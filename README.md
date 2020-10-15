@@ -1,16 +1,11 @@
-# precept
+# Precept
 
-Declarative Flutter framework
+A declarative Flutter application framework for use where forms are required
 
-## Getting Started
+## Objectives
 
-This project is a starting point for a Flutter application.
+1. impose NO restrictions on the developer - they should be able to use the full power of Flutter for anything else they want in their app.
+1. Minimise repetitive coding for data retrieval, form construction, validation and submission
+1. Reduce app updates by declaring the model on the server-side
+1. support multiple backends
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
