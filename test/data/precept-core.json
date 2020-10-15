@@ -1,0 +1,105 @@
+{
+  "core": {
+    "version": 0,
+    "schemaVersion": 0,
+    "signin": {
+      "available": [
+        {
+          "google": false,
+          "email": true
+        }
+      ]
+    },
+    "selectTenant": {},
+    "routes": {
+      "user": {
+        "home": {
+          "pageTitle": "$tenantShortName",
+          "sections": {
+            "welcome": {
+              "state": {
+                "user.authentication": {
+                  "authenticated": {},
+                  "else": {}
+                },
+                "user.subscription": {
+                  "subscriptionComplete": {}
+                }
+              }
+            }
+          }
+        }
+      },
+      "club": {
+        "full": {
+          "pageTitle": "Club Information",
+          "schema": {
+            "primary": "Club",
+            "includes": [
+              "Business",
+              "Activity"
+            ]
+          },
+          "fields": [
+            {
+              "property": "",
+              "caption": "Identity",
+              "displayType": "section",
+              "section": "club.identity"
+            },
+            {
+              "property": "Business",
+              "caption": "Business",
+              "displayType": "section",
+              "section": "club.business"
+            }
+          ]
+        }
+      }
+    },
+    "sections": {
+      "club": {
+        "identity": {
+          "fields": []
+        },
+        "business": {
+          "fields": [
+            {
+              "property": "registeredAddress",
+              "caption": "Registered address",
+              "displayType": "section",
+              "section": "common.address"
+            },
+            {
+              "property": "contactAddress",
+              "caption": "Contact address",
+              "displayType": "section",
+              "section": "common.address"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "common": [
+    {
+      "address": {
+        "fields": [
+          {
+            "property": "firstLine",
+            "caption": "#First Line",
+            "tooltip": "#First Line of Address",
+            "displayType": "TextBox"
+          },
+          {
+            "property": "postcode",
+            "caption": "#Post Code",
+            "tooltip": "#Post Code",
+            "displayType": "Postcode"
+          }
+        ]
+      }
+    }
+  ]
+}
+

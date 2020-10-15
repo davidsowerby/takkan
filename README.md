@@ -9,3 +9,17 @@ A declarative Flutter application framework for use where forms are required
 1. Reduce app updates by declaring the model on the server-side
 1. support multiple backends
 
+
+
+
+
+
+
+
+## Build
+
+``` bash
+flutter packages pub run build_runner watch
+
+```
+
