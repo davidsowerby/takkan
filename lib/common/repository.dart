@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept/common/backend.dart';
-import 'package:precept/common/inject.dart';
+import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/mutable/model.dart';
 
 abstract class Repository<MODEL extends DocumentModel> {
-  final BackendDelegate backendDelegate = injector<BackendDelegate>();
+  final BackendDelegate backendDelegate = inject<BackendDelegate>();
 
   MODEL modelBuilder({Map<String, dynamic> data, bool canEdit});
 

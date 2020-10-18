@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:precept/common/inject.dart';
+import 'package:precept/inject/inject.dart';
 
 /// This uses the [injector] to enable testing - replacing [Toast] with a Mock via the injector
 snackToast({@required String text}) {
-  injector<Toast>().snackToast(text: text);
+  inject<Toast>().snackToast(text: text);
 }
 
 class Toast {

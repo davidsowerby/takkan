@@ -1,4 +1,4 @@
-import 'package:precept/common/inject.dart';
+import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
@@ -22,7 +22,7 @@ void main() {
     data = generateData();
     getIt.reset();
     getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    temporaryDocument = injector<TemporaryDocument>();
+    temporaryDocument = inject<TemporaryDocument>();
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();

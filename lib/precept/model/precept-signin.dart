@@ -33,21 +33,18 @@ abstract class PreceptSignIn
 }
 
 class Backend extends EnumClass {
-
-
-  static const Backend yes = _$yes;
-  static const Backend no = _$no;
-  static const Backend maybe = _$maybe;
+  static const Backend back4app = _$back4app;
+  static const Backend firestore = _$firestore;
+  static const Backend other = _$other;
 
   const Backend._(String name) : super(name);
 
   static BuiltSet<Backend> get values => _$values;
+
   static Backend valueOf(String name) => _$valueOf(name);
+
   static Serializer<Backend> get serializer => _$backendSerializer;
-
-
 }
-
 
 buildOne(){
   var user1 =  PreceptSignIn((b) => b

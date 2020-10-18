@@ -16,7 +16,7 @@ void main() {
 
       // when
       final signin = PreceptSignIn((b) => b
-        ..backend = Backend.maybe
+        ..backend = Backend.back4app
         ..brand = "brandy");
       // then
       print(signin.toJson());

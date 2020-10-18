@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept/common/backend.dart';
-import 'package:precept/common/inject.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/common/toast.dart';
+import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
@@ -47,7 +47,7 @@ class DocumentModel {
     }
 
     /// We don't actually need a temporary document unless editing, but using it keeps things simple
-    _temporaryDocument = injector<TemporaryDocument>();
+    _temporaryDocument = inject<TemporaryDocument>();
     _temporaryDocument.updateFromSource(source: _data);
   }
 
@@ -67,7 +67,7 @@ class DocumentModel {
   /// See [TemporaryDocument.changes]
   Map<String, dynamic> get changes => _temporaryDocument.changes;
 
-  DocumentId get documentId => injector<DocumentIdConverter>().fromModel(this);
+  DocumentId get documentId => inject<DocumentIdConverter>().fromModel(this);
 
   ListBinding<String> get wizardSteps {
     return rootBinding.listBinding<String>(property: wizardStepProperty);

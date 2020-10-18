@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:precept/common/backend.dart';
-import 'package:precept/common/inject.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/common/toast.dart';
+import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
@@ -26,7 +26,7 @@ void main() {
     getIt.reset();
     getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
     getIt.registerFactory<BackendDelegate>(() => mockBackendDelegate);
-    tdoc = injector<TemporaryDocument>();
+    tdoc = inject<TemporaryDocument>();
     listener = ChangeListener();
     tdoc.addListener(listener.listenToChange);
   });
@@ -141,7 +141,7 @@ void main() {
       getIt
           .registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
       getIt.registerFactory<Toast>(() => MockToast());
-      tdoc = injector<TemporaryDocument>();
+      tdoc = inject<TemporaryDocument>();
     });
 
     test(

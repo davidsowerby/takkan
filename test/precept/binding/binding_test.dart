@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept/common/inject.dart';
+import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
@@ -20,7 +20,7 @@ void main() {
     data = generateData();
     getIt.reset();
     getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    temporaryDocument = injector<TemporaryDocument>();
+    temporaryDocument = inject<TemporaryDocument>();
     rootBinding =
         RootBinding(id: "-root-", data: data, editHost: temporaryDocument);
     changeListener = ChangeListener();
