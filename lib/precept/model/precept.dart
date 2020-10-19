@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:precept/precept/model/displayType.dart';
+import 'package:flutter/foundation.dart';
 import 'package:precept/precept/model/precept-signin.dart';
 import 'package:precept/precept/model/serializers.dart';
+import 'package:precept/precept/widget/displayType.dart';
 
 part 'precept.g.dart';
 
@@ -15,7 +16,7 @@ part 'precept.g.dart';
 /// To enable re-use of sections (for example an AddressSection), they are defined at Component level, but looked up using a simple dot notation path.
 ///
 abstract class Precept implements Built<Precept, PreceptBuilder> {
-  BuiltSet<PreceptComponent> get components;
+  BuiltList<PreceptComponent> get components;
 
   PreceptSignIn get signIn;
 
@@ -177,4 +178,22 @@ abstract class PreceptField
   }
 
   static Serializer<PreceptField> get serializer => _$preceptFieldSerializer;
+}
+
+/// Common interface to load a Precept instance from any source
+abstract class PreceptLoader {
+  Future<Precept> load();
+}
+
+/// Generally only used for testing this implementation of [PreceptLoader] just
+/// takes a pre-built [Precept] model
+class DirectPreceptLoader implements PreceptLoader {
+  final Precept model;
+
+  const DirectPreceptLoader({@required this.model});
+
+  @override
+  Future<Precept> load() {
+    return Future.value(model);
+  }
 }

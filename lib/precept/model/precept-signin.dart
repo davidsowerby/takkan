@@ -45,8 +45,3 @@ class Backend extends EnumClass {
 
   static Serializer<Backend> get serializer => _$backendSerializer;
 }
-
-buildOne(){
-  var user1 =  PreceptSignIn((b) => b
-    ..brand = 'John Smith');
-}
