@@ -42,10 +42,12 @@ abstract class PreceptComponent
 
   BuiltList<PreceptSection> get sections;
 
+  BuiltList<PreceptRoute> get routes;
+
   PreceptComponent._();
 
   factory PreceptComponent([updates(PreceptComponentBuilder b)]) =
-      _$PreceptComponent;
+  _$PreceptComponent;
 
   String toJson() {
     return json
@@ -59,11 +61,18 @@ abstract class PreceptComponent
 
   static Serializer<PreceptComponent> get serializer =>
       _$preceptComponentSerializer;
+
+  List<String> get routeList {
+    return [];
+  }
 }
 
 abstract class PreceptRoute
     implements Built<PreceptRoute, PreceptRouteBuilder> {
   String get path;
+
+  BuiltList<PreceptSectionLookup> get sections;
+
 
   PreceptRoute._();
 
@@ -82,26 +91,7 @@ abstract class PreceptRoute
   static Serializer<PreceptRoute> get serializer => _$preceptRouteSerializer;
 }
 
-abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
-  bool get isList;
 
-  BuiltList<PreceptSectionLookup> get sections;
-
-  PreceptPage._();
-
-  factory PreceptPage([updates(PreceptPageBuilder b)]) = _$PreceptPage;
-
-  String toJson() {
-    return json.encode(serializers.serializeWith(PreceptPage.serializer, this));
-  }
-
-  static PreceptPage fromJson(String jsonString) {
-    return serializers.deserializeWith(
-        PreceptPage.serializer, json.decode(jsonString));
-  }
-
-  static Serializer<PreceptPage> get serializer => _$preceptPageSerializer;
-}
 
 abstract class PreceptSectionLookup
     implements Built<PreceptSectionLookup, PreceptSectionLookupBuilder> {
@@ -182,18 +172,25 @@ abstract class PreceptField
 
 /// Common interface to load a Precept instance from any source
 abstract class PreceptLoader {
+  /// Loads the precept JSON file from source.  Implementations must call [Precept.init] after loading
   Future<Precept> load();
+
+  bool get isLoaded;
 }
 
 /// Generally only used for testing this implementation of [PreceptLoader] just
 /// takes a pre-built [Precept] model
 class DirectPreceptLoader implements PreceptLoader {
   final Precept model;
+  bool _loaded = false;
 
-  const DirectPreceptLoader({@required this.model});
+  DirectPreceptLoader({@required this.model});
 
   @override
   Future<Precept> load() {
+    _loaded = true;
     return Future.value(model);
   }
+
+  bool get isLoaded => _loaded;
 }

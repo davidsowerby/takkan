@@ -27,7 +27,10 @@ dependencies:
   cloud_firestore: ^0.13.6
   logger: ^0.9.1
   built_value: ^7.1.0
-
+  provider: ^4.1.2
+  image_picker: ^0.6.7
+  adaptive_dialog: ^0.6.4
+  font_awesome_flutter: ^8.8.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0

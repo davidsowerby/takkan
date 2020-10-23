@@ -2,6 +2,7 @@ import 'package:precept/common/locale.dart';
 import 'package:precept/common/toast.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/router.dart';
 
 common() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());
@@ -10,6 +11,7 @@ common() {
 }
 
 precept() {
+  getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
 }
 

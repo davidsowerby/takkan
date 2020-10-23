@@ -16,3 +16,18 @@ class DefaultLocaleReader implements LocaleReader {
     return locale;
   }
 }
+
+/// Populates placeholders with [params]
+mixin Interpolator {
+  /// populates placeholders with [params]
+  String interpolate(String pattern,
+      {Map<String, dynamic> params, Locale locale}) {
+    String p = pattern;
+    if (params != null) {
+      params.forEach((key, value) {
+        p = p.replaceAll("{$key}", "$value");
+      });
+    }
+    return p;
+  }
+}
