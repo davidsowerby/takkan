@@ -2,8 +2,9 @@ import 'package:precept/app/model.dart';
 import 'package:precept/precept/model/precept.dart';
 import 'package:test/test.dart';
 
+/// Not much to be done here, the model uses BuiltValue
 void main() {
-  group('Unit test', () {
+  group('Model', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -12,7 +13,7 @@ void main() {
 
     tearDown(() {});
 
-    test('output', () {
+    test('JSON round trip', () {
       // given
 
       // when

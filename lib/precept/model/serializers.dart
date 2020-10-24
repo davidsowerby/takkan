@@ -18,6 +18,7 @@ part 'serializers.g.dart';
   Precept,
   PreceptComponent,
   PreceptRoute,
+  PreceptPage,
   PreceptSectionLookup,
   PreceptSection,
   PreceptField,

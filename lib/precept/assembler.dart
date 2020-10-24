@@ -5,7 +5,8 @@ import 'package:precept/precept/router.dart';
 
 class PreceptPageAssembler {
   Widget assemblePage({@required PreceptRoute route}) {
-    for (PreceptSectionLookup sectionLookup in route.sections) {
+    PreceptPage page = route.page;
+    for (PreceptSectionLookup sectionLookup in page.sections) {
       assembleSection(sectionLookup);
     }
   }

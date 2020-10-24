@@ -47,7 +47,7 @@ abstract class PreceptComponent
   PreceptComponent._();
 
   factory PreceptComponent([updates(PreceptComponentBuilder b)]) =
-  _$PreceptComponent;
+      _$PreceptComponent;
 
   String toJson() {
     return json
@@ -71,8 +71,7 @@ abstract class PreceptRoute
     implements Built<PreceptRoute, PreceptRouteBuilder> {
   String get path;
 
-  BuiltList<PreceptSectionLookup> get sections;
-
+  PreceptPage get page;
 
   PreceptRoute._();
 
@@ -91,7 +90,26 @@ abstract class PreceptRoute
   static Serializer<PreceptRoute> get serializer => _$preceptRouteSerializer;
 }
 
+abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
+  String get title;
 
+  BuiltList<PreceptSectionLookup> get sections;
+
+  PreceptPage._();
+
+  factory PreceptPage([updates(PreceptPageBuilder b)]) = _$PreceptPage;
+
+  String toJson() {
+    return json.encode(serializers.serializeWith(PreceptPage.serializer, this));
+  }
+
+  static PreceptPage fromJson(String jsonString) {
+    return serializers.deserializeWith(
+        PreceptPage.serializer, json.decode(jsonString));
+  }
+
+  static Serializer<PreceptPage> get serializer => _$preceptPageSerializer;
+}
 
 abstract class PreceptSectionLookup
     implements Built<PreceptSectionLookup, PreceptSectionLookupBuilder> {

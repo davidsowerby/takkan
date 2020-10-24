@@ -4,7 +4,6 @@ import 'package:precept/app/page/homePage.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/model/precept.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
@@ -22,7 +21,9 @@ abstract class RouteLocator {
 
   /// Returns all [PreceptRoutes] for this locator.   These are combined with other
   /// instances within the [PreceptRouter] to form a single route map.
-  Map<String, PreceptRoute> routeMap();
+  ///
+  /// Usually asynchronous to allow loader to retrieve data
+  Future<Map<String, PreceptRoute>> routeMap();
 }
 
 /// Maintains a list of [RouteLocator], used to find widgets for routes, and
@@ -44,15 +45,13 @@ class RouteLocatorSet {
 
   /// Returns a widget from the first [RouteLocator] in [locators] which recognises
   /// [settings.name]
-  Map<String, PreceptRoute> routeMap() {
+  Future<Map<String, PreceptRoute>> routeMap() async {
     Map<String, PreceptRoute> masterMap = Map();
     for (RouteLocator locator in locators) {
-      masterMap.addAll(locator.routeMap());
+      masterMap.addAll(await locator.routeMap());
     }
-    return null;
+    return masterMap;
   }
-
-
 }
 
 /// This singleton is accessible via [router], and needs to be declared for your
@@ -83,8 +82,7 @@ class PreceptRouter {
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     getLogger(this.runtimeType).d(
-        "Requested route is: ${settings.name} with arguments ${settings
-            .arguments}.");
+        "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
     PreceptRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
       // TODO: Should do we catch the unrecognised route here or somewhere else?
@@ -100,12 +98,16 @@ class PreceptRouter {
 
   /// Loads all [PreceptRoutes] into [routeMap], mapped by route path.  This is a bit of a sledgehammer approach,
   /// see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2):
-  buildRouteMap() {
-    _preceptRoutes.addAll(_locatorSet.routeMap());
+  buildRouteMap() async {
+    _preceptRoutes.addAll(await _locatorSet.routeMap());
   }
 
   Route<dynamic> _route(Widget page) {
     return MaterialPageRoute(builder: (_) => page);
+  }
+
+  hasRoute(String path) {
+    return _preceptRoutes.containsKey(path);
   }
 }
 
@@ -126,18 +128,19 @@ class PreceptRouteLocator implements RouteLocator {
   bool _initialised = false;
   final PreceptLoader loader;
   Precept _model;
-  final PreceptPageAssembler assembler = PreceptPageAssembler();
 
   PreceptRouteLocator({@required this.loader});
 
   @override
-  Map<String, PreceptRoute> routeMap() {
+  Future<Map<String, PreceptRoute>> routeMap() async {
+    _model = await loader.load();
     Map<String, PreceptRoute> map = Map();
     for (PreceptComponent component in _model.components) {
       for (PreceptRoute preceptRoute in component.routes) {
         map[preceptRoute.path] = preceptRoute;
       }
     }
+    return map;
   }
 
   // Route generateRoute(RouteSettings settings) {
@@ -170,6 +173,4 @@ class PreceptRouteLocator implements RouteLocator {
 
   @override
   bool get isInitialised => _initialised;
-
-
 }
