@@ -1,3 +1,4 @@
+import 'package:built_value/built_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/app/page/homePage.dart';
@@ -24,6 +25,10 @@ abstract class RouteLocator {
   ///
   /// Usually asynchronous to allow loader to retrieve data
   Future<Map<String, PreceptRoute>> routeMap();
+
+  /// Returns all the [PreceptSection]s declared by the locator.  These are held as a lookup in the
+  /// [router]
+  Future<Map<EnumClass, PreceptSection>> sectionDeclarations();
 }
 
 /// Maintains a list of [RouteLocator], used to find widgets for routes, and
@@ -52,6 +57,14 @@ class RouteLocatorSet {
     }
     return masterMap;
   }
+
+  Future<Map<EnumClass, PreceptSection>> sectionDeclarations() async {
+    Map<EnumClass, PreceptSection> masterMap = Map();
+    for (RouteLocator locator in locators) {
+      masterMap.addAll(await locator.sectionDeclarations());
+    }
+    return masterMap;
+  }
 }
 
 /// This singleton is accessible via [router], and needs to be declared for your
@@ -77,6 +90,7 @@ class PreceptRouter {
   static PreceptRouter _instance;
   final RouteLocatorSet _locatorSet;
   final Map<String, PreceptRoute> _preceptRoutes = Map();
+  final Map<EnumClass, PreceptSection> _sections = Map();
 
   PreceptRouter._private() : _locatorSet = inject<RouteLocatorSet>();
 
@@ -96,10 +110,12 @@ class PreceptRouter {
     return _instance;
   }
 
-  /// Loads all [PreceptRoutes] into [routeMap], mapped by route path.  This is a bit of a sledgehammer approach,
-  /// see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2):
+  /// Loads all [PreceptRoutes] into [routeMap], mapped by route path, and all section declarations into _sections.
+  /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
   buildRouteMap() async {
     _preceptRoutes.addAll(await _locatorSet.routeMap());
+
+    _sections.addAll(await _locatorSet.sectionDeclarations());
   }
 
   Route<dynamic> _route(Widget page) {
@@ -108,6 +124,10 @@ class PreceptRouter {
 
   hasRoute(String path) {
     return _preceptRoutes.containsKey(path);
+  }
+
+  hasSection(EnumClass key) {
+    return _sections.containsKey(key);
   }
 }
 
@@ -139,6 +159,16 @@ class PreceptRouteLocator implements RouteLocator {
       for (PreceptRoute preceptRoute in component.routes) {
         map[preceptRoute.path] = preceptRoute;
       }
+    }
+    return map;
+  }
+
+  @override
+  Future<Map<EnumClass, PreceptSection>> sectionDeclarations() async {
+    _model = await loader.load();
+    Map<EnumClass, PreceptSection> map = Map();
+    for (PreceptComponent component in _model.components) {
+      map.addAll(component.sections.asMap());
     }
     return map;
   }

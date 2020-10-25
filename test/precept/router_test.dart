@@ -3,7 +3,7 @@ import 'package:precept/precept/model/precept.dart';
 import 'package:precept/precept/router.dart';
 import 'package:test/test.dart';
 
-import '../../data/testModel.dart';
+import '../data/testModel/testModel.dart';
 
 void main() {
   group('Precept Router', () {
@@ -22,6 +22,7 @@ void main() {
       await router.buildRouteMap();
       // then
       expect(router.hasRoute("/home"), isTrue);
+      expect(router.hasSection(CoreSection.address), isTrue);
     });
   });
 }

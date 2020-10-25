@@ -4,16 +4,18 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/model/precept-signin.dart';
 import 'package:precept/precept/model/serializers.dart';
 import 'package:precept/precept/widget/displayType.dart';
+import 'package:precept/section/base/section.dart';
 
 part 'precept.g.dart';
 
 /// A Precept instance represents a specific backend - Back4App, Firebase for example, or perhaps a Rest API for some third party service.
 ///
 /// For larger implementations, it may contain multiple [components].  Each component defines its own [sections], where a Section is just an arbitrary part of a page
-/// To enable re-use of sections (for example an AddressSection), they are defined at Component level, but looked up using a simple dot notation path.
+/// To enable re-use of sections (for example an AddressSection), they are defined at Component level, but looked up using a [PreceptSectionLookup]
 ///
 abstract class Precept implements Built<Precept, PreceptBuilder> {
   BuiltList<PreceptComponent> get components;
@@ -36,11 +38,16 @@ abstract class Precept implements Built<Precept, PreceptBuilder> {
   static Serializer<Precept> get serializer => _$preceptSerializer;
 }
 
+/// A [PreceptComponent] is notional separation within an app.  Simple Apps may contain only one.
+///
+/// The idea is to gather together the definition of functionally related UI into one place.
+/// It contains one or more [sections] which are re-usable parts of a display page - for example an address
+/// could be used in multiple ways, but declared only once.
 abstract class PreceptComponent
     implements Built<PreceptComponent, PreceptComponentBuilder> {
   String get name;
 
-  BuiltList<PreceptSection> get sections;
+  BuiltMap<EnumClass, PreceptSection> get sections;
 
   BuiltList<PreceptRoute> get routes;
 
@@ -67,6 +74,9 @@ abstract class PreceptComponent
   }
 }
 
+/// A route is represented by a [path] - simply a String but typically a pseudo URL such as '/user/home'
+///
+/// Each path displays a [page] - a descriptor which is converted to Widgets by a [PreceptPageAssembler]
 abstract class PreceptRoute
     implements Built<PreceptRoute, PreceptRouteBuilder> {
   String get path;
@@ -90,6 +100,8 @@ abstract class PreceptRoute
   static Serializer<PreceptRoute> get serializer => _$preceptRouteSerializer;
 }
 
+/// Describes a displayed page, using re-usable [sections]
+/// This descriptor is converted to a UI [Section] by a [PreceptPageAssembler]
 abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
   String get title;
 
@@ -134,6 +146,12 @@ abstract class PreceptSectionLookup
       _$preceptSectionLookupSerializer;
 }
 
+/// Describes an arbitrary section of a displayed page, using [fields]
+/// This descriptor is converted to a UI [Section] by a [PreceptPageAssembler]
+///
+/// A [PreceptSection] may be reused either within a [PreceptComponent] or even
+/// between [PreceptComponents].  This is enabled by having each [PreceptComponent]
+/// declare its sections as a map - entries are then looked up from wherever needed.
 abstract class PreceptSection
     implements Built<PreceptSection, PreceptSectionBuilder> {
   String get title;

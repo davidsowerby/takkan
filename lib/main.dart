@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:precept/app/inject/modules.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/router.dart';
 
@@ -28,6 +27,4 @@ class PreceptApp extends StatelessWidget {
 
 injectorBindings() {
   preceptInjection();
-  appInjection();
-  locatorInjection();
 }
