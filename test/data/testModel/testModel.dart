@@ -1,10 +1,6 @@
-import 'package:built_collection/built_collection.dart';
-import 'package:built_value/built_value.dart';
-import 'package:built_value/serializer.dart';
 import 'package:precept/precept/model/precept-signin.dart';
 import 'package:precept/precept/model/precept.dart';
-
-part 'testModel.g.dart';
+import 'package:precept/precept/part/library/partLibrary.dart';
 
 final testModel = Precept((b) => b
   ..signIn.backend = Backend.back4app
@@ -32,15 +28,4 @@ page() {
   return PreceptPage((b) => b.title = "Home");
 }
 
-class CorePart extends EnumClass {
-  static const CorePart address = _$address;
-  static const CorePart contact = _$contact;
 
-  const CorePart._(String name) : super(name);
-
-  static BuiltSet<CorePart> get values => _$values;
-
-  static CorePart valueOf(String name) => _$valueOf(name);
-
-  static Serializer<CorePart> get serializer => _$corePartSerializer;
-}
