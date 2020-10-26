@@ -22,7 +22,7 @@ void main() {
       await router.buildLookups();
       // then
       expect(router.hasRoute("/home"), isTrue);
-      expect(router.hasSection(CoreSection.address), isTrue);
+      expect(router.hasSection(CorePart.address), isTrue);
     });
   });
 }

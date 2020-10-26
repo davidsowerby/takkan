@@ -8,7 +8,7 @@ import 'testModel.dart';
 part 'serializers.g.dart';
 
 @SerializersFor(const [
-  CoreSection,
+  CorePart,
 ])
 final Serializers serializers =
     (_$serializers.toBuilder()..addPlugin(StandardJsonPlugin())).build();

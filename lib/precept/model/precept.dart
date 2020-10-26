@@ -43,7 +43,7 @@ abstract class Precept implements Built<Precept, PreceptBuilder> {
 ///
 /// The idea is to gather together the definition of functionally related UI into one place.
 ///
-/// A [PreceptComponent] contains 0 or more [widgets] which may be defined to supplement standard Flutter widgets.
+/// A [PreceptComponent] contains 0 or more [parts] which may be defined to supplement standard Flutter widgets.
 /// These are often composite widgets that  could be re-used - for example an AddressWidget
 /// could be used in multiple ways, but declared only once.
 ///
@@ -54,7 +54,7 @@ abstract class PreceptComponent
     implements Built<PreceptComponent, PreceptComponentBuilder> {
   String get name;
 
-  BuiltMap<EnumClass, PreceptWidget> get widgets;
+  BuiltMap<EnumClass, PreceptPart> get parts;
 
   BuiltList<PreceptRoute> get routes;
 
@@ -157,30 +157,28 @@ abstract class PreceptSection
 /// It contains 1 or more [fields], which in turn define
 /// the properties from which to read / write data, and the widget to display it.
 ///
-/// A [PreceptWidget] may be reused either within a [PreceptComponent] or even
+/// A [PreceptPart] may be reused either within a [PreceptComponent] or even
 /// between [PreceptComponents].  This is enabled by having each [PreceptComponent]
 /// declare its widgets as a map - entries are then looked up from wherever needed.
-abstract class PreceptWidget
-    implements Built<PreceptWidget, PreceptWidgetBuilder> {
+abstract class PreceptPart implements Built<PreceptPart, PreceptPartBuilder> {
   String get caption;
 
   BuiltList<PreceptField> get fields;
 
-  PreceptWidget._();
+  PreceptPart._();
 
-  factory PreceptWidget([updates(PreceptWidgetBuilder b)]) = _$PreceptWidget;
+  factory PreceptPart([updates(PreceptPartBuilder b)]) = _$PreceptPart;
 
   String toJson() {
-    return json
-        .encode(serializers.serializeWith(PreceptWidget.serializer, this));
+    return json.encode(serializers.serializeWith(PreceptPart.serializer, this));
   }
 
-  static PreceptWidget fromJson(String jsonString) {
+  static PreceptPart fromJson(String jsonString) {
     return serializers.deserializeWith(
-        PreceptWidget.serializer, json.decode(jsonString));
+        PreceptPart.serializer, json.decode(jsonString));
   }
 
-  static Serializer<PreceptWidget> get serializer => _$preceptWidgetSerializer;
+  static Serializer<PreceptPart> get serializer => _$preceptPartSerializer;
 }
 
 abstract class PreceptField

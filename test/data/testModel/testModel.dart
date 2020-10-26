@@ -13,8 +13,8 @@ final testModel = Precept((b) => b
     PreceptComponent(
       (b) => b
         ..name = "core"
-        ..widgets.addAll({
-          CoreSection.address: PreceptWidget((b) => b
+        ..parts.addAll({
+          CorePart.address: PreceptPart((b) => b
             ..caption = "Address"
             ..fields.addAll([]))
         })
@@ -23,7 +23,7 @@ final testModel = Precept((b) => b
             ..path = "/home"
             ..page.title = "Home"
             ..page.sections.addAll(
-                [PreceptSection((b) => b..sectionKey = CoreSection.address)]))
+                [PreceptSection((b) => b..sectionKey = CorePart.address)]))
         ]),
     )
   ]));
@@ -32,15 +32,15 @@ page() {
   return PreceptPage((b) => b.title = "Home");
 }
 
-class CoreSection extends EnumClass {
-  static const CoreSection address = _$address;
-  static const CoreSection contact = _$contact;
+class CorePart extends EnumClass {
+  static const CorePart address = _$address;
+  static const CorePart contact = _$contact;
 
-  const CoreSection._(String name) : super(name);
+  const CorePart._(String name) : super(name);
 
-  static BuiltSet<CoreSection> get values => _$values;
+  static BuiltSet<CorePart> get values => _$values;
 
-  static CoreSection valueOf(String name) => _$valueOf(name);
+  static CorePart valueOf(String name) => _$valueOf(name);
 
-  static Serializer<CoreSection> get serializer => _$coreSectionSerializer;
+  static Serializer<CorePart> get serializer => _$corePartSerializer;
 }
