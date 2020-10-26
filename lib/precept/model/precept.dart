@@ -47,7 +47,7 @@ abstract class PreceptComponent
     implements Built<PreceptComponent, PreceptComponentBuilder> {
   String get name;
 
-  BuiltMap<EnumClass, PreceptSection> get sections;
+  BuiltMap<EnumClass, PreceptWidget> get sections;
 
   BuiltList<PreceptRoute> get routes;
 
@@ -146,35 +146,35 @@ abstract class PreceptSectionLookup
       _$preceptSectionLookupSerializer;
 }
 
-/// Describes an arbitrary section of a displayed page, using [fields]
-/// This descriptor is converted to a UI [Section] by a [PreceptPageAssembler]
+/// Describes a composite widget, to supplement the standard Flutter Widgets.
 ///
-/// A [PreceptSection] may be reused either within a [PreceptComponent] or even
+/// It contains 1 or more [fields], which in turn define
+/// the properties from which to read / write data, and the widget to display it.
+///
+/// A [PreceptWidget] may be reused either within a [PreceptComponent] or even
 /// between [PreceptComponents].  This is enabled by having each [PreceptComponent]
-/// declare its sections as a map - entries are then looked up from wherever needed.
-abstract class PreceptSection
-    implements Built<PreceptSection, PreceptSectionBuilder> {
+/// declare its widgets as a map - entries are then looked up from wherever needed.
+abstract class PreceptWidget
+    implements Built<PreceptWidget, PreceptWidgetBuilder> {
   String get caption;
 
   BuiltList<PreceptField> get fields;
 
-  PreceptSection._();
+  PreceptWidget._();
 
-  factory PreceptSection([updates(PreceptSectionBuilder b)]) = _$PreceptSection;
-
+  factory PreceptWidget([updates(PreceptWidgetBuilder b)]) = _$PreceptWidget;
 
   String toJson() {
     return json
-        .encode(serializers.serializeWith(PreceptSection.serializer, this));
+        .encode(serializers.serializeWith(PreceptWidget.serializer, this));
   }
 
-  static PreceptSection fromJson(String jsonString) {
+  static PreceptWidget fromJson(String jsonString) {
     return serializers.deserializeWith(
-        PreceptSection.serializer, json.decode(jsonString));
+        PreceptWidget.serializer, json.decode(jsonString));
   }
 
-  static Serializer<PreceptSection> get serializer =>
-      _$preceptSectionSerializer;
+  static Serializer<PreceptWidget> get serializer => _$preceptWidgetSerializer;
 }
 
 abstract class PreceptField

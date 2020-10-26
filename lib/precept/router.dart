@@ -26,13 +26,13 @@ abstract class RouteLocator {
   /// Usually asynchronous to allow loader to retrieve data
   Future<Map<String, PreceptRoute>> routeMap();
 
-  /// Returns all the [PreceptSection]s declared by the locator.  These are held as a lookup in the
+  /// Returns all the [PreceptWidget]s declared by the locator.  These are held as a lookup in the
   /// [router]
-  Future<Map<EnumClass, PreceptSection>> sectionDeclarations();
+  Future<Map<EnumClass, PreceptWidget>> sectionDeclarations();
 }
 
 /// Maintains a list of [RouteLocator], used to find widgets for routes, and
-/// a [PreceptSection] for a [PreceptSectionLookup]
+/// a [PreceptWidget] for a [PreceptSectionLookup]
 ///
 /// [locators] are queried in the order supplied.
 ///
@@ -58,8 +58,8 @@ class RouteLocatorSet {
     return masterMap;
   }
 
-  Future<Map<EnumClass, PreceptSection>> sectionDeclarations() async {
-    Map<EnumClass, PreceptSection> masterMap = Map();
+  Future<Map<EnumClass, PreceptWidget>> sectionDeclarations() async {
+    Map<EnumClass, PreceptWidget> masterMap = Map();
     for (RouteLocator locator in locators) {
       masterMap.addAll(await locator.sectionDeclarations());
     }
@@ -90,7 +90,7 @@ class PreceptRouter {
   static PreceptRouter _instance;
   final RouteLocatorSet _locatorSet;
   final Map<String, PreceptRoute> _preceptRoutes = Map();
-  final Map<EnumClass, PreceptSection> _sections = Map();
+  final Map<EnumClass, PreceptWidget> _sections = Map();
 
   PreceptRouter._private() : _locatorSet = inject<RouteLocatorSet>();
 
@@ -130,7 +130,7 @@ class PreceptRouter {
     return _sections.containsKey(key);
   }
 
-  PreceptSection section(PreceptSectionLookup sectionLookup) {
+  PreceptWidget section(PreceptSectionLookup sectionLookup) {
     return _sections[sectionLookup.sectionKey];
   }
 }
@@ -168,9 +168,9 @@ class PreceptRouteLocator implements RouteLocator {
   }
 
   @override
-  Future<Map<EnumClass, PreceptSection>> sectionDeclarations() async {
+  Future<Map<EnumClass, PreceptWidget>> sectionDeclarations() async {
     _model = await loader.load();
-    Map<EnumClass, PreceptSection> map = Map();
+    Map<EnumClass, PreceptWidget> map = Map();
     for (PreceptComponent component in _model.components) {
       map.addAll(component.sections.asMap());
     }

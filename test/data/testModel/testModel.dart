@@ -14,7 +14,7 @@ final testModel = Precept((b) => b
       (b) => b
         ..name = "core"
         ..sections.addAll({
-          CoreSection.address: PreceptSection((b) => b
+          CoreSection.address: PreceptWidget((b) => b
             ..caption = "Address"
             ..fields.addAll([]))
         })

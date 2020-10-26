@@ -21,7 +21,7 @@ part 'serializers.g.dart';
   PreceptRoute,
   PreceptPage,
   PreceptSectionLookup,
-  PreceptSection,
+  PreceptWidget,
   PreceptField,
 ])
 final Serializers serializers =
