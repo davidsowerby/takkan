@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/model/precept-signin.dart';
 import 'package:precept/precept/model/serializers.dart';
+import 'package:precept/precept/section/contact/address.dart';
 import 'package:precept/precept/widget/displayType.dart';
 import 'package:precept/section/base/section.dart';
 
@@ -41,13 +42,19 @@ abstract class Precept implements Built<Precept, PreceptBuilder> {
 /// A [PreceptComponent] is notional separation within an app.  Simple Apps may contain only one.
 ///
 /// The idea is to gather together the definition of functionally related UI into one place.
-/// It contains one or more [sections] which are re-usable parts of a display page - for example an address
+///
+/// A [PreceptComponent] contains 0 or more [widgets] which may be defined to supplement standard Flutter widgets.
+/// These are often composite widgets that  could be re-used - for example an AddressWidget
 /// could be used in multiple ways, but declared only once.
+///
+/// A widget must be identified by a key derived from EnumClass
+///
+/// (Precept actually provides an [AddressWidget], but you could prefer your own)
 abstract class PreceptComponent
     implements Built<PreceptComponent, PreceptComponentBuilder> {
   String get name;
 
-  BuiltMap<EnumClass, PreceptWidget> get sections;
+  BuiltMap<EnumClass, PreceptWidget> get widgets;
 
   BuiltList<PreceptRoute> get routes;
 

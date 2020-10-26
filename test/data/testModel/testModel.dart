@@ -13,7 +13,7 @@ final testModel = Precept((b) => b
     PreceptComponent(
       (b) => b
         ..name = "core"
-        ..sections.addAll({
+        ..widgets.addAll({
           CoreSection.address: PreceptWidget((b) => b
             ..caption = "Address"
             ..fields.addAll([]))
@@ -22,8 +22,8 @@ final testModel = Precept((b) => b
           PreceptRoute((b) => b
             ..path = "/home"
             ..page.title = "Home"
-            ..page.sections.addAll([
-              PreceptSection((b) => b..sectionKey = CoreSection.address)]))
+            ..page.sections.addAll(
+                [PreceptSection((b) => b..sectionKey = CoreSection.address)]))
         ]),
     )
   ]));

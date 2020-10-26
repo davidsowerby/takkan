@@ -172,7 +172,7 @@ class PreceptRouteLocator implements RouteLocator {
     _model = await loader.load();
     Map<EnumClass, PreceptWidget> map = Map();
     for (PreceptComponent component in _model.components) {
-      map.addAll(component.sections.asMap());
+      map.addAll(component.widgets.asMap());
     }
     return map;
   }
