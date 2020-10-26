@@ -35,7 +35,6 @@ abstract class PreceptSignIn
 class Backend extends EnumClass {
   static const Backend back4app = _$back4app;
   static const Backend firestore = _$firestore;
-  static const Backend other = _$other;
 
   const Backend._(String name) : super(name);
 

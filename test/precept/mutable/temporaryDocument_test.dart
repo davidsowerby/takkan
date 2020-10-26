@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:precept/backend/common/document.dart';
 import 'package:precept/common/backend.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';

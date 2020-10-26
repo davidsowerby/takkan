@@ -41,7 +41,7 @@ class Section extends StatelessWidget
   final String Function() title;
   final String Function() subTitle;
   final String route;
-  final HelpKeys helpKeys;
+  final HelpText helpKeys;
   final dynamic lookupKey;
   final dynamic titleKey;
   final String bindingProperty;

@@ -112,7 +112,7 @@ class PreceptRouter {
 
   /// Loads all [PreceptRoutes] into [routeMap], mapped by route path, and all section declarations into _sections.
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  buildRouteMap() async {
+  buildLookups() async {
     _preceptRoutes.addAll(await _locatorSet.routeMap());
 
     _sections.addAll(await _locatorSet.sectionDeclarations());
@@ -128,6 +128,10 @@ class PreceptRouter {
 
   hasSection(EnumClass key) {
     return _sections.containsKey(key);
+  }
+
+  PreceptSection section(PreceptSectionLookup sectionLookup) {
+    return _sections[sectionLookup.sectionKey];
   }
 }
 

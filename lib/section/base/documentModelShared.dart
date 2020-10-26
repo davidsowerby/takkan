@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/common/backend.dart';
+import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/precept/mutable/model.dart';

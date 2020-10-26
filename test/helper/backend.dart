@@ -1,3 +1,6 @@
+import 'package:precept/backend/common/document.dart';
+import 'package:precept/backend/common/documentId.dart';
+import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/backend.dart';
 import 'package:precept/precept/mutable/model.dart';
 
@@ -39,8 +42,7 @@ class MockBackendDelegate implements BackendDelegate {
   }
 
   @override
-  Future<CloudResponse> executeFunction(
-      {String functionName, Map<String, String> params}) {
+  Future<CloudResponse> executeFunction({String functionName, Map<String, String> params}) {
     // TODO: implement executeFunction
     throw UnimplementedError();
   }
@@ -64,8 +66,7 @@ class MockBackendDelegate implements BackendDelegate {
   }
 
   @override
-  Future<CloudResponse> selectDistinct(
-      {String path, String fieldName, fieldValue}) {
+  Future<CloudResponse> selectDistinct({String path, String fieldName, fieldValue}) {
     // TODO: implement selectDistinct
     throw UnimplementedError();
   }

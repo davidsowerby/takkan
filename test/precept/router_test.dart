@@ -19,7 +19,7 @@ void main() {
       // given
       setupInjector(buildInjector);
       // when
-      await router.buildRouteMap();
+      await router.buildLookups();
       // then
       expect(router.hasRoute("/home"), isTrue);
       expect(router.hasSection(CoreSection.address), isTrue);

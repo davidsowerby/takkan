@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/common/backend.dart';
+import 'package:precept/backend/common/document.dart';
+import 'package:precept/backend/common/documentId.dart';
+import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/common/toast.dart';
 import 'package:precept/inject/inject.dart';
@@ -134,14 +136,4 @@ class TitledDocumentModel extends DocumentModel {
   }
 }
 
-abstract class DocumentIdConverter {
-  DocumentId fromModel(DocumentModel model);
 
-  toModel(DocumentModel model, DocumentId documentId);
-
-  DocumentId fromNative(DocumentId documentId);
-
-  DocumentId toNative(DocumentId documentId);
-}
-
-enum DocumentType { standard, versioned, formal }

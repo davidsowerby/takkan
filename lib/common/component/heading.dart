@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
-  final HelpKeys helpKeys;
+  final HelpText helpKeys;
   final Widget child;
   final bool editable;
   final bool expandable;
@@ -115,7 +115,7 @@ class _HeadingState extends State<Heading> with Interpolator {
                   ),
                   if (widget.helpKeys != null)
                     HelpButton(
-                      helpKeys: widget.helpKeys,
+                      helpText: widget.helpKeys,
                     ),
                   Spacer(),
                   if (actionButtons.isNotEmpty)
@@ -170,7 +170,7 @@ class HeadingExpandCloseAction extends StatelessWidget {
 
 class SectionHeading extends StatelessWidget {
   final String headingText;
-  final HelpKeys helpKeys;
+  final HelpText helpKeys;
   final Widget child;
   final bool canEdit;
   final bool expandable;
@@ -231,31 +231,28 @@ class SectionHeading extends StatelessWidget {
   }
 }
 
-class HelpKeys {
-  final dynamic title;
-  final dynamic message;
+class HelpText {
+  final String title;
+  final String message;
 
-  const HelpKeys({@required this.title, this.message});
+  const HelpText({@required this.title, this.message});
 }
 
 class HelpButton extends StatelessWidget with Interpolator {
-  final HelpKeys helpKeys;
+  final HelpText helpText;
 
-  const HelpButton({Key key, @required this.helpKeys}) : super(key: key);
+  const HelpButton({Key key, @required this.helpText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final TranslationShared translationShared = Provider.of<TranslationShared>(context);
-    // final title = translate(translationShared, helpKeys.title);
-    // final message = translate(translationShared, helpKeys.message);
     return ActionIcon(
-      iconData: Icons.help,
-      action: () => showOkAlertDialog(
-          context: context,
-          title: helpKeys.title.toString(),
-          message:
-              "Message"), // TODO interpolate with params, but params from where?
-    );
+        iconData: Icons.help,
+        action: () => showOkAlertDialog(
+              context: context,
+              title: helpText.title,
+              message: helpText.message,
+            ) // TODO interpolate with params, but params from where.  A Binding with property names maybe?
+        );
   }
 }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:precept/backend/common/documentId.dart';
+import 'package:precept/backend/common/response.dart';
 import 'package:precept/precept/mutable/model.dart';
 
 /// Converts a response from a cloud provider (currently Back4App) to a standard form.  This enables the Repository layer
@@ -38,21 +40,6 @@ abstract class BackendDelegate<MODEL extends DocumentModel> {
   });
 }
 
-/// Standardised document reference, which is converted to / from whatever the cloud provider uses, by an implementation of
-/// [DocumentIdConverter].
-/// For example, Back4App (ParseServer) uses this as path==className and itemId==objectId
-class DocumentId {
-  /// The path to the document, but not including the [itemId]
-  final String path;
 
-  final String itemId;
 
-  const DocumentId({@required this.path, @required this.itemId});
-}
 
-class CloudResponse {
-  final dynamic result;
-  final bool success;
-
-  const CloudResponse({@required this.success, this.result});
-}

@@ -125,7 +125,7 @@ abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
 
 abstract class PreceptSectionLookup
     implements Built<PreceptSectionLookup, PreceptSectionLookupBuilder> {
-  // fields go here}",
+  EnumClass get sectionKey;
 
   PreceptSectionLookup._();
 
@@ -154,13 +154,14 @@ abstract class PreceptSectionLookup
 /// declare its sections as a map - entries are then looked up from wherever needed.
 abstract class PreceptSection
     implements Built<PreceptSection, PreceptSectionBuilder> {
-  String get title;
+  String get caption;
 
   BuiltList<PreceptField> get fields;
 
   PreceptSection._();
 
   factory PreceptSection([updates(PreceptSectionBuilder b)]) = _$PreceptSection;
+
 
   String toJson() {
     return json

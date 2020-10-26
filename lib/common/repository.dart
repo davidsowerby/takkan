@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:precept/backend/common/document.dart';
+import 'package:precept/backend/common/documentId.dart';
+import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/backend.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/mutable/model.dart';

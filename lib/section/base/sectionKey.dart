@@ -7,7 +7,7 @@ abstract class DocumentSection {
 
   dynamic get lookupKey;
 
-  HelpKeys get helpKeys;
+  HelpText get helpKeys;
 
   String get bindingProperty;
 }

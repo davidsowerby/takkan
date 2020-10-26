@@ -15,14 +15,16 @@ final testModel = Precept((b) => b
         ..name = "core"
         ..sections.addAll({
           CoreSection.address: PreceptSection((b) => b
-            ..title = "Address"
+            ..caption = "Address"
             ..fields.addAll([]))
         })
         ..routes.addAll([
           PreceptRoute((b) => b
             ..path = "/home"
             ..page.title = "Home"
-            ..page.sections.addAll([]))
+            ..page.sections.addAll([
+              PreceptSectionLookup((b) => b..sectionKey = CoreSection.address)
+            ]))
         ]),
     )
   ]));
