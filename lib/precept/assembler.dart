@@ -9,7 +9,7 @@ class PreceptPageAssembler {
     return ListView(children: assembleSections(route: route));
   }
 
-  Section assembleSection(PreceptSectionLookup sectionLookup) {
+  Section assembleSection(PreceptSection sectionLookup) {
     final preceptSection = router.section(sectionLookup);
     return Section(child: AddressWidget());
   }
@@ -17,7 +17,7 @@ class PreceptPageAssembler {
   /// Visible for testing
   List<Section> assembleSections({@required PreceptRoute route}) {
     final List<Section> children = List();
-    for (PreceptSectionLookup sectionLookup in route.page.sections) {
+    for (PreceptSection sectionLookup in route.page.sections) {
       children.add(assembleSection(sectionLookup));
     }
     return children;

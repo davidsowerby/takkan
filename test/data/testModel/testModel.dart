@@ -23,8 +23,7 @@ final testModel = Precept((b) => b
             ..path = "/home"
             ..page.title = "Home"
             ..page.sections.addAll([
-              PreceptSectionLookup((b) => b..sectionKey = CoreSection.address)
-            ]))
+              PreceptSection((b) => b..sectionKey = CoreSection.address)]))
         ]),
     )
   ]));

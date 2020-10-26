@@ -32,7 +32,7 @@ abstract class RouteLocator {
 }
 
 /// Maintains a list of [RouteLocator], used to find widgets for routes, and
-/// a [PreceptWidget] for a [PreceptSectionLookup]
+/// a [PreceptWidget] for a [PreceptSection]
 ///
 /// [locators] are queried in the order supplied.
 ///
@@ -130,7 +130,7 @@ class PreceptRouter {
     return _sections.containsKey(key);
   }
 
-  PreceptWidget section(PreceptSectionLookup sectionLookup) {
+  PreceptWidget section(PreceptSection sectionLookup) {
     return _sections[sectionLookup.sectionKey];
   }
 }

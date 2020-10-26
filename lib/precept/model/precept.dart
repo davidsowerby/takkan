@@ -15,7 +15,7 @@ part 'precept.g.dart';
 /// A Precept instance represents a specific backend - Back4App, Firebase for example, or perhaps a Rest API for some third party service.
 ///
 /// For larger implementations, it may contain multiple [components].  Each component defines its own [sections], where a Section is just an arbitrary part of a page
-/// To enable re-use of sections (for example an AddressSection), they are defined at Component level, but looked up using a [PreceptSectionLookup]
+/// To enable re-use of sections (for example an AddressSection), they are defined at Component level, but looked up using a [PreceptSection]
 ///
 abstract class Precept implements Built<Precept, PreceptBuilder> {
   BuiltList<PreceptComponent> get components;
@@ -105,7 +105,7 @@ abstract class PreceptRoute
 abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
   String get title;
 
-  BuiltList<PreceptSectionLookup> get sections;
+  BuiltList<PreceptSection> get sections;
 
   PreceptPage._();
 
@@ -123,27 +123,26 @@ abstract class PreceptPage implements Built<PreceptPage, PreceptPageBuilder> {
   static Serializer<PreceptPage> get serializer => _$preceptPageSerializer;
 }
 
-abstract class PreceptSectionLookup
-    implements Built<PreceptSectionLookup, PreceptSectionLookupBuilder> {
+abstract class PreceptSection
+    implements Built<PreceptSection, PreceptSectionBuilder> {
   EnumClass get sectionKey;
 
-  PreceptSectionLookup._();
+  PreceptSection._();
 
-  factory PreceptSectionLookup([updates(PreceptSectionLookupBuilder b)]) =
-      _$PreceptSectionLookup;
+  factory PreceptSection([updates(PreceptSectionBuilder b)]) = _$PreceptSection;
 
   String toJson() {
-    return json.encode(
-        serializers.serializeWith(PreceptSectionLookup.serializer, this));
+    return json
+        .encode(serializers.serializeWith(PreceptSection.serializer, this));
   }
 
-  static PreceptSectionLookup fromJson(String jsonString) {
+  static PreceptSection fromJson(String jsonString) {
     return serializers.deserializeWith(
-        PreceptSectionLookup.serializer, json.decode(jsonString));
+        PreceptSection.serializer, json.decode(jsonString));
   }
 
-  static Serializer<PreceptSectionLookup> get serializer =>
-      _$preceptSectionLookupSerializer;
+  static Serializer<PreceptSection> get serializer =>
+      _$preceptSectionSerializer;
 }
 
 /// Describes a composite widget, to supplement the standard Flutter Widgets.
