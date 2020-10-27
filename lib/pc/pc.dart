@@ -26,42 +26,14 @@ class PComponent {
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 
-  static pPartFromJson(Map<String, dynamic> json) {
-    return PPart(
-      caption: json['caption'] as String,
-    );
-  }
-
-  Map<String, dynamic> pPartToJson(PPart instance) {
-    return <String, dynamic>{
-      'caption': instance.caption,
-    };
-  }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PPart {
+abstract class PPart {
   final String caption;
 
-  // @JsonKey(fromJson: paramsFromJson, toJson: paramsToJson)
-  //
-  // final PartParams params;
+  PPart({@required this.caption});
 
-  factory PPart.fromJson(Map<String, dynamic> json) => pPartFromJson(json);
-
-  Map<String, dynamic> toJson() => pPartToJson(this);
-
-  PPart({this.caption});
-
-  static pPartFromJson(Map<String, dynamic> json) {
-    return PPart(
-      caption: json['caption'] as String,
-    );
-  }
-
-  Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
-    'caption': instance.caption,
-  };
+  Map<String, dynamic> toJson();
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -153,8 +125,8 @@ class PStringPart extends PPart {
   }
 
   Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
-    'caption': instance.caption,
-  };
+        'caption': instance.caption,
+      };
 }
 
 class _PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
@@ -164,8 +136,6 @@ class _PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
   PPart fromJson(Map<String, dynamic> json) {
     final partType = json["-part-"];
     switch (partType) {
-      case "PPart":
-        return PPart.fromJson(json);
       case "PStringPart":
         return PStringPart.fromJson(json);
       default:
@@ -184,8 +154,6 @@ class _PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
 
 class _PPartMapConverter
     implements JsonConverter<Map<String, PPart>, Map<String, dynamic>> {
-
-
   const _PPartMapConverter();
 
   @override
@@ -211,8 +179,6 @@ class _PPartMapConverter
   PPart _partFromJson(Map<String, dynamic> json) {
     final partType = json["-part-"];
     switch (partType) {
-      case "PPart":
-        return PPart.fromJson(json);
       case "PStringPart":
         return PStringPart.fromJson(json);
       default:
