@@ -4,6 +4,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/model/precept-signin.dart';
 import 'package:precept/precept/model/serializers.dart';
@@ -235,3 +236,15 @@ class DirectPreceptLoader implements PreceptLoader {
 
   bool get isLoaded => _loaded;
 }
+
+class _DateTimeEpochConverter implements JsonConverter<DateTime, int> {
+  const _DateTimeEpochConverter();
+
+  @override
+  DateTime fromJson(int json) => DateTime.fromMillisecondsSinceEpoch(json);
+
+  @override
+  int toJson(DateTime object) => object.millisecondsSinceEpoch;
+}
+
+

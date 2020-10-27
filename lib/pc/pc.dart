@@ -1,10 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/common/exceptions.dart';
+import 'package:precept/precept/part/stringPart.dart';
 
 part 'pc.g.dart';
 
 @JsonSerializable(nullable: false, explicitToJson: true)
+@_PPartMapConverter()
 class PComponent {
   final Map<String, PPart> parts;
+
+  // final PPart part;
   final List<PRoute> routes;
 
   PComponent({this.parts, this.routes});
@@ -47,8 +52,7 @@ class PPart {
     );
   }
 
-  Map<String, dynamic> pPartToJson(PPart instance) =>
-      <String, dynamic>{
+  Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
         'caption': instance.caption,
       };
 }
@@ -141,8 +145,71 @@ class PStringPart extends PPart {
     );
   }
 
-  Map<String, dynamic> pPartToJson(PPart instance) =>
-      <String, dynamic>{
+  Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
         'caption': instance.caption,
       };
+}
+
+class _PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
+  const _PPartConverter();
+
+  @override
+  PPart fromJson(Map<String, dynamic> json) {
+    final partType = json["-part-"];
+    switch (partType) {
+      case "PPart":
+        return PPart.fromJson(json);
+      case "PStringPart":
+        return PStringPart.fromJson(json);
+      default:
+        throw PreceptException("part type $partType not recognised");
+    }
+  }
+
+  @override
+  Map<String, dynamic> toJson(PPart object) {
+    final type = object.runtimeType;
+    Map<String, dynamic> jsonMap = object.toJson();
+    jsonMap["-part-"] = type.toString();
+    return jsonMap;
+  }
+}
+
+class _PPartMapConverter
+    implements JsonConverter<Map<String, PPart>, Map<String, dynamic>> {
+
+
+  const _PPartMapConverter();
+
+  @override
+  Map<String, PPart> fromJson(Map<String, dynamic> json) {
+    Map<String, PPart> outputMap = Map();
+    for (var entry in json.entries) {
+      if (entry.key != "-part-") {
+        outputMap[entry.key] = _PPartConverter().fromJson(entry.value);
+      }
+    }
+    return outputMap;
+  }
+
+  @override
+  Map<String, dynamic> toJson(Map<String, PPart> partMap) {
+    final outputMap = Map<String, dynamic>();
+    for (var entry in partMap.entries) {
+      outputMap[entry.key] = _PPartConverter().toJson(entry.value);
+    }
+    return outputMap;
+  }
+
+  PPart _partFromJson(Map<String, dynamic> json) {
+    final partType = json["-part-"];
+    switch (partType) {
+      case "PPart":
+        return PPart.fromJson(json);
+      case "PStringPart":
+        return PStringPart.fromJson(json);
+      default:
+        throw PreceptException("part type $partType not recognised");
+    }
+  }
 }

@@ -4,7 +4,7 @@ import 'package:precept/pc/pc.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Unit test', () {
+  group('PPart experiment', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -19,7 +19,8 @@ void main() {
         parts: {
           "a": PStringPart(
             caption: "Wiggly part",
-          )
+          ),
+          "B": PStringPart(caption: "part 2"),
         },
         routes: [
           PRoute(
