@@ -16,7 +16,11 @@ void main() {
     test('output', () {
       // given
       final pc = PComponent(
-        parts: {"a": PPart(title: "Wiggly part")},
+        parts: {
+          "a": PStringPart(
+            caption: "Wiggly part",
+          )
+        },
         routes: [
           PRoute(
             path: "user/home",

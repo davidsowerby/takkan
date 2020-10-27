@@ -13,17 +13,44 @@ class PComponent {
       _$PComponentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
+
+  static pPartFromJson(Map<String, dynamic> json) {
+    return PPart(
+      caption: json['caption'] as String,
+    );
+  }
+
+  Map<String, dynamic> pPartToJson(PPart instance) {
+    return <String, dynamic>{
+      'caption': instance.caption,
+    };
+  }
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart {
-  final String title;
+  final String caption;
 
-  factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
+  // @JsonKey(fromJson: paramsFromJson, toJson: paramsToJson)
+  //
+  // final PartParams params;
 
-  Map<String, dynamic> toJson() => _$PPartToJson(this);
+  factory PPart.fromJson(Map<String, dynamic> json) => pPartFromJson(json);
 
-  PPart({this.title});
+  Map<String, dynamic> toJson() => pPartToJson(this);
+
+  PPart({this.caption});
+
+  static pPartFromJson(Map<String, dynamic> json) {
+    return PPart(
+      caption: json['caption'] as String,
+    );
+  }
+
+  Map<String, dynamic> pPartToJson(PPart instance) =>
+      <String, dynamic>{
+        'caption': instance.caption,
+      };
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -38,6 +65,39 @@ class PRoute {
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 }
+
+// @JsonSerializable()
+// class GenericClass<T extends num, S> {
+//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+//   Object fieldObject;
+//
+//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+//   dynamic fieldDynamic;
+//
+//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+//   int fieldInt;
+//
+//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+//   T fieldT;
+//
+//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
+//   S fieldS;
+//
+//   GenericClass();
+//
+//   factory GenericClass.fromJson(Map<String, dynamic> json) =>
+//       _$GenericClassFromJson<T, S>(json);
+//
+//   Map<String, dynamic> toJson() => _$GenericClassToJson(this);
+//
+//   static T _dataFromJson<T, S, U>(Map<String, dynamic> input,
+//       [S other1, U other2]) =>
+//       input['value'] as T;
+//
+//   static Map<String, dynamic> _dataToJson<T, S, U>(T input,
+//       [S other1, U other2]) =>
+//       {'value': input};
+// }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage {
@@ -66,16 +126,23 @@ class PSection {
 
 enum Wiggly { big, small }
 
-class FieldLookup {}
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PStringPart extends PPart {
+  PStringPart({String caption}) : super(caption: caption);
 
-class Blat {
-  final String v1 = "blat1";
-  final String v2 = "blat2";
+  factory PStringPart.fromJson(Map<String, dynamic> json) =>
+      pPartFromJson(json);
+
+  Map<String, dynamic> toJson() => pPartToJson(this);
+
+  static pPartFromJson(Map<String, dynamic> json) {
+    return PStringPart(
+      caption: json['caption'] as String,
+    );
+  }
+
+  Map<String, dynamic> pPartToJson(PPart instance) =>
+      <String, dynamic>{
+        'caption': instance.caption,
+      };
 }
-
-class Blat2 extends Blat {
-  final String v1 = "blat21";
-}
-
-Blat2 b = Blat2();
-String s = b.v2;
