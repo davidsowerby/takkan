@@ -58,34 +58,17 @@ abstract class Part<T, READONLY extends ReadOnlyOptions,
     getLogger(this.runtimeType)
         .d("caption: $caption, EditState readOnly: $readOnly");
     if (readOnly) {
-      return readOnlyWidget(context: context);
+      return buildReadOnlyWidget(context);
     } else {
-      return editModeWidget(context: context);
+      return buildEditModeWidget(context);
     }
   }
-
-  /// looks up the edit state of the parent document or table.  This allows column properties within a table to correctly
-  /// reflect edit state while the table is in focus, witout changes to it reflecting back into the document edit state
-//  bool getEditStatus(BuildContext context) {
-//    final editState = Provider.of<DocumentEditState>(context);
-//    if (editState.hasTableInFocus) {
-//      return editState.tableReadOnly;
-//    } else {
-//      return editState.readOnly;
-//    }
-//  }
 
   Widget buildReadOnlyWidget(BuildContext context);
 
   Widget buildEditModeWidget(BuildContext context);
 
-  Widget readOnlyWidget({BuildContext context}) {
-    return buildReadOnlyWidget(context);
-  }
 
-  Widget editModeWidget({BuildContext context}) {
-    return buildEditModeWidget(context);
-  }
 }
 
 /// Common base class for part specific read only options which support [Part]
