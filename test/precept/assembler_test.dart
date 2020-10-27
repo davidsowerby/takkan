@@ -1,6 +1,6 @@
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
-import 'package:precept/precept/model/precept.dart';
+import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/router.dart';
 import 'package:precept/precept/section/contact/address.dart';
 import 'package:precept/section/base/section.dart';

@@ -5,7 +5,8 @@ import 'package:precept/app/page/homePage.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/model/precept.dart';
+import 'package:precept/pc/pc.dart';
+import 'package:precept/precept/loader.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.
@@ -20,15 +21,15 @@ abstract class RouteLocator {
   /// reason not to do so.
   init();
 
-  /// Returns all [PreceptRoutes] for this locator.   These are combined with other
+  /// Returns all [PRoute]s declared by this locator.   These are combined with other
   /// instances within the [PreceptRouter] to form a single route map.
   ///
   /// Usually asynchronous to allow loader to retrieve data
-  Future<Map<String, PreceptRoute>> routeMap();
+  Future<Map<String, PRoute>> routeMap();
 
-  /// Returns all the [PreceptPart]s declared by the locator.  These are held as a lookup in the
+  /// Returns all the [PPart]s declared by the locator.  These are held as a lookup in the
   /// [router]
-  Future<Map<EnumClass, PreceptPart>> sectionDeclarations();
+  Future<Map<String, PPart>> sectionDeclarations();
 }
 
 /// Maintains a list of [RouteLocator], used to find widgets for routes, and
@@ -50,16 +51,16 @@ class RouteLocatorSet {
 
   /// Returns a widget from the first [RouteLocator] in [locators] which recognises
   /// [settings.name]
-  Future<Map<String, PreceptRoute>> routeMap() async {
-    Map<String, PreceptRoute> masterMap = Map();
+  Future<Map<String, PRoute>> routeMap() async {
+    Map<String, PRoute> masterMap = Map();
     for (RouteLocator locator in locators) {
       masterMap.addAll(await locator.routeMap());
     }
     return masterMap;
   }
 
-  Future<Map<EnumClass, PreceptPart>> sectionDeclarations() async {
-    Map<EnumClass, PreceptPart> masterMap = Map();
+  Future<Map<String, PPart>> sectionDeclarations() async {
+    Map<String, PPart> masterMap = Map();
     for (RouteLocator locator in locators) {
       masterMap.addAll(await locator.sectionDeclarations());
     }
@@ -89,15 +90,15 @@ class RouteLocatorSet {
 class PreceptRouter {
   static PreceptRouter _instance;
   final RouteLocatorSet _locatorSet;
-  final Map<String, PreceptRoute> _preceptRoutes = Map();
-  final Map<EnumClass, PreceptPart> _sections = Map();
+  final Map<String, PRoute> _preceptRoutes = Map();
+  final Map<String, PPart> _parts = Map();
 
   PreceptRouter._private() : _locatorSet = inject<RouteLocatorSet>();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     getLogger(this.runtimeType).d(
         "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
-    PreceptRoute preceptRoute = _preceptRoutes[settings.name];
+    PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
       // TODO: Should do we catch the unrecognised route here or somewhere else?
       throw ConfigurationException("Unknown route ${settings.name}");
@@ -110,12 +111,12 @@ class PreceptRouter {
     return _instance;
   }
 
-  /// Loads all [PreceptRoutes] into [routeMap], mapped by route path, and all section declarations into _sections.
+  /// Loads all [PRoutes] into [routeMap], mapped by route path, and all section declarations into _sections.
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
   buildLookups() async {
     _preceptRoutes.addAll(await _locatorSet.routeMap());
 
-    _sections.addAll(await _locatorSet.sectionDeclarations());
+    _parts.addAll(await _locatorSet.sectionDeclarations());
   }
 
   Route<dynamic> _route(Widget page) {
@@ -127,11 +128,12 @@ class PreceptRouter {
   }
 
   hasSection(EnumClass key) {
-    return _sections.containsKey(key);
+    return _parts.containsKey(key);
   }
 
-  PreceptPart section(PreceptSection sectionLookup) {
-    return _sections[sectionLookup.sectionKey];
+  PPart section(PSection sectionLookup) {
+    throw UnimplementedError();
+    // return _parts[sectionLookup.sectionKey];
   }
 }
 
@@ -156,11 +158,11 @@ class PreceptRouteLocator implements RouteLocator {
   PreceptRouteLocator({@required this.loader});
 
   @override
-  Future<Map<String, PreceptRoute>> routeMap() async {
+  Future<Map<String, PRoute>> routeMap() async {
     _model = await loader.load();
-    Map<String, PreceptRoute> map = Map();
-    for (PreceptComponent component in _model.components) {
-      for (PreceptRoute preceptRoute in component.routes) {
+    Map<String, PRoute> map = Map();
+    for (PComponent component in _model.components) {
+      for (PRoute preceptRoute in component.routes) {
         map[preceptRoute.path] = preceptRoute;
       }
     }
@@ -168,11 +170,11 @@ class PreceptRouteLocator implements RouteLocator {
   }
 
   @override
-  Future<Map<EnumClass, PreceptPart>> sectionDeclarations() async {
+  Future<Map<String, PPart>> sectionDeclarations() async {
     _model = await loader.load();
-    Map<EnumClass, PreceptPart> map = Map();
-    for (PreceptComponent component in _model.components) {
-      map.addAll(component.parts.asMap());
+    Map<String, PPart> map = Map();
+    for (PComponent component in _model.components) {
+      map.addAll(component.parts);
     }
     return map;
   }

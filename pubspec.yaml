@@ -27,7 +27,6 @@ dependencies:
   cloud_firestore: ^0.13.6
   firebase_storage: ^3.1.6
   logger: ^0.9.1
-  built_value: ^7.1.0
   provider: ^4.1.2
   image_picker: ^0.6.7
   adaptive_dialog: ^0.6.4
@@ -46,7 +45,6 @@ dev_dependencies:
   build:
   build_runner:
   source_gen:
-  built_value_generator:
   json_serializable: ^3.2.0
 
 # For information on the generic Dart part of this file, see the

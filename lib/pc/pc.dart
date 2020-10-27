@@ -1,8 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/common/exceptions.dart';
-import 'package:precept/precept/part/stringPart.dart';
 
 part 'pc.g.dart';
+
+@JsonSerializable(nullable: false, explicitToJson: true)
+class Precept {
+  final List<PComponent> components;
+
+  Precept({@required this.components});
+}
 
 @JsonSerializable(nullable: false, explicitToJson: true)
 @_PPartMapConverter()
@@ -53,8 +60,8 @@ class PPart {
   }
 
   Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
-        'caption': instance.caption,
-      };
+    'caption': instance.caption,
+  };
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -146,8 +153,8 @@ class PStringPart extends PPart {
   }
 
   Map<String, dynamic> pPartToJson(PPart instance) => <String, dynamic>{
-        'caption': instance.caption,
-      };
+    'caption': instance.caption,
+  };
 }
 
 class _PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
