@@ -19,7 +19,7 @@ class PComponent {
   // final PPart part;
   final List<PRoute> routes;
 
-  PComponent({this.parts, this.routes});
+  PComponent({this.parts, @required this.routes});
 
   factory PComponent.fromJson(Map<String, dynamic> json) =>
       _$PComponentFromJson(json);
@@ -31,7 +31,7 @@ class PComponent {
 abstract class PPart {
   final String caption;
 
-  PPart({@required this.caption});
+  PPart({this.caption});
 
   Map<String, dynamic> toJson();
 }
@@ -42,53 +42,19 @@ class PRoute {
 
   final PPage page;
 
-  PRoute({this.path, this.page});
+  PRoute({@required this.path, @required this.page});
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 }
-
-// @JsonSerializable()
-// class GenericClass<T extends num, S> {
-//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
-//   Object fieldObject;
-//
-//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
-//   dynamic fieldDynamic;
-//
-//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
-//   int fieldInt;
-//
-//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
-//   T fieldT;
-//
-//   @JsonKey(fromJson: _dataFromJson, toJson: _dataToJson)
-//   S fieldS;
-//
-//   GenericClass();
-//
-//   factory GenericClass.fromJson(Map<String, dynamic> json) =>
-//       _$GenericClassFromJson<T, S>(json);
-//
-//   Map<String, dynamic> toJson() => _$GenericClassToJson(this);
-//
-//   static T _dataFromJson<T, S, U>(Map<String, dynamic> input,
-//       [S other1, U other2]) =>
-//       input['value'] as T;
-//
-//   static Map<String, dynamic> _dataToJson<T, S, U>(T input,
-//       [S other1, U other2]) =>
-//       {'value': input};
-// }
-
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage {
   final String title;
 
   final List<PSection> sections;
 
-  PPage({this.title, this.sections});
+  PPage({this.title, @required this.sections});
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -104,7 +70,7 @@ class PSection {
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
-  PSection({this.wiggly});
+  PSection({@required this.wiggly});
 }
 
 enum Wiggly { big, small }
