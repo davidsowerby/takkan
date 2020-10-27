@@ -10,10 +10,11 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// The [Part] series display data from the database of types.
 ///
 /// [Part] implementations are effectively builders that display a read only or editable Widget.  The Widget displayed
-/// depends on the [SourceDataType], edit mode, and display option to determine.
+/// depends on the [SourceDataType], edit mode, and display option.
 ///
-/// The source data type goes beyond the raw data types supported by Firestore - it also takes into account how the data
-/// is used.  For example, a String may be just that, or it may be the currently selected value from a set of options.
+/// The source data type goes beyond the raw data types typically provided by a backend such as Firestore or Parse Server.
+/// It also takes into account how the data is used.
+/// For example, a String may be just that, or it may be the currently selected value from a set of options.
 ///
 /// There is, therefore, a [StringPart] and a [StringSingleSelectPart] to cater for both situations.
 ///

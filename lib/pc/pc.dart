@@ -9,29 +9,34 @@ class Precept {
   final List<PComponent> components;
 
   Precept({@required this.components});
+
+  factory Precept.fromJson(Map<String, dynamic> json) =>
+      _$PreceptFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PreceptToJson(this);
 }
 
 @JsonSerializable(nullable: false, explicitToJson: true)
 @_PPartMapConverter()
 class PComponent {
   final Map<String, PPart> parts;
+  final String name;
 
-  // final PPart part;
   final List<PRoute> routes;
 
-  PComponent({this.parts, @required this.routes});
+  PComponent({this.parts, @required this.routes, @required this.name});
 
   factory PComponent.fromJson(Map<String, dynamic> json) =>
       _$PComponentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
-
 }
 
 abstract class PPart {
   final String caption;
+  final String property;
 
-  PPart({this.caption});
+  PPart({this.caption, @required this.property});
 
   Map<String, dynamic> toJson();
 }
@@ -48,6 +53,7 @@ class PRoute {
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 }
+
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage {
   final String title;
@@ -62,22 +68,22 @@ class PPage {
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
+@_PPartConverter()
 class PSection {
-  final Wiggly wiggly;
+  final List<PPart> parts;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
-  PSection({@required this.wiggly});
+  PSection({@required this.parts});
 }
-
-enum Wiggly { big, small }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PStringPart extends PPart {
-  PStringPart({String caption}) : super(caption: caption);
+  PStringPart({String caption, @required String property})
+      : super(caption: caption, property: property);
 
   factory PStringPart.fromJson(Map<String, dynamic> json) =>
       pPartFromJson(json);
@@ -87,6 +93,7 @@ class PStringPart extends PPart {
   static pPartFromJson(Map<String, dynamic> json) {
     return PStringPart(
       caption: json['caption'] as String,
+      property: json['property'] as String,
     );
   }
 
@@ -136,10 +143,12 @@ class _PPartMapConverter
   @override
   Map<String, dynamic> toJson(Map<String, PPart> partMap) {
     final outputMap = Map<String, dynamic>();
+    if (partMap == null) {
+      return outputMap;
+    }
     for (var entry in partMap.entries) {
       outputMap[entry.key] = _PPartConverter().toJson(entry.value);
     }
     return outputMap;
   }
-
 }

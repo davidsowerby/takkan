@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:precept/pc/pc.dart';
 import 'package:test/test.dart';
 
+import '../../data/testModel/testModel.dart';
+
 void main() {
-  group('PPart experiment', () {
+  group('Round trip Precept model to JSON', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -15,31 +17,14 @@ void main() {
 
     test('output', () {
       // given
-      final pc = PComponent(
-        parts: {
-          "a": PStringPart(
-            caption: "Wiggly part",
-          ),
-          "B": PStringPart(caption: "part 2"),
-        },
-        routes: [
-          PRoute(
-            path: "user/home",
-            page: PPage(
-              title: "Big Page",
-              sections: [
-                PSection(wiggly: Wiggly.big),
-              ],
-            ),
-          )
-        ],
-      );
+      Precept model = testModel;
+
       // when
 
       // then
-      Map<String, dynamic> pco = pc.toJson();
-      PComponent pc2 = PComponent.fromJson(pco);
-      final String pcj = json.encode(pc);
+      Map<String, dynamic> pco = model.toJson();
+      Precept pc2 = Precept.fromJson(pco);
+      final String pcj = json.encode(model);
       final String pc2j = json.encode(pc2);
       expect(pcj, pc2j);
     });
