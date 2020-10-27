@@ -176,13 +176,4 @@ class _PPartMapConverter
     return outputMap;
   }
 
-  PPart _partFromJson(Map<String, dynamic> json) {
-    final partType = json["-part-"];
-    switch (partType) {
-      case "PStringPart":
-        return PStringPart.fromJson(json);
-      default:
-        throw PreceptException("part type $partType not recognised");
-    }
-  }
 }

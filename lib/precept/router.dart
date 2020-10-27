@@ -1,4 +1,3 @@
-import 'package:built_value/built_value.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/app/page/homePage.dart';
@@ -127,7 +126,7 @@ class PreceptRouter {
     return _preceptRoutes.containsKey(path);
   }
 
-  hasSection(EnumClass key) {
+  hasSection(Object key) {
     return _parts.containsKey(key);
   }
 
