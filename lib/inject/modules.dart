@@ -18,6 +18,7 @@ precept() {
       PartLibrary(modules: [PreceptPartLibraryModule()]));
   getIt.registerSingleton<StyleLibrary>(
       StyleLibrary(modules: [PreceptStyleLibraryModule()]));
+  getIt.registerSingleton<PreceptRouter>(PreceptRouter());
   // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
 }
 

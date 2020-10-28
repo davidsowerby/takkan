@@ -6,15 +6,15 @@ import 'package:precept/precept/part/partConverter.dart';
 part 'model.g.dart';
 
 @JsonSerializable(nullable: false, explicitToJson: true)
-class Precept {
+class PreceptModel {
   final List<PComponent> components;
 
-  Precept({@required this.components});
+  PreceptModel({@required this.components});
 
-  factory Precept.fromJson(Map<String, dynamic> json) =>
-      _$PreceptFromJson(json);
+  factory PreceptModel.fromJson(Map<String, dynamic> json) =>
+      _$PreceptModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PreceptToJson(this);
+  Map<String, dynamic> toJson() => _$PreceptModelToJson(this);
 }
 
 @JsonSerializable(nullable: false, explicitToJson: true)

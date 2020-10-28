@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/part.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
@@ -19,6 +20,8 @@ class PartLibrary {
     }
     return null;
   }
+
+  init({@required List<PreceptModel> models}) {}
 }
 
 abstract class PartLibraryModule {

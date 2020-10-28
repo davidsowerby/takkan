@@ -17,13 +17,13 @@ void main() {
 
     test('output', () {
       // given
-      Precept model = testModel;
+      PreceptModel model = testModel;
 
       // when
 
       // then
       Map<String, dynamic> pco = model.toJson();
-      Precept pc2 = Precept.fromJson(pco);
+      PreceptModel pc2 = PreceptModel.fromJson(pco);
       final String pcj = json.encode(model);
       final String pc2j = json.encode(pc2);
       expect(pcj, pc2j);

@@ -12,7 +12,7 @@ void main() {
   group('Assemble', () {
     setUpAll(() async {
       setupInjector(buildInjector);
-      await router.buildLookups();
+      await router.init();
     });
 
     tearDownAll(() {});

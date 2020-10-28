@@ -68,13 +68,13 @@ class RouteLocatorSet {
   }
 }
 
-/// This singleton is accessible via [router], and needs to be declared for your
-/// [MaterialApp.router]
+/// This class should be used as a singleton. It is accessible either via [router],
+/// or by invoking inject<PreceptRouter>() - both will return the same instance
 ///
 /// It builds a Precept route map, [_preceptRoutes], from all the registered [RouteLocator]s, via
 /// [RouteLocatorSet]
 ///
-/// Example:
+/// Example of use:
 ///
 /// return MaterialApp(
 //       title: 'Flutter Demo',
@@ -88,16 +88,16 @@ class RouteLocatorSet {
 //     );
 ///
 class PreceptRouter {
-  static PreceptRouter _instance;
-  final RouteLocatorSet _locatorSet;
-  final Map<String, PRoute> _preceptRoutes = Map();
-  final Map<String, PPart> _parts = Map();
 
-  PreceptRouter._private() : _locatorSet = inject<RouteLocatorSet>();
+  final Map<String, PRoute> _preceptRoutes = Map();
+  bool _indexed = false;
+
+  PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     getLogger(this.runtimeType).d(
-        "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
+        "Requested route is: ${settings.name} with arguments ${settings
+            .arguments}.");
     PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
       // TODO: Should do we catch the unrecognised route here or somewhere else?
@@ -106,18 +106,20 @@ class PreceptRouter {
     return _route(MyHomePage());
   }
 
-  static PreceptRouter get instance {
-    _instance ??= PreceptRouter._private();
-    return _instance;
-  }
-
-  /// Loads all [PRoutes] into [routeMap], mapped by route path, and all section declarations into _sections.
+  /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  buildLookups() async {
-    _preceptRoutes.addAll(await _locatorSet.routeMap());
-
-    _parts.addAll(await _locatorSet.sectionDeclarations());
+  init({@required List<PreceptModel> models}) {
+    for (PreceptModel model in models) {
+      for (PComponent component in model.components) {
+        for (PRoute r in component.routes) {
+          _preceptRoutes[r.path] = r;
+        }
+      }
+    }
+    _indexed = true;
   }
+
+  bool get ready => _indexed;
 
   Route<dynamic> _route(Widget page) {
     return MaterialPageRoute(builder: (_) => page);
@@ -127,14 +129,6 @@ class PreceptRouter {
     return _preceptRoutes.containsKey(path);
   }
 
-  hasSection(Object key) {
-    return _parts.containsKey(key);
-  }
-
-  PPart section(PSection sectionLookup) {
-    throw UnimplementedError();
-    // return _parts[sectionLookup.sectionKey];
-  }
 }
 
 /// Provides a way to modify the options for the [PreceptRouter].
@@ -146,14 +140,13 @@ class PreceptRouterConfig {
   const PreceptRouterConfig({this.preceptFirst = true, this.alternateRouter});
 }
 
-PreceptRouter _router = PreceptRouter.instance;
 
-PreceptRouter get router => _router;
+PreceptRouter get router => inject<PreceptRouter>();
 
 class PreceptRouteLocator implements RouteLocator {
-  bool _initialised = false;
+  bool _loaded = false;
   final PreceptLoader loader;
-  Precept _model;
+  PreceptModel _model;
 
   PreceptRouteLocator({@required this.loader});
 
@@ -179,34 +172,18 @@ class PreceptRouteLocator implements RouteLocator {
     return map;
   }
 
-  // Route generateRoute(RouteSettings settings) {
-  //   if (!_initialised) {
-  //     throw PreceptException(
-  //         "RouteLocator must be initialised before requesting a route");
-  //   }
-  //   switch (settings.name) {
-  //     case "/":
-  //       return _route(MyHomePage(
-  //         title: "Wiggly",
-  //       ));
-  //     // default:
-  //     //   PreceptRoute route = _model.routeFromPath(path: settings.name);
-  //     //   return _route(assembler.assemblePage(route: route));
-  //   }
-  // }
-
   Route<dynamic> _route(Widget page) {
     return MaterialPageRoute(builder: (_) => page);
   }
 
   @override
   init() async {
-    if (!_initialised) {
+    if (!_loaded) {
       _model = await loader.load();
-      _initialised = true;
+      _loaded = true;
     }
   }
 
   @override
-  bool get isInitialised => _initialised;
+  bool get isInitialised => _loaded;
 }

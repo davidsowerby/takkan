@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:precept/app/inject/setupInject.dart';
 import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/precept.dart';
 import 'package:precept/precept/router.dart';
 
 void main() {
   setupInjector(injectorBindings);
+  precept.init();
   runApp(PreceptApp());
 }
 
@@ -22,9 +25,4 @@ class PreceptApp extends StatelessWidget {
       onGenerateRoute: router.generateRoute,
     );
   }
-}
-
-
-injectorBindings() {
-  preceptInjection();
 }

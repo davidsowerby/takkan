@@ -1,7 +1,7 @@
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
-final testModel = PreceptModel(components: [
+final kitchenSinkModel = PreceptModel(components: [
   PComponent(
     name: "core",
     routes: [
