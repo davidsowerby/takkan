@@ -1,4 +1,5 @@
-import 'package:precept/pc/pc.dart';
+import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/part/string/stringPart.dart';
 
 final testModel = Precept(components: [
   PComponent(

@@ -1,86 +1,73 @@
-import 'package:flutter/material.dart';
-import 'package:precept/backend/common/documentId.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/precept/part/pPart.dart';
+import 'package:precept/precept/part/partConverter.dart';
 
-/// Model implementations are a tree structure of objects matching the tree structure of a document.
-/// They are used in conjunction with [Binding] to give read and write access to underlying data
-/// A common interface for [SectionModel] and [DocumentModel]
-/// [modelProperties] is a list of property names which should be transformed into sub-models
-/// [modelListProperties] is a list of property names which should be transformed into lists of sub-models
-abstract class DataModel {
-  final ModelBinding baseBinding;
-  final List<String> modelProperties;
-  final List<String> modelListProperties;
+part 'model.g.dart';
 
-  DataModel(
-      {@required this.baseBinding,
-      @required this.modelProperties,
-      @required this.modelListProperties}) {
-    /// Reading json is likely to produce Map<dynamic,dynamic> which messes up type inference
-    /// So we have to re-create with the correct generics
-    final Map<String, dynamic> data = baseBinding.read();
-    for (String modelProperty in modelProperties) {
-      if (data[modelProperty] == null) {
-        data[modelProperty] = Map<String, dynamic>();
-      } else {
-        data[modelProperty] = Map<String, dynamic>.from(data[modelProperty]);
-      }
-    }
+@JsonSerializable(nullable: false, explicitToJson: true)
+class Precept {
+  final List<PComponent> components;
 
-    /// We need to do the same for a list of models
-    for (String modelListProperty in modelListProperties) {
-      final List list = data[modelListProperty];
-      final newList = List<Map<String, dynamic>>();
-      if (list != null) {
-        for (Map map in list) {
-          newList.add(Map<String, dynamic>.from(map));
-        }
-        data[modelListProperty] = newList;
-      }
-    }
-  }
+  Precept({@required this.components});
 
-  ModelBinding modelBinding({String property}) {
-    baseBinding.read()[property] =
-        Map<String, dynamic>.from(baseBinding.read()[property]);
-    return baseBinding.modelBinding(property: property);
-  }
+  factory Precept.fromJson(Map<String, dynamic> json) =>
+      _$PreceptFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PreceptToJson(this);
 }
 
-/// A model used purely for configuration of a [DocumentPageSection] or [Document], and when used for configuration is read only.
-abstract class Configuration extends DataModel {
-  Configuration(
-      {@required ModelBinding baseBinding,
-      @required List<String> modelProperties,
-      @required List<String> modelListProperties})
-      : super(
-          baseBinding: baseBinding,
-          modelProperties: modelProperties,
-          modelListProperties: modelListProperties,
-        );
+@JsonSerializable(nullable: false, explicitToJson: true)
+@PPartMapConverter()
+class PComponent {
+  final Map<String, PPart> parts;
+  final String name;
+
+  final List<PRoute> routes;
+
+  PComponent({this.parts, @required this.routes, @required this.name});
+
+  factory PComponent.fromJson(Map<String, dynamic> json) =>
+      _$PComponentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PComponentToJson(this);
 }
 
-/// A model representing the elements of a document used to display in a [ListTile].
-class CollectionTileModel {
-  final String titleProperty;
-  final String subtitleProperty;
-  final TitledDocumentModel model;
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PRoute {
+  final String path;
 
-  CollectionTileModel(
-      {@required this.model,
-      this.titleProperty = "title",
-      this.subtitleProperty = "subtitle"});
+  final PPage page;
 
-  String get title {
-    return model.title.read();
-  }
+  PRoute({@required this.path, @required this.page});
 
-  String get subtitle {
-    return model.subtitle.read();
-  }
+  factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
 
-  DocumentId get documentId {
-    return model.documentId;
-  }
+  Map<String, dynamic> toJson() => _$PRouteToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PPage {
+  final String title;
+
+  final List<PSection> sections;
+
+  PPage({this.title, @required this.sections});
+
+  factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PPageToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+@PPartConverter()
+class PSection {
+  final List<PPart> parts;
+
+  factory PSection.fromJson(Map<String, dynamic> json) =>
+      _$PSectionFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PSectionToJson(this);
+
+  PSection({@required this.parts});
 }

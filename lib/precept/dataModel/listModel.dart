@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
-import 'model.dart';
+import 'dataModel.dart';
 
 /// Base class for presenting a list of models, which themselves are most easily represented as subclasses of [ListItemModel]
 abstract class ListModel<MODEL extends ListItemModel> {

@@ -4,8 +4,9 @@ import 'package:precept/app/page/homePage.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/pc/pc.dart';
 import 'package:precept/precept/loader.dart';
+import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/part/pPart.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.

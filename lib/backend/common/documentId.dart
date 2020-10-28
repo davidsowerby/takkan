@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 
 abstract class DocumentIdConverter {
   DocumentId fromModel(DocumentModel model);

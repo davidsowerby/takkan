@@ -8,11 +8,11 @@ import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/common/toast.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 import '../../helper/backend.dart';
 import '../../helper/listener.dart';

@@ -1,8 +1,8 @@
+import 'package:flutter/widgets.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/router.dart';
-import 'package:precept/precept/section/contact/address.dart';
 import 'package:precept/section/base/section.dart';
 import 'package:test/test.dart';
 
@@ -32,7 +32,7 @@ void main() {
       expect(output.length, 1);
       expect(output[0], isA<Section>());
       Section section = output[0];
-      expect(section.child, isA<AddressWidget>());
+      expect(section.child, isA<Text>());
     });
   });
 }
@@ -40,6 +40,6 @@ void main() {
 buildInjector() {
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: [
-        PreceptRouteLocator(loader: DirectPreceptLoader(model: testModel))
-      ]));
+    PreceptRouteLocator(loader: DirectPreceptLoader(model: testModel))
+  ]));
 }

@@ -3,6 +3,7 @@ import 'package:precept/common/logger.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 /// [T] is the data type of the list items
 class ListBinding<T> extends CollectionBinding<List<T>> {

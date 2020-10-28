@@ -3,6 +3,7 @@ import 'package:precept/common/exceptions.dart';
 import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
   const MapBinding.private(

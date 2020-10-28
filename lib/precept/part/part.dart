@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:precept/common/editState/sectionEditState.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/precept/binding/binding.dart';
+import 'package:precept/precept/part/pPart.dart';
 import 'package:provider/provider.dart';
 
 enum DisplayType { text, datePicker }
@@ -29,34 +30,18 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// A caption may optionally be displayed in either read only or edit mode.
 ///
 /// [T] the type of data read from the database
-abstract class Part<T, READONLY extends ReadOnlyOptions,
-    EDITMODE extends EditModeOptions> extends StatelessWidget {
-  final Binding<T> binding;
-  final String caption;
-  final IconData icon;
-  final EdgeInsets padding;
-  final EDITMODE editModeOptions;
-  final READONLY readOnlyOptions;
-  final SourceDataType sourceDataType;
+abstract class Part extends StatelessWidget {
+  final PPart precept;
 
-  const Part({
-    Key key,
-    @required this.sourceDataType,
-    this.binding,
-    this.padding = const EdgeInsets.only(bottom: 8.0),
-    this.caption,
-    this.icon,
-    this.editModeOptions,
-    this.readOnlyOptions,
-  }) : super(key: key);
+  const Part({@required this.precept}) : super();
 
   @override
   Widget build(BuildContext context) {
     final SectionEditState sectionEditState =
         Provider.of<SectionEditState>(context);
-    final readOnly = sectionEditState.readMode;
-    getLogger(this.runtimeType)
-        .d("caption: $caption, EditState readOnly: $readOnly");
+    final readOnly = precept.readOnly || sectionEditState.readMode;
+    getLogger(this.runtimeType).d(
+        "caption: ${precept.caption}, EditState readOnly: ${precept.readOnly}");
     if (readOnly) {
       return buildReadOnlyWidget(context);
     } else {
@@ -67,8 +52,6 @@ abstract class Part<T, READONLY extends ReadOnlyOptions,
   Widget buildReadOnlyWidget(BuildContext context);
 
   Widget buildEditModeWidget(BuildContext context);
-
-
 }
 
 /// Common base class for part specific read only options which support [Part]

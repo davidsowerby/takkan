@@ -2,7 +2,7 @@ import 'package:precept/backend/common/document.dart';
 import 'package:precept/backend/common/documentId.dart';
 import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/backend.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 
 /// The [dataStore] must be held externally, as this delegate may get re-created
 class MockBackendDelegate implements BackendDelegate {

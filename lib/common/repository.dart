@@ -4,7 +4,7 @@ import 'package:precept/backend/common/documentId.dart';
 import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/backend.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 
 abstract class Repository<MODEL extends DocumentModel> {
   final BackendDelegate backendDelegate = inject<BackendDelegate>();

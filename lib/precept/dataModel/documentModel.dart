@@ -5,10 +5,10 @@ import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/repository.dart';
 import 'package:precept/common/toast.dart';
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 /// A model at the level of a document.  Conceptually, a user only ever views / modifies one document at a time
 /// This might mean that a document has to be correlated from multiple sources to be presented as a single entity.

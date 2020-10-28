@@ -6,6 +6,7 @@ import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 import '../../helper/catcher.dart';
 import '../../helper/listener.dart';

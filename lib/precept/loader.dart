@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/pc/pc.dart';
+import 'package:precept/precept/model/model.dart';
 
 /// Common interface to load a Precept instance from any source
 abstract class PreceptLoader {

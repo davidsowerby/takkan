@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept/backend/common/response.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 
 /// [readOnlyMode] means the document is read only, but can be changed to edit mode by the user if [_canEdit] is true
 /// [documentEditMode] determines whether to use a Form or Wizard when editing.  Ignored if [canChangeEdit] is false

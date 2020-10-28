@@ -1,6 +1,54 @@
+import 'package:flutter/foundation.dart';
+import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/part/part.dart';
+import 'package:precept/precept/part/string/stringPart.dart';
 
+enum StandardPart { StringPart }
 
+class PartLibrary {
+  final List<PartLibraryModule> modules;
 
-enum CorePart { address, contact }
+  const PartLibrary({@required this.modules});
 
-class PartLibrary {}
+  Part findPart(Object key) {
+    for (var module in modules) {
+      final result = module.findPart(key);
+      if (result != null) {
+        return result;
+      }
+    }
+    return null;
+  }
+}
+
+abstract class PartLibraryModule {
+  final Type keyType;
+
+  const PartLibraryModule({@required this.keyType});
+
+  Part findPart(Object key) {
+    if (key.runtimeType == keyType) {
+      return doFindPart(key);
+    }
+    return null;
+  }
+
+  Part doFindPart(Object key);
+}
+
+class PreceptPartLibraryModule extends PartLibraryModule {
+  PreceptPartLibraryModule() : super(keyType: StandardPart);
+
+  @override
+  Part doFindPart(Object key) {
+    final StandardPart k = key;
+    switch (k) {
+      case StandardPart.StringPart:
+        return StringPart();
+      default:
+        return null;
+    }
+  }
+}
+
+PartLibrary get partLibrary => inject<PartLibrary>();

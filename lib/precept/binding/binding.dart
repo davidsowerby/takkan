@@ -3,6 +3,7 @@ import 'package:precept/common/exceptions.dart';
 import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 
 /// [T] is model
 /// All the static constructors ensure that the [editHost] and [firstLevelKey] are propagated down the document tree.
@@ -134,25 +135,6 @@ abstract class CollectionBinding<T> extends Binding<T> {
   }
 }
 
-class StringBinding extends Binding<String> {
-  const StringBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      TemporaryDocument editHost})
-      : super.private(
-            parent: parent,
-            property: property,
-            index: index,
-            firstLevelKey: firstLevelKey,
-            editHost: editHost);
-
-  @override
-  String emptyValue() {
-    return "";
-  }
-}
 
 class DynamicBinding extends Binding<dynamic> {
   const DynamicBinding.private(

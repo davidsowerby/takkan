@@ -1,7 +1,7 @@
 import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/binding.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept/precept/part/string/stringBinding.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';

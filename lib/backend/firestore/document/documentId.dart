@@ -1,5 +1,5 @@
 import 'package:precept/backend/common/documentId.dart';
-import 'package:precept/precept/mutable/model.dart';
+import 'package:precept/precept/dataModel/documentModel.dart';
 
 class FirebaseDocumentIdConverter implements DocumentIdConverter {
   @override
