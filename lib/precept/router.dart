@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/app/page/homePage.dart';
-import 'package:precept/common/exceptions.dart';
+import 'package:precept/app/page/errorPage.dart';
+import 'package:precept/app/page/standardPage.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/pPart.dart';
@@ -88,22 +89,22 @@ class RouteLocatorSet {
 //     );
 ///
 class PreceptRouter {
-
   final Map<String, PRoute> _preceptRoutes = Map();
   bool _indexed = false;
+  final PreceptPageAssembler assembler = PreceptPageAssembler();
 
   PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     getLogger(this.runtimeType).d(
-        "Requested route is: ${settings.name} with arguments ${settings
-            .arguments}.");
+        "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
     PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
-      // TODO: Should do we catch the unrecognised route here or somewhere else?
-      throw ConfigurationException("Unknown route ${settings.name}");
+      return _route(ErrorPage(
+          message: "Requested route: '${settings.name}' not recognised"));
     }
-    return _route(MyHomePage());
+    return _route(StandardPage(
+        sections: assembler.assembleSections(route: preceptRoute)));
   }
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
@@ -128,7 +129,6 @@ class PreceptRouter {
   hasRoute(String path) {
     return _preceptRoutes.containsKey(path);
   }
-
 }
 
 /// Provides a way to modify the options for the [PreceptRouter].
@@ -139,7 +139,6 @@ class PreceptRouterConfig {
 
   const PreceptRouterConfig({this.preceptFirst = true, this.alternateRouter});
 }
-
 
 PreceptRouter get router => inject<PreceptRouter>();
 

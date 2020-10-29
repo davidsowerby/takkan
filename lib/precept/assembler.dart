@@ -3,9 +3,6 @@ import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/section.dart';
 
 class PreceptPageAssembler {
-  Widget assemblePage({@required PRoute route}) {
-    return ListView(children: assembleSections(route: route));
-  }
 
   Section assembleSection(PSection sectionLookup) {
     return Section(child: Text("Replace this with a proper part lookup"));

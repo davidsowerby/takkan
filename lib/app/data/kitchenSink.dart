@@ -6,9 +6,9 @@ final kitchenSinkModel = PreceptModel(components: [
     name: "core",
     routes: [
       PRoute(
-          path: "/user/home",
+          path: "/",
           page: PPage(
-            title: "My Home",
+            title: "Home",
             sections: [
               PSection(parts: [PStringPart(property: "name")])
             ],
