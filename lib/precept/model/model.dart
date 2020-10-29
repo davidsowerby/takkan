@@ -63,11 +63,26 @@ class PPage {
 @PPartConverter()
 class PSection {
   final List<PPart> parts;
+  final PSectionHeading heading;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
-  PSection({@required this.parts});
+  PSection({@required this.parts, this.heading,});
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PSectionHeading {
+  final String title;
+  final bool expandable;
+  final bool openExpanded;
+
+  PSectionHeading({@required this.title, this.expandable=true, this.openExpanded=true,}) : super();
+
+  factory PSectionHeading.fromJson(Map<String, dynamic> json) =>
+      _$PSectionHeadingFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PSectionHeadingToJson(this);
 }
