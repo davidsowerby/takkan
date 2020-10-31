@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/common/action/actionIcon.dart';
 import 'package:precept/common/action/toggleEdit.dart';
-import 'package:precept/common/editState/sectionEditState.dart';
+import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// Toggles the read only state of the nearest [SectionEditState]
@@ -13,9 +13,9 @@ class EditSaveAction extends StatelessWidget with ToggleSectionEditState {
 
   @override
   Widget build(BuildContext context) {
-    final SectionEditState sectionEditState =
-        Provider.of<SectionEditState>(context);
-    final icon = (sectionEditState.readMode) ? Icons.edit : Icons.check;
+    final SectionState sectionState =
+        Provider.of<SectionState>(context);
+    final icon = (sectionState.readMode) ? Icons.edit : Icons.check;
     return ActionIcon(
       iconData: icon,
       action: () => _execute(context),

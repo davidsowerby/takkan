@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
 
@@ -33,13 +34,16 @@ class PComponent {
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 }
 
+
+
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute {
   final String path;
 
   final PPage page;
+  final PDocument document;
 
-  PRoute({@required this.path, @required this.page});
+  PRoute({@required this.path, @required this.page, @required this.document});
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
 
@@ -52,7 +56,7 @@ class PPage {
 
   final List<PSection> sections;
 
-  PPage({this.title, @required this.sections});
+  PPage({@required this.title, @required this.sections});
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -64,13 +68,18 @@ class PPage {
 class PSection {
   final List<PPart> parts;
   final PSectionHeading heading;
+  final String property;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
-  PSection({@required this.parts, this.heading,});
+  PSection({
+    @required this.parts,
+    this.heading,
+    @required this.property,
+  });
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -79,7 +88,11 @@ class PSectionHeading {
   final bool expandable;
   final bool openExpanded;
 
-  PSectionHeading({@required this.title, this.expandable=true, this.openExpanded=true,}) : super();
+  PSectionHeading({
+    @required this.title,
+    this.expandable = true,
+    this.openExpanded = true,
+  }) : super();
 
   factory PSectionHeading.fromJson(Map<String, dynamic> json) =>
       _$PSectionHeadingFromJson(json);

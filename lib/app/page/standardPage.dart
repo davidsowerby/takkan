@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/model/model.dart';
-import 'package:precept/section/base/section.dart';
 
 class StandardPage extends StatelessWidget {
-  StandardPage({Key key, @required this.sections, this.preceptPage})
+  StandardPage({Key key, @required this.preceptRoute})
       : super(key: key);
 
-  final List<Section> sections;
-  final PPage preceptPage;
+  final PRoute preceptRoute;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(preceptPage.title),
+        title: Text(preceptRoute.page.title),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: sections,
+          children: inject<PreceptPageAssembler>().assembleSections(route: preceptRoute),
         ),
       ),
     );

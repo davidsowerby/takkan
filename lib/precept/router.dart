@@ -5,9 +5,13 @@ import 'package:precept/app/page/standardPage.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
+import 'package:precept/precept/document/documentState.dart';
 import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/pPart.dart';
+import 'package:precept/section/base/section.dart';
+import 'package:precept/section/base/sectionState.dart';
+import 'package:provider/provider.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.
@@ -103,8 +107,7 @@ class PreceptRouter {
       return _route(ErrorPage(
           message: "Requested route: '${settings.name}' not recognised"));
     }
-    return _route(StandardPage(
-        sections: assembler.assembleSections(route: preceptRoute)));
+    return _route(StandardPage(preceptRoute: preceptRoute));
   }
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
@@ -122,8 +125,14 @@ class PreceptRouter {
 
   bool get ready => _indexed;
 
+  /// [DocumentState] provider always has a child [SectionState].  This is so [Section]s can always find a [SectionState] above them
   Route<dynamic> _route(Widget page) {
-    return MaterialPageRoute(builder: (_) => page);
+    final documentState=DocumentState(); // TODO something should determine canEdit
+    return MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider<DocumentState>(
+            create: (_) => documentState,
+            child: ChangeNotifierProvider<SectionState>(
+                create: (_) => SectionState.fromDocumentState(documentState: documentState), child: page)));
   }
 
   hasRoute(String path) {

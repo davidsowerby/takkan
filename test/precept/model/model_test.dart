@@ -24,9 +24,11 @@ void main() {
       // then
       Map<String, dynamic> pco = model.toJson();
       PreceptModel pc2 = PreceptModel.fromJson(pco);
-      final String pcj = json.encode(model);
-      final String pc2j = json.encode(pc2);
-      expect(pcj, pc2j);
+      final Map <String,dynamic> pc3m = Map.castFrom(json.decode(json.encode(pc2)));
+      final PreceptModel pc3=PreceptModel.fromJson(pc3m);
+      print(pc3);
+      expect(json.encode(model), json.encode(pc2));
+      expect(json.encode(pc2),json.encode(pc3));
     });
   });
 }

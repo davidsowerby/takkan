@@ -1,35 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:precept/common/editState/sectionEditState.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/precept/binding/binding.dart';
+import 'package:precept/precept/mutable/temporaryDocument.dart';
 import 'package:precept/precept/part/pPart.dart';
+import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
-/// The [Part] series display data from the database of types.
+/// A [Part] brings together data at the field level, with the manner in which it is displayed.
 ///
-/// [Part] implementations are effectively builders that display a read only or editable Widget.  The Widget displayed
+/// [Part] implementations are builders that display a read only or editable Widget.  The Widget displayed
 /// depends on the [SourceDataType], edit mode, and display option.
 ///
 /// The source data type goes beyond the raw data types typically provided by a backend such as Firestore or Parse Server.
 /// It also takes into account how the data is used.
+///
 /// For example, a String may be just that, or it may be the currently selected value from a set of options.
 ///
-/// There is, therefore, a [StringPart] and a [StringSingleSelectPart] to cater for both situations.
-///
-/// The [StringPart] just processes strings from the database and displays them as a [Text] in read only,
+/// - There is, therefore, a [StringPart] and a [StringSingleSelectPart] to cater for both situations.
+/// - The [StringPart] just processes strings from the database and displays them as a [Text] in read only,
 /// and a [TextField] in edit mode.
-///
-/// A [StringSingleSelectPart] still handles a string, but for an item which is a single choice from a list of options.
+/// - A [StringSingleSelectPart] still handles a string, but for an item which is a single choice from a list of options.
 /// Its displayOption can be RadioButton or Combo
 ///
-/// An instance of [Binding] is used to transfer data from an associated Model
+/// An instance of [Binding] is used to transfer data from a [TemporaryDocument]
 ///
 /// A caption may optionally be displayed in either read only or edit mode.
 ///
-/// [T] the type of data read from the database
 abstract class Part extends StatelessWidget {
   final PPart precept;
 
@@ -37,9 +36,9 @@ abstract class Part extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SectionEditState sectionEditState =
-        Provider.of<SectionEditState>(context);
-    final readOnly = precept.readOnly || sectionEditState.readMode;
+    final SectionState sectionState =
+        Provider.of<SectionState>(context);
+    final readOnly = precept.readOnly || sectionState.readMode;
     getLogger(this.runtimeType).d(
         "caption: ${precept.caption}, EditState readOnly: ${precept.readOnly}");
     if (readOnly) {

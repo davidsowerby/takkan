@@ -6,7 +6,7 @@ import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/part.dart';
 import 'package:precept/precept/style/library/styleLibrary.dart';
 import 'package:precept/precept/widget/caption.dart';
-import 'package:precept/section/base/sectionBinding.dart';
+import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 part 'stringPart.g.dart';
@@ -23,7 +23,7 @@ class StringPart extends Part {
   const StringPart({@required this.pPart}) : super(precept: pPart);
 
   Widget buildReadOnlyWidget(BuildContext context) {
-    final sectionBinding = Provider.of<SectionBinding>(context, listen: false);
+    final sectionBinding = Provider.of<SectionState>(context, listen: false);
     final binding =
         sectionBinding.dataBinding.stringBinding(property: precept.property);
     final connector = ModelConnector<String, String>(
@@ -59,7 +59,7 @@ class StringPart extends Part {
 
   Widget buildEditModeWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final sectionBinding = Provider.of<SectionBinding>(context, listen: false);
+    final sectionBinding = Provider.of<SectionState>(context, listen: false);
     final binding =
         sectionBinding.dataBinding.stringBinding(property: precept.property);
     final connector = ModelConnector<String, String>(

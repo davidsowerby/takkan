@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/backend/common/documentId.dart';
 import 'package:precept/backend/common/response.dart';
 import 'package:precept/precept/dataModel/documentModel.dart';
+import 'package:precept/precept/model/modelDocument.dart';
 
 /// Converts a response from a cloud provider (currently Back4App) to a standard form.  This enables the Repository layer
 /// to decouple from a chosen backend provider

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept/common/action/toggleEdit.dart';
 import 'package:precept/common/component/heading.dart';
 import 'package:precept/section/base/documentModelShared.dart';
-import 'package:precept/section/base/sectionBinding.dart';
+import 'package:precept/section/base/sectionState.dart';
 import 'package:precept/section/base/sectionKey.dart';
 import 'package:precept/section/base/sectionList.dart';
 import 'package:provider/provider.dart';
@@ -71,12 +71,12 @@ class Section extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    final SectionBinding sectionBinding = Provider.of<SectionBinding>(context);
+    final SectionState sectionBinding = Provider.of<SectionState>(context);
     final DocumentModelShared documentEditState =
         Provider.of<DocumentModelShared>(context);
     if (child is SectionList) {
-      return ChangeNotifierProvider<SectionBinding>(
-          create: (_) => SectionBinding(
+      return ChangeNotifierProvider<SectionState>(
+          create: (_) => SectionState(
                 parentSectionBinding: sectionBinding,
                 dataBinding: sectionBinding.dataBinding
                     .listBinding(property: bindingProperty),
@@ -88,7 +88,7 @@ class Section extends StatelessWidget
     return Form(
       key: formKey,
       child: ChangeNotifierProvider(
-          create: (_) => SectionBinding(
+          create: (_) => SectionState(
                 parentSectionBinding: sectionBinding,
                 dataBinding:
                     (bindingProperty == null || bindingProperty.isEmpty)

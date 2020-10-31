@@ -1,4 +1,5 @@
 import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
 final testModel = PreceptModel(components: [
@@ -7,6 +8,8 @@ final testModel = PreceptModel(components: [
     routes: [
       PRoute(
           path: "/user/home",
+          document: PDocument(
+              params: {"id": 234}),
           page: PPage(
             title: "My Home",
             sections: [
