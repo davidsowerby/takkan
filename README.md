@@ -23,3 +23,16 @@ flutter packages pub run build_runner watch --delete-conflicting-outputs
 
 ```
 
+## Build Docs
+
+To build:
+
+```bash
+npm run docs:dev
+```
+
+If the *node_modules* folder is absent just call npm on its own first
+
+```bash
+npm
+```
