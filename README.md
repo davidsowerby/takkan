@@ -4,10 +4,11 @@ A declarative Flutter application framework for use where forms are required
 
 ## Objectives
 
-1. Minimise repetitive coding for data retrieval, form construction, validation and submission
-1. Reduce app updates by declaring the model on the server-side
-1. impose NO restrictions on the developer - they should be able to use the full power of Flutter for anything else they want in their app.
-1. support multiple backends
+1. Reduce the number of app updates needed, by generating part or all of an app's UI in Flutter using a declarative file sourced from a server.
+1. Reduce the amount of effort needed to code page layouts, forms and wizards, by using simplified declarations and re-usable elements.
+1. Support multiple backends (for example Parse Server, Firebase)
+1. Achieve the above without restricting the developer from access to all of Flutter's extensive capabilities
+1. Be Open Source for ever
 
 
 
