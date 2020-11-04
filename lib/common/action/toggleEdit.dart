@@ -12,10 +12,10 @@ mixin ToggleSectionEditState {
         Provider.of<SectionState>(context, listen: false);
     // final DocumentModelShared documentEditState = Provider.of<DocumentModelShared>(context, listen: false);
 
-    if (sectionEditState.readMode) {
-      sectionEditState.readMode = false;
+    if (sectionEditState.readOnlyMode) {
+      sectionEditState.readOnlyMode = false;
     } else {
-      sectionEditState.readMode = true;
+      sectionEditState.readOnlyMode = true;
     }
 
     /// Let the DocumentEditState know, in case other actions required

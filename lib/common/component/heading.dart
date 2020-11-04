@@ -69,7 +69,7 @@ class _HeadingState extends State<Heading> with Interpolator {
   Widget build(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context);
-    final List<Widget> actionButtons = (sectionState.readMode)
+    final List<Widget> actionButtons = (sectionState.readOnlyMode)
         ? List.from(widget.readModeActions)
         : List.from(widget.editModeActions);
     actionButtons.addAll((sectionState.canEdit)
@@ -221,13 +221,13 @@ class SectionHeading extends StatelessWidget {
   edit(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context, listen: false);
-    sectionState.readMode = false;
+    sectionState.readOnlyMode = false;
   }
 
   save(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context, listen: false);
-    sectionState.readMode = true;
+    sectionState.readOnlyMode = true;
   }
 }
 

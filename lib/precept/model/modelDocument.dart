@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/backend/common/documentIdConverter.dart';
@@ -15,26 +13,21 @@ part 'modelDocument.g.dart';
 /// - 'select distinct' with criteria expressed in parameters
 /// - 'select first'
 /// - 'select last'
-@JsonSerializable(nullable: true, explicitToJson: true)
-@PDocumentSelectorConverter()
-class PDocument {
+
+/// Classes used to define selection method and criteria for a document
+abstract class PDocumentSelector {
   final Map<String, dynamic> params;
-  final PDocumentSelector selector;
 
-  const PDocument({@required this.params, @required this.selector});
-
-  factory PDocument.fromJson(Map<String, dynamic> json) =>
-      _$PDocumentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PDocumentToJson(this);
+  const PDocumentSelector({@required this.params});
 }
 
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDocumentGet implements PDocumentSelector {
+class PDocumentGet extends PDocumentSelector {
   final DocumentId id;
 
-  const PDocumentGet({@required this.id});
+  const PDocumentGet({@required this.id, @required Map<String, dynamic> params})
+      : super(params: params);
 
   factory PDocumentGet.fromJson(Map<String, dynamic> json) =>
       _$PDocumentGetFromJson(json);
@@ -42,25 +35,30 @@ class PDocumentGet implements PDocumentSelector {
   Map<String, dynamic> toJson() => _$PDocumentGetToJson(this);
 }
 
-/// Used as an interface to identify the classes used to Provide the selection method and criteria for [PDocument]
-abstract class PDocumentSelector {}
-
 class PDocumentSelectorConverter
     implements JsonConverter<PDocumentSelector, Map<String, dynamic>> {
   const PDocumentSelectorConverter();
 
   @override
   PDocumentSelector fromJson(Map<String, dynamic> json) {
+    if (json == null) {
+      return null;
+    }
     final String typeName = json["type"];
     json.remove("type");
-    switch (typeName){
-      case "PDocumentGet" : return PDocumentGet.fromJson(json);
-      throw PreceptException("Conversion required for $typeName");
+    switch (typeName) {
+      case "PDocumentGet":
+        return PDocumentGet.fromJson(json);
+      default:
+        throw PreceptException("Conversion required for $typeName");
     }
   }
 
   @override
   Map<String, dynamic> toJson(PDocumentSelector object) {
+    if (object == null) {
+      return null;
+    }
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
     jsonMap["type"] = type.toString();

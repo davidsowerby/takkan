@@ -15,7 +15,7 @@ class EditSaveAction extends StatelessWidget with ToggleSectionEditState {
   Widget build(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context);
-    final icon = (sectionState.readMode) ? Icons.edit : Icons.check;
+    final icon = (sectionState.readOnlyMode) ? Icons.edit : Icons.check;
     return ActionIcon(
       iconData: icon,
       action: () => _execute(context),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/app/page/errorPage.dart';
+import 'package:precept/app/page/documentSection.dart';
 import 'package:precept/app/page/standardPage.dart';
+import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
@@ -104,10 +106,10 @@ class PreceptRouter {
         "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
     PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
-      return _route(ErrorPage(
+      return _routeForWidget(ErrorPage(
           message: "Requested route: '${settings.name}' not recognised"));
     }
-    return _route(StandardPage(preceptRoute: preceptRoute));
+    return _route(preceptRoute);
   }
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
@@ -126,17 +128,20 @@ class PreceptRouter {
   bool get ready => _indexed;
 
   /// [DocumentState] provider always has a child [SectionState].  This is so [Section]s can always find a [SectionState] above them
-  Route<dynamic> _route(Widget page) {
-    final documentState=DocumentState(); // TODO something should determine canEdit
-    return MaterialPageRoute(
-        builder: (_) => ChangeNotifierProvider<DocumentState>(
-            create: (_) => documentState,
-            child: ChangeNotifierProvider<SectionState>(
-                create: (_) => SectionState.fromDocumentState(documentState: documentState), child: page)));
+  Route<dynamic> _route(PRoute route) {
+    // switch (route.page.pageType) {
+    //   case PageType.standard:
+        return MaterialPageRoute(builder: (_) => StandardPage(route: route));
+    // }
+    throw PreceptException("Should not be here!");
   }
 
   hasRoute(String path) {
     return _preceptRoutes.containsKey(path);
+  }
+
+  _routeForWidget(Widget widget) {
+    return MaterialPageRoute(builder: (_) => widget);
   }
 }
 

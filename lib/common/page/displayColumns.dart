@@ -15,7 +15,7 @@ mixin DisplayColumns {
   Row distributeWidgets(
       {@required Size screenSize,
       @required double preferredColumnWidth,
-      @required List<DocumentSection> widgets}) {
+      @required List<AbstractSection> widgets}) {
     final dim = dimensions(
         screenSize: screenSize, preferredColumnWidth: preferredColumnWidth);
     final List<List<Widget>> columnChildren = List();

@@ -2,6 +2,7 @@ import 'package:precept/common/locale.dart';
 import 'package:precept/common/toast.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
+import 'package:precept/precept/document/documentController.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
 import 'package:precept/precept/part/library/partLibrary.dart';
 import 'package:precept/precept/router.dart';
@@ -21,6 +22,7 @@ precept() {
       StyleLibrary(modules: [PreceptStyleLibraryModule()]));
   getIt.registerSingleton<PreceptRouter>(PreceptRouter());
   getIt.registerFactory<PreceptPageAssembler>(() => PreceptPageAssembler());
+  getIt.registerSingleton<DocumentController>(DocumentController());
   // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
 }
 

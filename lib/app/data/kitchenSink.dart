@@ -1,18 +1,29 @@
 import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
-final kitchenSinkModel = PreceptModel(components: [
-  PComponent(
-    name: "core",
-    routes: [
-      PRoute(
+final kitchenSinkModel = PreceptModel(
+  components: [
+    PComponent(
+      name: "core",
+      routes: [
+        PRoute(
           path: "/",
           page: PPage(
-            title: "Home",
+            title: "Home Page",
             sections: [
-              PSection(parts: [PStringPart(property: "name")])
+              PDocumentSection(
+                  documentSelector: PDocumentGet(
+                    id: DocumentId(path: "any", itemId: "any"),
+                    params: {},
+                  ),
+                  parts: [
+                    PStringPart(property: "title", caption: "Title",),
+                  ]),
             ],
-          ))
-    ],
-  ),
-]);
+          ),
+        ),
+      ],
+    )
+  ],
+);

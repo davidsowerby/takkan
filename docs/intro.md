@@ -13,7 +13,7 @@ this can be useful when your users are not updating when you want them to!
 Precept has the following objectives:
 
 1. Reduce the number of app updates needed, by generating part or all of an app's UI in Flutter using a declarative file sourced from a server.
-1. Reduce the amount of effort needed to code page layouts, forms and wizards, by using simplified declarations and re-usable elements.
+1. Reduce the effort needed to code page layouts, forms and wizards, by using simplified declarations and re-usable elements.
 1. Support multiple backends (for example Parse Server, Firebase)
-1. Achieve the above without restricting the developer from access to all of Flutter's extensive capabilities
+1. Achieve the above without restricting the developer's access to native Flutter
 1. Be Open Source for ever

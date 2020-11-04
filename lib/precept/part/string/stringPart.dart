@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/binding/converter.dart';
+import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/part/options/options.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/part.dart';
@@ -19,13 +20,13 @@ enum DisplayType { text, datePicker }
 /// See [Part]
 class StringPart extends Part {
   final PStringPart pPart;
+  final MapBinding baseBinding;
 
-  const StringPart({@required this.pPart}) : super(precept: pPart);
+  const StringPart({@required this.pPart, @required this.baseBinding}) : super(precept: pPart);
 
   Widget buildReadOnlyWidget(BuildContext context) {
-    final sectionBinding = Provider.of<SectionState>(context, listen: false);
-    final binding =
-        sectionBinding.dataBinding.stringBinding(property: precept.property);
+    // final sectionState = Provider.of<SectionState>(context);
+    final binding =baseBinding.stringBinding(property: pPart.property);
     final connector = ModelConnector<String, String>(
         binding: binding, converter: PassThroughConverter<String>());
     final style =
@@ -59,9 +60,7 @@ class StringPart extends Part {
 
   Widget buildEditModeWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final sectionBinding = Provider.of<SectionState>(context, listen: false);
-    final binding =
-        sectionBinding.dataBinding.stringBinding(property: precept.property);
+    final binding =baseBinding.stringBinding(property: pPart.property);
     final connector = ModelConnector<String, String>(
         binding: binding, converter: PassThroughConverter<String>());
     return Padding(
@@ -85,7 +84,7 @@ class PStringPart extends PPart {
   final PReadModeOptions readModeOptions;
   final PEditModeOptions editModeOptions;
 
-  PStringPart({
+  const PStringPart({
     String caption,
     @required String property,
     this.readModeOptions = const PReadModeOptions(),

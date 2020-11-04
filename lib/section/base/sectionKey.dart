@@ -1,15 +1,9 @@
 import 'package:precept/common/component/heading.dart';
 
-abstract class DocumentSection {
-  SectionKey get keyId;
+abstract class AbstractSection {
 
-  dynamic get titleKey;
+  HelpText get helpText;
 
-  dynamic get lookupKey;
-
-  HelpText get helpKeys;
-
-  String get bindingProperty;
 }
 
 /// An identifier for instances of [Section], used in a [WizSpecification] to enable one step to 'goto' another

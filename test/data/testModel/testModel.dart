@@ -2,20 +2,27 @@ import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
-final testModel = PreceptModel(components: [
-  PComponent(
-    name: "core",
-    routes: [
-      PRoute(
-          path: "/user/home",
-          document: PDocument(
-              params: {"id": 234}),
+final testModel = PreceptModel(
+  components: [
+    PComponent(
+      name: "core",
+      routes: [
+        PRoute(
+          path: "/",
           page: PPage(
-            title: "My Home",
+            title: "Home Page",
             sections: [
-              PSection(parts: [PStringPart(property: "name")])
+              PDocumentSection(
+                documentSelector: PDocumentGet(
+                  id: DocumentId(path: "any", itemId: "any"),
+                  params: {},
+                ),
+              ),
             ],
-          ))
-    ],
-  ),
-]);
+          ),
+        ),
+      ],
+    )
+  ],
+);
+

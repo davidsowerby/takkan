@@ -32,7 +32,7 @@ import 'package:provider/provider.dart';
 /// [child] is the widget that presents the section's data - for example [AddressSection]
 
 class Section extends StatelessWidget
-    with ToggleSectionEditState, DocumentSection {
+    with ToggleSectionEditState, AbstractSection {
   final Widget child;
 
   final dynamic subTitleKey;
@@ -41,7 +41,7 @@ class Section extends StatelessWidget
   final String Function() title;
   final String Function() subTitle;
   final String route;
-  final HelpText helpKeys;
+  final HelpText helpText;
   final dynamic lookupKey;
   final dynamic titleKey;
   final String bindingProperty;
@@ -56,7 +56,7 @@ class Section extends StatelessWidget
     this.subTitle,
     this.route,
     this.lookupKey,
-    this.helpKeys,
+    this.helpText,
     this.titleKey,
     this.bindingProperty,
   }) :
@@ -76,11 +76,7 @@ class Section extends StatelessWidget
         Provider.of<DocumentModelShared>(context);
     if (child is SectionList) {
       return ChangeNotifierProvider<SectionState>(
-          create: (_) => SectionState(
-                parentSectionBinding: sectionBinding,
-                dataBinding: sectionBinding.dataBinding
-                    .listBinding(property: bindingProperty),
-              ),
+          create: (_) => SectionState(              ),
           child: child);
     }
     final formKey = GlobalKey<FormState>();
@@ -88,14 +84,7 @@ class Section extends StatelessWidget
     return Form(
       key: formKey,
       child: ChangeNotifierProvider(
-          create: (_) => SectionState(
-                parentSectionBinding: sectionBinding,
-                dataBinding:
-                    (bindingProperty == null || bindingProperty.isEmpty)
-                        ? sectionBinding.dataBinding
-                        : sectionBinding.dataBinding
-                            .modelBinding(property: bindingProperty),
-              ),
+          create: (_) => SectionState(              ),
           child: InkWell(
               onTap: () => toggleEditState(context),
               child: Container(padding: EdgeInsets.all(8), child: child))),
@@ -114,49 +103,3 @@ class WizardSection extends StatelessWidget {
   }
 }
 
-///// An implementation of [AbstractSection] for sections positioned within a document.  See also [CollectionSection] and
-///// [WizardSection]
-//class CollectionSection extends AbstractSection {
-//  final String bindingProperty;
-//  final dynamic titleKey;
-//  final dynamic subTitleKey;
-//  final String titleProperty;
-//  final String subTitleProperty;
-//  final String Function() title;
-//  final String Function() subTitle;
-//  final String route;
-//
-//  const CollectionSection({
-//    Key key,
-//    this.bindingProperty,
-//    @required Widget child,
-//    this.titleKey,
-//    this.subTitleKey,
-//    this.titleProperty,
-//    this.subTitleProperty,
-//    this.title,
-//    this.subTitle,
-//    this.route,
-//  })  : assert(child != null),
-//        assert(child is SectionList ? (bindingProperty != null) : true, "List binding always needs binding property"),
-//        super(key: key, child: child);
-//
-//  @override
-//  Widget build(BuildContext context) {
-//    final SectionBinding sectionBinding = Provider.of<SectionBinding>(context);
-//    if (child is SectionList) {
-//      return ChangeNotifierProvider<SectionBinding>(
-//          create: (_) => SectionBinding(
-//                listBinding: sectionBinding.mapBinding.listBinding(property: bindingProperty),
-//              ),
-//          child: child);
-//    }
-//    return ChangeNotifierProvider(
-//        create: (_) => SectionBinding(
-//              mapBinding: (bindingProperty == null || bindingProperty.isEmpty)
-//                  ? sectionBinding.mapBinding
-//                  : sectionBinding.mapBinding.mapBinding(property: bindingProperty),
-//            ),
-//        child: Container(child: child));
-//  }
-//}

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:precept/app/data/kitchenSink.dart';
 import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/model/modelDocument.dart';
+import 'package:precept/precept/part/string/stringPart.dart';
 import 'package:test/test.dart';
 
 import '../../data/testModel/testModel.dart';
@@ -15,20 +18,40 @@ void main() {
 
     tearDown(() {});
 
-    test('output', () {
+    test('full model', () {
       // given
-      PreceptModel model = testModel;
+      PreceptModel model = kitchenSinkModel;
 
       // when
 
       // then
-      Map<String, dynamic> pco = model.toJson();
-      PreceptModel pc2 = PreceptModel.fromJson(pco);
-      final Map <String,dynamic> pc3m = Map.castFrom(json.decode(json.encode(pc2)));
-      final PreceptModel pc3=PreceptModel.fromJson(pc3m);
-      print(pc3);
-      expect(json.encode(model), json.encode(pc2));
-      expect(json.encode(pc2),json.encode(pc3));
+      Map<String, dynamic> jsonMap = model.toJson();
+      PreceptModel model2 = PreceptModel.fromJson(jsonMap);
+      expect(json.encode(model.toJson()), json.encode(model2.toJson()));
+    });
+
+    test('PDocumentSection round trip', () {
+      // given
+      final m = PDocumentSection(                  documentSelector: PDocumentGet(
+        id: DocumentId(path: "any", itemId: "any"),
+        params: {},
+      ),
+          parts: [
+            PStringPart(
+              property: "title",
+              caption: "Title",
+            ),
+          ]);
+      // when
+      final asJsonMap = m.toJson();
+      final m2=PDocumentSection.fromJson(asJsonMap);
+      // then
+
+      expect(json.encode(m.toJson()), jsonEncode(m2.toJson()));
+      expect(m2.parts[0].property,"title");
+      expect(m2.parts[0].caption,"Title");
+      expect(m2.parts[0],isA<PStringPart>());
+
     });
   });
 }

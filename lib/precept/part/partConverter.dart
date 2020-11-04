@@ -3,6 +3,54 @@ import 'package:precept/common/exceptions.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
+// class PPartListConverter
+//     implements JsonConverter<List<PPart>, List<Map<String, dynamic>>> {
+//   final partConverter = const PPartConverter();
+//
+//   const PPartListConverter();
+//
+//   @override
+//   List<PPart> fromJson(List<Map<String, dynamic>> json) {
+//     List<PPart> list = List();
+//     for (var entry in json) {
+//       list.add(partConverter.fromJson(entry));
+//     }
+//     return list;
+//   }
+//
+//   @override
+//   List<Map<String, dynamic>> toJson(List<PPart> object) {
+//     List<Map<String, dynamic>> list = List();
+//     for(var entry in object){
+//       list.add(partConverter.toJson(entry));
+//     }
+//     return list;
+//   }
+// }
+
+class PPartListConverter{
+
+
+  static List<PPart> fromJson(List<Map<String, dynamic>> json) {
+    List<PPart> list = List();
+    for (var entry in json) {
+      list.add(PPartConverter().fromJson(entry));
+    }
+    return list;
+  }
+
+
+  static List<Map<String, dynamic>> toJson(List<PPart> object) {
+    List<Map<String, dynamic>> list = List();
+    for(var entry in object){
+      list.add(PPartConverter().toJson(entry));
+    }
+    return list;
+  }
+}
+
+
+
 class PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
   const PPartConverter();
 

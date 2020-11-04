@@ -38,7 +38,7 @@ abstract class Part extends StatelessWidget {
   Widget build(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context);
-    final readOnly = precept.readOnly || sectionState.readMode;
+    final readOnly = precept.readOnly || sectionState.readOnlyMode;
     getLogger(this.runtimeType).d(
         "caption: ${precept.caption}, EditState readOnly: ${precept.readOnly}");
     if (readOnly) {

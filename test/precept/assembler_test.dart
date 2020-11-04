@@ -26,7 +26,7 @@ void main() {
       final assembler = PreceptPageAssembler();
       // when
       final output =
-          assembler.assembleSections(route: testModel.components[0].routes[0]);
+          assembler.assembleDocumentSections(route: testModel.components[0].routes[0]);
       // then
 
       expect(output.length, 1);
