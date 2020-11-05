@@ -19,7 +19,7 @@ class Heading extends StatefulWidget {
   final Widget child;
   final bool editable;
   final bool expandable;
-  final DocumentHeadingStyle headingStyle;
+  final DocumentHeadingStyle headingStyle=const DocumentHeadingStyle();
   final Function(BuildContext) onEdit;
   final Function(BuildContext) onSave;
   final bool openExpanded;
@@ -38,7 +38,7 @@ class Heading extends StatefulWidget {
     this.editable = true,
     this.onEdit,
     this.onSave,
-    this.headingStyle,
+    headingStyle,
     this.expandable,
     this.readModeActions = const [],
     this.editModeActions = const [],
@@ -171,7 +171,6 @@ class HeadingExpandCloseAction extends StatelessWidget {
 
 class SectionHeading extends StatelessWidget {
   final PSectionHeading config;
-  final String headingText;
   final HelpText helpKeys;
   final Widget child;
   final bool canEdit;
@@ -186,17 +185,16 @@ class SectionHeading extends StatelessWidget {
 
   const SectionHeading({
     Key key,
-    this.config,
-    this.headingText,
+    @required this.config,
     this.showEditIcon = true,
     this.readModeActions = const [],
     this.editModeActions = const [],
     this.canEditActions = const [],
     this.cannotEditActions = const [],
     this.helpKeys,
-    this.child,
-    this.canEdit,
-    this.expandable,
+    @required this.child,
+    this.canEdit=true,
+    this.expandable=true,
     this.openExpanded = true,
     this.headingStyle,
   }) : super(key: key);
@@ -215,7 +213,7 @@ class SectionHeading extends StatelessWidget {
       editable: canEdit,
       expandable: expandable,
       headingStyle: headingStyle,
-      headingText: headingText,
+      headingText: config.title,
       onSave: save,
       onEdit: edit,
     );

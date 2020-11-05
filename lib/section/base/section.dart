@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/common/action/toggleEdit.dart';
+import 'package:precept/common/component/heading.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
@@ -10,6 +11,7 @@ import 'package:precept/precept/document/formLog.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/sectionKey.dart';
 import 'package:precept/section/base/sectionList.dart';
+import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// A section is an arbitrary collection of Widgets displaying part of a [Document].
@@ -31,6 +33,7 @@ import 'package:provider/provider.dart';
 class Section extends StatelessWidget with ToggleSectionEditState {
   final PSection config;
   final MapBinding baseBinding;
+
   const Section({@required this.config, @required this.baseBinding}) : super();
 
   @override
@@ -49,13 +52,20 @@ class Section extends StatelessWidget with ToggleSectionEditState {
 
   Widget _doBuild(BuildContext context) {
     final assembler = inject<PreceptPageAssembler>();
-    List<Widget> children =
-        assembler.assembleElements(elements: config.elements, baseBinding: baseBinding);
-    return (config.scrollable)
+    List<Widget> children = assembler.assembleElements(
+        elements: config.elements, baseBinding: baseBinding);
+    final body = (config.scrollable)
         ? ListView(children: children)
         : Column(
             children: children,
           );
+    if (config.heading == null) {
+      return body;
+    } else {
+      return ChangeNotifierProvider<SectionState>(
+          create: (_) => SectionState(),
+          child: SectionHeading(config: config.heading, child: body));
+    }
   }
 }
 
