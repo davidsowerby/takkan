@@ -1,9 +1,11 @@
+
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:precept/common/action/actionIcon.dart';
 import 'package:precept/common/action/editSave.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/locale.dart';
+import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +17,7 @@ import 'package:provider/provider.dart';
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
-  final HelpText helpKeys;
+  final PHelp help;
   final Widget child;
   final bool editable;
   final bool expandable;
@@ -32,7 +34,7 @@ class Heading extends StatefulWidget {
   const Heading({
     Key key,
     this.headingText,
-    this.helpKeys,
+    this.help,
     this.openExpanded = true,
     @required this.child,
     this.editable = true,
@@ -77,6 +79,7 @@ class _HeadingState extends State<Heading> with Interpolator {
         ? widget.canEditActions
         : widget.cannotEditActions);
 
+    /// Pressing edit also expands the heading - otherwise it cannot be edited
     if (sectionState.canEdit && widget.showEditIcon) {
       actionButtons.add(
         EditSaveAction(
@@ -114,9 +117,9 @@ class _HeadingState extends State<Heading> with Interpolator {
                       style: widget.headingStyle.textStyle,
                     ),
                   ),
-                  if (widget.helpKeys != null)
+                  if (widget.help != null)
                     HelpButton(
-                      helpText: widget.helpKeys,
+                      help: widget.help,
                     ),
                   Spacer(),
                   if (actionButtons.isNotEmpty)
@@ -171,11 +174,8 @@ class HeadingExpandCloseAction extends StatelessWidget {
 
 class SectionHeading extends StatelessWidget {
   final PSectionHeading config;
-  final HelpText helpKeys;
+  final PHelp help;
   final Widget child;
-  final bool canEdit;
-  final bool expandable;
-  final bool openExpanded;
   final DocumentHeadingStyle headingStyle;
   final List<Widget> readModeActions;
   final List<Widget> editModeActions;
@@ -191,27 +191,25 @@ class SectionHeading extends StatelessWidget {
     this.editModeActions = const [],
     this.canEditActions = const [],
     this.cannotEditActions = const [],
-    this.helpKeys,
+    this.help,
     @required this.child,
-    this.canEdit=true,
-    this.expandable=true,
-    this.openExpanded = true,
     this.headingStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final sectionState=Provider.of<SectionState>(context);
     return Heading(
       showEditIcon: showEditIcon,
-      helpKeys: helpKeys,
+      help: help,
       readModeActions: readModeActions,
       editModeActions: editModeActions,
       canEditActions: canEditActions,
       cannotEditActions: cannotEditActions,
-      openExpanded: openExpanded,
+      openExpanded: config.openExpanded,
       child: child,
-      editable: canEdit,
-      expandable: expandable,
+      editable: (!config.canEdit) ? false : sectionState.canEdit,
+      expandable: config.expandable,
       headingStyle: headingStyle,
       headingText: config.title,
       onSave: save,
@@ -232,17 +230,12 @@ class SectionHeading extends StatelessWidget {
   }
 }
 
-class HelpText {
-  final String title;
-  final String message;
 
-  const HelpText({@required this.title, this.message});
-}
 
 class HelpButton extends StatelessWidget with Interpolator {
-  final HelpText helpText;
+  final PHelp help;
 
-  const HelpButton({Key key, @required this.helpText}) : super(key: key);
+  const HelpButton({Key key, @required this.help}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -250,8 +243,8 @@ class HelpButton extends StatelessWidget with Interpolator {
         iconData: Icons.help,
         action: () => showOkAlertDialog(
               context: context,
-              title: helpText.title,
-              message: helpText.message,
+              title: help.title,
+              message: help.message,
             ) // TODO interpolate with params, but params from where.  A Binding with property names maybe?
         );
   }

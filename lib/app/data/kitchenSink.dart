@@ -1,3 +1,4 @@
+import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
@@ -23,7 +24,11 @@ final kitchenSinkModel = PreceptModel(
                       caption: "Title",
                     ),
                     PSection(
-                      property: "stuff",
+                        property: "stuff",
+                        help: PHelp(
+                          title: "Help",
+                          message: "I really need help",
+                        ),
                         heading: PSectionHeading(title: "Section 1"),
                         elements: [
                           PString(

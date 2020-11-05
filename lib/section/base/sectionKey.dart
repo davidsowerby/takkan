@@ -1,8 +1,8 @@
-import 'package:precept/common/component/heading.dart';
+import 'package:precept/precept/model/help.dart';
 
 abstract class AbstractSection {
 
-  HelpText get helpText;
+  PHelp get helpText;
 
 }
 

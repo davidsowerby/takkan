@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/model/element.dart';
+import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
@@ -86,6 +87,7 @@ class PSection implements DisplayElement {
   final String property;
   final String caption;
   final bool scrollable;
+  final PHelp help;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
@@ -98,6 +100,7 @@ class PSection implements DisplayElement {
     this.caption,
     this.property,
     this.scrollable = false,
+    this.help,
   });
 }
 
@@ -131,11 +134,15 @@ class PSectionHeading {
   final String title;
   final bool expandable;
   final bool openExpanded;
+  final bool canEdit;
+  final PHelp help;
 
   PSectionHeading({
     @required this.title,
     this.expandable = true,
     this.openExpanded = true,
+    this.canEdit=false,
+    this.help,
   }) : super();
 
   factory PSectionHeading.fromJson(Map<String, dynamic> json) =>

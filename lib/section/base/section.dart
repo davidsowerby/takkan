@@ -64,7 +64,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
     } else {
       return ChangeNotifierProvider<SectionState>(
           create: (_) => SectionState(),
-          child: SectionHeading(config: config.heading, child: body));
+          child: SectionHeading(config: config.heading,help:config.help, child: body));
     }
   }
 }
