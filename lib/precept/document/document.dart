@@ -7,11 +7,11 @@ import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
-class DocumentSection extends StatelessWidget {
+class Document extends StatelessWidget {
   final Stream<DocumentState> documentState;
   final PDocument config;
 
-  DocumentSection({Key key, @required this.config})
+  Document({Key key, @required this.config})
       : documentState = inject<DocumentController>().getDocument(config.documentSelector),
         super(key: key);
 

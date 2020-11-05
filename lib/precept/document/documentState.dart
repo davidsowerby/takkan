@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/mutable/temporaryDocument.dart';
@@ -9,6 +10,7 @@ import 'package:precept/precept/mutable/temporaryDocument.dart';
 /// When [readOnlyMode] is true, the document and therefore pages using it, are read only.
 /// When [canEdit] is true, [readOnlyMode] can be changed to false (thus allowing editing) by user action
 class DocumentState with ChangeNotifier {
+
    TemporaryDocument _temporaryDocument;
    bool _readOnlyMode=true;
    bool _canEdit;
@@ -29,4 +31,6 @@ class DocumentState with ChangeNotifier {
   updateData(Map<String,dynamic> data){
     _temporaryDocument.updateFromSource(source: data);
   }
+
+
 }

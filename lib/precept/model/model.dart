@@ -4,7 +4,6 @@ import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
 
 part 'model.g.dart';
 
@@ -86,6 +85,7 @@ class PSection implements DisplayElement {
   final PSectionHeading heading;
   final String property;
   final String caption;
+  final bool scrollable;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
@@ -97,6 +97,7 @@ class PSection implements DisplayElement {
     this.heading,
     this.caption,
     this.property,
+    this.scrollable = false,
   });
 }
 

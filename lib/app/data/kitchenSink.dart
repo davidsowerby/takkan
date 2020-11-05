@@ -18,8 +18,19 @@ final kitchenSinkModel = PreceptModel(
                     params: {},
                   ),
                   elements: [
-                    PString(property: "title", caption: "Title",),
-                    PString(property: "value", caption: "Value",),
+                    PString(
+                      property: "title",
+                      caption: "Title",
+                    ),
+                    PSection(
+                      property: "stuff",
+                        heading: PSectionHeading(title: "Section 1"),
+                        elements: [
+                          PString(
+                            property: "value",
+                            caption: "Value",
+                          ),
+                        ]),
                   ]),
             ],
           ),

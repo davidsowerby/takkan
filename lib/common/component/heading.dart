@@ -4,6 +4,7 @@ import 'package:precept/common/action/actionIcon.dart';
 import 'package:precept/common/action/editSave.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/locale.dart';
+import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
@@ -169,6 +170,7 @@ class HeadingExpandCloseAction extends StatelessWidget {
 }
 
 class SectionHeading extends StatelessWidget {
+  final PSectionHeading config;
   final String headingText;
   final HelpText helpKeys;
   final Widget child;
@@ -184,6 +186,7 @@ class SectionHeading extends StatelessWidget {
 
   const SectionHeading({
     Key key,
+    this.config,
     this.headingText,
     this.showEditIcon = true,
     this.readModeActions = const [],

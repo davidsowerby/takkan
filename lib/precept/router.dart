@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/app/page/errorPage.dart';
-import 'package:precept/app/page/documentSection.dart';
 import 'package:precept/app/page/standardPage.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
@@ -13,7 +12,6 @@ import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/section/base/section.dart';
 import 'package:precept/section/base/sectionState.dart';
-import 'package:provider/provider.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.

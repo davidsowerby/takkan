@@ -15,7 +15,7 @@ class DocumentController {
 
   // TODO replace with injectable Repository
   Stream<Map<String, dynamic>> _repo(PDocumentSelector selector) {
-    return streamCreator.start(Duration(seconds: 1), 10);
+    return streamCreator.start(interval: Duration(seconds: 1), maxCount: 10, keepOpen: Duration(seconds: 60));
   }
 
   DocumentState transformSnapshot(Map<String, dynamic> data) {
@@ -28,6 +28,7 @@ class DocumentController {
 }
 
 class StreamCreator{
+
   final snapshots = [
     {"title": "temporary data", "value": "skip"},
     {"title": "added age", "value": "b", "age":41},
@@ -42,8 +43,8 @@ class StreamCreator{
     {"title": "last data", "value": "ddddddddd", "age":14},
   ];
 
-  Stream<Map<String, dynamic>> start(Duration interval,
-      [int maxCount]) async* {
+  Stream<Map<String, dynamic>> start({Duration interval=const Duration(seconds: 1),  Duration keepOpen=const Duration(seconds: 30),
+      int maxCount=10}) async* {
 
     int i = 0;
     while (true) {
@@ -53,6 +54,7 @@ class StreamCreator{
       getLogger(this.runtimeType).d("Release snapshot $i");
       i++;
     }
+    await Future.delayed(keepOpen);
 
   }
 

@@ -1,7 +1,5 @@
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/precept/part/partConverter.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
 /// Common interface for PSection and PPart so both can be held in any order for display
