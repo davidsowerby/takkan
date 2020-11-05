@@ -11,8 +11,8 @@ final testModel = PreceptModel(
           path: "/",
           page: PPage(
             title: "Home Page",
-            sections: [
-              PDocumentSection(
+            elements: [
+              PDocument(
                 documentSelector: PDocumentGet(
                   id: DocumentId(path: "any", itemId: "any"),
                   params: {},

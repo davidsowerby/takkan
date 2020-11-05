@@ -19,7 +19,7 @@ enum DisplayType { text, datePicker }
 /// Edit mode display: [TextField]
 /// See [Part]
 class StringPart extends Part {
-  final PStringPart pPart;
+  final PString pPart;
   final MapBinding baseBinding;
 
   const StringPart({@required this.pPart, @required this.baseBinding}) : super(precept: pPart);
@@ -80,19 +80,19 @@ class StringPart extends Part {
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PStringPart extends PPart {
+class PString extends PPart {
   final PReadModeOptions readModeOptions;
   final PEditModeOptions editModeOptions;
 
-  const PStringPart({
+  const PString({
     String caption,
     @required String property,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
   }) : super(caption: caption, property: property);
 
-  factory PStringPart.fromJson(Map<String, dynamic> json) =>
-      _$PStringPartFromJson(json);
+  factory PString.fromJson(Map<String, dynamic> json) =>
+      _$PStringFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PStringPartToJson(this);
+  Map<String, dynamic> toJson() => _$PStringToJson(this);
 }

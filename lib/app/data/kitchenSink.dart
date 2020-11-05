@@ -11,14 +11,15 @@ final kitchenSinkModel = PreceptModel(
           path: "/",
           page: PPage(
             title: "Home Page",
-            sections: [
-              PDocumentSection(
+            elements: [
+              PDocument(
                   documentSelector: PDocumentGet(
                     id: DocumentId(path: "any", itemId: "any"),
                     params: {},
                   ),
-                  parts: [
-                    PStringPart(property: "title", caption: "Title",),
+                  elements: [
+                    PString(property: "title", caption: "Title",),
+                    PString(property: "value", caption: "Value",),
                   ]),
             ],
           ),

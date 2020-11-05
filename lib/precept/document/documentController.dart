@@ -29,17 +29,17 @@ class DocumentController {
 
 class StreamCreator{
   final snapshots = [
-    {"title": "temporary data", "value": 23},
-    {"title": "added age", "value": 23, "age":41},
-    {"title": "temporary data", "value": 3, "age":66},
-    {"title": "changed data", "value": 32, "age":66},
-    {"title": "changed data", "value": 37, "age":66},
-    {"title": "changed data", "value": 38, "age":66},
-    {"title": "revised data", "value": 2, "age":10},
-    {"title": "revised data", "value": 4, "age":10},
-    {"title": "revised data", "value": 4, "age":12},
-    {"title": "revised data", "value": 5, "age":13},
-    {"title": "last data", "value": 4, "age":14},
+    {"title": "temporary data", "value": "skip"},
+    {"title": "added age", "value": "b", "age":41},
+    {"title": "temporary data", "value": "r", "age":66},
+    {"title": "changed data", "value": "rerw", "age":66},
+    {"title": "changed data", "value": "gdgfdfgd", "age":66},
+    {"title": "changed data", "value": "xvxcv", "age":66},
+    {"title": "revised data", "value": "sssss", "age":10},
+    {"title": "revised data", "value": "sdfsf", "age":10},
+    {"title": "revised data", "value": "sssssssssss", "age":12},
+    {"title": "revised data", "value": "cccccc", "age":13},
+    {"title": "last data", "value": "ddddddddd", "age":14},
   ];
 
   Stream<Map<String, dynamic>> start(Duration interval,

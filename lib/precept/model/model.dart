@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
@@ -50,15 +51,18 @@ class PRoute {
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage {
   final String title;
+
   // final pageType;
+  @JsonKey(
+      fromJson: PElementListConverter.fromJson,
+      toJson: PElementListConverter.toJson)
+  final List<DisplayElement> elements;
 
-  final List<PDocumentSection> sections;
-
-  PPage(
-      {@required this.title,
-      @required this.sections,
-      // this.pageType = PageType.standard
-      });
+  PPage({
+    @required this.title,
+    @required this.elements,
+    // this.pageType = PageType.standard
+  });
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -73,15 +77,15 @@ enum PageType { standard }
 //
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PSection {
-  final List<PSection> sections;
-  @JsonKey(fromJson: PPartListConverter.fromJson, toJson: PPartListConverter.toJson)
-  final List<PPart> parts;
-
+class PSection implements DisplayElement {
+  @JsonKey(
+      fromJson: PElementListConverter.fromJson,
+      toJson: PElementListConverter.toJson)
+  final List<DisplayElement> elements;
 
   final PSectionHeading heading;
   final String property;
-  final bool partsFirst;
+  final String caption;
 
   factory PSection.fromJson(Map<String, dynamic> json) =>
       _$PSectionFromJson(json);
@@ -89,38 +93,36 @@ class PSection {
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
   const PSection({
-    this.parts=const[],
-    this.sections = const [],
+    this.elements = const [],
     this.heading,
+    this.caption,
     this.property,
-    this.partsFirst = true,
   });
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PDocumentSelectorConverter()
-class PDocumentSection extends PSection {
+class PDocument extends PSection {
   final PDocumentSelector documentSelector;
 
-  const PDocumentSection(
-      {@required this.documentSelector,
-        @JsonKey(fromJson: PPartListConverter.fromJson, toJson: PPartListConverter.toJson)
-      List<PPart> parts=const[],
-      List<PSection> sections=const[],
+  const PDocument(
+      {@required
+          this.documentSelector,
+      @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
+          List<DisplayElement> elements = const [],
       PSectionHeading heading,
-      String property="not required",
-      bool partsFirst=true})
+      String property = "not required",
+      bool partsFirst = true})
       : super(
-            parts: parts,
-            sections: sections,
-            heading: heading,
-            property: property,
-            partsFirst: partsFirst);
+          elements: elements,
+          heading: heading,
+          property: property,
+        );
 
-  factory PDocumentSection.fromJson(Map<String, dynamic> json) =>
-      _$PDocumentSectionFromJson(json);
+  factory PDocument.fromJson(Map<String, dynamic> json) =>
+      _$PDocumentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDocumentSectionToJson(this);
+  Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)

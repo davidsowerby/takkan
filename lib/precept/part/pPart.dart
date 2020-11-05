@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/part.dart';
 
 part 'pPart.g.dart';
 /// Contained within a [PreceptModel] a [PPart] describes a [Part]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPart {
+class PPart implements DisplayElement {
   final String caption;
   final String property;
   final bool readOnly;
@@ -17,5 +18,6 @@ class PPart {
   factory PPart.fromJson(Map<String, dynamic> json) =>
       _$PPartFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 }

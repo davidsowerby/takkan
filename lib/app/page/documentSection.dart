@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class DocumentSection extends StatelessWidget {
   final Stream<DocumentState> documentState;
-  final PDocumentSection config;
+  final PDocument config;
 
   DocumentSection({Key key, @required this.config})
       : documentState = inject<DocumentController>().getDocument(config.documentSelector),
@@ -47,8 +47,7 @@ class DocumentSection extends StatelessWidget {
   activeBuilder(BuildContext context, DocumentState documentState) {
     final children=List<Widget>();
     final assembler = inject<PreceptPageAssembler>();
-    children.addAll(assembler.assembleParts(config.parts, documentState.rootBinding));
-    children.addAll(assembler.assembleSections(section: config, baseBinding: documentState.rootBinding));
+    children.addAll(assembler.assembleElements(elements: config.elements, baseBinding: documentState.rootBinding));
     return ChangeNotifierProvider<SectionState>(create: (_) => SectionState(), child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: children,
