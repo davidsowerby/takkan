@@ -8,19 +8,19 @@ import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 class Document extends StatelessWidget {
-  final Stream<DocumentState> documentState;
+  final Stream<Map<String,dynamic>> documentDataStream;
   final PDocument config;
 
   Document({Key key, @required this.config})
-      : documentState = inject<DocumentController>().getDocument(config.documentSelector),
+      : documentDataStream = inject<DocumentController>().getDocument(config.documentSelector),
         super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentState>(
-        stream: documentState,
-        initialData: DocumentState(),
+    final DocumentState documentState = Provider.of<DocumentState>(context);
+    return StreamBuilder<Map<String,dynamic>>(
+        stream: documentDataStream,
+        initialData: {},
         builder: (context, snapshot) {
           if (snapshot.hasError) return Text('Error: ${snapshot.error}');
           switch (snapshot.connectionState) {
@@ -33,7 +33,7 @@ class Document extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case ConnectionState.active:
-              return activeBuilder(context,  snapshot.data);
+              return activeBuilder(context, documentState, snapshot.data);
             case ConnectionState.done:
               return Center(
                 child: Text("Connection closed"),
@@ -42,15 +42,21 @@ class Document extends StatelessWidget {
               return null; // unreachable
           }
         });
- }
+  }
 
-  activeBuilder(BuildContext context, DocumentState documentState) {
-    final children=List<Widget>();
+  /// Updates [documentState] (which is in the Widget tree above this Widget) so that bindings
+  /// reflect the new data. Then builds using a [PreceptPageAssembler]
+  activeBuilder(BuildContext context, DocumentState documentState, Map<String,dynamic> update) {
+    documentState.updateData(update);
+    final children = List<Widget>();
     final assembler = inject<PreceptPageAssembler>();
-    children.addAll(assembler.assembleElements(elements: config.elements, baseBinding: documentState.rootBinding));
-    return ChangeNotifierProvider<SectionState>(create: (_) => SectionState(), child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: children,
-    ));
+    children.addAll(assembler.assembleElements(
+        elements: config.elements, baseBinding: documentState.rootBinding));
+    return ChangeNotifierProvider<SectionState>(
+        create: (_) => SectionState(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: children,
+        ));
   }
 }

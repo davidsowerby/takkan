@@ -1,6 +1,5 @@
 import 'package:precept/common/logger.dart';
 import 'package:precept/common/repository.dart';
-import 'package:precept/precept/document/documentState.dart';
 import 'package:precept/precept/model/modelDocument.dart';
 
 /// Retrieves documents from the [Repository] layer, and manages current instances.
@@ -8,8 +7,8 @@ import 'package:precept/precept/model/modelDocument.dart';
 class DocumentController {
   final streamCreator = StreamCreator();
 
-  Stream<DocumentState> getDocument(PDocumentSelector selector) {
-    return _repo(selector).map<DocumentState>((d) => transformSnapshot(d));
+  Stream<Map<String,dynamic>> getDocument(PDocumentSelector selector) {
+    return _repo(selector);
   }
 
   List<Map<String, dynamic>> getDocumentList(PDocumentSelector selector) {}
@@ -20,11 +19,7 @@ class DocumentController {
         interval: Duration(seconds: 1), maxCount: 10, keepOpen: Duration(days: 60));
   }
 
-  DocumentState transformSnapshot(Map<String, dynamic> data) {
-    final ds = DocumentState();
-    ds.updateData(data);
-    return ds;
-  }
+
 }
 
 class StreamCreator {

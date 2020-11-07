@@ -85,15 +85,15 @@ class _HeadingState extends State<Heading> with Interpolator {
 
     /// Pressing edit also expands the heading - otherwise it cannot be edited
     if (sectionState.canEdit && widget.showEditIcon) {
-      List<Function(BuildContext)> callbacks = List();
+      List<Future<bool> Function(BuildContext,bool)> callbacks = List();
       callbacks.add(_expand);
       if(widget.persistOnSave){
         DocumentState documentState= Provider.of<DocumentState>(context, listen: false);
-        callbacks.add(documentState.persist());
+        callbacks.add(documentState.persist);
       }
       actionButtons.add(
         EditSaveAction(
-          callbacks: [_expand],
+          callbacks: callbacks,
         ),
       );
     }
@@ -151,12 +151,13 @@ class _HeadingState extends State<Heading> with Interpolator {
     );
   }
 
-  _expand(BuildContext context) {
+  Future<bool> _expand(BuildContext context, bool readOnly) async{
     if (!expanded) {
       setState(() {
         expanded = true;
       });
     }
+    return true;
   }
 
   _toggleExpanded() {

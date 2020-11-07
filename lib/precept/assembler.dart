@@ -4,6 +4,7 @@ import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/document/document.dart';
+import 'package:precept/precept/document/documentState.dart';
 import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
@@ -18,13 +19,12 @@ class PreceptPageAssembler {
   /// [baseBinding] is the data binding for the level of the caller.  [Part]s and [Section]s
   /// attach themselves to that binding.  May be null, when called by a Page (because a document is held at [Document] level,
   /// or where a Widget only contains static text / content and therefore does not require a data binding
-  List<Widget> assembleElements(
-      {@required List<DisplayElement> elements, MapBinding baseBinding}) {
+  List<Widget> assembleElements({@required List<DisplayElement> elements, MapBinding baseBinding}) {
     final list = List<Widget>();
     for (var element in elements) {
       switch (element.runtimeType) {
         case PString:
-          assert(baseBinding !=null);
+          assert(baseBinding != null);
           list.add(StringPart(
             pPart: element,
             baseBinding: baseBinding,
@@ -37,8 +37,11 @@ class PreceptPageAssembler {
           list.add(constructSection(pSection: element, baseBinding: baseBinding));
           break;
         case PStaticText:
-          final PStaticText config=element;
-          list.add(AutoSizeText(config.text, softWrap: config.softWrap,));
+          final PStaticText config = element;
+          list.add(AutoSizeText(
+            config.text,
+            softWrap: config.softWrap,
+          ));
           break;
         default:
           final message = "Assembler not defined for ${element.runtimeType}";
@@ -51,9 +54,8 @@ class PreceptPageAssembler {
 
   /// Visible for testing
   Widget constructDocument({@required PDocument pDocument}) {
-    return ChangeNotifierProvider<SectionState>(
-        create: (_) => SectionState(readOnlyMode: false, canEdit: true),
-        child: Document(config: pDocument));
+    return ChangeNotifierProvider<DocumentState>(
+        create: (_) => DocumentState(config:pDocument), child: Document(config: pDocument));
   }
 
   /// Visible for testing
@@ -62,7 +64,12 @@ class PreceptPageAssembler {
   Widget constructSection({@required PSection pSection, @required ModelBinding baseBinding}) {
     return ChangeNotifierProvider<SectionState>(
         create: (_) => SectionState(readOnlyMode: false, canEdit: true),
-        child: Section(config: pSection, baseBinding: (pSection.property==null) ? baseBinding :baseBinding.modelBinding(property: pSection.property),));
+        child: Section(
+          config: pSection,
+          baseBinding: (pSection.property == null)
+              ? baseBinding
+              : baseBinding.modelBinding(property: pSection.property),
+        ));
   }
 
   /// Visible for testing
