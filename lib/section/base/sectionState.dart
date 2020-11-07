@@ -1,10 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/common/logger.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/binding/listBinding.dart';
 import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/section/base/section.dart';
 
 
 /// [readOnlyMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false

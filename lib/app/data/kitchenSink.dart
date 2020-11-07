@@ -1,6 +1,7 @@
 import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/model/modelDocument.dart';
+import 'package:precept/precept/model/style.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
 final kitchenSinkModel = PreceptModel(
@@ -24,18 +25,31 @@ final kitchenSinkModel = PreceptModel(
                       caption: "Title",
                     ),
                     PSection(
-                        property: "stuff",
-                        help: PHelp(
-                          title: "Help",
-                          message: "I really need help",
+                      property: "text",
+                      help: PHelp(
+                        title: "Text",
+                        message: "This sections shows StringPart and StaticText",
+                      ),
+                      heading: PSectionHeading(
+                        title: "Text",
+                        style: PHeadingStyle(background: PColor.primary),
+                      ),
+                      elements: [
+                        PString(
+                          property: "stringPart",
+                          caption: "StringPart",
                         ),
-                        heading: PSectionHeading(title: "Section 1"),
-                        elements: [
-                          PString(
-                            property: "value",
-                            caption: "Value",
-                          ),
-                        ]),
+                        PStaticText(text: "This is static text which cannot be edited, but you can change the style", caption: "StaticText")
+                      ],
+                    ),
+                    PSection(
+                      caption: "Section 2",
+                      property: "section2",
+                      elements: [
+                        PString(property: "name", caption: "Name"),
+                        PString(property: "preference", caption: "Preference"),
+                      ],
+                    )
                   ]),
             ],
           ),

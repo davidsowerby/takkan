@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/library/partLibrary.dart';
 import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/library/partLibrary.dart';
 import 'package:precept/precept/router.dart';
 
 /// [init] must be called before the app is run

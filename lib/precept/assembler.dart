@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
@@ -35,6 +36,10 @@ class PreceptPageAssembler {
           break;
         case PSection:
           list.add(constructSection(pSection: element, baseBinding: baseBinding));
+          break;
+        case PStaticText:
+          final PStaticText config=element;
+          list.add(AutoSizeText(config.text, softWrap: config.softWrap,));
           break;
         default:
           final message = "Assembler not defined for ${element.runtimeType}";

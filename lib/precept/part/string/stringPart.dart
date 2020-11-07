@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/binding/converter.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
+import 'package:precept/precept/model/element.dart';
+import 'package:precept/precept/model/style.dart';
 import 'package:precept/precept/part/options/options.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/part.dart';
-import 'package:precept/precept/style/library/styleLibrary.dart';
 import 'package:precept/precept/widget/caption.dart';
-import 'package:precept/section/base/sectionState.dart';
-import 'package:provider/provider.dart';
 
 part 'stringPart.g.dart';
 
@@ -26,11 +25,10 @@ class StringPart extends Part {
 
   Widget buildReadOnlyWidget(BuildContext context) {
     // final sectionState = Provider.of<SectionState>(context);
-    final binding =baseBinding.stringBinding(property: pPart.property);
-    final connector = ModelConnector<String, String>(
-        binding: binding, converter: PassThroughConverter<String>());
-    final style =
-        styleLibrary.findStyle(pPart.readModeOptions.styleName); // TODO styling
+    final binding = baseBinding.stringBinding(property: pPart.property);
+    final connector =
+        ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
+    // TODO styling final style =
     final text = Text(connector.readFromModel());
     if (pPart.readModeOptions.showCaption) {
       return Padding(
@@ -60,9 +58,9 @@ class StringPart extends Part {
 
   Widget buildEditModeWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final binding =baseBinding.stringBinding(property: pPart.property);
-    final connector = ModelConnector<String, String>(
-        binding: binding, converter: PassThroughConverter<String>());
+    final binding = baseBinding.stringBinding(property: pPart.property);
+    final connector =
+        ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
     return Padding(
       padding: EdgeInsets.only(bottom: 8.0),
       child: TextFormField(
@@ -91,8 +89,28 @@ class PString extends PPart {
     this.editModeOptions = const PEditModeOptions(),
   }) : super(caption: caption, property: property);
 
-  factory PString.fromJson(Map<String, dynamic> json) =>
-      _$PStringFromJson(json);
+  factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PStringToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PStaticText implements DisplayElement {
+  final String text;
+  final String caption;
+  final PTextStyle style;
+  final PTextTheme theme;
+  final bool softWrap;
+
+  const PStaticText({
+    @required this.text,
+    this.style = PTextStyle.bodyText1,
+    this.theme = PTextTheme.standard,
+    this.caption,
+    this.softWrap = true,
+  });
+
+  factory PStaticText.fromJson(Map<String, dynamic> json) => _$PStaticTextFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PStaticTextToJson(this);
 }

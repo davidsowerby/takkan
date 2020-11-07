@@ -6,7 +6,8 @@ import 'package:precept/precept/model/modelDocument.dart';
 /// Retrieves documents from the [Repository] layer, and manages current instances.
 /// This allows the system to work with multiple documents concurrently
 class DocumentController {
-  final streamCreator=StreamCreator();
+  final streamCreator = StreamCreator();
+
   Stream<DocumentState> getDocument(PDocumentSelector selector) {
     return _repo(selector).map<DocumentState>((d) => transformSnapshot(d));
   }
@@ -15,7 +16,8 @@ class DocumentController {
 
   // TODO replace with injectable Repository
   Stream<Map<String, dynamic>> _repo(PDocumentSelector selector) {
-    return streamCreator.start(interval: Duration(seconds: 1), maxCount: 10, keepOpen: Duration(seconds: 60));
+    return streamCreator.start(
+        interval: Duration(seconds: 1), maxCount: 10, keepOpen: Duration(days: 60));
   }
 
   DocumentState transformSnapshot(Map<String, dynamic> data) {
@@ -23,29 +25,50 @@ class DocumentController {
     ds.updateData(data);
     return ds;
   }
-
-
 }
 
-class StreamCreator{
-
+class StreamCreator {
   final snapshots = [
-    {"title": "temporary data", "value": "skip"},
-    {"title": "added age", "value": "b", "age":41},
-    {"title": "temporary data", "value": "r", "age":66},
-    {"title": "changed data", "value": "rerw", "age":66},
-    {"title": "changed data", "value": "gdgfdfgd", "age":66},
-    {"title": "changed data", "value": "xvxcv", "age":66},
-    {"title": "revised data", "value": "sssss", "age":10},
-    {"title": "revised data", "value": "sdfsf", "age":10},
-    {"title": "revised data", "value": "sssssssssss", "age":12},
-    {"title": "revised data", "value": "cccccc", "age":13},
-    {"title": "last data", "value": "ddddddddd", "age":14},
+    {
+      "text": {"stringPart": "Text in a StringPart", "staticText": "A static text widget, cannot be edited"}
+    },
+    {
+      "text": {"stringPart": "added age", "staticText": "b", "age": 41}
+    },
+    {
+      "text": {"stringPart": "temporary data", "staticText": "r", "age": 66}
+    },
+    {
+      "text": {"stringPart": "changed data", "staticText": "rerw", "age": 66}
+    },
+    {
+      "text": {"stringPart": "changed data", "staticText": "gdgfdfgd", "age": 66}
+    },
+    {
+      "text": {"stringPart": "changed data", "staticText": "xvxcv", "age": 66}
+    },
+    {
+      "text": {"stringPart": "revised data", "staticText": "sssss", "age": 10}
+    },
+    {
+      "text": {"stringPart": "revised data", "staticText": "sdfsf", "age": 10}
+    },
+    {
+      "text": {"stringPart": "revised data", "staticText": "sssssssssss", "age": 12}
+    },
+    {
+      "text": {"stringPart": "revised data", "staticText": "cccccc", "age": 13}
+    },
+    {
+      "text": {"stringPart": "Text in a StringPart", "staticText": "A static text widget, cannot be edited"},
+      "section2": {"name": "squiggly", "preference":"blue"}
+    },
   ];
 
-  Stream<Map<String, dynamic>> start({Duration interval=const Duration(seconds: 1),  Duration keepOpen=const Duration(seconds: 30),
-      int maxCount=10}) async* {
-
+  Stream<Map<String, dynamic>> start(
+      {Duration interval = const Duration(seconds: 1),
+      Duration keepOpen = const Duration(seconds: 30),
+      int maxCount = 10}) async* {
     int i = 0;
     while (true) {
       await Future.delayed(interval);
@@ -55,7 +78,6 @@ class StreamCreator{
       i++;
     }
     await Future.delayed(keepOpen);
-
   }
 
   Stream<int> timedCounter(Duration interval, [int maxCount]) async* {

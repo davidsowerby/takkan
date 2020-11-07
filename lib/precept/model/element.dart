@@ -8,7 +8,7 @@ abstract class DisplayElement {
 
   String get caption;
 
-  String get property;
+
 }
 
 class PElementListConverter {

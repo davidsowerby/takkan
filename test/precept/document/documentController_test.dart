@@ -38,7 +38,7 @@ class EventMatcher extends Matcher {
 
   @override
   Description describe(Description description) {
-    return description.add("has expected word content = '${expected}'");
+    return description.add("has expected word content = '$expected'");
   }
 
   @override

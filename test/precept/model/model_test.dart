@@ -6,8 +6,6 @@ import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 import 'package:test/test.dart';
 
-import '../../data/testModel/testModel.dart';
-
 void main() {
   group('Round trip Precept model to JSON', () {
     setUpAll(() {});
@@ -61,7 +59,6 @@ void main() {
       // then
 
       expect(json.encode(m.toJson()), jsonEncode(m2.toJson()));
-      expect(m2.elements[0].property, "title");
       expect(m2.elements[0].caption, "Title");
       expect(m2.elements[0], isA<PString>());
     });

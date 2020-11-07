@@ -1,12 +1,14 @@
-
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:precept/common/action/actionIcon.dart';
 import 'package:precept/common/action/editSave.dart';
-import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/locale.dart';
+import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/library/borderLibrary.dart';
 import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/model.dart';
+import 'package:precept/precept/model/style.dart';
+import 'package:precept/precept/model/themeLookup.dart';
 import 'package:precept/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
@@ -17,11 +19,11 @@ import 'package:provider/provider.dart';
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
+  final PHeadingStyle headingStyle;
   final PHelp help;
   final Widget child;
   final bool editable;
   final bool expandable;
-  final DocumentHeadingStyle headingStyle=const DocumentHeadingStyle();
   final Function(BuildContext) onEdit;
   final Function(BuildContext) onSave;
   final bool openExpanded;
@@ -35,24 +37,23 @@ class Heading extends StatefulWidget {
     Key key,
     this.headingText,
     this.help,
+    this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
     @required this.child,
     this.editable = true,
     this.onEdit,
     this.onSave,
-    headingStyle,
-    this.expandable,
+    this.expandable = true,
     this.readModeActions = const [],
     this.editModeActions = const [],
     this.canEditActions = const [],
     this.cannotEditActions = const [],
     this.showEditIcon = true,
-  })  : assert((editable) ? onEdit != null : true,
-            "If edit button required, OnEdit must be defined"),
-        assert((editable) ? onSave != null : true,
-            "If edit required, onSave must also be defined"),
-        assert((editable) ? expandable : true,
-            "If editable needs also to be expandable"),
+  })  : assert(child != null),
+        assert(
+            (editable) ? onEdit != null : true, "If edit button required, OnEdit must be defined"),
+        assert((editable) ? onSave != null : true, "If edit required, onSave must also be defined"),
+        assert((editable) ? expandable : true, "If editable needs also to be expandable"),
         super(key: key);
 
   @override
@@ -61,23 +62,22 @@ class Heading extends StatefulWidget {
 
 class _HeadingState extends State<Heading> with Interpolator {
   bool expanded;
+  ThemeLookup themeLookup;
 
   @override
   void initState() {
     super.initState();
     expanded = widget.openExpanded;
+    themeLookup = inject<ThemeLookup>();
   }
 
   @override
   Widget build(BuildContext context) {
-    final SectionState sectionState =
-        Provider.of<SectionState>(context);
+    final SectionState sectionState = Provider.of<SectionState>(context);
     final List<Widget> actionButtons = (sectionState.readOnlyMode)
         ? List.from(widget.readModeActions)
         : List.from(widget.editModeActions);
-    actionButtons.addAll((sectionState.canEdit)
-        ? widget.canEditActions
-        : widget.cannotEditActions);
+    actionButtons.addAll((sectionState.canEdit) ? widget.canEditActions : widget.cannotEditActions);
 
     /// Pressing edit also expands the heading - otherwise it cannot be edited
     if (sectionState.canEdit && widget.showEditIcon) {
@@ -89,32 +89,34 @@ class _HeadingState extends State<Heading> with Interpolator {
     }
 
     if (widget.expandable) {
-      actionButtons.add(HeadingExpandCloseAction(
-          callback: _toggleExpanded, expanded: expanded));
+      actionButtons.add(HeadingExpandCloseAction(callback: _toggleExpanded, expanded: expanded));
     }
 
     final theme = Theme.of(context);
-
+    final borderLibrary = inject<BorderLibrary>();
     return Card(
-      shape: RoundedRectangleBorder(
-        side: BorderSide(color: theme.primaryColor, width: 0),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      elevation: 20,
-      child: Column(
+      shape: borderLibrary.find(theme: theme, border: widget.headingStyle.border),
+      elevation: widget.headingStyle.elevation,
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
             onTap: _toggleExpanded,
             child: Container(
-              height: 40,
-              color: widget.headingStyle.headingBackgroundColor,
+              height: widget.headingStyle.height,
+              color: themeLookup.color(
+                theme: theme,
+                pColor: widget.headingStyle.background,
+              ),
               child: Row(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       widget.headingText,
-                      style: widget.headingStyle.textStyle,
+                      style: themeLookup.textStyle(
+                        theme: theme,
+                        style: widget.headingStyle.style,
+                      ),
                     ),
                   ),
                   if (widget.help != null)
@@ -130,7 +132,10 @@ class _HeadingState extends State<Heading> with Interpolator {
               ),
             ),
           ),
-          if (expanded) widget.child
+          if (expanded) Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: widget.child,
+          )
         ],
       ),
     );
@@ -155,8 +160,7 @@ class HeadingExpandCloseAction extends StatelessWidget {
   final bool expanded;
   final Function() callback;
 
-  const HeadingExpandCloseAction(
-      {Key key, @required this.expanded, @required this.callback})
+  const HeadingExpandCloseAction({Key key, @required this.expanded, @required this.callback})
       : super(key: key);
 
   @override
@@ -176,7 +180,6 @@ class SectionHeading extends StatelessWidget {
   final PSectionHeading config;
   final PHelp help;
   final Widget child;
-  final DocumentHeadingStyle headingStyle;
   final List<Widget> readModeActions;
   final List<Widget> editModeActions;
   final List<Widget> canEditActions;
@@ -193,13 +196,12 @@ class SectionHeading extends StatelessWidget {
     this.cannotEditActions = const [],
     this.help,
     @required this.child,
-    this.headingStyle,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final sectionState=Provider.of<SectionState>(context);
-    return Heading(
+    final sectionState = Provider.of<SectionState>(context);
+    return Heading(headingStyle: config.style,
       showEditIcon: showEditIcon,
       help: help,
       readModeActions: readModeActions,
@@ -210,7 +212,6 @@ class SectionHeading extends StatelessWidget {
       child: child,
       editable: (!config.canEdit) ? false : sectionState.canEdit,
       expandable: config.expandable,
-      headingStyle: headingStyle,
       headingText: config.title,
       onSave: save,
       onEdit: edit,
@@ -218,19 +219,15 @@ class SectionHeading extends StatelessWidget {
   }
 
   edit(BuildContext context) {
-    final SectionState sectionState =
-        Provider.of<SectionState>(context, listen: false);
+    final SectionState sectionState = Provider.of<SectionState>(context, listen: false);
     sectionState.readOnlyMode = false;
   }
 
   save(BuildContext context) {
-    final SectionState sectionState =
-        Provider.of<SectionState>(context, listen: false);
+    final SectionState sectionState = Provider.of<SectionState>(context, listen: false);
     sectionState.readOnlyMode = true;
   }
 }
-
-
 
 class HelpButton extends StatelessWidget with Interpolator {
   final PHelp help;
@@ -247,124 +244,5 @@ class HelpButton extends StatelessWidget with Interpolator {
               message: help.message,
             ) // TODO interpolate with params, but params from where.  A Binding with property names maybe?
         );
-  }
-}
-
-class DocumentHeadingStyle {
-  final TextStyle textStyle;
-  final double indentation;
-  final Color headingBackgroundColor;
-  final Border border;
-  final int elevation;
-  final bool expanding;
-  final bool editable;
-  final double width;
-  final double contentElevation;
-
-  const DocumentHeadingStyle({
-    this.textStyle,
-    this.indentation = 0,
-    this.headingBackgroundColor = Colors.white,
-    this.border,
-    this.elevation = 20,
-    this.expanding = true,
-    this.editable = true,
-    this.width,
-    this.contentElevation = 10,
-  });
-}
-
-TextStyle lookupTextStyle(
-    {Color backgroundColour,
-    int sizeIndex,
-    bool bold = false,
-    bool italic = false,
-    Color fontColour = Colors.black}) {
-  final FontWeight fontWeight = (bold) ? FontWeight.bold : FontWeight.normal;
-  final FontStyle fontStyle = (italic) ? FontStyle.italic : FontStyle.normal;
-
-  switch (sizeIndex) {
-    case 0:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 12,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // caption
-    case 1:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 14,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // body1
-    case 2:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 16,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // body2
-    case 3:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 18,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // no equivalent
-    case 4:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 20,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // title
-    case 5:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 24,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // headline
-    case 6:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 34,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // display1
-    case 7:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 45,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // display2
-    case 8:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 56,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // display3
-    case 9:
-      return TextStyle(
-        color: fontColour,
-        fontSize: 112,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColour,
-        fontStyle: fontStyle,
-      ); // display4
-    default:
-      throw ConfigurationException("Text level $sizeIndex is not supported");
   }
 }

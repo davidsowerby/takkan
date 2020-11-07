@@ -45,26 +45,29 @@ class Section extends StatelessWidget with ToggleSectionEditState {
       key: formKey,
       child: InkWell(
           onTap: () => toggleEditState(context),
-          child:
-              Container(padding: EdgeInsets.all(8), child: _doBuild(context))),
+          child: Container(padding: EdgeInsets.all(8), child: _doBuild(context))),
     );
   }
 
   Widget _doBuild(BuildContext context) {
     final assembler = inject<PreceptPageAssembler>();
-    List<Widget> children = assembler.assembleElements(
-        elements: config.elements, baseBinding: baseBinding);
+    List<Widget> children =
+        assembler.assembleElements(elements: config.elements, baseBinding: baseBinding);
     final body = (config.scrollable)
         ? ListView(children: children)
         : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
           );
     if (config.heading == null) {
-      return body;
+      return Padding(
+        padding: const EdgeInsets.only(top: 12.0),
+        child: body,
+      );
     } else {
       return ChangeNotifierProvider<SectionState>(
           create: (_) => SectionState(),
-          child: SectionHeading(config: config.heading,help:config.help, child: body));
+          child: SectionHeading(config: config.heading, help: config.help, child: body));
     }
   }
 }

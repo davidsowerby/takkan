@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/modelDocument.dart';
+import 'package:precept/precept/model/style.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
 
@@ -98,7 +99,7 @@ class PSection implements DisplayElement {
     this.elements = const [],
     this.heading,
     this.caption,
-    this.property,
+    @required this.property,
     this.scrollable = false,
     this.help,
   });
@@ -136,6 +137,8 @@ class PSectionHeading {
   final bool openExpanded;
   final bool canEdit;
   final PHelp help;
+  final PHeadingStyle style;
+
 
   PSectionHeading({
     @required this.title,
@@ -143,6 +146,7 @@ class PSectionHeading {
     this.openExpanded = true,
     this.canEdit=false,
     this.help,
+    this.style=const PHeadingStyle(),
   }) : super();
 
   factory PSectionHeading.fromJson(Map<String, dynamic> json) =>
