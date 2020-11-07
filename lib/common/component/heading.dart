@@ -4,6 +4,7 @@ import 'package:precept/common/action/actionIcon.dart';
 import 'package:precept/common/action/editSave.dart';
 import 'package:precept/common/locale.dart';
 import 'package:precept/inject/inject.dart';
+import 'package:precept/precept/document/documentState.dart';
 import 'package:precept/precept/library/borderLibrary.dart';
 import 'package:precept/precept/model/help.dart';
 import 'package:precept/precept/model/model.dart';
@@ -16,6 +17,7 @@ import 'package:provider/provider.dart';
 /// - [canEditActions] always has a [EditSaveAction] added when [editable] is true, so there is no need to explicitly add that
 /// - [actionButtons], if present, are placed before the 'expand' widget
 /// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [SectionState.canEdit] is true.
+/// - [persistOnSave] if true, when a save action is executed, the nearest [DocumentState] is called to persist the document
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
@@ -32,6 +34,7 @@ class Heading extends StatefulWidget {
   final List<Widget> canEditActions;
   final List<Widget> cannotEditActions;
   final bool showEditIcon;
+  final bool persistOnSave;
 
   const Heading({
     Key key,
@@ -43,6 +46,7 @@ class Heading extends StatefulWidget {
     this.editable = true,
     this.onEdit,
     this.onSave,
+    this.persistOnSave=true,
     this.expandable = true,
     this.readModeActions = const [],
     this.editModeActions = const [],
@@ -81,9 +85,15 @@ class _HeadingState extends State<Heading> with Interpolator {
 
     /// Pressing edit also expands the heading - otherwise it cannot be edited
     if (sectionState.canEdit && widget.showEditIcon) {
+      List<Function(BuildContext)> callbacks = List();
+      callbacks.add(_expand);
+      if(widget.persistOnSave){
+        DocumentState documentState= Provider.of<DocumentState>(context, listen: false);
+        callbacks.add(documentState.persist());
+      }
       actionButtons.add(
         EditSaveAction(
-          callback: _expand,
+          callbacks: [_expand],
         ),
       );
     }
@@ -141,7 +151,7 @@ class _HeadingState extends State<Heading> with Interpolator {
     );
   }
 
-  _expand() {
+  _expand(BuildContext context) {
     if (!expanded) {
       setState(() {
         expanded = true;

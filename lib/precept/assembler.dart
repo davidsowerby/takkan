@@ -4,7 +4,6 @@ import 'package:precept/common/exceptions.dart';
 import 'package:precept/common/logger.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/document/document.dart';
-import 'package:precept/precept/document/formLog.dart';
 import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
@@ -52,9 +51,9 @@ class PreceptPageAssembler {
 
   /// Visible for testing
   Widget constructDocument({@required PDocument pDocument}) {
-    return ChangeNotifierProvider<FormLog>(create: (_) => FormLog(), child: ChangeNotifierProvider<SectionState>(
+    return ChangeNotifierProvider<SectionState>(
         create: (_) => SectionState(readOnlyMode: false, canEdit: true),
-        child: Document(config: pDocument)));
+        child: Document(config: pDocument));
   }
 
   /// Visible for testing

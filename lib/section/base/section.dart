@@ -7,7 +7,7 @@ import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/assembler.dart';
 import 'package:precept/precept/binding/mapBinding.dart';
 import 'package:precept/precept/document/document.dart';
-import 'package:precept/precept/document/formLog.dart';
+import 'package:precept/precept/document/documentState.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/section/base/sectionKey.dart';
 import 'package:precept/section/base/sectionList.dart';
@@ -38,7 +38,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
 
   @override
   Widget build(BuildContext context) {
-    final FormLog formLog = Provider.of<FormLog>(context);
+    final DocumentState formLog = Provider.of<DocumentState>(context);
     final formKey = GlobalKey<FormState>();
     formLog.addForm(formKey);
     return Form(

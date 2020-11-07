@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 
 /// Toggles the read only state of the nearest [SectionEditState]
 class EditSaveAction extends StatelessWidget with ToggleSectionEditState {
-  final Function() callback;
+  final List<Function(BuildContext)> callbacks;
 
-  const EditSaveAction({Key key, this.callback}) : super(key: key);
+  const EditSaveAction({Key key, this.callbacks}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +24,10 @@ class EditSaveAction extends StatelessWidget with ToggleSectionEditState {
 
   _execute(BuildContext context) {
     toggleEditState(context);
-    if (callback != null) callback();
+    if (callbacks != null) {
+      for(var callback in callbacks){
+        callback(context);
+      }
+    }
   }
 }

@@ -28,7 +28,7 @@ final kitchenSinkModel = PreceptModel(
                       property: "text",
                       help: PHelp(
                         title: "Text",
-                        message: "This sections shows StringPart and StaticText",
+                        message: "This section shows StringPart and StaticText, with various styling options applied.\n\nNot all options are shown, though",
                       ),
                       heading: PSectionHeading(
                         title: "Text",
@@ -39,7 +39,7 @@ final kitchenSinkModel = PreceptModel(
                           property: "stringPart",
                           caption: "StringPart",
                         ),
-                        PStaticText(text: "This is static text which cannot be edited, but you can change the style", caption: "StaticText")
+                        PStaticText(text: "This is static text which cannot be edited.", caption: "StaticText")
                       ],
                     ),
                     PSection(
