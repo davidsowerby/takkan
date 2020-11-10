@@ -62,5 +62,6 @@ void main() {
       expect(m2.elements[0].caption, "Title");
       expect(m2.elements[0], isA<PString>());
     });
+
   });
 }

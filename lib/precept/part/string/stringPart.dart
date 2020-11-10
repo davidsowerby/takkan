@@ -91,6 +91,7 @@ class PString extends PPart {
 
   factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PStringToJson(this);
 }
 

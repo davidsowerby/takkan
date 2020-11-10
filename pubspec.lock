@@ -65,7 +65,7 @@ packages:
     source: hosted
     version: "1.3.0"
   build_config:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: build_config
       url: "https://pub.dartlang.org"
@@ -303,6 +303,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.10.0"
+  generator:
+    dependency: "direct dev"
+    description:
+      path: generator
+      relative: true
+    source: path
+    version: "0.0.0"
   get_it:
     dependency: "direct main"
     description:

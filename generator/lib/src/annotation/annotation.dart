@@ -1,0 +1,3 @@
+class SchemaGen{
+  const SchemaGen();
+}

@@ -39,6 +39,7 @@ dependencies:
   collection: ^1.14.13
   auto_size_text: ^2.1.0
 
+
 dev_dependencies:
   test: ^1.14.4
   flutter_test:
@@ -46,8 +47,12 @@ dev_dependencies:
   mockito: ^4.1.0
   build:
   build_runner:
+  build_config:
   source_gen:
   json_serializable: ^3.2.0
+  generator:
+    path: generator
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,0 +1,8 @@
+builders:
+  schemaGeneratorBuilder:
+    import: 'package:generator/generators.dart'
+    builder_factories: ['schemaGeneratorBuilder']
+    auto_apply: dependents
+    build_extensions: {".dart": [".schema.part"]}
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
