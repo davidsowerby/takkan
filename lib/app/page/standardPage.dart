@@ -16,7 +16,7 @@ class StandardPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(route.page.title),
       ),
-        body: Column(children:pageAssembler.assembleElements(elements: route.page.elements)),
+        body: Column(children:pageAssembler.assembleElements(elements: route.page.document.sections)),
     );
   }
 }

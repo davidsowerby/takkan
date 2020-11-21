@@ -6,19 +6,19 @@ import 'package:precept/precept/model/modelDocument.dart';
 import 'package:precept/precept/model/style.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/partConverter.dart';
+import 'package:precept/precept/schema/schema.dart';
 
 part 'model.g.dart';
 
 @JsonSerializable(nullable: false, explicitToJson: true)
-class PreceptModel {
+class PModel {
   final List<PComponent> components;
 
-  PreceptModel({@required this.components});
+  PModel({@required this.components});
 
-  factory PreceptModel.fromJson(Map<String, dynamic> json) =>
-      _$PreceptModelFromJson(json);
+  factory PModel.fromJson(Map<String, dynamic> json) => _$PModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PreceptModelToJson(this);
+  Map<String, dynamic> toJson() => _$PModelToJson(this);
 }
 
 @JsonSerializable(nullable: false, explicitToJson: true)
@@ -31,8 +31,7 @@ class PComponent {
 
   PComponent({this.parts, @required this.routes, @required this.name});
 
-  factory PComponent.fromJson(Map<String, dynamic> json) =>
-      _$PComponentFromJson(json);
+  factory PComponent.fromJson(Map<String, dynamic> json) => _$PComponentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 }
@@ -50,19 +49,15 @@ class PRoute {
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
+/// [pageKey] used to look up from [PageLibrary]
 class PPage {
   final String title;
+  final String pageKey;
+  final PDocument document;
 
-  // final pageType;
-  @JsonKey(
-      fromJson: PElementListConverter.fromJson,
-      toJson: PElementListConverter.toJson)
-  final List<DisplayElement> elements;
-
-  PPage({
+  const PPage( {@required this.pageKey,
     @required this.title,
-    @required this.elements,
-    // this.pageType = PageType.standard
+    @required this.document,
   });
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
@@ -79,27 +74,24 @@ enum PageType { standard }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PSection implements DisplayElement {
-  @JsonKey(
-      fromJson: PElementListConverter.fromJson,
-      toJson: PElementListConverter.toJson)
+  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<DisplayElement> elements;
-
+  @JsonKey(ignore: true)
+  final SchemaClass schema;
   final PSectionHeading heading;
-  final String property;
   final String caption;
   final bool scrollable;
   final PHelp help;
 
-  factory PSection.fromJson(Map<String, dynamic> json) =>
-      _$PSectionFromJson(json);
+  factory PSection.fromJson(Map<String, dynamic> json) => _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
   const PSection({
+    @required this.schema,
     this.elements = const [],
     this.heading,
     this.caption,
-    @required this.property,
     this.scrollable = false,
     this.help,
   });
@@ -107,25 +99,14 @@ class PSection implements DisplayElement {
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PDocumentSelectorConverter()
-class PDocument extends PSection {
+class PDocument {
   final PDocumentSelector documentSelector;
+  final List<PSection> sections;
 
   const PDocument(
-      {@required
-          this.documentSelector,
-      @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-          List<DisplayElement> elements = const [],
-      PSectionHeading heading,
-      String property = "not required",
-      bool partsFirst = true})
-      : super(
-          elements: elements,
-          heading: heading,
-          property: property,
-        );
+      {@required SchemaClass schema, @required this.documentSelector, @required this.sections});
 
-  factory PDocument.fromJson(Map<String, dynamic> json) =>
-      _$PDocumentFromJson(json);
+  factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 }
@@ -139,18 +120,16 @@ class PSectionHeading {
   final PHelp help;
   final PHeadingStyle style;
 
-
   PSectionHeading({
     @required this.title,
     this.expandable = true,
     this.openExpanded = true,
-    this.canEdit=false,
+    this.canEdit = false,
     this.help,
-    this.style=const PHeadingStyle(),
+    this.style = const PHeadingStyle(),
   }) : super();
 
-  factory PSectionHeading.fromJson(Map<String, dynamic> json) =>
-      _$PSectionHeadingFromJson(json);
+  factory PSectionHeading.fromJson(Map<String, dynamic> json) => _$PSectionHeadingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionHeadingToJson(this);
 }

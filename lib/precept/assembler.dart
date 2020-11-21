@@ -30,9 +30,6 @@ class PreceptPageAssembler {
             baseBinding: baseBinding,
           ));
           break;
-        case PDocument:
-          list.add(constructDocument(pDocument: element));
-          break;
         case PSection:
           list.add(constructSection(pSection: element, baseBinding: baseBinding));
           break;
@@ -66,9 +63,9 @@ class PreceptPageAssembler {
         create: (_) => SectionState(readOnlyMode: false, canEdit: true),
         child: Section(
           config: pSection,
-          baseBinding: (pSection.property == null)
+          baseBinding: (pSection.schema == null)
               ? baseBinding
-              : baseBinding.modelBinding(property: pSection.property),
+              : baseBinding.modelBinding(property: pSection.schema.property),
         ));
   }
 

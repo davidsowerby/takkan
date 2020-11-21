@@ -9,12 +9,16 @@ class SchemaGenerator extends GeneratorForAnnotation<SchemaGen> {
       Element element, ConstantReader annotation, BuildStep buildStep) {
     var buffer = StringBuffer();
 
+
     // buffer.writeln('// ${annotation.read('nullable').boolValue}');
     // extension $OrderSerializer on Order {
     //   static Order fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
     //   Map<String, dynamic> toJson() => _$OrderToJson(this);
     // }
-    final className = element.displayName;
+    final displayName = element.displayName;
+    final extendedDisplayName = element.getExtendedDisplayName(displayName);
+    final declaration =element.declaration.toString();
+
 
     // buffer.writeln('extension \$${className}Serializer on ${className} {');
     //
@@ -22,7 +26,9 @@ class SchemaGenerator extends GeneratorForAnnotation<SchemaGen> {
     //     'Map<String, dynamic> toJson() => _\$${className}ToJson(this);');
     //
     // buffer.writeln('}');
-    buffer.writeln('/// ???????????????????????? ');
+    buffer.writeln('/// ${displayName}');
+    buffer.writeln('/// ${extendedDisplayName}');
+    buffer.writeln('/// ${declaration}');
     return buffer.toString();
   }
 }

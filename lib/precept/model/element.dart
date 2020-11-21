@@ -1,4 +1,5 @@
 import 'package:precept/common/exceptions.dart';
+import 'package:precept/common/logger.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/string/stringPart.dart';
 
@@ -24,15 +25,16 @@ class PElementListConverter {
         case "PSection":
           list.add(PSection.fromJson(entryCopy));
           break;
-        case "PDocument":
-          list.add(PDocument.fromJson(entryCopy));
-          break;
         case "PString":
           list.add(PString.fromJson(entryCopy));
           break;
+          case "PStaticText":
+          list.add(PStaticText.fromJson(entryCopy));
+          break;
         default:
-          throw PreceptException(
-              "JSON conversion has not been implemented for $elementType");
+          final msg="JSON conversion has not been implemented for $elementType";
+          getLogger(Object().runtimeType).e(msg);
+          throw PreceptException(msg);
       }
     }
     return list;

@@ -112,8 +112,8 @@ class PreceptRouter {
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  init({@required List<PreceptModel> models}) {
-    for (PreceptModel model in models) {
+  init({@required List<PModel> models}) {
+    for (PModel model in models) {
       for (PComponent component in model.components) {
         for (PRoute r in component.routes) {
           _preceptRoutes[r.path] = r;
@@ -157,7 +157,7 @@ PreceptRouter get router => inject<PreceptRouter>();
 class PreceptRouteLocator implements RouteLocator {
   bool _loaded = false;
   final PreceptLoader loader;
-  PreceptModel _model;
+  PModel _model;
 
   PreceptRouteLocator({@required this.loader});
 

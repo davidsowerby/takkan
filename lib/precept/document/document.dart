@@ -51,7 +51,7 @@ class Document extends StatelessWidget {
     final children = List<Widget>();
     final assembler = inject<PreceptPageAssembler>();
     children.addAll(assembler.assembleElements(
-        elements: config.elements, baseBinding: documentState.rootBinding));
+        elements: config.sections, baseBinding: documentState.rootBinding));
     return ChangeNotifierProvider<SectionState>(
         create: (_) => SectionState(),
         child: Column(

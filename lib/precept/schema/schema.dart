@@ -1,45 +1,76 @@
-import 'package:generator/src/annotation/annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:precept/app/data/targetSchema.dart';
 
-part 'schema.g.dart';
+/// Contains one or more [SourceSchema] instances, each relating to a specific backend (data source)
+class ApplicationSchema {
+  final Map<String, SchemaSource> sources;
 
-/// The root for a backend-agnostic definition of a data structure, including data types, validation
-/// and relationships.
-///
-/// This is just a definition, which is used by Precept, and may or may not be used to create a backend schema.
-/// If it is used that way, the interpretation of it is a matter for each [SchemaInterpreter} implementation.
-///
-///
-/// The terminology used reflects the intention to keep this backend-agnostic - there are only 3 classes:
-/// - [Schema] the top level, or root of the schema
-/// - [SchemaObject], contains [SField] and/or more [SObject]s
-/// - [SField], represents a database field
-///
-/// How these translate to the structure in the backend will depend on the backend itself, and the user's
-/// preferences.
-///
-/// Each level contains [Hints], which can be used to guide a [SchemaInterpreter} implementation.
-///
-///
-///
-// @JsonSerializable(nullable: true, explicitToJson: true)
-@SchemaGen()
-class Schema {
-  Map<String, SObject> objects;
+  const ApplicationSchema({@required this.sources});
+
+  CoreSource get core=> sources["core"] ;
 }
 
-abstract class SElement {
-}
+abstract class SchemaClass implements SchemaElement {
+  final Map<String,SchemaElement> elements;
+  final String property;
 
-abstract class SObject {
-  Map<String, SElement> elements;
+  const SchemaClass({@required this.elements, this.property});
+
+  /// Returns only the classes from elements
+  Map<String,SchemaClass> get classes => throw UnimplementedError();
+  Map<String,SchemaField> get fields => throw UnimplementedError();
+
 }
 
 
+abstract class SchemaSource {
+  final Map<String, SchemaClass> classes;
 
-/// Common interface for a backend-specific interpretation of [Schema]
-///
-/// An implementation must interpret the Schema in way which acknowledges version changes,
-/// and should of course minimise risk of data loss or corruption abstract
+  const SchemaSource({@required this.classes});
+}
 
-class SchemaInterpreter {}
+abstract class SchemaElement {}
 
+/// [T] is the data type to be validated
+abstract class SchemaField<T> implements SchemaElement {
+  final String property;
+  @JsonKey(ignore:true)
+  final Validator<T> validator;
+  final SchemaPermissions permissions;
+  final T defaultValue;
+
+  const SchemaField({@required this.property, this.validator, this.permissions, this.defaultValue});
+
+  bool validate(T value)=> validator.validate(value);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SchemaString extends SchemaField<String> {
+  const SchemaString({@required String property, Validator<String> validator, String defaultValue})
+      : super(property: property, validator: validator,defaultValue: defaultValue);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SchemaBoolean extends SchemaField<bool> {
+  const SchemaBoolean({@required String property, Validator<bool> validator, bool defaultValue})
+      : super(property: property, validator: validator,defaultValue: defaultValue);
+}
+
+abstract class SchemaPermissions {}
+
+/// [T] the data type to be validated
+abstract class Validator<T> {
+  final bool required;
+
+  const Validator({this.required = false});
+
+  bool validate(T value) {
+    if (value == null) {
+      return false;
+    }
+    return doValidate(value);
+  }
+
+  bool doValidate(T value);
+}

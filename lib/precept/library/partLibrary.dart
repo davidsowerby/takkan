@@ -21,7 +21,7 @@ class PartLibrary {
     return null;
   }
 
-  init({@required List<PreceptModel> models}) {}
+  init({@required List<PModel> models}) {}
 }
 
 abstract class PartLibraryModule {

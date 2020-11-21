@@ -1,8 +1,7 @@
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/model/modelDocument.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
 
-final testModel = PreceptModel(
+final testModel = PModel(
   components: [
     PComponent(
       name: "core",
@@ -11,18 +10,15 @@ final testModel = PreceptModel(
           path: "/",
           page: PPage(
             title: "Home Page",
-            elements: [
-              PDocument(
-                documentSelector: PDocumentGet(
-                  id: DocumentId(path: "any", itemId: "any"),
-                  params: {},
-                ),
+            document: PDocument(
+              documentSelector: PDocumentGet(
+                id: DocumentId(path: "any", itemId: "any"),
+                params: {},
               ),
-            ],
+            ),
           ),
         ),
       ],
     )
   ],
 );
-

@@ -7,14 +7,14 @@ import 'package:precept/precept/router.dart';
 
 /// [init] must be called before the app is run
 class Precept {
-  final List<PreceptModel> models = List();
+  final List<PModel> models = List();
   final List<PreceptLoader> loaders;
 
   Precept({@required this.loaders});
 
 // TODO error handling, loader may fail
   init() async {
-    List<Future<PreceptModel>> modelFutures = List();
+    List<Future<PModel>> modelFutures = List();
     for (PreceptLoader loader in loaders) {
       modelFutures.add(loader.load());
     }

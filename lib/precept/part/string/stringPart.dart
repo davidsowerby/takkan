@@ -7,6 +7,7 @@ import 'package:precept/precept/model/style.dart';
 import 'package:precept/precept/part/options/options.dart';
 import 'package:precept/precept/part/pPart.dart';
 import 'package:precept/precept/part/part.dart';
+import 'package:precept/precept/schema/schema.dart';
 import 'package:precept/precept/widget/caption.dart';
 
 part 'stringPart.g.dart';
@@ -25,7 +26,7 @@ class StringPart extends Part {
 
   Widget buildReadOnlyWidget(BuildContext context) {
     // final sectionState = Provider.of<SectionState>(context);
-    final binding = baseBinding.stringBinding(property: pPart.property);
+    final binding = baseBinding.stringBinding(property: pPart.schema.property);
     final connector =
         ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
     // TODO styling final style =
@@ -58,7 +59,7 @@ class StringPart extends Part {
 
   Widget buildEditModeWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final binding = baseBinding.stringBinding(property: pPart.property);
+    final binding = baseBinding.stringBinding(property: pPart.schema.property);
     final connector =
         ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
     return Padding(
@@ -83,11 +84,11 @@ class PString extends PPart {
   final PEditModeOptions editModeOptions;
 
   const PString({
+    @required SchemaString schema,
     String caption,
-    @required String property,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
-  }) : super(caption: caption, property: property);
+  }) : super(caption: caption,  schema:schema);
 
   factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
 
