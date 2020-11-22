@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/precept/model/element.dart';
-import 'package:precept/precept/model/help.dart';
-import 'package:precept/precept/model/modelDocument.dart';
-import 'package:precept/precept/model/style.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/precept/part/partConverter.dart';
-import 'package:precept/precept/schema/schema.dart';
+import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/help.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/model/style.dart';
+import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/part/partConverter.dart';
+import 'package:precept_client/precept/schema/schema.dart';
 
 part 'model.g.dart';
 

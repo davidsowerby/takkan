@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:precept/app/data/kitchenSink.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/model/modelDocument.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
+import 'package:precept_client/app/data/kitchenSink.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/part/string/stringPart.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/assembler.dart';
-import 'package:precept/precept/model/model.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/model/model.dart';
 
 class StandardPage extends StatelessWidget {
   final PRoute route;
-  final PreceptPageAssembler pageAssembler;
+  final PageBuilder pageAssembler;
 
-  StandardPage({@required this.route}) : pageAssembler=inject<PreceptPageAssembler>();
+  StandardPage({@required this.route}) : pageAssembler=inject<PageBuilder>();
 
   @override
   Widget build(BuildContext context) {

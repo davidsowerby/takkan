@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:precept/common/locale.dart';
+import 'package:precept_client/common/locale.dart';
 
 class MockLocaleReader implements LocaleReader {
   final Locale locale;

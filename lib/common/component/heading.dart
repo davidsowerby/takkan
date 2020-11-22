@@ -1,16 +1,16 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:precept/common/action/actionIcon.dart';
-import 'package:precept/common/action/editSave.dart';
-import 'package:precept/common/locale.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/precept/library/borderLibrary.dart';
-import 'package:precept/precept/model/help.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/model/style.dart';
-import 'package:precept/precept/model/themeLookup.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/common/action/actionIcon.dart';
+import 'package:precept_client/common/action/editSave.dart';
+import 'package:precept_client/common/locale.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/library/borderLibrary.dart';
+import 'package:precept_client/precept/model/help.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/model/style.dart';
+import 'package:precept_client/precept/model/themeLookup.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created

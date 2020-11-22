@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/common/action/toggleEdit.dart';
-import 'package:precept/common/component/heading.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/assembler.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/document/document.dart';
-import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/section/base/sectionKey.dart';
-import 'package:precept/section/base/sectionList.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/common/action/toggleEdit.dart';
+import 'package:precept_client/common/component/heading.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/document/document.dart';
+import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/section/base/sectionKey.dart';
+import 'package:precept_client/section/base/sectionList.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// A section is an arbitrary collection of Widgets displaying part of a [Document].
@@ -50,7 +50,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
   }
 
   Widget _doBuild(BuildContext context) {
-    final assembler = inject<PreceptPageAssembler>();
+    final assembler = inject<PageBuilder>();
     List<Widget> children =
         assembler.assembleElements(elements: config.elements, baseBinding: baseBinding);
     final body = (config.scrollable)

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/part/string/stringPart.dart';
 
 class PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
   const PPartConverter();

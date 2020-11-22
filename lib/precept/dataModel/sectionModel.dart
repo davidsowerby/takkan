@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/dataModel/dataModel.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/dataModel/dataModel.dart';
 
 /// A child of [DocumentModel] or another [SectionModel].  Sub-class for specific models.  Each complex object should
 /// usually have its own model

@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
 
 enum ChangeType { update, remove, add, clear, createNew }
 

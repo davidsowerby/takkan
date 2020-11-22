@@ -1,7 +1,7 @@
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/listBinding.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/binding/listBinding.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/catcher.dart';

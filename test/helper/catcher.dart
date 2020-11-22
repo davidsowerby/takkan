@@ -1,5 +1,5 @@
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/precept/binding/binding.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/precept/binding/binding.dart';
 import 'package:test/test.dart';
 
 Matcher throwsBindingException = throwsA(TypeMatcher<BindingException>());

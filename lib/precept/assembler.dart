@@ -1,19 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/document/document.dart';
-import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/precept/model/element.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
-import 'package:precept/section/base/section.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/document/document.dart';
+import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/section/base/section.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
-class PreceptPageAssembler {
-  const PreceptPageAssembler();
+class PageBuilder {
+  const PageBuilder();
 
   /// Assembles Widgets from [elements]
   /// [baseBinding] is the data binding for the level of the caller.  [Part]s and [Section]s

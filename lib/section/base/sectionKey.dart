@@ -1,4 +1,4 @@
-import 'package:precept/precept/model/help.dart';
+import 'package:precept_client/precept/model/help.dart';
 
 abstract class AbstractSection {
 

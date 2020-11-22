@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 enum DisplayType { text, datePicker }

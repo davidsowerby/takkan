@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/backend/common/document.dart';
-import 'package:precept/backend/common/documentIdConverter.dart';
-import 'package:precept/backend/common/response.dart';
-import 'package:precept/common/repository.dart';
-import 'package:precept/common/toast.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/listBinding.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/model/modelDocument.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
-import 'package:precept/precept/part/string/stringBinding.dart';
+import 'package:precept_client/backend/common/document.dart';
+import 'package:precept_client/backend/common/documentIdConverter.dart';
+import 'package:precept_client/backend/common/response.dart';
+import 'package:precept_client/common/repository.dart';
+import 'package:precept_client/common/toast.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/binding/listBinding.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/part/string/stringBinding.dart';
 
 /// A model at the level of a document.  Conceptually, a user only ever views / modifies one document at a time
 /// This might mean that a document has to be correlated from multiple sources to be presented as a single entity.

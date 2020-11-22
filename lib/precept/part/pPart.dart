@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/precept/model/element.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/part.dart';
+import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/part/part.dart';
 
 part 'pPart.g.dart';
 /// Contained within a [PModel] a [PPart] describes a [Part]

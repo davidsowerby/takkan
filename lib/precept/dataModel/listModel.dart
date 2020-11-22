@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/binding/listBinding.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/part/string/stringBinding.dart';
+import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/binding/listBinding.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/part/string/stringBinding.dart';
 
 import 'dataModel.dart';
 

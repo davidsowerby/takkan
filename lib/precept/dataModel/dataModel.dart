@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/dataModel/documentModel.dart';
-import 'package:precept/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/dataModel/documentModel.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
 
 /// Model implementations are a tree structure of objects matching the tree structure of a document.
 /// They are used in conjunction with [Binding] to give read and write access to underlying data

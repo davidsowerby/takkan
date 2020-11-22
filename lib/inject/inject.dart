@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import 'package:precept/inject/modules.dart';
+import 'package:precept_client/inject/modules.dart';
 
 final GetIt getIt = GetIt.instance;
 

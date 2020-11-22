@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/library/borderLibrary.dart';
-import 'package:precept/precept/model/style.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/library/borderLibrary.dart';
+import 'package:precept_client/precept/model/style.dart';
 
 abstract class ThemeLookup {
   Color color({@required ThemeData theme, @required PColor pColor});

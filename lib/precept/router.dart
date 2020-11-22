@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/app/page/errorPage.dart';
-import 'package:precept/app/page/standardPage.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/assembler.dart';
-import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/precept/loader.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/section/base/section.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/app/page/errorPage.dart';
+import 'package:precept_client/app/page/standardPage.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/loader.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/section/base/section.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.
@@ -95,7 +95,7 @@ class RouteLocatorSet {
 class PreceptRouter {
   final Map<String, PRoute> _preceptRoutes = Map();
   bool _indexed = false;
-  final PreceptPageAssembler assembler = PreceptPageAssembler();
+  final PageBuilder assembler = PageBuilder();
 
   PreceptRouter();
 

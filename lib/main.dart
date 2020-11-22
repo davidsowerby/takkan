@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept/app/inject/setupInject.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/precept.dart';
-import 'package:precept/precept/router.dart';
+import 'package:precept_client/app/inject/setupInject.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/precept.dart';
+import 'package:precept_client/precept/router.dart';
 
 void main() {
   setupInjector(injectorBindings);

@@ -1,10 +1,10 @@
 
-import 'package:precept/app/data/schema.dart';
-import 'package:precept/precept/model/help.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/model/modelDocument.dart';
-import 'package:precept/precept/model/style.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
+import 'package:precept_client/app/data/schema.dart';
+import 'package:precept_client/precept/model/help.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/model/style.dart';
+import 'package:precept_client/precept/part/string/stringPart.dart';
 final kitchenSinkModel = PModel(
   components: [
     PComponent(

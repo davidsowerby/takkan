@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept/common/toast.dart';
+import 'package:precept_client/common/toast.dart';
 
 class MockBuildContext extends Mock implements BuildContext {}
 

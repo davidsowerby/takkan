@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/model/style.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/model/style.dart';
 
 // TODO: think about iteration order, it could be used to 'overwrite' previous declarations
 class BorderLibrary {

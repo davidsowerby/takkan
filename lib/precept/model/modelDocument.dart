@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/backend/common/documentIdConverter.dart';
-import 'package:precept/common/exceptions.dart';
+import 'package:precept_client/backend/common/documentIdConverter.dart';
+import 'package:precept_client/common/exceptions.dart';
 
 part 'modelDocument.g.dart';
 

@@ -1,6 +1,6 @@
-import 'package:precept/backend/common/documentIdConverter.dart';
-import 'package:precept/precept/dataModel/documentModel.dart';
-import 'package:precept/precept/model/modelDocument.dart';
+import 'package:precept_client/backend/common/documentIdConverter.dart';
+import 'package:precept_client/precept/dataModel/documentModel.dart';
+import 'package:precept_client/precept/model/modelDocument.dart';
 
 class Back4AppDocumentIdConverter implements DocumentIdConverter {
   @override

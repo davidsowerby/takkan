@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/binding/listBinding.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
-import 'package:precept/precept/part/string/stringBinding.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/binding/listBinding.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/part/string/stringBinding.dart';
 
 import '../../helper/catcher.dart';
 import '../../helper/listener.dart';

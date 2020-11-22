@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/common/logger.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 
 /// Represents the current editing state of a document, and holds a temporary copy of the document
 /// for editing purposes, in [_temporaryDocument]

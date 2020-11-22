@@ -1,6 +1,6 @@
 
 import 'package:collection/collection.dart';
-import 'package:precept/precept/document/documentController.dart';
+import 'package:precept_client/precept/document/documentController.dart';
 import 'package:test/test.dart';
 
 void main() {

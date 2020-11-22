@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/common/exceptions.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/binding/listBinding.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
-import 'package:precept/precept/part/string/stringBinding.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/binding/listBinding.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/part/string/stringBinding.dart';
 
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
   const MapBinding.private(

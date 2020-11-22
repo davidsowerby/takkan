@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:precept/precept/binding/binding.dart';
+import 'package:precept_client/precept/binding/binding.dart';
 
 /// Function class to read dropdown selection list from a data source
 abstract class SelectionReader {

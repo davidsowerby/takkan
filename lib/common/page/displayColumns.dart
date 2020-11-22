@@ -1,6 +1,6 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept/section/base/sectionKey.dart';
+import 'package:precept_client/section/base/sectionKey.dart';
 
 /// Organises display columns according to screen size
 mixin DisplayColumns {

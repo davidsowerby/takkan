@@ -1,4 +1,4 @@
-import 'package:precept/common/logger.dart';
+import 'package:precept_client/common/logger.dart';
 
 class ChangeListener {
   int changeCount = 0;

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/precept/part/part.dart';
-import 'package:precept/precept/part/string/stringPart.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/part/string/stringPart.dart';
 
 enum StandardPart { StringPart }
 

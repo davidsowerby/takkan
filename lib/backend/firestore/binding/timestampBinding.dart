@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:precept/precept/binding/binding.dart';
-import 'package:precept/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 
 class TimestampBinding extends Binding<Timestamp> {
   const TimestampBinding.private(

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/precept/binding/converter.dart';
-import 'package:precept/precept/binding/mapBinding.dart';
-import 'package:precept/precept/model/element.dart';
-import 'package:precept/precept/model/style.dart';
-import 'package:precept/precept/part/options/options.dart';
-import 'package:precept/precept/part/pPart.dart';
-import 'package:precept/precept/part/part.dart';
-import 'package:precept/precept/widget/caption.dart';
+import 'package:precept_client/precept/binding/converter.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/style.dart';
+import 'package:precept_client/precept/part/options/options.dart';
+import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/widget/caption.dart';
 
 part 'stringPart.g.dart';
 

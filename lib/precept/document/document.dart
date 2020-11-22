@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:precept/inject/inject.dart';
-import 'package:precept/precept/assembler.dart';
-import 'package:precept/precept/document/documentController.dart';
-import 'package:precept/precept/document/documentState.dart';
-import 'package:precept/precept/model/model.dart';
-import 'package:precept/section/base/sectionState.dart';
+import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/document/documentController.dart';
+import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 class Document extends StatelessWidget {
@@ -45,11 +45,11 @@ class Document extends StatelessWidget {
   }
 
   /// Updates [documentState] (which is in the Widget tree above this Widget) so that bindings
-  /// reflect the new data. Then builds using a [PreceptPageAssembler]
+  /// reflect the new data. Then builds using a [PageBuilder]
   activeBuilder(BuildContext context, DocumentState documentState, Map<String,dynamic> update) {
     documentState.updateData(update);
     final children = List<Widget>();
-    final assembler = inject<PreceptPageAssembler>();
+    final assembler = inject<PageBuilder>();
     children.addAll(assembler.assembleElements(
         elements: config.sections, baseBinding: documentState.rootBinding));
     return ChangeNotifierProvider<SectionState>(

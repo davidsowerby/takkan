@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/precept/schema/jsonConverter.dart';
+import 'package:precept_client/precept/schema/jsonConverter.dart';
 
 part 'schema.g.dart';
 
