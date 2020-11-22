@@ -1,9 +1,9 @@
+import 'package:precept/app/data/kitchenSink.dart';
 import 'package:precept/inject/inject.dart';
 import 'package:precept/precept/loader.dart';
 import 'package:precept/precept/router.dart';
 import 'package:test/test.dart';
 
-import '../data/testModel/testModel.dart';
 
 void main() {
   group('Precept Router', () {
@@ -30,6 +30,6 @@ void main() {
 buildInjector() {
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: [
-        PreceptRouteLocator(loader: DirectPreceptLoader(model: testModel))
+        PreceptRouteLocator(loader: DirectPreceptLoader(model: kitchenSinkModel))
       ]));
 }

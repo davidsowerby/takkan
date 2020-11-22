@@ -22,21 +22,23 @@ final kitchenSinkModel = PModel(
                   ),
                   sections: [
                     PSection(
-                      property:"sink",
+                      property:"",
                       help: PHelp(
-                        title: "Display of String data",
-                        message: 'This section shows StringPart and StaticText, with various display options applied',
+                        title: "Display options",
+                        message: 'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
                       ),
                       heading: PSectionHeading(
-                        title: "String data",
+                        title: "Person",
                         style: PHeadingStyle(background: PColor.primary),
                       ),
                       elements: [
+                        PStaticText(text: "You can use static text like this", caption: "StaticText"),
+                        PStaticText(text: "All text should be pre-translated patterns"),
                         PString(
-                          property: "brand",
-                          caption: "StringPart with default settings",
+                          property: "firstName",
+                          caption: "First Name",
                         ),
-                        PStaticText(text: "This is static text which cannot be edited.", caption: "StaticText")
+
                       ],
                     ),
 
