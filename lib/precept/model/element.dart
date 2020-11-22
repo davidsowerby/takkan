@@ -8,6 +8,7 @@ abstract class DisplayElement {
   Map<String, dynamic> toJson();
 
   String get caption;
+  String get property;
 
 
 }

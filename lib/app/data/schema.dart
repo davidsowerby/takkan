@@ -1,9 +1,5 @@
-import 'package:generator/src/annotation/annotation.dart';
-import 'package:precept/precept/schema/schemaMap.dart';
+import 'package:precept/precept/schema/schema.dart';
 
-part 'schema.g.dart';
-
-@SchemaGen()
-final schema2 = const SModel(components: {
-  "core": SComponent(documents: const [SDocument()]),
+final schema = const SModel(components: {
+  "core": SComponent(documents: {"sink": SDocument()}),
 });

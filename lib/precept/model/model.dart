@@ -77,18 +77,18 @@ class PSection implements DisplayElement {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<DisplayElement> elements;
   @JsonKey(ignore: true)
-  final SchemaClass schema;
   final PSectionHeading heading;
   final String caption;
   final bool scrollable;
   final PHelp help;
+  final String property;
 
   factory PSection.fromJson(Map<String, dynamic> json) => _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
   const PSection({
-    @required this.schema,
+    @required this. property,
     this.elements = const [],
     this.heading,
     this.caption,
@@ -104,7 +104,7 @@ class PDocument {
   final List<PSection> sections;
 
   const PDocument(
-      {@required SchemaClass schema, @required this.documentSelector, @required this.sections});
+      {@required SDocument schema, @required this.documentSelector, @required this.sections});
 
   factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
 

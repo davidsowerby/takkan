@@ -63,9 +63,9 @@ class PreceptPageAssembler {
         create: (_) => SectionState(readOnlyMode: false, canEdit: true),
         child: Section(
           config: pSection,
-          baseBinding: (pSection.schema == null)
+          baseBinding: (pSection.property == null)
               ? baseBinding
-              : baseBinding.modelBinding(property: pSection.schema.property),
+              : baseBinding.modelBinding(property: pSection.property),
         ));
   }
 

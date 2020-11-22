@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept/precept/model/element.dart';
 import 'package:precept/precept/model/model.dart';
 import 'package:precept/precept/part/part.dart';
-import 'package:precept/precept/schema/schema.dart';
 
 part 'pPart.g.dart';
 /// Contained within a [PModel] a [PPart] describes a [Part]
@@ -12,11 +11,10 @@ part 'pPart.g.dart';
 class PPart<T> implements DisplayElement {
   final String caption;
   final bool readOnly;
-  @JsonKey(ignore:true)
-  final SchemaField<T> schema;
+  final String property;
 
   /// [readOnly], if true, forces this part always to be in read only mode, regardless of any other settings
-  const PPart({this.caption,  this.readOnly = false,@required this.schema});
+  const PPart({this.caption,  this.readOnly = false,@required this.property});
 
   factory PPart.fromJson(Map<String, dynamic> json) =>
       _$PPartFromJson(json);

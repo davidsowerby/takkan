@@ -1,76 +1,129 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept/app/data/targetSchema.dart';
+import 'package:precept/precept/schema/jsonConverter.dart';
 
-/// Contains one or more [SourceSchema] instances, each relating to a specific backend (data source)
-class ApplicationSchema {
-  final Map<String, SchemaSource> sources;
+part 'schema.g.dart';
 
-  const ApplicationSchema({@required this.sources});
 
-  CoreSource get core=> sources["core"] ;
+/// This is how I would like to create a schema, but it does not play well with the [PreceptModel]
+/// There needs to be a code generation step between this and [Schema] but that does not look possible using the standard Dart build_runner.
+/// The problem is referencing an instance of this class from within the code generator
+
+/// The root for a backend-agnostic definition of a data structure, including data types, validation
+/// and relationships.
+///
+/// This is just a definition, which is used by Precept, and may or may not be used to create a backend schema.
+/// If it is used that way, the interpretation of it is a matter for each [SchemaInterpreter} implementation.
+///
+///
+/// The terminology used reflects the intention to keep this backend-agnostic - see: 
+///
+/// How these translate to the structure in the backend will depend on the backend itself, and the user's
+/// preferences.
+///
+/// Each level will contain [Hints], which can be used to guide a [SchemaInterpreter} implementation.
+///
+///
+///
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SModel {
+  final Map<String, SComponent> components;
+
+  const SModel({@required this.components});
+
+  factory SModel.fromJson(Map<String, dynamic> json) => _$SModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SModelToJson(this);
 }
 
-abstract class SchemaClass implements SchemaElement {
-  final Map<String,SchemaElement> elements;
-  final String property;
-
-  const SchemaClass({@required this.elements, this.property});
-
-  /// Returns only the classes from elements
-  Map<String,SchemaClass> get classes => throw UnimplementedError();
-  Map<String,SchemaField> get fields => throw UnimplementedError();
-
-}
-
-
-abstract class SchemaSource {
-  final Map<String, SchemaClass> classes;
-
-  const SchemaSource({@required this.classes});
-}
-
-abstract class SchemaElement {}
-
-/// [T] is the data type to be validated
-abstract class SchemaField<T> implements SchemaElement {
-  final String property;
-  @JsonKey(ignore:true)
-  final Validator<T> validator;
-  final SchemaPermissions permissions;
-  final T defaultValue;
-
-  const SchemaField({@required this.property, this.validator, this.permissions, this.defaultValue});
-
-  bool validate(T value)=> validator.validate(value);
+abstract class SElement {
+  Map<String, dynamic> toJson();
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class SchemaString extends SchemaField<String> {
-  const SchemaString({@required String property, Validator<String> validator, String defaultValue})
-      : super(property: property, validator: validator,defaultValue: defaultValue);
+class SComponent  {
+  final Map<String, SDocument> documents;
+  const SComponent({@required this.documents}) ;
+
+  factory SComponent.fromJson(Map<String, dynamic> json) =>
+      _$SComponentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SComponentToJson(this);
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class SchemaBoolean extends SchemaField<bool> {
-  const SchemaBoolean({@required String property, Validator<bool> validator, bool defaultValue})
-      : super(property: property, validator: validator,defaultValue: defaultValue);
+class SDocument {
+  final Map<String, SSection> sections;
+
+  const SDocument({@required this.sections});
+
+  factory SDocument.fromJson(Map<String, dynamic> json) => _$SDocumentFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SDocumentToJson(this);
 }
 
-abstract class SchemaPermissions {}
+abstract class SField implements SElement {}
 
-/// [T] the data type to be validated
-abstract class Validator<T> {
-  final bool required;
+@JsonSerializable(nullable: true, explicitToJson: true)
+@SElementMapConverter()
+class SSection implements SElement{
+  final Map<String, SElement> elements;
 
-  const Validator({this.required = false});
+  const SSection({@required this.elements});
 
-  bool validate(T value) {
-    if (value == null) {
-      return false;
-    }
-    return doValidate(value);
-  }
+  factory SSection.fromJson(Map<String, dynamic> json) => _$SSectionFromJson(json);
 
-  bool doValidate(T value);
+  Map<String, dynamic> toJson() => _$SSectionToJson(this);
+
 }
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SBoolean implements SField {
+  final bool defaultValue;
+
+  const SBoolean({this.defaultValue});
+
+  factory SBoolean.fromJson(Map<String, dynamic> json) => _$SBooleanFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SBooleanToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SInteger implements SField {
+  final int defaultValue;
+
+  const SInteger({this.defaultValue});
+
+  factory SInteger.fromJson(Map<String, dynamic> json) => _$SIntegerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SIntegerToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SString implements SField {
+  final String defaultValue;
+
+  const SString({this.defaultValue});
+
+  factory SString.fromJson(Map<String, dynamic> json) => _$SStringFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SStringToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class SDate implements SField{
+  final DateTime defaultValue;
+
+  const SDate({this.defaultValue});
+
+  factory SDate.fromJson(Map<String, dynamic> json) => _$SDateFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SDateToJson(this);
+}
+
+/// Common interface for a backend-specific interpretation of [SModel]
+///
+/// An implementation must interpret the Schema in way which acknowledges version changes,
+/// and should of course minimise risk of data loss or corruption abstract
+
+class SchemaInterpreter {}
