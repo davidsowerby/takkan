@@ -7,11 +7,11 @@ T inject<T>() {
   return getIt.get<T>();
 }
 
-void setupInjector(Function() injectorBuilder) {
-  injectorBuilder();
-}
-
-void preceptInjection() {
-  common();
-  precept();
+void preceptDefaultInjectionBindings() {
+  commonInjectionBindings();
+  libraryInjectionBindings();
+  documentInjectionBindings();
+  routerInjectionBindings();
+  pageInjectionBindings();
+  themeInjectionBindings();
 }

@@ -9,22 +9,36 @@ import 'package:precept_client/precept/model/themeLookup.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/router.dart';
 
-common() {
+commonInjectionBindings() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());
-  getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
   getIt.registerFactory<Toast>(() => Toast());
 }
 
-precept() {
-  getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
+libraryInjectionBindings(){
   getIt.registerSingleton<PartLibrary>(PartLibrary(modules: [PreceptPartLibraryModule()]));
   getIt.registerSingleton<BorderLibrary>(BorderLibrary(modules: [PreceptBorderLibraryModule()]));
-  getIt.registerSingleton<PreceptRouter>(PreceptRouter());
-  getIt.registerFactory<PageBuilder>(() => PageBuilder());
+}
+
+documentInjectionBindings(){
+  getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
   getIt.registerSingleton<DocumentController>(DocumentController());
+}
+
+routerInjectionBindings(){
+  getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
+  getIt.registerSingleton<PreceptRouter>(PreceptRouter());
+}
+
+pageInjectionBindings(){
+  getIt.registerFactory<PageBuilder>(() => PageBuilder());
+}
+
+themeInjectionBindings() {
   getIt.registerSingleton<ThemeLookup>(DefaultThemeLookup());
   // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
 }
+
+
 
 // void back4AppModule() {
 //   getIt.registerFactory<BackendInitialiser>(() => Back4AppInitialiser());

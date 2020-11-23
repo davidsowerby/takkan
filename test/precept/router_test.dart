@@ -17,7 +17,7 @@ void main() {
 
     test('builds route map on init', () async {
       // given
-      setupInjector(buildInjector);
+      // setupInjector(buildInjector);
       // when
       await router.init();
       // then
