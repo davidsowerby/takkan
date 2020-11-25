@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/help.dart';
 import 'package:precept_client/precept/model/style.dart';
 import 'package:precept_client/precept/part/options/options.dart';
 import 'package:precept_client/precept/part/pPart.dart';
@@ -77,6 +78,8 @@ class StringPart extends Part {
   }
 }
 
+///
+/// - [property],[isStatic],[static], [caption],[tooltip],[help] - see [PPart]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PString extends PPart {
   final PReadModeOptions readModeOptions;
@@ -85,9 +88,19 @@ class PString extends PPart {
   const PString({
     @required String property,
     String caption,
+    bool isStatic,
+    String static,
+    String tooltip,
+    PHelp help,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
-  }) : super(caption: caption,  property:property);
+  }) : super(
+            caption: caption,
+            property: property,
+            isStatic: isStatic,
+            static: static,
+            help: help,
+            tooltip: tooltip);
 
   factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
 
@@ -110,7 +123,7 @@ class PStaticText implements DisplayElement {
     this.theme = PTextTheme.standard,
     this.caption,
     this.softWrap = true,
-    this.property="not used",
+    this.property = "not used",
   });
 
   factory PStaticText.fromJson(Map<String, dynamic> json) => _$PStaticTextFromJson(json);

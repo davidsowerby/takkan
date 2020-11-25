@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/app/page/errorPage.dart';
-import 'package:precept_client/app/page/standardPage.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/assembler.dart';
-import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/loader.dart';
 import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/pPart.dart';
-import 'package:precept_client/section/base/section.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.
@@ -95,17 +90,21 @@ class RouteLocatorSet {
 class PreceptRouter {
   final Map<String, PRoute> _preceptRoutes = Map();
   bool _indexed = false;
-  final PageBuilder assembler = PageBuilder();
+  final PageBuilder pageBuilder = PageBuilder();
 
   PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
-    getLogger(this.runtimeType).d(
-        "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
+    if (!_indexed) {
+      final msg = "PreceptRouter: must invoke 'init()' before calling 'generateRoute'";
+      getLogger(this.runtimeType).d(msg);
+      throw PreceptException(msg);
+    }
+    getLogger(this.runtimeType)
+        .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
     PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
-      return _routeForWidget(ErrorPage(
-          message: "Requested route: '${settings.name}' not recognised"));
+      return _routeForWidget(pageBuilder.routeNotRecognised(settings));
     }
     return _route(preceptRoute);
   }
@@ -125,13 +124,9 @@ class PreceptRouter {
 
   bool get ready => _indexed;
 
-  /// [DocumentState] provider always has a child [SectionState].  This is so [Section]s can always find a [SectionState] above them
+  /// If the [route.page] is not found, an error page is returned
   Route<dynamic> _route(PRoute route) {
-    // switch (route.page.pageType) {
-    //   case PageType.standard:
-        return MaterialPageRoute(builder: (_) => StandardPage(route: route));
-    // }
-    throw PreceptException("Should not be here!");
+    return MaterialPageRoute(builder: (_) => pageBuilder.buildRoute(route: route));
   }
 
   hasRoute(String path) {

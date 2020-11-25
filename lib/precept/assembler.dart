@@ -5,7 +5,9 @@ import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/document.dart';
 import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/model/element.dart';
+import 'package:precept_client/precept/model/error.dart';
 import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
 import 'package:precept_client/section/base/section.dart';
@@ -52,7 +54,7 @@ class PageBuilder {
   /// Visible for testing
   Widget constructDocument({@required PDocument pDocument}) {
     return ChangeNotifierProvider<DocumentState>(
-        create: (_) => DocumentState(config:pDocument), child: Document(config: pDocument));
+        create: (_) => DocumentState(config: pDocument), child: Document(config: pDocument));
   }
 
   /// Visible for testing
@@ -77,4 +79,20 @@ class PageBuilder {
 //       child: Section(config: section));
 // }
 
+  /// Returns the Widget representing page [route.page.pageKey], configured with [route.page]
+  /// If there is no matching key in the [PageLibrary], an error page is returned.
+  Widget buildRoute({@required PRoute route}) {
+    final page = pageLibrary.find(route.page.pageKey, route.page);
+    return (page == null)
+        ? pageLibrary.errorPage(PError(
+            message:
+                "Page ${route.page.pageKey}, has not been defined but was requested by route: ${route.path}")) // TODO message should come from Precept
+        : page;
+  }
+
+  Widget routeNotRecognised(RouteSettings settings) {
+    return pageLibrary.errorPage(PError(
+        message:
+            "Route not recognised: ${settings.name}")); // TODO message should come from Precept
+  }
 }
