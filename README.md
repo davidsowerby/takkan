@@ -22,6 +22,14 @@ In development, but a number of concepts working.  [Detailed status](https://www
 Full documentation is being developed [here](https://www.preceptblog.co.uk/).
 
 
+## Build
+
+Uses json_serializable.
+
+```bash
+flutter packages pub run build_runner watch --delete-conflicting-outputs
+```
+
 
 
 

@@ -22,7 +22,7 @@ class PPart<T> implements DisplayElement {
   final bool readOnly;
   final String property;
   final bool isStatic;
-  final T static;
+  final String static;
   final PHelp help;
   final String tooltip;
 
