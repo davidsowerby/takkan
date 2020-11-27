@@ -32,8 +32,6 @@ final kitchenSinkModel = PModel(
                         style: PHeadingStyle(background: PColor.primary),
                       ),
                       elements: [
-                        PStaticText(text: "You can use static text like this", caption: "StaticText"),
-                        PStaticText(text: "All text should be pre-translated patterns"),
                         PString(
                           property: "firstName",
                           caption: "First Name",

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/model/element.dart';
 import 'package:precept_client/precept/model/help.dart';
-import 'package:precept_client/precept/model/style.dart';
 import 'package:precept_client/precept/part/options/options.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/part.dart';
@@ -113,25 +111,4 @@ class PString extends PPart {
   Map<String, dynamic> toJson() => _$PStringToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PStaticText implements DisplayElement {
-  final String text;
-  final String caption;
-  final PTextStyle style;
-  final PTextTheme theme;
-  final bool softWrap;
-  final String property;
 
-  const PStaticText({
-    @required this.text,
-    this.style = PTextStyle.bodyText1,
-    this.theme = PTextTheme.standard,
-    this.caption,
-    this.softWrap = true,
-    this.property = "not used",
-  });
-
-  factory PStaticText.fromJson(Map<String, dynamic> json) => _$PStaticTextFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PStaticTextToJson(this);
-}

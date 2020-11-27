@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/common/exceptions.dart';
@@ -31,13 +30,7 @@ import 'package:precept_client/section/base/section.dart';
         case PSection:
           list.add(constructSection(pSection: element, baseBinding: baseBinding, isStatic:isStatic));
           break;
-        case PStaticText:
-          final PStaticText config = element;
-          list.add(AutoSizeText(
-            config.text,
-            softWrap: config.softWrap,
-          ));
-          break;
+
         default:
           final message = "Assembler not defined for ${element.runtimeType}";
           logName('assembleElements').e(message);

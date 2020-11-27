@@ -29,9 +29,7 @@ class PElementListConverter {
         case "PString":
           list.add(PString.fromJson(entryCopy));
           break;
-          case "PStaticText":
-          list.add(PStaticText.fromJson(entryCopy));
-          break;
+
         default:
           final msg="JSON conversion has not been implemented for $elementType";
           logType(Object().runtimeType).e(msg);
