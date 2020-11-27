@@ -22,16 +22,14 @@ class StringPart extends Part {
   final PString pPart;
   final MapBinding baseBinding;
 
-  const StringPart({@required this.pPart, @required this.baseBinding}) : super(precept: pPart);
+  const StringPart({@required this.pPart, @required this.baseBinding, bool isStatic=false}) : super(precept: pPart, isStatic: isStatic);
 
   Widget buildReadOnlyWidget(BuildContext context) {
-    // final sectionState = Provider.of<SectionState>(context);
-    final binding = baseBinding.stringBinding(property: pPart.property);
-    final connector =
-        ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
-    // TODO styling final style =
-    final text = Text(connector.readFromModel());
-    if (pPart.readModeOptions.showCaption) {
+    final text = Text((isStatic) ? pPart.static : _textFromBinding());
+
+    // TODO: styling final style =
+// TODO: shouldn't use isStatic like this, it may want a caption still
+    if (!isStatic && pPart.readModeOptions.showCaption) {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(
@@ -55,6 +53,13 @@ class StringPart extends Part {
       padding: EdgeInsets.only(bottom: 8.0),
       child: text,
     );
+  }
+
+  String _textFromBinding(){
+    final binding = baseBinding.stringBinding(property: pPart.property);
+    final connector =
+    ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
+    return connector.readFromModel();
   }
 
   Widget buildEditModeWidget(BuildContext context) {
@@ -86,7 +91,7 @@ class PString extends PPart {
   final PEditModeOptions editModeOptions;
 
   const PString({
-    @required String property,
+    String property,
     String caption,
     bool isStatic,
     String static,

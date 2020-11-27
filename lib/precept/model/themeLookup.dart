@@ -118,7 +118,7 @@ class DefaultThemeLookup implements ThemeLookup {
   }
 
   BorderRadiusGeometry _borderRadius({@required PBorderDetailed border}) {
-    getLogger(this.runtimeType).w(
+    logType(this.runtimeType).w(
         "_borderRadius not implemented, just returns a default value"); // TODO  https://gitlab.com/precept1/precept-client/-/issues/6
     return BorderRadius.all(Radius.circular(5));
   }

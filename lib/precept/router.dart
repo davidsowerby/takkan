@@ -3,8 +3,9 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
+import 'package:precept_client/precept/model/error.dart';
 import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 
@@ -90,21 +91,20 @@ class RouteLocatorSet {
 class PreceptRouter {
   final Map<String, PRoute> _preceptRoutes = Map();
   bool _indexed = false;
-  final PageBuilder pageBuilder = PageBuilder();
 
   PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings) {
     if (!_indexed) {
       final msg = "PreceptRouter: must invoke 'init()' before calling 'generateRoute'";
-      getLogger(this.runtimeType).d(msg);
+      logType(this.runtimeType).d(msg);
       throw PreceptException(msg);
     }
-    getLogger(this.runtimeType)
+    logType(this.runtimeType)
         .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
     PRoute preceptRoute = _preceptRoutes[settings.name];
     if (preceptRoute == null) {
-      return _routeForWidget(pageBuilder.routeNotRecognised(settings));
+      return _routeNotRecognised(settings);
     }
     return _route(preceptRoute);
   }
@@ -124,17 +124,27 @@ class PreceptRouter {
 
   bool get ready => _indexed;
 
-  /// If the [route.page] is not found, an error page is returned
+  /// Returns the Widget representing page [route.page.pageKey], configured with [route.page]
+  /// If there is no matching key in the [PageLibrary], an error page is returned.
   Route<dynamic> _route(PRoute route) {
-    return MaterialPageRoute(builder: (_) => pageBuilder.buildRoute(route: route));
+
+    final page = pageLibrary.find(route.page.pageKey, route.page);
+    return (page == null)
+        ? pageLibrary.errorPage(PError(
+            message:
+                "Page ${route.page.pageKey}, has not been defined but was requested by route: ${route.path}")) // TODO message should come from Precept
+        : MaterialPageRoute(builder: (_) => page);
   }
 
   hasRoute(String path) {
     return _preceptRoutes.containsKey(path);
   }
 
-  _routeForWidget(Widget widget) {
-    return MaterialPageRoute(builder: (_) => widget);
+  MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
+    final page = pageLibrary.errorPage(PError(
+        message:
+            "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
+    return MaterialPageRoute(builder: (_) => page);
   }
 }
 

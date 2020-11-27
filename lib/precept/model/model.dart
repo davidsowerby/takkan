@@ -48,17 +48,25 @@ class PRoute {
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+/// [isStatic] can be defined at either page or document level - it has the same effect
 /// [pageKey] used to look up from [PageLibrary]
+@JsonSerializable(nullable: true, explicitToJson: true)
 class PPage {
   final String title;
   final String pageKey;
   final PDocument document;
+  final bool scrollable;
+  final bool _isStatic;
 
-  const PPage( {@required this.pageKey,
+  const PPage({
+    this.pageKey = "standard",
     @required this.title,
     @required this.document,
-  });
+    this.scrollable = true,
+    bool isStatic=false,
+  }) : _isStatic =isStatic;
+
+  bool get isStatic => _isStatic || document.isStatic;
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -82,29 +90,39 @@ class PSection implements DisplayElement {
   final bool scrollable;
   final PHelp help;
   final String property;
+  final bool isStatic;
 
   factory PSection.fromJson(Map<String, dynamic> json) => _$PSectionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSectionToJson(this);
 
   const PSection({
-    @required this. property,
+    @required this.property,
     this.elements = const [],
     this.heading,
     this.caption,
     this.scrollable = false,
     this.help,
+    this.isStatic=false,
   });
 }
 
+/// if [isStatic] is true, [documentSelector] and [schema] are not required and may be null
+/// if [isStatic] is false [documentSelector] and [schema] must be defined
+/// [sections] must always contain at least one [PSection]
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PDocumentSelectorConverter()
 class PDocument {
   final PDocumentSelector documentSelector;
+  final bool isStatic;
   final List<PSection> sections;
+  final SDocument schema;
 
   const PDocument(
-      {@required SDocument schema, @required this.documentSelector, @required this.sections});
+      {this.schema, this.documentSelector, @required this.sections, this.isStatic = false})
+      : assert(isStatic || (documentSelector != null)),
+        assert(isStatic || (schema != null)),
+        assert((sections != null) && (sections.length > 0));
 
   factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
 

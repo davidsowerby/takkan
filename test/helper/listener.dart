@@ -5,6 +5,6 @@ class ChangeListener {
 
   listenToChange() {
     changeCount++;
-    getLogger(this.runtimeType).d("change $changeCount received");
+    logType(this.runtimeType).d("change $changeCount received");
   }
 }

@@ -29,7 +29,7 @@ class SectionState with ChangeNotifier {
 
   set readOnlyMode(bool readOnly) {
     _readOnlyMode = readOnly;
-    getLogger(this.runtimeType).d("SectionEditState changed to readOnly: $readOnly");
+    logType(this.runtimeType).d("SectionEditState changed to readOnly: $readOnly");
     notifyListeners();
   }
 

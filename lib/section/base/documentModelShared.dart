@@ -55,7 +55,7 @@ class DocumentModelShared with ChangeNotifier {
   /// Called by a [Section] creating a Form.  Forms are 'flushed' to the backing data by [flushFormsToModel]
   addForm(GlobalKey<FormState> formKey) {
     formKeys.add(formKey);
-    getLogger(this.runtimeType).d("Holding ${formKeys.length} form keys");
+    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 
   /// Iterates though form keys registered by [Section] instances through [addForm], 'saves' the [Form] - that is, transfers data from
@@ -66,7 +66,7 @@ class DocumentModelShared with ChangeNotifier {
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
         key.currentState.save();
-        getLogger(this.runtimeType).d("Form saved for $key");
+        logType(this.runtimeType).d("Form saved for $key");
       }
     }
   }

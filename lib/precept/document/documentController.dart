@@ -69,7 +69,7 @@ class StreamCreator {
       await Future.delayed(interval);
       yield snapshots[i];
       if (i == maxCount) break;
-      getLogger(this.runtimeType).d("Release snapshot $i");
+      logType(this.runtimeType).d("Release snapshot $i");
       i++;
     }
     await Future.delayed(keepOpen);

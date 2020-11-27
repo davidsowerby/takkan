@@ -34,7 +34,7 @@ class PElementListConverter {
           break;
         default:
           final msg="JSON conversion has not been implemented for $elementType";
-          getLogger(Object().runtimeType).e(msg);
+          logType(Object().runtimeType).e(msg);
           throw PreceptException(msg);
       }
     }

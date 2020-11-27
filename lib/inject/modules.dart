@@ -1,7 +1,6 @@
 import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/document/documentController.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
@@ -27,10 +26,6 @@ documentInjectionBindings(){
 routerInjectionBindings(){
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   getIt.registerSingleton<PreceptRouter>(PreceptRouter());
-}
-
-pageInjectionBindings(){
-  getIt.registerFactory<PageBuilder>(() => PageBuilder());
 }
 
 themeInjectionBindings() {

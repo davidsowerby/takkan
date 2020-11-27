@@ -31,15 +31,16 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 abstract class Part extends StatelessWidget {
   final PPart precept;
+  final bool isStatic;
 
-  const Part({@required this.precept}) : super();
+  const Part({@required this.precept, @required this.isStatic}) : super();
 
   @override
   Widget build(BuildContext context) {
     final SectionState sectionState =
         Provider.of<SectionState>(context);
     final readOnly = precept.readOnly || sectionState.readOnlyMode;
-    getLogger(this.runtimeType).d(
+    logType(this.runtimeType).d(
         "caption: ${precept.caption}, EditState readOnly: ${precept.readOnly}");
     if (readOnly) {
       return buildReadOnlyWidget(context);

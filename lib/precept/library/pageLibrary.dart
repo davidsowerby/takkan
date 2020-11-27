@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/page/documentPage.dart';
+import 'package:precept_client/app/page/standardPage.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/model/error.dart';
@@ -31,14 +31,14 @@ class PageLibrary extends Library<String, Widget, PPage> {
 
 
 class DefaultPageLibraryModule implements PageLibraryModule {
-  DefaultDocumentPage _defaultHomePage(PPage config) {
-    return DefaultDocumentPage(config: config);
+  StandardPage _standardPage(PPage config) {
+    return StandardPage(config: config);
   }
 
   @override
   Map<String, Widget Function(PPage config)> get mappings {
     return {
-      "home": _defaultHomePage,
+      "standard": _standardPage,
     };
   }
 }

@@ -12,6 +12,5 @@ void preceptDefaultInjectionBindings() {
   libraryInjectionBindings();
   documentInjectionBindings();
   routerInjectionBindings();
-  pageInjectionBindings();
   themeInjectionBindings();
 }

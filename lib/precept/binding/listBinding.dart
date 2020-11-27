@@ -155,11 +155,11 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   /// returns -1 if no change is made or [newIndex] if a change is made
   int changeOrder({int oldIndex, int newIndex}) {
     if (oldIndex < 0 || oldIndex >= read().length) {
-      getLogger(this.runtimeType).d("old index=$oldIndex");
+      logType(this.runtimeType).d("old index=$oldIndex");
       throw BindingException("oldIndex must be within range, it is $oldIndex");
     }
     if (newIndex < 0 || newIndex >= read().length) {
-      getLogger(this.runtimeType)
+      logType(this.runtimeType)
           .d("new index=$newIndex, list length: ${read().length}");
       throw BindingException("newIndex must be within range, it is $newIndex");
     }
@@ -185,7 +185,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     List<dynamic> rows = List();
     rows.addAll(parent.read()[property]);
     rows.insert(index, value);
-    getLogger(this.runtimeType)
+    logType(this.runtimeType)
         .d("inserted new item at index $index in list $property");
     parent.read()[property] = rows;
     editHost.nestedChange(firstLevelKey);
@@ -199,7 +199,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
       rows.addAll(parent.read()[property]);
     }
     rows.add(value);
-    getLogger(this.runtimeType).d("added new item list $property");
+    logType(this.runtimeType).d("added new item list $property");
     parent.read()[property] = rows;
     editHost.nestedChange(firstLevelKey);
   }
@@ -213,7 +213,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
       parent.read()[property] = rows;
       editHost.nestedChange(firstLevelKey);
     } else {
-      getLogger(this.runtimeType)
+      logType(this.runtimeType)
           .d("Index $index is out of range, cannot be deleted");
     }
   }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
 import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/document.dart';
@@ -28,13 +27,14 @@ import 'package:provider/provider.dart';
 /// - [WizardSection] displays the section as a wizard step, and also adds some control properties to support the wizard "process".
 /// - [SectionGroup] is an arbitrary group of sections, but is also treated as a section in its own right
 /// - [SectionList] is a list of section instances of the same same section type, but is also treated as a section in its own right
-///
+/// - [isStatic] May be set by the parent Section / Document to 'inherit' a setting higher up the tree
 ///
 class Section extends StatelessWidget with ToggleSectionEditState {
   final PSection config;
   final MapBinding baseBinding;
+  final bool isStatic;
 
-  const Section({@required this.config, @required this.baseBinding}) : super();
+  const Section({@required this.config, @required this.baseBinding, this.isStatic=false}) : super();
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +45,13 @@ class Section extends StatelessWidget with ToggleSectionEditState {
       key: formKey,
       child: InkWell(
           onTap: () => toggleEditState(context),
-          child: Container(padding: EdgeInsets.all(8), child: _doBuild(context))),
+          child: Container(padding: EdgeInsets.all(8), child: _doBuild(context,isStatic))),
     );
   }
 
-  Widget _doBuild(BuildContext context) {
-    final assembler = inject<PageBuilder>();
+  Widget _doBuild(BuildContext context,bool isStatic) {
     List<Widget> children =
-        assembler.assembleElements(elements: config.elements, baseBinding: baseBinding);
+        assembleElements(elements: config.elements, baseBinding: baseBinding, isStatic: isStatic || config.isStatic);
     final body = (config.scrollable)
         ? ListView(children: children)
         : Column(

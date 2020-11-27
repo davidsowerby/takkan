@@ -215,7 +215,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 
   /// Called by bindings to indicate a change below the first level of keys.
   void nestedChange(String firstLevelKey) {
-    getLogger(this.runtimeType)
+    logType(this.runtimeType)
         .d("nested change notification received for '$firstLevelKey'");
     _changeList.add(ChangeEntry(type: ChangeType.update, key: firstLevelKey));
     _changes[firstLevelKey] = _output[firstLevelKey];

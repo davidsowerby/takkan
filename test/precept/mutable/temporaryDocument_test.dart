@@ -179,7 +179,7 @@ class TestModel extends DocumentModel {
       : super(data: data, canEdit: canEdit, id: id ?? "Test model");
 
   peek() {
-    getLogger(this.runtimeType).d("somewhere to stop");
+    logType(this.runtimeType).d("somewhere to stop");
   }
 
   StringBinding get item1 {

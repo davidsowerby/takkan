@@ -28,13 +28,13 @@ class Precept {
 
 // TODO error handling, loader may fail
   loadModels({@required List<PreceptLoader> loaders}) async {
-    getLogger(this.runtimeType).d("Loading models");
+    logType(this.runtimeType).d("Loading models");
     List<Future<PModel>> modelFutures = List();
     for (PreceptLoader loader in loaders) {
       modelFutures.add(loader.load());
     }
     final m = await Future.wait(modelFutures);
-    getLogger(this.runtimeType).d("All models loaded");
+    logType(this.runtimeType).d("All models loaded");
     models.addAll(m);
     router.init(models: models);
     partLibrary.init(models: models);

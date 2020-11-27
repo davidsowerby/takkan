@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/assembler.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/documentController.dart';
 import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/model/model.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 class Document extends StatelessWidget {
-  final Stream<Map<String,dynamic>> documentDataStream;
-  final PDocument config;
+  final Stream<Map<String, dynamic>> documentDataStream;
+  final PPage config;
+  final RootBinding rootBinding;
 
-  Document({Key key, @required this.config})
-      : documentDataStream = inject<DocumentController>().getDocument(config.documentSelector),
+  Document({Key key, @required this.config, @required this.rootBinding})
+      : documentDataStream =
+            inject<DocumentController>().getDocument(config.document.documentSelector),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final DocumentState documentState = Provider.of<DocumentState>(context);
-    return StreamBuilder<Map<String,dynamic>>(
+    return StreamBuilder<Map<String, dynamic>>(
         stream: documentDataStream,
         initialData: {},
         builder: (context, snapshot) {
@@ -45,18 +47,9 @@ class Document extends StatelessWidget {
   }
 
   /// Updates [documentState] (which is in the Widget tree above this Widget) so that bindings
-  /// reflect the new data. Then builds using a [PageBuilder]
-  activeBuilder(BuildContext context, DocumentState documentState, Map<String,dynamic> update) {
+  /// reflect the new data. Then builds using [assembleSections]
+  activeBuilder(BuildContext context, DocumentState documentState, Map<String, dynamic> update) {
     documentState.updateData(update);
-    final children = List<Widget>();
-    final assembler = inject<PageBuilder>();
-    children.addAll(assembler.assembleElements(
-        elements: config.sections, baseBinding: documentState.rootBinding));
-    return ChangeNotifierProvider<SectionState>(
-        create: (_) => SectionState(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: children,
-        ));
+    return assembleSections(rootBinding: rootBinding, pPage: config);
   }
 }
