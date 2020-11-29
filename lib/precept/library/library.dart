@@ -1,39 +1,40 @@
-
+import 'package:precept_client/common/logger.dart';
 
 abstract class LibraryModule<KEY, VALUE, CONFIG> {
   Map<KEY, VALUE Function(CONFIG)> get mappings;
 }
 
-
-
 abstract class Library<KEY, VALUE, CONFIG> {
-  Map<KEY, VALUE Function(CONFIG)> _mappings = Map();
+  static const String defaultKey = 'default';
+  static const String defaultListKey = 'default-list';
+  final Map<KEY, VALUE Function(CONFIG)> entries=Map();
+
+   Library();
 
   /// Finds an entry in the library matching [key], and returns an instance of it with [config]
   /// Return null if [key] not found
   VALUE find(KEY key, CONFIG config) {
-    final func = _mappings[key];
+    logType(this.runtimeType).d("Finding $key in $runtimeType");
+    final func = entries[key];
     return (func == null) ? null : func(config);
   }
 
-  /// [DefaultPageLibraryModule] will be loaded unless [useDefault] is false.
-  /// Your own [modules] will be merged together, and will include [DefaultPageLibraryModule] unless [useDefault] is false.
-  init({List<LibraryModule<KEY, VALUE, CONFIG>> modules, bool useDefault = true}) {
-    assert(useDefault != null);
-    assert((useDefault) || ((modules != null) && (modules.length > 0)));
-    if (useDefault) {
-      _mappings.addAll(defaultMappings);
-    }
+  /// Loads library entries defined by the developer
+  ///
+  /// If there are duplicate keys, later additions will override earlier
+  /// Defaults are loaded first, so to replace, define another with the key 'default'
+  /// There should be no need to call this directly, init for all libraries is carried out in
+  /// a call to [Precept.init] which should be before your runApp statement
+  init({Map<KEY, VALUE Function(CONFIG)> entries}) {
 
-    if (modules != null) {
-      for (var module in modules) {
-        _mappings.addAll(module.mappings);
-      }
+    setDefaults();
+
+    if (entries != null) {
+      this.entries.addAll(entries);
     }
+    logType(this.runtimeType).d("$runtimeType Library initialised");
   }
 
-  Map<KEY, VALUE Function(CONFIG)> get defaultMappings;
+  /// Override for each library
+  setDefaults();
 }
-
-
-

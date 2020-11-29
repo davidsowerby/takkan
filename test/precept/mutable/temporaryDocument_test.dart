@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept_client/backend/common/document.dart';
-import 'package:precept_client/common/backend.dart';
+import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/backend/document.dart';
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/common/repository.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/listBinding.dart';
@@ -13,8 +12,8 @@ import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/dataModel/documentModel.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/part/string/stringBinding.dart';
+import 'package:precept_mock_backend/precept_mock_backend.dart';
 
-import '../../helper/backend.dart';
 import '../../helper/listener.dart';
 import '../../helper/mock.dart';
 
@@ -149,7 +148,7 @@ void main() {
         "saving with changesOnly=false, saves all, no documentId uses existing",
         () async {
       // given
-      final repo = BaseRepository();
+      final backend = Backend();
       //when
       final TestModel model =
           TestModel(data: testData1(), canEdit: true, id: "test 23");
@@ -159,12 +158,12 @@ void main() {
       model.list1.deleteRow(0);
       model.map1.intBinding(property: "mapitem2").write(999);
       //then
-      await repo.saveDocument(
+      await backend.save(
           saveChangesOnly: false,
           documentType: DocumentType.standard,
-          model: model);
+          data: model.temporaryDocument);
       //expect
-      final data = mockBackendDelegate.data;
+      final data = mockBackendDelegate.store;
       expect(data["item1"], "item1 amended");
       expect(data["list1"], [2, 12, 3, 4]);
       expect(data["item2"], 444);

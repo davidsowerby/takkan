@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/precept/model/model.dart';
 
-class StandardPage extends StatelessWidget {
+class DefaultPage extends StatelessWidget {
   final PPage config;
 
-  const StandardPage({@required this.config}) ;
+  const DefaultPage({@required this.config}) ;
 
   @override
   Widget build(BuildContext context) {

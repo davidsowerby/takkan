@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/backend/common/response.dart';
+import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/backend/response.dart';
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/common/repository.dart';
 import 'package:precept_client/precept/dataModel/documentModel.dart';
 
 /// [readOnlyMode] means the document is read only, but can be changed to edit mode by the user if [_canEdit] is true
@@ -27,7 +27,7 @@ class DocumentModelShared with ChangeNotifier {
 
   Future<CloudResponse> persist() async {
     flushFormsToModel();
-    return await BaseRepository().saveDocument(model: model);
+    return await Backend().save(data:  model.temporaryDocument);
   }
 
   bool get readMode {

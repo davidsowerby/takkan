@@ -1,3 +1,5 @@
+
+
 import 'package:precept_client/precept/dataModel/documentModel.dart';
 import 'package:precept_client/precept/model/modelDocument.dart';
 
@@ -10,3 +12,5 @@ abstract class DocumentIdConverter {
 
   DocumentId toNative(DocumentId documentId);
 }
+
+enum DocumentType { standard, versioned, formal }

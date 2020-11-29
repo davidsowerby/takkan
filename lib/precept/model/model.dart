@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/model/element.dart';
 import 'package:precept_client/precept/model/help.dart';
 import 'package:precept_client/precept/model/modelDocument.dart';
@@ -59,7 +60,7 @@ class PPage {
   final bool _isStatic;
 
   const PPage({
-    this.pageKey = "standard",
+    this.pageKey = Library.defaultKey,
     @required this.title,
     @required this.document,
     this.scrollable = true,

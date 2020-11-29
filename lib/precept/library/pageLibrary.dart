@@ -9,41 +9,22 @@ class PageLibrary extends Library<String, Widget, PPage> {
   Widget Function(PError) _errorPage;
 
   @override
-  init(
-      {List<LibraryModule<String, Widget, PPage>> modules,
-        bool useDefault = true,
-        Widget Function(PError) errorPage}) {
-    super.init(modules: modules, useDefault: useDefault);
-    if (errorPage != null) {
-      _errorPage = errorPage ?? _defaultErrorPage;
-    }
+  init({Map<String, Widget Function(PPage)> entries, Widget Function(PError) errorPage}) {
+    super.init(entries: entries);
+    _errorPage = errorPage ?? (config) => PreceptDefaultErrorPage(config: config);
   }
 
-  PreceptDefaultErrorPage _defaultErrorPage(PError config) {
-    return PreceptDefaultErrorPage(config: config);
-  }
-
-  Widget errorPage(PError config) => _errorPage(config);
-
-  @override
-  Map<String, Widget Function(PPage)> get defaultMappings => DefaultPageLibraryModule().mappings;
-}
-
-
-class DefaultPageLibraryModule implements PageLibraryModule {
-  StandardPage _standardPage(PPage config) {
-    return StandardPage(config: config);
+  Widget errorPage(PError config) {
+    return _errorPage(config);
   }
 
   @override
-  Map<String, Widget Function(PPage config)> get mappings {
-    return {
-      "standard": _standardPage,
-    };
+  setDefaults() {
+    entries[Library.defaultKey] = (config) => DefaultPage(config: config);
   }
 }
 
-abstract class PageLibraryModule extends LibraryModule<String, Widget, PPage> {}
 
-final PageLibrary _pageLibrary=PageLibrary();
-PageLibrary get pageLibrary=> _pageLibrary;
+final PageLibrary _pageLibrary = PageLibrary();
+
+PageLibrary get pageLibrary => _pageLibrary;

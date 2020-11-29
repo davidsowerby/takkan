@@ -16,7 +16,7 @@ class PreceptDefaultErrorPage extends StatelessWidget {
       ),
       body: Center(
         child: Container(
-          child: Text("This will be a Error page"),
+          child: Text(config.message),
         ),
       ),
     );

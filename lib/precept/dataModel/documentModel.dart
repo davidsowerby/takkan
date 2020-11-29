@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_client/backend/common/document.dart';
-import 'package:precept_client/backend/common/documentIdConverter.dart';
-import 'package:precept_client/backend/common/response.dart';
-import 'package:precept_client/common/repository.dart';
+import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/backend/document.dart';
+import 'package:precept_client/backend/response.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/listBinding.dart';
@@ -70,6 +69,8 @@ class DocumentModel {
   /// See [TemporaryDocument.changes]
   Map<String, dynamic> get changes => _temporaryDocument.changes;
 
+  TemporaryDocument get temporaryDocument => _temporaryDocument;
+
   DocumentId get documentId => inject<DocumentIdConverter>().fromModel(this);
 
   ListBinding<String> get wizardSteps {
@@ -117,7 +118,7 @@ class DocumentModel {
   /// if required
   ///
   Future<CloudResponse> saveDocument() async {
-    final response = await BaseRepository().saveDocument(model: this);
+    final response = await Backend().save(data: this._temporaryDocument);
     snackToast(text: "Changes saved");
     return response;
   }

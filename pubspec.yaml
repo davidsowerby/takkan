@@ -38,6 +38,8 @@ dependencies:
   json_annotation: ^3.0.0
   collection: ^1.14.13
   auto_size_text: ^2.1.0
+  precept_mock_backend:
+    path: ../precept_mock_backend
 
 
 dev_dependencies:
@@ -50,6 +52,7 @@ dev_dependencies:
   build_config:
   source_gen:
   json_serializable: ^3.2.0
+
 
 
 

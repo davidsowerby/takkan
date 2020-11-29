@@ -127,13 +127,15 @@ class PreceptRouter {
   /// Returns the Widget representing page [route.page.pageKey], configured with [route.page]
   /// If there is no matching key in the [PageLibrary], an error page is returned.
   Route<dynamic> _route(PRoute route) {
+    final pageWidget = pageLibrary.find(route.page.pageKey, route.page);
+    if (pageWidget != null) {
+      return MaterialPageRoute(builder: (_) => pageWidget);
+    }
 
-    final page = pageLibrary.find(route.page.pageKey, route.page);
-    return (page == null)
-        ? pageLibrary.errorPage(PError(
-            message:
-                "Page ${route.page.pageKey}, has not been defined but was requested by route: ${route.path}")) // TODO message should come from Precept
-        : MaterialPageRoute(builder: (_) => page);
+    final errorPageWidget = pageLibrary.errorPage(PError(message: "Page '${route.page
+        .pageKey}' has not been defined in the PageLibrary, but was requested by route: '${route
+        .path}'"),); // TODO message should come from Precept
+    return MaterialPageRoute(builder: (_) => errorPageWidget);
   }
 
   hasRoute(String path) {
@@ -143,7 +145,7 @@ class PreceptRouter {
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
     final page = pageLibrary.errorPage(PError(
         message:
-            "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
+        "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
     return MaterialPageRoute(builder: (_) => page);
   }
 }

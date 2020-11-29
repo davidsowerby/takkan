@@ -1,5 +1,4 @@
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/common/repository.dart';
 import 'package:precept_client/precept/model/modelDocument.dart';
 
 /// Retrieves documents from the [Repository] layer, and manages current instances.
