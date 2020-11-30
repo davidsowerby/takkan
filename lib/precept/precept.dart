@@ -7,10 +7,10 @@ import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
-import 'package:precept_client/precept/model/backend.dart';
-import 'package:precept_client/precept/model/error.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/router.dart';
+import 'package:precept_client/precept/script/backend.dart';
+import 'package:precept_client/precept/script/error.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 /// Loads the Precept models and initialises various parts of Precept
 ///
@@ -21,7 +21,7 @@ import 'package:precept_client/precept/router.dart';
 ///
 /// [init] must be called before the app is run
 class Precept {
-  final List<PModel> models = List();
+  final List<PScript> models = List();
 
   Precept();
 
@@ -44,7 +44,7 @@ class Precept {
 // TODO error handling, loader may fail
   loadModels({@required List<PreceptLoader> loaders}) async {
     logType(this.runtimeType).d("Loading models");
-    List<Future<PModel>> modelFutures = List();
+    List<Future<PScript>> modelFutures = List();
     for (PreceptLoader loader in loaders) {
       modelFutures.add(loader.load());
     }

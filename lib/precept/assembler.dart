@@ -4,9 +4,9 @@ import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/document.dart';
-import 'package:precept_client/precept/model/element.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/precept/script/element.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/section.dart';
 
 

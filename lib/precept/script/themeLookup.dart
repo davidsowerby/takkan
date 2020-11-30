@@ -4,7 +4,7 @@ import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
-import 'package:precept_client/precept/model/style.dart';
+import 'package:precept_client/precept/script/style.dart';
 
 abstract class ThemeLookup {
   Color color({@required ThemeData theme, @required PColor pColor});

@@ -5,8 +5,8 @@ import 'package:precept_client/backend/document.dart';
 import 'package:precept_client/backend/query.dart';
 import 'package:precept_client/backend/response.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/model/modelDocument.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/script/document.dart';
 
 /// The layer between the client and server.
 ///
@@ -117,13 +117,13 @@ class Backend {
   /// If [saveChangesOnly] is true (the default) only changed properties are passed to the backend.
   ///
   ///
-  /// [documentId] is only required if [model] does not contain a valid [documentId], or this is to be saved to a document
+  /// [documentId] is only required if [script] does not contain a valid [documentId], or this is to be saved to a document
   /// different to the one from which the data was taken.  If [documentId] is provided, it takes precedence over that
   /// within the model, effectively making this a "save as" call.
   ///
   /// [documentType] affects the meta data applied to the document - not yet implemented
   ///
-  /// [model] contains the data to be saved
+  /// [script] contains the data to be saved
   ///
   Future<CloudResponse> save({
     DocumentId documentId,

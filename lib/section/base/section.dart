@@ -7,7 +7,7 @@ import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/document.dart';
 import 'package:precept_client/precept/document/documentState.dart';
-import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
 import 'package:precept_client/section/base/sectionState.dart';
@@ -50,8 +50,9 @@ class Section extends StatelessWidget with ToggleSectionEditState {
   }
 
   Widget _doBuild(BuildContext context,bool isStatic) {
+    final staticState=isStatic || config.isStatic;
     List<Widget> children =
-        assembleElements(elements: config.elements, baseBinding: baseBinding, isStatic: isStatic || config.isStatic);
+        assembleElements(elements: config.content, baseBinding: baseBinding, isStatic: staticState);
     final body = (config.scrollable)
         ? ListView(children: children)
         : Column(

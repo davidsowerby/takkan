@@ -1,5 +1,5 @@
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/script/document.dart';
 
 /// Retrieves documents from the [Repository] layer, and manages current instances.
 /// This allows the system to work with multiple documents concurrently

@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/part.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 enum StandardPart { StringPart }
 
@@ -21,7 +21,7 @@ class PartLibrary {
     return null;
   }
 
-  init({@required List<PModel> models}) {}
+  init({@required List<PScript> models}) {}
 }
 
 abstract class PartLibraryModule {

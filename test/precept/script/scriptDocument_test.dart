@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_client/precept/model/modelDocument.dart';
+import 'package:precept_client/precept/script/document.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -4,9 +4,9 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/document/documentController.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
-import 'package:precept_client/precept/model/themeLookup.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/router.dart';
+import 'package:precept_client/precept/script/themeLookup.dart';
 
 commonInjectionBindings() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());

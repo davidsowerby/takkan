@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/model/help.dart';
 import 'package:precept_client/precept/part/options/options.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/widget/caption.dart';
 
 part 'stringPart.g.dart';
@@ -20,7 +20,7 @@ class StringPart extends Part {
   final PString pPart;
   final MapBinding baseBinding;
 
-  const StringPart({@required this.pPart, @required this.baseBinding, bool isStatic=false}) : super(precept: pPart, isStatic: isStatic);
+  const StringPart({@required this.pPart, @required this.baseBinding, bool isStatic=false}) : super(config: pPart, isStatic: isStatic);
 
   Widget buildReadOnlyWidget(BuildContext context) {
     final text = Text((isStatic) ? pPart.static : _textFromBinding());
@@ -91,7 +91,7 @@ class PString extends PPart {
   const PString({
     String property,
     String caption,
-    bool isStatic,
+    bool isStatic=false,
     String static,
     String tooltip,
     PHelp help,

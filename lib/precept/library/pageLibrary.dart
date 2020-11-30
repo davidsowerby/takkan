@@ -2,8 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/app/page/standardPage.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/precept/library/library.dart';
-import 'package:precept_client/precept/model/error.dart';
-import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/script/error.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 class PageLibrary extends Library<String, Widget, PPage> {
   Widget Function(PError) _errorPage;

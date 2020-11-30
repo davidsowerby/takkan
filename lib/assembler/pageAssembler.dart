@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/document.dart';
 import 'package:precept_client/precept/document/documentState.dart';
-import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/section.dart';
 import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';

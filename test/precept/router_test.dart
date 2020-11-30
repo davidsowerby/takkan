@@ -30,6 +30,6 @@ void main() {
 buildInjector() {
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: [
-        PreceptRouteLocator(loader: DirectPreceptLoader(model: kitchenSinkModel))
+        PreceptRouteLocator(loader: DirectPreceptLoader(script: kitchenSinkScript))
       ]));
 }

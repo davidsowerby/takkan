@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 class DefaultListPage extends StatelessWidget {
   final PPage config;

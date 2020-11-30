@@ -30,18 +30,26 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// A caption may optionally be displayed in either read only or edit mode.
 ///
 abstract class Part extends StatelessWidget {
-  final PPart precept;
+  final PPart config;
   final bool isStatic;
 
-  const Part({@required this.precept, @required this.isStatic}) : super();
+  const Part({@required this.config, @required this.isStatic})
+      : assert(isStatic != null),
+        super();
 
   @override
   Widget build(BuildContext context) {
-    final SectionState sectionState =
-        Provider.of<SectionState>(context);
-    final readOnly = precept.readOnly || sectionState.readOnlyMode;
-    logType(this.runtimeType).d(
-        "caption: ${precept.caption}, EditState readOnly: ${precept.readOnly}");
+    final staticState = isStatic || config.isStatic;
+    assert(
+      staticState ? config.static != null : true,
+      'If a Part is static, it must define static text. Remember the `isStatic` setting may have come from a parent Document or Section ',
+    );
+    assert(!staticState ? config.property != null : true,
+        'If a Part is not static, it must define a property. A property may be an empty String');
+    final SectionState sectionState = Provider.of<SectionState>(context);
+    final readOnly = config.readOnly || sectionState.readOnlyMode;
+    logType(this.runtimeType)
+        .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
     if (readOnly) {
       return buildReadOnlyWidget(context);
     } else {
@@ -61,9 +69,7 @@ class ReadOnlyOptions {
   final TextStyle style;
 
   const ReadOnlyOptions(
-      {this.showCaption = true,
-      this.style = const TextStyle(),
-      this.showColumnHeading = true});
+      {this.showCaption = true, this.style = const TextStyle(), this.showColumnHeading = true});
 }
 
 /// Common base class for edit mode options which support [Part]
@@ -71,8 +77,7 @@ class EditModeOptions {
   final bool showCaption;
   final bool showColumnHeading;
 
-  const EditModeOptions(
-      {this.showCaption = true, this.showColumnHeading = true});
+  const EditModeOptions({this.showCaption = true, this.showColumnHeading = true});
 }
 
 class TrueFunction {

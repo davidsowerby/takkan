@@ -5,9 +5,9 @@ import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
-import 'package:precept_client/precept/model/error.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/script/error.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 /// A [RouteLocator] implementation returns a widget for [settings.name], or null
 /// if it does not recognise the route.
@@ -111,8 +111,8 @@ class PreceptRouter {
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  init({@required List<PModel> models}) {
-    for (PModel model in models) {
+  init({@required List<PScript> models}) {
+    for (PScript model in models) {
       for (PComponent component in model.components) {
         for (PRoute r in component.routes) {
           _preceptRoutes[r.path] = r;
@@ -164,7 +164,7 @@ PreceptRouter get router => inject<PreceptRouter>();
 class PreceptRouteLocator implements RouteLocator {
   bool _loaded = false;
   final PreceptLoader loader;
-  PModel _model;
+  PScript _model;
 
   PreceptRouteLocator({@required this.loader});
 

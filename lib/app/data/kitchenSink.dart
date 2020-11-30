@@ -1,11 +1,11 @@
 
 import 'package:precept_client/app/data/schema.dart';
-import 'package:precept_client/precept/model/help.dart';
-import 'package:precept_client/precept/model/model.dart';
-import 'package:precept_client/precept/model/modelDocument.dart';
-import 'package:precept_client/precept/model/style.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
-final kitchenSinkModel = PModel(
+import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/help.dart';
+import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_client/precept/script/style.dart';
+final kitchenSinkScript = PScript(
   components: [
     PComponent(
       name: "core",
@@ -31,7 +31,7 @@ final kitchenSinkModel = PModel(
                         title: "Person",
                         style: PHeadingStyle(background: PColor.primary),
                       ),
-                      elements: [
+                      content: [
                         PString(
                           property: "firstName",
                           caption: "First Name",

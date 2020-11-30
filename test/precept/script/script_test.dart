@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:precept_client/app/data/kitchenSink.dart';
-import 'package:precept_client/precept/model/model.dart';
-import 'package:precept_client/precept/model/modelDocument.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Round trip Precept model to JSON', () {
+  group('Round trip Precept Script to JSON', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -18,13 +18,13 @@ void main() {
 
     test('full model', () {
       // given
-      PModel model = kitchenSinkModel;
+      PScript script = kitchenSinkScript;
 
       // when
 
       // then
-      Map<String, dynamic> jsonMap = model.toJson();
-      PModel model2 = PModel.fromJson(jsonMap);
+      Map<String, dynamic> jsonMap = script.toJson();
+      PScript model2 = PScript.fromJson(jsonMap);
 
       expect(model2.components.length, 1);
       final c0 = model2.components[0];
@@ -36,7 +36,7 @@ void main() {
       expect(p.title, "Home Page");
       expect(p.document.sections.length, 1);
 
-      expect(json.encode(model.toJson()), json.encode(model2.toJson()));
+      expect(json.encode(script.toJson()), json.encode(model2.toJson()));
     });
 
     test('PDocument round trip', () {
@@ -47,7 +47,7 @@ void main() {
             params: {},
           ),
           sections: [
-            PSection(elements: [
+            PSection(content: [
               PString(
                 caption: "Title",
               )
@@ -59,8 +59,8 @@ void main() {
       // then
 
       expect(json.encode(m.toJson()), jsonEncode(m2.toJson()));
-      expect(m2.sections[0].elements[0].caption, "Title");
-      expect(m2.sections[0].elements[0], isA<PString>());
+      expect(m2.sections[0].content[0].caption, "Title");
+      expect(m2.sections[0].content[0], isA<PString>());
     });
   });
 }

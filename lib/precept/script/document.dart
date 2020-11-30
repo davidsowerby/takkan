@@ -1,8 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/precept/script/script.dart';
 
-part 'modelDocument.g.dart';
+part 'document.g.dart';
 
 /// Roughly equivalent to a query with an expected result of one document.
 ///
@@ -18,6 +19,8 @@ abstract class PDocumentSelector {
   final Map<String, dynamic> params;
 
   const PDocumentSelector({@required this.params});
+
+  void validate(PDocument pDocument, List<ValidationMessage> messages, int pass);
 }
 
 /// Retrieves a single document using a [DocumentId]
@@ -32,6 +35,16 @@ class PDocumentGet extends PDocumentSelector {
       _$PDocumentGetFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDocumentGetToJson(this);
+
+  @override
+  void validate(PDocument pDocument, List<ValidationMessage> messages, int pass) {
+    if (id == null ) {
+      messages.add(ValidationMessage(
+          type: this.runtimeType,
+          name: 'n/a',
+          msg: "PDocumentGet must define an id"));
+    }
+  }
 }
 
 class PDocumentSelectorConverter

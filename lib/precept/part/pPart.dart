@@ -1,12 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_client/precept/model/element.dart';
-import 'package:precept_client/precept/model/help.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/script/element.dart';
+import 'package:precept_client/precept/script/help.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 part 'pPart.g.dart';
 
-/// Contained within a [PModel] a [PPart] describes a [Part]
+/// Contained within a [PScript] a [PPart] describes a [Part]
 /// [T] is the data type as held by the database.  Depending on how it is displayed, this may need conversion
 /// [isStatic] - if true, the value is taken from [static], if false, the value is dynamic data loaded via [property]
 /// [static] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
@@ -27,11 +27,7 @@ class PPart<T> implements DisplayElement {
   final String tooltip;
 
   const PPart(
-      {this.caption, this.readOnly = false, this.property, this.isStatic, this.static, this.help, this.tooltip})
-      :assert(isStatic
-      ? static != null
-      : true, 'If a Part is static, it must define static text. The `isStatic` setting may have come from a parent Document or Section ', ),
-        assert(!isStatic ? property != null : true, 'If a Part is not static, it must define a property. A property may be an empty String' );
+      {this.caption, this.readOnly = false, this.property, this.isStatic=false, this.static, this.help, this.tooltip});
 
   factory PPart.fromJson(Map<String, dynamic> json) =>
       _$PPartFromJson(json);

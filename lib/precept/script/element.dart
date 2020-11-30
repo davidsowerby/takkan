@@ -1,7 +1,7 @@
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/precept/model/model.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/precept/script/script.dart';
 
 /// Common interface for PSection and PPart so both can be held in any order for display
 abstract class DisplayElement {

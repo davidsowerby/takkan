@@ -4,7 +4,7 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/document/documentController.dart';
 import 'package:precept_client/precept/document/documentState.dart';
-import 'package:precept_client/precept/model/model.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:provider/provider.dart';
 
 class Document extends StatelessWidget {

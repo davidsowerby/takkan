@@ -6,10 +6,10 @@ import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
-import 'package:precept_client/precept/model/help.dart';
-import 'package:precept_client/precept/model/model.dart';
-import 'package:precept_client/precept/model/style.dart';
-import 'package:precept_client/precept/model/themeLookup.dart';
+import 'package:precept_client/precept/script/help.dart';
+import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_client/precept/script/style.dart';
+import 'package:precept_client/precept/script/themeLookup.dart';
 import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
