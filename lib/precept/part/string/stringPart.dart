@@ -23,7 +23,7 @@ class StringPart extends Part {
   const StringPart({@required this.pPart, @required this.baseBinding, bool isStatic=false}) : super(config: pPart, isStatic: isStatic);
 
   Widget buildReadOnlyWidget(BuildContext context) {
-    final text = Text((isStatic) ? pPart.static : _textFromBinding());
+    final text = Text((isStatic) ? pPart.staticData : _textFromBinding());
 
     // TODO: styling final style =
 // TODO: shouldn't use isStatic like this, it may want a caption still
@@ -82,13 +82,13 @@ class StringPart extends Part {
 }
 
 ///
-/// - [property],[isStatic],[static], [caption],[tooltip],[help] - see [PPart]
+/// - [property],[isStatic],[staticData], [caption],[tooltip],[help] - see [PPart]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PString extends PPart {
   final PReadModeOptions readModeOptions;
   final PEditModeOptions editModeOptions;
 
-  const PString({
+   PString({
     String property,
     String caption,
     bool isStatic=false,
@@ -101,7 +101,7 @@ class PString extends PPart {
             caption: caption,
             property: property,
             isStatic: isStatic,
-            static: static,
+            staticData: static,
             help: help,
             tooltip: tooltip);
 

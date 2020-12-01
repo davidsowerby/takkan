@@ -4,76 +4,16 @@ import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
-import 'package:precept_client/precept/loader.dart';
-import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/script/error.dart';
 import 'package:precept_client/precept/script/script.dart';
 
-/// A [RouteLocator] implementation returns a widget for [settings.name], or null
-/// if it does not recognise the route.
-abstract class RouteLocator {
-  /// See [init]
-  bool get isInitialised;
 
-  /// Most sources require authentication or other form of preparation.  This method
-  /// is invoked only when a [RouteLocator] instance is first queried for a route.
-  ///
-  /// Implementations should ignore this call if [isInitialised] is true, unless there is some
-  /// reason not to do so.
-  init();
 
-  /// Returns all [PRoute]s declared by this locator.   These are combined with other
-  /// instances within the [PreceptRouter] to form a single route map.
-  ///
-  /// Usually asynchronous to allow loader to retrieve data
-  Future<Map<String, PRoute>> routeMap();
-
-  /// Returns all the [PPart]s declared by the locator.  These are held as a lookup in the
-  /// [router]
-  Future<Map<String, PPart>> sectionDeclarations();
-}
-
-/// Maintains a list of [RouteLocator], used to find widgets for routes, and
-/// a [PreceptPart] for a [PreceptSection]
+/// Router for Precept.
 ///
-/// [locators] are queried in the order supplied.
-///
-/// An entry for [RouteLocatorSet] must be made in [getIt], as part of the
-/// [setupInjector] call, either directly or indirectly.
-///
-/// The [locators] are specified as part of the [getIt] declaration, for example:
-///
-/// getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators:[PreceptRouteLocator()]));
-///
-class RouteLocatorSet {
-  final List<RouteLocator> locators;
-
-  const RouteLocatorSet({@required this.locators});
-
-  /// Returns a widget from the first [RouteLocator] in [locators] which recognises
-  /// [settings.name]
-  Future<Map<String, PRoute>> routeMap() async {
-    Map<String, PRoute> masterMap = Map();
-    for (RouteLocator locator in locators) {
-      masterMap.addAll(await locator.routeMap());
-    }
-    return masterMap;
-  }
-
-  Future<Map<String, PPart>> sectionDeclarations() async {
-    Map<String, PPart> masterMap = Map();
-    for (RouteLocator locator in locators) {
-      masterMap.addAll(await locator.sectionDeclarations());
-    }
-    return masterMap;
-  }
-}
-
 /// This class should be used as a singleton. It is accessible either via [router],
 /// or by invoking inject<PreceptRouter>() - both will return the same instance
 ///
-/// It builds a Precept route map, [_preceptRoutes], from all the registered [RouteLocator]s, via
-/// [RouteLocatorSet]
 ///
 /// Example of use:
 ///
@@ -111,9 +51,9 @@ class PreceptRouter {
 
   /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  init({@required List<PScript> models}) {
-    for (PScript model in models) {
-      for (PComponent component in model.components) {
+  init({@required List<PScript> scripts}) {
+    for (PScript script in scripts) {
+      for (PComponent component in script.components) {
         for (PRoute r in component.routes) {
           _preceptRoutes[r.path] = r;
         }
@@ -161,47 +101,3 @@ class PreceptRouterConfig {
 
 PreceptRouter get router => inject<PreceptRouter>();
 
-class PreceptRouteLocator implements RouteLocator {
-  bool _loaded = false;
-  final PreceptLoader loader;
-  PScript _model;
-
-  PreceptRouteLocator({@required this.loader});
-
-  @override
-  Future<Map<String, PRoute>> routeMap() async {
-    _model = await loader.load();
-    Map<String, PRoute> map = Map();
-    for (PComponent component in _model.components) {
-      for (PRoute preceptRoute in component.routes) {
-        map[preceptRoute.path] = preceptRoute;
-      }
-    }
-    return map;
-  }
-
-  @override
-  Future<Map<String, PPart>> sectionDeclarations() async {
-    _model = await loader.load();
-    Map<String, PPart> map = Map();
-    for (PComponent component in _model.components) {
-      map.addAll(component.parts);
-    }
-    return map;
-  }
-
-  Route<dynamic> _route(Widget page) {
-    return MaterialPageRoute(builder: (_) => page);
-  }
-
-  @override
-  init() async {
-    if (!_loaded) {
-      _model = await loader.load();
-      _loaded = true;
-    }
-  }
-
-  @override
-  bool get isInitialised => _loaded;
-}

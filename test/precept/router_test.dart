@@ -1,6 +1,4 @@
-import 'package:precept_client/app/data/kitchenSink.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/loader.dart';
 import 'package:precept_client/precept/router.dart';
 import 'package:test/test.dart';
 
@@ -29,7 +27,5 @@ void main() {
 
 buildInjector() {
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
-  getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: [
-        PreceptRouteLocator(loader: DirectPreceptLoader(script: kitchenSinkScript))
-      ]));
+
 }

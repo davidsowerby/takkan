@@ -41,7 +41,7 @@ abstract class Part extends StatelessWidget {
   Widget build(BuildContext context) {
     final staticState = isStatic || config.isStatic;
     assert(
-      staticState ? config.static != null : true,
+      staticState ? config.staticData != null : true,
       'If a Part is static, it must define static text. Remember the `isStatic` setting may have come from a parent Document or Section ',
     );
     assert(!staticState ? config.property != null : true,

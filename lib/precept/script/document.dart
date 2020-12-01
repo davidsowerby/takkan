@@ -15,12 +15,13 @@ part 'document.g.dart';
 /// - 'select last'
 
 /// Classes used to define selection method and criteria for a document
-abstract class PDocumentSelector {
+abstract class PDocumentSelector extends PCommon{
   final Map<String, dynamic> params;
+  @JsonKey(ignore: true)
+  PDocument _parent;
+   PDocumentSelector({@required this.params});
 
-  const PDocumentSelector({@required this.params});
-
-  void validate(PDocument pDocument, List<ValidationMessage> messages, int pass);
+  void validate( List<ValidationMessage> messages, int pass);
 }
 
 /// Retrieves a single document using a [DocumentId]
@@ -28,16 +29,16 @@ abstract class PDocumentSelector {
 class PDocumentGet extends PDocumentSelector {
   final DocumentId id;
 
-  const PDocumentGet({@required this.id, @required Map<String, dynamic> params})
+   PDocumentGet({@required this.id, @required Map<String, dynamic> params})
       : super(params: params);
 
   factory PDocumentGet.fromJson(Map<String, dynamic> json) =>
       _$PDocumentGetFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDocumentGetToJson(this);
-
+  PDocument get parent => _parent;
   @override
-  void validate(PDocument pDocument, List<ValidationMessage> messages, int pass) {
+  void validate( List<ValidationMessage> messages, int pass) {
     if (id == null ) {
       messages.add(ValidationMessage(
           type: this.runtimeType,

@@ -38,7 +38,7 @@ class Precept {
     await loadModels(loaders: loaders);
     backendLibrary.init();
     pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
-    router.init(models: precept.models);
+    router.init(scripts: precept.models);
   }
 
 // TODO error handling, loader may fail
@@ -51,7 +51,7 @@ class Precept {
     final m = await Future.wait(modelFutures);
     logType(this.runtimeType).d("All models loaded");
     models.addAll(m);
-    router.init(models: models);
+    router.init(scripts: models);
     partLibrary.init(models: models);
   }
 }
