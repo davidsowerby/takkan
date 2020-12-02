@@ -9,7 +9,7 @@ import 'package:precept_client/precept/script/style.dart';
 final kitchenSinkScript = PScript(
   components: [
     PComponent(
-      backend: PBackend(backendKey: "mock", connection: {'id': 'mock1'}),
+      backend: PBackend(backendType: "mock", connection: {'id': 'mock1'}),
       name: "core",
       routes: [
         PRoute(

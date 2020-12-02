@@ -4,8 +4,9 @@ import 'package:precept_client/backend/data.dart';
 import 'package:precept_client/backend/document.dart';
 import 'package:precept_client/backend/query.dart';
 import 'package:precept_client/backend/response.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/precept/script/backend.dart';
 import 'package:precept_client/precept/script/document.dart';
 
 /// The layer between the client and server.
@@ -15,7 +16,10 @@ import 'package:precept_client/precept/script/document.dart';
 ///
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
 class Backend {
-  final BackendDelegate backendDelegate = inject<BackendDelegate>();
+  final BackendDelegate backendDelegate;
+
+  Backend({ @required PBackend config})
+      : backendDelegate = backendLibrary.find(config.backendType, config);
 
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
@@ -32,7 +36,7 @@ class Backend {
   /// Returns a Stream of [Data] identified by [documentId]
   ///
   /// Throws an [APIException] if not found
-  Future<Stream<Data>> getStream({@required DocumentId documentId}) {
+  Stream<Data> getStream({@required DocumentId documentId}) {
     return backendDelegate.getStream(documentId: documentId);
   }
 
@@ -48,7 +52,7 @@ class Backend {
   ///
   /// May return an empty list
   /// throws an [APIException] if the query is not valid
-  Future<Stream<List<Data>>> getListStream({@required Query query}) {
+  Stream<List<Data>> getListStream({@required Query query}) {
     return backendDelegate.getListStream(query: query);
   }
 
@@ -62,7 +66,7 @@ class Backend {
   /// Returns a single instance of [Data] for the [query]
   ///
   /// Throws an [APIException] if the result is not exactly one instance
-  Future<Stream<Data>> getDistinctStream({@required Query query}) {
+  Stream<Data> getDistinctStream({@required Query query}) {
     return backendDelegate.getDistinctStream(query: query);
   }
 
@@ -151,8 +155,6 @@ class Backend {
   }
 }
 
-/// Converts a response from a cloud provider (currently Back4App) to a standard form.  This enables the Repository layer
-/// to decouple from a chosen backend provider
 abstract class BackendDelegate {
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
@@ -163,19 +165,19 @@ abstract class BackendDelegate {
   Future<Data> get({@required DocumentId documentId});
 
   /// See [Backend.getStream]
-  Future<Stream<Data>> getStream({@required DocumentId documentId});
+  Stream<Data> getStream({@required DocumentId documentId});
 
   /// See [Backend.getList]
   Future<Data> getList({Query query});
 
   /// See [Backend.getListStream]
-  Future<Stream<List<Data>>> getListStream({Query query});
+  Stream<List<Data>> getListStream({Query query});
 
   /// See [Backend.getDistinct]
   Future<Data> getDistinct({Query query});
 
   /// See [Backend.getDistinctStream]
-  Future<Stream<Data>> getDistinctStream({Query query});
+  Stream<Data> getDistinctStream({Query query});
 
   /// ================================================================================================
   /// All 'fetchXXX' methods call Cloud Functions
@@ -212,9 +214,9 @@ abstract class BackendDelegate {
   /// See [Backend.delete]
   Future<CloudResponse> delete({@required List<DocumentId> documentIds});
 
-/// ================================================================================================
-/// Precept calls
-/// ================================================================================================
+  /// ================================================================================================
+  /// Precept calls
+  /// ================================================================================================
 
   /// Loads a Precept model
   ///
@@ -232,16 +234,14 @@ abstract class BackendDelegate {
   /// If [CloudResponse.success] is false, [CloudResponse.result] is a message indicating the reason
   Future<CloudResponse> loadPreceptSchema({int minimumVersion});
 
-/// ================================================================================================
-/// Authorisation calls
-/// ================================================================================================
+  /// ================================================================================================
+  /// Authorisation calls
+  /// ================================================================================================
 
-
-/// ================================================================================================
-/// Feature Switch (combine with Precept???????
-/// ================================================================================================
+  /// ================================================================================================
+  /// Feature Switch (combine with Precept???????
+  /// ================================================================================================
 }
-
 
 class APIException implements Exception {
   final String message;
@@ -260,4 +260,3 @@ class APINotSupportedException implements Exception {
 
   String errMsg() => message;
 }
-

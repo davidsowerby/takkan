@@ -10,12 +10,12 @@ import 'package:provider/provider.dart';
 
 /// Starts the process of assembling the content of a page based on its [config].
 /// This step provides a [DocumentState] and a [Document].
-/// The [Document] then uses a Stream to build when the data becomes available
+/// The [Document] then uses a Stream to build when the data becomes available, which then calls on Sections to be built
 Widget assemblePage({@required PPage config}) {
   final documentState=DocumentState(config: config.document);
   return ChangeNotifierProvider<DocumentState>(
       create: (_) => documentState,
-      child: Document(config: config, rootBinding: documentState.rootBinding,));
+      child: Document(pageConfig: config, rootBinding: documentState.rootBinding,));
 }
 
 /// Assembles the first level of [Section]s within a [Document], as declared by from [sections].
