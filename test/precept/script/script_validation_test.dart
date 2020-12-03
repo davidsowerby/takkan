@@ -76,7 +76,7 @@ void main() {
       test('Must have document, pageKey and title', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageKey: null))])
+          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PFormPage(pageKey: null))])
         ]);
         // when
         final messages = component.validate();
@@ -92,7 +92,7 @@ void main() {
       test('No errors', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageKey: "mine",title: "Wiggly", document: PDocument(documentSelector: PDocumentGet(id: DocumentId()))))])
+          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PFormPage(pageKey: "mine",title: "Wiggly", document: PDocument(documentSelector: PDocumentGet(id: DocumentId()))))])
         ]);
         // when
         final messages = component.validate();

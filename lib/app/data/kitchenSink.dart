@@ -14,7 +14,7 @@ final kitchenSinkScript = PScript(
       routes: [
         PRoute(
           path: "/",
-          page: PPage(
+          page: PFormPage(
             title: "Home Page",
             document: PDocument(
                 schema: schema.components["core"].documents["sink"],

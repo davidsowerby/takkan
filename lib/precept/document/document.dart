@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class Document extends StatelessWidget {
   final Backend backend;
-  final PPage pageConfig;
+  final PFormPage pageConfig;
   final RootBinding rootBinding;
 
   Document({Key key, @required this.pageConfig, @required this.rootBinding})

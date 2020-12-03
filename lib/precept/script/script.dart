@@ -190,7 +190,7 @@ class PComponent extends PCommon {
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute extends PCommon {
   final String path;
-  final PPage page;
+  final PFormPage page;
 
   @JsonKey(ignore: true)
   PRoute({
@@ -235,14 +235,14 @@ class PRoute extends PCommon {
 /// [isStatic] can be defined at either page or document level - it has the same effect
 /// [pageKey] used to look up from [PageLibrary]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPage extends PCommon {
+class PFormPage extends PCommon {
   final String title;
   final String pageKey;
   final PDocument document;
   final bool scrollable;
 
   @JsonKey(ignore: true)
-  PPage({
+  PFormPage({
     this.pageKey = Library.simpleKey,
     @required this.title,
     @required this.document,
@@ -251,11 +251,11 @@ class PPage extends PCommon {
     PBackend backend,
   }) : super(isStatic: isStatic);
 
-  factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
+  factory PFormPage.fromJson(Map<String, dynamic> json) => _$PFormPageFromJson(json);
 
   PRoute get parent => _parent;
 
-  Map<String, dynamic> toJson() => _$PPageToJson(this);
+  Map<String, dynamic> toJson() => _$PFormPageToJson(this);
 
   void validate(List<ValidationMessage> messages, int pass) {
     if (title == null || title.isEmpty) {
@@ -358,7 +358,7 @@ class PDocument extends PCommon {
 
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 
-  PPage get parent => _parent;
+  PFormPage get parent => _parent;
 
   void validate(List<ValidationMessage> messages, int pass) {
     if (documentSelector == null) {

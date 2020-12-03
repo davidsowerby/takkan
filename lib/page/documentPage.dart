@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/precept/script/script.dart';
 
 class DefaultDocumentPage extends StatelessWidget {
-  final PPage config;
+  final PFormPage config;
 
   const DefaultDocumentPage({@required this.config, Key key}) :assert(config != null), super(key: key);
 

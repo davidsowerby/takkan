@@ -39,7 +39,7 @@ dependencies:
   collection: ^1.14.13
   auto_size_text: ^2.1.0
   precept_mock_backend:
-    path: ../precept-mock-backend
+    path: ../precept_mock_backend
 
 
 dev_dependencies:

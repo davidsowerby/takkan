@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 /// Starts the process of assembling the content of a page based on its [config].
 /// This step provides a [DocumentState] and a [Document].
 /// The [Document] then uses a Stream to build when the data becomes available, which then calls on Sections to be built
-Widget assemblePage({@required PPage config}) {
+Widget assemblePage({@required PFormPage config}) {
   final documentState=DocumentState(config: config.document);
   return ChangeNotifierProvider<DocumentState>(
       create: (_) => documentState,
@@ -21,7 +21,7 @@ Widget assemblePage({@required PPage config}) {
 /// Assembles the first level of [Section]s within a [Document], as declared by from [content].
 /// A [SectionState] instance is placed above each [Section] in the Widget Tree, which is used to control the edit state of the [Section] itself, and its contents (which are either [Part]s or sub-[Sections].
 /// [rootBinding] is the data binding from a [DocumentState]
-Widget assembleSections({@required PPage pPage, RootBinding rootBinding}) {
+Widget assembleSections({@required PFormPage pPage, RootBinding rootBinding}) {
   final list = List<Widget>();
   for (var pSection in pPage.document.content) {
     list.add(constructSection(pSection: pSection, baseBinding: rootBinding, isStatic: pPage.isStatic));

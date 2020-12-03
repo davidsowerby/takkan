@@ -4,7 +4,7 @@ import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/precept/script/script.dart';
 
 class DefaultPage extends StatelessWidget {
-  final PPage config;
+  final PFormPage config;
 
   const DefaultPage({@required this.config}) ;
 
