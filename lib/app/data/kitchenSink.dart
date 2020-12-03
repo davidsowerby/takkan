@@ -22,7 +22,7 @@ final kitchenSinkScript = PScript(
                   id: DocumentId(path: "any", itemId: "any"),
                   params: {},
                 ),
-                sections: [
+                content: [
                   PSection(
                     property: "",
                     help: PHelp(

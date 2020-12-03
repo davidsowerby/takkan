@@ -20,7 +20,7 @@ class PageLibrary extends Library<String, Widget, PPage> {
 
   @override
   setDefaults() {
-    entries[Library.defaultKey] = (config) => DefaultPage(config: config);
+    entries[Library.simpleKey] = (config) => DefaultPage(config: config);
   }
 }
 

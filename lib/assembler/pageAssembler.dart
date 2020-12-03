@@ -18,12 +18,12 @@ Widget assemblePage({@required PPage config}) {
       child: Document(pageConfig: config, rootBinding: documentState.rootBinding,));
 }
 
-/// Assembles the first level of [Section]s within a [Document], as declared by from [sections].
+/// Assembles the first level of [Section]s within a [Document], as declared by from [content].
 /// A [SectionState] instance is placed above each [Section] in the Widget Tree, which is used to control the edit state of the [Section] itself, and its contents (which are either [Part]s or sub-[Sections].
 /// [rootBinding] is the data binding from a [DocumentState]
 Widget assembleSections({@required PPage pPage, RootBinding rootBinding}) {
   final list = List<Widget>();
-  for (var pSection in pPage.document.sections) {
+  for (var pSection in pPage.document.content) {
     list.add(constructSection(pSection: pSection, baseBinding: rootBinding, isStatic: pPage.isStatic));
   }
   return (pPage.scrollable) ? ListView(children: list) : Column(children: list);

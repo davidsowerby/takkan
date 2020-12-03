@@ -5,8 +5,8 @@ abstract class LibraryModule<KEY, VALUE, CONFIG> {
 }
 
 abstract class Library<KEY, VALUE, CONFIG> {
-  static const String defaultKey = 'default';
-  static const String defaultListKey = 'default-list';
+  static const String simpleKey = 'simple';
+  static const String simpleListKey = 'simple-list';
   final Map<KEY, VALUE Function(CONFIG)> entries=Map();
 
    Library();

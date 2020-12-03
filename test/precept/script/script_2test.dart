@@ -5,7 +5,7 @@ import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Round trip Precept Script to JSON', () {
+  group('PScript JSON Round trip', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -13,7 +13,6 @@ void main() {
     setUp(() {});
 
     tearDown(() {});
-
     test('full model', () {
       // given
       PScript script = kitchenSinkScript;
@@ -33,7 +32,7 @@ void main() {
       expect(r0.path, "/");
       final p = r0.page;
       expect(p.title, "Home Page");
-      expect(p.document.sections.length, 1);
+      expect(p.document.content.length, 1);
       expect(p.document.backend.connection['id'], 'mock1');
 
       expect(json.encode(script.toJson()), json.encode(model2.toJson()));

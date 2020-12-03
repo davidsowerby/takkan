@@ -243,7 +243,7 @@ class PPage extends PCommon {
 
   @JsonKey(ignore: true)
   PPage({
-    this.pageKey = Library.defaultKey,
+    this.pageKey = Library.simpleKey,
     @required this.title,
     @required this.document,
     this.scrollable = true,
@@ -333,19 +333,20 @@ class PSection extends PCommon implements DisplayElement {
 
 /// if [isStatic] is true, [documentSelector] and [schema] are not required and may be null
 /// if [isStatic] is false [documentSelector] and [schema] must be defined
-/// [sections] must always contain at least one [PSection]
+/// [content] must always contain at least one [DisplayElement]
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PDocumentSelectorConverter()
 class PDocument extends PCommon {
   final PDocumentSelector documentSelector;
-  final List<PSection> sections;
+  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
+  final List<DisplayElement> content;
   final SDocument schema;
 
   @JsonKey(ignore: true)
   PDocument({
     this.schema,
     this.documentSelector,
-    @required this.sections,
+    @required this.content,
     bool isStatic = false,
     PBackend backend,
   }) : super(
@@ -373,8 +374,8 @@ class PDocument extends PCommon {
   @override
   doInit(PCommon parent) {
     super.doInit(parent);
-    for (var section in sections) {
-      section.doInit(this);
+    for (var element in content) {
+      (element as PCommon).doInit(this);
     }
     documentSelector.doInit(this);
   }

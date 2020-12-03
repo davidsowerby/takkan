@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -197,7 +198,7 @@ class _UploaderState extends State<Uploader> {
                         Container(
                           width: 60,
                           height: 30,
-                          child: FlatButton(
+                          child: TextButton(
                             child: Icon(Icons.play_arrow, size: 25),
                             onPressed: _uploadTask.resume,
                           ),
@@ -206,7 +207,7 @@ class _UploaderState extends State<Uploader> {
                         Container(
                           width: 60,
                           height: 30,
-                          child: FlatButton(
+                          child: TextButton(
                             child: Icon(Icons.pause, size: 25),
                             onPressed: _uploadTask.pause,
                           ),
