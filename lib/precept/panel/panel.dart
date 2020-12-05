@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/backend/data.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:provider/provider.dart';
 
-class Document extends StatelessWidget {
+class Panel extends StatelessWidget {
   final Backend backend;
-  final PFormPage pageConfig;
+  final PPage pageConfig;
   final RootBinding rootBinding;
 
-  Document({Key key, @required this.pageConfig, @required this.rootBinding})
-      : backend = Backend(config: pageConfig.document.documentSelector.backend); // Make sure we get the one furthest down the tree
+  Panel({Key key, @required this.pageConfig, @required this.rootBinding})
+      : backend = Backend(config: pageConfig.backend); // Make sure we get the one furthest down the tree
 
   @override
   Widget build(BuildContext context) {
-    final DocumentState documentState = Provider.of<DocumentState>(context);
+    final DataSource dataSource = Provider.of<DataSource>(context);
     return StreamBuilder<Data>(
         stream: backend.getStream(documentId: null),
         initialData: Data(data : {}),
@@ -33,7 +33,7 @@ class Document extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             case ConnectionState.active:
-              return activeBuilder(context, documentState, snapshot.data);
+              return activeBuilder(context, dataSource, snapshot.data);
             case ConnectionState.done:
               return Center(
                 child: Text("Connection closed"),
@@ -46,7 +46,7 @@ class Document extends StatelessWidget {
 
   /// Updates [documentState] (which is in the Widget tree above this Widget) so that bindings
   /// reflect the new data. Then builds using [assembleSections]
-  activeBuilder(BuildContext context, DocumentState documentState, Data update) {
+  activeBuilder(BuildContext context, DataSource documentState, Data update) {
     documentState.updateData(update.data);
     return assembleSections(rootBinding: rootBinding, pPage: pageConfig);
   }

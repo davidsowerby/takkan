@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/part/part.dart';
 import 'package:precept_client/precept/script/element.dart';
@@ -39,5 +40,9 @@ class PPart<T> extends PCommon implements DisplayElement {
 
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
+
+  Widget build(){
+    return Text("this should be a proper part");
+  }
 
 }

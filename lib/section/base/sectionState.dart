@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/precept/document/documentState.dart';
+import 'package:precept_client/data/dataSource.dart';
 
 
 /// [readOnlyMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
@@ -15,7 +15,7 @@ class SectionState with ChangeNotifier {
       : _readOnlyMode = readOnlyMode,
         _canEdit = canEdit;
 
-  SectionState.fromDocument(DocumentState documentEditState)
+  SectionState.fromDocument(DataSource documentEditState)
       : _canEdit = documentEditState.canEdit,
         _readOnlyMode = documentEditState.readOnlyMode;
 

@@ -64,16 +64,16 @@ class PreceptRouter {
 
   bool get ready => _indexed;
 
-  /// Returns the Widget representing page [route.page.pageKey], configured with [route.page]
+  /// Returns the Widget representing page [route.page.pageType], configured with [route.page]
   /// If there is no matching key in the [PageLibrary], an error page is returned.
   Route<dynamic> _route(PRoute route) {
-    final pageWidget = pageLibrary.find(route.page.pageKey, route.page);
+    final pageWidget = pageLibrary.find(route.page.pageType, route.page);
     if (pageWidget != null) {
       return MaterialPageRoute(builder: (_) => pageWidget);
     }
 
     final errorPageWidget = pageLibrary.errorPage(PError(message: "Page '${route.page
-        .pageKey}' has not been defined in the PageLibrary, but was requested by route: '${route
+        .pageType}' has not been defined in the PageLibrary, but was requested by route: '${route
         .path}'"),); // TODO message should come from Precept
     return MaterialPageRoute(builder: (_) => errorPageWidget);
   }

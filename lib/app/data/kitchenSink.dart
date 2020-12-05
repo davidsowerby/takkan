@@ -1,7 +1,5 @@
-import 'package:precept_client/app/data/schema.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
 import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/document.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/script/style.dart';
@@ -14,35 +12,26 @@ final kitchenSinkScript = PScript(
       routes: [
         PRoute(
           path: "/",
-          page: PFormPage(
-            title: "Home Page",
-            document: PDocument(
-                schema: schema.components["core"].documents["sink"],
-                documentSelector: PDocumentGet(
-                  id: DocumentId(path: "any", itemId: "any"),
-                  params: {},
+          page: PPage(title: "Home Page", panels: [
+            PPanel(
+              property: "",
+              help: PHelp(
+                title: "Display options",
+                message:
+                    'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
+              ),
+              heading: PPanelHeading(
+                title: "Person",
+                style: PHeadingStyle(background: PColor.primary),
+              ),
+              content: [
+                PString(
+                  property: "firstName",
+                  caption: "First Name",
                 ),
-                content: [
-                  PSection(
-                    property: "",
-                    help: PHelp(
-                      title: "Display options",
-                      message:
-                          'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
-                    ),
-                    heading: PSectionHeading(
-                      title: "Person",
-                      style: PHeadingStyle(background: PColor.primary),
-                    ),
-                    content: [
-                      PString(
-                        property: "firstName",
-                        caption: "First Name",
-                      ),
-                    ],
-                  ),
-                ]),
-          ),
+              ],
+            ),
+          ]),
         ),
       ],
     )

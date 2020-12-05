@@ -1,4 +1,4 @@
-import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
 
@@ -76,7 +76,7 @@ void main() {
       test('Must have document, pageKey and title', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PFormPage(pageKey: null))])
+          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])
         ]);
         // when
         final messages = component.validate();
@@ -92,7 +92,7 @@ void main() {
       test('No errors', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PFormPage(pageKey: "mine",title: "Wiggly", document: PDocument(documentSelector: PDocumentGet(id: DocumentId()))))])
+          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: "mine",title: "Wiggly", dataSource: PDataGet(id: DocumentId())))])
         ]);
         // when
         final messages = component.validate();

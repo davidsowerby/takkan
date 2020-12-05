@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/partConverter.dart';
-import 'package:precept_client/precept/schema/schema.dart';
 import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/element.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/style.dart';
@@ -33,6 +33,11 @@ class PScript extends PCommon {
   @override
   @JsonKey(includeIfNull: false, nullable: true)
   PBackend get backend => _backend;
+
+  @override
+  @JsonKey(includeIfNull: false, nullable: true)
+  PDataSource get dataSource => _dataSource;
+
   bool get isStatic => _isStatic;
 
   /// Validates the structure and content of the model
@@ -103,29 +108,35 @@ class ValidationMessage {
 /// set this during construction - this also means that the [PScript] structure cannot be **const**
 ///
 @JsonSerializable(nullable: false, explicitToJson: true)
+@PDataSourceConverter()
 class PCommon {
-
   PCommon _parent;
   bool _isStatic;
   PBackend _backend;
+  PDataSource _dataSource;
 
   PCommon({
     bool isStatic,
     PBackend backend,
+    PDataSource dataSource,
   })  : _isStatic = isStatic,
+        _dataSource = dataSource,
         _backend = backend;
 
   bool get isStatic => _isStatic ?? parent.isStatic;
 
+  PDataSource get dataSource => _dataSource ?? parent.dataSource;
+
   @JsonKey(includeIfNull: false)
-  PBackend get backend  {
-   if (_backend == null){
-     assert(_parent != null, "Have you forgotten to invoke PScript.init() ??");
-     return _parent.backend;
-   }else{
-     return _backend;
-   }
+  PBackend get backend {
+    if (_backend == null) {
+      assert(_parent != null, "Have you forgotten to invoke PScript.init() ??");
+      return _parent.backend;
+    } else {
+      return _backend;
+    }
   }
+
   @JsonKey(ignore: true)
   PCommon get parent => _parent;
 
@@ -190,7 +201,7 @@ class PComponent extends PCommon {
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute extends PCommon {
   final String path;
-  final PFormPage page;
+  final PPage page;
 
   @JsonKey(ignore: true)
   PRoute({
@@ -232,58 +243,62 @@ class PRoute extends PCommon {
   }
 }
 
-/// [isStatic] can be defined at either page or document level - it has the same effect
-/// [pageKey] used to look up from [PageLibrary]
+/// [pageType] is used to look up from [PageLibrary]
+/// although [panels] is a list, this simplest page only uses the first one
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PFormPage extends PCommon {
+class PPage extends PCommon {
   final String title;
-  final String pageKey;
-  final PDocument document;
+  final String pageType;
   final bool scrollable;
+  final List<PPanel> panels;
 
   @JsonKey(ignore: true)
-  PFormPage({
-    this.pageKey = Library.simpleKey,
+  PPage({
+    this.pageType = Library.simpleKey,
     @required this.title,
-    @required this.document,
     this.scrollable = true,
     bool isStatic = false,
+    this.panels,
     PBackend backend,
-  }) : super(isStatic: isStatic);
+    PDataSource dataSource,
+  }) : super(
+          isStatic: isStatic,
+          dataSource: dataSource,
+          backend: backend,
+        );
 
-  factory PFormPage.fromJson(Map<String, dynamic> json) => _$PFormPageFromJson(json);
+  factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
   PRoute get parent => _parent;
 
-  Map<String, dynamic> toJson() => _$PFormPageToJson(this);
+  Map<String, dynamic> toJson() => _$PPageToJson(this);
 
   void validate(List<ValidationMessage> messages, int pass) {
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
           type: this.runtimeType,
-          name: pageKey ?? 'n/a',
+          name: pageType ?? 'n/a',
           msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a title"));
     }
-    if (pageKey == null || pageKey.isEmpty) {
+    if (pageType == null || pageType.isEmpty) {
       messages.add(ValidationMessage(
           type: this.runtimeType,
-          name: pageKey ?? 'n/a',
-          msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a pageKey"));
-    }
-    if (document == null) {
-      messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: pageKey ?? 'n/a',
-          msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a document"));
-    } else {
-      document.validate(messages, pass);
+          name: pageType ?? 'n/a',
+          msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a pageType"));
     }
   }
 
   @override
   doInit(PCommon parent) {
     super.doInit(parent);
-    document.doInit(this);
+  }
+
+  Widget build() {
+    final List<Widget> children = List();
+    for (var panel in panels) {
+      children.add(panel.build());
+    }
+    return (scrollable) ? ListView(children: children) : Column(children: children);
   }
 }
 
@@ -295,21 +310,21 @@ enum PageType { standard }
 //
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PSection extends PCommon implements DisplayElement {
+class PPanel extends PCommon implements DisplayElement {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<DisplayElement> content;
   @JsonKey(ignore: true)
-  final PSectionHeading heading;
+  final PPanelHeading heading;
   final String caption;
   final bool scrollable;
   final PHelp help;
   final String property;
 
-  factory PSection.fromJson(Map<String, dynamic> json) => _$PSectionFromJson(json);
+  factory PPanel.fromJson(Map<String, dynamic> json) => _$PPanelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSectionToJson(this);
+  Map<String, dynamic> toJson() => _$PPanelToJson(this);
 
-  PSection({
+  PPanel({
     this.property,
     this.content = const [],
     this.heading,
@@ -317,8 +332,12 @@ class PSection extends PCommon implements DisplayElement {
     this.scrollable = false,
     this.help,
     bool isStatic = false,
+    PBackend backend,
+    PDataSource dataSource,
   }) : super(
           isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
         );
 
   @override
@@ -329,60 +348,23 @@ class PSection extends PCommon implements DisplayElement {
       entry.doInit(this);
     }
   }
-}
 
-/// if [isStatic] is true, [documentSelector] and [schema] are not required and may be null
-/// if [isStatic] is false [documentSelector] and [schema] must be defined
-/// [content] must always contain at least one [DisplayElement]
-@JsonSerializable(nullable: true, explicitToJson: true)
-@PDocumentSelectorConverter()
-class PDocument extends PCommon {
-  final PDocumentSelector documentSelector;
-  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-  final List<DisplayElement> content;
-  final SDocument schema;
-
-  @JsonKey(ignore: true)
-  PDocument({
-    this.schema,
-    this.documentSelector,
-    @required this.content,
-    bool isStatic = false,
-    PBackend backend,
-  }) : super(
-          isStatic: isStatic,
-          backend: backend,
-        );
-
-  factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PDocumentToJson(this);
-
-  PFormPage get parent => _parent;
-
-  void validate(List<ValidationMessage> messages, int pass) {
-    if (documentSelector == null) {
-      messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: parent.title ?? 'untitled page',
-          msg: "PDocument for ${parent.title} must define a documentSelector"));
-    } else {
-      documentSelector.validate(messages, pass);
-    }
-  }
-
-  @override
-  doInit(PCommon parent) {
-    super.doInit(parent);
+  Widget build() {
+    final List<Widget> children = List();
     for (var element in content) {
-      (element as PCommon).doInit(this);
+      if (element is PPanel) {
+        children.add(element.build());
+      }
+      if (element is PPart) {
+        children.add(element.build());
+      }
     }
-    documentSelector.doInit(this);
+    return (scrollable) ? ListView(children: children) : Column(children: children);
   }
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PSectionHeading {
+class PPanelHeading {
   final String title;
   final bool expandable;
   final bool openExpanded;
@@ -390,7 +372,7 @@ class PSectionHeading {
   final PHelp help;
   final PHeadingStyle style;
 
-  PSectionHeading({
+  PPanelHeading({
     @required this.title,
     this.expandable = true,
     this.openExpanded = true,
@@ -399,7 +381,7 @@ class PSectionHeading {
     this.style = const PHeadingStyle(),
   }) : super();
 
-  factory PSectionHeading.fromJson(Map<String, dynamic> json) => _$PSectionHeadingFromJson(json);
+  factory PPanelHeading.fromJson(Map<String, dynamic> json) => _$PPanelHeadingFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSectionHeadingToJson(this);
+  Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
 }

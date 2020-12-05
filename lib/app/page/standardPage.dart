@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/precept/script/script.dart';
 
 class DefaultPage extends StatelessWidget {
-  final PFormPage config;
+  final PPage config;
 
   const DefaultPage({@required this.config}) ;
 
@@ -14,7 +13,7 @@ class DefaultPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(config.title),
       ),
-        body: assemblePage(config: config),
+        body: config.build(),
     );
   }
 }

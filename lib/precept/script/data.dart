@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/precept/script/script.dart';
 
-part 'document.g.dart';
+part 'data.g.dart';
 
 /// Roughly equivalent to a query with an expected result of one document.
 ///
@@ -15,60 +15,70 @@ part 'document.g.dart';
 /// - 'select last'
 
 /// Classes used to define selection method and criteria for a document
-abstract class PDocumentSelector extends PCommon{
-  final Map<String, dynamic> params;
-  @JsonKey(ignore: true)
-  PDocument _parent;
-   PDocumentSelector({@required this.params});
+///
+//// Should not be instantiated directly - it would be abstract if that would work with JSON serialization
 
-  void validate( List<ValidationMessage> messages, int pass);
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PDataSource  {
+
+  PDataSource({this.params}) ;
+
+  factory PDataSource.fromJson(Map<String, dynamic> json) =>
+      _$PDataSourceFromJson(json);
+
+  final Map<String, dynamic> params;
+
+
+  void validate( List<ValidationMessage> messages, int pass){}
+
+
+  Map<String, dynamic> toJson() => _$PDataSourceToJson(this);
 }
 
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDocumentGet extends PDocumentSelector {
+class PDataGet extends PDataSource {
   final DocumentId id;
 
-   PDocumentGet({@required this.id, @required Map<String, dynamic> params})
+   PDataGet({@required this.id, @required Map<String, dynamic> params})
       : super(params: params);
 
-  factory PDocumentGet.fromJson(Map<String, dynamic> json) =>
-      _$PDocumentGetFromJson(json);
+  factory PDataGet.fromJson(Map<String, dynamic> json) =>
+      _$PDataGetFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDocumentGetToJson(this);
-  PDocument get parent => _parent;
+  Map<String, dynamic> toJson() => _$PDataGetToJson(this);
   @override
   void validate( List<ValidationMessage> messages, int pass) {
     if (id == null ) {
       messages.add(ValidationMessage(
           type: this.runtimeType,
           name: 'n/a',
-          msg: "PDocumentGet must define an id"));
+          msg: "PDataGet must define an id"));
     }
   }
 }
 
-class PDocumentSelectorConverter
-    implements JsonConverter<PDocumentSelector, Map<String, dynamic>> {
-  const PDocumentSelectorConverter();
+class PDataSourceConverter
+    implements JsonConverter<PDataSource, Map<String, dynamic>> {
+  const PDataSourceConverter();
 
   @override
-  PDocumentSelector fromJson(Map<String, dynamic> json) {
+  PDataSource fromJson(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     }
     final String typeName = json["type"];
     json.remove("type");
     switch (typeName) {
-      case "PDocumentGet":
-        return PDocumentGet.fromJson(json);
+      case "PDataGet":
+        return PDataGet.fromJson(json);
       default:
         throw PreceptException("Conversion required for $typeName");
     }
   }
 
   @override
-  Map<String, dynamic> toJson(PDocumentSelector object) {
+  Map<String, dynamic> toJson(PDataSource object) {
     if (object == null) {
       return null;
     }
@@ -76,9 +86,9 @@ class PDocumentSelectorConverter
     Map<String, dynamic> jsonMap = Map();
     jsonMap["type"] = type.toString();
     switch (type) {
-      case PDocumentGet:
+      case PDataGet:
         {
-          final PDocumentGet obj = object;
+          final PDataGet obj = object;
           jsonMap.addAll(obj.toJson());
           return jsonMap;
         }

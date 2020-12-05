@@ -28,7 +28,7 @@ class Precept {
   init(
       {List<Function()> injectionBindings = const [],
       bool includePreceptDefaults = true,
-      Map<String, Widget Function(PFormPage)> pageLibraryEntries,
+      Map<String, Widget Function(PPage)> pageLibraryEntries,
       Widget Function(PError) errorPage,
       Map<String, BackendDelegate Function(PBackend)> backendLibraryEntries,
       List<PreceptLoader> loaders = const []}) async {

@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
 import 'package:precept_client/common/component/heading.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/document/document.dart';
-import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
 import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
-/// A section is an arbitrary collection of Widgets displaying part of a [Document].
+/// A section is an arbitrary collection of Widgets displaying part of a [Panel].
 /// The Widgets may be [Part] implementations or other sections
 ///
 /// A section uses [Part] instances to display data in either read-only or edit mode as determined by the [SectionEditState] positioned
@@ -30,7 +29,7 @@ import 'package:provider/provider.dart';
 /// - [isStatic] May be set by the parent Section / Document to 'inherit' a setting higher up the tree
 ///
 class Section extends StatelessWidget with ToggleSectionEditState {
-  final PSection config;
+  final PPanel config;
   final MapBinding baseBinding;
   final bool isStatic;
 
@@ -38,7 +37,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
 
   @override
   Widget build(BuildContext context) {
-    final DocumentState formLog = Provider.of<DocumentState>(context);
+    final DataSource formLog = Provider.of<DataSource>(context);
     final formKey = GlobalKey<FormState>();
     formLog.addForm(formKey);
     return Form(

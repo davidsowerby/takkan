@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/data.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -15,8 +15,8 @@ void main() {
 
     test('round trip, PDocumentGet', () {
       // given
-      PDocumentSelectorConverter converter = PDocumentSelectorConverter();
-      PDocumentGet g = PDocumentGet(
+      PDataSourceConverter converter = PDataSourceConverter();
+      PDataGet g = PDataGet(
         id: DocumentId(
           path: "user/prefs",
           itemId: "23",

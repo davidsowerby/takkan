@@ -4,7 +4,7 @@ import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_client/precept/script/data.dart';
 
 /// Represents the current editing state of a document, and holds a temporary copy of the document
 /// for editing purposes, in [_temporaryDocument]
@@ -15,13 +15,13 @@ import 'package:precept_client/precept/script/script.dart';
 /// Precept potentially creates a number of [Form] instances on one page, as each [Section]
 /// may have its own.  This class just holds the [GlobalKey] for each, so that all can be saved
 /// when a document save is executed.
-class DocumentState with ChangeNotifier {
-  final PDocument config;
+class DataSource with ChangeNotifier {
+  final PDataSource config;
   TemporaryDocument _temporaryDocument;
   bool _readOnlyMode = true;
   bool _canEdit;
 
-  DocumentState({bool canEdit = true, bool readOnlyMode = true, @required this.config})
+  DataSource({bool canEdit = true, bool readOnlyMode = true, @required this.config})
       : _readOnlyMode = readOnlyMode,
         _canEdit = canEdit {
     _temporaryDocument = inject<TemporaryDocument>();
@@ -64,7 +64,7 @@ class DocumentState with ChangeNotifier {
   }
 
   /// Iterates though form keys registered by [Section] instances through [addForm], 'saves' the [Form] - that is, transfers data from
-  /// the [Form] back to the [DocumentState] via [Binding]s - the bindings are provided by [Part] components
+  /// the [Form] back to the [DataSource] via [Binding]s - the bindings are provided by [Part] components
   /// within the [Section] (and therefore within the [Form] if the [Section] is in edit mode.)
   flushFormsToModel() {
     for (GlobalKey<FormState> key in formKeys) {

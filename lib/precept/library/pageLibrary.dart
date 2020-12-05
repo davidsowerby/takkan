@@ -5,11 +5,11 @@ import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/script/error.dart';
 import 'package:precept_client/precept/script/script.dart';
 
-class PageLibrary extends Library<String, Widget, PFormPage> {
+class PageLibrary extends Library<String, Widget, PPage> {
   Widget Function(PError) _errorPage;
 
   @override
-  init({Map<String, Widget Function(PFormPage)> entries, Widget Function(PError) errorPage}) {
+  init({Map<String, Widget Function(PPage)> entries, Widget Function(PError) errorPage}) {
     super.init(entries: entries);
     _errorPage = errorPage ?? (config) => PreceptDefaultErrorPage(config: config);
   }

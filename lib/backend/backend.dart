@@ -7,7 +7,7 @@ import 'package:precept_client/backend/response.dart';
 import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/document.dart';
+import 'package:precept_client/precept/script/data.dart';
 
 /// The layer between the client and server.
 ///
@@ -29,7 +29,7 @@ class Backend {
   /// Returns a single instance of [Data] identified by [documentId]
   ///
   /// Throws an [APIException] if not found
-  Future<Data> get({@required PDocumentGet config}) {
+  Future<Data> get({@required PDataGet config}) {
     return backendDelegate.get(documentId: config.id);
   }
 

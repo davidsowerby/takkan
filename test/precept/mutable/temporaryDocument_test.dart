@@ -1,17 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:precept_client/backend/backend.dart';
-import 'package:precept_client/backend/document.dart';
-import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/listBinding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/dataModel/documentModel.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/part/string/stringBinding.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 
 import '../../helper/listener.dart';
@@ -144,59 +137,34 @@ void main() {
       tdoc = inject<TemporaryDocument>();
     });
 
-    test(
-        "saving with changesOnly=false, saves all, no documentId uses existing",
-        () async {
-      // given
-      final backend = Backend();
-      //when
-      final TestModel model =
-          TestModel(data: testData1(), canEdit: true, id: "test 23");
-      model.peek();
-      model.setItem1("item1 amended");
-      model.list1.insertRow(2, 12);
-      model.list1.deleteRow(0);
-      model.map1.intBinding(property: "mapitem2").write(999);
-      //then
-      await backend.save(
-          saveChangesOnly: false,
-          documentType: DocumentType.standard,
-          data: model.temporaryDocument);
-      //expect
-      final data = mockBackendDelegate.store;
-      expect(data["item1"], "item1 amended");
-      expect(data["list1"], [2, 12, 3, 4]);
-      expect(data["item2"], 444);
-      expect(data["map1"]["mapitem2"], 999);
-    });
+  //   test(
+  //       "saving with changesOnly=false, saves all, no documentId uses existing",
+  //       () async {
+  //     // given
+  //     final backend = Backend();
+  //     //when
+  //
+  //     model.peek();
+  //     model.setItem1("item1 amended");
+  //     model.list1.insertRow(2, 12);
+  //     model.list1.deleteRow(0);
+  //     model.map1.intBinding(property: "mapitem2").write(999);
+  //     //then
+  //     await backend.save(
+  //         saveChangesOnly: false,
+  //         documentType: DocumentType.standard,
+  //         data: model.temporaryDocument);
+  //     //expect
+  //     final data = mockBackendDelegate.store;
+  //     expect(data["item1"], "item1 amended");
+  //     expect(data["list1"], [2, 12, 3, 4]);
+  //     expect(data["item2"], 444);
+  //     expect(data["map1"]["mapitem2"], 999);
+  //   });
   });
 }
 
-class TestModel extends DocumentModel {
-  TestModel(
-      {@required Map<String, dynamic> data, bool canEdit = false, String id})
-      : super(data: data, canEdit: canEdit, id: id ?? "Test model");
 
-  peek() {
-    logType(this.runtimeType).d("somewhere to stop");
-  }
-
-  StringBinding get item1 {
-    return rootBinding.stringBinding(property: "item1");
-  }
-
-  setItem1(String value) {
-    item1.write(value);
-  }
-
-  ListBinding get list1 {
-    return rootBinding.listBinding(property: "list1");
-  }
-
-  ModelBinding get map1 {
-    return rootBinding.modelBinding(property: "map1");
-  }
-}
 
 Map<String, dynamic> testData1() {
   return {

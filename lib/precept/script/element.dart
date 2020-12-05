@@ -23,8 +23,8 @@ class PElementListConverter {
       final entryCopy = Map<String,dynamic>.from(entry);
       entryCopy.remove(elementKeyName);
       switch (elementType) {
-        case "PSection":
-          list.add(PSection.fromJson(entryCopy));
+        case "PPanel":
+          list.add(PPanel.fromJson(entryCopy));
           break;
         case "PString":
           list.add(PString.fromJson(entryCopy));

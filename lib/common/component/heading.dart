@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/action/editSave.dart';
 import 'package:precept_client/common/locale.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/document/documentState.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/script.dart';
@@ -17,7 +17,7 @@ import 'package:provider/provider.dart';
 /// - [canEditActions] always has a [EditSaveAction] added when [editable] is true, so there is no need to explicitly add that
 /// - [actionButtons], if present, are placed before the 'expand' widget
 /// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [SectionState.canEdit] is true.
-/// - [persistOnSave] if true, when a save action is executed, the nearest [DocumentState] is called to persist the document
+/// - [persistOnSave] if true, when a save action is executed, the nearest [DataSource] is called to persist the document
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
@@ -88,7 +88,7 @@ class _HeadingState extends State<Heading> with Interpolator {
       List<Future<bool> Function(BuildContext,bool)> callbacks = List();
       callbacks.add(_expand);
       if(widget.persistOnSave){
-        DocumentState documentState= Provider.of<DocumentState>(context, listen: false);
+        DataSource documentState= Provider.of<DataSource>(context, listen: false);
         callbacks.add(documentState.persist);
       }
       actionButtons.add(
@@ -188,7 +188,7 @@ class HeadingExpandCloseAction extends StatelessWidget {
 }
 
 class SectionHeading extends StatelessWidget {
-  final PSectionHeading config;
+  final PPanelHeading config;
   final PHelp help;
   final Widget child;
   final List<Widget> readModeActions;

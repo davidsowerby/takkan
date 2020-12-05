@@ -1,7 +1,6 @@
 import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/document/documentController.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
@@ -20,7 +19,6 @@ libraryInjectionBindings(){
 
 documentInjectionBindings(){
   getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-  getIt.registerSingleton<DocumentController>(DocumentController());
 }
 
 routerInjectionBindings(){
