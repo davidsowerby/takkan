@@ -43,8 +43,9 @@ class PScript extends PCommon {
   @JsonKey(includeIfNull: false, nullable: true)
   PDataSource get dataSource => _dataSource;
 
-  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
+  /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   bool get isStatic => _isStatic;
+  bool get controlEdit => _controlEdit;
 
   /// Validates the structure and content of the model
   ///
@@ -95,21 +96,26 @@ class ValidationMessage {
   }
 }
 
-/// Holds common properties for every level of a [PScript], and provides methods to enable 'inheritance'
 ///
-/// To save a lot of manual configuration, a number of properties can be set at higher level in the [PScript] structure,
-/// and then overridden at a lower level.  For example, a [PBackend] may be set at [PScript] level, and then overridden
-/// for one [PDocument]
+/// Holds common properties for every level of a [PScript], and its main purpose is to reduce manual configuration.
+/// Not all properties are appropriate to all levels (levels here means the level in the [PScript] structure).
 ///
-/// Not all properties are appropriate to all levels, so some are ignored by descendant classes (for example, [backend]
-/// cannot be set at [PPart] level.
+/// Some properties work on the basis of 'inheritance'
+/// For these properties, a higher level setting is used by all lower levels, unless overridden by a lower level setting:
 ///
-/// There is one slight exception to this general principle. If [isStatic] is true at [PPart] level (either directly or inherited),
-/// the data bindings to retrieve data must be created from [PDocument] level, as that is where the
-/// root binding is created. A call to [validate] ensures that [PDocument] [isStatic] is set correctly
-/// if any of its [PPart] instances require data.
+/// - [backend]
+/// - [dataSource]
+/// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
+/// This also means that no [DataBinding] is needed.
 ///
-/// **NOTE** Calls to any of the getters will fail unless [validate], because the [_parent] property
+/// Some operate on an 'overrule' basis, where a higher level setting overrules a lower level setting:
+///
+/// - [controlEdit] determines whether an editing action is displayed at this level, and applies only
+/// to [PPage], [PPanel] and [PPart]. It determines whether an [EditState] is used for this [Part].
+/// Defaults to true, if nothing above it true.
+///
+///
+/// **NOTE** Calls to any of the getters will fail unless [init] has been called first, because the [_parent] property
 /// is set only after a [init] call.  Unfortunately there seems to be no way to
 /// set this during construction - this also means that the [PScript] structure cannot be **const**
 ///
@@ -119,6 +125,7 @@ class PCommon {
   @JsonKey(ignore: true)
   PCommon _parent;
   bool _isStatic;
+  bool _controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -128,11 +135,25 @@ class PCommon {
     bool isStatic,
     PBackend backend,
     PDataSource dataSource,
+    bool controlEdit,
   })  : _isStatic = isStatic,
+        _controlEdit = controlEdit,
         _dataSource = dataSource,
         _backend = backend;
 
   bool get isStatic => _isStatic ?? parent.isStatic;
+
+  /// Walks up the tree as far as [PPage] (one below [PRoute] and returns false if any level above is true
+  /// This is the 'override' mechanism, where a higher level declaring true overrides all lower levels
+  bool get controlEdit {
+    PCommon p=parent;
+    while (!(p is PRoute)){
+      if (p.controlEdit==null) return false;
+      if (p.controlEdit) return false;
+      p=p.parent;
+    }
+    return _controlEdit ?? false;
+  }
 
   @JsonKey(nullable: true, includeIfNull: false)
   PDataSource get dataSource => _dataSource ?? parent.dataSource;
@@ -271,10 +292,12 @@ class PPage extends PCommon {
     this.panels,
     PBackend backend,
     PDataSource dataSource,
+    bool controlEdit,
   }) : super(
           isStatic: isStatic,
           dataSource: dataSource,
           backend: backend,
+          controlEdit: controlEdit,
         );
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
@@ -313,6 +336,8 @@ class PPage extends PCommon {
     }
     return (scrollable) ? ListView(children: children) : Column(children: children);
   }
+
+  bool get controlEdit => _controlEdit ?? false;
 }
 
 enum PageType { standard }
@@ -347,10 +372,12 @@ class PPanel extends PCommon implements DisplayElement {
     bool isStatic,
     PBackend backend,
     PDataSource dataSource,
+    bool controlEdit,
   }) : super(
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
+          controlEdit: controlEdit,
         );
 
   @override
@@ -376,6 +403,7 @@ class PPanel extends PCommon implements DisplayElement {
     }
     return (scrollable) ? ListView(children: children) : Column(children: children);
   }
+
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)

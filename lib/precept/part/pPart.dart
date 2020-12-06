@@ -36,17 +36,17 @@ class PPart<T> extends PCommon implements DisplayElement {
       bool isStatic,
       this.staticData,
       this.help,
-      this.tooltip})
-      : super(isStatic: isStatic);
+      bool controlEdit,
+      this.tooltip}): super(isStatic: isStatic, controlEdit:controlEdit);
 
   factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
-  Widget build(){
-    final part= partLibrary.find(this.runtimeType.toString(), this);
-    if (part==null){
+  Widget build() {
+    final part = partLibrary.find(this.runtimeType.toString(), this);
+    if (part == null) {
       String msg = "No Part is defined for $runtimeType";
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
@@ -56,4 +56,22 @@ class PPart<T> extends PCommon implements DisplayElement {
 
   @override
   bool get isStatic => super.isStatic ?? false;
+
+  /// Overrides the [PCommon] method becuase this needs to return true if there is no other true in the chain above
+  /// Walks up the tree as far as [PPage] (one below [PRoute] and returns false if any level above is true
+  /// This is the 'override' mechanism, where a higher level declaring true overrides all lower levels
+  bool get controlEdit {
+    PCommon p=parent;
+    bool setAbove=false;
+    while (!(p is PRoute)){
+      if (p.controlEdit != null && p.controlEdit){
+        setAbove=true;
+        break;
+      }
+      p=p.parent;
+    }
+    return !setAbove;
+  }
+
+
 }

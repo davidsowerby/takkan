@@ -6,7 +6,7 @@ import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Inherited properties', () {
+  group('Common properties', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -15,7 +15,7 @@ void main() {
 
     tearDown(() {});
 
-    test('true at the top, true at the bottom', () {
+    test('correct inherit / overrule', () {
       // given
       final script =
           PScript(backend: PBackend(), isStatic: true, dataSource: PDataSource(), components: [
@@ -24,6 +24,7 @@ void main() {
             PRoute(
               path: null,
               page: PPage(
+                controlEdit: true,
                 panels: [
                   PPanel(
                     content: [
@@ -56,17 +57,20 @@ void main() {
       expect(page.isStatic, true);
       expect(page.backend, isNotNull);
       expect(page.dataSource, isNotNull);
+      expect(page.controlEdit, true);
 
       expect(panel.isStatic, true);
       expect(panel.backend, isNotNull);
       expect(panel.dataSource, isNotNull);
+      expect(panel.controlEdit, false);
 
       expect(part.isStatic, true);
       expect(part.backend, isNotNull);
       expect(part.dataSource, isNotNull);
+      expect(part.controlEdit, false);
     });
 
-    test('false at top, false at bottom', () {
+    test('defaults, unset', () {
       // given
       final script =
       PScript(  components: [
@@ -108,14 +112,17 @@ void main() {
       expect(page.isStatic, isNull);
       expect(page.backend, isNull);
       expect(page.dataSource, isNull);
+      expect(page.controlEdit, false);
 
       expect(panel.isStatic, isNull);
       expect(panel.backend, isNull);
       expect(panel.dataSource, isNull);
+      expect(panel.controlEdit, false);
 
       expect(part.isStatic, false);
       expect(part.backend, isNull);
       expect(part.dataSource, isNull);
+      expect(part.controlEdit, true);
     });
   });
 
