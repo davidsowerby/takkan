@@ -7,6 +7,7 @@ import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
+import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/router.dart';
 import 'package:precept_client/precept/script/backend.dart';
 import 'package:precept_client/precept/script/error.dart';
@@ -29,6 +30,7 @@ class Precept {
       {List<Function()> injectionBindings = const [],
       bool includePreceptDefaults = true,
       Map<String, Widget Function(PPage)> pageLibraryEntries,
+      Map<String, Widget Function(PPart)> partLibraryEntries,
       Widget Function(PError) errorPage,
       Map<String, BackendDelegate Function(PBackend)> backendLibraryEntries,
       List<PreceptLoader> loaders = const []}) async {
@@ -38,6 +40,7 @@ class Precept {
     await loadModels(loaders: loaders);
     backendLibrary.init();
     pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
+    partLibrary.init(entries: partLibraryEntries);
     router.init(scripts: precept.models);
   }
 
@@ -51,8 +54,10 @@ class Precept {
     final m = await Future.wait(modelFutures);
     logType(this.runtimeType).d("All models loaded");
     models.addAll(m);
+    for (var model in models){
+      model.init();
+    }
     router.init(scripts: models);
-    partLibrary.init(models: models);
   }
 }
 

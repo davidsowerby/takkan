@@ -2,7 +2,6 @@ import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
-import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/router.dart';
 import 'package:precept_client/precept/script/themeLookup.dart';
@@ -13,7 +12,6 @@ commonInjectionBindings() {
 }
 
 libraryInjectionBindings(){
-  getIt.registerSingleton<PartLibrary>(PartLibrary(modules: [PreceptPartLibraryModule()]));
   getIt.registerSingleton<BorderLibrary>(BorderLibrary(modules: [PreceptBorderLibraryModule()]));
 }
 

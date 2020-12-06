@@ -6,17 +6,17 @@ import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
+import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/script/style.dart';
 import 'package:precept_client/precept/script/themeLookup.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
 /// - [canEditActions] always has a [EditSaveAction] added when [editable] is true, so there is no need to explicitly add that
 /// - [actionButtons], if present, are placed before the 'expand' widget
-/// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [SectionState.canEdit] is true.
+/// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [EditState.canEdit] is true.
 /// - [persistOnSave] if true, when a save action is executed, the nearest [DataSource] is called to persist the document
 /// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
@@ -77,7 +77,7 @@ class _HeadingState extends State<Heading> with Interpolator {
 
   @override
   Widget build(BuildContext context) {
-    final SectionState sectionState = Provider.of<SectionState>(context);
+    final EditState sectionState = Provider.of<EditState>(context);
     final List<Widget> actionButtons = (sectionState.readOnlyMode)
         ? List.from(widget.readModeActions)
         : List.from(widget.editModeActions);
@@ -211,7 +211,7 @@ class SectionHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final sectionState = Provider.of<SectionState>(context);
+    final sectionState = Provider.of<EditState>(context);
     return Heading(headingStyle: config.style,
       showEditIcon: showEditIcon,
       help: help,
@@ -230,12 +230,12 @@ class SectionHeading extends StatelessWidget {
   }
 
   edit(BuildContext context) {
-    final SectionState sectionState = Provider.of<SectionState>(context, listen: false);
+    final EditState sectionState = Provider.of<EditState>(context, listen: false);
     sectionState.readOnlyMode = false;
   }
 
   save(BuildContext context) {
-    final SectionState sectionState = Provider.of<SectionState>(context, listen: false);
+    final EditState sectionState = Provider.of<EditState>(context, listen: false);
     sectionState.readOnlyMode = true;
   }
 }

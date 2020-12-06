@@ -1,5 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/common/logger.dart';
+import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/part/part.dart';
 import 'package:precept_client/precept/script/element.dart';
 import 'package:precept_client/precept/script/help.dart';
@@ -30,7 +33,7 @@ class PPart<T> extends PCommon implements DisplayElement {
       {this.caption,
       this.readOnly = false,
       this.property,
-      bool isStatic = false,
+      bool isStatic,
       this.staticData,
       this.help,
       this.tooltip})
@@ -42,7 +45,15 @@ class PPart<T> extends PCommon implements DisplayElement {
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
   Widget build(){
-    return Text("this should be a proper part");
+    final part= partLibrary.find(this.runtimeType.toString(), this);
+    if (part==null){
+      String msg = "No Part is defined for $runtimeType";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return part;
   }
 
+  @override
+  bool get isStatic => super.isStatic ?? false;
 }

@@ -17,17 +17,17 @@ enum DisplayType { text, datePicker }
 /// Edit mode display: [TextField]
 /// See [Part]
 class StringPart extends Part {
-  final PString pPart;
   final MapBinding baseBinding;
 
-  const StringPart({@required this.pPart, @required this.baseBinding, bool isStatic=false}) : super(config: pPart, isStatic: isStatic);
+  const StringPart({@required this.baseBinding, bool isStatic=false, PString config}) : super(config: config);
 
   Widget buildReadOnlyWidget(BuildContext context) {
-    final text = Text((isStatic) ? pPart.staticData : _textFromBinding());
+    final text = Text((config.isStatic) ? config.staticData : _textFromBinding());
+    final PString cfg=config as PString;
 
     // TODO: styling final style =
 // TODO: shouldn't use isStatic like this, it may want a caption still
-    if (!isStatic && pPart.readModeOptions.showCaption) {
+    if (!config.isStatic && cfg.readModeOptions.showCaption) {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(
@@ -38,7 +38,7 @@ class StringPart extends Part {
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
                 child: I18NCaption(
-                  text: pPart.caption,
+                  text: cfg.caption,
                 ),
               ),
               text,
@@ -54,7 +54,7 @@ class StringPart extends Part {
   }
 
   String _textFromBinding(){
-    final binding = baseBinding.stringBinding(property: pPart.property);
+    final binding = baseBinding.stringBinding(property: config.property);
     final connector =
     ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
     return connector.readFromModel();
@@ -62,7 +62,7 @@ class StringPart extends Part {
 
   Widget buildEditModeWidget(BuildContext context) {
     final theme = Theme.of(context);
-    final binding = baseBinding.stringBinding(property: pPart.property);
+    final binding = baseBinding.stringBinding(property: config.property);
     final connector =
         ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
     return Padding(
@@ -73,7 +73,7 @@ class StringPart extends Part {
         decoration: InputDecoration(
           isDense: true,
           labelStyle: theme.textTheme.overline.apply(color: theme.primaryColor),
-          labelText: pPart.caption,
+          labelText: config.caption,
           border: OutlineInputBorder(gapPadding: 0),
         ),
       ),
@@ -91,7 +91,7 @@ class PString extends PPart {
    PString({
     String property,
     String caption,
-    bool isStatic=false,
+    bool isStatic,
     String static,
     String tooltip,
     PHelp help,

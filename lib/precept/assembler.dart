@@ -22,7 +22,7 @@ import 'package:precept_client/section/base/section.dart';
           assert(baseBinding != null);
           list.add(StringPart(
             isStatic: isStatic,
-            pPart: element,
+            config: element,
             baseBinding: baseBinding,
           ));
           break;

@@ -7,15 +7,15 @@ import 'package:precept_client/data/dataSource.dart';
 /// [readOnlyMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
 /// [canEdit] reflects whether the [readOnlyMode] status can be changed. If a [DocumentPageSection] is allowed to edit, this is
 /// typically used to display an edit icon to the user
-class SectionState with ChangeNotifier {
+class EditState with ChangeNotifier {
   bool _canEdit;
   bool _readOnlyMode;
 
-  SectionState({bool canEdit=true, bool readOnlyMode=true})
+  EditState({bool canEdit=true, bool readOnlyMode=true})
       : _readOnlyMode = readOnlyMode,
         _canEdit = canEdit;
 
-  SectionState.fromDocument(DataSource documentEditState)
+  EditState.fromDocument(DataSource documentEditState)
       : _canEdit = documentEditState.canEdit,
         _readOnlyMode = documentEditState.readOnlyMode;
 

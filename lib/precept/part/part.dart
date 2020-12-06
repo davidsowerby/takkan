@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/part/pPart.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 enum DisplayType { text, datePicker }
@@ -31,22 +31,13 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 abstract class Part extends StatelessWidget {
   final PPart config;
-  final bool isStatic;
 
-  const Part({@required this.config, @required this.isStatic})
-      : assert(isStatic != null),
-        super();
+  const Part({@required this.config}) : super();
 
   @override
   Widget build(BuildContext context) {
-    final staticState = isStatic || config.isStatic;
-    assert(
-      staticState ? config.staticData != null : true,
-      'If a Part is static, it must define static text. Remember the `isStatic` setting may have come from a parent Document or Section ',
-    );
-    assert(!staticState ? config.property != null : true,
-        'If a Part is not static, it must define a property. A property may be an empty String');
-    final SectionState sectionState = Provider.of<SectionState>(context);
+
+    final EditState sectionState = Provider.of<EditState>(context);
     final readOnly = config.readOnly || sectionState.readOnlyMode;
     logType(this.runtimeType)
         .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
@@ -87,3 +78,10 @@ class TrueFunction {
     return true;
   }
 }
+
+// assert(
+// staticState ? config.staticData != null : true,
+// 'If a Part is static, it must define static text. Remember the `isStatic` setting may have come from a parent Document or Section ',
+// );
+// assert(!staticState ? config.property != null : true,
+// 'If a Part is not static, it must define a property. A property may be an empty String');

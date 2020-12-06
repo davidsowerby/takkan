@@ -6,10 +6,10 @@ import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// A section is an arbitrary collection of Widgets displaying part of a [Panel].
@@ -64,8 +64,8 @@ class Section extends StatelessWidget with ToggleSectionEditState {
         child: body,
       );
     } else {
-      return ChangeNotifierProvider<SectionState>(
-          create: (_) => SectionState(),
+      return ChangeNotifierProvider<EditState>(
+          create: (_) => EditState(),
           child: SectionHeading(config: config.heading, help: config.help, child: body));
     }
   }

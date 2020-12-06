@@ -21,11 +21,11 @@ void main() {
       script.init();
       // then
       Map<String, dynamic> jsonMap = script.toJson();
-      PScript model2 = PScript.fromJson(jsonMap);
+      PScript script2 = PScript.fromJson(jsonMap);
 
-      expect(model2.components.length, 1);
-      model2.init();
-      final c0 = model2.components[0];
+      expect(script2.components.length, 1);
+      script2.init();
+      final c0 = script2.components[0];
       expect(c0.name, "core");
       expect(c0.routes.length, 1);
       final r0 = c0.routes[0];
@@ -35,7 +35,7 @@ void main() {
       expect(p.panels.length, 1);
       expect(p.backend.connection['id'], 'mock1');
 
-      expect(json.encode(script.toJson()), json.encode(model2.toJson()));
+      expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });
 
   });

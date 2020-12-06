@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/section/base/section.dart';
-import 'package:precept_client/section/base/sectionState.dart';
 import 'package:provider/provider.dart';
 
 /// Starts the process of assembling the content of a page based on its [config].
@@ -19,7 +19,7 @@ Widget assemblePage({@required PPage config}) {
 }
 
 /// Assembles the first level of [Section]s within a [Panel], as declared by from [content].
-/// A [SectionState] instance is placed above each [Section] in the Widget Tree, which is used to control the edit state of the [Section] itself, and its contents (which are either [Part]s or sub-[Sections].
+/// A [EditState] instance is placed above each [Section] in the Widget Tree, which is used to control the edit state of the [Section] itself, and its contents (which are either [Part]s or sub-[Sections].
 /// [rootBinding] is the data binding from a [DataSource]
 Widget assembleSections({@required PPage pPage, RootBinding rootBinding}) {
   final list = List<Widget>();
@@ -33,8 +33,8 @@ Widget assembleSections({@required PPage pPage, RootBinding rootBinding}) {
 /// If [pSection] does specify a property, that property is used to create a new 'child' [ModelBinding] for the section
 @visibleForTesting
 Widget constructSection({@required PPanel pSection, @required ModelBinding baseBinding, bool isStatic}) {
-  return ChangeNotifierProvider<SectionState>(
-      create: (_) => SectionState(readOnlyMode: isStatic, canEdit: !isStatic),
+  return ChangeNotifierProvider<EditState>(
+      create: (_) => EditState(readOnlyMode: isStatic, canEdit: !isStatic),
       child: Section(isStatic:isStatic,
         config: pSection,
         baseBinding: (pSection.property == null)

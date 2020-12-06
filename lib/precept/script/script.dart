@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_client/precept/library/library.dart';
+import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/partConverter.dart';
 import 'package:precept_client/precept/script/backend.dart';
@@ -9,6 +10,7 @@ import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/element.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/style.dart';
+import 'package:provider/provider.dart';
 
 part 'script.g.dart';
 
@@ -20,24 +22,28 @@ part 'script.g.dart';
 class PScript extends PCommon {
   final List<PComponent> components;
 
-  PScript({@required this.components, PBackend backend, bool isStatic})
+  PScript({@required this.components, PBackend backend, bool isStatic, PDataSource dataSource})
       : super(
           isStatic: isStatic,
           backend: backend,
+          dataSource: dataSource,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
   Map<String, dynamic> toJson() => _$PScriptToJson(this);
 
+  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
   @JsonKey(includeIfNull: false, nullable: true)
   PBackend get backend => _backend;
 
+  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
   @JsonKey(includeIfNull: false, nullable: true)
   PDataSource get dataSource => _dataSource;
 
+  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   bool get isStatic => _isStatic;
 
   /// Validates the structure and content of the model
@@ -110,9 +116,12 @@ class ValidationMessage {
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PDataSourceConverter()
 class PCommon {
+  @JsonKey(ignore: true)
   PCommon _parent;
   bool _isStatic;
+  @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
+  @JsonKey(nullable: true, includeIfNull: false)
   PDataSource _dataSource;
 
   PCommon({
@@ -125,9 +134,10 @@ class PCommon {
 
   bool get isStatic => _isStatic ?? parent.isStatic;
 
+  @JsonKey(nullable: true, includeIfNull: false)
   PDataSource get dataSource => _dataSource ?? parent.dataSource;
 
-  @JsonKey(includeIfNull: false)
+  @JsonKey(nullable: true, includeIfNull: false)
   PBackend get backend {
     if (_backend == null) {
       assert(_parent != null, "Have you forgotten to invoke PScript.init() ??");
@@ -157,7 +167,7 @@ class PComponent extends PCommon {
   PComponent({
     @required this.routes,
     @required this.name,
-    bool isStatic = false,
+    bool isStatic,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
@@ -207,7 +217,7 @@ class PRoute extends PCommon {
   PRoute({
     @required this.path,
     @required this.page,
-    bool isStatic = false,
+    bool isStatic,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
@@ -257,7 +267,7 @@ class PPage extends PCommon {
     this.pageType = Library.simpleKey,
     @required this.title,
     this.scrollable = true,
-    bool isStatic = false,
+    bool isStatic,
     this.panels,
     PBackend backend,
     PDataSource dataSource,
@@ -291,6 +301,9 @@ class PPage extends PCommon {
   @override
   doInit(PCommon parent) {
     super.doInit(parent);
+    for (var panel in panels) {
+      panel.doInit(this);
+    }
   }
 
   Widget build() {
@@ -331,7 +344,7 @@ class PPanel extends PCommon implements DisplayElement {
     this.caption,
     this.scrollable = false,
     this.help,
-    bool isStatic = false,
+    bool isStatic,
     PBackend backend,
     PDataSource dataSource,
   }) : super(
@@ -352,12 +365,14 @@ class PPanel extends PCommon implements DisplayElement {
   Widget build() {
     final List<Widget> children = List();
     for (var element in content) {
+      Widget child;
       if (element is PPanel) {
-        children.add(element.build());
+        child = element.build();
       }
       if (element is PPart) {
-        children.add(element.build());
+        child = element.build();
       }
+      children.add(ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: child));
     }
     return (scrollable) ? ListView(children: children) : Column(children: children);
   }
