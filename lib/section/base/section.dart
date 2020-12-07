@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
 import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_client/precept/assembler.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/script/script.dart';
@@ -50,8 +49,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
 
   Widget _doBuild(BuildContext context,bool isStatic) {
     final staticState=isStatic || config.isStatic;
-    List<Widget> children =
-        assembleElements(elements: config.content, baseBinding: baseBinding, isStatic: staticState);
+    List<Widget> children =[];
     final body = (config.scrollable)
         ? ListView(children: children)
         : Column(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
@@ -30,7 +31,7 @@ class Precept {
       {List<Function()> injectionBindings = const [],
       bool includePreceptDefaults = true,
       Map<String, Widget Function(PPage)> pageLibraryEntries,
-      Map<String, Widget Function(PPart)> partLibraryEntries,
+      Map<String, Widget Function(PPart, ModelBinding)> partLibraryEntries,
       Widget Function(PError) errorPage,
       Map<String, BackendDelegate Function(PBackend)> backendLibraryEntries,
       List<PreceptLoader> loaders = const []}) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/logger.dart';
-import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/part/pPart.dart';
@@ -9,7 +10,7 @@ import 'package:provider/provider.dart';
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
-/// A [Part] brings together data at the field level, with the manner in which it is displayed.
+/// A [Part] combines field level data with the manner in which it is displayed.
 ///
 /// [Part] implementations are builders that display a read only or editable Widget.  The Widget displayed
 /// depends on the [SourceDataType], edit mode, and display option.
@@ -25,32 +26,38 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// - A [StringSingleSelectPart] still handles a string, but for an item which is a single choice from a list of options.
 /// Its displayOption can be RadioButton or Combo
 ///
-/// An instance of [Binding] is used to transfer data from a [TemporaryDocument]
+/// For Parts using a data source (dynamic data) a chain of [DataBinding] instances is used to transfer data from a [TemporaryDocument]
+/// For Parts displaying static data, that data is taken from [config.staticData]
+/// For a discussion of static vs dynamic data see https://www.preceptblog.co.uk/user-guide/precept-script.html#dynamic-vs-static-data
 ///
 /// A caption may optionally be displayed in either read only or edit mode.
 ///
+/// [parentBinding] is not required if [config.isStatic] is true
+///
 abstract class Part extends StatelessWidget {
   final PPart config;
-
-  const Part({@required this.config}) : super();
+  final ModelBinding parentBinding;
+  const Part({@required this.config, this.parentBinding}) : super();
 
   @override
   Widget build(BuildContext context) {
-
+    if (config.isStatic) {
+      return buildReadOnlyWidget(context, parentBinding);
+    }
     final EditState sectionState = Provider.of<EditState>(context);
     final readOnly = config.readOnly || sectionState.readOnlyMode;
     logType(this.runtimeType)
         .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
     if (readOnly) {
-      return buildReadOnlyWidget(context);
+      return buildReadOnlyWidget(context,parentBinding);
     } else {
-      return buildEditModeWidget(context);
+      return buildEditModeWidget(context,parentBinding);
     }
   }
 
-  Widget buildReadOnlyWidget(BuildContext context);
+  Widget buildReadOnlyWidget(BuildContext context, ModelBinding baseBinding);
 
-  Widget buildEditModeWidget(BuildContext context);
+  Widget buildEditModeWidget(BuildContext context, ModelBinding baseBinding);
 }
 
 /// Common base class for part specific read only options which support [Part]

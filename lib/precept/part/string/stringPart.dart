@@ -17,13 +17,11 @@ enum DisplayType { text, datePicker }
 /// Edit mode display: [TextField]
 /// See [Part]
 class StringPart extends Part {
-  final MapBinding baseBinding;
+  const StringPart({bool isStatic = false, @required PString config, ModelBinding parentBinding}) : super(config: config,parentBinding: parentBinding);
 
-  const StringPart({@required this.baseBinding, bool isStatic=false, PString config}) : super(config: config);
-
-  Widget buildReadOnlyWidget(BuildContext context) {
-    final text = Text((config.isStatic) ? config.staticData : _textFromBinding());
-    final PString cfg=config as PString;
+  Widget buildReadOnlyWidget(BuildContext context, ModelBinding baseBinding) {
+    final text = Text((config.isStatic) ? config.staticData : _textFromBinding(baseBinding:baseBinding));
+    final PString cfg = config as PString;
 
     // TODO: styling final style =
 // TODO: shouldn't use isStatic like this, it may want a caption still
@@ -31,7 +29,7 @@ class StringPart extends Part {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(
-          height: 51,
+          height: 51, // difference between read only and edit widgets
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -53,18 +51,13 @@ class StringPart extends Part {
     );
   }
 
-  String _textFromBinding(){
-    final binding = baseBinding.stringBinding(property: config.property);
-    final connector =
-    ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
-    return connector.readFromModel();
+  String _textFromBinding({ModelBinding baseBinding}) {
+    return _createConnector(baseBinding: baseBinding).readFromModel();
   }
 
-  Widget buildEditModeWidget(BuildContext context) {
+  Widget buildEditModeWidget(BuildContext context, ModelBinding baseBinding) {
     final theme = Theme.of(context);
-    final binding = baseBinding.stringBinding(property: config.property);
-    final connector =
-        ModelConnector<String, String>(binding: binding, converter: PassThroughConverter<String>());
+    final connector = _createConnector(baseBinding: baseBinding);
     return Padding(
       padding: EdgeInsets.only(bottom: 8.0),
       child: TextFormField(
@@ -79,6 +72,12 @@ class StringPart extends Part {
       ),
     );
   }
+
+  ModelConnector<String, String> _createConnector({@required ModelBinding baseBinding}) {
+    final binding = baseBinding.stringBinding(property: config.property);
+    return ModelConnector<String, String>(
+        binding: binding, converter: PassThroughConverter<String>());
+  }
 }
 
 ///
@@ -88,20 +87,22 @@ class PString extends PPart {
   final PReadModeOptions readModeOptions;
   final PEditModeOptions editModeOptions;
 
-   PString({
+  PString({
     String property,
     String caption,
     bool isStatic,
-    String static,
+    String staticData,
     String tooltip,
     PHelp help,
+    bool controlEdit,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
   }) : super(
             caption: caption,
             property: property,
             isStatic: isStatic,
-            staticData: static,
+            controlEdit: controlEdit,
+            staticData: staticData,
             help: help,
             tooltip: tooltip);
 
@@ -110,5 +111,3 @@ class PString extends PPart {
   @override
   Map<String, dynamic> toJson() => _$PStringToJson(this);
 }
-
-

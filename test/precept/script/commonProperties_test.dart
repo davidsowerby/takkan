@@ -124,6 +124,61 @@ void main() {
       expect(part.dataSource, isNull);
       expect(part.controlEdit, true);
     });
+
+    test('defaults, except pPart controlEdit==true', () {
+      // given
+      final script =
+      PScript(  components: [
+        PComponent(
+          routes: [
+            PRoute(
+              path: null,
+              page: PPage(
+                panels: [
+                  PPanel(
+                    content: [
+                      PString(controlEdit: true),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          ],
+        )
+      ]);
+      // when
+
+      script.init();
+      // then
+      final component = script.components[0];
+      final route = component.routes[0];
+      final page = route.page;
+      final panel = page.panels[0];
+      final part = panel.content[0] as PPart;
+
+      expect(component.isStatic, isNull);
+      expect(component.backend, isNull);
+      expect(component.dataSource, isNull);
+
+      expect(route.isStatic, isNull);
+      expect(route.backend, isNull);
+      expect(route.dataSource, isNull);
+
+      expect(page.isStatic, isNull);
+      expect(page.backend, isNull);
+      expect(page.dataSource, isNull);
+      expect(page.controlEdit, false);
+
+      expect(panel.isStatic, isNull);
+      expect(panel.backend, isNull);
+      expect(panel.dataSource, isNull);
+      expect(panel.controlEdit, false);
+
+      expect(part.isStatic, false);
+      expect(part.backend, isNull);
+      expect(part.dataSource, isNull);
+      expect(part.controlEdit, true);
+    });
   });
 
 }
