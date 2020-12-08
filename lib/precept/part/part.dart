@@ -5,6 +5,7 @@ import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/script/script.dart';
 import 'package:provider/provider.dart';
 
 enum DisplayType { text, datePicker }
@@ -36,14 +37,15 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 abstract class Part extends StatelessWidget {
   final PPart config;
-  final ModelBinding parentBinding;
-  const Part({@required this.config, this.parentBinding}) : super();
+  const Part({@required this.config}) : super();
 
   @override
   Widget build(BuildContext context) {
-    if (config.isStatic) {
-      return buildReadOnlyWidget(context, parentBinding);
+    if (config.isStatic==Triple.yes) {
+      return buildReadOnlyWidget(context, null);
     }
+    final DataBinding dataBinding = Provider.of<DataBinding>(context,listen: false);
+    final parentBinding=dataBinding.binding;
     final EditState sectionState = Provider.of<EditState>(context);
     final readOnly = config.readOnly || sectionState.readOnlyMode;
     logType(this.runtimeType)
@@ -55,9 +57,9 @@ abstract class Part extends StatelessWidget {
     }
   }
 
-  Widget buildReadOnlyWidget(BuildContext context, ModelBinding baseBinding);
+  Widget buildReadOnlyWidget(BuildContext context, ModelBinding parentBinding);
 
-  Widget buildEditModeWidget(BuildContext context, ModelBinding baseBinding);
+  Widget buildEditModeWidget(BuildContext context, ModelBinding parentBinding);
 }
 
 /// Common base class for part specific read only options which support [Part]

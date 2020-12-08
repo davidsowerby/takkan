@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/script/script.dart';
 
 class DefaultPage extends StatelessWidget {
@@ -13,7 +14,7 @@ class DefaultPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(config.title),
       ),
-        body: config.build(),
+        body: PageBuilder().buildContent(config: config),
     );
   }
 }

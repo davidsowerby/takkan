@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/assembler/pageAssembler.dart';
 import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/backend/data.dart';
+import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:provider/provider.dart';
 
 class Panel extends StatelessWidget {
-  final Backend backend;
-  final PPage pageConfig;
-  final RootBinding rootBinding;
+  final PPanel config;
 
-  Panel({Key key, @required this.pageConfig, @required this.rootBinding})
-      : backend = Backend(config: pageConfig.backend); // Make sure we get the one furthest down the tree
+  Panel({Key key, @required this.config});
 
   @override
   Widget build(BuildContext context) {
     final DataSource dataSource = Provider.of<DataSource>(context);
+    final Backend backend = Provider.of<Backend>(context);
     return StreamBuilder<Data>(
         stream: backend.getStream(documentId: null),
         initialData: Data(data : {}),
@@ -44,10 +42,12 @@ class Panel extends StatelessWidget {
         });
   }
 
-  /// Updates [documentState] (which is in the Widget tree above this Widget) so that bindings
-  /// reflect the new data. Then builds using [assembleSections]
-  activeBuilder(BuildContext context, DataSource documentState, Data update) {
-    documentState.updateData(update.data);
-    return assembleSections(rootBinding: rootBinding, pPage: pageConfig);
+  /// Called when the Stream is active.
+  /// Updates [dataSource] (which is in the Widget tree above this Widget) so that bindings
+  /// reflect the new data. Then builds using [PanelBuilder]
+  activeBuilder(BuildContext context, DataSource dataSource, Data update) {
+    final dataBinding=Provider.of<DataBinding>(context, listen: false);
+    dataSource.updateData(update.data);
+    return PanelBuilder().build(config: config);
   }
 }

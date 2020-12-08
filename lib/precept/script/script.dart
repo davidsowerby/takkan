@@ -10,7 +10,6 @@ import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/element.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/style.dart';
-import 'package:provider/provider.dart';
 
 part 'script.g.dart';
 
@@ -22,8 +21,12 @@ part 'script.g.dart';
 class PScript extends PCommon {
   final List<PComponent> components;
 
-  PScript({@required this.components, PBackend backend, bool isStatic, PDataSource dataSource})
-      : super(
+  PScript({
+    @required this.components,
+    PBackend backend,
+    Triple isStatic = Triple.inherited,
+    PDataSource dataSource,
+  }) : super(
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -44,7 +47,8 @@ class PScript extends PCommon {
   PDataSource get dataSource => _dataSource;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
-  bool get isStatic => _isStatic;
+  Triple get isStatic => _isStatic;
+
   bool get controlEdit => _controlEdit;
 
   /// Validates the structure and content of the model
@@ -124,7 +128,7 @@ class ValidationMessage {
 class PCommon {
   @JsonKey(ignore: true)
   PCommon _parent;
-  bool _isStatic;
+  Triple _isStatic;
   bool _controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
@@ -132,7 +136,7 @@ class PCommon {
   PDataSource _dataSource;
 
   PCommon({
-    bool isStatic,
+    Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
     bool controlEdit,
@@ -141,16 +145,16 @@ class PCommon {
         _dataSource = dataSource,
         _backend = backend;
 
-  bool get isStatic => _isStatic ?? parent.isStatic;
+  Triple get isStatic => _isStatic ?? parent.isStatic;
 
   /// Walks up the tree as far as [PPage] (one below [PRoute] and returns false if any level above is true
   /// This is the 'override' mechanism, where a higher level declaring true overrides all lower levels
   bool get controlEdit {
-    PCommon p=parent;
-    while (!(p is PRoute)){
-      if (p.controlEdit==null) return false;
+    PCommon p = parent;
+    while (!(p is PRoute)) {
+      if (p.controlEdit == null) return false;
       if (p.controlEdit) return false;
-      p=p.parent;
+      p = p.parent;
     }
     return _controlEdit ?? false;
   }
@@ -188,7 +192,7 @@ class PComponent extends PCommon {
   PComponent({
     @required this.routes,
     @required this.name,
-    bool isStatic,
+    Triple isStatic = Triple.inherited,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
@@ -238,7 +242,7 @@ class PRoute extends PCommon {
   PRoute({
     @required this.path,
     @required this.page,
-    bool isStatic,
+    Triple isStatic = Triple.inherited,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
@@ -275,21 +279,22 @@ class PRoute extends PCommon {
 }
 
 /// [pageType] is used to look up from [PageLibrary]
-/// although [panels] is a list, this simplest page only uses the first one
+/// although [content] is a list, this simplest page only uses the first one
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage extends PCommon {
   final String title;
   final String pageType;
   final bool scrollable;
-  final List<PPanel> panels;
+  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
+  final List<DisplayElement> content;
 
   @JsonKey(ignore: true)
   PPage({
     this.pageType = Library.simpleKey,
     @required this.title,
     this.scrollable = true,
-    bool isStatic,
-    this.panels,
+    Triple isStatic = Triple.inherited,
+    this.content,
     PBackend backend,
     PDataSource dataSource,
     bool controlEdit,
@@ -324,17 +329,14 @@ class PPage extends PCommon {
   @override
   doInit(PCommon parent) {
     super.doInit(parent);
-    for (var panel in panels) {
-      panel.doInit(this);
+    for (var element in content) {
+      if (element is PPanel) {
+        element.doInit(this);
+      }
+      if (element is PPart) {
+        element.doInit(this);
+      }
     }
-  }
-
-  Widget build() {
-    final List<Widget> children = List();
-    for (var panel in panels) {
-      children.add(panel.build());
-    }
-    return (scrollable) ? ListView(children: children) : Column(children: children);
   }
 
   bool get controlEdit => _controlEdit ?? false;
@@ -369,7 +371,7 @@ class PPanel extends PCommon implements DisplayElement {
     this.caption,
     this.scrollable = false,
     this.help,
-    bool isStatic,
+    Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
     bool controlEdit,
@@ -388,22 +390,6 @@ class PPanel extends PCommon implements DisplayElement {
       entry.doInit(this);
     }
   }
-
-  Widget build() {
-    final List<Widget> children = List();
-    for (var element in content) {
-      Widget child;
-      if (element is PPanel) {
-        child = element.build();
-      }
-      if (element is PPart) {
-        child = element.build();
-      }
-      children.add(ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: child));
-    }
-    return (scrollable) ? ListView(children: children) : Column(children: children);
-  }
-
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -428,3 +414,5 @@ class PPanelHeading {
 
   Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
 }
+
+enum Triple { yes, no, inherited }

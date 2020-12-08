@@ -12,7 +12,7 @@ final kitchenSinkScript = PScript(
       routes: [
         PRoute(
           path: "/",
-          page: PPage(title: "Home Page", panels: [
+          page: PPage(title: "Home Page", content: [
             PPanel(
               property: "",
               help: PHelp(

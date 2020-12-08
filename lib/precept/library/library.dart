@@ -1,3 +1,4 @@
+import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/common/logger.dart';
 
 abstract class LibraryModule<KEY, VALUE, CONFIG> {
@@ -12,10 +13,15 @@ abstract class Library<KEY, VALUE, CONFIG> {
    Library();
 
   /// Finds an entry in the library matching [key], and returns an instance of it with [config]
-  /// Return null if [key] not found
+  /// Throws a [PreceptException] if not found
   VALUE find(KEY key, CONFIG config) {
     logType(this.runtimeType).d("Finding $key in $runtimeType");
     final func = entries[key];
+    if (func==null){
+        String msg = "No entry is defined for ${key.toString()} in $runtimeType";
+        logType(this.runtimeType).e(msg);
+        throw PreceptException(msg);
+    }
     return (func == null) ? null : func(config);
   }
 

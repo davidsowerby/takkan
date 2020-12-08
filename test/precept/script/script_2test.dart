@@ -32,7 +32,7 @@ void main() {
       expect(r0.path, "/");
       final p = r0.page;
       expect(p.title, "Home Page");
-      expect(p.panels.length, 1);
+      expect(p.content.length, 1);
       expect(p.backend.connection['id'], 'mock1');
 
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));

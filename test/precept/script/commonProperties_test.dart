@@ -18,14 +18,17 @@ void main() {
     test('correct inherit / overrule', () {
       // given
       final script =
-          PScript(backend: PBackend(), isStatic: true, dataSource: PDataSource(), components: [
+      // ignore: missing_required_param
+          PScript(backend: PBackend(), isStatic: Triple.yes, dataSource: PDataSource(), components: [
+            // ignore: missing_required_param
         PComponent(
           routes: [
             PRoute(
               path: null,
+              // ignore: missing_required_param
               page: PPage(
                 controlEdit: true,
-                panels: [
+                content: [
                   PPanel(
                     content: [
                       PString(),
@@ -43,7 +46,7 @@ void main() {
       final component = script.components[0];
       final route = component.routes[0];
       final page = route.page;
-      final panel = page.panels[0];
+      final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
       expect(component.isStatic, true);
@@ -74,12 +77,14 @@ void main() {
       // given
       final script =
       PScript(  components: [
+        // ignore: missing_required_param
         PComponent(
           routes: [
             PRoute(
               path: null,
+              // ignore: missing_required_param
               page: PPage(
-                panels: [
+                content: [
                   PPanel(
                     content: [
                       PString(),
@@ -98,7 +103,7 @@ void main() {
       final component = script.components[0];
       final route = component.routes[0];
       final page = route.page;
-      final panel = page.panels[0];
+      final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
       expect(component.isStatic, isNull);
@@ -128,13 +133,16 @@ void main() {
     test('defaults, except pPart controlEdit==true', () {
       // given
       final script =
+
       PScript(  components: [
+        // ignore: missing_required_param
         PComponent(
           routes: [
             PRoute(
               path: null,
+              // ignore: missing_required_param
               page: PPage(
-                panels: [
+                content: [
                   PPanel(
                     content: [
                       PString(controlEdit: true),
@@ -153,7 +161,7 @@ void main() {
       final component = script.components[0];
       final route = component.routes[0];
       final page = route.page;
-      final panel = page.panels[0];
+      final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
       expect(component.isStatic, isNull);
