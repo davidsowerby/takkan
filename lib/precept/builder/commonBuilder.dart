@@ -17,7 +17,7 @@ mixin CommonBuilder {
     if (config.isStatic == Triple.yes) {
       return widget;
     }
-    if (config.controlEdit) {
+    if (config.hasEditControl) {
       return ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget);
     } else {
       return widget;

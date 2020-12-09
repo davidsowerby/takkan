@@ -25,9 +25,9 @@ void main() {
             PRoute(
               path: null,
               page: PPage(
-                controlEdit: true,
                 content: [
                   PPanel(
+                    controlEdit: ControlEdit.thisOnly,
                     content: [
                       PString(staticData: "static text"),
                     ],

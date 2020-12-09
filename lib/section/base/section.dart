@@ -48,7 +48,6 @@ class Section extends StatelessWidget with ToggleSectionEditState {
   }
 
   Widget _doBuild(BuildContext context,bool isStatic) {
-    final staticState=isStatic || config.isStatic;
     List<Widget> children =[];
     final body = (config.scrollable)
         ? ListView(children: children)

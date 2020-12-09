@@ -26,10 +26,12 @@ class PScript extends PCommon {
     PBackend backend,
     Triple isStatic = Triple.inherited,
     PDataSource dataSource,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
+          controlEdit: controlEdit,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -48,8 +50,6 @@ class PScript extends PCommon {
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   Triple get isStatic => _isStatic;
-
-  bool get controlEdit => _controlEdit;
 
   /// Validates the structure and content of the model
   ///
@@ -112,12 +112,19 @@ class ValidationMessage {
 /// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
 /// This also means that no [DataBinding] is needed.
 ///
-/// Some operate on an 'overrule' basis, where a higher level setting overrules a lower level setting:
+/// /// If an inherited property has no value set anywhere in the hierarchy, the [PScript.validate] will flag an error
 ///
-/// - [controlEdit] determines whether an editing action is displayed at this level, and applies only
-/// to [PPage], [PPanel] and [PPart]. It determines whether an [EditState] is used for this [Part].
-/// Defaults to true, if nothing above it true.
+/// The following do not actually inherit a setting in quite the same way, but the value can be set at any level.
 ///
+/// - [controlEdit] determines whether an editing action is displayed (usually a pencil icon).
+/// It is only relevant if the user has permission to edit (see [EditState.canEdit]
+/// A setting for [controlEdit] still overrides a setting higher up the hierarchy, but
+/// has a number of possible settings defined by [ControlEdit], with the intention of making it
+/// as easy as possible to specify what is wanted.  [hasEditControl] is computed during [PScript.validate]
+/// from the combination of [controlEdit] settings at different levels, and determines whether
+/// a [Page], [Panel] or [Part] can trigger an edit, and has an associated [EditState] as shown in
+/// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
+
 ///
 /// **NOTE** Calls to any of the getters will fail unless [init] has been called first, because the [_parent] property
 /// is set only after a [init] call.  Unfortunately there seems to be no way to
@@ -129,7 +136,8 @@ class PCommon {
   @JsonKey(ignore: true)
   PCommon _parent;
   Triple _isStatic;
-  bool _controlEdit;
+  bool _hasEditControl;
+  final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -139,25 +147,14 @@ class PCommon {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    bool controlEdit,
+    this.controlEdit = ControlEdit.notSetAtThisLevel,
   })  : _isStatic = isStatic,
-        _controlEdit = controlEdit,
         _dataSource = dataSource,
         _backend = backend;
 
-  Triple get isStatic => _isStatic ?? parent.isStatic;
+  Triple get isStatic => (_isStatic == Triple.inherited) ? parent.isStatic : _isStatic;
 
-  /// Walks up the tree as far as [PPage] (one below [PRoute] and returns false if any level above is true
-  /// This is the 'override' mechanism, where a higher level declaring true overrides all lower levels
-  bool get controlEdit {
-    PCommon p = parent;
-    while (!(p is PRoute)) {
-      if (p.controlEdit == null) return false;
-      if (p.controlEdit) return false;
-      p = p.parent;
-    }
-    return _controlEdit ?? false;
-  }
+  bool get hasEditControl => _hasEditControl;
 
   @JsonKey(nullable: true, includeIfNull: false)
   PDataSource get dataSource => _dataSource ?? parent.dataSource;
@@ -192,11 +189,13 @@ class PComponent extends PCommon {
   PComponent({
     @required this.routes,
     @required this.name,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     Triple isStatic = Triple.inherited,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
           backend: backend,
+          controlEdit: controlEdit,
         );
 
   factory PComponent.fromJson(Map<String, dynamic> json) => _$PComponentFromJson(json);
@@ -243,10 +242,12 @@ class PRoute extends PCommon {
     @required this.path,
     @required this.page,
     Triple isStatic = Triple.inherited,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     PBackend backend,
   }) : super(
           isStatic: isStatic,
           backend: backend,
+          controlEdit: controlEdit,
         );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
@@ -297,7 +298,7 @@ class PPage extends PCommon {
     this.content,
     PBackend backend,
     PDataSource dataSource,
-    bool controlEdit,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           dataSource: dataSource,
@@ -338,8 +339,6 @@ class PPage extends PCommon {
       }
     }
   }
-
-  bool get controlEdit => _controlEdit ?? false;
 }
 
 enum PageType { standard }
@@ -374,7 +373,7 @@ class PPanel extends PCommon implements DisplayElement {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    bool controlEdit,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           backend: backend,
@@ -416,3 +415,19 @@ class PPanelHeading {
 }
 
 enum Triple { yes, no, inherited }
+
+/// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
+/// [partsOnly] edit only at [Part] level (can be set higher up the hierarchy, even at [PScript])
+/// [panelsOnly] all panels from this level down (can be set higher up the hierarchy, even at [PScript])
+/// [thisOnly] enables edit for this instance only, overriding any inherited value
+/// [noEdit] cancels anything defined above (effectively the opposite of [thisOnly])
+/// [notSetAtThisLevel] accepts inherited value
+enum ControlEdit {
+  notSetAtThisLevel,
+  thisOnly,
+  thisAndBelow,
+  panelsOnly,
+  partsOnly,
+  firstLevelPanels,
+  noEdit,
+}

@@ -95,7 +95,7 @@ class PString extends PPart {
     String staticData,
     String tooltip,
     PHelp help,
-    bool controlEdit,
+    ControlEdit controlEdit=ControlEdit.notSetAtThisLevel,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
   }) : super(

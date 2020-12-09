@@ -25,15 +25,14 @@ class PPart<T> extends PCommon implements DisplayElement {
   final PHelp help;
   final String tooltip;
 
-  PPart(
-      {this.caption,
-      this.readOnly = false,
-      this.property,
-      Triple isStatic=Triple.inherited,
-      this.staticData,
-      this.help,
-      bool controlEdit,
-      this.tooltip})
+  PPart({this.caption,
+    this.readOnly = false,
+    this.property,
+    Triple isStatic = Triple.inherited,
+    this.staticData,
+    this.help,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    this.tooltip})
       : super(isStatic: isStatic, controlEdit: controlEdit);
 
   factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
@@ -42,23 +41,4 @@ class PPart<T> extends PCommon implements DisplayElement {
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
 
-
-  @override
-  Triple get isStatic => super.isStatic ?? false;
-
-  /// Overrides the [PCommon] method because this needs to return true if there is no other true in the chain above
-  /// Walks up the tree as far as [PPage] (one below [PRoute] and returns false if any level above is true
-  /// This is the 'override' mechanism, where a higher level declaring true overrides all lower levels
-  bool get controlEdit {
-    PCommon p = parent;
-    bool setAbove = false;
-    while (!(p is PRoute)) {
-      if (p.controlEdit != null && p.controlEdit) {
-        setAbove = true;
-        break;
-      }
-      p = p.parent;
-    }
-    return !setAbove;
-  }
 }
