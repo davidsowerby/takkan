@@ -71,13 +71,13 @@ void main() {
             PRoute(
               path: null,
               page: PPage(
-                controlEdit: true,
+                controlEdit: ControlEdit.thisAndBelow,
                 content: [
                   PPanel(
                     content: [
                       PString(
                         property: 'name',
-                        controlEdit: false,
+                        controlEdit: ControlEdit.noEdit,
                         readModeOptions: PReadModeOptions(showCaption: false),
                       ),
                     ],
@@ -133,7 +133,7 @@ void main() {
                     content: [
                       PString(
                         property: 'name',
-                        controlEdit: true,
+                        controlEdit: ControlEdit.thisOnly,
                         readModeOptions: PReadModeOptions(showCaption: false),
                       ),
                     ],

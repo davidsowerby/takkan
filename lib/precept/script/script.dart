@@ -120,9 +120,9 @@ class ValidationMessage {
 /// It is only relevant if the user has permission to edit (see [EditState.canEdit]
 /// A setting for [controlEdit] still overrides a setting higher up the hierarchy, but
 /// has a number of possible settings defined by [ControlEdit], with the intention of making it
-/// as easy as possible to specify what is wanted.  [hasEditControl] is computed during [PScript.validate]
+/// as easy as possible to specify what is wanted.  [hasEditControl] is computed during [PScript.init]
 /// from the combination of [controlEdit] settings at different levels, and determines whether
-/// a [Page], [Panel] or [Part] can trigger an edit, and has an associated [EditState] as shown in
+/// a [Page], [Panel] or [Part] can trigger an edit.  It also deermines whether there is an associated [EditState] as shown in
 /// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
 
 ///
@@ -136,7 +136,7 @@ class PCommon {
   @JsonKey(ignore: true)
   PCommon _parent;
   Triple _isStatic;
-  bool _hasEditControl;
+  bool _hasEditControl=false;
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
@@ -172,10 +172,64 @@ class PCommon {
   @JsonKey(ignore: true)
   PCommon get parent => _parent;
 
-  /// Initialises by setting up parent properties.  If you override this to pass the call on to other
-  /// levels, make sure you call super
+  /// Initialises by setting up [_parent] and [_hasEditControl] properties.
+  /// If you override this to pass the call on to other levels, make sure you call super
+  /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
   doInit(PCommon parent) {
     _parent = parent;
+    PCommon p=parent;
+    ControlEdit inherited=ControlEdit.notSetAtThisLevel;
+    while (p !=null){
+      if (parent.controlEdit != ControlEdit.notSetAtThisLevel){
+        inherited=parent.controlEdit;
+        break;
+      }
+      p=p.parent;
+    }
+    _setupControlEdit(inherited);
+  }
+
+  /// [ControlEdit.noEdit] overrides everything
+  _setupControlEdit(ControlEdit inherited) {
+    if (controlEdit == ControlEdit.noEdit) {
+      _hasEditControl = false;
+      return;
+    }
+    _hasEditControl =
+        ((controlEdit == ControlEdit.thisOnly) || (controlEdit == ControlEdit.thisAndBelow));
+
+    // Value has been set at this level, overriding anything inherited
+    if (_hasEditControl) {
+      return;
+    }
+
+    if (this is PPart && controlEdit == ControlEdit.partsOnly || inherited==ControlEdit.partsOnly) {
+      _hasEditControl = true;
+      return;
+    }
+
+    if (this is PPanel && controlEdit == ControlEdit.panelsOnly || inherited== ControlEdit.panelsOnly) {
+      _hasEditControl = true;
+      return;
+    }
+
+    if (this is PPage && controlEdit == ControlEdit.pagesOnly || inherited==ControlEdit.pagesOnly) {
+      _hasEditControl = true;
+      return;
+    }
+    
+    if (inherited==ControlEdit.thisAndBelow){
+      _hasEditControl = true;
+      return;
+    }
+    
+    if(controlEdit==ControlEdit.firstLevelPanels || inherited==ControlEdit.firstLevelPanels){
+      if (this is PPanel && _parent is PPage){
+        _hasEditControl=true;
+        return;
+      }
+    }
+    
   }
 }
 
@@ -426,6 +480,7 @@ enum ControlEdit {
   notSetAtThisLevel,
   thisOnly,
   thisAndBelow,
+  pagesOnly,
   panelsOnly,
   partsOnly,
   firstLevelPanels,

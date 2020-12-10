@@ -146,7 +146,7 @@ void main() {
                 content: [
                   PPanel(
                     content: [
-                      PString(controlEdit: true),
+                      PString(controlEdit: ControlEdit.thisOnly),
                     ],
                   ),
                 ],
