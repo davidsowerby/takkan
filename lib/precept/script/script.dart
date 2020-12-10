@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_client/common/writingStyle.dart';
 import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
+import 'package:precept_client/precept/panel/panelStyle.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/partConverter.dart';
 import 'package:precept_client/precept/script/backend.dart';
@@ -23,9 +26,11 @@ class PScript extends PCommon {
 
   PScript({
     this.components = const [],
-    PBackend backend,
     Triple isStatic = Triple.inherited,
+    PBackend backend,
     PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
@@ -100,27 +105,33 @@ class ValidationMessage {
 
 ///
 /// Holds common properties for every level of a [PScript], and its main purpose is to reduce manual configuration.
-/// Not all properties are appropriate to all levels (levels here means the level in the [PScript] structure).
 ///
-/// Some properties work on the basis of 'inheritance'
-/// For these properties, a higher level setting is used by all lower levels, unless overridden by a lower level setting:
+/// With the exception of [controlEdit] (described below), these properties are used to construct companion Widgets
+/// in the [Widget Tree](https://www.preceptblog.co.uk/user-guide/widget-tree.html) as part of the build process.
+/// In conjunction with Flutter and Provider, the resulting Widgets work on the basis of 'inheritance' - that is,
+/// a higher level setting is used by all lower levels, unless overridden by a lower level setting.
+///
+/// [PScript] and its constituents mimic this 'inheritance' structure for the purpose of validation.
 ///
 /// - [backend]
 /// - [dataSource]
+/// - [writingStyle] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
+/// - [panelStyle] defines borders and other styling for panels
 /// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
-/// This also means that no [DataBinding] is needed.
+/// This also means that no [DataBinding] is needed.  Although this really only applies at [Part] level, it can be set
+/// anywhere up to [PScript] and take effect for all lower levels.
 ///
-/// /// If an inherited property has no value set anywhere in the hierarchy, the [PScript.validate] will flag an error
 ///
-/// The following do not actually inherit a setting in quite the same way, but the value can be set at any level.
+/// If an inherited property has no value set anywhere in the hierarchy, the [PScript.validate] will flag an error
 ///
-/// - [controlEdit] determines whether an editing action is displayed (usually a pencil icon).
-/// It is only relevant if the user has permission to edit (see [EditState.canEdit]
+/// - [controlEdit] is treated slightly differently.
+/// It determines whether an editing action is displayed (usually a pencil icon).
+/// It is only relevant if the user has permission to edit (see [EditState.canEdit]).
 /// A setting for [controlEdit] still overrides a setting higher up the hierarchy, but
 /// has a number of possible settings defined by [ControlEdit], with the intention of making it
 /// as easy as possible to specify what is wanted.  [hasEditControl] is computed during [PScript.init]
 /// from the combination of [controlEdit] settings at different levels, and determines whether
-/// a [Page], [Panel] or [Part] can trigger an edit.  It also deermines whether there is an associated [EditState] as shown in
+/// a [Page], [Panel] or [Part] can trigger an edit.  It also determines whether there is an associated [EditState] as shown in
 /// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
 
 ///
@@ -140,32 +151,39 @@ class PCommon {
   PBackend _backend;
   @JsonKey(nullable: true, includeIfNull: false)
   PDataSource _dataSource;
+  @JsonKey(nullable: true, includeIfNull: false)
+  PanelStyle _panelStyle;
+  @JsonKey(nullable: true, includeIfNull: false)
+  WritingStyle _writingStyle;
 
   PCommon({
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
   })  : _isStatic = isStatic,
+        _backend = backend,
         _dataSource = dataSource,
-        _backend = backend;
+        _panelStyle = panelStyle,
+        _writingStyle = writingStyle;
 
   Triple get isStatic => (_isStatic == Triple.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
 
   @JsonKey(nullable: true, includeIfNull: false)
-  PDataSource get dataSource => _dataSource ?? parent.dataSource;
+  PBackend get backend => _backend ?? parent.backend;
+
+  /// [backend] is declared rather than inherited
+  bool get backendIsDeclared => (_backend != null);
 
   @JsonKey(nullable: true, includeIfNull: false)
-  PBackend get backend {
-    if (_backend == null) {
-      assert(_parent != null, "Have you forgotten to invoke PScript.init() ??");
-      return _parent.backend;
-    } else {
-      return _backend;
-    }
-  }
+  PDataSource get dataSource => _dataSource ?? parent.dataSource;
+
+  /// [dataSource] is declared rather than inherited
+  bool get dataSourceIsDeclared => (_dataSource != null);
 
   @JsonKey(ignore: true)
   PCommon get parent => _parent;
@@ -250,12 +268,18 @@ class PComponent extends PCommon {
   PComponent({
     this.routes = const [],
     @required this.name,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     Triple isStatic = Triple.inherited,
     PBackend backend,
+    PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
           controlEdit: controlEdit,
         );
 
@@ -303,8 +327,11 @@ class PRoute extends PCommon {
     @required this.path,
     @required this.page,
     Triple isStatic = Triple.inherited,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     PBackend backend,
+    PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           backend: backend,
@@ -358,14 +385,18 @@ class PPage extends PCommon {
     @required this.title,
     this.scrollable = true,
     Triple isStatic = Triple.inherited,
-    this.content=const [],
+    this.content = const [],
     PBackend backend,
     PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
-          dataSource: dataSource,
           backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
           controlEdit: controlEdit,
         );
 
@@ -436,11 +467,15 @@ class PPanel extends PCommon implements DisplayElement {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
           controlEdit: controlEdit,
         );
 

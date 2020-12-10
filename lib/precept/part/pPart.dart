@@ -1,5 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_client/common/writingStyle.dart';
+import 'package:precept_client/precept/panel/panelStyle.dart';
 import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/script/backend.dart';
+import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/element.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/script.dart';
@@ -25,20 +29,30 @@ class PPart<T> extends PCommon implements DisplayElement {
   final PHelp help;
   final String tooltip;
 
-  PPart({this.caption,
-    this.readOnly = false,
-    this.property,
-    Triple isStatic = Triple.inherited,
-    this.staticData,
-    this.help,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
-    this.tooltip})
-      : super(isStatic: isStatic, controlEdit: controlEdit);
+  PPart(
+      {this.caption,
+      this.readOnly = false,
+      this.property,
+      Triple isStatic = Triple.inherited,
+      this.staticData,
+      this.help,
+      PBackend backend,
+      PDataSource dataSource,
+      PanelStyle panelStyle,
+      WritingStyle writingStyle,
+      ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+      this.tooltip})
+      : super(
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+        );
 
   factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
-
-
 }

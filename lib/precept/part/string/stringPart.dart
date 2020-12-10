@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_client/common/writingStyle.dart';
 import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
+import 'package:precept_client/precept/panel/panelStyle.dart';
 import 'package:precept_client/precept/part/options/options.dart';
 import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/precept/script/backend.dart';
+import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/help.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/widget/caption.dart';
@@ -21,12 +25,14 @@ class StringPart extends Part {
   const StringPart({bool isStatic = false, @required PString config}) : super(config: config);
 
   Widget buildReadOnlyWidget(BuildContext context, ModelBinding baseBinding) {
-    final text = Text((config.isStatic==Triple.yes) ? config.staticData : _textFromBinding(baseBinding:baseBinding));
+    final text = Text((config.isStatic == Triple.yes)
+        ? config.staticData
+        : _textFromBinding(baseBinding: baseBinding));
     final PString cfg = config as PString;
 
     // TODO: styling final style =
 // TODO: shouldn't use isStatic like this, it may want a caption still
-    if (!(config.isStatic==Triple.yes) && cfg.readModeOptions.showCaption) {
+    if (!(config.isStatic == Triple.yes) && cfg.readModeOptions.showCaption) {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(
@@ -95,13 +101,21 @@ class PString extends PPart {
     String staticData,
     String tooltip,
     PHelp help,
-    ControlEdit controlEdit=ControlEdit.notSetAtThisLevel,
+    PBackend backend,
+    PDataSource dataSource,
+    PanelStyle panelStyle,
+    WritingStyle writingStyle,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
   }) : super(
             caption: caption,
             property: property,
             isStatic: isStatic,
+            backend: backend,
+            dataSource: dataSource,
+            panelStyle: panelStyle,
+            writingStyle: writingStyle,
             controlEdit: controlEdit,
             staticData: staticData,
             help: help,

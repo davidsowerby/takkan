@@ -5,6 +5,7 @@ import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
+import 'package:precept_client/precept/library/panelLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
 import 'package:precept_client/precept/part/pPart.dart';
@@ -40,7 +41,9 @@ class Precept {
     await loadModels(loaders: loaders);
     backendLibrary.init();
     pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
+    panelLibrary.init();
     partLibrary.init(entries: partLibraryEntries);
+
     router.init(scripts: precept.models);
   }
 
