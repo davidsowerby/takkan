@@ -407,17 +407,29 @@ class PPage extends PCommon {
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
   void validate(List<ValidationMessage> messages) {
+    final pageId = "PPage at PRoute ${parent.path ?? 'n/a'}";
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: pageType ?? 'n/a',
-          msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a title"));
+          type: this.runtimeType, name: pageType ?? 'n/a', msg: "$pageId must define a title"));
     }
     if (pageType == null || pageType.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: pageType ?? 'n/a',
-          msg: "PPage at PRoute ${parent.path ?? 'n/a'} must define a pageType"));
+          type: this.runtimeType, name: pageType ?? 'n/a', msg: "$pageId must define a pageType"));
+    }
+
+    if (isStatic != Triple.yes) {
+      if (backend == null) {
+        messages.add(ValidationMessage(
+            type: this.runtimeType,
+            name: pageType ?? 'n/a',
+            msg: "$pageId must either be static or have a backend defined"));
+      }
+      if (dataSource==null){
+        messages.add(ValidationMessage(
+            type: this.runtimeType,
+            name: pageType ?? 'n/a',
+            msg: "$pageId must either be static or have a dataSource defined"));
+      }
     }
   }
 

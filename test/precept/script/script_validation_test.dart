@@ -1,3 +1,4 @@
+import 'package:precept_client/precept/script/backend.dart';
 import 'package:precept_client/precept/script/data.dart';
 import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
@@ -15,7 +16,7 @@ void main() {
     test('Insufficient components', () {
       // given
       final script1 = PScript();
-      final script2= PScript(components: []);
+      final script2 = PScript(components: []);
       // when
       final result = script1.validate();
       // then
@@ -85,19 +86,114 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(), 'PPage : n/a : PPage at PRoute /home must define a title');
-        expect(messages[1].toString(), 'PPage : n/a : PPage at PRoute /home must define a pageType');
+        expect(
+            messages[1].toString(), 'PPage : n/a : PPage at PRoute /home must define a pageType');
       });
 
       test('No errors', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: "mine",title: "Wiggly", dataSource: PDataGet(id: DocumentId())))])
+          PComponent(name: 'core', routes: [
+            PRoute(
+                path: "/home",
+                page: PPage(
+                    pageType: "mine", title: "Wiggly", dataSource: PDataGet(id: DocumentId())))
+          ])
         ]);
         // when
         final messages = component.validate();
         // then
 
         expect(messages.length, 0);
+      });
+
+      test('any non-static Page must be able to access DataSource and Backend', () {
+        // given
+        final withoutDataSourceOrBackend = PScript(
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+
+        final withoutBackend = PScript(
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                    dataSource: PDataGet(
+                      id: DocumentId(),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+
+        final withoutDataSource = PScript(backend: PBackend(),
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+
+        final withDataSourceAndBackend = PScript(backend: PBackend(),
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                    dataSource: PDataGet(
+                      id: DocumentId(),
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+
+        // when
+        final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
+        final withoutBackendResults = withoutBackend.validate();
+        final withoutDataSourceResults = withoutDataSource.validate();
+        final withDataSourceAndBackendResults=withDataSourceAndBackend.validate();
+        // then
+
+        expect(withoutDataSourceOrBackendResults.length,2);
+        expect(withoutBackendResults.length, 1);
+        expect(withoutDataSourceResults.length, 1);
+        expect(withDataSourceAndBackendResults.length, 0);
       });
     });
   });
