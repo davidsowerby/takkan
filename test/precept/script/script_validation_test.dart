@@ -14,9 +14,10 @@ void main() {
 
     test('Insufficient components', () {
       // given
-      final model = PScript();
+      final script1 = PScript();
+      final script2= PScript(components: []);
       // when
-      final result = model.validate();
+      final result = script1.validate();
       // then
 
       expect(result.length, 1);
@@ -73,7 +74,7 @@ void main() {
     });
 
     group('PPage validation', () {
-      test('Must have document, pageKey and title', () {
+      test('Must have pageType and title', () {
         // given
         final component = PScript(components: [
           PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])
@@ -82,11 +83,9 @@ void main() {
         final messages = component.validate();
         // then
 
-        expect(messages.length, 3);
+        expect(messages.length, 2);
         expect(messages[0].toString(), 'PPage : n/a : PPage at PRoute /home must define a title');
-        expect(messages[1].toString(), 'PPage : n/a : PPage at PRoute /home must define a pageKey');
-        expect(
-            messages[2].toString(), 'PPage : n/a : PPage at PRoute /home must define a document');
+        expect(messages[1].toString(), 'PPage : n/a : PPage at PRoute /home must define a pageType');
       });
 
       test('No errors', () {

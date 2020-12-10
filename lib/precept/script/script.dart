@@ -22,7 +22,7 @@ class PScript extends PCommon {
   final List<PComponent> components;
 
   PScript({
-    @required this.components,
+    this.components = const [],
     PBackend backend,
     Triple isStatic = Triple.inherited,
     PDataSource dataSource,
@@ -52,11 +52,8 @@ class PScript extends PCommon {
   Triple get isStatic => _isStatic;
 
   /// Validates the structure and content of the model
-  ///
-  /// Uses 2 passes.  The first does not check anything which involves cascaded values (for example
-  /// 'isStatic') because those checks need [expand] to be run first
   List<ValidationMessage> validate() {
-    int pass = 1;
+    init();
     final List<ValidationMessage> messages = List();
 
     if (components == null || components.length == 0) {
@@ -67,7 +64,7 @@ class PScript extends PCommon {
     } else {
       var index = 0;
       for (var component in components) {
-        component.validate(messages, pass, index);
+        component.validate(messages, index);
         index++;
       }
     }
@@ -137,7 +134,7 @@ class PCommon {
   @JsonKey(ignore: true)
   PCommon _parent;
   Triple _isStatic;
-  bool _hasEditControl=false;
+  bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
@@ -178,59 +175,68 @@ class PCommon {
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
   doInit(PCommon parent) {
     _parent = parent;
-    PCommon p=parent;
-    ControlEdit inherited=ControlEdit.notSetAtThisLevel;
-    while (p !=null){
-      if (parent.controlEdit != ControlEdit.notSetAtThisLevel){
-        inherited=parent.controlEdit;
+    PCommon p = parent;
+    ControlEdit inherited = ControlEdit.notSetAtThisLevel;
+    while (p != null) {
+      if (p.controlEdit != ControlEdit.notSetAtThisLevel) {
+        inherited = p.controlEdit;
         break;
       }
-      p=p.parent;
+      p = p.parent;
     }
     _setupControlEdit(inherited);
   }
 
   /// [ControlEdit.noEdit] overrides everything
   _setupControlEdit(ControlEdit inherited) {
+    // top levels are not visual elements
+    if (this is PScript || this is PComponent || this is PRoute) {
+      _hasEditControl = false;
+      return;
+    }
+
     if (controlEdit == ControlEdit.noEdit) {
       _hasEditControl = false;
       return;
     }
-    _hasEditControl =
-        ((controlEdit == ControlEdit.thisOnly) || (controlEdit == ControlEdit.thisAndBelow));
 
-    // Value has been set at this level, overriding anything inherited
-    if (_hasEditControl) {
-      return;
-    }
-
-    if (this is PPart && controlEdit == ControlEdit.partsOnly || inherited==ControlEdit.partsOnly) {
+    if ((controlEdit == ControlEdit.thisOnly) || (controlEdit == ControlEdit.thisAndBelow)) {
       _hasEditControl = true;
       return;
     }
 
-    if (this is PPanel && controlEdit == ControlEdit.panelsOnly || inherited== ControlEdit.panelsOnly) {
+    if (inherited == ControlEdit.thisAndBelow) {
       _hasEditControl = true;
       return;
     }
 
-    if (this is PPage && controlEdit == ControlEdit.pagesOnly || inherited==ControlEdit.pagesOnly) {
-      _hasEditControl = true;
-      return;
-    }
-    
-    if (inherited==ControlEdit.thisAndBelow){
-      _hasEditControl = true;
-      return;
-    }
-    
-    if(controlEdit==ControlEdit.firstLevelPanels || inherited==ControlEdit.firstLevelPanels){
-      if (this is PPanel && _parent is PPage){
-        _hasEditControl=true;
+    if (this is PPart) {
+      if (controlEdit == ControlEdit.partsOnly || inherited == ControlEdit.partsOnly) {
+        _hasEditControl = true;
         return;
       }
     }
-    
+
+    if (this is PPanel) {
+      if (controlEdit == ControlEdit.panelsOnly || inherited == ControlEdit.panelsOnly) {
+        _hasEditControl = true;
+        return;
+      }
+    }
+
+    if (this is PPage) {
+      if (controlEdit == ControlEdit.pagesOnly || inherited == ControlEdit.pagesOnly) {
+        _hasEditControl = true;
+        return;
+      }
+    }
+
+    if (controlEdit == ControlEdit.firstLevelPanels || inherited == ControlEdit.firstLevelPanels) {
+      if (this is PPanel && _parent is PPage) {
+        _hasEditControl = true;
+        return;
+      }
+    }
   }
 }
 
@@ -242,7 +248,7 @@ class PComponent extends PCommon {
 
   @JsonKey(ignore: true)
   PComponent({
-    @required this.routes,
+    this.routes = const [],
     @required this.name,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     Triple isStatic = Triple.inherited,
@@ -257,7 +263,7 @@ class PComponent extends PCommon {
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 
-  validate(List<ValidationMessage> messages, int pass, int index) {
+  validate(List<ValidationMessage> messages, int index) {
     if (name == null || name.isEmpty) {
       messages.add(ValidationMessage(
           type: this.runtimeType,
@@ -272,7 +278,7 @@ class PComponent extends PCommon {
     } else {
       int index = 0;
       for (var route in routes) {
-        route.validate(this, messages, pass, index);
+        route.validate(this, messages, index);
         index++;
       }
     }
@@ -309,7 +315,7 @@ class PRoute extends PCommon {
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 
-  validate(PComponent parent, List<ValidationMessage> messages, int pass, int index) {
+  validate(PComponent parent, List<ValidationMessage> messages, int index) {
     final parentName = parent.name ?? 'unnamed';
     if (path == null || path.isEmpty) {
       messages.add(ValidationMessage(
@@ -323,14 +329,16 @@ class PRoute extends PCommon {
           name: path ?? 'n/a',
           msg: "PRoute at index $index of PComponent $parentName must define a page"));
     } else {
-      page.validate(messages, pass);
+      page.validate(messages);
     }
   }
 
   @override
   doInit(PCommon parent) {
     super.doInit(parent);
-    page.doInit(this);
+    if (page != null) {
+      page.doInit(this);
+    }
   }
 }
 
@@ -350,7 +358,7 @@ class PPage extends PCommon {
     @required this.title,
     this.scrollable = true,
     Triple isStatic = Triple.inherited,
-    this.content,
+    this.content=const [],
     PBackend backend,
     PDataSource dataSource,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -367,7 +375,7 @@ class PPage extends PCommon {
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
-  void validate(List<ValidationMessage> messages, int pass) {
+  void validate(List<ValidationMessage> messages) {
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
           type: this.runtimeType,

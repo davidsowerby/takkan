@@ -509,7 +509,7 @@ packages:
   precept_mock_backend:
     dependency: "direct main"
     description:
-      path: "../precept-mock-backend"
+      path: "../precept_mock_backend"
       relative: true
     source: path
     version: "0.0.1"

@@ -63,6 +63,7 @@ void main() {
       expect(pagePart.controlEdit, ControlEdit.notSetAtThisLevel);
 
       expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);
@@ -115,6 +116,7 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
@@ -123,5 +125,220 @@ void main() {
       expect(panel11Part1.hasEditControl, false);
       expect(pagePart.hasEditControl, true);
     });
+
+    test('firstLevelPanels with Part override', () {
+      // given
+      final script = PScript(
+        components: [
+          PComponent(controlEdit: ControlEdit.firstLevelPanels,
+            routes: [
+              PRoute(
+                path: '/home',
+                page: PPage(
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1',controlEdit: ControlEdit.thisOnly),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final component = script.components[0];
+      final route = component.routes[0];
+      final page = route.page;
+      final panel1 = page.content[0] as PPanel;
+      final panel11 = panel1.content[1] as PPanel;
+      final panel1Part1 = panel1.content[0] as PPart;
+      final panel11Part1 = panel11.content[0] as PPart;
+      final pagePart = page.content[1] as PPart;
+
+      // when
+      script.init();
+      // then
+
+      expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
+      expect(route.hasEditControl, false);
+      expect(page.hasEditControl, false);
+      expect(panel1.hasEditControl, true);
+      expect(panel11.hasEditControl, false);
+      expect(panel1Part1.hasEditControl, false);
+      expect(panel11Part1.hasEditControl, false);
+      expect(pagePart.hasEditControl, true);
+    });
+
+    test('thisOnly does nothing if too high', () {
+      // given
+      final script = PScript(
+        components: [
+          PComponent(controlEdit: ControlEdit.thisOnly,
+            routes: [
+              PRoute(
+                path: '/home',
+                page: PPage(
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final component = script.components[0];
+      final route = component.routes[0];
+      final page = route.page;
+      final panel1 = page.content[0] as PPanel;
+      final panel11 = panel1.content[1] as PPanel;
+      final panel1Part1 = panel1.content[0] as PPart;
+      final panel11Part1 = panel11.content[0] as PPart;
+      final pagePart = page.content[1] as PPart;
+
+      // when
+      script.init();
+      // then
+
+      expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
+      expect(route.hasEditControl, false);
+      expect(page.hasEditControl, false);
+      expect(panel1.hasEditControl, false);
+      expect(panel11.hasEditControl, false);
+      expect(panel1Part1.hasEditControl, false);
+      expect(panel11Part1.hasEditControl, false);
+      expect(pagePart.hasEditControl, false);
+    });
+
+    test('thisAndBelow with negation', () {
+      // given
+      final script = PScript(
+        components: [
+          PComponent(controlEdit: ControlEdit.thisAndBelow,
+            routes: [
+              PRoute(
+                path: '/home',
+                page: PPage(
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          controlEdit: ControlEdit.noEdit,
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1',controlEdit: ControlEdit.thisOnly),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final component = script.components[0];
+      final route = component.routes[0];
+      final page = route.page;
+      final panel1 = page.content[0] as PPanel;
+      final panel11 = panel1.content[1] as PPanel;
+      final panel1Part1 = panel1.content[0] as PPart;
+      final panel11Part1 = panel11.content[0] as PPart;
+      final pagePart = page.content[1] as PPart;
+
+      // when
+      script.init();
+      // then
+
+      expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
+      expect(route.hasEditControl, false);
+      expect(page.hasEditControl, true);
+      expect(panel1.hasEditControl, true);
+      expect(panel11.hasEditControl, false);
+      expect(panel1Part1.hasEditControl, true);
+      expect(panel11Part1.hasEditControl, false);
+      expect(pagePart.hasEditControl, true);
+    });
+
+    test('partsOnly, single branch', () {
+      // given
+      final script = PScript(
+        components: [
+          PComponent(
+            routes: [
+              PRoute(
+                path: '/home',
+                page: PPage(
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          controlEdit: ControlEdit.partsOnly,
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+
+      final component = script.components[0];
+      final route = component.routes[0];
+      final page = route.page;
+      final panel1 = page.content[0] as PPanel;
+      final panel11 = panel1.content[1] as PPanel;
+      final panel1Part1 = panel1.content[0] as PPart;
+      final panel11Part1 = panel11.content[0] as PPart;
+      final pagePart = page.content[1] as PPart;
+
+      // when
+      script.init();
+      // then
+
+      expect(script.hasEditControl, false);
+      expect(component.hasEditControl, false);
+      expect(route.hasEditControl, false);
+      expect(page.hasEditControl, false);
+      expect(panel1.hasEditControl, false);
+      expect(panel11.hasEditControl, false);
+      expect(panel1Part1.hasEditControl, false);
+      expect(panel11Part1.hasEditControl, true);
+      expect(pagePart.hasEditControl, false);
+    });
+
   });
 }
