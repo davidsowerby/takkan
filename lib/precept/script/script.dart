@@ -80,6 +80,7 @@ class PScript extends PCommon {
 
   @override
   doInit(PCommon parent) {
+    _setupControlEdit(ControlEdit.notSetAtThisLevel);
     for (var component in components) {
       component.doInit(this);
     }
