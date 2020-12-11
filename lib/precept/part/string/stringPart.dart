@@ -106,9 +106,11 @@ class PString extends PPart {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
     this.readModeOptions = const PReadModeOptions(),
     this.editModeOptions = const PEditModeOptions(),
   }) : super(
+            id: caption ?? id,
             caption: caption,
             property: property,
             isStatic: isStatic,

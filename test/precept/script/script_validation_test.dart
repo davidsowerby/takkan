@@ -4,7 +4,7 @@ import 'package:precept_client/precept/script/script.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('PScript validation', () {
+  group('PScript all level validation', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -13,17 +13,19 @@ void main() {
 
     tearDown(() {});
 
-    test('Insufficient components', () {
-      // given
-      final script1 = PScript();
-      final script2 = PScript(components: []);
-      // when
-      final result = script1.validate();
-      // then
+    group('PScript validation', () {
+      test('Insufficient components', () {
+        // given
+        final script1 = PScript();
+        final script2 = PScript(components: []);
+        // when
+        final result = script1.validate();
+        // then
 
-      expect(result.length, 1);
-      expect(result[0].toString(),
-          'PScript : n/a : A PScript instance must contain at least one component');
+        expect(result.length, 1);
+        expect(result[0].toString(),
+            'PScript : script : must contain at least one component');
+      });
     });
 
     group('PComponent validation', () {
@@ -36,9 +38,9 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PComponent : n/a : PComponent at index 0 must have a name defined');
+            'PComponent : missing id : PComponent at index 0 must have a name defined');
         expect(messages[1].toString(),
-            "PComponent : n/a : PComponent at index 0 must contain at least one PRoute");
+            "PComponent : missing id : PComponent at index 0 must contain at least one PRoute");
       });
 
       test('routes and name must not be not empty', () {
@@ -50,9 +52,9 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PComponent : n/a : PComponent at index 0 must have a name defined');
+            'PComponent :  : PComponent at index 0 must have a name defined');
         expect(messages[1].toString(),
-            "PComponent : n/a : PComponent at index 0 must contain at least one PRoute");
+            "PComponent :  : PComponent at index 0 must contain at least one PRoute");
       });
     });
 
@@ -68,16 +70,16 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PRoute : n/a : PRoute at index 0 of PComponent core must define a path');
+            'PRoute : missing id : at index 0 of PComponent core must define a path');
         expect(messages[1].toString(),
-            "PRoute : n/a : PRoute at index 0 of PComponent core must define a page");
+            "PRoute : missing id : at index 0 of PComponent core must define a page");
       });
     });
 
     group('PPage validation', () {
       test('Must have pageType and title', () {
         // given
-        final component = PScript(components: [
+        final component = PScript(isStatic: Triple.yes, components: [
           PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])
         ]);
         // when
@@ -85,19 +87,19 @@ void main() {
         // then
 
         expect(messages.length, 2);
-        expect(messages[0].toString(), 'PPage : n/a : PPage at PRoute /home must define a title');
+        expect(messages[0].toString(), 'PPage : missing id : PPage at route /home must define a title');
         expect(
-            messages[1].toString(), 'PPage : n/a : PPage at PRoute /home must define a pageType');
+            messages[1].toString(), 'PPage : missing id : PPage at route /home must define a pageType');
       });
 
       test('No errors', () {
         // given
-        final component = PScript(components: [
+        final component = PScript(backend: PBackend(), components: [
           PComponent(name: 'core', routes: [
             PRoute(
                 path: "/home",
                 page: PPage(
-                    pageType: "mine", title: "Wiggly", dataSource: PDataGet(id: DocumentId())))
+                    pageType: "mine", title: "Wiggly", dataSource: PDataGet(documentId: DocumentId())))
           ])
         ]);
         // when
@@ -137,7 +139,7 @@ void main() {
                     pageType: "mine",
                     title: "Wiggly",
                     dataSource: PDataGet(
-                      id: DocumentId(),
+                      documentId: DocumentId(),
                     ),
                   ),
                 )
@@ -146,7 +148,8 @@ void main() {
           ],
         );
 
-        final withoutDataSource = PScript(backend: PBackend(),
+        final withoutDataSource = PScript(
+          backend: PBackend(),
           components: [
             PComponent(
               name: 'core',
@@ -163,7 +166,8 @@ void main() {
           ],
         );
 
-        final withDataSourceAndBackend = PScript(backend: PBackend(),
+        final withDataSourceAndBackend = PScript(
+          backend: PBackend(),
           components: [
             PComponent(
               name: 'core',
@@ -174,7 +178,7 @@ void main() {
                     pageType: "mine",
                     title: "Wiggly",
                     dataSource: PDataGet(
-                      id: DocumentId(),
+                      documentId: DocumentId(),
                     ),
                   ),
                 )
@@ -187,12 +191,137 @@ void main() {
         final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
         final withoutBackendResults = withoutBackend.validate();
         final withoutDataSourceResults = withoutDataSource.validate();
-        final withDataSourceAndBackendResults=withDataSourceAndBackend.validate();
+        final withDataSourceAndBackendResults = withDataSourceAndBackend.validate();
         // then
 
-        expect(withoutDataSourceOrBackendResults.length,2);
+        expect(withoutDataSourceOrBackendResults.length, 2);
+        expect(withoutDataSourceOrBackendResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a backend defined');
+        expect(withoutDataSourceOrBackendResults[1].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a dataSource defined');
         expect(withoutBackendResults.length, 1);
+        expect(withoutBackendResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a backend defined');
         expect(withoutDataSourceResults.length, 1);
+        expect(withoutDataSourceResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a dataSource defined');
+        expect(withDataSourceAndBackendResults.length, 0);
+      });
+    });
+
+    group('PPanel validation', () {
+      test('No errors', () {
+        // given
+        final component = PScript(backend: PBackend(),components: [
+          PComponent(name: 'core', routes: [
+            PRoute(
+              path: "/home",
+              page: PPage(
+                pageType: "mine",
+                title: "Wiggly",
+                dataSource: PDataGet(
+                  documentId: DocumentId(),
+                ),
+                content: [PPanel()],
+              ),
+            )
+          ])
+        ]);
+        // when
+        final messages = component.validate();
+        // then
+
+        expect(messages.length, 0);
+      });
+
+      test('any non-static PPanel must be able to access DataSource and Backend', () {
+        // given
+        final withoutDataSourceOrBackend = PScript(
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",content: [PPanel(caption: 'panel1')],
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+
+        final withoutBackend = PScript(
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                    dataSource: PDataGet(
+                      documentId: DocumentId(),
+                    ),content: [PPanel(caption: 'panel1')],
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+
+        final withoutDataSource = PScript(
+          backend: PBackend(),
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                    content: [PPanel(caption: 'panel1')],),
+                )
+              ],
+            )
+          ],
+        );
+
+        final withDataSourceAndBackend = PScript(
+          backend: PBackend(),
+          components: [
+            PComponent(
+              name: 'core',
+              routes: [
+                PRoute(
+                  path: "/home",
+                  page: PPage(
+                    pageType: "mine",
+                    title: "Wiggly",
+                    dataSource: PDataGet(
+                      documentId: DocumentId(),
+                    ),content: [PPanel(caption: 'panel1')],
+                  ),
+                )
+              ],
+            )
+          ],
+        );
+
+        // when
+        final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
+        final withoutBackendResults = withoutBackend.validate();
+        final withoutDataSourceResults = withoutDataSource.validate();
+        final withDataSourceAndBackendResults = withDataSourceAndBackend.validate();
+        // then
+
+        expect(withoutDataSourceOrBackendResults.length, 4, reason: 'PPage will still fail validation');
+        expect(withoutDataSourceOrBackendResults[2].toString(), 'PPanel : panel1 : must either be static or have a backend defined');
+        expect(withoutDataSourceOrBackendResults[3].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
+        expect(withoutBackendResults.length, 2);
+        expect(withoutBackendResults[1].toString(), 'PPanel : panel1 : must either be static or have a backend defined');
+        expect(withoutDataSourceResults.length, 2);
+        expect(withoutDataSourceResults[1].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
         expect(withDataSourceAndBackendResults.length, 0);
       });
     });

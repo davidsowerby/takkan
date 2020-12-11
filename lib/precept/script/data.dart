@@ -19,7 +19,7 @@ part 'data.g.dart';
 //// Should not be instantiated directly - it would be abstract if that would work with JSON serialization
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDataSource  {
+class PDataSource extends PreceptItem {
 
   PDataSource({this.params}) ;
 
@@ -38,9 +38,9 @@ class PDataSource  {
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PDataGet extends PDataSource {
-  final DocumentId id;
+  final DocumentId documentId;
 
-   PDataGet({@required this.id, @required Map<String, dynamic> params})
+   PDataGet({@required this.documentId, @required Map<String, dynamic> params})
       : super(params: params);
 
   factory PDataGet.fromJson(Map<String, dynamic> json) =>
@@ -49,11 +49,10 @@ class PDataGet extends PDataSource {
   Map<String, dynamic> toJson() => _$PDataGetToJson(this);
   @override
   void validate( List<ValidationMessage> messages, int pass) {
-    if (id == null ) {
+    if (documentId == null ) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: 'n/a',
-          msg: "PDataGet must define an id"));
+          item: this,
+          msg: "PDataGet must define a documentId"));
     }
   }
 }

@@ -32,7 +32,9 @@ class PScript extends PCommon {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id = 'script',
   }) : super(
+          id: id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -62,10 +64,7 @@ class PScript extends PCommon {
     final List<ValidationMessage> messages = List();
 
     if (components == null || components.length == 0) {
-      messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: "n/a",
-          msg: "A PScript instance must contain at least one component"));
+      messages.add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       var index = 0;
       for (var component in components) {
@@ -91,22 +90,23 @@ class PScript extends PCommon {
 
 class ValidationMessage {
   final String type;
-  final String name;
+  final String itemId;
   final String msg;
 
-  ValidationMessage({@required Type type, @required this.name, @required this.msg})
-      : type = type.toString();
+  ValidationMessage({@required PreceptItem item, @required this.msg})
+      : type = item.runtimeType.toString(),
+        itemId = item.id;
 
   @override
   String toString() {
-    return "$type : $name : $msg";
+    return "$type : $itemId : $msg";
   }
 }
 
 ///
 /// Holds common properties for every level of a [PScript], and its main purpose is to reduce manual configuration.
 ///
-/// With the exception of [controlEdit] (described below), these properties are used to construct companion Widgets
+/// With the exception of [controlEdit] and[documentId] (described below), these properties are used to construct companion Widgets
 /// in the [Widget Tree](https://www.preceptblog.co.uk/user-guide/widget-tree.html) as part of the build process.
 /// In conjunction with Flutter and Provider, the resulting Widgets work on the basis of 'inheritance' - that is,
 /// a higher level setting is used by all lower levels, unless overridden by a lower level setting.
@@ -133,7 +133,9 @@ class ValidationMessage {
 /// from the combination of [controlEdit] settings at different levels, and determines whether
 /// a [Page], [Panel] or [Part] can trigger an edit.  It also determines whether there is an associated [EditState] as shown in
 /// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
-
+///
+/// - [documentId] combined with [itemId] are used to identify the item during validation, where no caption or title is defined.  It is also
+/// used as a key in the corresponding, constructed Widget to aid functional testing.
 ///
 /// **NOTE** Calls to any of the getters will fail unless [init] has been called first, because the [_parent] property
 /// is set only after a [init] call.  Unfortunately there seems to be no way to
@@ -141,7 +143,7 @@ class ValidationMessage {
 ///
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PDataSourceConverter()
-class PCommon {
+class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon _parent;
   Triple _isStatic;
@@ -163,11 +165,13 @@ class PCommon {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
   })  : _isStatic = isStatic,
         _backend = backend,
         _dataSource = dataSource,
         _panelStyle = panelStyle,
-        _writingStyle = writingStyle;
+        _writingStyle = writingStyle,
+        super(itemId: id);
 
   Triple get isStatic => (_isStatic == Triple.inherited) ? parent.isStatic : _isStatic;
 
@@ -258,6 +262,19 @@ class PCommon {
   }
 }
 
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PreceptItem {
+  final String itemId;
+
+  const PreceptItem({this.itemId});
+
+  factory PreceptItem.fromJson(Map<String, dynamic> json) => _$PreceptItemFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PreceptItemToJson(this);
+
+  String get id => itemId ?? 'missing id';
+}
+
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PPartMapConverter()
 class PComponent extends PCommon {
@@ -274,7 +291,9 @@ class PComponent extends PCommon {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
   }) : super(
+          id: name ?? id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -290,15 +309,11 @@ class PComponent extends PCommon {
   validate(List<ValidationMessage> messages, int index) {
     if (name == null || name.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: 'n/a',
-          msg: "PComponent at index $index must have a name defined"));
+          item: this, msg: "PComponent at index $index must have a name defined"));
     }
     if (routes == null || routes.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: (name == null || name.isEmpty) ? 'n/a' : name,
-          msg: "PComponent at index $index must contain at least one PRoute"));
+          item: this, msg: "PComponent at index $index must contain at least one PRoute"));
     } else {
       int index = 0;
       for (var route in routes) {
@@ -343,18 +358,14 @@ class PRoute extends PCommon {
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 
   validate(PComponent parent, List<ValidationMessage> messages, int index) {
-    final parentName = parent.name ?? 'unnamed';
+    final parentName = parent.itemId;
     if (path == null || path.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: 'n/a',
-          msg: "PRoute at index $index of PComponent $parentName must define a path"));
+          item: this, msg: "at index $index of PComponent $parentName must define a path"));
     }
     if (page == null) {
       messages.add(ValidationMessage(
-          type: this.runtimeType,
-          name: path ?? 'n/a',
-          msg: "PRoute at index $index of PComponent $parentName must define a page"));
+          item: this, msg: "at index $index of PComponent $parentName must define a page"));
     } else {
       page.validate(messages);
     }
@@ -391,14 +402,15 @@ class PPage extends PCommon {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
   }) : super(
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          panelStyle: panelStyle,
-          writingStyle: writingStyle,
-          controlEdit: controlEdit,
-        );
+            isStatic: isStatic,
+            backend: backend,
+            dataSource: dataSource,
+            panelStyle: panelStyle,
+            writingStyle: writingStyle,
+            controlEdit: controlEdit,
+            id: title ?? id);
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -407,28 +419,38 @@ class PPage extends PCommon {
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
   void validate(List<ValidationMessage> messages) {
-    final pageId = "PPage at PRoute ${parent.path ?? 'n/a'}";
+    final routePath = parent.path;
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType, name: pageType ?? 'n/a', msg: "$pageId must define a title"));
+        item: this,
+        msg: "PPage at route $routePath must define a title",
+      ));
     }
     if (pageType == null || pageType.isEmpty) {
       messages.add(ValidationMessage(
-          type: this.runtimeType, name: pageType ?? 'n/a', msg: "$pageId must define a pageType"));
+        item: this,
+        msg: "PPage at route $routePath must define a pageType",
+      ));
     }
 
     if (isStatic != Triple.yes) {
       if (backend == null) {
         messages.add(ValidationMessage(
-            type: this.runtimeType,
-            name: pageType ?? 'n/a',
-            msg: "$pageId must either be static or have a backend defined"));
+            item: this,
+            msg: "PPage at route $routePath must either be static or have a backend defined"));
       }
-      if (dataSource==null){
+      if (dataSource == null) {
         messages.add(ValidationMessage(
-            type: this.runtimeType,
-            name: pageType ?? 'n/a',
-            msg: "$pageId must either be static or have a dataSource defined"));
+            item: this,
+            msg: "PPage at route $routePath must either be static or have a dataSource defined"));
+      }
+    }
+    for (var element in content) {
+      if (element is PPanel) {
+        element.validate(messages);
+      }
+      if (element is PPart){
+        element.validate(messages);
       }
     }
   }
@@ -482,7 +504,9 @@ class PPanel extends PCommon implements DisplayElement {
     PanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
   }) : super(
+          id: id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -497,6 +521,21 @@ class PPanel extends PCommon implements DisplayElement {
     for (var element in content) {
       final entry = element as PCommon;
       entry.doInit(this);
+    }
+  }
+
+  String get id => caption ?? itemId;
+
+  void validate(List<ValidationMessage> messages) {
+    if (isStatic != Triple.yes) {
+      if (backend == null) {
+        messages.add(
+            ValidationMessage(item: this, msg: "must either be static or have a backend defined"));
+      }
+      if (dataSource == null) {
+        messages.add(ValidationMessage(
+            item: this, msg: "must either be static or have a dataSource defined"));
+      }
     }
   }
 }

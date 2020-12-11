@@ -41,8 +41,10 @@ class PPart<T> extends PCommon implements DisplayElement {
       PanelStyle panelStyle,
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+      String id,
       this.tooltip})
       : super(
+          id: caption ?? id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -55,4 +57,6 @@ class PPart<T> extends PCommon implements DisplayElement {
 
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
+
+  void validate(List<ValidationMessage> messages) {}
 }

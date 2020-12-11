@@ -17,7 +17,7 @@ void main() {
       // given
       PDataSourceConverter converter = PDataSourceConverter();
       PDataGet g = PDataGet(
-        id: DocumentId(
+        documentId: DocumentId(
           path: "user/prefs",
           itemId: "23",
         ),

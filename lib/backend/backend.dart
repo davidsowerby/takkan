@@ -30,7 +30,7 @@ class Backend {
   ///
   /// Throws an [APIException] if not found
   Future<Data> get({@required PDataGet config}) {
-    return backendDelegate.get(documentId: config.id);
+    return backendDelegate.get(documentId: config.documentId);
   }
 
   /// Returns a Stream of [Data] identified by [documentId]
