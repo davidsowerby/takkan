@@ -8,7 +8,6 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/script/help.dart';
-import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/script/style.dart';
 import 'package:precept_client/precept/script/themeLookup.dart';
 import 'package:provider/provider.dart';
@@ -187,58 +186,7 @@ class HeadingExpandCloseAction extends StatelessWidget {
   }
 }
 
-class SectionHeading extends StatelessWidget {
-  final PPanelHeading config;
-  final PHelp help;
-  final Widget child;
-  final List<Widget> readModeActions;
-  final List<Widget> editModeActions;
-  final List<Widget> canEditActions;
-  final List<Widget> cannotEditActions;
-  final bool showEditIcon;
 
-  const SectionHeading({
-    Key key,
-    @required this.config,
-    this.showEditIcon = true,
-    this.readModeActions = const [],
-    this.editModeActions = const [],
-    this.canEditActions = const [],
-    this.cannotEditActions = const [],
-    this.help,
-    @required this.child,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final sectionState = Provider.of<EditState>(context);
-    return Heading(headingStyle: config.style,
-      showEditIcon: showEditIcon,
-      help: help,
-      readModeActions: readModeActions,
-      editModeActions: editModeActions,
-      canEditActions: canEditActions,
-      cannotEditActions: cannotEditActions,
-      openExpanded: config.openExpanded,
-      child: child,
-      editable: (!config.canEdit) ? false : sectionState.canEdit,
-      expandable: config.expandable,
-      headingText: config.title,
-      onSave: save,
-      onEdit: edit,
-    );
-  }
-
-  edit(BuildContext context) {
-    final EditState sectionState = Provider.of<EditState>(context, listen: false);
-    sectionState.readOnlyMode = false;
-  }
-
-  save(BuildContext context) {
-    final EditState sectionState = Provider.of<EditState>(context, listen: false);
-    sectionState.readOnlyMode = true;
-  }
-}
 
 class HelpButton extends StatelessWidget with Interpolator {
   final PHelp help;

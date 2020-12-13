@@ -29,7 +29,7 @@ class PScript extends PCommon {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id = 'script',
@@ -154,7 +154,7 @@ class PCommon extends PreceptItem {
   @JsonKey(nullable: true, includeIfNull: false)
   PDataSource _dataSource;
   @JsonKey(nullable: true, includeIfNull: false)
-  PanelStyle _panelStyle;
+  PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
   WritingStyle _writingStyle;
 
@@ -162,7 +162,7 @@ class PCommon extends PreceptItem {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
@@ -288,7 +288,7 @@ class PComponent extends PCommon {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
@@ -344,7 +344,7 @@ class PRoute extends PCommon {
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
@@ -399,7 +399,7 @@ class PPage extends PCommon {
     this.content = const [],
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
@@ -467,6 +467,14 @@ class PPage extends PCommon {
       }
     }
   }
+
+  /// [backend] is always considered 'declared' by the page, even when actually declared by something above it.
+  /// This is because a page is the first level to be actually built into the Widget tree
+  bool get backendIsDeclared => true;
+
+  /// [dataSource] is always considered 'declared' by the page, even when actually declared by something above it.
+  /// This is because a page is the first level to be actually built into the Widget tree
+  bool get dataSourceIsDeclared => true;
 }
 
 enum PageType { standard }
@@ -486,6 +494,7 @@ class PPanel extends PCommon implements DisplayElement {
   final bool scrollable;
   final PHelp help;
   final String property;
+  final PPanelStyle style;
 
   factory PPanel.fromJson(Map<String, dynamic> json) => _$PPanelFromJson(json);
 
@@ -498,10 +507,11 @@ class PPanel extends PCommon implements DisplayElement {
     this.caption,
     this.scrollable = false,
     this.help,
+    this.style=const PPanelStyle(),
     Triple isStatic = Triple.inherited,
     PBackend backend,
     PDataSource dataSource,
-    PanelStyle panelStyle,
+    PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,

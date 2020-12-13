@@ -68,7 +68,7 @@ class PreceptRouter {
   /// If [PageBuilder] throws an exception - perhaps because there is no matching key in the [PageLibrary], an error page is returned.
   Route<dynamic> _route(PRoute route) {
     try {
-      final pageWidget = PageBuilder().build(config: route);
+      final pageWidget = PageBuilder().build(config: route.page);
       return MaterialPageRoute(builder: (_) => pageWidget);
     } catch (e) {
       final errorPageWidget = pageLibrary.errorPage(PError(message: "Page '${route.page

@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
-import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
@@ -63,7 +62,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
     } else {
       return ChangeNotifierProvider<EditState>(
           create: (_) => EditState(),
-          child: SectionHeading(config: config.heading, help: config.help, child: body));
+          child: null);
     }
   }
 }

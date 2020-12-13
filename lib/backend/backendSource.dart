@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_client/precept/script/backend.dart';
 
-class Backend with ChangeNotifier {
+class BackendSource with ChangeNotifier{
   final PBackend config;
 
-  Backend({this.config});
+  BackendSource({@required this.config});
+
+
 }

@@ -3,12 +3,15 @@ import 'package:json_annotation/json_annotation.dart';
 part 'panelStyle.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PanelStyle  {
+class PPanelStyle  {
 
-  PanelStyle() ;
+  final bool expandable;
+  final bool openExpanded;
 
-  factory PanelStyle.fromJson(Map<String, dynamic> json) =>
-      _$PanelStyleFromJson(json);
+  const PPanelStyle({this.expandable=true, this.openExpanded=true, }) ;
 
-  Map<String, dynamic> toJson() => _$PanelStyleToJson(this);
+  factory PPanelStyle.fromJson(Map<String, dynamic> json) =>
+      _$PPanelStyleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PPanelStyleToJson(this);
 }

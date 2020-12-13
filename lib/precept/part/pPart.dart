@@ -38,7 +38,7 @@ class PPart<T> extends PCommon implements DisplayElement {
       this.help,
       PBackend backend,
       PDataSource dataSource,
-      PanelStyle panelStyle,
+      PPanelStyle panelStyle,
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
       String id,

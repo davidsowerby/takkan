@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/backend/backendHandler.dart';
 import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/script/script.dart';
 
 part 'backend.g.dart';
 
 
-/// Configuration for a [Backend]
+/// Configuration for a [BackendHandler]
 ///
 /// - [backendType] is used as a key to lookup from the [BackendLibrary]. Unless you change the defaults,
 /// 'mock' is always available
