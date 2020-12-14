@@ -1,52 +1,63 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/part/options/options.dart';
-import 'package:precept_client/precept/part/pPart.dart';
+import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
-import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/data.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/part/options.dart';
+import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
+
+import '../../helper/mock.dart';
 
 void main() {
   group('PartBuilder build', () {
     testWidgets('build - static', (WidgetTester tester) async {
       // given
       partLibrary.init();
-      final script =
-          PScript(backend: PBackend(), isStatic: Triple.yes, dataSource: PDataSource(), components: [
-        PComponent(
-          routes: [
-            PRoute(
-              path: null,
-              page: PPage(
-                content: [
-                  PPanel(
-                    controlEdit: ControlEdit.thisOnly,
+      final script = PScript(
+          backend: PBackend(),
+          isStatic: Triple.yes,
+          dataSource: PDataSource(),
+          components: [
+            PComponent(
+              routes: [
+                PRoute(
+                  path: null,
+                  page: PPage(
                     content: [
-                      PString(staticData: "static text"),
+                      PPanel(
+                        controlEdit: ControlEdit.thisOnly,
+                        content: [
+                          PString(staticData: "static text"),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                )
+              ],
             )
-          ],
-        )
-      ]);
+          ]);
       final component = script.components[0];
       final route = component.routes[0];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
+
+      BuildContext context = MockBuildContext();
       // when
       script.init();
       // when
-      final StringPart b = PartBuilder().build(callingType: PString,config:part);
+      final StringPart b =
+          PartBuilder().build(context: context, callingType: PString, config: part);
       // simulate higher level to enable inflate
       final cnp = Directionality(textDirection: TextDirection.ltr, child: b);
       // then
@@ -93,24 +104,32 @@ void main() {
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
+
+      BuildContext context = MockBuildContext();
       // when
       script.init();
       // when
-      final StringPart b = PartBuilder().build(callingType:PString, config: part);
+      // final StringPart b = PartBuilder().build(context:context,callingType:PString, config: part);
       // simulate higher level to enable inflate
       final testTree = Directionality(
           textDirection: TextDirection.ltr,
-          child: ChangeNotifierProvider<DataBinding>(
-            create: (_) => DataBinding(binding: rootBinding),
-            child: ChangeNotifierProvider<EditState>(
-              create: (_) => EditState(),
-              child: b,
+          child: ChangeNotifierProvider<DataSource>(create: (_)=> DataSource(config: script.dataSource, canEdit: true,readOnlyMode: false),
+            child: ChangeNotifierProvider<DataBinding>(
+              create: (_) => DataBinding(binding: rootBinding),
+              child: ChangeNotifierProvider<EditState>(
+                create: (_) => EditState(),
+                child: ChangeNotifierProvider<PanelState>(
+                    create: (_) => PanelState(config: panel),
+                    child: Panel(
+                      config: panel,
+                    )),
+              ),
             ),
           ));
       // then
 
       await tester.pumpWidget(testTree);
-      expect(b, isA<StringPart>(), reason: 'Not controlling edit, refer to higher EditState');
+      // expect(b, isA<StringPart>(), reason: 'Not controlling edit, refer to higher EditState');
       final widgetList = tester.allWidgets.toList();
       expect(widgetList[7], isA<Text>());
       Text t = widgetList[7];
@@ -152,7 +171,8 @@ void main() {
       // when
       script.init();
       // when
-      final ChangeNotifierProvider<EditState> b = PartBuilder().build(callingType:PString, config:part);
+      final ChangeNotifierProvider<EditState> b =
+          PartBuilder().build(callingType: PString, config: part);
       // simulate higher level to enable inflate
       final testTree = Directionality(
           textDirection: TextDirection.ltr,

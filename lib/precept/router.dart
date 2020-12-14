@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/common/logger.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
-import 'package:precept_client/precept/script/error.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/script/error.dart';
+import 'package:precept_script/script/script.dart';
 
 
 /// Router for Precept.

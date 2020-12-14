@@ -402,7 +402,7 @@ packages:
     source: hosted
     version: "3.5.0"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       url: "https://pub.dartlang.org"
@@ -506,10 +506,24 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0-nullsafety.2"
+  precept_backend:
+    dependency: transitive
+    description:
+      path: "../precept_backend"
+      relative: true
+    source: path
+    version: "0.0.1"
   precept_mock_backend:
     dependency: "direct main"
     description:
       path: "../precept_mock_backend"
+      relative: true
+    source: path
+    version: "0.0.1"
+  precept_script:
+    dependency: transitive
+    description:
+      path: "../precept_script"
       relative: true
     source: path
     version: "0.0.1"

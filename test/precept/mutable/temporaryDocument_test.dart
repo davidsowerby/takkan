@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept_client/backend/backendHandler.dart';
+import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';

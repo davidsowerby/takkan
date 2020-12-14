@@ -1,5 +1,5 @@
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/common/logger.dart';
+import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/logger.dart';
 
 abstract class LibraryModule<KEY, VALUE, CONFIG> {
   Map<KEY, VALUE Function(CONFIG)> get mappings;

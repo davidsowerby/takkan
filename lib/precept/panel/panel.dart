@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/backend/backendHandler.dart';
-import 'package:precept_client/backend/data.dart';
+import 'package:precept_backend/backend/data.dart';
+import 'package:precept_backend/backend/delegate.dart';
+import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/script/help.dart';
-import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/script/themeLookup.dart';
+import 'package:precept_script/script/help.dart';
+import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 class Panel extends StatelessWidget {
@@ -23,32 +25,60 @@ class Panel extends StatelessWidget {
       return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
     } else {
       final DataSource dataSource = Provider.of<DataSource>(context);
-      final BackendHandler backend = Provider.of<BackendHandler>(context);
-      return StreamBuilder<Data>(
-          stream: backend.getStream(documentId: null),
-          initialData: Data(data: {}),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return Center(
-                  child: Text('No connection'),
-                );
-              case ConnectionState.waiting:
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              case ConnectionState.active:
-                return activeBuilder(context, dataSource, snapshot.data, panelState);
-              case ConnectionState.done:
-                return Center(
-                  child: Text("Connection closed"),
-                );
-              default:
-                return null; // unreachable
-            }
-          });
+      // final Backend backend = Provider.of<Backend>(context);
+      final backend = Backend(config: config.backend);
+      switch (dataSource.config.runtimeType) {
+        case PDataGet:
+          return futureBuilder(backend.get(config: dataSource.config), dataSource, panelState);
+        case PDataStream:
+          return streamBuilder(backend, dataSource, panelState);
+      }
     }
+  }
+
+  Widget futureBuilder(Future<Data> future, DataSource dataSource, PanelState panelState) {
+    return FutureBuilder<Data>(
+      future: future,
+      builder: (context, snapshot) {
+        if (snapshot.hasData){
+          dataSource.updateData(snapshot.data.data);
+          return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+        }else if (snapshot.hasError){
+          final APIException error=snapshot.error;
+          return Text('Error in Future ${error.message}');
+        }else{
+          return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+        }
+      },
+    );
+  }
+
+  Widget streamBuilder(
+      Backend backend, DataSource dataSource, PanelState panelState) {
+    return StreamBuilder<Data>(
+        stream: backend.getStream(documentId: null),
+        initialData: Data(data: {}),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              return Center(
+                child: Text('No connection'),
+              );
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.active:
+              return activeBuilder(context, dataSource, snapshot.data, panelState);
+            case ConnectionState.done:
+              return Center(
+                child: Text("Connection closed"),
+              );
+            default:
+              return null; // unreachable
+          }
+        });
   }
 
   /// Called when the Stream is active.
@@ -63,7 +93,7 @@ class Panel extends StatelessWidget {
 
   Widget _buildExpanded(BuildContext context) {
     return Column(
-      children: [_buildHeader(), PanelBuilder().buildContent(config: config)],
+      children: [_buildHeader(), PanelBuilder().buildContent(context: context, config: config)],
     );
   }
 

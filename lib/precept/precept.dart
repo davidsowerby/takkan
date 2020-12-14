@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_client/backend/backendHandler.dart';
-import 'package:precept_client/common/logger.dart';
+import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_client/precept/library/panelLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
-import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/router.dart';
-import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/error.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/error.dart';
+import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/script.dart';
 
 /// Loads the Precept models and initialises various parts of Precept
 ///

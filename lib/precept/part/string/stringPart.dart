@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_client/common/writingStyle.dart';
 import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/panel/panelStyle.dart';
-import 'package:precept_client/precept/part/options/options.dart';
-import 'package:precept_client/precept/part/pPart.dart';
 import 'package:precept_client/precept/part/part.dart';
-import 'package:precept_client/precept/script/backend.dart';
-import 'package:precept_client/precept/script/data.dart';
-import 'package:precept_client/precept/script/help.dart';
-import 'package:precept_client/precept/script/script.dart';
 import 'package:precept_client/precept/widget/caption.dart';
+import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/script.dart';
 
-part 'stringPart.g.dart';
 
 enum DisplayType { text, datePicker }
 
@@ -87,44 +79,4 @@ class StringPart extends Part {
   }
 }
 
-///
-/// - [property],[isStatic],[staticData], [caption],[tooltip],[help] - see [PPart]
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PString extends PPart {
-  final PReadModeOptions readModeOptions;
-  final PEditModeOptions editModeOptions;
 
-  PString({
-    String property,
-    String caption,
-    Triple isStatic = Triple.inherited,
-    String staticData,
-    String tooltip,
-    PHelp help,
-    PBackend backend,
-    PDataSource dataSource,
-    PPanelStyle panelStyle,
-    WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
-    String id,
-    this.readModeOptions = const PReadModeOptions(),
-    this.editModeOptions = const PEditModeOptions(),
-  }) : super(
-            id: caption ?? id,
-            caption: caption,
-            property: property,
-            isStatic: isStatic,
-            backend: backend,
-            dataSource: dataSource,
-            panelStyle: panelStyle,
-            writingStyle: writingStyle,
-            controlEdit: controlEdit,
-            staticData: staticData,
-            help: help,
-            tooltip: tooltip);
-
-  factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
-
-  @override
-  Map<String, dynamic> toJson() => _$PStringToJson(this);
-}

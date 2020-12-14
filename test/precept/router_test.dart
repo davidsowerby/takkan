@@ -1,6 +1,6 @@
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/router.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
 

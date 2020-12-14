@@ -1,6 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/backend/backend.dart';
-import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/precept/binding/binding.dart';
@@ -9,9 +7,9 @@ import 'package:precept_client/precept/library/panelLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
-import 'package:precept_client/precept/part/pPart.dart';
-import 'package:precept_client/precept/script/element.dart';
-import 'package:precept_client/precept/script/script.dart';
+import 'package:precept_script/script/element.dart';
+import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 /// Creates companion Widgets according to the settings of [config]
@@ -29,16 +27,12 @@ mixin CommonBuilder {
         child: ChangeNotifierProvider<DataBinding>(
             create: (_) => DataBinding(binding: dataSource.rootBinding), child: widget),
       );
+    } else {
+      return widget;
     }
-    return widget;
   }
 
-  Widget addBackend({@required Widget widget, @required PCommon config}) {
-    return config.backendIsDeclared
-        ? ChangeNotifierProvider<Backend>(
-            create: (_) => Backend(config: config.backend), child: widget)
-        : widget;
-  }
+
 }
 
 /// Returns [widget] wrapped in [EditState] if [config.hasEditControl]
@@ -48,20 +42,21 @@ Widget addEditControl({@required Widget widget, @required PCommon config}) {
       : widget;
 }
 
-Widget addDataBinding(
-    {@required BuildContext context,
-    @required Widget widget,
-    @required PCommon config,
-    @required String property}) {
-  return (config.isStatic == Triple.yes)
-      ? widget
-      : () {
-          final parentBinding = Provider.of<DataBinding>(context, listen: false);
-          widget = ChangeNotifierProvider<DataBinding>(
-              create: (_) =>
-                  DataBinding(binding: parentBinding.binding.modelBinding(property: property)),
-              child: widget);
-        };
+Widget addDataBinding({@required BuildContext context,
+  @required Widget widget,
+  @required PCommon config,
+  @required String property}) {
+  if (config.isStatic == Triple.yes) {
+    return widget;
+  } else {
+    final parentBinding = Provider.of<DataBinding>(context, listen: false);
+    widget = ChangeNotifierProvider<DataBinding>(
+        create: (_) =>
+            DataBinding(binding: (property.isEmpty) ? parentBinding.binding : parentBinding.binding
+                .modelBinding(property: property)),
+        child: widget);
+    return widget;
+  };
 }
 
 Widget assembleContent(
@@ -96,7 +91,6 @@ class PartBuilder with CommonBuilder {
       property: config.property,
     );
     widget = addDataSource(widget: widget, config: config);
-    widget = addBackend(widget: widget, config: config);
     return widget;
   }
 }
@@ -105,7 +99,7 @@ class PartBuilder with CommonBuilder {
 /// To work with Precept. the page must be [registered with the library](https://www.preceptblog.co.uk/user-guide/libraries.html#registering-with-a-library)
 class PageBuilder with CommonBuilder {
   /// Assembles the page with [companion widgets](see https://www.preceptblog.co.uk/user-guide/widget-tree.html).
-  /// Unless it is static, a page always creates a [Backend], [DataSource] and [DataBinding].
+  /// Unless it is static, a page always creates a [DataSource] and [DataBinding].
   /// This is because it is the first level of Widgets produces by the Precept build process, but may not be
   /// as efficient as it could be, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/22)
   ///
@@ -113,9 +107,8 @@ class PageBuilder with CommonBuilder {
   /// Throws a [PreceptException] on failure
   Widget build({@required PPage config}) {
     Widget widget = pageLibrary.find(config.pageType, config);
-    widget=addEditControl(widget: widget, config: config);
+    widget = addEditControl(widget: widget, config: config);
     widget = addDataSource(widget: widget, config: config);
-    widget = addBackend(widget: widget, config: config);
     return widget;
   }
 
@@ -127,9 +120,9 @@ class PageBuilder with CommonBuilder {
 
 class PanelBuilder with CommonBuilder {
   Widget build({@required BuildContext context, @required PPanel config}) {
-    final panelWidget = panelLibrary.find(config.runtimeType, config);
-    Widget widget = ChangeNotifierProvider<PanelState>(
-        create: (_) => PanelState(config: config), child: panelWidget);
+    Widget widget = panelLibrary.find(config.runtimeType, config);
+    widget = ChangeNotifierProvider<PanelState>(
+        create: (_) => PanelState(config: config), child: widget);
     widget = addEditControl(widget: widget, config: config);
     widget = addDataBinding(
       context: context,
@@ -138,7 +131,6 @@ class PanelBuilder with CommonBuilder {
       property: config.property,
     );
     widget = addDataSource(widget: widget, config: config);
-    widget = addBackend(widget: widget, config: config);
     return widget;
   }
 

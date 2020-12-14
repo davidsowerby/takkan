@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/precept/schema/schema.dart';
+import 'package:precept_script/common/exception.dart';
 
 class SElementMapConverter implements JsonConverter<Map<String, SElement>, Map<String, dynamic>> {
   const SElementMapConverter();
