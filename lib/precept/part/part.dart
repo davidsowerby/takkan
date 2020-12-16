@@ -41,7 +41,7 @@ abstract class Part extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (config.isStatic==Triple.yes) {
+    if (config.isStatic==IsStatic.yes) {
       return buildReadOnlyWidget(context, null);
     }
     final DataBinding dataBinding = Provider.of<DataBinding>(context,listen: false);

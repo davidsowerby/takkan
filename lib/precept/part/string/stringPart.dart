@@ -17,14 +17,14 @@ class StringPart extends Part {
   const StringPart({bool isStatic = false, @required PString config}) : super(config: config);
 
   Widget buildReadOnlyWidget(BuildContext context, ModelBinding baseBinding) {
-    final text = Text((config.isStatic == Triple.yes)
+    final text = Text((config.isStatic == IsStatic.yes)
         ? config.staticData
         : _textFromBinding(baseBinding: baseBinding));
     final PString cfg = config as PString;
 
     // TODO: styling final style =
 // TODO: shouldn't use isStatic like this, it may want a caption still
-    if (!(config.isStatic == Triple.yes) && cfg.readModeOptions.showCaption) {
+    if (!(config.isStatic == IsStatic.yes) && cfg.readModeOptions.showCaption) {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(

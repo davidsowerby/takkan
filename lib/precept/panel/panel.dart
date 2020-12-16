@@ -21,7 +21,7 @@ class Panel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final PanelState panelState = Provider.of<PanelState>(context);
-    if (config.isStatic == Triple.yes) {
+    if (config.isStatic == IsStatic.yes) {
       return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
     } else {
       final DataSource dataSource = Provider.of<DataSource>(context);

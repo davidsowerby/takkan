@@ -46,7 +46,7 @@ Widget addDataBinding({@required BuildContext context,
   @required Widget widget,
   @required PCommon config,
   @required String property}) {
-  if (config.isStatic == Triple.yes) {
+  if (config.isStatic == IsStatic.yes) {
     return widget;
   } else {
     final parentBinding = Provider.of<DataBinding>(context, listen: false);

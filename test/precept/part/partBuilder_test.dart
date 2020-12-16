@@ -25,7 +25,7 @@ void main() {
       partLibrary.init();
       final script = PScript(
           backend: PBackend(),
-          isStatic: Triple.yes,
+          isStatic: IsStatic.yes,
           dataSource: PDataSource(),
           components: [
             PComponent(
