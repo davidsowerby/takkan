@@ -32,7 +32,7 @@ class PPart<T> extends PCommon implements DisplayElement {
       {this.caption,
       this.readOnly = false,
       this.property,
-      Triple isStatic = Triple.inherited,
+      IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
       PBackend backend,

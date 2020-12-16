@@ -79,7 +79,7 @@ void main() {
     group('PPage validation', () {
       test('Must have pageType and title', () {
         // given
-        final component = PScript(isStatic: Triple.yes, components: [
+        final component = PScript(isStatic: IsStatic.yes, components: [
           PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])
         ]);
         // when

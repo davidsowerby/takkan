@@ -20,7 +20,7 @@ void main() {
       // given
       final script =
       // ignore: missing_required_param
-          PScript(backend: PBackend(), isStatic: Triple.yes, dataSource: PDataSource(), components: [
+          PScript(backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataSource(), components: [
             // ignore: missing_required_param
         PComponent(
           routes: [
@@ -51,25 +51,25 @@ void main() {
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
-      expect(component.isStatic, Triple.yes);
+      expect(component.isStatic, IsStatic.yes);
       expect(component.backend, isNotNull);
       expect(component.dataSource, isNotNull);
 
-      expect(route.isStatic, Triple.yes);
+      expect(route.isStatic, IsStatic.yes);
       expect(route.backend, isNotNull);
       expect(route.dataSource, isNotNull);
 
-      expect(page.isStatic, Triple.yes);
+      expect(page.isStatic, IsStatic.yes);
       expect(page.backend, isNotNull);
       expect(page.dataSource, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
 
-      expect(panel.isStatic, Triple.yes);
+      expect(panel.isStatic, IsStatic.yes);
       expect(panel.backend, isNotNull);
       expect(panel.dataSource, isNotNull);
       expect(panel.controlEdit, ControlEdit.noEdit);
 
-      expect(part.isStatic, Triple.yes);
+      expect(part.isStatic, IsStatic.yes);
       expect(part.backend, isNotNull);
       expect(part.dataSource, isNotNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
@@ -108,25 +108,25 @@ void main() {
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
-      expect(component.isStatic, Triple.inherited);
+      expect(component.isStatic, IsStatic.inherited);
       expect(component.backend, isNull);
       expect(component.dataSource, isNull);
 
-      expect(route.isStatic, Triple.inherited);
+      expect(route.isStatic, IsStatic.inherited);
       expect(route.backend, isNull);
       expect(route.dataSource, isNull);
 
-      expect(page.isStatic, Triple.inherited);
+      expect(page.isStatic, IsStatic.inherited);
       expect(page.backend, isNull);
       expect(page.dataSource, isNull);
       expect(page.controlEdit, ControlEdit.notSetAtThisLevel);
 
-      expect(panel.isStatic, Triple.inherited);
+      expect(panel.isStatic, IsStatic.inherited);
       expect(panel.backend, isNull);
       expect(panel.dataSource, isNull);
       expect(panel.controlEdit, ControlEdit.notSetAtThisLevel);
 
-      expect(part.isStatic, Triple.inherited);
+      expect(part.isStatic, IsStatic.inherited);
       expect(part.backend, isNull);
       expect(part.dataSource, isNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);

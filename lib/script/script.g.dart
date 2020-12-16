@@ -11,7 +11,7 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     components: (json['components'] as List)
         .map((e) => PComponent.fromJson(e as Map<String, dynamic>))
         .toList(),
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
@@ -38,7 +38,7 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
 
   writeNotNull('backend', instance.backend?.toJson());
   writeNotNull('dataSource', instance.dataSource?.toJson());
-  val['isStatic'] = _$TripleEnumMap[instance.isStatic];
+  val['isStatic'] = _$IsStaticEnumMap[instance.isStatic];
   return val;
 }
 
@@ -63,10 +63,10 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-const _$TripleEnumMap = {
-  Triple.yes: 'yes',
-  Triple.no: 'no',
-  Triple.inherited: 'inherited',
+const _$IsStaticEnumMap = {
+  IsStatic.yes: 'yes',
+  IsStatic.no: 'no',
+  IsStatic.inherited: 'inherited',
 };
 
 const _$ControlEditEnumMap = {
@@ -86,7 +86,7 @@ PComponent _$PComponentFromJson(Map<String, dynamic> json) {
         .map((e) => PRoute.fromJson(e as Map<String, dynamic>))
         .toList(),
     name: json['name'] as String,
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
@@ -102,7 +102,7 @@ Map<String, dynamic> _$PComponentToJson(PComponent instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -124,7 +124,7 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     page: json['page'] == null
         ? null
         : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
@@ -138,7 +138,7 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PRouteToJson(PRoute instance) {
   final val = <String, dynamic>{
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -159,7 +159,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     pageType: json['pageType'] as String,
     title: json['title'] as String,
     scrollable: json['scrollable'] as bool,
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
     backend: json['backend'] == null
@@ -177,7 +177,7 @@ Map<String, dynamic> _$PPageToJson(PPage instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -208,7 +208,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     style: json['style'] == null
         ? null
         : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
@@ -223,7 +223,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PPanelToJson(PPanel instance) {
   final val = <String, dynamic>{
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -271,7 +271,7 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
 
 PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
-    isStatic: _$enumDecode(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
@@ -286,7 +286,7 @@ Map<String, dynamic> _$PCommonToJson(PCommon instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {

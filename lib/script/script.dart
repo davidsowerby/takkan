@@ -28,7 +28,7 @@ class PScript extends PCommon {
 
   PScript({
     this.components = const [],
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
@@ -58,7 +58,7 @@ class PScript extends PCommon {
   PDataSource get dataSource => _dataSource;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
-  Triple get isStatic => _isStatic;
+  IsStatic get isStatic => _isStatic;
 
   /// Validates the structure and content of the model
   List<ValidationMessage> validate() {
@@ -106,7 +106,7 @@ class PComponent extends PCommon {
   PComponent({
     this.routes = const [],
     @required this.name,
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
@@ -162,7 +162,7 @@ class PRoute extends PCommon {
   PRoute({
     @required this.path,
     @required this.page,
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
@@ -216,7 +216,7 @@ class PPage extends PCommon {
     this.pageType = 'defaultPage',
     @required this.title,
     this.scrollable = true,
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
     PBackend backend,
     PDataSource dataSource,
@@ -254,7 +254,7 @@ class PPage extends PCommon {
       ));
     }
 
-    if (isStatic != Triple.yes) {
+    if (isStatic != IsStatic.yes) {
       if (backend == null) {
         messages.add(ValidationMessage(
             item: this,
@@ -329,7 +329,7 @@ class PPanel extends PCommon implements DisplayElement {
     this.scrollable = false,
     this.help,
     this.style=const PPanelStyle(),
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
@@ -358,7 +358,7 @@ class PPanel extends PCommon implements DisplayElement {
   String get id => caption ?? itemId;
 
   void validate(List<ValidationMessage> messages) {
-    if (isStatic != Triple.yes) {
+    if (isStatic != IsStatic.yes) {
       if (backend == null) {
         messages.add(
             ValidationMessage(item: this, msg: "must either be static or have a backend defined"));
@@ -394,7 +394,7 @@ class PPanelHeading {
   Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
 }
 
-enum Triple { yes, no, inherited }
+enum IsStatic { yes, no, inherited }
 
 /// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
 /// [partsOnly] edit only at [Part] level (can be set higher up the hierarchy, even at [PScript])
@@ -460,7 +460,7 @@ enum ControlEdit {
 class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon _parent;
-  Triple _isStatic;
+  IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -473,7 +473,7 @@ class PCommon extends PreceptItem {
   WritingStyle _writingStyle;
 
   PCommon({
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
@@ -487,7 +487,7 @@ class PCommon extends PreceptItem {
         _writingStyle = writingStyle,
         super(itemId: id);
 
-  Triple get isStatic => (_isStatic == Triple.inherited) ? parent.isStatic : _isStatic;
+  IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
 

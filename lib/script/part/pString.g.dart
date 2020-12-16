@@ -10,7 +10,7 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
   return PString(
     property: json['property'] as String,
     caption: json['caption'] as String,
-    isStatic: _$enumDecodeNullable(_$TripleEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     staticData: json['staticData'] as String,
     tooltip: json['tooltip'] as String,
     help: json['help'] == null
@@ -40,7 +40,7 @@ Map<String, dynamic> _$PStringToJson(PString instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$TripleEnumMap[instance.isStatic],
+    'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -93,10 +93,10 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$TripleEnumMap = {
-  Triple.yes: 'yes',
-  Triple.no: 'no',
-  Triple.inherited: 'inherited',
+const _$IsStaticEnumMap = {
+  IsStatic.yes: 'yes',
+  IsStatic.no: 'no',
+  IsStatic.inherited: 'inherited',
 };
 
 const _$ControlEditEnumMap = {

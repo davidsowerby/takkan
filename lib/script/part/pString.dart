@@ -21,7 +21,7 @@ class PString extends PPart {
   PString({
     String property,
     String caption,
-    Triple isStatic = Triple.inherited,
+    IsStatic isStatic = IsStatic.inherited,
     String staticData,
     String tooltip,
     PHelp help,
