@@ -35,9 +35,12 @@ mixin CommonBuilder {
 
 }
 
-/// Returns [widget] wrapped in [EditState] if [config.hasEditControl]
+/// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
 Widget addEditControl({@required Widget widget, @required PCommon config}) {
-  return (config.hasEditControl)
+  if (config.isStatic==IsStatic.yes){
+    return widget;
+  }
+  return (config.hasEditControl )
       ? ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget)
       : widget;
 }
@@ -71,7 +74,7 @@ Widget assembleContent(
       child =
           PartBuilder().build(context: context, callingType: element.runtimeType, config: element);
     }
-    children.add(ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: child));
+    children.add( child);
   }
   return (scrollable) ? ListView(children: children) : Column(children: children);
 }
