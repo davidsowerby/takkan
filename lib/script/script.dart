@@ -289,13 +289,15 @@ class PPage extends PCommon {
     }
   }
 
-  /// [backend] is always considered 'declared' by the page, even when actually declared by something above it.
+  /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [backend] is always
+  /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get backendIsDeclared => true;
+   bool get backendIsDeclared => (isStatic==IsStatic.yes) ? false : true;
 
-  /// [dataSource] is always considered 'declared' by the page, even when actually declared by something above it.
+  /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [dataSource] is always
+  /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataSourceIsDeclared => true;
+  bool get dataSourceIsDeclared => (isStatic==IsStatic.yes) ? false : true;
 }
 
 enum PageType { standard }
