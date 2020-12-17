@@ -49,13 +49,13 @@ Widget addDataBinding({@required BuildContext context,
   @required Widget widget,
   @required PCommon config,
   @required String property}) {
-  if (config.isStatic == IsStatic.yes) {
+  if (config.isStatic == IsStatic.yes || config.dataSourceIsDeclared) {
     return widget;
   } else {
     final parentBinding = Provider.of<DataBinding>(context, listen: false);
     widget = ChangeNotifierProvider<DataBinding>(
         create: (_) =>
-            DataBinding(binding: (property.isEmpty) ? parentBinding.binding : parentBinding.binding
+            DataBinding(binding: (property==null || property.isEmpty) ? parentBinding.binding : parentBinding.binding
                 .modelBinding(property: property)),
         child: widget);
     return widget;
@@ -63,7 +63,7 @@ Widget addDataBinding({@required BuildContext context,
 }
 
 Widget assembleContent(
-    {@required BuildContext context, List<DisplayElement> content, bool scrollable}) {
+    {@required BuildContext context, List<PDisplayElement> content, bool scrollable}) {
   final List<Widget> children = List();
   for (var element in content) {
     Widget child;

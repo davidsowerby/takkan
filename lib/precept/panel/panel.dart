@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
@@ -32,6 +33,8 @@ class Panel extends StatelessWidget {
           return futureBuilder(backend.get(config: dataSource.config), dataSource, panelState);
         case PDataStream:
           return streamBuilder(backend, dataSource, panelState);
+        default:
+          throw ConfigurationException('Unrecognised data source type:  ${dataSource.config.runtimeType}');
       }
     }
   }
@@ -40,21 +43,20 @@ class Panel extends StatelessWidget {
     return FutureBuilder<Data>(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.hasData){
+        if (snapshot.hasData) {
           dataSource.updateData(snapshot.data.data);
           return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
-        }else if (snapshot.hasError){
-          final APIException error=snapshot.error;
+        } else if (snapshot.hasError) {
+          final APIException error = snapshot.error;
           return Text('Error in Future ${error.message}');
-        }else{
+        } else {
           return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
         }
       },
     );
   }
 
-  Widget streamBuilder(
-      Backend backend, DataSource dataSource, PanelState panelState) {
+  Widget streamBuilder(Backend backend, DataSource dataSource, PanelState panelState) {
     return StreamBuilder<Data>(
         stream: backend.getStream(documentId: null),
         initialData: Data(data: {}),

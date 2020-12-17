@@ -23,8 +23,7 @@ class StringPart extends Part {
     final PString cfg = config as PString;
 
     // TODO: styling final style =
-// TODO: shouldn't use isStatic like this, it may want a caption still
-    if (!(config.isStatic == IsStatic.yes) && cfg.readModeOptions.showCaption) {
+    if (cfg.readModeOptions.showCaption) {
       return Padding(
         padding: EdgeInsets.only(bottom: 8.0),
         child: Container(
@@ -34,7 +33,7 @@ class StringPart extends Part {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(bottom: 4.0),
-                child: I18NCaption(
+                child: Caption(
                   text: cfg.caption,
                 ),
               ),

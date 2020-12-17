@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 /// Text styled as a caption
-class I18NCaption extends StatelessWidget {
+class Caption extends StatelessWidget {
   final String text;
 
-  const I18NCaption({Key key, this.text}) : super(key: key);
+  const Caption({Key key, this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
