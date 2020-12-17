@@ -6,8 +6,8 @@ part of 'pPart.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPart<T> _$PPartFromJson<T>(Map<String, dynamic> json) {
-  return PPart<T>(
+PPart _$PPartFromJson(Map<String, dynamic> json) {
+  return PPart(
     caption: json['caption'] as String,
     readOnly: json['readOnly'] as bool,
     property: json['property'] as String,
@@ -25,11 +25,19 @@ PPart<T> _$PPartFromJson<T>(Map<String, dynamic> json) {
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
+    readModeOptions: json['readModeOptions'] == null
+        ? null
+        : PReadModeOptions.fromJson(
+            json['readModeOptions'] as Map<String, dynamic>),
+    editModeOptions: json['editModeOptions'] == null
+        ? null
+        : PEditModeOptions.fromJson(
+            json['editModeOptions'] as Map<String, dynamic>),
     tooltip: json['tooltip'] as String,
   );
 }
 
-Map<String, dynamic> _$PPartToJson<T>(PPart<T> instance) {
+Map<String, dynamic> _$PPartToJson(PPart instance) {
   final val = <String, dynamic>{
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
@@ -50,6 +58,8 @@ Map<String, dynamic> _$PPartToJson<T>(PPart<T> instance) {
   val['staticData'] = instance.staticData;
   val['help'] = instance.help?.toJson();
   val['tooltip'] = instance.tooltip;
+  val['readModeOptions'] = instance.readModeOptions?.toJson();
+  val['editModeOptions'] = instance.editModeOptions?.toJson();
   return val;
 }
 

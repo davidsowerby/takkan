@@ -24,24 +24,26 @@ class PDisplayElement extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          panelStyle: panelStyle,
-          writingStyle: writingStyle,
-          controlEdit: controlEdit,
-        );
+    isStatic: isStatic,
+    backend: backend,
+    dataSource: dataSource,
+    panelStyle: panelStyle,
+    writingStyle: writingStyle,
+    controlEdit: controlEdit,
+    id: id,
+  );
 
-  void doValidate(List<ValidationMessage> messages, {int index=-1}) {
-    if (dataEnabled && dataSource == null) {
-      messages.add(ValidationMessage(
-          item: this, msg: 'When data is enabled, a data source must be defined'));
-    }
-
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index:index);
     if (isStatic != IsStatic.yes) {
       if (dataSource == null) {
         messages.add(ValidationMessage(
             item: this, msg: "must either be static or have a dataSource defined"));
+      }
+    }
+    if (dataSource != null){
+      if (backend==null){
+        messages.add(ValidationMessage(item:this, msg:'has declared a data source> it must have a backend available as well'));
       }
     }
   }

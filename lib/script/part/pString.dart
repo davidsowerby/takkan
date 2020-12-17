@@ -10,14 +10,10 @@ import 'package:precept_script/script/style/writingStyle.dart';
 
 part 'pString.g.dart';
 
-
 ///
 /// - [property],[isStatic],[staticData], [caption],[tooltip],[help] - see [PPart]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PString extends PPart {
-  final PReadModeOptions readModeOptions;
-  final PEditModeOptions editModeOptions;
-
   PString({
     String property,
     String caption,
@@ -31,21 +27,24 @@ class PString extends PPart {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-    this.readModeOptions = const PReadModeOptions(),
-    this.editModeOptions = const PEditModeOptions(),
+    PReadModeOptions readModeOptions = const PReadModeOptions(),
+    PEditModeOptions editModeOptions = const PEditModeOptions(),
   }) : super(
-      id: caption ?? id,
-      caption: caption,
-      property: property,
-      isStatic: isStatic,
-      backend: backend,
-      dataSource: dataSource,
-      panelStyle: panelStyle,
-      writingStyle: writingStyle,
-      controlEdit: controlEdit,
-      staticData: staticData,
-      help: help,
-      tooltip: tooltip);
+          id: caption ?? id,
+          caption: caption,
+          property: property,
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+          staticData: staticData,
+          help: help,
+          tooltip: tooltip,
+          readModeOptions: readModeOptions,
+          editModeOptions: editModeOptions,
+        );
 
   factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
 

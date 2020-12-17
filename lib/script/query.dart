@@ -40,7 +40,7 @@ class PDataSource extends PreceptItem {
 class PDataGet extends PDataSource {
   final DocumentId documentId;
 
-   PDataGet({@required this.documentId, @required Map<String, dynamic> params})
+   PDataGet({@required this.documentId,  Map<String, dynamic> params=const {}})
       : super(params: params);
 
   factory PDataGet.fromJson(Map<String, dynamic> json) =>

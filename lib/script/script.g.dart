@@ -18,7 +18,8 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     dataSource: json['dataSource'] == null
         ? null
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   );
 }
@@ -69,6 +70,17 @@ const _$IsStaticEnumMap = {
   IsStatic.inherited: 'inherited',
 };
 
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$ControlEditEnumMap = {
   ControlEdit.notSetAtThisLevel: 'notSetAtThisLevel',
   ControlEdit.thisOnly: 'thisOnly',
@@ -86,14 +98,15 @@ PComponent _$PComponentFromJson(Map<String, dynamic> json) {
         .map((e) => PRoute.fromJson(e as Map<String, dynamic>))
         .toList(),
     name: json['name'] as String,
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
     dataSource: json['dataSource'] == null
         ? null
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   );
 }
@@ -124,14 +137,15 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     page: json['page'] == null
         ? null
         : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
     dataSource: json['dataSource'] == null
         ? null
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
   );
 }
 
@@ -159,7 +173,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     pageType: json['pageType'] as String,
     title: json['title'] as String,
     scrollable: json['scrollable'] as bool,
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
     backend: json['backend'] == null
@@ -168,7 +182,8 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     dataSource: json['dataSource'] == null
         ? null
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   );
 }
@@ -208,14 +223,15 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     style: json['style'] == null
         ? null
         : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
     dataSource: json['dataSource'] == null
         ? null
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   );
 }
@@ -271,13 +287,14 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
 
 PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
+    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
     dataSource: const PDataSourceConverter()
         .fromJson(json['dataSource'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   );
 }

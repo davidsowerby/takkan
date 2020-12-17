@@ -25,6 +25,8 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final List<PComponent> components;
+  @JsonKey(ignore: true)
+  List<ValidationMessage> _validationMessages;
 
   PScript({
     this.components = const [],
@@ -65,22 +67,22 @@ class PScript extends PCommon {
   /// returns the list of validation messages
   List<ValidationMessage> validate({bool throwOnFail = false}) {
     init();
-    final List<ValidationMessage> messages = List();
-    doValidate(messages);
+    _validationMessages = List();
+    doValidate(_validationMessages);
 
     if (components == null || components.length == 0) {
-      messages.add(ValidationMessage(item: this, msg: "must contain at least one component"));
+      _validationMessages.add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       var index = 0;
       for (var component in components) {
-        component.doValidate(messages, index: index);
+        component.doValidate(_validationMessages, index: index);
         index++;
       }
     }
-    if (throwOnFail && messages.isNotEmpty) {
-      throw PreceptException(messages.toString());
+    if (throwOnFail && _validationMessages.isNotEmpty) {
+      throw PreceptException(_validationMessages.toString());
     }
-    return messages;
+    return _validationMessages;
   }
 
   init() {
@@ -93,6 +95,21 @@ class PScript extends PCommon {
     for (var component in components) {
       component.doInit(this);
     }
+  }
+
+  bool get failed => _validationMessages.length > 0;
+  bool get passed => _validationMessages.length ==0 ;
+
+  validationOutput(){
+    StringBuffer buf=StringBuffer();
+    buf.writeln('============================================================================');
+    buf.writeln('=                        PScript Validation Failed                         =');
+    buf.writeln('============================================================================');
+    buf.writeAll(_validationMessages.map((e) => e.toString()),'\n');
+    buf.writeln();
+    buf.writeln('============================================================================');
+    buf.writeln();
+    print(buf.toString());
   }
 }
 
@@ -127,8 +144,8 @@ class PComponent extends PCommon {
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 
-  doValidate(List<ValidationMessage> messages, {int index=-1}) {
-    super.doValidate(messages, index:index);
+  doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index: index);
     if (name == null || name.isEmpty) {
       messages.add(ValidationMessage(
           item: this, msg: "PComponent at index $index must have a name defined"));
@@ -181,7 +198,7 @@ class PRoute extends PCommon {
 
   doValidate(List<ValidationMessage> messages, {int index = -1}) {
     super.doValidate(messages, index: index);
-    final parentName = parent.itemId;
+    final parentName = parent.id;
     if (path == null || path.isEmpty) {
       messages.add(ValidationMessage(
           item: this, msg: "at index $index of PComponent $parentName must define a path"));
@@ -242,7 +259,7 @@ class PPage extends PCommon {
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index:index);
+    super.doValidate(messages, index: index);
     final routePath = parent.path;
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
@@ -346,10 +363,15 @@ class PPanel extends PDisplayElement {
     }
   }
 
-  String get id => caption ?? itemId;
+  String get id => caption ?? super.id;
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index:index);
+    super.doValidate(messages, index: index);
+    int i=0;
+    for (PDisplayElement element in content){
+      element.doValidate(messages,index: i);
+      i++;
+    }
   }
 }
 
@@ -463,13 +485,9 @@ class PCommon extends PreceptItem {
         _dataSource = dataSource,
         _panelStyle = panelStyle,
         _writingStyle = writingStyle,
-        super(itemId: id);
+        super(id: id);
 
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
-
-  /// Returns true only if this instance has enabled data by overriding a parent static setting of 'yes'
-  /// with a setting of 'no'
-  bool get dataEnabled => (_isStatic == IsStatic.no) && !(parent.isStatic == IsStatic.yes);
 
   bool get hasEditControl => _hasEditControl;
 
@@ -558,6 +576,12 @@ class PCommon extends PreceptItem {
   }
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index:index);
+    super.doValidate(messages, index: index);
+    if(backend != null){
+      backend.doValidate(messages,index:index);
+    }
+    if(dataSource != null){
+      dataSource.doValidate(messages,index:index);
+    }
   }
 }

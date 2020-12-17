@@ -3,10 +3,12 @@ import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/panelStyle.dart';
+import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
+
 part 'pPart.g.dart';
 
 /// Contained within a [PScript] a [PPart] describes a [Part]
@@ -19,14 +21,18 @@ part 'pPart.g.dart';
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 ///
+/// [RO] type of read options
+/// [WO] type of write options
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPart<T> extends  PDisplayElement {
+class PPart extends PDisplayElement {
   final String caption;
   final bool readOnly;
   final String property;
   final String staticData;
   final PHelp help;
   final String tooltip;
+  final PReadModeOptions readModeOptions;
+  final PEditModeOptions editModeOptions;
 
   PPart(
       {this.caption,
@@ -41,6 +47,8 @@ class PPart<T> extends  PDisplayElement {
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
       String id,
+      this.readModeOptions,
+      this.editModeOptions,
       this.tooltip})
       : super(
           id: caption ?? id,
@@ -57,7 +65,21 @@ class PPart<T> extends  PDisplayElement {
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
-  void doValidate(List<ValidationMessage> messages,{int index=-1}) {
-    super.doValidate(messages,index:index);
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index: index);
+    if (isStatic != IsStatic.yes) {
+      if (property == null || property.isEmpty) {
+        messages.add(ValidationMessage(
+            item: this,
+            msg: 'unless a Part is static, it must provide a non-null, non-empty property'));
+      }
+    }
+    if (readModeOptions.showCaption){
+      if (caption == null || caption.isEmpty){
+        messages.add(ValidationMessage(
+            item: this,
+            msg: 'readOnlyOptions.showCaption is true, so a caption must be provided'));
+      }
+    }
   }
 }
