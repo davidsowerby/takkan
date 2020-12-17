@@ -1,26 +1,60 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/validation/message.dart';
 
-/// Common interface for PSection and PPart so both can be held in any order for display
-abstract class DisplayElement {
-  Map<String, dynamic> toJson();
+/// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
+class PDisplayElement extends PCommon {
+  final String caption;
+  final String property;
 
-  String get caption;
-  String get property;
+  PDisplayElement({
+    this.caption,
+    this.property,
+    IsStatic isStatic = IsStatic.inherited,
+    PBackend backend,
+    PDataSource dataSource,
+    PPanelStyle panelStyle,
+    WritingStyle writingStyle,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    String id,
+  }) : super(
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+        );
 
+  void doValidate(List<ValidationMessage> messages, {int index=-1}) {
+    if (dataEnabled && dataSource == null) {
+      messages.add(ValidationMessage(
+          item: this, msg: 'When data is enabled, a data source must be defined'));
+    }
 
+    if (isStatic != IsStatic.yes) {
+      if (dataSource == null) {
+        messages.add(ValidationMessage(
+            item: this, msg: "must either be static or have a dataSource defined"));
+      }
+    }
+  }
 }
 
 class PElementListConverter {
   static const elementKeyName = "-element-";
 
-  static List<DisplayElement> fromJson(List<Map<String, dynamic>> json) {
-    List<DisplayElement> list = List();
+  static List<PDisplayElement> fromJson(List<Map<String, dynamic>> json) {
+    List<PDisplayElement> list = List();
     for (var entry in json) {
       final elementType = entry[elementKeyName];
-      final entryCopy = Map<String,dynamic>.from(entry);
+      final entryCopy = Map<String, dynamic>.from(entry);
       entryCopy.remove(elementKeyName);
       switch (elementType) {
         case "PPanel":
@@ -31,7 +65,7 @@ class PElementListConverter {
           break;
 
         default:
-          final msg="JSON conversion has not been implemented for $elementType";
+          final msg = "JSON conversion has not been implemented for $elementType";
           logType(Object().runtimeType).e(msg);
           throw PreceptException(msg);
       }
@@ -39,7 +73,7 @@ class PElementListConverter {
     return list;
   }
 
-  static List<Map<String, dynamic>> toJson(List<DisplayElement> elementList) {
+  static List<Map<String, dynamic>> toJson(List<PDisplayElement> elementList) {
     final outputList = List<Map<String, dynamic>>();
     if (elementList == null) {
       return outputList;

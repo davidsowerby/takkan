@@ -17,7 +17,6 @@ void main() {
       test('Insufficient components', () {
         // given
         final script1 = PScript();
-        final script2 = PScript(components: []);
         // when
         final result = script1.validate();
         // then
@@ -31,7 +30,7 @@ void main() {
     group('PComponent validation', () {
       test('routes and name not null', () {
         // given
-        final component = PScript(components: [PComponent()]);
+        final component = PScript(components: [PComponent()]);// ignore: missing_required_param
         // when
         final messages = component.validate();
         // then
@@ -62,7 +61,7 @@ void main() {
       test('Must have path and page', () {
         // given
         final component = PScript(components: [
-          PComponent(name: 'core', routes: [PRoute()])
+          PComponent(name: 'core', routes: [PRoute()])// ignore: missing_required_param
         ]);
         // when
         final messages = component.validate();
@@ -80,7 +79,7 @@ void main() {
       test('Must have pageType and title', () {
         // given
         final component = PScript(isStatic: IsStatic.yes, components: [
-          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])
+          PComponent(name: 'core', routes: [PRoute(path: "/home", page: PPage(pageType: null))])// ignore: missing_required_param
         ]);
         // when
         final messages = component.validate();
@@ -94,12 +93,12 @@ void main() {
 
       test('No errors', () {
         // given
-        final component = PScript(backend: PBackend(), components: [
+        final component = PScript(backend: PBackend(), components: [// ignore: missing_required_param
           PComponent(name: 'core', routes: [
             PRoute(
                 path: "/home",
                 page: PPage(
-                    pageType: "mine", title: "Wiggly", dataSource: PDataGet(documentId: DocumentId())))
+                    pageType: "mine", title: "Wiggly", dataSource: PDataGet(documentId: DocumentId())))// ignore: missing_required_param
           ])
         ]);
         // when
@@ -108,115 +107,20 @@ void main() {
 
         expect(messages.length, 0);
       });
-
-      test('any non-static Page must be able to access DataSource and Backend', () {
-        // given
-        final withoutDataSourceOrBackend = PScript(
-          components: [
-            PComponent(
-              name: 'core',
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                  ),
-                ),
-              ],
-            )
-          ],
-        );
-
-        final withoutBackend = PScript(
-          components: [
-            PComponent(
-              name: 'core',
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    dataSource: PDataGet(
-                      documentId: DocumentId(),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        );
-
-        final withoutDataSource = PScript(
-          backend: PBackend(),
-          components: [
-            PComponent(
-              name: 'core',
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                  ),
-                )
-              ],
-            )
-          ],
-        );
-
-        final withDataSourceAndBackend = PScript(
-          backend: PBackend(),
-          components: [
-            PComponent(
-              name: 'core',
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    dataSource: PDataGet(
-                      documentId: DocumentId(),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        );
-
-        // when
-        final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
-        final withoutBackendResults = withoutBackend.validate();
-        final withoutDataSourceResults = withoutDataSource.validate();
-        final withDataSourceAndBackendResults = withDataSourceAndBackend.validate();
-        // then
-
-        expect(withoutDataSourceOrBackendResults.length, 2);
-        expect(withoutDataSourceOrBackendResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a backend defined');
-        expect(withoutDataSourceOrBackendResults[1].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a dataSource defined');
-        expect(withoutBackendResults.length, 1);
-        expect(withoutBackendResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a backend defined');
-        expect(withoutDataSourceResults.length, 1);
-        expect(withoutDataSourceResults[0].toString(), 'PPage : Wiggly : PPage at route /home must either be static or have a dataSource defined');
-        expect(withDataSourceAndBackendResults.length, 0);
-      });
     });
 
     group('PPanel validation', () {
       test('No errors', () {
         // given
-        final component = PScript(backend: PBackend(),components: [
+        final component = PScript(backend: PBackend(),components: [// ignore: missing_required_param
           PComponent(name: 'core', routes: [
             PRoute(
               path: "/home",
               page: PPage(
                 pageType: "mine",
                 title: "Wiggly",
-                dataSource: PDataGet(
-                  documentId: DocumentId(),
+                dataSource: PDataGet(// ignore: missing_required_param
+                  documentId: DocumentId(),// ignore: missing_required_param
                 ),
                 content: [PPanel()],
               ),
@@ -230,7 +134,7 @@ void main() {
         expect(messages.length, 0);
       });
 
-      test('any non-static PPanel must be able to access DataSource and Backend', () {
+      test('any non-static PPanel must be able to access DataSource', () {
         // given
         final withoutDataSourceOrBackend = PScript(
           components: [
@@ -249,28 +153,9 @@ void main() {
           ],
         );
 
-        final withoutBackend = PScript(
-          components: [
-            PComponent(
-              name: 'core',
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    dataSource: PDataGet(
-                      documentId: DocumentId(),
-                    ),content: [PPanel(caption: 'panel1')],
-                  ),
-                )
-              ],
-            )
-          ],
-        );
 
         final withoutDataSource = PScript(
-          backend: PBackend(),
+          backend: PBackend(),// ignore: missing_required_param
           components: [
             PComponent(
               name: 'core',
@@ -288,7 +173,7 @@ void main() {
         );
 
         final withDataSourceAndBackend = PScript(
-          backend: PBackend(),
+          backend: PBackend(), // ignore: missing_required_param
           components: [
             PComponent(
               name: 'core',
@@ -298,8 +183,8 @@ void main() {
                   page: PPage(
                     pageType: "mine",
                     title: "Wiggly",
-                    dataSource: PDataGet(
-                      documentId: DocumentId(),
+                    dataSource: PDataGet( // ignore: missing_required_param
+                      documentId: DocumentId(), // ignore: missing_required_param
                     ),content: [PPanel(caption: 'panel1')],
                   ),
                 )
@@ -310,18 +195,14 @@ void main() {
 
         // when
         final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
-        final withoutBackendResults = withoutBackend.validate();
         final withoutDataSourceResults = withoutDataSource.validate();
         final withDataSourceAndBackendResults = withDataSourceAndBackend.validate();
         // then
 
-        expect(withoutDataSourceOrBackendResults.length, 4, reason: 'PPage will still fail validation');
-        expect(withoutDataSourceOrBackendResults[2].toString(), 'PPanel : panel1 : must either be static or have a backend defined');
-        expect(withoutDataSourceOrBackendResults[3].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
-        expect(withoutBackendResults.length, 2);
-        expect(withoutBackendResults[1].toString(), 'PPanel : panel1 : must either be static or have a backend defined');
-        expect(withoutDataSourceResults.length, 2);
-        expect(withoutDataSourceResults[1].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
+        expect(withoutDataSourceOrBackendResults.length, 1);
+        expect(withoutDataSourceOrBackendResults[0].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
+        expect(withoutDataSourceResults.length, 1);
+        expect(withoutDataSourceResults[0].toString(), 'PPanel : panel1 : must either be static or have a dataSource defined');
         expect(withDataSourceAndBackendResults.length, 0);
       });
     });

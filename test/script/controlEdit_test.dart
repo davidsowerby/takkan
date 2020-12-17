@@ -16,11 +16,11 @@ void main() {
       // given
       final script = PScript(
         components: [
-          PComponent(
+          PComponent(// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -77,11 +77,11 @@ void main() {
       // given
       final script = PScript(controlEdit: ControlEdit.panelsOnly,
         components: [
-          PComponent(
+          PComponent(// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -130,11 +130,11 @@ void main() {
       // given
       final script = PScript(
         components: [
-          PComponent(controlEdit: ControlEdit.firstLevelPanels,
+          PComponent(controlEdit: ControlEdit.firstLevelPanels,// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -183,11 +183,11 @@ void main() {
       // given
       final script = PScript(
         components: [
-          PComponent(controlEdit: ControlEdit.thisOnly,
+          PComponent(controlEdit: ControlEdit.thisOnly,// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -236,11 +236,11 @@ void main() {
       // given
       final script = PScript(
         components: [
-          PComponent(controlEdit: ControlEdit.thisAndBelow,
+          PComponent(controlEdit: ControlEdit.thisAndBelow,// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -290,11 +290,11 @@ void main() {
       // given
       final script = PScript(
         components: [
-          PComponent(
+          PComponent(// ignore: missing_required_param
             routes: [
               PRoute(
                 path: '/home',
-                page: PPage(
+                page: PPage(// ignore: missing_required_param
                   content: [
                     PPanel(
                       caption: 'panel1',

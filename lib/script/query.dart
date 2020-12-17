@@ -29,7 +29,7 @@ class PDataSource extends PreceptItem {
   final Map<String, dynamic> params;
 
 
-  void validate( List<ValidationMessage> messages, int pass){}
+  void doValidate( List<ValidationMessage> messages, {int index=-1}){}
 
 
   Map<String, dynamic> toJson() => _$PDataSourceToJson(this);
@@ -47,8 +47,9 @@ class PDataGet extends PDataSource {
       _$PDataGetFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDataGetToJson(this);
+
   @override
-  void validate( List<ValidationMessage> messages, int pass) {
+  void doValidate( List<ValidationMessage> messages, {int index=-1}) {
     if (documentId == null ) {
       messages.add(ValidationMessage(
           item: this,

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/validation/message.dart';
 
 part 'preceptItem.g.dart';
 
@@ -13,4 +14,6 @@ class PreceptItem {
   Map<String, dynamic> toJson() => _$PreceptItemToJson(this);
 
   String get id => itemId ?? 'missing id';
+
+  void doValidate( List<ValidationMessage> messages, {int index=-1}){}
 }

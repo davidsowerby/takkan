@@ -20,7 +20,7 @@ part 'pPart.g.dart';
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPart<T> extends PCommon implements DisplayElement {
+class PPart<T> extends  PDisplayElement {
   final String caption;
   final bool readOnly;
   final String property;
@@ -57,5 +57,7 @@ class PPart<T> extends PCommon implements DisplayElement {
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
-  void validate(List<ValidationMessage> messages) {}
+  void doValidate(List<ValidationMessage> messages,{int index=-1}) {
+    super.doValidate(messages,index:index);
+  }
 }

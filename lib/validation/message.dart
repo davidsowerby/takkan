@@ -5,13 +5,15 @@ class ValidationMessage {
   final String type;
   final String itemId;
   final String msg;
+  final int index;
 
-  ValidationMessage({@required PreceptItem item, @required this.msg})
+  ValidationMessage({@required PreceptItem item, @required this.msg, this.index=-1})
       : type = item.runtimeType.toString(),
         itemId = item.id;
 
   @override
   String toString() {
-    return "$type : $itemId : $msg";
+    final indexString = (index <0) ? '' : ' at index $index ';
+    return "$type $indexString: $itemId : $msg";
   }
 }

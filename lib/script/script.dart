@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
@@ -14,7 +15,6 @@ import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/style/style.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
-
 
 part 'script.g.dart';
 
@@ -61,18 +61,24 @@ class PScript extends PCommon {
   IsStatic get isStatic => _isStatic;
 
   /// Validates the structure and content of the model
-  List<ValidationMessage> validate() {
+  /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
+  /// returns the list of validation messages
+  List<ValidationMessage> validate({bool throwOnFail = false}) {
     init();
     final List<ValidationMessage> messages = List();
+    doValidate(messages);
 
     if (components == null || components.length == 0) {
       messages.add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       var index = 0;
       for (var component in components) {
-        component.validate(messages, index);
+        component.doValidate(messages, index: index);
         index++;
       }
+    }
+    if (throwOnFail && messages.isNotEmpty) {
+      throw PreceptException(messages.toString());
     }
     return messages;
   }
@@ -89,12 +95,6 @@ class PScript extends PCommon {
     }
   }
 }
-
-
-
-
-
-
 
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PPartMapConverter()
@@ -127,7 +127,8 @@ class PComponent extends PCommon {
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 
-  validate(List<ValidationMessage> messages, int index) {
+  doValidate(List<ValidationMessage> messages, {int index=-1}) {
+    super.doValidate(messages, index:index);
     if (name == null || name.isEmpty) {
       messages.add(ValidationMessage(
           item: this, msg: "PComponent at index $index must have a name defined"));
@@ -136,10 +137,10 @@ class PComponent extends PCommon {
       messages.add(ValidationMessage(
           item: this, msg: "PComponent at index $index must contain at least one PRoute"));
     } else {
-      int index = 0;
+      int i = 0;
       for (var route in routes) {
-        route.validate(this, messages, index);
-        index++;
+        route.doValidate(messages, index: i);
+        i++;
       }
     }
   }
@@ -178,7 +179,8 @@ class PRoute extends PCommon {
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 
-  validate(PComponent parent, List<ValidationMessage> messages, int index) {
+  doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index: index);
     final parentName = parent.itemId;
     if (path == null || path.isEmpty) {
       messages.add(ValidationMessage(
@@ -188,7 +190,7 @@ class PRoute extends PCommon {
       messages.add(ValidationMessage(
           item: this, msg: "at index $index of PComponent $parentName must define a page"));
     } else {
-      page.validate(messages);
+      page.doValidate(messages);
     }
   }
 
@@ -209,7 +211,7 @@ class PPage extends PCommon {
   final String pageType;
   final bool scrollable;
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-  final List<DisplayElement> content;
+  final List<PDisplayElement> content;
 
   @JsonKey(ignore: true)
   PPage({
@@ -239,7 +241,8 @@ class PPage extends PCommon {
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
-  void validate(List<ValidationMessage> messages) {
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index:index);
     final routePath = parent.path;
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
@@ -254,25 +257,12 @@ class PPage extends PCommon {
       ));
     }
 
-    if (isStatic != IsStatic.yes) {
-      if (backend == null) {
-        messages.add(ValidationMessage(
-            item: this,
-            msg: "PPage at route $routePath must either be static or have a backend defined"));
-      }
-      if (dataSource == null) {
-        messages.add(ValidationMessage(
-            item: this,
-            msg: "PPage at route $routePath must either be static or have a dataSource defined"));
-      }
-    }
+    int i = 0;
     for (var element in content) {
-      if (element is PPanel) {
-        element.validate(messages);
+      if (element is PCommon) {
+        element.doValidate(messages, index: i);
       }
-      if (element is PPart){
-        element.validate(messages);
-      }
+      i++;
     }
   }
 
@@ -292,12 +282,12 @@ class PPage extends PCommon {
   /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [backend] is always
   /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
-   bool get backendIsDeclared => (isStatic==IsStatic.yes) ? false : true;
+  bool get backendIsDeclared => (isStatic == IsStatic.yes) ? false : true;
 
   /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [dataSource] is always
   /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataSourceIsDeclared => (isStatic==IsStatic.yes) ? false : true;
+  bool get dataSourceIsDeclared => (isStatic == IsStatic.yes) ? false : true;
 }
 
 enum PageType { standard }
@@ -308,9 +298,9 @@ enum PageType { standard }
 //
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPanel extends PCommon implements DisplayElement {
+class PPanel extends PDisplayElement {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-  final List<DisplayElement> content;
+  final List<PDisplayElement> content;
   @JsonKey(ignore: true)
   final PPanelHeading heading;
   final String caption;
@@ -330,7 +320,7 @@ class PPanel extends PCommon implements DisplayElement {
     this.caption,
     this.scrollable = false,
     this.help,
-    this.style=const PPanelStyle(),
+    this.style = const PPanelStyle(),
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
@@ -352,24 +342,14 @@ class PPanel extends PCommon implements DisplayElement {
   doInit(PCommon parent) {
     super.doInit(parent);
     for (var element in content) {
-      final entry = element as PCommon;
-      entry.doInit(this);
+      element.doInit(this);
     }
   }
 
   String get id => caption ?? itemId;
 
-  void validate(List<ValidationMessage> messages) {
-    if (isStatic != IsStatic.yes) {
-      if (backend == null) {
-        messages.add(
-            ValidationMessage(item: this, msg: "must either be static or have a backend defined"));
-      }
-      if (dataSource == null) {
-        messages.add(ValidationMessage(
-            item: this, msg: "must either be static or have a dataSource defined"));
-      }
-    }
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index:index);
   }
 }
 
@@ -414,10 +394,6 @@ enum ControlEdit {
   firstLevelPanels,
   noEdit,
 }
-
-
-
-
 
 ///
 /// Holds common properties for every level of a [PScript], and its main purpose is to reduce manual configuration.
@@ -490,6 +466,10 @@ class PCommon extends PreceptItem {
         super(itemId: id);
 
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
+
+  /// Returns true only if this instance has enabled data by overriding a parent static setting of 'yes'
+  /// with a setting of 'no'
+  bool get dataEnabled => (_isStatic == IsStatic.no) && !(parent.isStatic == IsStatic.yes);
 
   bool get hasEditControl => _hasEditControl;
 
@@ -575,5 +555,9 @@ class PCommon extends PreceptItem {
         return;
       }
     }
+  }
+
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
+    super.doValidate(messages, index:index);
   }
 }
