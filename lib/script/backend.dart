@@ -26,7 +26,7 @@ class PBackend extends PreceptItem {
     @required this.connection,
     this.parent,
     String id,
-  }) : super(id: id ?? backendType);
+  }) : super(id: id );
 
   factory PBackend.fromJson(Map<String, dynamic> json) => _$PBackendFromJson(json);
 

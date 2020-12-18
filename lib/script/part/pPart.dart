@@ -25,7 +25,6 @@ part 'pPart.g.dart';
 /// [WO] type of write options
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PDisplayElement {
-  final String caption;
   final bool readOnly;
   final String property;
   final String staticData;
@@ -35,7 +34,7 @@ class PPart extends PDisplayElement {
   final PEditModeOptions editModeOptions;
 
   PPart(
-      {this.caption,
+      {String caption,
       this.readOnly = false,
       this.property,
       IsStatic isStatic = IsStatic.inherited,
@@ -51,13 +50,14 @@ class PPart extends PDisplayElement {
       this.editModeOptions,
       this.tooltip})
       : super(
-          id: caption ?? id,
+          id: id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
+          caption: caption,
         );
 
   factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
@@ -74,11 +74,10 @@ class PPart extends PDisplayElement {
             msg: 'unless a Part is static, it must provide a non-null, non-empty property'));
       }
     }
-    if (readModeOptions.showCaption){
-      if (caption == null || caption.isEmpty){
+    if (readModeOptions.showCaption) {
+      if (caption == null || caption.isEmpty) {
         messages.add(ValidationMessage(
-            item: this,
-            msg: 'readOnlyOptions.showCaption is true, so a caption must be provided'));
+            item: this, msg: 'readOnlyOptions.showCaption is true, so a caption must be provided'));
       }
     }
   }

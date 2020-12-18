@@ -71,7 +71,8 @@ class PScript extends PCommon {
     doValidate(_validationMessages);
 
     if (components == null || components.length == 0) {
-      _validationMessages.add(ValidationMessage(item: this, msg: "must contain at least one component"));
+      _validationMessages
+          .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       var index = 0;
       for (var component in components) {
@@ -86,26 +87,29 @@ class PScript extends PCommon {
   }
 
   init() {
-    doInit(null);
+    doInit(null,-1);
   }
 
   @override
-  doInit(PCommon parent) {
+  doInit(PCommon parent, int index) {
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
+    int i=0;
     for (var component in components) {
-      component.doInit(this);
+      component.doInit(this,i);
+      i++;
     }
   }
 
   bool get failed => _validationMessages.length > 0;
-  bool get passed => _validationMessages.length ==0 ;
 
-  validationOutput(){
-    StringBuffer buf=StringBuffer();
+  bool get passed => _validationMessages.length == 0;
+
+  validationOutput() {
+    StringBuffer buf = StringBuffer();
     buf.writeln('============================================================================');
     buf.writeln('=                        PScript Validation Failed                         =');
     buf.writeln('============================================================================');
-    buf.writeAll(_validationMessages.map((e) => e.toString()),'\n');
+    buf.writeAll(_validationMessages.map((e) => e.toString()), '\n');
     buf.writeln();
     buf.writeln('============================================================================');
     buf.writeln();
@@ -163,10 +167,12 @@ class PComponent extends PCommon {
   }
 
   @override
-  doInit(PCommon parent) {
-    super.doInit(parent);
+  doInit(PCommon parent, int index) {
+    super.doInit(parent, index);
+    int i=0;
     for (var route in routes) {
-      route.doInit(this);
+      route.doInit(this, i);
+      i++;
     }
   }
 }
@@ -212,10 +218,10 @@ class PRoute extends PCommon {
   }
 
   @override
-  doInit(PCommon parent) {
-    super.doInit(parent);
+  doInit(PCommon parent, int index) {
+    super.doInit(parent, index);
     if (page != null) {
-      page.doInit(this);
+      page.doInit(this,index);
     }
   }
 }
@@ -223,7 +229,7 @@ class PRoute extends PCommon {
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPage extends PCommon {
+class PPage extends PCommon implements PreceptDebug {
   final String title;
   final String pageType;
   final bool scrollable;
@@ -284,15 +290,17 @@ class PPage extends PCommon {
   }
 
   @override
-  doInit(PCommon parent) {
-    super.doInit(parent);
+  doInit(PCommon parent, int index) {
+    super.doInit(parent, index);
+    int i=0;
     for (var element in content) {
       if (element is PPanel) {
-        element.doInit(this);
+        element.doInit(this,i);
       }
       if (element is PPart) {
-        element.doInit(this);
+        element.doInit(this,i);
       }
+      i++;
     }
   }
 
@@ -305,6 +313,8 @@ class PPage extends PCommon {
   /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get dataSourceIsDeclared => (isStatic == IsStatic.yes) ? false : true;
+
+  String get debugId => id ?? 'page without id';
 }
 
 enum PageType { standard }
@@ -320,7 +330,6 @@ class PPanel extends PDisplayElement {
   final List<PDisplayElement> content;
   @JsonKey(ignore: true)
   final PPanelHeading heading;
-  final String caption;
   final bool scrollable;
   final PHelp help;
   final String property;
@@ -334,7 +343,7 @@ class PPanel extends PDisplayElement {
     this.property,
     this.content = const [],
     this.heading,
-    this.caption,
+    String caption,
     this.scrollable = false,
     this.help,
     this.style = const PPanelStyle(),
@@ -353,23 +362,23 @@ class PPanel extends PDisplayElement {
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
+          caption: caption,
         );
 
   @override
-  doInit(PCommon parent) {
-    super.doInit(parent);
+  doInit(PCommon parent, int index) {
+    super.doInit(parent,index);
+    int i=0;
     for (var element in content) {
-      element.doInit(this);
+      element.doInit(this,i);
+      i++;
     }
   }
-
-  String get id => caption ?? super.id;
-
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
     super.doValidate(messages, index: index);
-    int i=0;
-    for (PDisplayElement element in content){
-      element.doValidate(messages,index: i);
+    int i = 0;
+    for (PDisplayElement element in content) {
+      element.doValidate(messages, index: i);
       i++;
     }
   }
@@ -471,6 +480,8 @@ class PCommon extends PreceptItem {
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
   WritingStyle _writingStyle;
+  @JsonKey(ignore: true)
+  int _index;
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
@@ -506,11 +517,12 @@ class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon get parent => _parent;
 
-  /// Initialises by setting up [_parent] and [_hasEditControl] properties.
+  /// Initialises by setting up [_parent], [_index] and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PCommon parent) {
+  doInit(PCommon parent, int index) {
     _parent = parent;
+    _index =index;
     PCommon p = parent;
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
@@ -577,11 +589,15 @@ class PCommon extends PreceptItem {
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
     super.doValidate(messages, index: index);
-    if(backend != null){
-      backend.doValidate(messages,index:index);
+    if (backend != null) {
+      backend.doValidate(messages, index: index);
     }
-    if(dataSource != null){
-      dataSource.doValidate(messages,index:index);
+    if (dataSource != null) {
+      dataSource.doValidate(messages, index: index);
     }
   }
+}
+
+abstract class PreceptDebug {
+  String get debugId;
 }

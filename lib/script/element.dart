@@ -2,6 +2,7 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/logger.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/panelStyle.dart';
+import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
@@ -9,7 +10,7 @@ import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
-class PDisplayElement extends PCommon {
+class PDisplayElement extends PCommon implements PreceptDebug {
   final String caption;
   final String property;
 
@@ -24,28 +25,38 @@ class PDisplayElement extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-    isStatic: isStatic,
-    backend: backend,
-    dataSource: dataSource,
-    panelStyle: panelStyle,
-    writingStyle: writingStyle,
-    controlEdit: controlEdit,
-    id: id,
-  );
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+          id: id,
+        );
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index:index);
+    super.doValidate(messages, index: index);
     if (isStatic != IsStatic.yes) {
       if (dataSource == null) {
         messages.add(ValidationMessage(
             item: this, msg: "must either be static or have a dataSource defined"));
       }
     }
-    if (dataSource != null){
-      if (backend==null){
-        messages.add(ValidationMessage(item:this, msg:'has declared a data source> it must have a backend available as well'));
+    if (dataSource != null) {
+      if (backend == null) {
+        messages.add(ValidationMessage(
+            item: this,
+            msg: 'has declared a data source> it must have a backend available as well'));
       }
     }
+  }
+
+  /// Used for Widget and Functional testing.  This id also becomes the Widget key in [Part] and [Panel] instances
+  /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
+  String get debugId {
+    final parentDebugId = (parent as PreceptDebug).debugId;
+    final type = (this is PPart) ? 'Part' : 'PPanel';
+    return "$parentDebugId-$type-$id";
   }
 }
 
