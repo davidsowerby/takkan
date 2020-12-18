@@ -1,4 +1,5 @@
 # Miscellaneous
+*.g.dart
 *.class
 *.log
 *.pyc
@@ -73,4 +74,3 @@ build/
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 
-*.g.dart
