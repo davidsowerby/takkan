@@ -10,7 +10,7 @@ import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
-class PDisplayElement extends PCommon implements PreceptDebug {
+class PDisplayElement extends PCommon {
   final String caption;
   final String property;
 
@@ -34,8 +34,8 @@ class PDisplayElement extends PCommon implements PreceptDebug {
           id: id,
         );
 
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if (isStatic != IsStatic.yes) {
       if (dataSource == null) {
         messages.add(ValidationMessage(
@@ -51,13 +51,8 @@ class PDisplayElement extends PCommon implements PreceptDebug {
     }
   }
 
-  /// Used for Widget and Functional testing.  This id also becomes the Widget key in [Part] and [Panel] instances
-  /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
-  String get debugId {
-    final parentDebugId = (parent as PreceptDebug).debugId;
-    final type = (this is PPart) ? 'Part' : 'PPanel';
-    return "$parentDebugId-$type-$id";
-  }
+  @override
+  String get idAlternative => caption;
 }
 
 class PElementListConverter {

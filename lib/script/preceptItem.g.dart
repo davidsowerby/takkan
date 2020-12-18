@@ -7,12 +7,8 @@ part of 'preceptItem.dart';
 // **************************************************************************
 
 PreceptItem _$PreceptItemFromJson(Map<String, dynamic> json) {
-  return PreceptItem(
-    id: json['id'] as String,
-  );
+  return PreceptItem();
 }
 
 Map<String, dynamic> _$PreceptItemToJson(PreceptItem instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-    };
+    <String, dynamic>{};

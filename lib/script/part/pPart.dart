@@ -65,8 +65,8 @@ class PPart extends PDisplayElement {
   @override
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if (isStatic != IsStatic.yes) {
       if (property == null || property.isEmpty) {
         messages.add(ValidationMessage(

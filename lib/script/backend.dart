@@ -21,7 +21,7 @@ class PBackend extends PreceptItem {
   final Map<String, dynamic> connection;
   final PScript parent;
 
-  const PBackend({
+   PBackend({
     @required this.backendType,
     @required this.connection,
     this.parent,
@@ -33,8 +33,8 @@ class PBackend extends PreceptItem {
   Map<String, dynamic> toJson() => _$PBackendToJson(this);
 
   @override
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if(backendType == null || backendType==''){
       messages.add(ValidationMessage(item: this, msg: 'backendType cannot be null or empty'));
     }
@@ -42,4 +42,10 @@ class PBackend extends PreceptItem {
       messages.add(ValidationMessage(item: this, msg: 'connection cannot be null'));
     }
   }
+
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  }
+
+
 }

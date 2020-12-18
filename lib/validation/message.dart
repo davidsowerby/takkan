@@ -3,17 +3,15 @@ import 'package:precept_script/script/preceptItem.dart';
 
 class ValidationMessage {
   final String type;
-  final String itemId;
+  final String debugId;
   final String msg;
-  final int index;
 
-  ValidationMessage({@required PreceptItem item, @required this.msg, this.index=-1})
+  ValidationMessage({@required PreceptItem item, @required this.msg})
       : type = item.runtimeType.toString(),
-        itemId = item.id;
+        debugId = item.debugId;
 
   @override
   String toString() {
-    final indexString = (index <0) ? '' : ' at index $index ';
-    return "$type $indexString: $itemId : $msg";
+    return "$type : $debugId : $msg";
   }
 }

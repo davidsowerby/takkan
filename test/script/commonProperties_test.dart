@@ -20,7 +20,7 @@ void main() {
       // given
       final script =
       // ignore: missing_required_param
-          PScript(backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataSource(), components: [
+          PScript(name:'test',backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataSource(), components: [
             // ignore: missing_required_param
         PComponent(
           routes: [
@@ -78,7 +78,7 @@ void main() {
     test('defaults, unset', () {
       // given
       final script =
-      PScript(  components: [
+      PScript(name:'test',  components: [
         // ignore: missing_required_param
         PComponent(
           routes: [

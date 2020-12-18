@@ -11,6 +11,7 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     components: (json['components'] as List)
         .map((e) => PComponent.fromJson(e as Map<String, dynamic>))
         .toList(),
+    name: json['name'] as String,
     isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     backend: json['backend'] == null
         ? null
@@ -20,14 +21,13 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$PScriptToJson(PScript instance) {
   final val = <String, dynamic>{
-    'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+    'name': instance.name,
     'components': instance.components.map((e) => e.toJson()).toList(),
   };
 
@@ -107,13 +107,11 @@ PComponent _$PComponentFromJson(Map<String, dynamic> json) {
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$PComponentToJson(PComponent instance) {
   final val = <String, dynamic>{
-    'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
@@ -184,13 +182,11 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$PPageToJson(PPage instance) {
   final val = <String, dynamic>{
-    'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
@@ -232,7 +228,6 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
   );
 }
 
@@ -250,13 +245,12 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) {
 
   writeNotNull('backend', instance.backend?.toJson());
   writeNotNull('dataSource', instance.dataSource?.toJson());
-  val['content'] = PElementListConverter.toJson(instance.content);
   val['caption'] = instance.caption;
+  val['content'] = PElementListConverter.toJson(instance.content);
   val['scrollable'] = instance.scrollable;
   val['help'] = instance.help?.toJson();
   val['property'] = instance.property;
   val['style'] = instance.style?.toJson();
-  val['id'] = instance.id;
   return val;
 }
 
@@ -295,13 +289,11 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) {
         .fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
   );
 }
 
 Map<String, dynamic> _$PCommonToJson(PCommon instance) {
   final val = <String, dynamic>{
-    'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };

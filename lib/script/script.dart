@@ -24,19 +24,21 @@ part 'script.g.dart';
 /// and the [detailed description](https://www.preceptblog.co.uk/user-guide/precept-script.html#introduction) of PScript
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
+  final String name;
   final List<PComponent> components;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;
 
   PScript({
     this.components = const [],
+    this.name,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
-    String id = 'script',
+    String id,
   }) : super(
           id: id,
           isStatic: isStatic,
@@ -74,10 +76,8 @@ class PScript extends PCommon {
       _validationMessages
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
-      var index = 0;
       for (var component in components) {
-        component.doValidate(_validationMessages, index: index);
-        index++;
+        component.doValidate(_validationMessages);
       }
     }
     if (throwOnFail && _validationMessages.isNotEmpty) {
@@ -86,16 +86,23 @@ class PScript extends PCommon {
     return _validationMessages;
   }
 
-  init() {
-    doInit(null,-1);
+  /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user
+  /// See the [doInit] call for each [PreceptItem} type
+  ///
+  /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
+  /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
+  /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
+  init({bool useCaptionsAsIds = true}) {
+    doInit(null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   @override
-  doInit(PCommon parent, int index) {
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(parent, index,useCaptionsAsIds :useCaptionsAsIds = true);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
-    int i=0;
+    int i = 0;
     for (var component in components) {
-      component.doInit(this,i);
+      component.doInit(this, i);
       i++;
     }
   }
@@ -103,6 +110,8 @@ class PScript extends PCommon {
   bool get failed => _validationMessages.length > 0;
 
   bool get passed => _validationMessages.length == 0;
+
+  String get idAlternative => name;
 
   validationOutput() {
     StringBuffer buf = StringBuffer();
@@ -148,8 +157,8 @@ class PComponent extends PCommon {
 
   Map<String, dynamic> toJson() => _$PComponentToJson(this);
 
-  doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if (name == null || name.isEmpty) {
       messages.add(ValidationMessage(
           item: this, msg: "PComponent at index $index must have a name defined"));
@@ -158,23 +167,23 @@ class PComponent extends PCommon {
       messages.add(ValidationMessage(
           item: this, msg: "PComponent at index $index must contain at least one PRoute"));
     } else {
-      int i = 0;
       for (var route in routes) {
-        route.doValidate(messages, index: i);
-        i++;
+        route.doValidate(messages);
       }
     }
   }
 
   @override
-  doInit(PCommon parent, int index) {
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index);
-    int i=0;
+    int i = 0;
     for (var route in routes) {
       route.doInit(this, i);
       i++;
     }
   }
+
+  String get idAlternative => name;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -202,34 +211,34 @@ class PRoute extends PCommon {
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
 
-  doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
-    final parentName = parent.id;
+  doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if (path == null || path.isEmpty) {
-      messages.add(ValidationMessage(
-          item: this, msg: "at index $index of PComponent $parentName must define a path"));
+      messages.add(ValidationMessage(item: this, msg: "must define a path"));
     }
     if (page == null) {
-      messages.add(ValidationMessage(
-          item: this, msg: "at index $index of PComponent $parentName must define a page"));
+      messages.add(ValidationMessage(item: this, msg: "must define a page"));
     } else {
       page.doValidate(messages);
     }
   }
 
   @override
-  doInit(PCommon parent, int index) {
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index);
     if (page != null) {
-      page.doInit(this,index);
+      page.doInit(this, index);
     }
   }
+
+  @override
+  String get idAlternative => path;
 }
 
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPage extends PCommon implements PreceptDebug {
+class PPage extends PCommon {
   final String title;
   final String pageType;
   final bool scrollable;
@@ -260,49 +269,50 @@ class PPage extends PCommon implements PreceptDebug {
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
-  PRoute get parent => _parent;
+  PRoute get parent => super.parent  as PRoute;
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     final routePath = parent.path;
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
         item: this,
-        msg: "PPage at route $routePath must define a title",
+        msg: 'must define a title',
       ));
     }
     if (pageType == null || pageType.isEmpty) {
       messages.add(ValidationMessage(
         item: this,
-        msg: "PPage at route $routePath must define a pageType",
+        msg: 'must define a pageType',
       ));
     }
 
-    int i = 0;
     for (var element in content) {
       if (element is PCommon) {
-        element.doValidate(messages, index: i);
+        element.doValidate(messages);
+      }
+    }
+  }
+
+  @override
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(parent, index);
+    int i = 0;
+    for (var element in content) {
+      if (element is PPanel) {
+        element.doInit(this, i);
+      }
+      if (element is PPart) {
+        element.doInit(this, i);
       }
       i++;
     }
   }
 
   @override
-  doInit(PCommon parent, int index) {
-    super.doInit(parent, index);
-    int i=0;
-    for (var element in content) {
-      if (element is PPanel) {
-        element.doInit(this,i);
-      }
-      if (element is PPart) {
-        element.doInit(this,i);
-      }
-      i++;
-    }
-  }
+  String get idAlternative => title;
 
   /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [backend] is always
   /// considered 'declared' by the page, even when actually declared by something above it.
@@ -313,8 +323,6 @@ class PPage extends PCommon implements PreceptDebug {
   /// considered 'declared' by the page, even when actually declared by something above it.
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get dataSourceIsDeclared => (isStatic == IsStatic.yes) ? false : true;
-
-  String get debugId => id ?? 'page without id';
 }
 
 enum PageType { standard }
@@ -366,20 +374,19 @@ class PPanel extends PDisplayElement {
         );
 
   @override
-  doInit(PCommon parent, int index) {
-    super.doInit(parent,index);
-    int i=0;
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(parent, index);
+    int i = 0;
     for (var element in content) {
-      element.doInit(this,i);
+      element.doInit(this, i);
       i++;
     }
   }
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
-    int i = 0;
+
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     for (PDisplayElement element in content) {
-      element.doValidate(messages, index: i);
-      i++;
+      element.doValidate(messages);
     }
   }
 }
@@ -467,8 +474,6 @@ enum ControlEdit {
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PDataSourceConverter()
 class PCommon extends PreceptItem {
-  @JsonKey(ignore: true)
-  PCommon _parent;
   IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
@@ -480,8 +485,6 @@ class PCommon extends PreceptItem {
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
   WritingStyle _writingStyle;
-  @JsonKey(ignore: true)
-  int _index;
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
@@ -514,15 +517,13 @@ class PCommon extends PreceptItem {
   /// [dataSource] is declared rather than inherited
   bool get dataSourceIsDeclared => (_dataSource != null);
 
-  @JsonKey(ignore: true)
-  PCommon get parent => _parent;
+  PCommon get parent => super.parent as PCommon;
 
-  /// Initialises by setting up [_parent], [_index] and [_hasEditControl] properties.
+  /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PCommon parent, int index) {
-    _parent = parent;
-    _index =index;
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(parent, index);
     PCommon p = parent;
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
@@ -533,6 +534,8 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     _setupControlEdit(inherited);
+    if (_backend != null) _backend.doInit(this, index,useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataSource != null) _dataSource.doInit(this, index,useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
@@ -580,24 +583,20 @@ class PCommon extends PreceptItem {
     }
 
     if (controlEdit == ControlEdit.firstLevelPanels || inherited == ControlEdit.firstLevelPanels) {
-      if (this is PPanel && _parent is PPage) {
+      if (this is PPanel && parent is PPage) {
         _hasEditControl = true;
         return;
       }
     }
   }
 
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-    super.doValidate(messages, index: index);
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
     if (backend != null) {
-      backend.doValidate(messages, index: index);
+      backend.doValidate(messages);
     }
     if (dataSource != null) {
-      dataSource.doValidate(messages, index: index);
+      dataSource.doValidate(messages);
     }
   }
-}
-
-abstract class PreceptDebug {
-  String get debugId;
 }

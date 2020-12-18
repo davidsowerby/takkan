@@ -24,7 +24,6 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
         : PDataSource.fromJson(json['dataSource'] as Map<String, dynamic>),
     controlEdit:
         _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
     readModeOptions: json['readModeOptions'] == null
         ? null
         : PReadModeOptions.fromJson(
@@ -38,7 +37,6 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PStringToJson(PString instance) {
   final val = <String, dynamic>{
-    'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'isStatic': _$IsStaticEnumMap[instance.isStatic],
   };
