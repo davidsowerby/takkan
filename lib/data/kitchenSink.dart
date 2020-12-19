@@ -16,13 +16,13 @@ final kitchenSinkScript = PScript(
           page: PPage(title: "Home Page", content: [
             PPanel(
               property: "",
+              caption: "Person",
               help: PHelp(
                 title: "Display options",
                 message:
                     'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
               ),
               heading: PPanelHeading(
-                title: "Person",
                 style: PHeadingStyle(background: PColor.primary),
               ),
               content: [

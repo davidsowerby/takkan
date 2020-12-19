@@ -40,12 +40,12 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-          id: id,
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          controlEdit: controlEdit,
-        );
+    id: id,
+    isStatic: isStatic,
+    backend: backend,
+    dataSource: dataSource,
+    controlEdit: controlEdit,
+  );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
@@ -67,7 +67,7 @@ class PScript extends PCommon {
   /// Validates the structure and content of the model
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
-  List<ValidationMessage> validate({bool throwOnFail = false,bool useCaptionsAsIds=true}) {
+  List<ValidationMessage> validate({bool throwOnFail = false, bool useCaptionsAsIds = true}) {
     init(useCaptionsAsIds: useCaptionsAsIds);
     _validationMessages = List();
     doValidate(_validationMessages);
@@ -98,11 +98,11 @@ class PScript extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds :useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
     for (var component in components) {
-      component.doInit(this, i,useCaptionsAsIds: useCaptionsAsIds);
+      component.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -144,14 +144,14 @@ class PComponent extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-          id: id,
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          panelStyle: panelStyle,
-          writingStyle: writingStyle,
-          controlEdit: controlEdit,
-        );
+    id: id,
+    isStatic: isStatic,
+    backend: backend,
+    dataSource: dataSource,
+    panelStyle: panelStyle,
+    writingStyle: writingStyle,
+    controlEdit: controlEdit,
+  );
 
   factory PComponent.fromJson(Map<String, dynamic> json) => _$PComponentFromJson(json);
 
@@ -175,7 +175,7 @@ class PComponent extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var route in routes) {
       route.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
@@ -202,10 +202,10 @@ class PRoute extends PCommon {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
-          isStatic: isStatic,
-          backend: backend,
-          controlEdit: controlEdit,
-        );
+    isStatic: isStatic,
+    backend: backend,
+    controlEdit: controlEdit,
+  );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
 
@@ -225,7 +225,7 @@ class PRoute extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (page != null) {
       page.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
@@ -259,17 +259,17 @@ class PPage extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-            isStatic: isStatic,
-            backend: backend,
-            dataSource: dataSource,
-            panelStyle: panelStyle,
-            writingStyle: writingStyle,
-            controlEdit: controlEdit,
-            id: id);
+      isStatic: isStatic,
+      backend: backend,
+      dataSource: dataSource,
+      panelStyle: panelStyle,
+      writingStyle: writingStyle,
+      controlEdit: controlEdit,
+      id: id);
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
-  PRoute get parent => super.parent  as PRoute;
+  PRoute get parent => super.parent as PRoute;
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
@@ -298,7 +298,7 @@ class PPage extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
       if (element is PPanel) {
@@ -363,19 +363,22 @@ class PPanel extends PDisplayElement {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-          id: id,
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          panelStyle: panelStyle,
-          writingStyle: writingStyle,
-          controlEdit: controlEdit,
-          caption: caption,
-        );
+    id: id,
+    isStatic: isStatic,
+    backend: backend,
+    dataSource: dataSource,
+    panelStyle: panelStyle,
+    writingStyle: writingStyle,
+    controlEdit: controlEdit,
+    caption: caption,
+  );
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (heading!=null){
+      heading.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+    }
     int i = 0;
     for (var element in content) {
       element.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
@@ -389,11 +392,12 @@ class PPanel extends PDisplayElement {
       element.doValidate(messages);
     }
   }
+
+
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPanelHeading {
-  final String title;
+class PPanelHeading extends PreceptItem{
   final bool expandable;
   final bool openExpanded;
   final bool canEdit;
@@ -401,7 +405,6 @@ class PPanelHeading {
   final PHeadingStyle style;
 
   PPanelHeading({
-    @required this.title,
     this.expandable = true,
     this.openExpanded = true,
     this.canEdit = false,
@@ -412,6 +415,8 @@ class PPanelHeading {
   factory PPanelHeading.fromJson(Map<String, dynamic> json) => _$PPanelHeadingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
+
+  PPanel get parent => super.parent;
 }
 
 enum IsStatic { yes, no, inherited }
@@ -494,7 +499,8 @@ class PCommon extends PreceptItem {
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-  })  : _isStatic = isStatic,
+  })
+      : _isStatic = isStatic,
         _backend = backend,
         _dataSource = dataSource,
         _panelStyle = panelStyle,
@@ -523,7 +529,7 @@ class PCommon extends PreceptItem {
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     PCommon p = parent;
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
@@ -534,8 +540,8 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     _setupControlEdit(inherited);
-    if (_backend != null) _backend.doInit(this, index,useCaptionsAsIds: useCaptionsAsIds);
-    if (_dataSource != null) _dataSource.doInit(this, index,useCaptionsAsIds: useCaptionsAsIds);
+    if (_backend != null) _backend.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataSource != null) _dataSource.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
