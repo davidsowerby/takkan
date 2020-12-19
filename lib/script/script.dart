@@ -67,8 +67,8 @@ class PScript extends PCommon {
   /// Validates the structure and content of the model
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
-  List<ValidationMessage> validate({bool throwOnFail = false}) {
-    init();
+  List<ValidationMessage> validate({bool throwOnFail = false,bool useCaptionsAsIds=true}) {
+    init(useCaptionsAsIds: useCaptionsAsIds);
     _validationMessages = List();
     doValidate(_validationMessages);
 
