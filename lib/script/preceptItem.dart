@@ -54,7 +54,9 @@ class PreceptItem {
     _index = index;
 
     /// Use caption (or other specified alternative) if required
-    uid = (useCaptionsAsIds) ? idAlternative : _id;
+    if (useCaptionsAsIds){
+      uid=idAlternative;
+    }
 
     /// if we still don't have a uid, generate one
     if (uid == null || uid.isEmpty) {
@@ -62,12 +64,17 @@ class PreceptItem {
       uid = "$type:$index";
     }
 
+    /// Explicitly set [_id] override other settings
+    if (_id != null && _id.isNotEmpty){
+      uid=_id;
+    }
+
     /// construct hierarchical debugId
     /// PScript cannot call on parent - it does not have one
     if (this is PScript) {
       _debugId = uid;
     } else {
-      _debugId = "${_parent.debugId}-$uid";
+      _debugId = "${_parent.debugId}.$uid";
     }
   }
 
