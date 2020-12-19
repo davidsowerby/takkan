@@ -160,12 +160,12 @@ void main() {
 
       final part131Id='script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-1';
       expect(testTree.elementHasEditState(part131Id), isFalse);
-      expect(testTree.elementHasDataBinding(part131Id), isTrue);
+      expect(testTree.elementHasDataBinding(part131Id), isFalse);
       expect(testTree.elementHasDataSource(part131Id), isFalse);
 
       final part132Id='script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-2';
       expect(testTree.elementHasEditState(part132Id), isFalse);
-      expect(testTree.elementHasDataBinding(part132Id), isTrue);
+      expect(testTree.elementHasDataBinding(part132Id), isFalse);
       expect(testTree.elementHasDataSource(part132Id), isFalse);
     });
   });

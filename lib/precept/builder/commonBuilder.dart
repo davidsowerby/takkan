@@ -87,12 +87,6 @@ class PartBuilder with CommonBuilder {
     final part = partLibrary.find(callingType, config);
     Widget widget = part;
     widget = addEditControl(widget: widget, config: config);
-    widget = addDataBinding(
-      context: context,
-      widget: widget,
-      config: config,
-      property: config.property,
-    );
     widget = addDataSource(widget: widget, config: config);
     return widget;
   }
