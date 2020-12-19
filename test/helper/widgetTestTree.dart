@@ -20,6 +20,7 @@ import './exception.dart';
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
   final List<Widget> widgets;
+  final List<String> elementDebugs=List();
   final int pages;
   final int panels;
   final int parts;
@@ -31,6 +32,7 @@ class WidgetTestTree {
   Map<String, int> _panelIndexes = Map();
   Map<String, int> _partIndexes = Map();
   Map<String, int> _pageIndexes = Map();
+  Map<String, int> _allIndexes = Map();
 
   final List<String> debug = List();
 
@@ -38,11 +40,18 @@ class WidgetTestTree {
     int index = 0;
     for (Widget widget in widgets) {
       if (widget is PreceptPage) {
-        _pageIndexes[widget.config.id] = index;
+        _pageIndexes[widget.config.debugId] = index;
+        _allIndexes[widget.config.debugId] = index;
+        elementDebugs.add(widget.config.debugId);
+
       } else if (widget is Panel) {
-        _panelIndexes[widget.config.id] = index;
+        _panelIndexes[widget.config.debugId] = index;
+        _allIndexes[widget.config.debugId] = index;
+        elementDebugs.add(widget.config.debugId);
       } else if (widget is Part) {
-        _partIndexes[widget.config.id] = index;
+        _partIndexes[widget.config.debugId] = index;
+        _allIndexes[widget.config.debugId] = index;
+        elementDebugs.add(widget.config.debugId);
       }
       index++;
     }
@@ -61,12 +70,7 @@ class WidgetTestTree {
   }
 
   bool elementHas(String id, bool Function(Widget) typeTest, Type lookingFor) {
-    final indexMap = (id.startsWith('Part'))
-        ? _partIndexes
-        : (id.startsWith('Panel'))
-            ? _panelIndexes
-            : _pageIndexes;
-    final index = indexMap[id];
+    final index = _allIndexes[id];
     if (index == null) {
       String msg = "${this.runtimeType.toString()} cannot find '$id'. The _scan did not find it";
       logType(this.runtimeType).e("");
@@ -115,13 +119,13 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  PScript init({PScript script}) {
+  PScript init({PScript script,bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     pageLibrary.init();
     panelLibrary.init();
     partLibrary.init();
     backendLibrary.init();
-    script.validate();
+    script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();
       throw TestException("Validation failure");

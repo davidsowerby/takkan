@@ -4,6 +4,7 @@ import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
+import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
@@ -26,26 +27,36 @@ final PScript kitchenSink01 = PScript(
             title: 'Page 1',
             content: [
               PPanel(
-                id: 'Panel 1',
-                heading: PPanelHeading(title: 'Panel 2'),
+                caption: 'Panel 1',
+                heading: PPanelHeading(),
                 content: [
-                  PString(id: 'Part 1-1', staticData: 'Part 1-1'),
-                  PString(id: 'Part 1-2', staticData: 'Part 1-2'),
+                  PString(
+                    id: 'Part 1-1',
+                    staticData: 'Part 1-1',
+                    readModeOptions: PReadModeOptions(showCaption: false),
+                  ),
+                  PString(
+                    id: 'Part 1-2',
+                    staticData: 'Part 1-2',
+                    readModeOptions: PReadModeOptions(showCaption: false),
+                  ),
                   PPanel(
-                    id: 'Panel 1-3',
+                    caption: 'Panel 1-3',
                     isStatic: IsStatic.no,
                     backend: PMockBackend(instance: 'test'),
                     dataSource:
                         PDataGet(documentId: DocumentId(path: 'Account', itemId: 'objectId1')),
                     controlEdit: ControlEdit.thisOnly,
-                    heading: PPanelHeading(title: 'Panel 2-1'),
+                    heading: PPanelHeading(),
                     content: [
                       PString(
+                        caption: 'First Name',
                         property: 'firstName',
                         id: 'Part 1-3-1',
                         staticData: 'Part 1-3-1',
                       ),
                       PString(
+                        caption: 'Last Name',
                         property: 'lastName',
                         id: 'Part 1-3-2',
                         staticData: 'Part 1-3-2',
@@ -54,8 +65,8 @@ final PScript kitchenSink01 = PScript(
                   ),
                 ],
               ),
-              PString(id: 'Part 2', staticData: 'Part 2'),
-              PString(id: 'Part 3', staticData: 'Part 3'),
+              PString(id: 'Part 2', staticData: 'Part 2', caption: 'Part 2'),
+              PString(id: 'Part 3', staticData: 'Part 3', caption: 'Part 3'),
             ],
           ),
         ),

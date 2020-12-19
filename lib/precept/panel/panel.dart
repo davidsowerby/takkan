@@ -133,7 +133,7 @@ class PanelHeading extends StatelessWidget {
     final theme = Theme.of(context);
     final ThemeLookup themeLookup = inject<ThemeLookup>();
     return Container(
-        child: Text(config.title),
+        child: Text(config.parent.caption),
         color: themeLookup.color(theme: theme, pColor: config.style.background));
   }
 
