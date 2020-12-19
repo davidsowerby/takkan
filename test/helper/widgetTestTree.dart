@@ -12,6 +12,7 @@ import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/part/part.dart';
 import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -20,12 +21,13 @@ import './exception.dart';
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
   final List<Widget> widgets;
-  final List<String> elementDebugs=List();
+  final List<String> elementDebugs = List();
   final int pages;
   final int panels;
   final int parts;
+  final PScript script;
 
-  WidgetTestTree(this.widgets, {this.pages = 1, this.panels = 2, this.parts = 6}) {
+  WidgetTestTree(this.script, this.widgets, {this.pages = 1, this.panels = 2, this.parts = 6}) {
     _scan();
   }
 
@@ -43,7 +45,6 @@ class WidgetTestTree {
         _pageIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
-
       } else if (widget is Panel) {
         _panelIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
@@ -57,16 +58,26 @@ class WidgetTestTree {
     }
   }
 
-  int _upFromElement(int startIndex, bool Function(Widget) typeTest) {
-    int index = startIndex;
-    bool itemFound = false;
-    while (index >= 0 && !itemFound) {
+  int _upFromElement(String id, bool Function(Widget) typeTest) {
+    int index = _allIndexes[id]-1;
+    while (index >= 0 ) {
       if (typeTest(widgets[index])) {
         return index;
       }
+      // TODO: this is a bit fragile, would need new types adding
+      if (widgets[index] is PreceptPage) break;
+      if (widgets[index] is Panel) break;
+      if (widgets[index] is Part) break;
       index--;
     }
     return -1;
+  }
+
+  int _parentOf(String id) {
+    final debugNode = script.debugNode;
+    final DebugNode parentNode = debugNode.parentOf(debugId: id);
+    final parentId=parentNode.item.debugId;
+    return (_allIndexes.containsKey(parentId)) ?  _allIndexes[parentId] : 0;
   }
 
   bool elementHas(String id, bool Function(Widget) typeTest, Type lookingFor) {
@@ -77,7 +88,7 @@ class WidgetTestTree {
       debug.add(msg);
       throw TestException(msg);
     }
-    int result = _upFromElement(index, typeTest);
+    int result = _upFromElement(id, typeTest);
     bool found = result >= 0;
     String text = (found) ? "found at $result" : 'NOT found';
     debug.add("Looking for ${lookingFor.toString()} in $id:  $text");
@@ -107,11 +118,11 @@ class WidgetTestTree {
 
     bool allCorrect = pagesCorrect && panelsCorrect && partsCorrect;
 
-    if (!allCorrect){
-      final String pageMsg="expected $pages pages, but got ${_pageIndexes.length}\n";
-      final String panelMsg="expected $panels panels, but got ${_panelIndexes.length}\n";
-      final String partMsg="expected $parts parts, but got ${_partIndexes.length}\n";
-      final msg=pageMsg+panelMsg+partMsg;
+    if (!allCorrect) {
+      final String pageMsg = "expected $pages pages, but got ${_pageIndexes.length}\n";
+      final String panelMsg = "expected $panels panels, but got ${_panelIndexes.length}\n";
+      final String partMsg = "expected $parts parts, but got ${_partIndexes.length}\n";
+      final msg = pageMsg + panelMsg + partMsg;
       print(msg);
       throw TestException(msg);
     }
@@ -119,7 +130,7 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  PScript init({PScript script,bool useCaptionsAsIds = true}) {
+  PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     pageLibrary.init();
     panelLibrary.init();

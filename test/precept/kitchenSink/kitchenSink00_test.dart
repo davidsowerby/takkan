@@ -80,7 +80,7 @@ void main() {
         config: script.components[0].routes[0].page,
       ));
       await tester.pumpWidget(widgetTree);
-      testTree = WidgetTestTree(tester.allWidgets.toList());
+      testTree = WidgetTestTree(script, tester.allWidgets.toList());
       testTree.verify();
       // then
       final pageId = 'script00.core./test.Page 1';
