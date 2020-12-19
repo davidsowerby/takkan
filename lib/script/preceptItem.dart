@@ -46,32 +46,32 @@ class PreceptItem {
   /// Used for Widget and Functional testing.  This also becomes the Widget key in [Page], [Part] and [Panel] instances
   /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
   String get debugId => _debugId;
+
   PreceptItem get parent => _parent;
 
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     _parent = parent;
     _index = index;
 
-    if (_id == null || _id.isEmpty) {
-      if (useCaptionsAsIds) {
-        uid = idAlternative;
-      }
-      if (uid == null || uid.isEmpty) {
-        final type = _widgetTypeFromPreceptType();
-        uid = "$type:$index";
-      }
-      /// PScript cannot call on parent - it does not have one
-      if (this is PScript) {
-        _debugId = uid;
-      }else{
-        _debugId = "${_parent.debugId}-$uid";
-      }
+    /// Use caption (or other specified alternative) if required
+    uid = (useCaptionsAsIds) ? idAlternative : _id;
+
+    /// if we still don't have a uid, generate one
+    if (uid == null || uid.isEmpty) {
+      final type = _widgetTypeFromPreceptType();
+      uid = "$type:$index";
+    }
+
+    /// construct hierarchical debugId
+    /// PScript cannot call on parent - it does not have one
+    if (this is PScript) {
+      _debugId = uid;
     } else {
-      uid = _id;
       _debugId = "${_parent.debugId}-$uid";
     }
   }
 
+  /// Not all levels will have one
   String get idAlternative => null;
 
   _widgetTypeFromPreceptType() {

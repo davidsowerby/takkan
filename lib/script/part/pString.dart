@@ -30,7 +30,7 @@ class PString extends PPart {
     PReadModeOptions readModeOptions = const PReadModeOptions(),
     PEditModeOptions editModeOptions = const PEditModeOptions(),
   }) : super(
-          id: caption ?? id,
+          id: id,
           caption: caption,
           property: property,
           isStatic: isStatic,

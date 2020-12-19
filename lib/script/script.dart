@@ -98,11 +98,11 @@ class PScript extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index,useCaptionsAsIds :useCaptionsAsIds = true);
+    super.doInit(parent, index,useCaptionsAsIds :useCaptionsAsIds);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
     for (var component in components) {
-      component.doInit(this, i);
+      component.doInit(this, i,useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -144,7 +144,7 @@ class PComponent extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-          id: name ?? id,
+          id: id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -175,10 +175,10 @@ class PComponent extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index);
+    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var route in routes) {
-      route.doInit(this, i);
+      route.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -225,9 +225,9 @@ class PRoute extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index);
+    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
     if (page != null) {
-      page.doInit(this, index);
+      page.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
   }
 
@@ -265,7 +265,7 @@ class PPage extends PCommon {
             panelStyle: panelStyle,
             writingStyle: writingStyle,
             controlEdit: controlEdit,
-            id: title ?? id);
+            id: id);
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -298,14 +298,14 @@ class PPage extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index);
+    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
       if (element is PPanel) {
-        element.doInit(this, i);
+        element.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       }
       if (element is PPart) {
-        element.doInit(this, i);
+        element.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       }
       i++;
     }
@@ -375,10 +375,10 @@ class PPanel extends PDisplayElement {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index);
+    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
-      element.doInit(this, i);
+      element.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -523,7 +523,7 @@ class PCommon extends PreceptItem {
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index);
+    super.doInit(parent, index,useCaptionsAsIds: useCaptionsAsIds);
     PCommon p = parent;
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
