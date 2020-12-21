@@ -9,10 +9,10 @@ import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
 import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,7 @@ void main() {
       final script = PScript(
           backend: PBackend(),
           isStatic: IsStatic.yes,
-          dataSource: PDataSource(),
+          dataSource: PDataGet(),
           components: [
             PComponent(
               routes: [
@@ -76,7 +76,7 @@ void main() {
       partLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PBackend(), dataSource: PDataSource(), components: [
+      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: [
         PComponent(
           routes: [
             PRoute(
@@ -141,7 +141,7 @@ void main() {
       partLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PBackend(), dataSource: PDataSource(), components: [
+      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: [
         PComponent(
           routes: [
             PRoute(

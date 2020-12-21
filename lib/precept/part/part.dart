@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/precept/binding/converter.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
@@ -57,9 +58,17 @@ abstract class Part extends StatelessWidget {
     }
   }
 
-  Widget buildReadOnlyWidget(BuildContext context, ModelBinding parentBinding);
+  Widget buildReadOnlyWidget(BuildContext context, ModelBinding parentBinding){
 
-  Widget buildEditModeWidget(BuildContext context, ModelBinding parentBinding);
+  }
+
+  Widget buildEditModeWidget(BuildContext context, ModelBinding parentBinding){}
+
+  ModelConnector<String, String> _createConnector({@required ModelBinding baseBinding}) {
+    final binding = baseBinding.stringBinding(property: config.property);
+    return ModelConnector<String, String>(
+        binding: binding, converter: PassThroughConverter<String>());
+  }
 }
 
 /// Common base class for part specific read only options which support [Part]

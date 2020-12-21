@@ -9,8 +9,8 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/script/themeLookup.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/help.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
