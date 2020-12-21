@@ -1,5 +1,5 @@
 import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -37,9 +37,9 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PComponent : test-Component:0 : PComponent at index 0 must have a name defined');
+            'PComponent : test.Component:0 : PComponent at index 0 must have a name defined');
         expect(messages[1].toString(),
-            'PComponent : test-Component:0 : PComponent at index 0 must contain at least one PRoute');
+            'PComponent : test.Component:0 : PComponent at index 0 must contain at least one PRoute');
       });
 
       test('routes and name must not be not empty', () {
@@ -51,9 +51,9 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PComponent : Script:0-Component:0 : PComponent at index 0 must have a name defined');
+            'PComponent : Script:0.Component:0 : PComponent at index 0 must have a name defined');
         expect(messages[1].toString(),
-            "PComponent : Script:0-Component:0 : PComponent at index 0 must contain at least one PRoute");
+            "PComponent : Script:0.Component:0 : PComponent at index 0 must contain at least one PRoute");
       });
     });
 
@@ -69,9 +69,9 @@ void main() {
 
         expect(messages.length, 2);
         expect(messages[0].toString(),
-            'PRoute : Script:0-core-Route:0 : must define a path');
+            'PRoute : Script:0.core.Route:0 : must define a path');
         expect(messages[1].toString(),
-            'PRoute : Script:0-core-Route:0 : must define a page');
+            'PRoute : Script:0.core.Route:0 : must define a page');
       });
     });
 
@@ -86,9 +86,9 @@ void main() {
         // then
 
         expect(messages.length, 2);
-        expect(messages[0].toString(), 'PPage : Script:0-core-/home-Page:0 : must define a title');
+        expect(messages[0].toString(), 'PPage : Script:0.core./home.Page:0 : must define a title');
         expect(
-            messages[1].toString(), 'PPage : Script:0-core-/home-Page:0 : must define a pageType');
+            messages[1].toString(), 'PPage : Script:0.core./home.Page:0 : must define a pageType');
       });
 
       test('No errors', () {
@@ -200,9 +200,9 @@ void main() {
         // then
 
         expect(withoutDataSourceOrBackendResults.length, 1);
-        expect(withoutDataSourceOrBackendResults[0].toString(), 'PPanel : Script:0-core-/home-Wiggly-panel1 : must either be static or have a dataSource defined');
+        expect(withoutDataSourceOrBackendResults[0].toString(), 'PPanel : Script:0.core./home.Wiggly.panel1 : must either be static or have a dataSource defined');
         expect(withoutDataSourceResults.length, 1);
-        expect(withoutDataSourceResults[0].toString(), 'PPanel : Script:0-core-/home-Wiggly-panel1 : must either be static or have a dataSource defined');
+        expect(withoutDataSourceResults[0].toString(), 'PPanel : Script:0.core./home.Wiggly.panel1 : must either be static or have a dataSource defined');
         expect(withDataSourceAndBackendResults.length, 0);
       });
     });

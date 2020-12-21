@@ -3,41 +3,31 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/validation/message.dart';
 
-part 'query.g.dart';
+part 'dataSource.g.dart';
 
-/// Roughly equivalent to a query with an expected result of one document.
-///
-/// Specifies how to retrieve a single document in a backend-neutral way
+/// Roughly equivalent to a query with an expected result of one document, or a List of documents
+/// as either a Future or a Stream. Implementations are in broad categories of 'get',
+/// Specifies how to retrieve a single document or a list of documents in a backend-neutral way
 /// Supports various ways of identifying the document:
 /// - 'get' with a document id
 /// - 'select distinct' with criteria expressed in parameters
 /// - 'select first'
 /// - 'select last'
-
-/// Classes used to define selection method and criteria for a document
 ///
-//// Should not be instantiated directly - it would be abstract if that would work with JSON serialization
+abstract class PDataSource extends PreceptItem {
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PDataSource extends PreceptItem {
 
   PDataSource({this.params}) ;
 
-  factory PDataSource.fromJson(Map<String, dynamic> json) =>
-      _$PDataSourceFromJson(json);
-
   final Map<String, dynamic> params;
-
 
   void doValidate( List<ValidationMessage> messages, {int index=-1}){}
 
-
-  Map<String, dynamic> toJson() => _$PDataSourceToJson(this);
 }
 
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDataGet extends PDataSource {
+class PDataGet extends PDataSource<Future<Data>> {
   final DocumentId documentId;
 
    PDataGet({@required this.documentId,  Map<String, dynamic> params=const {}})
@@ -56,12 +46,14 @@ class PDataGet extends PDataSource {
           msg: "PDataGet must define a documentId"));
     }
   }
+
+  // DataSourceReturn get returnType=> throw PreceptException('returnType This must ')
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDataStream  {
-
-  PDataStream() ;
+class PDataStream extends PDataSource {
+  final DocumentId documentId;
+  PDataStream({@required this.documentId,  Map<String, dynamic> params=const {}}) : super(params: params) ;
 
   factory PDataStream.fromJson(Map<String, dynamic> json) =>
       _$PDataStreamFromJson(json);
@@ -90,3 +82,5 @@ class DocumentId {
 
   String get toKey => "$path:$itemId";
 }
+
+enum DataSourceReturn{future, futureList, stream, streamList}

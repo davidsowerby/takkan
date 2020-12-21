@@ -1,34 +1,31 @@
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/script/query.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/script/dataSource.dart';
 
-class PDataSourceConverter
-    implements JsonConverter<PDataSource, Map<String, dynamic>> {
-  const PDataSourceConverter();
-
-  @override
-  PDataSource fromJson(Map<String, dynamic> json) {
+class PDataSourceConverter {
+  static final elementKey = '-type-';
+  static PDataSource fromJson(Map<String, dynamic> json) {
     if (json == null) {
       return null;
     }
-    final String typeName = json["type"];
-    json.remove("type");
+    final String typeName = json[elementKey];
+    json.remove(elementKey);
     switch (typeName) {
-      case "PDataGet":
+      case 'PDataGet':
         return PDataGet.fromJson(json);
+      case 'PDataStream':
+        return PDataStream.fromJson(json);
       default:
         throw PreceptException("Conversion required for $typeName");
     }
   }
 
-  @override
-  Map<String, dynamic> toJson(PDataSource object) {
+  static Map<String, dynamic> toJson(PDataSource object) {
     if (object == null) {
       return null;
     }
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
-    jsonMap["type"] = type.toString();
+    jsonMap[elementKey] = type.toString();
     switch (type) {
       case PDataGet:
         {

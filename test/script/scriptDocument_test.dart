@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:precept_script/script/json/dataSourceConverter.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -16,7 +16,6 @@ void main() {
 
     test('round trip, PDocumentGet', () {
       // given
-      PDataSourceConverter converter = PDataSourceConverter();
       PDataGet g = PDataGet(// ignore: missing_required_param
         documentId: DocumentId(
           path: "user/prefs",
@@ -24,8 +23,8 @@ void main() {
         ),
       );
       // when
-      final Map<String, dynamic> j = converter.toJson(g);
-      final mirror =converter.fromJson(j);
+      final Map<String, dynamic> j = PDataSourceConverter.toJson(g);
+      final mirror =PDataSourceConverter.fromJson(j);
       // then
 
       expect(json.encode(g), json.encode(mirror));

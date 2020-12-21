@@ -1,7 +1,7 @@
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -20,7 +20,7 @@ void main() {
       // given
       final script =
       // ignore: missing_required_param
-          PScript(name:'test',backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataSource(), components: [
+          PScript(name:'test',backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataGet(), components: [
             // ignore: missing_required_param
         PComponent(
           routes: [

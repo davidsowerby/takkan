@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -54,8 +55,8 @@ class PreceptItem {
     _index = index;
 
     /// Use caption (or other specified alternative) if required
-    if (useCaptionsAsIds){
-      uid=idAlternative;
+    if (useCaptionsAsIds) {
+      uid = idAlternative;
     }
 
     /// if we still don't have a uid, generate one
@@ -65,8 +66,8 @@ class PreceptItem {
     }
 
     /// Explicitly set [_id] override other settings
-    if (_id != null && _id.isNotEmpty){
-      uid=_id;
+    if (_id != null && _id.isNotEmpty) {
+      uid = _id;
     }
 
     /// construct hierarchical debugId
@@ -88,4 +89,7 @@ class PreceptItem {
   void doValidate(List<ValidationMessage> messages) {}
 
   int get index => _index;
+
+  DebugNode get debugNode => DebugNode(this,const []);
+
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
@@ -11,7 +12,7 @@ import 'package:precept_script/script/json/partConverter.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/preceptItem.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/style/style.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -40,12 +41,12 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-    id: id,
-    isStatic: isStatic,
-    backend: backend,
-    dataSource: dataSource,
-    controlEdit: controlEdit,
-  );
+          id: id,
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          controlEdit: controlEdit,
+        );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
@@ -58,7 +59,7 @@ class PScript extends PCommon {
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(includeIfNull: false, nullable: true)
+  @JsonKey(fromJson: PDataSourceConverter.fromJson,toJson: PDataSourceConverter.toJson, nullable: true, includeIfNull: false)
   PDataSource get dataSource => _dataSource;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
@@ -124,6 +125,9 @@ class PScript extends PCommon {
     buf.writeln();
     print(buf.toString());
   }
+
+  DebugNode get debugNode  =>  DebugNode(this, List.from(components.map((e) => e.debugNode)));
+
 }
 
 @JsonSerializable(nullable: false, explicitToJson: true)
@@ -144,14 +148,14 @@ class PComponent extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-    id: id,
-    isStatic: isStatic,
-    backend: backend,
-    dataSource: dataSource,
-    panelStyle: panelStyle,
-    writingStyle: writingStyle,
-    controlEdit: controlEdit,
-  );
+          id: id,
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+        );
 
   factory PComponent.fromJson(Map<String, dynamic> json) => _$PComponentFromJson(json);
 
@@ -172,6 +176,8 @@ class PComponent extends PCommon {
       }
     }
   }
+
+  DebugNode get debugNode => DebugNode(this, routes.map((e) => e.debugNode).toList());
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
@@ -202,14 +208,16 @@ class PRoute extends PCommon {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
-    isStatic: isStatic,
-    backend: backend,
-    controlEdit: controlEdit,
-  );
+          isStatic: isStatic,
+          backend: backend,
+          controlEdit: controlEdit,
+        );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
 
   Map<String, dynamic> toJson() => _$PRouteToJson(this);
+
+  DebugNode get debugNode => DebugNode(this, [page.debugNode]);
 
   doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
@@ -259,23 +267,33 @@ class PPage extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-      isStatic: isStatic,
-      backend: backend,
-      dataSource: dataSource,
-      panelStyle: panelStyle,
-      writingStyle: writingStyle,
-      controlEdit: controlEdit,
-      id: id);
+            isStatic: isStatic,
+            backend: backend,
+            dataSource: dataSource,
+            panelStyle: panelStyle,
+            writingStyle: writingStyle,
+            controlEdit: controlEdit,
+            id: id);
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
   PRoute get parent => super.parent as PRoute;
 
+  DebugNode get debugNode {
+    final List <DebugNode> children =  content.map((e) => e.debugNode).toList();
+    if (backendIsDeclared){
+      children.add(backend.debugNode);
+    }
+    if (dataSourceIsDeclared ){
+      children.add(dataSource.debugNode);
+    }
+    return DebugNode(this,children);
+  }
+
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    final routePath = parent.path;
     if (title == null || title.isEmpty) {
       messages.add(ValidationMessage(
         item: this,
@@ -363,20 +381,20 @@ class PPanel extends PDisplayElement {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
-    id: id,
-    isStatic: isStatic,
-    backend: backend,
-    dataSource: dataSource,
-    panelStyle: panelStyle,
-    writingStyle: writingStyle,
-    controlEdit: controlEdit,
-    caption: caption,
-  );
+          id: id,
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+          caption: caption,
+        );
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (heading!=null){
+    if (heading != null) {
       heading.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
     int i = 0;
@@ -393,11 +411,20 @@ class PPanel extends PDisplayElement {
     }
   }
 
-
+  DebugNode get debugNode {
+    final List <DebugNode> children =  content.map((e) => e.debugNode).toList();
+    if (backendIsDeclared){
+      children.add(backend.debugNode);
+    }
+    if (dataSourceIsDeclared){
+      children.add(dataSource.debugNode);
+    }
+    return DebugNode(this,children);
+  }
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPanelHeading extends PreceptItem{
+class PPanelHeading extends PreceptItem {
   final bool expandable;
   final bool openExpanded;
   final bool canEdit;
@@ -477,14 +504,13 @@ enum ControlEdit {
 /// set this during construction - this also means that the [PScript] structure cannot be **const**
 ///
 @JsonSerializable(nullable: false, explicitToJson: true)
-@PDataSourceConverter()
 class PCommon extends PreceptItem {
   IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
-  @JsonKey(nullable: true, includeIfNull: false)
+
   PDataSource _dataSource;
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
@@ -499,8 +525,7 @@ class PCommon extends PreceptItem {
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-  })
-      : _isStatic = isStatic,
+  })  : _isStatic = isStatic,
         _backend = backend,
         _dataSource = dataSource,
         _panelStyle = panelStyle,
@@ -517,7 +542,7 @@ class PCommon extends PreceptItem {
   /// [backend] is declared rather than inherited
   bool get backendIsDeclared => (_backend != null);
 
-  @JsonKey(nullable: true, includeIfNull: false)
+  @JsonKey(fromJson: PDataSourceConverter.fromJson,toJson: PDataSourceConverter.toJson, nullable: true, includeIfNull: false)
   PDataSource get dataSource => _dataSource ?? parent.dataSource;
 
   /// [dataSource] is declared rather than inherited

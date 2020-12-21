@@ -4,7 +4,7 @@ import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
