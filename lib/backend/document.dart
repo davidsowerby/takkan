@@ -1,7 +1,7 @@
 
 
 
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/script/dataSource.dart';
 
 abstract class DocumentIdConverter {
 
