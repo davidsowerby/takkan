@@ -4,9 +4,14 @@ import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
+import 'package:precept_script/script/json/editParticleConverter.dart';
+import 'package:precept_script/script/json/readParticleConverter.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/particle/pParticle.dart';
+import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/script/particle/pTextBox.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -34,11 +39,17 @@ class PPart extends PDisplayElement {
   final String tooltip;
   final PReadModeOptions readModeOptions;
   final PEditModeOptions editModeOptions;
+  @JsonKey(fromJson: PReadParticleConverter.fromJson, toJson: PReadParticleConverter.toJson)
+  final PReadParticle read;
+  @JsonKey(fromJson: PEditParticleConverter.fromJson, toJson: PEditParticleConverter.toJson)
+  final PEditParticle edit;
 
   PPart(
       {String caption,
       this.readOnly = false,
       this.property,
+      this.read = const PText(),
+      this.edit=const PTextBox(),
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
@@ -68,15 +79,16 @@ class PPart extends PDisplayElement {
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
   DebugNode get debugNode {
-    final List <DebugNode> children =  List();
-    if (backendIsDeclared){
+    final List<DebugNode> children = List();
+    if (backendIsDeclared) {
       children.add(backend.debugNode);
     }
-    if (dataSourceIsDeclared){
+    if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);
     }
-    return DebugNode(this,children);
+    return DebugNode(this, children);
   }
+
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes) {
@@ -93,6 +105,4 @@ class PPart extends PDisplayElement {
       }
     }
   }
-
-
 }

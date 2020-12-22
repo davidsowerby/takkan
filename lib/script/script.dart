@@ -10,7 +10,7 @@ import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/json/partConverter.dart';
 import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/style/style.dart';
