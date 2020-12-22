@@ -11,7 +11,7 @@ import 'package:precept_client/precept/router.dart';
 import 'package:precept_script/common/logger.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/error.dart';
-import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 
 /// Loads the Precept models and initialises various parts of Precept

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'file:///home/david/git/precept/precept_script/lib/script/script.dart';
+import 'package:precept_script/script/script.dart';
 
 class DefaultListPage extends StatelessWidget {
   final PPage config;

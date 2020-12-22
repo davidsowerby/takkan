@@ -1,10 +1,10 @@
-import 'package:precept_client/precept/schema/schema.dart';
+import 'package:precept_schema/schema/schema.dart';
 
-final schema = const SModel(components: {
+final schema = const SSchema(components: {
   "core": SComponent(documents: {
     "sink": SDocument(
-      sections: {
-        "": SSection(
+      models: {
+        "": SModel(
           elements: {
             "firstName": SString(),
             "age": SInteger(defaultValue: 0),

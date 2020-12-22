@@ -9,7 +9,7 @@ import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///home/david/git/precept/precept_script/lib/script/script.dart';
+import 'package:precept_script/script/script.dart';
 
 /// A section is an arbitrary collection of Widgets displaying part of a [Panel].
 /// The Widgets may be [Part] implementations or other sections

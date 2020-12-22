@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/precept/library/library.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
-import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
 
 class PartLibrary extends Library<Type, Widget, PPart> {

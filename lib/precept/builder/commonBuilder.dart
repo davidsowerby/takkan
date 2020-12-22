@@ -8,8 +8,8 @@ import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_script/script/element.dart';
-import 'package:precept_script/script/part/pPart.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:provider/provider.dart';
 
 /// Creates companion Widgets according to the settings of [config]

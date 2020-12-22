@@ -11,7 +11,7 @@ import 'package:precept_client/precept/part/string/stringPart.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/part/options.dart';
-import 'package:precept_script/script/part/pPart.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
