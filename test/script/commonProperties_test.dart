@@ -5,7 +5,6 @@ import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
-
 void main() {
   group('Common properties', () {
     setUpAll(() {});
@@ -19,33 +18,39 @@ void main() {
     test('correct inherit / overrule', () {
       // given
       final script =
-      // ignore: missing_required_param
-          PScript(name:'test',backend: PBackend(), isStatic: IsStatic.yes, dataSource: PDataGet(), components: [
-            // ignore: missing_required_param
-        PComponent(
-          routes: [
-            PRoute(
-              path: null,
-              // ignore: missing_required_param
-              page: PPage(
-                controlEdit: ControlEdit.thisAndBelow,
-                content: [
-                  PPanel(
-                    controlEdit: ControlEdit.noEdit,
+          // ignore: missing_required_param
+          PScript(
+              name: 'test',
+              backend: PBackend(),
+              isStatic: IsStatic.yes,
+              dataSource: PDataGet(),
+              components: {
+            'core':
+                // ignore: missing_required_param
+                PComponent(
+              routes: [
+                PRoute(
+                  path: null,
+                  // ignore: missing_required_param
+                  page: PPage(
+                    controlEdit: ControlEdit.thisAndBelow,
                     content: [
-                      PString(),
+                      PPanel(
+                        controlEdit: ControlEdit.noEdit,
+                        content: [
+                          PString(),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
+                )
+              ],
             )
-          ],
-        )
-      ]);
+          });
       // when
       script.init();
       // then
-      final component = script.components[0];
+      final component = script.components['core'];
       final route = component.routes[0];
       final page = route.page;
       final panel = page.content[0] as PPanel;
@@ -77,10 +82,10 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script =
-      PScript(name:'test',  components: [
-        // ignore: missing_required_param
-        PComponent(
+      final script = PScript(name: 'test', components: {
+        'core':
+            // ignore: missing_required_param
+            PComponent(
           routes: [
             PRoute(
               path: null,
@@ -97,12 +102,12 @@ void main() {
             )
           ],
         )
-      ]);
+      });
       // when
 
       script.init();
       // then
-      final component = script.components[0];
+      final component = script.components['core'];
       final route = component.routes[0];
       final page = route.page;
       final panel = page.content[0] as PPanel;
@@ -131,8 +136,5 @@ void main() {
       expect(part.dataSource, isNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
     });
-
-
   });
-
 }

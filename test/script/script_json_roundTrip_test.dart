@@ -25,7 +25,7 @@ void main() {
 
       expect(script2.components.length, 1);
       script2.init();
-      final c0 = script2.components[0];
+      final c0 = script2.components['core'];
       expect(c0.name, "core");
       expect(c0.routes.length, 1);
       final r0 = c0.routes[0];

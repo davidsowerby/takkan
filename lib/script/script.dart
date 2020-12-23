@@ -26,12 +26,12 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-  final List<PComponent> components;
+  final Map<String, PComponent> components;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;
 
   PScript({
-    this.components = const [],
+    this.components=const {},
     this.name,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
@@ -77,8 +77,11 @@ class PScript extends PCommon {
       _validationMessages
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
-      for (var component in components) {
-        component.doValidate(_validationMessages);
+      for (var entry in components.entries) {
+        if (entry.key.isEmpty){
+          _validationMessages.add(ValidationMessage(item: this, msg: "PComponent name cannot be an empty String"));
+        }
+        entry.value.doValidate(_validationMessages);
       }
     }
     if (throwOnFail && _validationMessages.isNotEmpty) {
@@ -97,13 +100,16 @@ class PScript extends PCommon {
     doInit(null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
+
+  /// Passes call to all components, and sets the components names from their keys in parent
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
-    for (var component in components) {
-      component.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
+    for (var entry in components.entries) {
+      entry.value._name=entry.key; /// This must be done first or validation messages get wrong debugId
+      entry.value.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -126,20 +132,19 @@ class PScript extends PCommon {
     print(buf.toString());
   }
 
-  DebugNode get debugNode  =>  DebugNode(this, List.from(components.map((e) => e.debugNode)));
+  DebugNode get debugNode  =>  DebugNode(this, List.from(components.entries.toList().map((e) => (e as PComponent).debugNode)));
 
 }
 
 @JsonSerializable(nullable: false, explicitToJson: true)
 @PPartMapConverter()
 class PComponent extends PCommon {
-  final String name;
+  String _name;
   final List<PRoute> routes;
 
   @JsonKey(ignore: true)
   PComponent({
     this.routes = const [],
-    @required this.name,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
@@ -163,13 +168,10 @@ class PComponent extends PCommon {
 
   doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (name == null || name.isEmpty) {
-      messages.add(ValidationMessage(
-          item: this, msg: "PComponent at index $index must have a name defined"));
-    }
     if (routes == null || routes.isEmpty) {
+      final String n= (name.isEmpty) ? 'unnamed' : name;
       messages.add(ValidationMessage(
-          item: this, msg: "PComponent at index $index must contain at least one PRoute"));
+          item: this, msg: "$n PComponent must contain at least one PRoute"));
     } else {
       for (var route in routes) {
         route.doValidate(messages);
@@ -189,7 +191,8 @@ class PComponent extends PCommon {
     }
   }
 
-  String get idAlternative => name;
+  String get idAlternative => _name;
+  String get name => _name;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)

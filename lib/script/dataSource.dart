@@ -16,7 +16,7 @@ part 'dataSource.g.dart';
 /// - 'select last'
 ///
 /// [document] is in the form 'component:document', and refers to the [SComponent] : [SDocument] within the
-/// schema referenced by this script
+/// schema referenced by this script.  The 'component' element can be omitted if there is only one component in the script
 ///
 abstract class PDataSource extends PreceptItem {
   final String document;

@@ -357,7 +357,7 @@ packages:
   precept_schema:
     dependency: "direct main"
     description:
-      path: "../precept_schema"
+      path: "../precept-schema"
       relative: true
     source: path
     version: "0.0.1"
