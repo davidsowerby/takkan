@@ -38,9 +38,9 @@ dependencies:
   collection: ^1.14.13
   auto_size_text: ^2.1.0
   precept_schema:
-    path: ../precept_schema
+    path: ../precept-schema
   precept_script:
-    path: ../precept-script
+    path: ../precept_script
 
 
 
@@ -55,7 +55,7 @@ dev_dependencies:
   source_gen:
   json_serializable: ^3.2.0
   precept_mock_backend:
-    path: ../precept-mock-backend
+    path: ../precept_mock_backend
 
 
 

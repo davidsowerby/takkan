@@ -516,21 +516,21 @@ packages:
   precept_mock_backend:
     dependency: "direct dev"
     description:
-      path: "../precept-mock-backend"
+      path: "../precept_mock_backend"
       relative: true
     source: path
     version: "0.0.1"
   precept_schema:
     dependency: "direct main"
     description:
-      path: "../precept_schema"
+      path: "../precept-schema"
       relative: true
     source: path
     version: "0.0.1"
   precept_script:
     dependency: "direct main"
     description:
-      path: "../precept-script"
+      path: "../precept_script"
       relative: true
     source: path
     version: "0.0.1"

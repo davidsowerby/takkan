@@ -34,7 +34,8 @@ class Panel extends StatelessWidget {
         case PDataStream:
           return streamBuilder(backend, dataSource, panelState);
         default:
-          throw ConfigurationException('Unrecognised data source type:  ${dataSource.config.runtimeType}');
+          throw ConfigurationException(
+              'Unrecognised data source type:  ${dataSource.config.runtimeType}');
       }
     }
   }
@@ -95,7 +96,10 @@ class Panel extends StatelessWidget {
 
   Widget _buildExpanded(BuildContext context) {
     return Column(
-      children: [_buildHeader(), PanelBuilder().buildContent(context: context, config: config)],
+      children: [
+        if (config.heading != null) _buildHeader(),
+        PanelBuilder().buildContent(context: context, config: config),
+      ],
     );
   }
 

@@ -2,16 +2,22 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
+import 'package:precept_client/precept/library/backendLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
+import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/part/string/stringPart.dart';
+import 'package:precept_client/precept/script/themeLookup.dart';
+import 'package:precept_mock_backend/pMockBackend.dart';
+import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
-import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +26,22 @@ import '../../helper/mock.dart';
 
 void main() {
   group('PartBuilder build', () {
+
+    setUp(() {mockBackend.initialData(
+      instanceKey: 'test',
+      tables: [
+        MockTable(
+          name: 'Account',
+          rows: [
+            MockRow(
+              objectId: 'objectId1',
+              columns: {'firstName': 'David', 'lastName': 'Sowerby'},
+            ),
+          ],
+        ),
+      ],
+    );});
+
     testWidgets('build - static', (WidgetTester tester) async {
       // given
       partLibrary.init();
@@ -37,7 +59,7 @@ void main() {
                       PPanel(
                         controlEdit: ControlEdit.thisOnly,
                         content: [
-                          PString(staticData: "static text"),
+                          PString(staticData: "static text", caption:'static'),
                         ],
                       ),
                     ],
@@ -63,20 +85,25 @@ void main() {
       // then
 
       await tester.pumpWidget(cnp);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(b, isA<StringPart>(),
           reason: "Static, only the Part is generated, should not look for EditState");
       final widgetList = tester.allWidgets.toList();
-      expect(widgetList[3], isA<Text>());
-      Text t = widgetList[3];
+      expect(widgetList[10], isA<Text>());
+      Text t = widgetList[10];
       expect(t.data, "static text");
     });
 
     testWidgets('data, controlEdit==false', (WidgetTester tester) async {
       // given
+      getIt.reset();
+      getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
+      getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
       partLibrary.init();
+      backendLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: [
+      final script = PScript(backend: PMockBackend(instance: 'test'), dataSource: PDataGet(documentId: (DocumentId(path:'Account',itemId: 'objectId1'))), components: [
         PComponent(
           routes: [
             PRoute(
@@ -107,7 +134,7 @@ void main() {
 
       BuildContext context = MockBuildContext();
       // when
-      script.init();
+      script.validate();
       // when
       // final StringPart b = PartBuilder().build(context:context,callingType:PString, config: part);
       // simulate higher level to enable inflate
@@ -129,10 +156,11 @@ void main() {
       // then
 
       await tester.pumpWidget(testTree);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
       // expect(b, isA<StringPart>(), reason: 'Not controlling edit, refer to higher EditState');
       final widgetList = tester.allWidgets.toList();
-      expect(widgetList[7], isA<Text>());
-      Text t = widgetList[7];
+      expect(widgetList[15], isA<Text>());
+      Text t = widgetList[15];
       expect(t.data, 'Hugo');
     });
 
@@ -192,3 +220,5 @@ void main() {
     });
   });
 }
+
+
