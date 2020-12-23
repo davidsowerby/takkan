@@ -28,10 +28,8 @@ void main() {
             'core':
                 // ignore: missing_required_param
                 PComponent(
-              routes: [
+              routes: {'':
                 PRoute(
-                  path: null,
-                  // ignore: missing_required_param
                   page: PPage(
                     controlEdit: ControlEdit.thisAndBelow,
                     content: [
@@ -44,14 +42,14 @@ void main() {
                     ],
                   ),
                 )
-              ],
+              },
             )
           });
       // when
       script.init();
       // then
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes[''];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -86,10 +84,8 @@ void main() {
         'core':
             // ignore: missing_required_param
             PComponent(
-          routes: [
+          routes: {'/test':
             PRoute(
-              path: null,
-              // ignore: missing_required_param
               page: PPage(
                 content: [
                   PPanel(
@@ -100,7 +96,7 @@ void main() {
                 ],
               ),
             )
-          ],
+          },
         )
       });
       // when
@@ -108,7 +104,7 @@ void main() {
       script.init();
       // then
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/test'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;

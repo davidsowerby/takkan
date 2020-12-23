@@ -140,11 +140,11 @@ class PScript extends PCommon {
 @PPartMapConverter()
 class PComponent extends PCommon {
   String _name;
-  final List<PRoute> routes;
+  final Map<String, PRoute> routes;
 
   @JsonKey(ignore: true)
   PComponent({
-    this.routes = const [],
+    this.routes = const {},
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
@@ -173,20 +173,22 @@ class PComponent extends PCommon {
       messages.add(ValidationMessage(
           item: this, msg: "$n PComponent must contain at least one PRoute"));
     } else {
-      for (var route in routes) {
-        route.doValidate(messages);
+      for (var entry in routes.entries) {
+        entry.value.doValidate(messages);
       }
     }
   }
 
-  DebugNode get debugNode => DebugNode(this, routes.map((e) => e.debugNode).toList());
+  DebugNode get debugNode  =>  DebugNode(this, List.from(routes.entries.toList().map((e) => (e as PRoute).debugNode)));
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
-    for (var route in routes) {
-      route.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
+    for (var entry in routes.entries) {
+      /// Must do this first to set debugId for validation messages
+      entry.value._path=entry.key;
+      entry.value.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -197,12 +199,11 @@ class PComponent extends PCommon {
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute extends PCommon {
-  final String path;
+   String _path;
   final PPage page;
 
   @JsonKey(ignore: true)
   PRoute({
-    @required this.path,
     @required this.page,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
@@ -224,7 +225,7 @@ class PRoute extends PCommon {
 
   doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (path == null || path.isEmpty) {
+    if (_path == null || _path.isEmpty) {
       messages.add(ValidationMessage(item: this, msg: "must define a path"));
     }
     if (page == null) {
@@ -244,6 +245,7 @@ class PRoute extends PCommon {
 
   @override
   String get idAlternative => path;
+  String get path=> _path;
 }
 
 /// [pageType] is used to look up from [PageLibrary]

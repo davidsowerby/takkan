@@ -29,15 +29,15 @@ void main() {
     group('PComponent validation', () {
       test('routes and name not null', () {
         // given
-        final component = PScript(
-            name: 'test', components: {'': PComponent()}); // ignore: missing_required_param
+        final component =
+            PScript(name: 'test', components: {'': PComponent()}); // ignore: missing_required_param
         // when
         final messages = component.validate();
         // then
 
         expect(messages.length, 2);
-        expect(messages[0].toString(),
-            'PScript : test : PComponent name cannot be an empty String');
+        expect(
+            messages[0].toString(), 'PScript : test : PComponent name cannot be an empty String');
         expect(messages[1].toString(),
             'PComponent : test.Component:0 : unnamed PComponent must contain at least one PRoute');
       });
@@ -60,8 +60,8 @@ void main() {
     group('PRoute validation', () {
       test('Must have path and page', () {
         // given
-        final script = PScript(name: 'test',components: {
-          'core': PComponent(routes: [PRoute()]) // ignore: missing_required_param
+        final script = PScript(name: 'test', components: {
+          'core': PComponent(routes: {'': PRoute()}) // ignore: missing_required_param
         });
         // when
         final messages = script.validate();
@@ -77,7 +77,7 @@ void main() {
       test('Must have pageType and title', () {
         // given
         final component = PScript(isStatic: IsStatic.yes, components: {
-          'core': PComponent(routes: [PRoute(path: "/home", page: PPage(pageType: null))])
+          'core': PComponent(routes: {"/home": PRoute(page: PPage(pageType: null))})
           // ignore: missing_required_param
         });
         // when
@@ -97,15 +97,14 @@ void main() {
             components: {
               'core':
                   // ignore: missing_required_param
-                  PComponent(routes: [
-                PRoute(
-                    path: "/home",
+                  PComponent(routes: {
+                "/home": PRoute(
                     page: PPage(
                         pageType: "mine",
                         title: "Wiggly",
                         dataSource: PDataGet(documentId: DocumentId())))
                 // ignore: missing_required_param
-              ])
+              })
             });
         // when
         final messages = component.validate();
@@ -123,9 +122,8 @@ void main() {
             components: {
               'core':
                   // ignore: missing_required_param
-                  PComponent(routes: [
-                PRoute(
-                  path: "/home",
+                  PComponent(routes: {
+                "/home": PRoute(
                   page: PPage(
                     pageType: "mine",
                     title: "Wiggly",
@@ -136,7 +134,7 @@ void main() {
                     content: [PPanel()],
                   ),
                 )
-              ])
+              })
             });
         // when
         final messages = component.validate();
@@ -151,16 +149,15 @@ void main() {
           components: {
             'core': PComponent(
               backend: PBackend(backendType: 'mock', connection: const {'instanceKey': 'test'}),
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    content: [PPanel(caption: 'panel1')],
-                  ),
+              routes: { "/home":
+              PRoute(
+                page: PPage(
+                  pageType: "mine",
+                  title: "Wiggly",
+                  content: [PPanel(caption: 'panel1')],
                 ),
-              ],
+              ),
+              },
             )
           },
         );
@@ -169,16 +166,15 @@ void main() {
           backend: PBackend(backendType: 'mock', connection: const {'instanceKey': 'test'}),
           components: {
             'core': PComponent(
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    content: [PPanel(caption: 'panel1')],
-                  ),
-                )
-              ],
+              routes: { "/home":
+              PRoute(
+                page: PPage(
+                  pageType: "mine",
+                  title: "Wiggly",
+                  content: [PPanel(caption: 'panel1')],
+                ),
+              )
+              },
             )
           },
         );
@@ -188,20 +184,19 @@ void main() {
           // ignore: missing_required_param
           components: {
             'core': PComponent(
-              routes: [
-                PRoute(
-                  path: "/home",
-                  page: PPage(
-                    pageType: "mine",
-                    title: "Wiggly",
-                    dataSource: PDataGet(
-                      // ignore: missing_required_param
-                      documentId: DocumentId(), // ignore: missing_required_param
-                    ),
-                    content: [PPanel(caption: 'panel1')],
+              routes: { "/home":
+              PRoute(
+                page: PPage(
+                  pageType: "mine",
+                  title: "Wiggly",
+                  dataSource: PDataGet(
+                    // ignore: missing_required_param
+                    documentId: DocumentId(), // ignore: missing_required_param
                   ),
-                )
-              ],
+                  content: [PPanel(caption: 'panel1')],
+                ),
+              )
+              },
             )
           },
         );

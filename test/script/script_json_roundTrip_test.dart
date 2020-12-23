@@ -28,7 +28,7 @@ void main() {
       final c0 = script2.components['core'];
       expect(c0.name, "core");
       expect(c0.routes.length, 1);
-      final r0 = c0.routes[0];
+      final r0 = c0.routes['/'];
       expect(r0.path, "/");
       final p = r0.page;
       expect(p.title, "Home Page");

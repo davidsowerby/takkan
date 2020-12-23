@@ -18,9 +18,8 @@ void main() {
         components: {
           'core': PComponent(
             // ignore: missing_required_param
-            routes: [
-              PRoute(
-                path: '/home',
+            routes: {
+              '/home': PRoute(
                 page: PPage(
                   // ignore: missing_required_param
                   content: [
@@ -38,13 +37,13 @@ void main() {
                   ],
                 ),
               ),
-            ],
+            },
           ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -79,36 +78,35 @@ void main() {
       // given
       final script = PScript(
         controlEdit: ControlEdit.panelsOnly,
-        components: {'core':
-        PComponent(
-          // ignore: missing_required_param
-          routes: [
-            PRoute(
-              path: '/home',
-              page: PPage(
-                // ignore: missing_required_param
-                content: [
-                  PPanel(
-                    caption: 'panel1',
-                    content: [
-                      PPart(caption: 'panel1-part1'),
-                      PPanel(
-                        caption: 'panel11',
-                        content: [PPart(caption: 'panel11-part1')],
-                      ),
-                    ],
-                  ),
-                  PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-                ],
+        components: {
+          'core': PComponent(
+            // ignore: missing_required_param
+            routes: {
+              '/home': PRoute(
+                page: PPage(
+                  // ignore: missing_required_param
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            },
+          ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -134,36 +132,35 @@ void main() {
     test('firstLevelPanels with Part override', () {
       // given
       final script = PScript(
-        components: {'core':
-        PComponent(
-          controlEdit: ControlEdit.firstLevelPanels, // ignore: missing_required_param
-          routes: [
-            PRoute(
-              path: '/home',
-              page: PPage(
-                // ignore: missing_required_param
-                content: [
-                  PPanel(
-                    caption: 'panel1',
-                    content: [
-                      PPart(caption: 'panel1-part1'),
-                      PPanel(
-                        caption: 'panel11',
-                        content: [PPart(caption: 'panel11-part1')],
-                      ),
-                    ],
-                  ),
-                  PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-                ],
+        components: {
+          'core': PComponent(
+            controlEdit: ControlEdit.firstLevelPanels, // ignore: missing_required_param
+            routes: {
+              '/home': PRoute(
+                page: PPage(
+                  title: 'title',
+                  content: [
+                    PPanel(
+                      caption: 'panel1',
+                      content: [
+                        PPart(caption: 'panel1-part1'),
+                        PPanel(
+                          caption: 'panel11',
+                          content: [PPart(caption: 'panel11-part1')],
+                        ),
+                      ],
+                    ),
+                    PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
+            },
+          ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -189,12 +186,11 @@ void main() {
     test('thisOnly does nothing if too high', () {
       // given
       final script = PScript(
-        components: {'core':
-        PComponent(
-          controlEdit: ControlEdit.thisOnly, // ignore: missing_required_param
-          routes: [
+        components: {
+          'core': PComponent(
+            controlEdit: ControlEdit.thisOnly, // ignore: missing_required_param
+            routes: {'/home':
             PRoute(
-              path: '/home',
               page: PPage(
                 // ignore: missing_required_param
                 content: [
@@ -212,13 +208,13 @@ void main() {
                 ],
               ),
             ),
-          ],
-        ),
+            },
+          ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -247,34 +243,33 @@ void main() {
         components: {
           'core': PComponent(
             controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
-            routes: [
-              PRoute(
-                path: '/home',
-                page: PPage(
-                  // ignore: missing_required_param
-                  content: [
-                    PPanel(
-                      caption: 'panel1',
-                      content: [
-                        PPart(caption: 'panel1-part1'),
-                        PPanel(
-                          controlEdit: ControlEdit.noEdit,
-                          caption: 'panel11',
-                          content: [PPart(caption: 'panel11-part1')],
-                        ),
-                      ],
-                    ),
-                    PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-                  ],
-                ),
+            routes: {'/home':
+            PRoute(
+              page: PPage(
+                // ignore: missing_required_param
+                content: [
+                  PPanel(
+                    caption: 'panel1',
+                    content: [
+                      PPart(caption: 'panel1-part1'),
+                      PPanel(
+                        controlEdit: ControlEdit.noEdit,
+                        caption: 'panel11',
+                        content: [PPart(caption: 'panel11-part1')],
+                      ),
+                    ],
+                  ),
+                  PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                ],
               ),
-            ],
+            ),
+            },
           ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -303,34 +298,33 @@ void main() {
         components: {
           'core': PComponent(
             // ignore: missing_required_param
-            routes: [
-              PRoute(
-                path: '/home',
-                page: PPage(
-                  // ignore: missing_required_param
-                  content: [
-                    PPanel(
-                      caption: 'panel1',
-                      content: [
-                        PPart(caption: 'panel1-part1'),
-                        PPanel(
-                          controlEdit: ControlEdit.partsOnly,
-                          caption: 'panel11',
-                          content: [PPart(caption: 'panel11-part1')],
-                        ),
-                      ],
-                    ),
-                    PPart(caption: 'page-part1'),
-                  ],
-                ),
+            routes: {'/home':
+            PRoute(
+              page: PPage(
+                // ignore: missing_required_param
+                content: [
+                  PPanel(
+                    caption: 'panel1',
+                    content: [
+                      PPart(caption: 'panel1-part1'),
+                      PPanel(
+                        controlEdit: ControlEdit.partsOnly,
+                        caption: 'panel11',
+                        content: [PPart(caption: 'panel11-part1')],
+                      ),
+                    ],
+                  ),
+                  PPart(caption: 'page-part1'),
+                ],
               ),
-            ],
+            ),
+            },
           ),
         },
       );
 
       final component = script.components['core'];
-      final route = component.routes[0];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
