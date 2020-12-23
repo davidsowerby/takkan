@@ -14,12 +14,10 @@ import '../../helper/widgetTestTree.dart';
 final PScript kitchenSink00 = PScript(
   name: 'script00',
   isStatic: IsStatic.yes,
-  components: [
-    PComponent(
-      name: 'core',
-      routes: [
-        PRoute(
-          path: '/test',
+  components: {
+    'core': PComponent(
+      routes: {
+        '/test': PRoute(
           page: PPage(
             pageType: Library.simpleKey,
             title: 'Page 1',
@@ -51,9 +49,9 @@ final PScript kitchenSink00 = PScript(
             ],
           ),
         ),
-      ],
+      },
     ),
-  ],
+  },
 );
 
 void main() {
@@ -77,7 +75,7 @@ void main() {
       // when
       final widgetTree = MaterialApp(
           home: PageBuilder().build(
-        config: script.components[0].routes[0].page,
+        config: script.components['core'].routes['/test'].page,
       ));
       await tester.pumpWidget(widgetTree);
       testTree = WidgetTestTree(script, tester.allWidgets.toList());
@@ -94,7 +92,7 @@ void main() {
       expect(testTree.elementHasEditState(panel2Id), isFalse);
       expect(testTree.elementHasDataBinding(panel2Id), isFalse);
       expect(testTree.elementHasDataSource(panel2Id), isFalse);
-      
+
       final panel21Id = 'script00.core./test.Page 1.Panel 2.Panel 2-1';
       expect(testTree.elementHasPanelState(panel21Id), isTrue);
       expect(testTree.elementHasEditState(panel21Id), isFalse);
@@ -106,27 +104,27 @@ void main() {
       expect(testTree.elementHasDataBinding(part1Id), isFalse);
       expect(testTree.elementHasDataSource(part1Id), isFalse);
 
-      final part3Id='script00.core./test.Page 1.Part 3';
+      final part3Id = 'script00.core./test.Page 1.Part 3';
       expect(testTree.elementHasEditState(part3Id), isFalse);
       expect(testTree.elementHasDataBinding(part3Id), isFalse);
       expect(testTree.elementHasDataSource(part3Id), isFalse);
 
-      final part22Id='script00.core./test.Page 1.Panel 2.Part 2-2';
+      final part22Id = 'script00.core./test.Page 1.Panel 2.Part 2-2';
       expect(testTree.elementHasEditState(part22Id), isFalse);
       expect(testTree.elementHasDataBinding(part22Id), isFalse);
       expect(testTree.elementHasDataSource(part22Id), isFalse);
 
-      final part23Id='script00.core./test.Page 1.Panel 2.Part 2-3';
+      final part23Id = 'script00.core./test.Page 1.Panel 2.Part 2-3';
       expect(testTree.elementHasEditState(part23Id), isFalse);
       expect(testTree.elementHasDataBinding(part23Id), isFalse);
       expect(testTree.elementHasDataSource(part23Id), isFalse);
 
-      final part211Id='script00.core./test.Page 1.Panel 2.Panel 2-1.Part 2-1-1';
+      final part211Id = 'script00.core./test.Page 1.Panel 2.Panel 2-1.Part 2-1-1';
       expect(testTree.elementHasEditState(part211Id), isFalse);
       expect(testTree.elementHasDataBinding(part211Id), isFalse);
       expect(testTree.elementHasDataSource(part211Id), isFalse);
 
-      final part212Id='script00.core./test.Page 1.Panel 2.Panel 2-1.Part 2-1-2';
+      final part212Id = 'script00.core./test.Page 1.Panel 2.Panel 2-1.Part 2-1-2';
       expect(testTree.elementHasEditState(part212Id), isFalse);
       expect(testTree.elementHasDataBinding(part212Id), isFalse);
       expect(testTree.elementHasDataSource(part212Id), isFalse);

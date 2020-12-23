@@ -26,50 +26,51 @@ import '../../helper/mock.dart';
 
 void main() {
   group('PartBuilder build', () {
-
-    setUp(() {mockBackend.initialData(
-      instanceKey: 'test',
-      tables: [
-        MockTable(
-          name: 'Account',
-          rows: [
-            MockRow(
-              objectId: 'objectId1',
-              columns: {'firstName': 'David', 'lastName': 'Sowerby'},
-            ),
-          ],
-        ),
-      ],
-    );});
+    setUp(() {
+      mockBackend.initialData(
+        instanceKey: 'test',
+        tables: [
+          MockTable(
+            name: 'Account',
+            rows: [
+              MockRow(
+                objectId: 'objectId1',
+                columns: {'firstName': 'David', 'lastName': 'Sowerby'},
+              ),
+            ],
+          ),
+        ],
+      );
+    });
 
     testWidgets('build - static', (WidgetTester tester) async {
       // given
       partLibrary.init();
       final script = PScript(
-          backend: PBackend(),
-          isStatic: IsStatic.yes,
-          dataSource: PDataGet(),
-          components: [
-            PComponent(
-              routes: [
-                PRoute(
-                  path: null,
-                  page: PPage(
-                    content: [
-                      PPanel(
-                        controlEdit: ControlEdit.thisOnly,
-                        content: [
-                          PString(staticData: "static text", caption:'static'),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-          ]);
-      final component = script.components[0];
-      final route = component.routes[0];
+        backend: PBackend(),
+        isStatic: IsStatic.yes,
+        dataSource: PDataGet(),
+        components: {
+          'core': PComponent(
+            routes: {
+              '/home': PRoute(
+                page: PPage(
+                  content: [
+                    PPanel(
+                      controlEdit: ControlEdit.thisOnly,
+                      content: [
+                        PString(staticData: "static text", caption: 'static'),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            },
+          )
+        },
+      );
+      final component = script.components['core'];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -103,31 +104,34 @@ void main() {
       backendLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PMockBackend(instance: 'test'), dataSource: PDataGet(documentId: (DocumentId(path:'Account',itemId: 'objectId1'))), components: [
-        PComponent(
-          routes: [
-            PRoute(
-              path: null,
-              page: PPage(
-                controlEdit: ControlEdit.thisAndBelow,
-                content: [
-                  PPanel(
-                    content: [
-                      PString(
-                        property: 'name',
-                        controlEdit: ControlEdit.noEdit,
-                        readModeOptions: PReadModeOptions(showCaption: false),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
-        )
-      ]);
-      final component = script.components[0];
-      final route = component.routes[0];
+      final script = PScript(
+        backend: PMockBackend(instance: 'test'),
+        dataSource: PDataGet(documentId: (DocumentId(path: 'Account', itemId: 'objectId1'))),
+        components: {
+          'core': PComponent(
+            routes: {
+              '/home': PRoute(
+                page: PPage(
+                  controlEdit: ControlEdit.thisAndBelow,
+                  content: [
+                    PPanel(
+                      content: [
+                        PString(
+                          property: 'name',
+                          controlEdit: ControlEdit.noEdit,
+                          readModeOptions: PReadModeOptions(showCaption: false),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            },
+          )
+        },
+      );
+      final component = script.components['core'];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -140,7 +144,9 @@ void main() {
       // simulate higher level to enable inflate
       final testTree = Directionality(
           textDirection: TextDirection.ltr,
-          child: ChangeNotifierProvider<DataSource>(create: (_)=> DataSource(config: script.dataSource, canEdit: true,readOnlyMode: false),
+          child: ChangeNotifierProvider<DataSource>(
+            create: (_) =>
+                DataSource(config: script.dataSource, canEdit: true, readOnlyMode: false),
             child: ChangeNotifierProvider<DataBinding>(
               create: (_) => DataBinding(binding: rootBinding),
               child: ChangeNotifierProvider<EditState>(
@@ -169,11 +175,10 @@ void main() {
       partLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: [
-        PComponent(
-          routes: [
-            PRoute(
-              path: null,
+      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: {
+        'core': PComponent(
+          routes: {
+            '/home': PRoute(
               page: PPage(
                 content: [
                   PPanel(
@@ -188,11 +193,11 @@ void main() {
                 ],
               ),
             )
-          ],
+          },
         )
-      ]);
-      final component = script.components[0];
-      final route = component.routes[0];
+      });
+      final component = script.components['core'];
+      final route = component.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -220,5 +225,3 @@ void main() {
     });
   });
 }
-
-

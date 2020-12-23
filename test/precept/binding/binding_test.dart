@@ -72,6 +72,8 @@ void main() {
       sb.write("Wiggly");
       expect(mb.read(), isNotEmpty);
       expect(sb.read(), "Wiggly");
+
+      expect(changeListener.changeCount,1);
     });
   });
 

@@ -53,8 +53,8 @@ class PreceptRouter {
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
   init({@required List<PScript> scripts}) {
     for (PScript script in scripts) {
-      for (PComponent component in script.components) {
-        for (PRoute r in component.routes) {
+      for (PComponent component in script.components.values) {
+        for (PRoute r in component.routes.values) {
           _preceptRoutes[r.path] = r;
         }
       }

@@ -3,7 +3,6 @@ import 'package:precept_client/precept/router.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
-
 void main() {
   group('Precept Router', () {
     setUpAll(() {});
@@ -18,7 +17,17 @@ void main() {
       // given
       buildInjector();
       // when
-      await router.init(scripts: [PScript(components: [PComponent(routes: [PRoute(path: '/home')],)],),]);
+      final script = PScript(
+        components: {
+          'core': PComponent(
+            routes: {'/home': PRoute()},
+          ),
+        },
+      );
+      script.init();
+      await router.init(
+        scripts: [script],
+      );
       // then
       expect(router.hasRoute('/home'), isTrue);
       // expect(router.hasSection(CorePart.address), isTrue);
@@ -29,5 +38,4 @@ void main() {
 buildInjector() {
   getIt.registerSingleton<PreceptRouter>(PreceptRouter());
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
-
 }

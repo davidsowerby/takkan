@@ -14,14 +14,13 @@ import '../../helper/widgetTestTree.dart';
 /// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchenSink.html#static-page-with-overrides)
 ///
 
-final PScript kitchenSink01 = PScript(name: 'script01',
+final PScript kitchenSink01 = PScript(
+  name: 'script01',
   isStatic: IsStatic.yes,
-  components: [
-    PComponent(
-      name: 'core',
-      routes: [
-        PRoute(
-          path: '/test',
+  components: {
+    'core': PComponent(
+      routes: {
+        '/test': PRoute(
           page: PPage(
             pageType: Library.simpleKey,
             title: 'Page 1',
@@ -68,9 +67,9 @@ final PScript kitchenSink01 = PScript(name: 'script01',
             ],
           ),
         ),
-      ],
+      },
     ),
-  ],
+  },
 );
 
 void main() {
@@ -105,11 +104,11 @@ void main() {
 
     testWidgets('All ', (WidgetTester tester) async {
       // given
-      final PScript script = KitchenSinkTest().init(script: kitchenSink01,useCaptionsAsIds: true);
+      final PScript script = KitchenSinkTest().init(script: kitchenSink01, useCaptionsAsIds: true);
       // when
       final widgetTree = MaterialApp(
           home: PageBuilder().build(
-        config: script.components[0].routes[0].page,
+        config: script.components['core'].routes['/test'].page,
       ));
       await tester.pumpWidget(widgetTree);
       await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -117,8 +116,6 @@ void main() {
       testTree = WidgetTestTree(script, tester.allWidgets.toList());
       // then
       testTree.verify();
-
-
 
       final pageId = 'script01.core./test.Page 1';
       expect(testTree.elementHasPanelState(pageId), isFalse);
@@ -132,13 +129,13 @@ void main() {
       expect(testTree.elementHasDataBinding(panel1Id), isFalse);
       expect(testTree.elementHasDataSource(panel1Id), isFalse);
 
-      final panel13Id='script01.core./test.Page 1.Panel 1.Panel 1-3';
+      final panel13Id = 'script01.core./test.Page 1.Panel 1.Panel 1-3';
       expect(testTree.elementHasPanelState(panel13Id), isTrue);
       expect(testTree.elementHasEditState(panel13Id), isTrue);
       expect(testTree.elementHasDataBinding(panel13Id), isTrue);
       expect(testTree.elementHasDataSource(panel13Id), isTrue);
 
-      final part2Id='script01.core./test.Page 1.Part 2';
+      final part2Id = 'script01.core./test.Page 1.Part 2';
       expect(testTree.elementHasEditState(part2Id), isFalse);
       expect(testTree.elementHasDataBinding(part2Id), isFalse);
       expect(testTree.elementHasDataSource(part2Id), isFalse);
@@ -148,22 +145,22 @@ void main() {
       expect(testTree.elementHasDataBinding(part3Id), isFalse);
       expect(testTree.elementHasDataSource(part3Id), isFalse);
 
-      final part11Id='script01.core./test.Page 1.Panel 1.Part 1-1';
+      final part11Id = 'script01.core./test.Page 1.Panel 1.Part 1-1';
       expect(testTree.elementHasEditState(part11Id), isFalse);
       expect(testTree.elementHasDataBinding(part11Id), isFalse);
       expect(testTree.elementHasDataSource(part11Id), isFalse);
-      
-      final part12Id='script01.core./test.Page 1.Panel 1.Part 1-2';
+
+      final part12Id = 'script01.core./test.Page 1.Panel 1.Part 1-2';
       expect(testTree.elementHasEditState(part12Id), isFalse);
       expect(testTree.elementHasDataBinding(part12Id), isFalse);
       expect(testTree.elementHasDataSource(part12Id), isFalse);
 
-      final part131Id='script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-1';
+      final part131Id = 'script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-1';
       expect(testTree.elementHasEditState(part131Id), isFalse);
       expect(testTree.elementHasDataBinding(part131Id), isFalse);
       expect(testTree.elementHasDataSource(part131Id), isFalse);
 
-      final part132Id='script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-2';
+      final part132Id = 'script01.core./test.Page 1.Panel 1.Panel 1-3.Part 1-3-2';
       expect(testTree.elementHasEditState(part132Id), isFalse);
       expect(testTree.elementHasDataBinding(part132Id), isFalse);
       expect(testTree.elementHasDataSource(part132Id), isFalse);
