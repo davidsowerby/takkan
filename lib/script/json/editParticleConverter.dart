@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:precept_schema/common/exception.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/particle/pParticle.dart';

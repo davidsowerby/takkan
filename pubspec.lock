@@ -271,7 +271,7 @@ packages:
     source: hosted
     version: "3.5.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       url: "https://pub.dartlang.org"
