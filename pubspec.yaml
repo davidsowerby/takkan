@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  precept_schema:
-    path: ../precept-schema
+  logger: ^0.9.1
+
 
 dev_dependencies:
   test: ^1.14.4

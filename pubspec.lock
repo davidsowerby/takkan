@@ -271,7 +271,7 @@ packages:
     source: hosted
     version: "3.5.1"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       url: "https://pub.dartlang.org"
@@ -354,13 +354,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0-nullsafety.2"
-  precept_schema:
-    dependency: "direct main"
-    description:
-      path: "../precept-schema"
-      relative: true
-    source: path
-    version: "0.0.1"
   pub_semver:
     dependency: transitive
     description:

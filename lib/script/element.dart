@@ -1,10 +1,10 @@
-import 'package:precept_schema/common/exception.dart';
-import 'package:precept_schema/common/logger.dart';
+import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/logger.dart';
 import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/script/panelStyle.dart';
+import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';

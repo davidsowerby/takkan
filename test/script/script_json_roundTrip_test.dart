@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_script/data/kitchenSink.dart';
+import 'package:precept_script/example/kitchenSink.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 

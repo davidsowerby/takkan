@@ -1,4 +1,4 @@
-import 'package:precept_schema/common/exception.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/dataSource.dart';
 
 class PDataSourceConverter {
