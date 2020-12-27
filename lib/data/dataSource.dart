@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/binding/mapBinding.dart';
 import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/dataSource.dart';
 
 /// The intersection point between application and data.

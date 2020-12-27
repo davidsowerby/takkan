@@ -50,27 +50,22 @@ void main() {
         backend: PBackend(),
         isStatic: IsStatic.yes,
         dataSource: PDataGet(),
-        components: {
-          'core': PComponent(
-            routes: {
-              '/home': PRoute(
-                page: PPage(
+        routes: {
+          '/home': PRoute(
+            page: PPage(
+              content: [
+                PPanel(
+                  controlEdit: ControlEdit.thisOnly,
                   content: [
-                    PPanel(
-                      controlEdit: ControlEdit.thisOnly,
-                      content: [
-                        PString(staticData: "static text", caption: 'static'),
-                      ],
-                    ),
+                    PString(staticData: "static text", caption: 'static'),
                   ],
                 ),
-              )
-            },
+              ],
+            ),
           )
         },
       );
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -107,31 +102,26 @@ void main() {
       final script = PScript(
         backend: PMockBackend(instance: 'test'),
         dataSource: PDataGet(documentId: (DocumentId(path: 'Account', itemId: 'objectId1'))),
-        components: {
-          'core': PComponent(
-            routes: {
-              '/home': PRoute(
-                page: PPage(
-                  controlEdit: ControlEdit.thisAndBelow,
+        routes: {
+          '/home': PRoute(
+            page: PPage(
+              controlEdit: ControlEdit.thisAndBelow,
+              content: [
+                PPanel(
                   content: [
-                    PPanel(
-                      content: [
-                        PString(
-                          property: 'name',
-                          controlEdit: ControlEdit.noEdit,
-                          readModeOptions: PReadModeOptions(showCaption: false),
-                        ),
-                      ],
+                    PString(
+                      property: 'name',
+                      controlEdit: ControlEdit.noEdit,
+                      readModeOptions: PReadModeOptions(showCaption: false),
                     ),
                   ],
                 ),
-              )
-            },
+              ],
+            ),
           )
         },
       );
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
@@ -175,29 +165,24 @@ void main() {
       partLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
-      final script = PScript(backend: PBackend(), dataSource: PDataGet(), components: {
-        'core': PComponent(
-          routes: {
-            '/home': PRoute(
-              page: PPage(
+      final script = PScript(backend: PBackend(), dataSource: PDataGet(), routes: {
+        '/home': PRoute(
+          page: PPage(
+            content: [
+              PPanel(
                 content: [
-                  PPanel(
-                    content: [
-                      PString(
-                        property: 'name',
-                        controlEdit: ControlEdit.thisOnly,
-                        readModeOptions: PReadModeOptions(showCaption: false),
-                      ),
-                    ],
+                  PString(
+                    property: 'name',
+                    controlEdit: ControlEdit.thisOnly,
+                    readModeOptions: PReadModeOptions(showCaption: false),
                   ),
                 ],
               ),
-            )
-          },
+            ],
+          ),
         )
       });
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;

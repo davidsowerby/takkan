@@ -4,10 +4,9 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/builder/commonBuilder.dart';
 import 'package:precept_client/precept/library/pageLibrary.dart';
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/script.dart';
-
 
 /// Router for Precept.
 ///
@@ -49,15 +48,11 @@ class PreceptRouter {
     return _route(preceptRoute);
   }
 
-  /// Indexes all [PRoutes] into [_preceptRoutes], mapped by route path
+  /// Merges [PRoutes] from all [PScript] instances into [_preceptRoutes], mapped by route path
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
   init({@required List<PScript> scripts}) {
     for (PScript script in scripts) {
-      for (PComponent component in script.components.values) {
-        for (PRoute r in component.routes.values) {
-          _preceptRoutes[r.path] = r;
-        }
-      }
+      _preceptRoutes.addAll(script.routes);
     }
     _indexed = true;
   }
@@ -71,14 +66,13 @@ class PreceptRouter {
       final pageWidget = PageBuilder().build(config: route.page);
       return MaterialPageRoute(builder: (_) => pageWidget);
     } catch (e) {
-      final errorPageWidget = pageLibrary.errorPage(PError(message: "Page '${route.page
-          .pageType}' has not been defined in the PageLibrary, but was requested by route: '${route
-          .path}'"),); // TODO message should come from Precept
+      final errorPageWidget = pageLibrary.errorPage(
+        PError(
+            message:
+                "Page '${route.page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${route.path}'"),
+      ); // TODO message should come from Precept
       return MaterialPageRoute(builder: (_) => errorPageWidget);
     }
-
-
-
   }
 
   hasRoute(String path) {
@@ -88,7 +82,7 @@ class PreceptRouter {
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
     final page = pageLibrary.errorPage(PError(
         message:
-        "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
+            "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
     return MaterialPageRoute(builder: (_) => page);
   }
 }
@@ -103,4 +97,3 @@ class PreceptRouterConfig {
 }
 
 PreceptRouter get router => inject<PreceptRouter>();
-

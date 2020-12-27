@@ -18,11 +18,7 @@ void main() {
       buildInjector();
       // when
       final script = PScript(
-        components: {
-          'core': PComponent(
-            routes: {'/home': PRoute()},
-          ),
-        },
+        routes: {'/home': PRoute()},
       );
       script.init();
       await router.init(

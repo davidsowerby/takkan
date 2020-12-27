@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/precept/library/borderLibrary.dart';
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/style/style.dart';
-
 
 abstract class ThemeLookup {
   Color color({@required ThemeData theme, @required PColor pColor});

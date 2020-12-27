@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_script/common/logger.dart';
-
+import 'package:precept_script/common/log.dart';
 
 /// [readOnlyMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
 /// [canEdit] reflects whether the [readOnlyMode] status can be changed. If a [DocumentPageSection] is allowed to edit, this is

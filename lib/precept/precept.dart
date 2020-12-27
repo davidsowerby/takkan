@@ -8,7 +8,7 @@ import 'package:precept_client/precept/library/panelLibrary.dart';
 import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/loader.dart';
 import 'package:precept_client/precept/router.dart';
-import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/pPart.dart';

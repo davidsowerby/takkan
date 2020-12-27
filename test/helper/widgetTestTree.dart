@@ -11,7 +11,7 @@ import 'package:precept_client/precept/library/partLibrary.dart';
 import 'package:precept_client/precept/mutable/sectionState.dart';
 import 'package:precept_client/precept/panel/panel.dart';
 import 'package:precept_client/precept/part/part.dart';
-import 'package:precept_script/common/logger.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
