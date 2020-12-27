@@ -15,9 +15,6 @@ void main() {
     test('defaults', () {
       // given
       final script = PScript(
-        components: {
-          'core': PComponent(
-            // ignore: missing_required_param
             routes: {
               '/home': PRoute(
                 page: PPage(
@@ -38,12 +35,9 @@ void main() {
                 ),
               ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -64,7 +58,6 @@ void main() {
       expect(pagePart.controlEdit, ControlEdit.notSetAtThisLevel);
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);
@@ -78,9 +71,7 @@ void main() {
       // given
       final script = PScript(
         controlEdit: ControlEdit.panelsOnly,
-        components: {
-          'core': PComponent(
-            // ignore: missing_required_param
+
             routes: {
               '/home': PRoute(
                 page: PPage(
@@ -101,12 +92,9 @@ void main() {
                 ),
               ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -119,7 +107,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
@@ -132,13 +119,12 @@ void main() {
     test('firstLevelPanels with Part override', () {
       // given
       final script = PScript(
-        components: {
-          'core': PComponent(
-            controlEdit: ControlEdit.firstLevelPanels, // ignore: missing_required_param
+
             routes: {
               '/home': PRoute(
                 page: PPage(
                   title: 'title',
+                  controlEdit: ControlEdit.firstLevelPanels,
                   content: [
                     PPanel(
                       caption: 'panel1',
@@ -155,12 +141,9 @@ void main() {
                 ),
               ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -173,7 +156,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
@@ -186,9 +168,6 @@ void main() {
     test('thisOnly does nothing if too high', () {
       // given
       final script = PScript(
-        components: {
-          'core': PComponent(
-            controlEdit: ControlEdit.thisOnly, // ignore: missing_required_param
             routes: {'/home':
             PRoute(
               page: PPage(
@@ -209,12 +188,9 @@ void main() {
               ),
             ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -227,7 +203,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);
@@ -239,10 +214,7 @@ void main() {
 
     test('thisAndBelow with negation', () {
       // given
-      final script = PScript(
-        components: {
-          'core': PComponent(
-            controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
+      final script = PScript(          controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
             routes: {'/home':
             PRoute(
               page: PPage(
@@ -264,12 +236,9 @@ void main() {
               ),
             ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -282,7 +251,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, true);
       expect(panel1.hasEditControl, true);
@@ -295,9 +263,6 @@ void main() {
     test('partsOnly, single branch', () {
       // given
       final script = PScript(
-        components: {
-          'core': PComponent(
-            // ignore: missing_required_param
             routes: {'/home':
             PRoute(
               page: PPage(
@@ -319,12 +284,9 @@ void main() {
               ),
             ),
             },
-          ),
-        },
       );
 
-      final component = script.components['core'];
-      final route = component.routes['/home'];
+      final route = script.routes['/home'];
       final page = route.page;
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
@@ -337,7 +299,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(component.hasEditControl, false);
       expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);

@@ -26,12 +26,12 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-  final Map<String, PComponent> components;
+  final Map<String, PRoute> routes;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;
 
   PScript({
-    this.components=const {},
+    this.routes=const {},
     this.name,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
@@ -73,13 +73,13 @@ class PScript extends PCommon {
     _validationMessages = List();
     doValidate(_validationMessages);
 
-    if (components == null || components.length == 0) {
+    if (routes == null || routes.length == 0) {
       _validationMessages
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
-      for (var entry in components.entries) {
+      for (var entry in routes.entries) {
         if (entry.key.isEmpty){
-          _validationMessages.add(ValidationMessage(item: this, msg: "PComponent name cannot be an empty String"));
+          _validationMessages.add(ValidationMessage(item: this, msg: "PRoute path cannot be an empty String"));
         }
         entry.value.doValidate(_validationMessages);
       }
@@ -107,8 +107,8 @@ class PScript extends PCommon {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
-    for (var entry in components.entries) {
-      entry.value._name=entry.key; /// This must be done first or validation messages get wrong debugId
+    for (var entry in routes.entries) {
+      entry.value._path=entry.key; /// This must be done first or validation messages get wrong debugId
       entry.value.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
@@ -132,70 +132,10 @@ class PScript extends PCommon {
     print(buf.toString());
   }
 
-  DebugNode get debugNode  =>  DebugNode(this, List.from(components.entries.toList().map((e) => (e as PComponent).debugNode)));
-
-}
-
-@JsonSerializable(nullable: false, explicitToJson: true)
-@PPartMapConverter()
-class PComponent extends PCommon {
-  String _name;
-  final Map<String, PRoute> routes;
-
-  @JsonKey(ignore: true)
-  PComponent({
-    this.routes = const {},
-    IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
-    PPanelStyle panelStyle,
-    WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
-    String id,
-  }) : super(
-          id: id,
-          isStatic: isStatic,
-          backend: backend,
-          dataSource: dataSource,
-          panelStyle: panelStyle,
-          writingStyle: writingStyle,
-          controlEdit: controlEdit,
-        );
-
-  factory PComponent.fromJson(Map<String, dynamic> json) => _$PComponentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PComponentToJson(this);
-
-  doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
-    if (routes == null || routes.isEmpty) {
-      final String n= (name.isEmpty) ? 'unnamed' : name;
-      messages.add(ValidationMessage(
-          item: this, msg: "$n PComponent must contain at least one PRoute"));
-    } else {
-      for (var entry in routes.entries) {
-        entry.value.doValidate(messages);
-      }
-    }
-  }
-
   DebugNode get debugNode  =>  DebugNode(this, List.from(routes.entries.toList().map((e) => (e as PRoute).debugNode)));
 
-  @override
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    int i = 0;
-    for (var entry in routes.entries) {
-      /// Must do this first to set debugId for validation messages
-      entry.value._path=entry.key;
-      entry.value.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
-      i++;
-    }
-  }
-
-  String get idAlternative => _name;
-  String get name => _name;
 }
+
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute extends PCommon {
@@ -577,7 +517,7 @@ class PCommon extends PreceptItem {
   /// [ControlEdit.noEdit] overrides everything
   _setupControlEdit(ControlEdit inherited) {
     // top levels are not visual elements
-    if (this is PScript || this is PComponent || this is PRoute) {
+    if (this is PScript ||  this is PRoute) {
       _hasEditControl = false;
       return;
     }

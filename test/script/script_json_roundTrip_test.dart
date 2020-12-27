@@ -23,14 +23,11 @@ void main() {
       Map<String, dynamic> jsonMap = script.toJson();
       PScript script2 = PScript.fromJson(jsonMap);
 
-      expect(script2.components.length, 1);
+      expect(script2.routes.length, 1);
       script2.init();
-      final c0 = script2.components['core'];
-      expect(c0.name, "core");
-      expect(c0.routes.length, 1);
-      final r0 = c0.routes['/'];
-      expect(r0.path, "/");
-      final p = r0.page;
+      final c0 = script2.routes['/'];
+      expect(c0.path, '/');
+      final p = c0.page;
       expect(p.title, "Home Page");
       expect(p.content.length, 1);
       expect(p.backend.connection['id'], 'mock1');

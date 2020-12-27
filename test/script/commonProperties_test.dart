@@ -17,46 +17,34 @@ void main() {
 
     test('correct inherit / overrule', () {
       // given
-      final script =
-          // ignore: missing_required_param
-          PScript(
-              name: 'test',
-              backend: PBackend(),
-              isStatic: IsStatic.yes,
-              dataSource: PDataGet(),
-              components: {
-            'core':
-                // ignore: missing_required_param
-                PComponent(
-              routes: {'':
-                PRoute(
-                  page: PPage(
-                    controlEdit: ControlEdit.thisAndBelow,
-                    content: [
-                      PPanel(
-                        controlEdit: ControlEdit.noEdit,
-                        content: [
-                          PString(),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              },
-            )
-          });
+      final script = PScript(
+        name: 'test',
+        backend: PBackend(),
+        isStatic: IsStatic.yes,
+        dataSource: PDataGet(),
+        routes: {
+          '': PRoute(
+            page: PPage(
+              controlEdit: ControlEdit.thisAndBelow,
+              content: [
+                PPanel(
+                  controlEdit: ControlEdit.noEdit,
+                  content: [
+                    PString(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        },
+      );
       // when
       script.init();
       // then
-      final component = script.components['core'];
-      final route = component.routes[''];
+      final route = script.routes[''];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
-
-      expect(component.isStatic, IsStatic.yes);
-      expect(component.backend, isNotNull);
-      expect(component.dataSource, isNotNull);
 
       expect(route.isStatic, IsStatic.yes);
       expect(route.backend, isNotNull);
@@ -80,12 +68,9 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script = PScript(name: 'test', components: {
-        'core':
-            // ignore: missing_required_param
-            PComponent(
-          routes: {'/test':
-            PRoute(
+      final script = PScript(name: 'test',
+          routes: {
+            '/test': PRoute(
               page: PPage(
                 content: [
                   PPanel(
@@ -96,22 +81,16 @@ void main() {
                 ],
               ),
             )
-          },
-        )
       });
       // when
 
       script.init();
       // then
-      final component = script.components['core'];
-      final route = component.routes['/test'];
+      final route = script.routes['/test'];
       final page = route.page;
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
-      expect(component.isStatic, IsStatic.inherited);
-      expect(component.backend, isNull);
-      expect(component.dataSource, isNull);
 
       expect(route.isStatic, IsStatic.inherited);
       expect(route.backend, isNull);
