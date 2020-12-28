@@ -59,7 +59,8 @@ Widget addDataBinding(
         create: (_) => DataBinding(
             binding: (property == null || property.isEmpty)
                 ? parentBinding.binding
-                : parentBinding.binding.modelBinding(property: property)),
+                : parentBinding.binding.modelBinding(property: property),
+            schema: config.schema.documents[config.dataSource.document]),
         child: widget);
     return widget;
   }

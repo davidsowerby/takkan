@@ -13,7 +13,8 @@ mixin ConnectorBuilder {
     final ModelBinding parentBinding = dataBinding.binding;
     final PDocument schema = dataBinding.schema;
     final PSchemaElement fieldSchema = schema.fields[config.property];
-    final binding = _binding(parentBinding: parentBinding, schema: fieldSchema);
+    final binding =
+        _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
     final converter = _converter(schema: fieldSchema, particle: particle);
     final connector = ModelConnector(binding: binding, converter: converter);
     return connector;
