@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/debug.dart';
@@ -25,6 +26,8 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
+  @JsonKey(ignore: true)
+  final PSchema _schema;
   final Map<String, PRoute> routes;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;
@@ -32,6 +35,7 @@ class PScript extends PCommon {
   PScript({
     this.routes=const {},
     this.name,
+    PSchema schema,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
@@ -39,7 +43,7 @@ class PScript extends PCommon {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-  }) : super(
+  }) : _schema=schema, super(
           id: id,
           isStatic: isStatic,
           backend: backend,
@@ -55,6 +59,9 @@ class PScript extends PCommon {
   @override
   @JsonKey(includeIfNull: false, nullable: true)
   PBackend get backend => _backend;
+
+  @JsonKey(ignore: true)
+  PSchema get schema => _schema;
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
@@ -493,6 +500,8 @@ class PCommon extends PreceptItem {
   bool get dataSourceIsDeclared => (_dataSource != null);
 
   PCommon get parent => super.parent as PCommon;
+
+  PSchema get schema => parent.schema;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super

@@ -1,22 +1,29 @@
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/help.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/style.dart';
 
 final kitchenSinkScript = PScript(
-  name: 'test',
-  backend: PBackend(backendType: "mock", connection: {'id': 'mock1'}),
+  name: 'Kitchen Sink',
+  backend: PBackend(backendType: 'mock', connection: {'id': 'mock1'}),
   routes: {
-    "/": PRoute(
+    '/': PRoute(
       page: PPage(
-        title: "Home Page",
+        title: 'Home Page',
         content: [
+          PPart(
+            isStatic: IsStatic.yes,
+            staticData: 'Welcome to the Precept Kitchen Sink, starting with a bit of static text',
+            read: PText(showCaption: false),
+          ),
           PPanel(
-            property: "",
-            caption: "Person",
+            property: '',
+            caption: 'Person',
             help: PHelp(
-              title: "Display options",
+              title: 'Display options',
               message:
                   'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
             ),
@@ -25,8 +32,8 @@ final kitchenSinkScript = PScript(
             ),
             content: [
               PString(
-                property: "firstName",
-                caption: "First Name",
+                property: 'firstName',
+                caption: 'First Name',
               ),
             ],
           ),

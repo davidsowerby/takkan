@@ -5,7 +5,8 @@ import 'package:precept_script/schema/schema.dart';
 
 part 'field.g.dart';
 
-abstract class PField extends PSchemaElement {}
+abstract class PField extends PSchemaElement {
+}
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PBoolean extends PField {

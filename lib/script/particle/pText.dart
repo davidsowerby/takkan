@@ -1,14 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 
 part 'pText.g.dart';
 
 ///
-/// - [property],[isStatic],[staticData], [caption],[tooltip],[help] - see [PPart]
+/// - configures a Flutter Text widget
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PText extends PReadParticle {
-  const PText();
+  const PText({String styleName = 'default', bool showCaption = true}) :  super(styleName: styleName, showCaption: showCaption);
 
   factory PText.fromJson(Map<String, dynamic> json) => _$PTextFromJson(json);
 

@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/part/options.dart';
-import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 
@@ -28,8 +27,6 @@ class PString extends PPart {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-    PReadModeOptions readModeOptions = const PReadModeOptions(),
-    PEditModeOptions editModeOptions = const PEditModeOptions(),
   }) : super(
           id: id,
           caption: caption,
@@ -43,8 +40,6 @@ class PString extends PPart {
           staticData: staticData,
           help: help,
           tooltip: tooltip,
-          readModeOptions: readModeOptions,
-          editModeOptions: editModeOptions,
         );
 
   factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);

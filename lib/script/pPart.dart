@@ -1,14 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/json/editParticleConverter.dart';
 import 'package:precept_script/script/json/readParticleConverter.dart';
 import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/part/options.dart';
-import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/particle/pTextBox.dart';
@@ -37,8 +36,6 @@ class PPart extends PDisplayElement {
   final String staticData;
   final PHelp help;
   final String tooltip;
-  final PReadModeOptions readModeOptions;
-  final PEditModeOptions editModeOptions;
   @JsonKey(fromJson: PReadParticleConverter.fromJson, toJson: PReadParticleConverter.toJson)
   final PReadParticle read;
   @JsonKey(fromJson: PEditParticleConverter.fromJson, toJson: PEditParticleConverter.toJson)
@@ -59,8 +56,6 @@ class PPart extends PDisplayElement {
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
       String id,
-      this.readModeOptions,
-      this.editModeOptions,
       this.tooltip})
       : super(
           id: id,
@@ -98,11 +93,11 @@ class PPart extends PDisplayElement {
             msg: 'unless a Part is static, it must provide a non-null, non-empty property'));
       }
     }
-    if (readModeOptions.showCaption) {
-      if (caption == null || caption.isEmpty) {
-        messages.add(ValidationMessage(
-            item: this, msg: 'readOnlyOptions.showCaption is true, so a caption must be provided'));
-      }
-    }
+    // if (readModeOptions.showCaption) {
+    //   if (caption == null || caption.isEmpty) {
+    //     messages.add(ValidationMessage(
+    //         item: this, msg: 'readOnlyOptions.showCaption is true, so a caption must be provided'));
+    //   }
+    // }
   }
 }
