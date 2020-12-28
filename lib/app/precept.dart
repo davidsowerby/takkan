@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/app/router.dart';
+import 'package:precept_client/binding/converter.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/backendLibrary.dart';
 import 'package:precept_client/library/pageLibrary.dart';
@@ -31,7 +32,8 @@ class Precept {
       {List<Function()> injectionBindings = const [],
       bool includePreceptDefaults = true,
       Map<String, Widget Function(PPage)> pageLibraryEntries,
-      Map<Type, Widget Function(PPart)> partLibraryEntries,
+
+  Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,
       Widget Function(PError) errorPage,
       Map<String, BackendDelegate Function(PBackend)> backendLibraryEntries,
       List<PreceptLoader> loaders = const []}) async {
@@ -42,7 +44,7 @@ class Precept {
     backendLibrary.init();
     pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
     panelLibrary.init();
-    particleLibrary.init(entries: partLibraryEntries);
+    particleLibrary.init(entries: particleLibraryEntries);
 
     router.init(scripts: precept.models);
   }

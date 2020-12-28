@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/common/exceptions.dart';
 
 /// Function class to read dropdown selection list from a data source
 abstract class SelectionReader {
@@ -61,6 +62,21 @@ class PassThroughConverter<T> extends ModelViewConverter<T, T> {
   @override
   T viewToModel(T view) {
     return view;
+  }
+}
+
+class StaticConnector extends ModelConnector<String, String> {
+  final String staticData;
+
+  StaticConnector(this.staticData);
+
+  @override
+  String readFromModel() {
+    return converter.modelToView(binding.read());
+  }
+
+  writeToModel(String value) {
+    throw ConfigurationException('Static converter only works from model to view');
   }
 }
 

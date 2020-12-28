@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:precept_client/binding/converter.dart';
+import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/library/partLibrary.dart';
@@ -35,7 +37,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 /// [parentBinding] is not required if [config.isStatic] is true
 ///
-abstract class Part extends StatelessWidget {
+class Part extends StatelessWidget with ConnectorBuilder {
   final PPart config;
 
   const Part({@required this.config}) : super();
@@ -43,26 +45,29 @@ abstract class Part extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (config.isStatic == IsStatic.yes) {
-      return buildReadOnlyWidget(context);
+      return buildReadOnlyWidget(context, StaticConnector(config.staticData));
     }
+
+    final DataBinding dataBinding = Provider.of<DataBinding>(context);
+    final ModelConnector connector = buildConnector(dataBinding: dataBinding, config: config);
 
     final EditState sectionState = Provider.of<EditState>(context);
     final readOnly = config.readOnly || sectionState.readOnlyMode;
     logType(this.runtimeType)
         .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
     if (readOnly) {
-      return buildReadOnlyWidget(context);
+      return buildReadOnlyWidget(context, connector);
     } else {
-      return buildEditModeWidget(context);
+      return buildEditModeWidget(context, connector);
     }
   }
 
-  Widget buildReadOnlyWidget(BuildContext context) {
-    return particleLibrary.find(config.read.runtimeType, config);
+  Widget buildReadOnlyWidget(BuildContext context, ModelConnector connector) {
+    return particleLibrary.find(config.read.runtimeType, config, connector);
   }
 
-  Widget buildEditModeWidget(BuildContext context) {
-    return particleLibrary.find(config.edit.runtimeType, config);
+  Widget buildEditModeWidget(BuildContext context, ModelConnector connector) {
+    return particleLibrary.find(config.edit.runtimeType, config, connector);
   }
 }
 

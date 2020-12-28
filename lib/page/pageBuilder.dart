@@ -4,9 +4,9 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/pageLibrary.dart';
 import 'package:precept_client/library/panelLibrary.dart';
-import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
@@ -19,47 +19,51 @@ import 'package:provider/provider.dart';
 mixin CommonBuilder {
   /// Wraps [widget] with a new [DataSource] and [DataBinding].  The [DataBinding] provides the root binding for all
   /// [Binding]  instances further down the tree.
-  Widget addDataSource({@required Widget widget, @required PCommon config}) {
+  Widget addDataSource(Widget widget, PCommon config) {
     if (config.dataSourceIsDeclared) {
       final dataSource = DataSource(config: config.dataSource);
       return ChangeNotifierProvider<DataSource>(
         create: (_) => dataSource,
         child: ChangeNotifierProvider<DataBinding>(
-            create: (_) => DataBinding(binding: dataSource.rootBinding), child: widget),
+            create: (_) => DataBinding(
+                binding: dataSource.rootBinding,
+                schema: config.schema.documents[config.dataSource.document]),
+            child: widget),
       );
     } else {
       return widget;
     }
   }
-
-
 }
 
 /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
 Widget addEditControl({@required Widget widget, @required PCommon config}) {
-  if (config.isStatic==IsStatic.yes){
+  if (config.isStatic == IsStatic.yes) {
     return widget;
   }
-  return (config.hasEditControl )
+  return (config.hasEditControl)
       ? ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget)
       : widget;
 }
 
-Widget addDataBinding({@required BuildContext context,
-  @required Widget widget,
-  @required PCommon config,
-  @required String property}) {
+Widget addDataBinding(
+    {@required BuildContext context,
+    @required Widget widget,
+    @required PCommon config,
+    @required String property}) {
   if (config.isStatic == IsStatic.yes || config.dataSourceIsDeclared) {
     return widget;
   } else {
     final parentBinding = Provider.of<DataBinding>(context, listen: false);
     widget = ChangeNotifierProvider<DataBinding>(
-        create: (_) =>
-            DataBinding(binding: (property==null || property.isEmpty) ? parentBinding.binding : parentBinding.binding
-                .modelBinding(property: property)),
+        create: (_) => DataBinding(
+            binding: (property == null || property.isEmpty)
+                ? parentBinding.binding
+                : parentBinding.binding.modelBinding(property: property)),
         child: widget);
     return widget;
-  };
+  }
+  ;
 }
 
 Widget assembleContent(
@@ -74,7 +78,7 @@ Widget assembleContent(
       child =
           PartBuilder().build(context: context, callingType: element.runtimeType, config: element);
     }
-    children.add( child);
+    children.add(child);
   }
   return (scrollable) ? ListView(children: children) : Column(children: children);
 }
@@ -84,10 +88,12 @@ class PartBuilder with CommonBuilder {
   /// Throws a [PreceptException] on failure
   Widget build(
       {@required BuildContext context, @required Type callingType, @required PPart config}) {
-    final part = particleLibrary.find(callingType, config);
+    final part = Part(
+      config: config,
+    );
     Widget widget = part;
     widget = addEditControl(widget: widget, config: config);
-    widget = addDataSource(widget: widget, config: config);
+    widget = addDataSource(widget, config);
     return widget;
   }
 }
@@ -105,7 +111,7 @@ class PageBuilder with CommonBuilder {
   Widget build({@required PPage config}) {
     Widget widget = pageLibrary.find(config.pageType, config);
     widget = addEditControl(widget: widget, config: config);
-    widget = addDataSource(widget: widget, config: config);
+    widget = addDataSource(widget, config);
     return widget;
   }
 
@@ -127,7 +133,7 @@ class PanelBuilder with CommonBuilder {
       config: config,
       property: config.property,
     );
-    widget = addDataSource(widget: widget, config: config);
+    widget = addDataSource(widget, config);
     return widget;
   }
 

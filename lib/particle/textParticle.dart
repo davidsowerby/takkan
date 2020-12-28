@@ -1,23 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/converter.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
-import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_client/widget/caption.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:provider/provider.dart';
 
 class TextParticle extends StatelessWidget with ConnectorBuilder implements Particle {
   final PPart config;
+  final ModelConnector connector;
 
-  const TextParticle({Key key, @required this.config}) : super(key: key);
+  const TextParticle({Key key, @required this.config, @required this.connector}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final DataBinding dataBinding = Provider.of<DataBinding>(context);
-    final ModelConnector connector = buildConnector(dataBinding: dataBinding, config: config);
-
     final text =
         Text((config.isStatic == IsStatic.yes) ? config.staticData : connector.readFromModel());
     if (config.read.showCaption) {
