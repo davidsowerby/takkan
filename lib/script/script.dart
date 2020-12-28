@@ -26,14 +26,13 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-  @JsonKey(ignore: true)
-  final PSchema _schema;
+
   final Map<String, PRoute> routes;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;
 
   PScript({
-    this.routes=const {},
+    this.routes = const {},
     this.name,
     PSchema schema,
     IsStatic isStatic = IsStatic.inherited,
@@ -43,12 +42,13 @@ class PScript extends PCommon {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-  }) : _schema=schema, super(
+  }) : super(
           id: id,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
           controlEdit: controlEdit,
+          schema: schema,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -65,7 +65,11 @@ class PScript extends PCommon {
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(fromJson: PDataSourceConverter.fromJson,toJson: PDataSourceConverter.toJson, nullable: true, includeIfNull: false)
+  @JsonKey(
+      fromJson: PDataSourceConverter.fromJson,
+      toJson: PDataSourceConverter.toJson,
+      nullable: true,
+      includeIfNull: false)
   PDataSource get dataSource => _dataSource;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
@@ -84,8 +88,9 @@ class PScript extends PCommon {
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       for (var entry in routes.entries) {
-        if (entry.key.isEmpty){
-          _validationMessages.add(ValidationMessage(item: this, msg: "PRoute path cannot be an empty String"));
+        if (entry.key.isEmpty) {
+          _validationMessages
+              .add(ValidationMessage(item: this, msg: "PRoute path cannot be an empty String"));
         }
         entry.value.doValidate(_validationMessages);
       }
@@ -106,7 +111,6 @@ class PScript extends PCommon {
     doInit(null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
-
   /// Passes call to all components, and sets the components names from their keys in parent
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
@@ -114,7 +118,9 @@ class PScript extends PCommon {
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
     for (var entry in routes.entries) {
-      entry.value._path=entry.key; /// This must be done first or validation messages get wrong debugId
+      entry.value._path = entry.key;
+
+      /// This must be done first or validation messages get wrong debugId
       entry.value.doInit(this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
@@ -138,14 +144,13 @@ class PScript extends PCommon {
     print(buf.toString());
   }
 
-  DebugNode get debugNode  =>  DebugNode(this, List.from(routes.entries.toList().map((e) => (e as PRoute).debugNode)));
-
+  DebugNode get debugNode =>
+      DebugNode(this, List.from(routes.entries.toList().map((e) => (e as PRoute).debugNode)));
 }
-
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRoute extends PCommon {
-   String _path;
+  String _path;
   final PPage page;
 
   @JsonKey(ignore: true)
@@ -191,7 +196,8 @@ class PRoute extends PCommon {
 
   @override
   String get idAlternative => path;
-  String get path=> _path;
+
+  String get path => _path;
 }
 
 /// [pageType] is used to look up from [PageLibrary]
@@ -231,14 +237,14 @@ class PPage extends PCommon {
   PRoute get parent => super.parent as PRoute;
 
   DebugNode get debugNode {
-    final List <DebugNode> children =  content.map((e) => e.debugNode).toList();
-    if (backendIsDeclared){
+    final List<DebugNode> children = content.map((e) => e.debugNode).toList();
+    if (backendIsDeclared) {
       children.add(backend.debugNode);
     }
-    if (dataSourceIsDeclared ){
+    if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);
     }
-    return DebugNode(this,children);
+    return DebugNode(this, children);
   }
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
@@ -306,7 +312,7 @@ class PPanel extends PDisplayElement {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<PDisplayElement> content;
   @JsonKey(ignore: true)
-  final PPanelHeading heading;
+  final PPanelHeading _heading;
   final bool scrollable;
   final PHelp help;
   final String property;
@@ -319,7 +325,7 @@ class PPanel extends PDisplayElement {
   PPanel({
     this.property,
     this.content = const [],
-    this.heading,
+    PPanelHeading heading,
     String caption,
     this.scrollable = false,
     this.help,
@@ -331,7 +337,8 @@ class PPanel extends PDisplayElement {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
-  }) : super(
+  })  : _heading = heading ?? PPanelHeading(),
+        super(
           id: id,
           isStatic: isStatic,
           backend: backend,
@@ -363,15 +370,17 @@ class PPanel extends PDisplayElement {
   }
 
   DebugNode get debugNode {
-    final List <DebugNode> children =  content.map((e) => e.debugNode).toList();
-    if (backendIsDeclared){
+    final List<DebugNode> children = content.map((e) => e.debugNode).toList();
+    if (backendIsDeclared) {
       children.add(backend.debugNode);
     }
-    if (dataSourceIsDeclared){
+    if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);
     }
-    return DebugNode(this,children);
+    return DebugNode(this, children);
   }
+
+  PPanelHeading get heading => _heading;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -388,7 +397,8 @@ class PPanelHeading extends PreceptItem {
     this.canEdit = false,
     this.help,
     this.style = const PHeadingStyle(),
-  }) : super();
+    String id,
+  }) : super(id: id);
 
   factory PPanelHeading.fromJson(Map<String, dynamic> json) => _$PPanelHeadingFromJson(json);
 
@@ -461,6 +471,8 @@ class PCommon extends PreceptItem {
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
   PBackend _backend;
+  @JsonKey(ignore: true)
+  PSchema _schema;
 
   PDataSource _dataSource;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -475,8 +487,10 @@ class PCommon extends PreceptItem {
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
+    PSchema schema,
     String id,
-  })  : _isStatic = isStatic,
+  })  : _schema = schema,
+        _isStatic = isStatic,
         _backend = backend,
         _dataSource = dataSource,
         _panelStyle = panelStyle,
@@ -493,15 +507,20 @@ class PCommon extends PreceptItem {
   /// [backend] is declared rather than inherited
   bool get backendIsDeclared => (_backend != null);
 
-  @JsonKey(fromJson: PDataSourceConverter.fromJson,toJson: PDataSourceConverter.toJson, nullable: true, includeIfNull: false)
+  @JsonKey(
+      fromJson: PDataSourceConverter.fromJson,
+      toJson: PDataSourceConverter.toJson,
+      nullable: true,
+      includeIfNull: false)
   PDataSource get dataSource => _dataSource ?? parent.dataSource;
 
   /// [dataSource] is declared rather than inherited
   bool get dataSourceIsDeclared => (_dataSource != null);
 
+  @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
-
-  PSchema get schema => parent.schema;
+  @JsonKey(ignore: true)
+  PSchema get schema => _schema;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
@@ -515,6 +534,7 @@ class PCommon extends PreceptItem {
         inherited = p.controlEdit;
         break;
       }
+      _schema=p._schema;
       p = p.parent;
     }
     _setupControlEdit(inherited);
@@ -525,7 +545,7 @@ class PCommon extends PreceptItem {
   /// [ControlEdit.noEdit] overrides everything
   _setupControlEdit(ControlEdit inherited) {
     // top levels are not visual elements
-    if (this is PScript ||  this is PRoute) {
+    if (this is PScript || this is PRoute) {
       _hasEditControl = false;
       return;
     }

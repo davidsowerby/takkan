@@ -14,12 +14,14 @@ part 'dataSource.g.dart';
 /// - 'select first'
 /// - 'select last'
 ///
-/// [document] is in the form 'component:document', and refers to the [SComponent] : [SDocument] within the
-/// schema referenced by this script.  The 'component' element can be omitted if there is only one component in the script
+/// [document] is usually the equivalent of something like a table name, and does not usually need to be specified
+/// explicitly - it is typically derived from whatever is used to select the required data
+///
 ///
 abstract class PDataSource extends PreceptItem {
-  final String document;
-  PDataSource({this.params, this.document});
+  String get document;
+
+  PDataSource({this.params});
 
   final Map<String, dynamic> params;
 
@@ -34,15 +36,15 @@ class PDataGet extends PDataSource {
   PDataGet({
     @required this.documentId,
     Map<String, dynamic> params = const {},
-    String document,
   }) : super(
-          params: params,
-          document: document,
-        );
+    params: params,
+  );
 
   factory PDataGet.fromJson(Map<String, dynamic> json) => _$PDataGetFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDataGetToJson(this);
+
+  String get document => documentId.path;
 
   @override
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
@@ -61,11 +63,11 @@ class PDataStream extends PDataSource {
   PDataStream({
     @required this.documentId,
     Map<String, dynamic> params = const {},
-    String document,
   }) : super(
-          params: params,
-          document: document,
-        );
+    params: params,
+  );
+
+  String get document => documentId.path;
 
   factory PDataStream.fromJson(Map<String, dynamic> json) => _$PDataStreamFromJson(json);
 
