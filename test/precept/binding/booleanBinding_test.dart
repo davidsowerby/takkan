@@ -1,7 +1,7 @@
+import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -33,7 +33,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final bool actual =
-            rootBinding.booleanBinding(property: property).read();
+        rootBinding.booleanBinding(property: property).read();
         final bool expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final bool actual =
-            rootBinding.booleanBinding(property: "no item").read();
+        rootBinding.booleanBinding(property: "no item").read();
         final bool expected = false;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -81,31 +81,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final bool expected = false;
-        final actual = rootBinding
-            .booleanBinding(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final bool expected = false;
+            final actual = rootBinding
+                .booleanBinding(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating BooleanBinding adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final bool expected = null;
-        final actual = rootBinding
-            .booleanBinding(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final bool expected = null;
+            final actual = rootBinding
+                .booleanBinding(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating BooleanBinding adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {

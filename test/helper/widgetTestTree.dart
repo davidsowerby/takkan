@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/app/page/standardPage.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/library/backendLibrary.dart';
-import 'package:precept_client/precept/library/pageLibrary.dart';
-import 'package:precept_client/precept/library/panelLibrary.dart';
-import 'package:precept_client/precept/library/partLibrary.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/panel/panel.dart';
-import 'package:precept_client/precept/part/part.dart';
+import 'package:precept_client/library/backendLibrary.dart';
+import 'package:precept_client/library/pageLibrary.dart';
+import 'package:precept_client/library/panelLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_client/panel/panel.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
@@ -134,7 +134,7 @@ class KitchenSinkTest {
     preceptDefaultInjectionBindings();
     pageLibrary.init();
     panelLibrary.init();
-    partLibrary.init();
+    particleLibrary.init();
     backendLibrary.init();
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {

@@ -1,3 +1,0 @@
-
-
-enum DisplayType { a, b }

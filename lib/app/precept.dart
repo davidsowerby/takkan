@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/delegate.dart';
+import 'package:precept_client/app/loader.dart';
+import 'package:precept_client/app/router.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/library/backendLibrary.dart';
-import 'package:precept_client/precept/library/pageLibrary.dart';
-import 'package:precept_client/precept/library/panelLibrary.dart';
-import 'package:precept_client/precept/library/partLibrary.dart';
-import 'package:precept_client/precept/loader.dart';
-import 'package:precept_client/precept/router.dart';
+import 'package:precept_client/library/backendLibrary.dart';
+import 'package:precept_client/library/pageLibrary.dart';
+import 'package:precept_client/library/panelLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/error.dart';
@@ -42,7 +42,7 @@ class Precept {
     backendLibrary.init();
     pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
     panelLibrary.init();
-    partLibrary.init(entries: partLibraryEntries);
+    particleLibrary.init(entries: partLibraryEntries);
 
     router.init(scripts: precept.models);
   }

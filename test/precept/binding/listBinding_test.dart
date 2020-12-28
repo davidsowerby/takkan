@@ -1,7 +1,7 @@
+import 'package:precept_client/binding/listBinding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/listBinding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -33,7 +33,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final List<int> actual =
-            rootBinding.listBinding<int>(property: property).read();
+        rootBinding.listBinding<int>(property: property).read();
         final List<int> expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final List<int> actual =
-            rootBinding.listBinding<int>(property: "no item").read();
+        rootBinding.listBinding<int>(property: "no item").read();
         final List<int> expected = [];
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -81,31 +81,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final List<int> expected = [];
-        final actual = rootBinding
-            .listBinding<int>(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating ListBinding<int> adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final List<int> expected = [];
+            final actual = rootBinding
+                .listBinding<int>(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating ListBinding<int> adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final List<int> expected = null;
-        final actual = rootBinding
-            .listBinding<int>(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating ListBinding<int> adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final List<int> expected = null;
+            final actual = rootBinding
+                .listBinding<int>(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating ListBinding<int> adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {

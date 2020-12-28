@@ -1,17 +1,17 @@
+import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/common/toast.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/library/borderLibrary.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/router.dart';
-import 'package:precept_client/precept/script/themeLookup.dart';
+import 'package:precept_client/library/borderLibrary.dart';
+import 'package:precept_client/library/themeLookup.dart';
 
 commonInjectionBindings() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());
   getIt.registerFactory<Toast>(() => Toast());
 }
 
-libraryInjectionBindings(){
+libraryInjectionBindings() {
   getIt.registerSingleton<BorderLibrary>(BorderLibrary(modules: [PreceptBorderLibraryModule()]));
 }
 
@@ -28,7 +28,6 @@ themeInjectionBindings() {
   getIt.registerSingleton<ThemeLookup>(DefaultThemeLookup());
   // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
 }
-
 
 
 // void back4AppModule() {

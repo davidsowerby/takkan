@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/precept/builder/commonBuilder.dart';
-import 'package:precept_client/precept/library/library.dart';
-import 'package:precept_script/script/part/options.dart';
+import 'package:precept_client/library/library.dart';
+import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';
@@ -20,7 +21,7 @@ final PScript kitchenSink00 = PScript(
         pageType: Library.simpleKey,
         title: 'Page 1',
         content: [
-          PString(caption: 'Part 1', staticData: 'Part 1'),
+          PPart(caption: 'Part 1', staticData: 'Part 1', read: PText()),
           PPanel(
             caption: 'Panel 2',
             heading: PPanelHeading(),
@@ -29,18 +30,16 @@ final PScript kitchenSink00 = PScript(
                 caption: 'Panel 2-1',
                 heading: PPanelHeading(),
                 content: [
-                  PString(caption: 'Part 2-1-1', staticData: 'Part 2-1-1'),
-                  PString(
-                      readModeOptions: PReadModeOptions(showCaption: false),
-                      id: 'Part 2-1-2',
-                      staticData: 'Part 2-1-2'),
+                  PPart(caption: 'Part 2-1-1', staticData: 'Part 2-1-1'),
+                  PPart(
+                    read: PText(showCaption: false),
+                    id: 'Part 2-1-2',
+                    staticData: 'Part 2-1-2',
+                  ),
                 ],
               ),
               PString(caption: 'Part 2-2', staticData: 'Part 2-2'),
-              PString(
-                  readModeOptions: PReadModeOptions(showCaption: false),
-                  id: 'Part 2-3',
-                  staticData: 'Part 2-3'),
+              PPart(read: PText(showCaption: false), id: 'Part 2-3', staticData: 'Part 2-3'),
             ],
           ),
           PString(caption: 'Part 3', staticData: 'Part 3'),

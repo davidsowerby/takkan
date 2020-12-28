@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/dataSource.dart';
 

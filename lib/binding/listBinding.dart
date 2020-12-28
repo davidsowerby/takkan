@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/part/string/stringBinding.dart';
+import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/binding/stringBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/log.dart';
 
 /// [T] is the data type of the list items

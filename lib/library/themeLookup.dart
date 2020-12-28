@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/library/borderLibrary.dart';
+import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/style/style.dart';

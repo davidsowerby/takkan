@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/builder/commonBuilder.dart';
-import 'package:precept_client/precept/library/pageLibrary.dart';
+import 'package:precept_client/library/pageLibrary.dart';
+import 'package:precept_client/page/pageBuilder.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/error.dart';

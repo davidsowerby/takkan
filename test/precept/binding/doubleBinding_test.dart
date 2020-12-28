@@ -1,7 +1,7 @@
+import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -33,7 +33,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final double actual =
-            rootBinding.doubleBinding(property: property).read();
+        rootBinding.doubleBinding(property: property).read();
         final double expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final double actual =
-            rootBinding.doubleBinding(property: "no item").read();
+        rootBinding.doubleBinding(property: "no item").read();
         final double expected = 0.0;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -81,31 +81,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final double expected = 0.0;
-        final actual = rootBinding
-            .doubleBinding(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DoubleBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final double expected = 0.0;
+            final actual = rootBinding
+                .doubleBinding(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating DoubleBinding adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final double expected = null;
-        final actual = rootBinding
-            .doubleBinding(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DoubleBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final double expected = null;
+            final actual = rootBinding
+                .doubleBinding(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating DoubleBinding adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {

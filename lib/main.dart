@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/precept/precept.dart';
-import 'package:precept_client/precept/router.dart';
+import 'package:precept_client/app/precept.dart';
+import 'package:precept_client/app/router.dart';
 
 void main() {
   precept.init();

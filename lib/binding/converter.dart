@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
-import 'package:precept_client/precept/binding/binding.dart';
+import 'package:precept_client/binding/binding.dart';
 
 /// Function class to read dropdown selection list from a data source
 abstract class SelectionReader {
@@ -48,15 +48,6 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   VIEW modelToView(MODEL model, {VIEW defaultValue});
 
   MODEL viewToModel(VIEW view);
-}
-
-class ConverterFactory {
-  ModelViewConverter<MODEL, VIEW> get<MODEL, VIEW>(MODEL m, VIEW v) {
-    if (m.runtimeType == int && v.runtimeType == String) {
-      return IntStringConverter() as ModelViewConverter<MODEL, VIEW>;
-    }
-    throw UnimplementedError();
-  }
 }
 
 class PassThroughConverter<T> extends ModelViewConverter<T, T> {

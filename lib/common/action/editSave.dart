@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
+import 'package:precept_client/page/editState.dart';
 import 'package:provider/provider.dart';
 
 /// Toggles the read only state of the nearest [SectionEditState]

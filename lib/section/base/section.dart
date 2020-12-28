@@ -1,15 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
+import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
-import 'package:provider/provider.dart';
-
 import 'package:precept_script/script/script.dart';
+import 'package:provider/provider.dart';
 
 /// A section is an arbitrary collection of Widgets displaying part of a [Panel].
 /// The Widgets may be [Part] implementations or other sections

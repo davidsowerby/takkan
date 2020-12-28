@@ -1,6 +1,6 @@
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -32,7 +32,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final Map<String, dynamic> actual =
-            rootBinding.modelBinding(property: property).read();
+        rootBinding.modelBinding(property: property).read();
         final Map<String, dynamic> expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -43,7 +43,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final Map<String, dynamic> actual =
-            rootBinding.modelBinding(property: "no item").read();
+        rootBinding.modelBinding(property: "no item").read();
         final Map<String, dynamic> expected = {};
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -80,31 +80,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final Map<String, dynamic> expected = {};
-        final actual = rootBinding
-            .modelBinding(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating MapBinding<String,dynamic> adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final Map<String, dynamic> expected = {};
+            final actual = rootBinding
+                .modelBinding(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating MapBinding<String,dynamic> adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final Map<String, dynamic> expected = null;
-        final actual = rootBinding
-            .modelBinding(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating MapBinding<String,dynamic> adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final Map<String, dynamic> expected = null;
+            final actual = rootBinding
+                .modelBinding(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating MapBinding<String,dynamic> adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {
@@ -124,7 +124,7 @@ void main() {
         final map = rootBinding.modelBinding(property: "theMap");
         expect(map.read(allowNullReturn: true), isNull);
         final MapBinding<String, dynamic> sb =
-            map.modelBinding(property: "mapEntry");
+        map.modelBinding(property: "mapEntry");
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
         expect(changeListener.changeCount, 1,
@@ -136,7 +136,7 @@ void main() {
       test("parent list created when needed", () {
         Map<String, dynamic> expected = updateValue;
         final list =
-            rootBinding.listBinding<Map<String, dynamic>>(property: "theList");
+        rootBinding.listBinding<Map<String, dynamic>>(property: "theList");
         expect(list.read(allowNullReturn: true), isNull);
         final MapBinding<String, dynamic> sb = list.modelBinding(index: 0);
         sb.write(expected);

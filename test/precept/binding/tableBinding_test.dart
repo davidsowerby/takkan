@@ -1,7 +1,7 @@
+import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -39,7 +39,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final List<Map<String, dynamic>> actual =
-            rootBinding.tableBinding(property: property).read();
+        rootBinding.tableBinding(property: property).read();
         final List<Map<String, dynamic>> expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -50,7 +50,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final List<Map<String, dynamic>> actual =
-            rootBinding.tableBinding(property: "no item").read();
+        rootBinding.tableBinding(property: "no item").read();
         final List<Map<String, dynamic>> expected = [];
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -87,31 +87,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final List<Map<String, dynamic>> expected = [];
-        final actual = rootBinding
-            .tableBinding(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating TableBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final List<Map<String, dynamic>> expected = [];
+            final actual = rootBinding
+                .tableBinding(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating TableBinding adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final List<Map<String, dynamic>> expected = null;
-        final actual = rootBinding
-            .tableBinding(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating TableBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final List<Map<String, dynamic>> expected = null;
+            final actual = rootBinding
+                .tableBinding(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating TableBinding adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {

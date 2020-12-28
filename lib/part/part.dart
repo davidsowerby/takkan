@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/precept/binding/converter.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/page/editState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
@@ -38,36 +37,32 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 abstract class Part extends StatelessWidget {
   final PPart config;
+
   const Part({@required this.config}) : super();
 
   @override
   Widget build(BuildContext context) {
-    if (config.isStatic==IsStatic.yes) {
-      return buildReadOnlyWidget(context, null);
+    if (config.isStatic == IsStatic.yes) {
+      return buildReadOnlyWidget(context);
     }
-    final DataBinding dataBinding = Provider.of<DataBinding>(context,listen: false);
-    final parentBinding=dataBinding.binding;
+
     final EditState sectionState = Provider.of<EditState>(context);
     final readOnly = config.readOnly || sectionState.readOnlyMode;
     logType(this.runtimeType)
         .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
     if (readOnly) {
-      return buildReadOnlyWidget(context,parentBinding);
+      return buildReadOnlyWidget(context);
     } else {
-      return buildEditModeWidget(context,parentBinding);
+      return buildEditModeWidget(context);
     }
   }
 
-  Widget buildReadOnlyWidget(BuildContext context, ModelBinding parentBinding){
-
+  Widget buildReadOnlyWidget(BuildContext context) {
+    return particleLibrary.find(config.read.runtimeType, config);
   }
 
-  Widget buildEditModeWidget(BuildContext context, ModelBinding parentBinding){}
-
-  ModelConnector<String, String> _createConnector({@required ModelBinding baseBinding}) {
-    final binding = baseBinding.stringBinding(property: config.property);
-    return ModelConnector<String, String>(
-        binding: binding, converter: PassThroughConverter<String>());
+  Widget buildEditModeWidget(BuildContext context) {
+    return particleLibrary.find(config.edit.runtimeType, config);
   }
 }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:precept_client/binding/listBinding.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/binding/stringBinding.dart';
 import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/precept/binding/listBinding.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/part/string/stringBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 
 /// [T] is model
 /// All the static constructors ensure that the [editHost] and [firstLevelKey] are propagated down the document tree.

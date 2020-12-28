@@ -1,15 +1,15 @@
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/library/pageLibrary.dart';
-import 'package:precept_client/precept/library/panelLibrary.dart';
-import 'package:precept_client/precept/library/partLibrary.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/panel/panel.dart';
+import 'package:precept_client/library/pageLibrary.dart';
+import 'package:precept_client/library/panelLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/panel/panel.dart';
 import 'package:precept_script/script/element.dart';
-import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 /// Creates companion Widgets according to the settings of [config]
@@ -84,7 +84,7 @@ class PartBuilder with CommonBuilder {
   /// Throws a [PreceptException] on failure
   Widget build(
       {@required BuildContext context, @required Type callingType, @required PPart config}) {
-    final part = partLibrary.find(callingType, config);
+    final part = particleLibrary.find(callingType, config);
     Widget widget = part;
     widget = addEditControl(widget: widget, config: config);
     widget = addDataSource(widget: widget, config: config);

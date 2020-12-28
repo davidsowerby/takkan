@@ -1,7 +1,7 @@
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/binding/stringBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/part/string/stringBinding.dart';
 import 'package:test/test.dart';
 
 import '../../helper/listener.dart';
@@ -33,7 +33,7 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final String actual =
-            rootBinding.stringBinding(property: property).read();
+        rootBinding.stringBinding(property: property).read();
         final String expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final String actual =
-            rootBinding.stringBinding(property: "no item").read();
+        rootBinding.stringBinding(property: "no item").read();
         final String expected = "";
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -81,31 +81,31 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final String expected = "";
-        final actual = rootBinding
-            .stringBinding(property: "no item")
-            .read(allowNullReturn: false);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating StringBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
-      });
+              () {
+            final String expected = "";
+            final actual = rootBinding
+                .stringBinding(property: "no item")
+                .read(allowNullReturn: false);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating StringBinding adds property");
+            expect(temporaryDocument.changeList.length, 1,
+                reason: "default is createIfAbsent=true");
+          });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-          () {
-        final String expected = null;
-        final actual = rootBinding
-            .stringBinding(property: "no item")
-            .read(allowNullReturn: true);
-        expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating StringBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
-      });
+              () {
+            final String expected = null;
+            final actual = rootBinding
+                .stringBinding(property: "no item")
+                .read(allowNullReturn: true);
+            expect(actual, expected);
+            expect(changeListener.changeCount, 1,
+                reason: "creating StringBinding adds property");
+            expect(temporaryDocument.changeList.length, 0,
+                reason: "successful read, no changes made");
+          });
     });
     group("Write", () {
       test("updates value correctly", () {

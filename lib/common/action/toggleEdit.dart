@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
+import 'package:precept_client/page/editState.dart';
 import 'package:provider/provider.dart';
 
 /// Changes the state of the nearest [SectionEditState]

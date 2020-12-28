@@ -1,24 +1,24 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/binding/mapBinding.dart';
-import 'package:precept_client/precept/builder/commonBuilder.dart';
-import 'package:precept_client/precept/library/backendLibrary.dart';
-import 'package:precept_client/precept/library/partLibrary.dart';
-import 'package:precept_client/precept/mutable/sectionState.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
-import 'package:precept_client/precept/panel/panel.dart';
-import 'package:precept_client/precept/part/string/stringPart.dart';
-import 'package:precept_client/precept/script/themeLookup.dart';
+import 'package:precept_client/library/backendLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/library/themeLookup.dart';
+import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_client/panel/panel.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/part/options.dart';
 import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -45,7 +45,7 @@ void main() {
 
     testWidgets('build - static', (WidgetTester tester) async {
       // given
-      partLibrary.init();
+      particleLibrary.init();
       final script = PScript(
         backend: PBackend(),
         isStatic: IsStatic.yes,
@@ -74,15 +74,14 @@ void main() {
       // when
       script.init();
       // when
-      final StringPart b =
-          PartBuilder().build(context: context, callingType: PString, config: part);
+      final Part b = PartBuilder().build(context: context, callingType: PString, config: part);
       // simulate higher level to enable inflate
       final cnp = Directionality(textDirection: TextDirection.ltr, child: b);
       // then
 
       await tester.pumpWidget(cnp);
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(b, isA<StringPart>(),
+      expect(b, isA<Part>(),
           reason: "Static, only the Part is generated, should not look for EditState");
       final widgetList = tester.allWidgets.toList();
       expect(widgetList[10], isA<Text>());
@@ -95,7 +94,7 @@ void main() {
       getIt.reset();
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
       getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-      partLibrary.init();
+      particleLibrary.init();
       backendLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
@@ -109,10 +108,10 @@ void main() {
               content: [
                 PPanel(
                   content: [
-                    PString(
+                    PPart(
                       property: 'name',
                       controlEdit: ControlEdit.noEdit,
-                      readModeOptions: PReadModeOptions(showCaption: false),
+                      read: PText(showCaption: false),
                     ),
                   ],
                 ),
@@ -162,7 +161,7 @@ void main() {
 
     testWidgets('data, controlEdit==true', (WidgetTester tester) async {
       // given
-      partLibrary.init();
+      particleLibrary.init();
       final Map<String, dynamic> data = {'name': 'Hugo', 'age': 23};
       final rootBinding = RootBinding(data: data, id: 'test');
       final script = PScript(backend: PBackend(), dataSource: PDataGet(), routes: {
@@ -171,10 +170,10 @@ void main() {
             content: [
               PPanel(
                 content: [
-                  PString(
+                  PPart(
                     property: 'name',
                     controlEdit: ControlEdit.thisOnly,
-                    readModeOptions: PReadModeOptions(showCaption: false),
+                    read: PText(showCaption: false),
                   ),
                 ],
               ),

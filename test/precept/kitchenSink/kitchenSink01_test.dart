@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/precept/builder/commonBuilder.dart';
-import 'package:precept_client/precept/library/library.dart';
+import 'package:precept_client/library/library.dart';
+import 'package:precept_client/page/pageBuilder.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/script/dataSource.dart';
-import 'package:precept_script/script/part/options.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
+import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';
@@ -27,15 +28,15 @@ final PScript kitchenSink01 = PScript(
             caption: 'Panel 1',
             heading: PPanelHeading(),
             content: [
-              PString(
+              PPart(
                 id: 'Part 1-1',
                 staticData: 'Part 1-1',
-                readModeOptions: PReadModeOptions(showCaption: false),
+                read: PText(showCaption: false),
               ),
-              PString(
+              PPart(
                 id: 'Part 1-2',
                 staticData: 'Part 1-2',
-                readModeOptions: PReadModeOptions(showCaption: false),
+                read: PText(showCaption: false),
               ),
               PPanel(
                 caption: 'Panel 1-3',

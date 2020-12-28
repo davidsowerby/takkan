@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:precept_client/precept/binding/converter.dart';
+import 'package:precept_client/binding/converter.dart';
 
 /// Widget to capture and crop the image
 class ImageCapture extends StatefulWidget {

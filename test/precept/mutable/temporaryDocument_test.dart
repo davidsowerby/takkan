@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/common/toast.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 
 import '../../helper/listener.dart';

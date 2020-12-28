@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_client/precept/binding/binding.dart';
-import 'package:precept_client/precept/mutable/temporaryDocument.dart';
+import 'package:precept_client/binding/binding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 
 class StringBinding extends Binding<String> {
   const StringBinding.private(
