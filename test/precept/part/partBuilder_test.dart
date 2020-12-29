@@ -6,7 +6,7 @@ import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/backendLibrary.dart';
-import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/pageBuilder.dart';

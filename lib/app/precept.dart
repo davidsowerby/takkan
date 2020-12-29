@@ -8,7 +8,7 @@ import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/backendLibrary.dart';
 import 'package:precept_client/library/pageLibrary.dart';
 import 'package:precept_client/library/panelLibrary.dart';
-import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/error.dart';

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/converter.dart';
-import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/library/partLibrary.dart';
+import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
@@ -15,59 +13,56 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
 /// A [Part] combines field level data with the manner in which it is displayed.
 ///
-/// [Part] implementations are builders that display a read only or editable Widget.  The Widget displayed
-/// depends on the [SourceDataType], edit mode, and display option.
+/// [Part] contains exactly one or two [Particle] instances, one for reading data and one for editing data
+/// [config] is a [PPart] instance, which is contained within a [PScript].  It has the following properties:
 ///
-/// The source data type goes beyond the raw data types typically provided by a backend such as Firestore or Parse Server.
-/// It also takes into account how the data is used.
+/// [isStatic] - if true, the value is taken from [staticData], if false, the value is dynamic data loaded via [property]
+/// [staticData] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [caption] - the text to display as a caption.  See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [property] - the property to look up in order to get the data value.  This connects a data binding to the [DataBinding] above this [Part]
+/// [readOnly] - if true, this part is always in read only mode, regardless of any other settings.  If false, this [Part] will respond to the current edit state of the [EditState] immediately above it.
+/// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 ///
-/// For example, a String may be just that, or it may be the currently selected value from a set of options.
-///
-/// - There is, therefore, a [StringPart] and a [StringSingleSelectPart] to cater for both situations.
-/// - The [StringPart] just processes strings from the database and displays them as a [Text] in read only,
-/// and a [TextField] in edit mode.
-/// - A [StringSingleSelectPart] still handles a string, but for an item which is a single choice from a list of options.
-/// Its displayOption can be RadioButton or Combo
-///
-/// For Parts using a data source (dynamic data) a chain of [DataBinding] instances is used to transfer data from a [TemporaryDocument]
-/// For Parts displaying static data, that data is taken from [config.staticData]
-/// For a discussion of static vs dynamic data see https://www.preceptblog.co.uk/user-guide/precept-script.html#dynamic-vs-static-data
-///
-/// A caption may optionally be displayed in either read only or edit mode.
-///
-/// [parentBinding] is not required if [config.isStatic] is true
-///
-class Part extends StatelessWidget with ConnectorBuilder {
+class Part extends StatefulWidget {
   final PPart config;
 
   const Part({@required this.config}) : super();
 
   @override
+  _PartState createState() => _PartState();
+}
+
+class _PartState extends State<Part> {
+  Widget readParticle;
+  Widget editParticle;
+
+  @override
   Widget build(BuildContext context) {
-    if (config.isStatic == IsStatic.yes) {
-      return buildReadOnlyWidget(context, StaticConnector(config.staticData));
+    if (widget.config.isStatic == IsStatic.yes) {
+      if (readParticle == null) {
+        readParticle = particleLibrary.findStaticParticle(widget.config);
+      }
+      return readParticle;
     }
 
     final DataBinding dataBinding = Provider.of<DataBinding>(context);
-    final ModelConnector connector = buildConnector(dataBinding: dataBinding, config: config);
 
-    final EditState sectionState = Provider.of<EditState>(context);
-    final readOnly = config.readOnly || sectionState.readOnlyMode;
+    final EditState editState = Provider.of<EditState>(context);
+    final readOnly = widget.config.readOnly || editState.readOnlyMode;
     logType(this.runtimeType)
-        .d("caption: ${config.caption}, EditState readOnly: ${config.readOnly}");
+        .d("caption: ${widget.config.caption}, EditState readOnly: ${widget.config.readOnly}");
     if (readOnly) {
-      return buildReadOnlyWidget(context, connector);
+      if (readParticle == null) {
+        readParticle = particleLibrary.findParticle(dataBinding, widget.config, true);
+      }
+      return readParticle;
     } else {
-      return buildEditModeWidget(context, connector);
+      if (editParticle == null) {
+        editParticle = particleLibrary.findParticle(dataBinding, widget.config, false);
+      }
+      return editParticle;
     }
-  }
-
-  Widget buildReadOnlyWidget(BuildContext context, ModelConnector connector) {
-    return particleLibrary.find(config.read.runtimeType, config, connector);
-  }
-
-  Widget buildEditModeWidget(BuildContext context, ModelConnector connector) {
-    return particleLibrary.find(config.edit.runtimeType, config, connector);
   }
 }
 
