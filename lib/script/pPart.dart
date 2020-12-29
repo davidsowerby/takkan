@@ -22,13 +22,11 @@ part 'pPart.g.dart';
 /// [isStatic] - if true, the value is taken from [staticData], if false, the value is dynamic data loaded via [property]
 /// [staticData] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [caption] - the text to display as a caption.  See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
-/// [property] - the property to look up in order to get the data value.  This connects a data binding to the [SectionState] immediately above the [Part] Widget associated with this configuration.
-/// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [SectionState] immediately above it.
+/// [property] - the property to look up in order to get the data value.  This connects a data binding to the [EditState] immediately above the [Part] Widget associated with this configuration.
+/// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
-///
-/// [RO] type of read options
-/// [WO] type of write options
+
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PDisplayElement {
   final bool readOnly;
@@ -86,11 +84,11 @@ class PPart extends PDisplayElement {
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (isStatic != IsStatic.yes) {
+    if (isStatic != IsStatic.yes || readOnly) {
       if (property == null || property.isEmpty) {
         messages.add(ValidationMessage(
             item: this,
-            msg: 'unless a Part is static, it must provide a non-null, non-empty property'));
+            msg: 'unless a Part is static or readOnly, it must provide a non-null, non-empty property'));
       }
     }
     // if (readModeOptions.showCaption) {

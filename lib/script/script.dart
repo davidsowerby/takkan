@@ -528,13 +528,15 @@ class PCommon extends PreceptItem {
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     PCommon p = parent;
+    if (parent != null){
+      _schema=p._schema;
+    }
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
       if (p.controlEdit != ControlEdit.notSetAtThisLevel) {
         inherited = p.controlEdit;
         break;
       }
-      _schema=p._schema;
       p = p.parent;
     }
     _setupControlEdit(inherited);

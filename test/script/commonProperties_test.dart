@@ -1,7 +1,8 @@
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
-import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -17,8 +18,10 @@ void main() {
 
     test('correct inherit / overrule', () {
       // given
+      final  PSchema schema = PSchema();
       final script = PScript(
         name: 'test',
+        schema: schema,
         backend: PBackend(),
         isStatic: IsStatic.yes,
         dataSource: PDataGet(),
@@ -49,21 +52,25 @@ void main() {
       expect(route.isStatic, IsStatic.yes);
       expect(route.backend, isNotNull);
       expect(route.dataSource, isNotNull);
+      expect(route.schema, schema);
 
       expect(page.isStatic, IsStatic.yes);
       expect(page.backend, isNotNull);
       expect(page.dataSource, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
+      expect(page.schema, schema);
 
       expect(panel.isStatic, IsStatic.yes);
       expect(panel.backend, isNotNull);
       expect(panel.dataSource, isNotNull);
       expect(panel.controlEdit, ControlEdit.noEdit);
+      expect(panel.schema, schema);
 
       expect(part.isStatic, IsStatic.yes);
       expect(part.backend, isNotNull);
       expect(part.dataSource, isNotNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(part.schema, schema);
     });
 
     test('defaults, unset', () {
