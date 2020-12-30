@@ -29,13 +29,15 @@ import 'package:precept_script/script/dataSource.dart';
 /// to the [_temporaryDocument] prior to saving it.
 ///
 class DataSource with ChangeNotifier {
+  final DateTime timestamp;
   final PDataSource config;
   TemporaryDocument _temporaryDocument;
   bool _readOnlyMode = true;
   bool _canEdit;
 
   DataSource({bool canEdit = true, bool readOnlyMode = true, @required this.config})
-      : _readOnlyMode = readOnlyMode,
+      : timestamp = DateTime.now(),
+        _readOnlyMode = readOnlyMode,
         _canEdit = canEdit {
     _temporaryDocument = inject<TemporaryDocument>();
   }

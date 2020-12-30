@@ -72,7 +72,7 @@ class StaticConnector extends ModelConnector<String, String> {
 
   @override
   String readFromModel() {
-    return converter.modelToView(binding.read());
+    return staticData;
   }
 
   writeToModel(String value) {

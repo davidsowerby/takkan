@@ -4,7 +4,6 @@ import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_client/widget/caption.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/script.dart';
 
 class TextParticle extends StatelessWidget with ConnectorBuilder implements Particle {
   final PPart config;
@@ -14,8 +13,7 @@ class TextParticle extends StatelessWidget with ConnectorBuilder implements Part
 
   @override
   Widget build(BuildContext context) {
-    final text =
-        Text((config.isStatic == IsStatic.yes) ? config.staticData : connector.readFromModel());
+    final text = Text(connector.readFromModel());
     if (config.read.showCaption) {
       return Container(
         height: config.particleHeight,

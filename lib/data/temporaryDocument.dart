@@ -90,6 +90,7 @@ abstract class TemporaryDocument with ChangeNotifier {
 class DefaultTemporaryDocument extends MapBase<String, dynamic>
     with ChangeNotifier
     implements TemporaryDocument {
+  final DateTime timestamp;
   final Map<String, dynamic> _output = Map<String, dynamic>();
   final List<ChangeEntry> _changeList = List();
   final Map<String, dynamic> _changes = Map<String, dynamic>();
@@ -97,7 +98,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   final instance = DateTime.now();
   RootBinding _rootBinding;
 
-  DefaultTemporaryDocument() {
+  DefaultTemporaryDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
   }
 
@@ -154,8 +155,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// override this default
   ///
   /// See also [createNew]
-  TemporaryDocument updateFromSource(
-      {@required Map<String, dynamic> source, bool fireListeners = false}) {
+  TemporaryDocument updateFromSource({@required Map<String, dynamic> source, bool fireListeners = false}) {
     assert(source != null);
     _output.clear(); // we have to clear - keys may have been deleted
     _output.addAll(source); // output is now a copy of the source
