@@ -5,6 +5,7 @@ import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
@@ -14,20 +15,38 @@ import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
-class Panel extends StatelessWidget {
+class Panel extends StatefulWidget {
   final PPanel config;
 
   Panel({Key key, @required this.config});
 
   @override
+  _PanelState createState() => _PanelState();
+}
+
+class _PanelState extends State<Panel> {
+  bool expanded;
+  TemporaryDocument temporaryDocument;
+  DataSource dataSource;
+
+  @override
+  void initState() {
+    expanded = widget.config.heading.openExpanded;
+    if (widget.config.dataSourceIsDeclared) {
+      temporaryDocument = inject<TemporaryDocument>();
+      dataSource = DataSource();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final PanelState panelState = Provider.of<PanelState>(context);
-    if (config.isStatic == IsStatic.yes) {
+    if (widget.config.isStatic == IsStatic.yes) {
       return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
     } else {
       final DataSource dataSource = Provider.of<DataSource>(context);
       // final Backend backend = Provider.of<Backend>(context);
-      final backend = Backend(config: config.backend);
+      final backend = Backend(config: widget.config.backend);
       switch (dataSource.config.runtimeType) {
         case PDataGet:
           return futureBuilder(backend.get(config: dataSource.config), dataSource, panelState);
@@ -97,8 +116,7 @@ class Panel extends StatelessWidget {
   /// Called when the Stream is active.
   /// Updates [dataSource] (which is in the Widget tree above this Widget) so that bindings
   /// reflect the new data. Then builds using [PanelBuilder]
-  Widget activeBuilder(
-      BuildContext context, DataSource dataSource, Data update, PanelState panelState) {
+  Widget activeBuilder(BuildContext context, DataSource dataSource, Data update, PanelState panelState) {
     final dataBinding = Provider.of<DataBinding>(context, listen: false);
     dataSource.updateData(update.data);
     return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
@@ -107,14 +125,14 @@ class Panel extends StatelessWidget {
   Widget _buildExpanded(BuildContext context) {
     return Column(
       children: [
-        if (config.heading != null) _buildHeader(),
-        PanelBuilder().buildContent(context: context, config: config),
+        if (widget.config.heading != null) _buildHeader(),
+        PanelBuilder().buildContent(context: context, config: widget.config),
       ],
     );
   }
 
   Widget _buildHeader() {
-    return PanelHeading(config: config.heading);
+    return PanelHeading(config: widget.config.heading);
   }
 }
 
