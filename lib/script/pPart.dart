@@ -26,6 +26,7 @@ part 'pPart.g.dart';
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PDisplayElement {
@@ -34,6 +35,7 @@ class PPart extends PDisplayElement {
   final String staticData;
   final PHelp help;
   final String tooltip;
+  final double particleHeight;
   @JsonKey(fromJson: PReadParticleConverter.fromJson, toJson: PReadParticleConverter.toJson)
   final PReadParticle read;
   @JsonKey(fromJson: PEditParticleConverter.fromJson, toJson: PEditParticleConverter.toJson)
@@ -42,6 +44,7 @@ class PPart extends PDisplayElement {
   PPart(
       {String caption,
       this.readOnly = false,
+        this.particleHeight=60,
       this.property,
       this.read = const PText(),
       this.edit=const PTextBox(),
