@@ -17,29 +17,23 @@ class TextParticle extends StatelessWidget with ConnectorBuilder implements Part
     final text =
         Text((config.isStatic == IsStatic.yes) ? config.staticData : connector.readFromModel());
     if (config.read.showCaption) {
-      return Padding(
-        padding: EdgeInsets.only(bottom: 8.0),
-        child: Container(
-          height: 51, // difference between read only and edit widgets
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Caption(
-                  text: config.caption,
-                ),
+      return Container(
+        height: config.particleHeight,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Caption(
+                text: config.caption,
               ),
-              text,
-            ],
-          ),
+            ),
+            text,
+          ],
         ),
       );
     }
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.0),
-      child: text,
-    );
+    return Container(height: config.particleHeight, child: text);
   }
 
   @override

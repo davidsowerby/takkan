@@ -23,6 +23,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other settings.  If false, this [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 ///
 class Part extends StatefulWidget {
   final PPart config;

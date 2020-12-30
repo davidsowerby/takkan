@@ -51,7 +51,17 @@ class Panel extends StatelessWidget {
           final APIException error = snapshot.error;
           return Text('Error in Future ${error.message}');
         } else {
-          return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+
+            case ConnectionState.none:
+              return Text('Error in Future, it may have returned null');
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+          }
+          return null; // unreachable
         }
       },
     );
