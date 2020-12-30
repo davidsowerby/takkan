@@ -5,7 +5,6 @@ import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/pageLibrary.dart';
 import 'package:precept_client/library/panelLibrary.dart';
 import 'package:precept_client/page/editState.dart';
-import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/pPart.dart';
@@ -125,8 +124,6 @@ class PageBuilder with CommonBuilder {
 class PanelBuilder with CommonBuilder {
   Widget build({@required BuildContext context, @required PPanel config}) {
     Widget widget = panelLibrary.find(config.runtimeType, config);
-    widget = ChangeNotifierProvider<PanelState>(
-        create: (_) => PanelState(config: config), child: widget);
     widget = addEditControl(widget: widget, config: config);
     widget = addDataBinding(
       context: context,

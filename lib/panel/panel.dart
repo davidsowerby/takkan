@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/backend/backend.dart';
+import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/script.dart';
@@ -27,45 +28,57 @@ class Panel extends StatefulWidget {
 class _PanelState extends State<Panel> {
   bool expanded;
   TemporaryDocument temporaryDocument;
-  DataSource dataSource;
+  PDataSource dataSourceConfig;
+  RootBinding rootBinding;
 
   @override
   void initState() {
+    super.initState();
     expanded = widget.config.heading.openExpanded;
     if (widget.config.dataSourceIsDeclared) {
       temporaryDocument = inject<TemporaryDocument>();
-      dataSource = DataSource();
+      dataSourceConfig = widget.config.dataSource;
+      rootBinding = temporaryDocument.rootBinding;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final PanelState panelState = Provider.of<PanelState>(context);
     if (widget.config.isStatic == IsStatic.yes) {
-      return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+      return (expanded) ? _buildExpanded(context) : _buildHeader();
     } else {
-      final DataSource dataSource = Provider.of<DataSource>(context);
-      // final Backend backend = Provider.of<Backend>(context);
       final backend = Backend(config: widget.config.backend);
-      switch (dataSource.config.runtimeType) {
+      Widget builder;
+      PDocument schema;
+
+      switch (dataSourceConfig.runtimeType) {
         case PDataGet:
-          return futureBuilder(backend.get(config: dataSource.config), dataSource, panelState);
+          builder =
+              futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, expanded);
+          schema = widget.config.schema.documents[dataSourceConfig.document];
+          break;
         case PDataStream:
-          return streamBuilder(backend, dataSource, panelState);
+          builder = streamBuilder(backend, temporaryDocument, expanded);
+          break;
         default:
           throw ConfigurationException(
-              'Unrecognised data source type:  ${dataSource.config.runtimeType}');
+              'Unrecognised data source type:  ${dataSourceConfig.runtimeType}');
       }
+
+      return (widget.config.dataSourceIsDeclared)
+          ? ChangeNotifierProvider<DataBinding>(
+          create: (_) => DataBinding(binding: rootBinding, schema: schema), child: builder)
+          : builder;
     }
   }
 
-  Widget futureBuilder(Future<Data> future, DataSource dataSource, PanelState panelState) {
+  Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument, bool expanded) {
     return FutureBuilder<Data>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          dataSource.updateData(snapshot.data.data);
-          return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+          temporaryDocument.updateFromSource(source: snapshot.data.data, fireListeners: false);
+          return (expanded) ? _buildExpanded(context) : _buildHeader();
         } else if (snapshot.hasError) {
           final APIException error = snapshot.error;
           return Text('Error in Future ${error.message}');
@@ -73,7 +86,7 @@ class _PanelState extends State<Panel> {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
-              return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+              return (expanded) ? _buildExpanded(context) : _buildHeader();
 
             case ConnectionState.none:
               return Text('Error in Future, it may have returned null');
@@ -86,7 +99,7 @@ class _PanelState extends State<Panel> {
     );
   }
 
-  Widget streamBuilder(Backend backend, DataSource dataSource, PanelState panelState) {
+  Widget streamBuilder(Backend backend, TemporaryDocument temporaryDocument, bool expanded) {
     return StreamBuilder<Data>(
         stream: backend.getStream(documentId: null),
         initialData: Data(data: {}),
@@ -102,7 +115,7 @@ class _PanelState extends State<Panel> {
                 child: CircularProgressIndicator(),
               );
             case ConnectionState.active:
-              return activeBuilder(context, dataSource, snapshot.data, panelState);
+              return activeBuilder(context, temporaryDocument, snapshot.data, expanded);
             case ConnectionState.done:
               return Center(
                 child: Text("Connection closed"),
@@ -116,10 +129,11 @@ class _PanelState extends State<Panel> {
   /// Called when the Stream is active.
   /// Updates [dataSource] (which is in the Widget tree above this Widget) so that bindings
   /// reflect the new data. Then builds using [PanelBuilder]
-  Widget activeBuilder(BuildContext context, DataSource dataSource, Data update, PanelState panelState) {
+  Widget activeBuilder(BuildContext context, TemporaryDocument temporaryDocument, Data update,
+      bool expanded) {
     final dataBinding = Provider.of<DataBinding>(context, listen: false);
-    dataSource.updateData(update.data);
-    return (panelState.expanded) ? _buildExpanded(context) : _buildHeader();
+    temporaryDocument.updateFromSource(source: update.data, fireListeners: false);
+    return (expanded) ? _buildExpanded(context) : _buildHeader();
   }
 
   Widget _buildExpanded(BuildContext context) {
@@ -136,19 +150,7 @@ class _PanelState extends State<Panel> {
   }
 }
 
-class PanelState with ChangeNotifier {
-  bool _expanded;
-  final PPanel config;
 
-  PanelState({@required this.config}) : _expanded = config.style.openExpanded;
-
-  bool get expanded => _expanded;
-
-  set expanded(value) {
-    _expanded = value;
-    notifyListeners();
-  }
-}
 
 class PanelHeading extends StatelessWidget {
   final PPanelHeading config;
