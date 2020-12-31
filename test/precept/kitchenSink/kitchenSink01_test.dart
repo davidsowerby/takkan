@@ -114,19 +114,19 @@ void main() {
       testTree.verify();
 
       final pageId = 'script01./test.Page 1';
-      expect(testTree.elementHasPanelState(pageId), isFalse);
+      // expect(testTree.elementHasPanelState(pageId), isFalse);
       expect(testTree.elementHasEditState(pageId), isFalse);
       expect(testTree.elementHasDataBinding(pageId), isFalse);
       expect(testTree.elementHasDataSource(pageId), isFalse);
 
       final panel1Id = 'script01./test.Page 1.Panel 1';
-      expect(testTree.elementHasPanelState(panel1Id), isTrue);
+      // expect(testTree.elementHasPanelState(panel1Id), isTrue);
       expect(testTree.elementHasEditState(panel1Id), isFalse);
       expect(testTree.elementHasDataBinding(panel1Id), isFalse);
       expect(testTree.elementHasDataSource(panel1Id), isFalse);
 
       final panel13Id = 'script01./test.Page 1.Panel 1.Panel 1-3';
-      expect(testTree.elementHasPanelState(panel13Id), isTrue);
+      // expect(testTree.elementHasPanelState(panel13Id), isTrue);
       expect(testTree.elementHasEditState(panel13Id), isTrue);
       expect(testTree.elementHasDataBinding(panel13Id), isTrue);
       expect(testTree.elementHasDataSource(panel13Id), isTrue);

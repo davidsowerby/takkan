@@ -140,11 +140,9 @@ void main() {
               create: (_) => DataBinding(binding: rootBinding),
               child: ChangeNotifierProvider<EditState>(
                 create: (_) => EditState(),
-                child: ChangeNotifierProvider<PanelState>(
-                    create: (_) => PanelState(config: panel),
-                    child: Panel(
-                      config: panel,
-                    )),
+                child: Panel(
+                  config: panel,
+                ),
               ),
             ),
           ));

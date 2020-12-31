@@ -44,32 +44,54 @@ class _PanelState extends State<Panel> {
 
   @override
   Widget build(BuildContext context) {
+    /// If using only static data, we don't care about any data sources
     if (widget.config.isStatic == IsStatic.yes) {
-      return (expanded) ? _buildExpanded(context) : _buildHeader();
-    } else {
-      final backend = Backend(config: widget.config.backend);
-      Widget builder;
-      PDocument schema;
-
-      switch (dataSourceConfig.runtimeType) {
-        case PDataGet:
-          builder =
-              futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, expanded);
-          schema = widget.config.schema.documents[dataSourceConfig.document];
-          break;
-        case PDataStream:
-          builder = streamBuilder(backend, temporaryDocument, expanded);
-          break;
-        default:
-          throw ConfigurationException(
-              'Unrecognised data source type:  ${dataSourceConfig.runtimeType}');
-      }
-
-      return (widget.config.dataSourceIsDeclared)
-          ? ChangeNotifierProvider<DataBinding>(
-          create: (_) => DataBinding(binding: rootBinding, schema: schema), child: builder)
-          : builder;
+      return _buildContent();
     }
+
+    /// We know this is not static, and if we are not using a data source constructed at this level, then
+    /// we create a new DataBinding for this level. Connect its binding and schema to the DataBinding
+    /// above this Panel, using this Panel's property.
+    if (!widget.config.dataSourceIsDeclared) {
+      final DataBinding parentBinding = Provider.of<DataBinding>(context);
+      return ChangeNotifierProvider<DataBinding>(
+        create: (_) => DataBinding(
+          schema: parentBinding.schema.fields[widget.config.property],
+          binding: parentBinding.binding.modelBinding(property: widget.config.property),
+        ),
+        child: _buildContent(),
+      );
+    }
+
+    /// Now we know we need to construct a data source. [initState] has already created the
+    /// TemporaryDocument and RootBinding
+
+    /// Select the configured backend
+    final backend = Backend(config: widget.config.backend);
+    Widget builder;
+    PDocument schema;
+
+    switch (dataSourceConfig.runtimeType) {
+      case PDataGet:
+        builder = futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, expanded);
+        schema = widget.config.schema.documents[dataSourceConfig.document];
+        break;
+      case PDataStream:
+        builder = streamBuilder(backend, temporaryDocument, expanded);
+        break;
+      default:
+        throw ConfigurationException(
+            'Unrecognised data source type:  ${dataSourceConfig.runtimeType}');
+    }
+
+    return (widget.config.dataSourceIsDeclared)
+        ? ChangeNotifierProvider<DataBinding>(
+            create: (_) => DataBinding(binding: rootBinding, schema: schema), child: builder)
+        : builder;
+  }
+
+  Widget _buildContent() {
+    return (expanded) ? _buildExpanded(context) : _buildHeader();
   }
 
   Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument, bool expanded) {
@@ -129,8 +151,8 @@ class _PanelState extends State<Panel> {
   /// Called when the Stream is active.
   /// Updates [dataSource] (which is in the Widget tree above this Widget) so that bindings
   /// reflect the new data. Then builds using [PanelBuilder]
-  Widget activeBuilder(BuildContext context, TemporaryDocument temporaryDocument, Data update,
-      bool expanded) {
+  Widget activeBuilder(
+      BuildContext context, TemporaryDocument temporaryDocument, Data update, bool expanded) {
     final dataBinding = Provider.of<DataBinding>(context, listen: false);
     temporaryDocument.updateFromSource(source: update.data, fireListeners: false);
     return (expanded) ? _buildExpanded(context) : _buildHeader();
@@ -149,8 +171,6 @@ class _PanelState extends State<Panel> {
     return PanelHeading(config: widget.config.heading);
   }
 }
-
-
 
 class PanelHeading extends StatelessWidget {
   final PPanelHeading config;

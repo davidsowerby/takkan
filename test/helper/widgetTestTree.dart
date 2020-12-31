@@ -99,9 +99,9 @@ class WidgetTestTree {
     return elementHas(id, (widget) => widget is ChangeNotifierProvider<EditState>, EditState);
   }
 
-  bool elementHasPanelState(String id) {
-    return elementHas(id, (widget) => widget is ChangeNotifierProvider<PanelState>, PanelState);
-  }
+  // bool elementHasPanelState(String id) {
+  //   return elementHas(id, (widget) => widget is ChangeNotifierProvider<PanelState>, PanelState);
+  // }
 
   bool elementHasDataBinding(String id) {
     return elementHas(id, (widget) => widget is ChangeNotifierProvider<DataBinding>, DataBinding);

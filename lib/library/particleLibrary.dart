@@ -105,8 +105,9 @@ class ConnectorFactory {
     final ModelBinding parentBinding = dataBinding.binding;
     final PDocument schema = dataBinding.schema;
     final PSchemaElement fieldSchema = schema.fields[config.property];
+    assert(fieldSchema != null, "No schema found for property ${config.property}");
     final binding =
-    _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
+        _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
     final converter = _converter(schema: fieldSchema, particleDataType: particleDataType);
     final connector = ModelConnector(binding: binding, converter: converter);
     return connector;
