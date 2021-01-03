@@ -10,22 +10,22 @@ abstract class BackendDelegate {
   /// For methods accessing Cloud Functions, use the 'fetchXXXX' methods
   /// ================================================================================================
 
-  /// See [BackendHandler.get]
+  /// See [Backend.get]
   Future<Data> get({@required DocumentId documentId});
 
-  /// See [BackendHandler.getStream]
+  /// See [Backend.getStream]
   Stream<Data> getStream({@required DocumentId documentId});
 
-  /// See [BackendHandler.getList]
+  /// See [Backend.getList]
   Future<Data> getList({Query query});
 
-  /// See [BackendHandler.getListStream]
+  /// See [Backend.getListStream]
   Stream<List<Data>> getListStream({Query query});
 
-  /// See [BackendHandler.getDistinct]
+  /// See [Backend.getDistinct]
   Future<Data> getDistinct({Query query});
 
-  /// See [BackendHandler.getDistinctStream]
+  /// See [Backend.getDistinctStream]
   Stream<Data> getDistinctStream({Query query});
 
   /// ================================================================================================
@@ -34,33 +34,34 @@ abstract class BackendDelegate {
   /// Note there are no Streams returned by these calls
   /// ================================================================================================
 
-  /// See [BackendHandler.fetch]
+  /// See [Backend.fetch]
   Future<Data> fetch({@required String functionName, @required DocumentId documentId});
 
-  /// See [BackendHandler.fetchDistinct]
+  /// See [Backend.fetchDistinct]
   Future<Data> fetchDistinct({@required String functionName, Map<String, dynamic> params});
 
-  /// See [BackendHandler.fetchList]
+  /// See [Backend.fetchList]
   Future<List<Data>> fetchList({@required String functionName, Map<String, String> params});
 
   /// ================================================================================================
   /// General calls
   /// ================================================================================================
 
-  /// See [BackendHandler.exists]
+  /// See [Backend.exists]
   Future<bool> exists({@required DocumentId documentId});
 
-  /// See [BackendHandler.executeFunction]
+  /// See [Backend.executeFunction]
   Future<CloudResponse> executeFunction(
       {@required String functionName, Map<String, String> params});
 
-  /// [BackendHandler.save] prepares the data and passes it to this method for a backend-specific save
+  /// [Backend.save] prepares the data and passes it to this method for a backend-specific save
   Future<CloudResponse> save({
     DocumentId documentId,
-    Map<String, dynamic> data,
+    Map<String, dynamic> changedData,
+    Map<String, dynamic> fullData,
   });
 
-  /// See [BackendHandler.delete]
+  /// See [Backend.delete]
   Future<CloudResponse> delete({@required List<DocumentId> documentIds});
 
   /// ================================================================================================
