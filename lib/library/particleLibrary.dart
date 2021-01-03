@@ -3,6 +3,7 @@ import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/converter.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
@@ -10,6 +11,7 @@ import 'package:precept_script/schema/field.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/script/particle/pTextBox.dart';
 
 ParticleLibrary _particleLibrary = ParticleLibrary();
 
@@ -49,6 +51,11 @@ class ParticleLibrary {
           config: config,
           connector: connector,
         );
+      case PTextBox:
+        return TextBoxParticle(
+          config: config,
+          connector: connector,
+        );
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
@@ -71,9 +78,10 @@ class ParticleLibrary {
     final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;
     switch (particleType) {
       case PText:
+      case PTextBox:
         return String;
     }
-    String msg = "No entry is defined for ${config.runtimeType.toString()} in $runtimeType";
+    String msg = "No Particle is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }

@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/dataSource.dart';
 
 /// The intersection point between application and data.
@@ -21,8 +20,8 @@ import 'package:precept_script/script/dataSource.dart';
 /// for [DataBinding] instances to connect to.  In this way, [DataBindings] provide a connection chain
 /// from the data source to the element which actually displays the data.
 ///
-/// When [readOnlyMode] is true, the document and therefore pages using it, are read only.
-/// When [canEdit] is true, [readOnlyMode] can be changed to false (thus allowing editing) by user action
+/// When [readMode] is true, the document and therefore pages using it, are read only.
+/// When [canEdit] is true, [readMode] can be changed to false (thus allowing editing) by user action
 ///
 /// Precept potentially creates a number of [Form] instances on one page, as each [Panel]
 /// may have its own.  This class just holds the [GlobalKey] for each, so Form content can be pushed
@@ -44,11 +43,11 @@ class DataSource with ChangeNotifier {
 
   RootBinding get rootBinding => _temporaryDocument.rootBinding;
 
-  bool get readOnlyMode => _readOnlyMode;
+  bool get readMode => _readOnlyMode;
 
   bool get canEdit => _canEdit;
 
-  set readOnlyMode(bool value) {
+  set readMode(bool value) {
     _readOnlyMode = value;
     notifyListeners();
   }
@@ -57,43 +56,7 @@ class DataSource with ChangeNotifier {
     _temporaryDocument.updateFromSource(source: data);
   }
 
-  Future<bool> persist(BuildContext context, bool readOnly) async {
-    if (readOnly) {
-      return false;
-    }
-    flushFormsToModel();
-    await _doPersist();
-    return true;
-  }
 
-  _doPersist() {
-    return Future.value(true); // TODO: save it through the Repo layer
-  }
 
-  final List<GlobalKey<FormState>> formKeys = List();
 
-  /// Called by a [Section] creating a Form.  Forms are 'flushed' to the backing data by [flushFormsToModel]
-  addForm(GlobalKey<FormState> formKey) {
-    formKeys.add(formKey);
-    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
-  }
-
-  /// Iterates though form keys registered by [Section] instances through [addForm], 'saves' the [Form] - that is, transfers data from
-  /// the [Form] back to the [DataSource] via [Binding]s - the bindings are provided by [Part] components
-  /// within the [Section] (and therefore within the [Form] if the [Section] is in edit mode.)
-  flushFormsToModel() {
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        key.currentState.save();
-        logType(this.runtimeType).d("Form saved for $key");
-      }
-    }
-    // TODO: purge those with null current state
-  }
-
-  /// Uses [config] to connect to the data.  Returns either a Future<Data> or a Stream<Data> depending
-  /// on the [config] type
-  connectToData() {
-    return null;
-  }
 }

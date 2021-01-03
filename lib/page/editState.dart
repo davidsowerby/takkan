@@ -3,32 +3,36 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_script/common/log.dart';
 
-/// [readOnlyMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
-/// [canEdit] reflects whether the [readOnlyMode] status can be changed. If a [DocumentPageSection] is allowed to edit, this is
+/// [readMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
+/// [canEdit] reflects whether the [readMode] status can be changed. If a [DocumentPageSection] is allowed to edit, this is
 /// typically used to display an edit icon to the user
 class EditState with ChangeNotifier {
   bool _canEdit;
-  bool _readOnlyMode;
+  bool _readMode;
 
-  EditState({bool canEdit=true, bool readOnlyMode=true})
-      : _readOnlyMode = readOnlyMode,
+  EditState({bool canEdit = true, bool readMode = true})
+      : _readMode = readMode,
         _canEdit = canEdit;
 
-  EditState.fromDocument(DataSource documentEditState)
-      : _canEdit = documentEditState.canEdit,
-        _readOnlyMode = documentEditState.readOnlyMode;
+  EditState.fromDocument(DataSource dataSource)
+      : _canEdit = dataSource.canEdit,
+        _readMode = dataSource.readMode;
 
-  bool get readOnlyMode {
-    return _readOnlyMode;
+  bool get readMode {
+    return _readMode;
+  }
+
+  bool get editMode {
+    return !_readMode;
   }
 
   bool get canEdit {
     return _canEdit;
   }
 
-  set readOnlyMode(bool readOnly) {
-    _readOnlyMode = readOnly;
-    logType(this.runtimeType).d("SectionEditState changed to readOnly: $readOnly");
+  set readMode(bool value) {
+    _readMode = value;
+    logType(this.runtimeType).d("EditState changed to readMode: $value");
     notifyListeners();
   }
 

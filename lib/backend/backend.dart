@@ -19,7 +19,7 @@ import 'package:precept_script/script/dataSource.dart';
 class Backend {
   final BackendDelegate backendDelegate;
 
-  Backend({ @required PBackend config})
+  Backend({@required PBackend config})
       : backendDelegate = backendLibrary.find(config.backendType, config);
 
   /// ================================================================================================
@@ -138,7 +138,8 @@ class Backend {
   }) async {
     CloudResponse response = await backendDelegate.save(
       documentId: documentId,
-      data: (saveChangesOnly) ? data.changes : data.output,
+      changedData: data.changes,
+      fullData: data.output,
     );
     if (response.success) {
       data.saved();
@@ -155,5 +156,3 @@ class Backend {
     return backendDelegate.delete(documentIds: documentIds);
   }
 }
-
-

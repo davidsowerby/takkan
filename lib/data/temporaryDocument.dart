@@ -228,9 +228,8 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 
   @override
   void saved() {
-    initialData.clear();
-    initialData.addAll(_output);
-    _output.clear();
+    _initialData.clear();
+    _initialData.addAll(_output);
     _changes.clear();
     _changeList.clear();
   }

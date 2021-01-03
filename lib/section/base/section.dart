@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/action/toggleEdit.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/section/base/sectionKey.dart';
 import 'package:precept_client/section/base/sectionList.dart';
@@ -35,9 +34,7 @@ class Section extends StatelessWidget with ToggleSectionEditState {
 
   @override
   Widget build(BuildContext context) {
-    final DataSource formLog = Provider.of<DataSource>(context);
     final formKey = GlobalKey<FormState>();
-    formLog.addForm(formKey);
     return Form(
       key: formKey,
       child: InkWell(

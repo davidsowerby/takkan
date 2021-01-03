@@ -3,16 +3,16 @@ import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
-import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -91,7 +91,12 @@ class _PanelState extends State<Panel> {
   }
 
   Widget _buildContent() {
-    return (expanded) ? _buildExpanded(context) : _buildHeader();
+    return Heading(
+      headingText: widget.config.caption,
+      expandedContent: _expandedContent,
+      openExpanded: true,
+      onAfterSave: [persist],
+    );
   }
 
   Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument, bool expanded) {
@@ -100,7 +105,7 @@ class _PanelState extends State<Panel> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           temporaryDocument.updateFromSource(source: snapshot.data.data, fireListeners: false);
-          return (expanded) ? _buildExpanded(context) : _buildHeader();
+          return _buildContent();
         } else if (snapshot.hasError) {
           final APIException error = snapshot.error;
           return Text('Error in Future ${error.message}');
@@ -108,7 +113,7 @@ class _PanelState extends State<Panel> {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
-              return (expanded) ? _buildExpanded(context) : _buildHeader();
+            return _buildContent();
 
             case ConnectionState.none:
               return Text('Error in Future, it may have returned null');
@@ -148,56 +153,58 @@ class _PanelState extends State<Panel> {
         });
   }
 
-  /// Called when the Stream is active.
-  /// Updates [dataSource] (which is in the Widget tree above this Widget) so that bindings
-  /// reflect the new data. Then builds using [PanelBuilder]
+  /// Updates data and rebuilds using [PanelBuilder]
   Widget activeBuilder(
       BuildContext context, TemporaryDocument temporaryDocument, Data update, bool expanded) {
-    final dataBinding = Provider.of<DataBinding>(context, listen: false);
     temporaryDocument.updateFromSource(source: update.data, fireListeners: false);
-    return (expanded) ? _buildExpanded(context) : _buildHeader();
+    return _buildContent();
   }
 
-  Widget _buildExpanded(BuildContext context) {
-    return Column(
-      children: [
-        if (widget.config.heading != null) _buildHeader(),
-        PanelBuilder().buildContent(context: context, config: widget.config),
-      ],
+  Widget _expandedContent() {
+    final editState = Provider.of<EditState>(context, listen: false);
+    final content = PanelBuilder().buildContent(context: context, config: widget.config);
+    if (editState.readMode) {
+      return content;
+    } else {
+      final formKey = GlobalKey<FormState>();
+      addForm(formKey);
+      return Form(
+          key: formKey,
+          child: PanelBuilder().buildContent(context: context, config: widget.config));
+    }
+  }
+
+  Future<bool> persist(BuildContext context) async {
+    flushFormsToModel();
+    await _doPersist();
+    return true;
+  }
+
+  _doPersist() async {
+    final Backend backend = Backend(config: widget.config.backend);
+    return backend.save(
+      data: temporaryDocument,
     );
   }
 
-  Widget _buildHeader() {
-    return PanelHeading(config: widget.config.heading);
-  }
-}
+  final List<GlobalKey<FormState>> formKeys = List();
 
-class PanelHeading extends StatelessWidget {
-  final PPanelHeading config;
-  final PHelp help;
-
-  const PanelHeading({
-    Key key,
-    @required this.config,
-    this.help,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final ThemeLookup themeLookup = inject<ThemeLookup>();
-    return Container(
-        child: Text(config.parent.caption),
-        color: themeLookup.color(theme: theme, pColor: config.style.background));
+  /// Called when creating a Form. Sub-Panels may calls this
+  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
+  addForm(GlobalKey<FormState> formKey) {
+    formKeys.add(formKey);
+    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 
-  edit(BuildContext context) {
-    final EditState sectionState = Provider.of<EditState>(context, listen: false);
-    sectionState.readOnlyMode = false;
-  }
-
-  save(BuildContext context) {
-    final EditState sectionState = Provider.of<EditState>(context, listen: false);
-    sectionState.readOnlyMode = true;
+  /// Iterates though form keys registered by [Panels] instances through [addForm], 'saves' the [Form]
+  /// that is, transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
+  flushFormsToModel() {
+    for (GlobalKey<FormState> key in formKeys) {
+      if (key.currentState != null) {
+        key.currentState.save();
+        logType(this.runtimeType).d("Form saved for $key");
+      }
+    }
+    // TODO: purge those with null current state
   }
 }

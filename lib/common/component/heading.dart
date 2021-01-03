@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/action/editSave.dart';
 import 'package:precept_client/common/locale.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
@@ -13,27 +12,24 @@ import 'package:precept_script/script/style/style.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
-/// - [canEditActions] always has a [EditSaveAction] added when [editable] is true, so there is no need to explicitly add that
+/// - actions are supported for Edit, Save and Cancel, but an [EditSaveCancel] instance should be added if required
 /// - [actionButtons], if present, are placed before the 'expand' widget
 /// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [EditState.canEdit] is true.
-/// - [persistOnSave] if true, when a save action is executed, the nearest [DataSource] is called to persist the document
-/// This is used By [SectionList] for example
 class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
   final PHelp help;
-  final Widget child;
+  final Widget Function() expandedContent;
   final bool editable;
   final bool expandable;
-  final Function(BuildContext) onEdit;
-  final Function(BuildContext) onSave;
   final bool openExpanded;
-  final List<Widget> readModeActions;
-  final List<Widget> editModeActions;
-  final List<Widget> canEditActions;
-  final List<Widget> cannotEditActions;
+  final List<Function(BuildContext)> onBeforeEdit;
+  final List<Function(BuildContext)> onAfterEdit;
+  final List<Function(BuildContext)> onBeforeCancelEdit;
+  final List<Function(BuildContext)> onAfterCancelEdit;
+  final List<Function(BuildContext)> onBeforeSave;
+  final List<Function(BuildContext)> onAfterSave;
   final bool showEditIcon;
-  final bool persistOnSave;
 
   const Heading({
     Key key,
@@ -41,21 +37,17 @@ class Heading extends StatefulWidget {
     this.help,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
-    @required this.child,
+    @required this.expandedContent,
     this.editable = true,
-    this.onEdit,
-    this.onSave,
-    this.persistOnSave=true,
     this.expandable = true,
-    this.readModeActions = const [],
-    this.editModeActions = const [],
-    this.canEditActions = const [],
-    this.cannotEditActions = const [],
+    this.onAfterEdit = const [],
+    this.onBeforeEdit = const [],
+    this.onBeforeCancelEdit = const [],
+    this.onAfterCancelEdit = const [],
+    this.onBeforeSave = const [],
+    this.onAfterSave = const [],
     this.showEditIcon = true,
-  })  : assert(child != null),
-        assert(
-            (editable) ? onEdit != null : true, "If edit button required, OnEdit must be defined"),
-        assert((editable) ? onSave != null : true, "If edit required, onSave must also be defined"),
+  })  : assert(expandedContent != null),
         assert((editable) ? expandable : true, "If editable needs also to be expandable"),
         super(key: key);
 
@@ -76,29 +68,33 @@ class _HeadingState extends State<Heading> with Interpolator {
 
   @override
   Widget build(BuildContext context) {
-    final EditState sectionState = Provider.of<EditState>(context);
-    final List<Widget> actionButtons = (sectionState.readOnlyMode)
-        ? List.from(widget.readModeActions)
-        : List.from(widget.editModeActions);
-    actionButtons.addAll((sectionState.canEdit) ? widget.canEditActions : widget.cannotEditActions);
+    final EditState editState = Provider.of<EditState>(context);
 
-    /// Pressing edit also expands the heading - otherwise it cannot be edited
-    if (sectionState.canEdit && widget.showEditIcon) {
-      List<Future<bool> Function(BuildContext,bool)> callbacks = List();
-      callbacks.add(_expand);
-      if(widget.persistOnSave){
-        DataSource documentState= Provider.of<DataSource>(context, listen: false);
-        callbacks.add(documentState.persist);
-      }
+    final List<Widget> actionButtons = List();
+
+    if (editState.readMode) {
       actionButtons.add(
-        EditSaveAction(
-          callbacks: callbacks,
+        EditAction(
+          onBefore: widget.onBeforeEdit,
+          onAfter: widget.onAfterEdit,
         ),
       );
     }
 
+    if (editState.editMode) {
+      actionButtons.add(CancelEditAction(
+        onBefore: widget.onBeforeCancelEdit,
+        onAfter: widget.onAfterCancelEdit,
+      ));
+
+      actionButtons.add(SaveAction(
+        onBefore: widget.onBeforeSave,
+        onAfter: widget.onAfterSave,
+      ));
+    }
+
     if (widget.expandable) {
-      actionButtons.add(HeadingExpandCloseAction(callback: _toggleExpanded, expanded: expanded));
+      actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
     }
 
     final theme = Theme.of(context);
@@ -106,10 +102,11 @@ class _HeadingState extends State<Heading> with Interpolator {
     return Card(
       shape: borderLibrary.find(theme: theme, border: widget.headingStyle.border),
       elevation: widget.headingStyle.elevation,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
-            onTap: _toggleExpanded,
+            onTap: () => _toggleExpanded(context),
             child: Container(
               height: widget.headingStyle.height,
               color: themeLookup.color(
@@ -141,16 +138,17 @@ class _HeadingState extends State<Heading> with Interpolator {
               ),
             ),
           ),
-          if (expanded) Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: widget.child,
-          )
+          if (expanded)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: widget.expandedContent(),
+            )
         ],
       ),
     );
   }
 
-  Future<bool> _expand(BuildContext context, bool readOnly) async{
+  Future<bool> _expand(BuildContext context, bool readOnly) async {
     if (!expanded) {
       setState(() {
         expanded = true;
@@ -159,49 +157,57 @@ class _HeadingState extends State<Heading> with Interpolator {
     return true;
   }
 
-  _toggleExpanded() {
+  /// [context] is not used, but needs it for the callback signature
+  _toggleExpanded(BuildContext context) {
     setState(() {
       expanded = !expanded;
     });
   }
 }
 
-class HeadingExpandCloseAction extends StatelessWidget {
+class HeadingExpandCloseAction extends ActionIcon {
   final bool expanded;
-  final Function() callback;
 
-  const HeadingExpandCloseAction({Key key, @required this.expanded, @required this.callback})
-      : super(key: key);
+  const HeadingExpandCloseAction({
+    Key key,
+    this.expanded,
+    List<Function(BuildContext)> onBefore = const [],
+    List<Function(BuildContext)> onAfter = const [],
+  }) : super(
+          key: key,
+          icon: (expanded) ? Icons.arrow_drop_down : Icons.arrow_drop_up,
+          onAfter: onAfter,
+          onBefore: onBefore,
+        );
 
   @override
-  Widget build(BuildContext context) {
-    return ActionIcon(
-      iconData: (expanded) ? Icons.arrow_drop_down : Icons.arrow_drop_up,
-      action: _execute,
-    );
-  }
-
-  _execute() {
-    callback();
+  void doAction(BuildContext context) {
+    /// Only action is in the callback
   }
 }
 
-
-
-class HelpButton extends StatelessWidget with Interpolator {
+class HelpButton extends ActionIcon with Interpolator {
   final PHelp help;
 
-  const HelpButton({Key key, @required this.help}) : super(key: key);
+  const HelpButton({
+    Key key,
+    @required this.help,
+    IconData icon = Icons.help,
+    List<Function(BuildContext)> onBefore = const [],
+    List<Function(BuildContext)> onAfter = const [],
+  }) : super(
+          key: key,
+          icon: icon,
+          onAfter: onAfter,
+          onBefore: onBefore,
+        );
 
   @override
-  Widget build(BuildContext context) {
-    return ActionIcon(
-        iconData: Icons.help,
-        action: () => showOkAlertDialog(
-              context: context,
-              title: help.title,
-              message: help.message,
-            ) // TODO interpolate with params, but params from where.  A Binding with property names maybe?
-        );
+  void doAction(BuildContext context) {
+    showOkAlertDialog(
+      context: context,
+      title: help.title,
+      message: help.message,
+    ); // TODO interpolate with params, but params from where.  A Binding with property names maybe?
   }
 }

@@ -50,7 +50,7 @@ class _PartState extends State<Part> {
     final DataBinding dataBinding = Provider.of<DataBinding>(context);
 
     final EditState editState = Provider.of<EditState>(context);
-    final readOnly = widget.config.readOnly || editState.readOnlyMode;
+    final readOnly = widget.config.readOnly || editState.readMode;
     logType(this.runtimeType)
         .d("caption: ${widget.config.caption}, EditState readOnly: ${widget.config.readOnly}");
     if (readOnly) {
