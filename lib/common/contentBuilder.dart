@@ -3,10 +3,16 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
+import 'package:precept_client/common/exceptions.dart';
+import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/pageBuilder.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:provider/provider.dart';
 
 mixin ContentBuilder {
   Widget futureBuilder(
@@ -98,5 +104,67 @@ mixin ContentBuilder {
       }
     }
     // TODO: purge those with null current state
+  }
+
+  doBuild(BuildContext context, TemporaryDocument temporaryDocument, PContent config,
+      Widget Function() buildContent) {
+    /// If using only static data, we don't care about any data sources
+    if (config.isStatic == IsStatic.yes) {
+      return buildContent();
+    }
+
+    /// We know this is not static, and if we are not using a data source constructed at this level, then
+    /// we create a new DataBinding for this level. Connect its binding and schema to the DataBinding
+    /// above this Panel, using this Panel's property.
+    if (!config.dataSourceIsDeclared) {
+      final DataBinding parentBinding = Provider.of<DataBinding>(context);
+      return ChangeNotifierProvider<DataBinding>(
+        create: (_) => DataBinding(
+          schema: parentBinding.schema.fields[config.property],
+          binding: parentBinding.binding.modelBinding(property: config.property),
+        ),
+        child: buildContent(),
+      );
+    }
+
+    /// Now we know we need to construct a data source. [initState] has already created the
+    /// TemporaryDocument and RootBinding
+
+    /// Select the configured backend
+    final backend = Backend(config: config.backend);
+    final dataSourceConfig = config.dataSource;
+    Widget builder;
+    PDocument schema;
+
+    switch (dataSourceConfig.runtimeType) {
+      case PDataGet:
+        builder =
+            futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, buildContent);
+        schema = config.schema.documents[dataSourceConfig.document];
+        break;
+      case PDataStream:
+        builder = streamBuilder(backend, temporaryDocument, buildContent);
+        break;
+      default:
+        throw ConfigurationException(
+            'Unrecognised data source type:  ${dataSourceConfig.runtimeType}');
+    }
+
+    return (config.dataSourceIsDeclared)
+        ? ChangeNotifierProvider<DataBinding>(
+            create: (_) => DataBinding(binding: temporaryDocument.rootBinding, schema: schema),
+            child: builder)
+        : builder;
+  }
+
+  Widget formWrapped(BuildContext context, Widget content, Function(GlobalKey<FormState>) addForm) {
+    final editState = Provider.of<EditState>(context, listen: false);
+    if (editState.readMode) {
+      return content;
+    } else {
+      final formKey = GlobalKey<FormState>();
+      addForm(formKey);
+      return Form(key: formKey, child: content);
+    }
   }
 }

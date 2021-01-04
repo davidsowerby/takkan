@@ -67,7 +67,7 @@ Widget addDataBinding(
 }
 
 Widget assembleContent(
-    {@required BuildContext context, List<PDisplayElement> content, bool scrollable}) {
+    {@required BuildContext context, List<PSubContent> content, bool scrollable}) {
   final List<Widget> children = List();
   for (var element in content) {
     Widget child;
@@ -75,8 +75,8 @@ Widget assembleContent(
       child = PanelBuilder().build(context: context, config: element);
     }
     if (element is PPart) {
-      child =
-          PartBuilder().build(context: context, callingType: element.runtimeType, config: element);
+      child = PartBuilder()
+          .build(context: context, callingType: element.runtimeType, config: element as PPart);
     }
     children.add(child);
   }
