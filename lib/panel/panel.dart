@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/backend.dart';
-import 'package:precept_backend/backend/data.dart';
-import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/heading.dart';
+import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
@@ -25,11 +24,12 @@ class Panel extends StatefulWidget {
   _PanelState createState() => _PanelState();
 }
 
-class _PanelState extends State<Panel> {
+class _PanelState extends State<Panel> with ContentBuilder {
   bool expanded;
   TemporaryDocument temporaryDocument;
   PDataSource dataSourceConfig;
   RootBinding rootBinding;
+  final List<GlobalKey<FormState>> formKeys = List();
 
   @override
   void initState() {
@@ -73,11 +73,12 @@ class _PanelState extends State<Panel> {
 
     switch (dataSourceConfig.runtimeType) {
       case PDataGet:
-        builder = futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument);
+        builder =
+            futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, _buildContent);
         schema = widget.config.schema.documents[dataSourceConfig.document];
         break;
       case PDataStream:
-        builder = streamBuilder(backend, temporaryDocument, expanded);
+        builder = streamBuilder(backend, temporaryDocument, _buildContent);
         break;
       default:
         throw ConfigurationException(
@@ -95,69 +96,8 @@ class _PanelState extends State<Panel> {
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
       openExpanded: true,
-      onAfterSave: [persist],
+      onAfterSave: [(_) => persist(widget.config, temporaryDocument, formKeys)],
     );
-  }
-
-  Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument) {
-    return FutureBuilder<Data>(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          temporaryDocument.updateFromSource(source: snapshot.data.data, fireListeners: false);
-          return _buildContent();
-        } else if (snapshot.hasError) {
-          final APIException error = snapshot.error;
-          return Text('Error in Future ${error.message}');
-        } else {
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-            case ConnectionState.done:
-            return _buildContent();
-
-            case ConnectionState.none:
-              return Text('Error in Future, it may have returned null');
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-          }
-          return null; // unreachable
-        }
-      },
-    );
-  }
-
-  Widget streamBuilder(Backend backend, TemporaryDocument temporaryDocument, bool expanded) {
-    return StreamBuilder<Data>(
-        stream: backend.getStream(documentId: null),
-        initialData: Data(data: {}),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return Center(
-                child: Text('No connection'),
-              );
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            case ConnectionState.active:
-              return activeBuilder(context, temporaryDocument, snapshot.data, expanded);
-            case ConnectionState.done:
-              return Center(
-                child: Text("Connection closed"),
-              );
-            default:
-              return null; // unreachable
-          }
-        });
-  }
-
-  /// Updates data and rebuilds using [PanelBuilder]
-  Widget activeBuilder(
-      BuildContext context, TemporaryDocument temporaryDocument, Data update, bool expanded) {
-    temporaryDocument.updateFromSource(source: update.data, fireListeners: false);
-    return _buildContent();
   }
 
   Widget _expandedContent() {
@@ -174,39 +114,10 @@ class _PanelState extends State<Panel> {
     }
   }
 
-  Future<bool> persist(BuildContext context) async {
-    flushFormsToModel();
-    await _doPersist();
-    return true;
-  }
-
-  _doPersist() async {
-    final Backend backend = Backend(config: widget.config.backend);
-    return backend.save(
-      changedData: temporaryDocument.changes,
-      fullData: temporaryDocument.output,
-      onSuccess: temporaryDocument.saved,
-    );
-  }
-
-  final List<GlobalKey<FormState>> formKeys = List();
-
   /// Called when creating a Form. Sub-Panels may calls this
   /// Forms are 'flushed' to the backing data by [flushFormsToModel]
   addForm(GlobalKey<FormState> formKey) {
     formKeys.add(formKey);
     logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
-  }
-
-  /// Iterates though form keys registered by [Panels] instances through [addForm], 'saves' the [Form]
-  /// that is, transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
-  flushFormsToModel() {
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        key.currentState.save();
-        logType(this.runtimeType).d("Form saved for $key");
-      }
-    }
-    // TODO: purge those with null current state
   }
 }
