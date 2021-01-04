@@ -10,6 +10,8 @@ final kitchenSinkSchema = PSchema(
     'Account': PDocument(
       fields: {
         'objectId': PString(),
+        'id':PString(),
+        'category': PString(),
         'recordDate': PDate(),
         'customer': PDocument(
           fields: {
