@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
-import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/exceptions.dart';
@@ -183,7 +183,9 @@ class _PanelState extends State<Panel> {
   _doPersist() async {
     final Backend backend = Backend(config: widget.config.backend);
     return backend.save(
-      data: temporaryDocument,
+      changedData: temporaryDocument.changes,
+      fullData: temporaryDocument.output,
+      onSuccess: temporaryDocument.saved,
     );
   }
 
