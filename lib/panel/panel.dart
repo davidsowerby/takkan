@@ -73,7 +73,7 @@ class _PanelState extends State<Panel> {
 
     switch (dataSourceConfig.runtimeType) {
       case PDataGet:
-        builder = futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, expanded);
+        builder = futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument);
         schema = widget.config.schema.documents[dataSourceConfig.document];
         break;
       case PDataStream:
@@ -99,7 +99,7 @@ class _PanelState extends State<Panel> {
     );
   }
 
-  Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument, bool expanded) {
+  Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument) {
     return FutureBuilder<Data>(
       future: future,
       builder: (context, snapshot) {
