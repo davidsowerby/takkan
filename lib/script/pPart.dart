@@ -29,7 +29,7 @@ part 'pPart.g.dart';
 /// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPart extends PDisplayElement {
+class PPart extends PSubContent {
   final bool readOnly;
   final String property;
   final String staticData;

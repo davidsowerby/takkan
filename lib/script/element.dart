@@ -10,13 +10,11 @@ import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
-class PDisplayElement extends PCommon {
-  final String caption;
-  final String property;
-
-  PDisplayElement({
-    this.caption,
-    this.property,
+/// Separated from [PContent], because it does not reall make sense to contain a page within a page
+class PSubContent extends PContent {
+  PSubContent({
+    String caption,
+    String property,
     IsStatic isStatic = IsStatic.inherited,
     PBackend backend,
     PDataSource dataSource,
@@ -25,6 +23,8 @@ class PDisplayElement extends PCommon {
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
   }) : super(
+          caption: caption,
+          property: property,
           isStatic: isStatic,
           backend: backend,
           dataSource: dataSource,
@@ -58,8 +58,8 @@ class PDisplayElement extends PCommon {
 class PElementListConverter {
   static const elementKeyName = "-element-";
 
-  static List<PDisplayElement> fromJson(List<Map<String, dynamic>> json) {
-    List<PDisplayElement> list = List();
+  static List<PSubContent> fromJson(List<Map<String, dynamic>> json) {
+    List<PSubContent> list = List();
     for (var entry in json) {
       final elementType = entry[elementKeyName];
       final entryCopy = Map<String, dynamic>.from(entry);
@@ -81,7 +81,7 @@ class PElementListConverter {
     return list;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PDisplayElement> elementList) {
+  static List<Map<String, dynamic>> toJson(List<PSubContent> elementList) {
     final outputList = List<Map<String, dynamic>>();
     if (elementList == null) {
       return outputList;

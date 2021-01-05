@@ -59,18 +59,24 @@ void main() {
       expect(page.dataSource, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
       expect(page.schema, schema);
+      expect(page.dataSourceIsDeclared, true);
+      expect(page.backendIsDeclared, true);
 
       expect(panel.isStatic, IsStatic.yes);
       expect(panel.backend, isNotNull);
       expect(panel.dataSource, isNotNull);
       expect(panel.controlEdit, ControlEdit.noEdit);
       expect(panel.schema, schema);
+      expect(panel.dataSourceIsDeclared, false);
+      expect(panel.backendIsDeclared, false);
 
       expect(part.isStatic, IsStatic.yes);
       expect(part.backend, isNotNull);
       expect(part.dataSource, isNotNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
       expect(part.schema, schema);
+      expect(part.dataSourceIsDeclared, false);
+      expect(part.backendIsDeclared, false);
     });
 
     test('defaults, unset', () {
@@ -98,7 +104,6 @@ void main() {
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
-
       expect(route.isStatic, IsStatic.inherited);
       expect(route.backend, isNull);
       expect(route.dataSource, isNull);
@@ -107,16 +112,22 @@ void main() {
       expect(page.backend, isNull);
       expect(page.dataSource, isNull);
       expect(page.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(page.dataSourceIsDeclared, false);
+      expect(page.backendIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
       expect(panel.backend, isNull);
       expect(panel.dataSource, isNull);
       expect(panel.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(panel.dataSourceIsDeclared, false);
+      expect(panel.backendIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
       expect(part.backend, isNull);
       expect(part.dataSource, isNull);
       expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(part.dataSourceIsDeclared, false);
+      expect(part.backendIsDeclared, false);
     });
   });
 }

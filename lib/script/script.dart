@@ -203,17 +203,15 @@ class PRoute extends PCommon {
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPage extends PCommon {
-  final String title;
+class PPage extends PContent {
   final String pageType;
   final bool scrollable;
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-  final List<PDisplayElement> content;
+  final List<PSubContent> content;
 
   @JsonKey(ignore: true)
   PPage({
     this.pageType = 'defaultPage',
-    @required this.title,
     this.scrollable = true,
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
@@ -223,14 +221,19 @@ class PPage extends PCommon {
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
     String id,
+    String property,
+    @required String title,
   }) : super(
-            isStatic: isStatic,
-            backend: backend,
-            dataSource: dataSource,
-            panelStyle: panelStyle,
-            writingStyle: writingStyle,
-            controlEdit: controlEdit,
-            id: id);
+          isStatic: isStatic,
+          backend: backend,
+          dataSource: dataSource,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          controlEdit: controlEdit,
+          id: id,
+          property: property,
+          caption: title,
+        );
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
@@ -289,15 +292,17 @@ class PPage extends PCommon {
   @override
   String get idAlternative => title;
 
-  /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [backend] is always
-  /// considered 'declared' by the page, even when actually declared by something above it.
-  /// This is because a page is the first level to be actually built into the Widget tree
-  bool get backendIsDeclared => (isStatic == IsStatic.yes) ? false : true;
+  String get title => caption;
 
-  /// Unless a page is declared as static ([isStatic] == [IsStatic.yes]), [dataSource] is always
-  /// considered 'declared' by the page, even when actually declared by something above it.
+  /// [backend] is always
+  /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataSourceIsDeclared => (isStatic == IsStatic.yes) ? false : true;
+  bool get backendIsDeclared => backend != null;
+
+  /// [dataSource] is always
+  /// considered 'declared' by the page, if any level above it actually declares it.
+  /// This is because a page is the first level to be actually built into the Widget tree
+  bool get dataSourceIsDeclared => dataSource != null;
 }
 
 enum PageType { standard }
@@ -308,9 +313,9 @@ enum PageType { standard }
 //
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPanel extends PDisplayElement {
+class PPanel extends PSubContent {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
-  final List<PDisplayElement> content;
+  final List<PSubContent> content;
   @JsonKey(ignore: true)
   final PPanelHeading _heading;
   final bool scrollable;
@@ -364,7 +369,7 @@ class PPanel extends PDisplayElement {
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    for (PDisplayElement element in content) {
+    for (PSubContent element in content) {
       element.doValidate(messages);
     }
   }
@@ -519,6 +524,7 @@ class PCommon extends PreceptItem {
 
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
+
   @JsonKey(ignore: true)
   PSchema get schema => _schema;
 
@@ -528,8 +534,8 @@ class PCommon extends PreceptItem {
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     PCommon p = parent;
-    if (parent != null){
-      _schema=p._schema;
+    if (parent != null) {
+      _schema = p._schema;
     }
     ControlEdit inherited = ControlEdit.notSetAtThisLevel;
     while (p != null) {
@@ -605,4 +611,31 @@ class PCommon extends PreceptItem {
       dataSource.doValidate(messages);
     }
   }
+}
+
+class PContent extends PCommon {
+  final String caption;
+  final String property;
+
+  PContent({
+    this.caption,
+    this.property,
+    IsStatic isStatic = IsStatic.inherited,
+    PBackend backend,
+    PDataSource dataSource,
+    PPanelStyle panelStyle,
+    WritingStyle writingStyle,
+    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    PSchema schema,
+    String id,
+  }) : super(
+          dataSource: dataSource,
+          schema: schema,
+          id: id,
+          controlEdit: controlEdit,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
+          backend: backend,
+          isStatic: isStatic,
+        );
 }
