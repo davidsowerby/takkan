@@ -5,7 +5,6 @@ import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/page/pageBuilder.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -43,14 +42,7 @@ class _PanelState extends State<Panel> with ContentBuilder {
 
   Widget _expandedContent() {
     final content = PanelBuilder().buildContent(context: context, config: widget.config);
-    return formWrapped(context, content, addForm);
-  }
-
-  /// Called when creating a Form. Sub-Panels may calls this
-  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
-  addForm(GlobalKey<FormState> formKey) {
-    formKeys.add(formKey);
-    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
+    return formWrapped(context, content, formKeys);
   }
 
   Widget _buildContent() {

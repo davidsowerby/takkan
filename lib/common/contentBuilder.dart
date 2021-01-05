@@ -157,14 +157,21 @@ mixin ContentBuilder {
         : builder;
   }
 
-  Widget formWrapped(BuildContext context, Widget content, Function(GlobalKey<FormState>) addForm) {
+  Widget formWrapped(BuildContext context, Widget content, List<GlobalKey<FormState>> formKeys) {
     final editState = Provider.of<EditState>(context, listen: false);
     if (editState.readMode) {
       return content;
     } else {
       final formKey = GlobalKey<FormState>();
-      addForm(formKey);
+      addForm(formKeys, formKey);
       return Form(key: formKey, child: content);
     }
+  }
+
+  /// Stores a key for a Form.
+  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
+  addForm(List<GlobalKey<FormState>> formKeys, GlobalKey<FormState> formKey) {
+    formKeys.add(formKey);
+    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 }
