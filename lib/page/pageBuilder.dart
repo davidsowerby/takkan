@@ -75,12 +75,14 @@ Widget assembleContent(
       child = PanelBuilder().build(context: context, config: element);
     }
     if (element is PPart) {
-      child = PartBuilder()
-          .build(context: context, callingType: element.runtimeType, config: element as PPart);
+      child =
+          PartBuilder().build(context: context, callingType: element.runtimeType, config: element);
     }
     children.add(child);
   }
-  return (scrollable) ? ListView(children: children) : Column(children: children);
+  return (scrollable)
+      ? ListView(children: children)
+      : Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
 }
 
 class PartBuilder with CommonBuilder {
