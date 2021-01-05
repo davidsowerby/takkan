@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
@@ -34,12 +39,31 @@ class Part extends StatefulWidget {
   _PartState createState() => _PartState();
 }
 
-class _PartState extends State<Part> {
+class _PartState extends State<Part> with ContentBuilder implements ContentState {
   Widget readParticle;
   Widget editParticle;
+  TemporaryDocument temporaryDocument;
+  PDataSource dataSourceConfig;
+  RootBinding rootBinding;
+  final List<GlobalKey<FormState>> formKeys = List();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.config.dataSourceIsDeclared) {
+      temporaryDocument = inject<TemporaryDocument>();
+      dataSourceConfig = widget.config.dataSource;
+      rootBinding = temporaryDocument.rootBinding;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    return doBuild(context, temporaryDocument, widget.config, buildContent);
+  }
+
+  @override
+  Widget buildContent() {
     if (widget.config.isStatic == IsStatic.yes) {
       if (readParticle == null) {
         readParticle = particleLibrary.findStaticParticle(widget.config);
