@@ -114,9 +114,16 @@ mixin ContentBuilder {
     }
 
     /// We know this is not static, and if we are not using a data source constructed at this level, then
-    /// we create a new DataBinding for this level. Connect its binding and schema to the DataBinding
-    /// above this Panel, using this Panel's property.
+    /// we create a new DataBinding for this level, but only for Part or Panel.
+
     if (!config.dataSourceIsDeclared) {
+      /// A Page cannot have a DataBinding above it, except when created as part of a [DataSource],
+      /// and we wouldn't be here then
+      if (config is PPage) {
+        return buildContent();
+      }
+
+      ///  Connect its binding and schema to the DataBinding above this content, using this content's property.
       final DataBinding parentBinding = Provider.of<DataBinding>(context);
       return ChangeNotifierProvider<DataBinding>(
         create: (_) => DataBinding(
@@ -146,8 +153,9 @@ mixin ContentBuilder {
         builder = streamBuilder(backend, temporaryDocument, buildContent);
         break;
       default:
-        throw ConfigurationException(
-            'Unrecognised data source type:  ${dataSourceConfig.runtimeType}');
+        final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';
+        logType(this.runtimeType).e(msg);
+        throw ConfigurationException(msg);
     }
 
     return (config.dataSourceIsDeclared)
@@ -174,4 +182,8 @@ mixin ContentBuilder {
     formKeys.add(formKey);
     logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
+}
+
+abstract class ContentState {
+  Widget buildContent();
 }

@@ -17,7 +17,7 @@ class Panel extends StatefulWidget {
   _PanelState createState() => _PanelState();
 }
 
-class _PanelState extends State<Panel> with ContentBuilder {
+class _PanelState extends State<Panel> with ContentBuilder implements ContentState {
   bool expanded;
   TemporaryDocument temporaryDocument;
   PDataSource dataSourceConfig;
@@ -37,7 +37,7 @@ class _PanelState extends State<Panel> with ContentBuilder {
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, temporaryDocument, widget.config, _buildContent);
+    return doBuild(context, temporaryDocument, widget.config, buildContent);
   }
 
   Widget _expandedContent() {
@@ -45,7 +45,7 @@ class _PanelState extends State<Panel> with ContentBuilder {
     return formWrapped(context, content, formKeys);
   }
 
-  Widget _buildContent() {
+  Widget buildContent() {
     return Heading(
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
