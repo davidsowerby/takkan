@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/contentBuilder.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/page/pageBuilder.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_script/script/script.dart';
 
 class Panel extends StatefulWidget {
@@ -19,30 +16,22 @@ class Panel extends StatefulWidget {
 
 class _PanelState extends State<Panel> with ContentBuilder implements ContentState {
   bool expanded;
-  TemporaryDocument temporaryDocument;
-  PDataSource dataSourceConfig;
-  RootBinding rootBinding;
-  final List<GlobalKey<FormState>> formKeys = List();
+  LocalContentState localState;
 
   @override
   void initState() {
     super.initState();
-    expanded = widget.config.heading.openExpanded;
-    if (widget.config.dataSourceIsDeclared) {
-      temporaryDocument = inject<TemporaryDocument>();
-      dataSourceConfig = widget.config.dataSource;
-      rootBinding = temporaryDocument.rootBinding;
-    }
+    localState = LocalContentState(widget.config);
   }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, temporaryDocument, widget.config, buildContent);
+    return doBuild(context, localState.temporaryDocument, widget.config, buildContent);
   }
 
   Widget _expandedContent() {
     final content = PanelBuilder().buildContent(context: context, config: widget.config);
-    return formWrapped(context, content, formKeys);
+    return formWrapped(context, content, localState.formKeys);
   }
 
   Widget buildContent() {
@@ -50,7 +39,9 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
       openExpanded: true,
-      onAfterSave: [(_) => persist(widget.config, temporaryDocument, formKeys)],
+      onAfterSave: [
+        (_) => persist(widget.config, localState.temporaryDocument, localState.formKeys)
+      ],
     );
   }
 }

@@ -47,10 +47,7 @@ class _PartState extends State<Part> with ContentBuilder implements ContentState
   @override
   void initState() {
     super.initState();
-
-    if (widget.config.dataSourceIsDeclared) {
-      localState = LocalContentState(widget.config.dataSource);
-    }
+    localState = LocalContentState(widget.config);
   }
 
   @override
@@ -122,13 +119,27 @@ class TrueFunction {
 // 'If a Part is not static, it must define a property. A property may be an empty String');
 
 class LocalContentState {
-  final TemporaryDocument temporaryDocument;
-  final PDataSource dataSourceConfig;
-  final List<GlobalKey<FormState>> _formKeys = List();
+  TemporaryDocument _temporaryDocument;
+  PDataSource _dataSource;
+  List<GlobalKey<FormState>> _formKeys;
 
-  LocalContentState(this.dataSourceConfig) : temporaryDocument = inject<TemporaryDocument>();
+  LocalContentState(PCommon config) {
+    init(config);
+  }
 
-  RootBinding get rootBinding => temporaryDocument.rootBinding;
+  RootBinding get rootBinding => _temporaryDocument.rootBinding;
 
   List<GlobalKey<FormState>> get formKeys => _formKeys;
+
+  init(PCommon config) {
+    if (config.dataSourceIsDeclared) {
+      _temporaryDocument = inject<TemporaryDocument>();
+      _dataSource = config.dataSource;
+      _formKeys = List();
+    }
+  }
+
+  TemporaryDocument get temporaryDocument => _temporaryDocument;
+
+  PDataSource get dataSource => _dataSource;
 }
