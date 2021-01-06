@@ -42,24 +42,21 @@ class Part extends StatefulWidget {
 class _PartState extends State<Part> with ContentBuilder implements ContentState {
   Widget readParticle;
   Widget editParticle;
-  TemporaryDocument temporaryDocument;
-  PDataSource dataSourceConfig;
-  RootBinding rootBinding;
-  final List<GlobalKey<FormState>> formKeys = List();
+  LocalContentState localState;
 
   @override
   void initState() {
     super.initState();
+
     if (widget.config.dataSourceIsDeclared) {
-      temporaryDocument = inject<TemporaryDocument>();
-      dataSourceConfig = widget.config.dataSource;
-      rootBinding = temporaryDocument.rootBinding;
+      localState = LocalContentState(widget.config.dataSource);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, temporaryDocument, widget.config, buildContent);
+    return doBuild(context, (localState == null) ? null : localState.temporaryDocument,
+        widget.config, buildContent);
   }
 
   @override
@@ -123,3 +120,15 @@ class TrueFunction {
 // );
 // assert(!staticState ? config.property != null : true,
 // 'If a Part is not static, it must define a property. A property may be an empty String');
+
+class LocalContentState {
+  final TemporaryDocument temporaryDocument;
+  final PDataSource dataSourceConfig;
+  final List<GlobalKey<FormState>> _formKeys = List();
+
+  LocalContentState(this.dataSourceConfig) : temporaryDocument = inject<TemporaryDocument>();
+
+  RootBinding get rootBinding => temporaryDocument.rootBinding;
+
+  List<GlobalKey<FormState>> get formKeys => _formKeys;
+}
