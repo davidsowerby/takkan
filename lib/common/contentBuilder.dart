@@ -8,6 +8,7 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
@@ -106,7 +107,7 @@ mixin ContentBuilder {
     // TODO: purge those with null current state
   }
 
-  doBuild(BuildContext context, TemporaryDocument temporaryDocument, PContent config,
+  doBuild(BuildContext context, LocalContentState contentState, PContent config,
       Widget Function() buildContent) {
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
@@ -145,12 +146,12 @@ mixin ContentBuilder {
 
     switch (dataSourceConfig.runtimeType) {
       case PDataGet:
-        builder =
-            futureBuilder(backend.get(config: dataSourceConfig), temporaryDocument, buildContent);
+        builder = futureBuilder(
+            backend.get(config: dataSourceConfig), contentState.temporaryDocument, buildContent);
         schema = config.schema.documents[dataSourceConfig.document];
         break;
       case PDataStream:
-        builder = streamBuilder(backend, temporaryDocument, buildContent);
+        builder = streamBuilder(backend, contentState.temporaryDocument, buildContent);
         break;
       default:
         final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';
@@ -160,7 +161,7 @@ mixin ContentBuilder {
 
     return (config.dataSourceIsDeclared)
         ? ChangeNotifierProvider<DataBinding>(
-            create: (_) => DataBinding(binding: temporaryDocument.rootBinding, schema: schema),
+        create: (_) => DataBinding(binding: contentState.rootBinding, schema: schema),
             child: builder)
         : builder;
   }

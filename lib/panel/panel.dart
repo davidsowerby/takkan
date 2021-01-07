@@ -26,7 +26,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, localState.temporaryDocument, widget.config, buildContent);
+    return doBuild(context, localState, widget.config, buildContent);
   }
 
   Widget _expandedContent() {

@@ -52,8 +52,7 @@ class _PartState extends State<Part> with ContentBuilder implements ContentState
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, (localState == null) ? null : localState.temporaryDocument,
-        widget.config, buildContent);
+    return doBuild(context, localState, widget.config, buildContent);
   }
 
   @override

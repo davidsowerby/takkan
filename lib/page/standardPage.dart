@@ -29,7 +29,7 @@ class _PreceptPageState extends State<PreceptPage> with ContentBuilder implement
       appBar: AppBar(
         title: Text(widget.config.title),
       ),
-      body: doBuild(context, localState.temporaryDocument, widget.config, buildContent),
+      body: doBuild(context, localState, widget.config, buildContent),
     );
   }
 
