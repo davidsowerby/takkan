@@ -8,6 +8,7 @@ import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
@@ -121,20 +122,38 @@ class LocalContentState {
   TemporaryDocument _temporaryDocument;
   PDataSource _dataSource;
   List<GlobalKey<FormState>> _formKeys;
+  ModelBinding _binding;
+  PDocument _schema;
 
-  LocalContentState(PCommon config) {
-    init(config);
+  LocalContentState(PContent config, [ModelBinding parentBinding, PDocument parentSchema]) {
+    init(config, parentBinding, parentSchema);
   }
 
   RootBinding get rootBinding => _temporaryDocument.rootBinding;
 
+  PDocument get schema => _schema;
+
+  ModelBinding get binding => _binding;
+
   List<GlobalKey<FormState>> get formKeys => _formKeys;
 
-  init(PCommon config) {
+  init(PContent config, ModelBinding parentBinding, PDocument parentSchema) {
     if (config.dataSourceIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
       _dataSource = config.dataSource;
       _formKeys = List();
+      _binding = _temporaryDocument.rootBinding;
+      _schema = config.schema.documents[_dataSource.document];
+    } else {
+      if (dataSource != null) {
+        assert(config.property != null,
+            'If a Part is not static, it must define a property. A property may be an empty String');
+        assert(config.property != null);
+        if (config.property == '') {
+          _binding = parentBinding;
+          _schema = parentSchema;
+        }
+      }
     }
   }
 
