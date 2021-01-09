@@ -25,7 +25,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// [isStatic] - if true, the value is taken from [staticData], if false, the value is dynamic data loaded via [property]
 /// [staticData] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [caption] - the text to display as a caption.  See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
-/// [property] - the property to look up in order to get the data value.  This connects a data binding to the [DataBinding] above this [Part]
+/// [property] - the property to look up in order to get the data value.  This connects a data binding to the [FullDataBinding] above this [Part]
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other settings.  If false, this [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
@@ -33,8 +33,10 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 class Part extends StatefulWidget {
   final PPart config;
+  final DataBinding parentBinding;
 
-  const Part({@required this.config}) : super();
+  const Part({Key key, @required this.config, this.parentBinding = const NoDataBinding()})
+      : super(key: key);
 
   @override
   _PartState createState() => _PartState();
@@ -43,17 +45,17 @@ class Part extends StatefulWidget {
 class _PartState extends State<Part> with ContentBuilder implements ContentState {
   Widget readParticle;
   Widget editParticle;
-  LocalContentState localState;
+  LocalContentState contentState;
 
   @override
   void initState() {
     super.initState();
-    localState = LocalContentState(widget.config);
+    contentState = LocalContentState(widget.config);
   }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, localState, widget.config, buildContent);
+    return doBuild(context, contentState, widget.config, buildContent);
   }
 
   @override
@@ -65,20 +67,18 @@ class _PartState extends State<Part> with ContentBuilder implements ContentState
       return readParticle;
     }
 
-    final DataBinding dataBinding = Provider.of<DataBinding>(context);
-
     final EditState editState = Provider.of<EditState>(context);
     final readOnly = widget.config.readOnly || editState.readMode;
     logType(this.runtimeType)
         .d("caption: ${widget.config.caption}, EditState readOnly: ${widget.config.readOnly}");
     if (readOnly) {
       if (readParticle == null) {
-        readParticle = particleLibrary.findParticle(dataBinding, widget.config, true);
+        readParticle = particleLibrary.findParticle(widget.parentBinding, widget.config, true);
       }
       return readParticle;
     } else {
       if (editParticle == null) {
-        editParticle = particleLibrary.findParticle(dataBinding, widget.config, false);
+        editParticle = particleLibrary.findParticle(widget.parentBinding, widget.config, false);
       }
       return editParticle;
     }
@@ -122,42 +122,37 @@ class LocalContentState {
   TemporaryDocument _temporaryDocument;
   PDataSource _dataSource;
   List<GlobalKey<FormState>> _formKeys;
-  ModelBinding _binding;
-  PDocument _schema;
+  PDocument _documentSchema;
 
-  LocalContentState(PContent config, [ModelBinding parentBinding, PDocument parentSchema]) {
-    init(config, parentBinding, parentSchema);
+  LocalContentState(PContent config) {
+    init(config);
   }
 
   RootBinding get rootBinding => _temporaryDocument.rootBinding;
 
-  PDocument get schema => _schema;
-
-  ModelBinding get binding => _binding;
+  PDocument get documentSchema => _documentSchema;
 
   List<GlobalKey<FormState>> get formKeys => _formKeys;
 
-  init(PContent config, ModelBinding parentBinding, PDocument parentSchema) {
+  init(PContent config) {
     if (config.dataSourceIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
       _dataSource = config.dataSource;
       _formKeys = List();
-      _binding = _temporaryDocument.rootBinding;
-      _schema = config.schema.documents[_dataSource.document];
-    } else {
-      if (dataSource != null) {
-        assert(config.property != null,
-            'If a Part is not static, it must define a property. A property may be an empty String');
-        assert(config.property != null);
-        if (config.property == '') {
-          _binding = parentBinding;
-          _schema = parentSchema;
-        }
-      }
+      _documentSchema = config.schema.documents[_dataSource.document];
     }
   }
 
   TemporaryDocument get temporaryDocument => _temporaryDocument;
 
   PDataSource get dataSource => _dataSource;
+}
+
+/// Forms a chain of data and schema bindings down the Widget tree
+class ContentBindings {
+  final ContentBindings parent;
+  final ModelBinding modelBinding;
+  final PDocument schema;
+
+  const ContentBindings({this.parent, this.modelBinding, this.schema});
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/library/library.dart';
-import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/particle/pText.dart';
@@ -69,7 +69,7 @@ void main() {
       final PScript script = KitchenSinkTest().init(script: kitchenSink00, useCaptionsAsIds: true);
       // when
       final widgetTree = MaterialApp(
-          home: PageBuilder().build(
+          home: PreceptPage(
         config: script.routes['/test'].page,
       ));
       await tester.pumpWidget(widgetTree);

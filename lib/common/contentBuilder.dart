@@ -7,11 +7,13 @@ import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
-import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/element.dart';
+import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -125,14 +127,7 @@ mixin ContentBuilder {
       }
 
       ///  Connect its binding and schema to the DataBinding above this content, using this content's property.
-      final DataBinding parentBinding = Provider.of<DataBinding>(context);
-      return ChangeNotifierProvider<DataBinding>(
-        create: (_) => DataBinding(
-          schema: parentBinding.schema.fields[config.property],
-          binding: parentBinding.binding.modelBinding(property: config.property),
-        ),
-        child: buildContent(),
-      );
+      return buildContent();
     }
 
     /// Now we know we need to construct a data source. [initState] has already created the
@@ -159,11 +154,7 @@ mixin ContentBuilder {
         throw ConfigurationException(msg);
     }
 
-    return (config.dataSourceIsDeclared)
-        ? ChangeNotifierProvider<DataBinding>(
-        create: (_) => DataBinding(binding: contentState.rootBinding, schema: schema),
-            child: builder)
-        : builder;
+    return builder;
   }
 
   Widget formWrapped(BuildContext context, Widget content, List<GlobalKey<FormState>> formKeys) {
@@ -182,6 +173,41 @@ mixin ContentBuilder {
   addForm(List<GlobalKey<FormState>> formKeys, GlobalKey<FormState> formKey) {
     formKeys.add(formKey);
     logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
+  }
+
+  Widget assembleContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable}) {
+    assert(parentBinding != null);
+    final List<Widget> children = List();
+    for (var element in content) {
+      Widget child;
+      if (element is PPanel) {
+        child = Panel(
+          parentBinding: parentBinding,
+          config: element,
+        );
+      }
+      if (element is PPart) {
+        child = Part(
+          parentBinding: parentBinding,
+          config: element,
+        );
+      }
+      child = addEditControl(widget: child, config: element);
+      children.add(child);
+    }
+    return (scrollable)
+        ? ListView(children: children)
+        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+  }
+
+  /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
+  Widget addEditControl({@required Widget widget, @required PCommon config}) {
+    if (config.isStatic == IsStatic.yes) {
+      return widget;
+    }
+    return (config.hasEditControl)
+        ? ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget)
+        : widget;
   }
 }
 

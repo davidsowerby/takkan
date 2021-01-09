@@ -6,8 +6,6 @@ import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/binding/converter.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/library/pageLibrary.dart';
-import 'package:precept_client/library/panelLibrary.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/backend.dart';
@@ -42,8 +40,6 @@ preceptDefaultInjectionBindings();
 }
 await loadModels(loaders: loaders);
 backendLibrary.init(entries: backendLibraryEntries);
-pageLibrary.init(entries: pageLibraryEntries, errorPage: errorPage);
-panelLibrary.init();
 particleLibrary.init(entries: particleLibraryEntries);
 
 router.init(scripts: precept.models);

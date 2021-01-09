@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
-import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/library/pageLibrary.dart';
-import 'package:precept_client/library/panelLibrary.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
@@ -104,7 +101,9 @@ class WidgetTestTree {
   // }
 
   bool elementHasDataBinding(String id) {
-    return elementHas(id, (widget) => widget is ChangeNotifierProvider<DataBinding>, DataBinding);
+    // return elementHas(id, (widget) => widget is ChangeNotifierProvider<DataBinding>, DataBinding);
+    throw UnimplementedError(
+        'Can this be checked now that the DataBinding is no longer a separate Widget?');
   }
 
   bool elementHasDataSource(String id) {
@@ -132,8 +131,6 @@ class WidgetTestTree {
 class KitchenSinkTest {
   PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
-    pageLibrary.init();
-    panelLibrary.init();
     particleLibrary.init();
     backendLibrary.init();
     script.validate(useCaptionsAsIds: useCaptionsAsIds);

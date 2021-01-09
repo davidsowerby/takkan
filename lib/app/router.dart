@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_client/library/pageLibrary.dart';
-import 'package:precept_client/page/pageBuilder.dart';
+import 'package:precept_client/page/errorPage.dart';
+import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/error.dart';
@@ -63,11 +63,11 @@ class PreceptRouter {
   /// If [PageBuilder] throws an exception - perhaps because there is no matching key in the [PageLibrary], an error page is returned.
   Route<dynamic> _route(PRoute route) {
     try {
-      final pageWidget = PageBuilder().build(config: route.page);
+      final pageWidget = PreceptPage(config: route.page);
       return MaterialPageRoute(builder: (_) => pageWidget);
     } catch (e) {
-      final errorPageWidget = pageLibrary.errorPage(
-        PError(
+      final errorPageWidget = PreceptDefaultErrorPage(
+        config: PError(
             message:
                 "Page '${route.page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${route.path}'"),
       ); // TODO message should come from Precept
@@ -80,9 +80,10 @@ class PreceptRouter {
   }
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
-    final page = pageLibrary.errorPage(PError(
-        message:
-            "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
+    final page = PreceptDefaultErrorPage(
+        config: PError(
+            message:
+                "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
     return MaterialPageRoute(builder: (_) => page);
   }
 }
