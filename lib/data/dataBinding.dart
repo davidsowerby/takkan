@@ -16,6 +16,20 @@ class FullDataBinding extends DataBinding {
         assert(binding != null),
         assert(schema != null),
         super();
+
+  LocalContentState get activeContentState => parent.activeContentState;
+}
+
+class RootDataBinding extends FullDataBinding {
+  final LocalContentState activeContentState;
+
+  const RootDataBinding(
+      {@required RootBinding binding,
+      @required PDocument schema,
+      @required this.activeContentState})
+      : assert(binding != null),
+        assert(schema != null),
+        super(parent: const NoDataBinding(), schema: schema, binding: binding);
 }
 
 class NoDataBinding extends DataBinding {
@@ -28,6 +42,8 @@ class NoDataBinding extends DataBinding {
   PDocument get schema => _throwError();
 
   FullDataBinding get parent => _throwError();
+
+  LocalContentState get activeContentState => _throwError();
 
   _throwError() {
     logType(this.runtimeType).e(msg);
@@ -44,6 +60,8 @@ abstract class DataBinding {
 
   DataBinding get parent;
 
+  LocalContentState get activeContentState;
+
   DataBinding childFromConfig(PContent config) {
     if (this is NoDataBinding) {
       return NoDataBinding();
@@ -58,15 +76,22 @@ abstract class DataBinding {
     }
   }
 
-  DataBinding childFromDataSource(
-      PDataSource dataSource, RootBinding rootBinding, PDocument documentSchema) {
-    return FullDataBinding(parent: NoDataBinding(), binding: rootBinding, schema: documentSchema);
+  /// Stores a key for a Form.
+  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
+  addForm(GlobalKey<FormState> formKey) {
+    activeContentState.addForm(formKey);
+  }
+
+  DataBinding childFromDataSource(PDataSource dataSource, RootBinding rootBinding,
+      PDocument documentSchema, LocalContentState activeContentState) {
+    return RootDataBinding(
+        binding: rootBinding, schema: documentSchema, activeContentState: activeContentState);
   }
 
   DataBinding child(PContent config, DataBinding parentBinding, LocalContentState contentState) {
     return (config.dataSourceIsDeclared)
         ? parentBinding.childFromDataSource(
-            config.dataSource, contentState.rootBinding, contentState.documentSchema)
+            config.dataSource, contentState.rootBinding, contentState.documentSchema, contentState)
         : parentBinding.childFromConfig(config);
   }
 }

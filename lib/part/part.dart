@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
@@ -13,7 +14,6 @@ import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
-
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
@@ -146,6 +146,41 @@ class LocalContentState {
   TemporaryDocument get temporaryDocument => _temporaryDocument;
 
   PDataSource get dataSource => _dataSource;
+
+  /// Stores a key for a Form.
+  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
+  addForm(GlobalKey<FormState> formKey) {
+    formKeys.add(formKey);
+    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
+  }
+
+  /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument].
+  /// Keys are added through [addForm], this method 'saves' the [Form] data -
+  /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
+  flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
+    for (GlobalKey<FormState> key in formKeys) {
+      if (key.currentState != null) {
+        key.currentState.save();
+        logType(this.runtimeType).d("Form saved for $key");
+      }
+    }
+    // TODO: purge those with null current state
+  }
+
+  Future<bool> persist(PCommon config) async {
+    flushFormsToModel(temporaryDocument, formKeys);
+    await _doPersist(config);
+    return true;
+  }
+
+  _doPersist(PCommon config) async {
+    final Backend backend = Backend(config: config.backend);
+    return backend.save(
+      changedData: temporaryDocument.changes,
+      fullData: temporaryDocument.output,
+      onSuccess: temporaryDocument.saved,
+    );
+  }
 }
 
 /// Forms a chain of data and schema bindings down the Widget tree

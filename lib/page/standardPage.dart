@@ -46,6 +46,6 @@ class _PreceptPageState extends State<PreceptPage> with ContentBuilder implement
     return assembleContent(
         content: widget.config.content,
         scrollable: widget.config.scrollable,
-        parentBinding: widget.parentBinding);
+        parentBinding: dataBinding);
   }
 }

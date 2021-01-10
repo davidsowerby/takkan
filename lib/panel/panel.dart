@@ -40,7 +40,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
       scrollable: widget.config.scrollable,
       content: widget.config.content,
     );
-    return formWrapped(context, content, contentState.formKeys);
+    return formWrapped(context, content, dataBinding);
   }
 
   Widget buildContent() {
@@ -49,8 +49,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
       expandedContent: _expandedContent,
       openExpanded: true,
       onAfterSave: [
-            (_) => persist(widget.config, contentState.temporaryDocument, contentState.formKeys)
-      ],
+            (_) => dataBinding.activeContentState.persist(widget.config)],
     );
   }
 }

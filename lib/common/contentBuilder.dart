@@ -81,34 +81,6 @@ mixin ContentBuilder {
     return buildContent();
   }
 
-  Future<bool> persist(PCommon config, TemporaryDocument temporaryDocument,
-      List<GlobalKey<FormState>> formKeys) async {
-    flushFormsToModel(temporaryDocument, formKeys);
-    await _doPersist(config, temporaryDocument);
-    return true;
-  }
-
-  _doPersist(PCommon config, TemporaryDocument temporaryDocument) async {
-    final Backend backend = Backend(config: config.backend);
-    return backend.save(
-      changedData: temporaryDocument.changes,
-      fullData: temporaryDocument.output,
-      onSuccess: temporaryDocument.saved,
-    );
-  }
-
-  /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument] instances through [addForm], 'saves' the [Form]
-  /// that is, transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
-  flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        key.currentState.save();
-        logType(this.runtimeType).d("Form saved for $key");
-      }
-    }
-    // TODO: purge those with null current state
-  }
-
   doBuild(BuildContext context, LocalContentState contentState, PContent config,
       Widget Function() buildContent) {
     /// If using only static data, we don't care about any data sources
@@ -157,22 +129,15 @@ mixin ContentBuilder {
     return builder;
   }
 
-  Widget formWrapped(BuildContext context, Widget content, List<GlobalKey<FormState>> formKeys) {
+  Widget formWrapped(BuildContext context, Widget content, DataBinding dataBinding) {
     final editState = Provider.of<EditState>(context, listen: false);
     if (editState.readMode) {
       return content;
     } else {
       final formKey = GlobalKey<FormState>();
-      addForm(formKeys, formKey);
+      dataBinding.addForm(formKey);
       return Form(key: formKey, child: content);
     }
-  }
-
-  /// Stores a key for a Form.
-  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
-  addForm(List<GlobalKey<FormState>> formKeys, GlobalKey<FormState> formKey) {
-    formKeys.add(formKey);
-    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 
   Widget assembleContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable}) {
