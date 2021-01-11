@@ -19,19 +19,19 @@ class Panel extends StatefulWidget {
 
 class _PanelState extends State<Panel> with ContentBuilder implements ContentState {
   bool expanded;
-  LocalContentState contentState;
+  DataSource dataSource;
   DataBinding dataBinding;
 
   @override
   void initState() {
     super.initState();
-    contentState = LocalContentState(widget.config);
-    dataBinding = widget.parentBinding.child(widget.config, widget.parentBinding, contentState);
+    dataSource = DataSource(widget.config);
+    dataBinding = widget.parentBinding.child(widget.config, widget.parentBinding, dataSource);
   }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, contentState, widget.config, buildContent);
+    return doBuild(context, dataSource, widget.config, buildContent);
   }
 
   Widget _expandedContent() {
@@ -48,8 +48,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
       openExpanded: true,
-      onAfterSave: [
-            (_) => dataBinding.activeContentState.persist(widget.config)],
+      onAfterSave: [(_) => dataBinding.activeDataSource.persist(widget.config)],
     );
   }
 }

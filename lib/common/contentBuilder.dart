@@ -81,7 +81,7 @@ mixin ContentBuilder {
     return buildContent();
   }
 
-  doBuild(BuildContext context, LocalContentState contentState, PContent config,
+  doBuild(BuildContext context, DataSource dataSource, PContent config,
       Widget Function() buildContent) {
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
@@ -114,11 +114,11 @@ mixin ContentBuilder {
     switch (dataSourceConfig.runtimeType) {
       case PDataGet:
         builder = futureBuilder(
-            backend.get(config: dataSourceConfig), contentState.temporaryDocument, buildContent);
+            backend.get(config: dataSourceConfig), dataSource.temporaryDocument, buildContent);
         schema = config.schema.documents[dataSourceConfig.document];
         break;
       case PDataStream:
-        builder = streamBuilder(backend, contentState.temporaryDocument, buildContent);
+        builder = streamBuilder(backend, dataSource.temporaryDocument, buildContent);
         break;
       default:
         final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';

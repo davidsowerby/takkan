@@ -45,17 +45,17 @@ class Part extends StatefulWidget {
 class _PartState extends State<Part> with ContentBuilder implements ContentState {
   Widget readParticle;
   Widget editParticle;
-  LocalContentState contentState;
+  DataSource dataSource;
 
   @override
   void initState() {
     super.initState();
-    contentState = LocalContentState(widget.config);
+    dataSource = DataSource(widget.config);
   }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, contentState, widget.config, buildContent);
+    return doBuild(context, dataSource, widget.config, buildContent);
   }
 
   @override
@@ -118,13 +118,13 @@ class TrueFunction {
 // assert(!staticState ? config.property != null : true,
 // 'If a Part is not static, it must define a property. A property may be an empty String');
 
-class LocalContentState {
+class DataSource {
   TemporaryDocument _temporaryDocument;
   PDataSource _dataSource;
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
 
-  LocalContentState(PContent config) {
+  DataSource(PContent config) {
     init(config);
   }
 

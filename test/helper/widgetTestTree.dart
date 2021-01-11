@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
@@ -107,7 +106,8 @@ class WidgetTestTree {
   }
 
   bool elementHasDataSource(String id) {
-    return elementHas(id, (widget) => widget is ChangeNotifierProvider<DataSource>, DataSource);
+    throw UnimplementedError(
+        'Can this be checked now that the DataBinding is no longer a DataSource Widget?');
   }
 
   verify() {

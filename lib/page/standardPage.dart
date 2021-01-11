@@ -13,7 +13,7 @@ class PreceptPage extends StatefulWidget {
   /// [parentBinding] is always a [NoDataBinding] for a page, because there is nothing relating to
   /// Precept data above it in the Widget tree.
   ///
-  /// Doing it this wasy keeps the structure consistent with [Panel] and [Part]
+  /// Doing it this way keeps the structure consistent with [Panel] and [Part]
   const PreceptPage({@required this.config}) : parentBinding = const NoDataBinding();
 
   @override
@@ -21,14 +21,14 @@ class PreceptPage extends StatefulWidget {
 }
 
 class _PreceptPageState extends State<PreceptPage> with ContentBuilder implements ContentState {
-  LocalContentState contentState;
+  DataSource dataSource;
   DataBinding dataBinding;
 
   @override
   void initState() {
     super.initState();
-    contentState = LocalContentState(widget.config);
-    dataBinding = widget.parentBinding.child(widget.config, widget.parentBinding, contentState);
+    dataSource = DataSource(widget.config);
+    dataBinding = widget.parentBinding.child(widget.config, widget.parentBinding, dataSource);
   }
 
   @override
@@ -37,7 +37,7 @@ class _PreceptPageState extends State<PreceptPage> with ContentBuilder implement
       appBar: AppBar(
         title: Text(widget.config.title),
       ),
-      body: doBuild(context, contentState, widget.config, buildContent),
+      body: doBuild(context, dataSource, widget.config, buildContent),
     );
   }
 
