@@ -10,7 +10,7 @@ import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
-/// Separated from [PContent], because it does not reall make sense to contain a page within a page
+/// Separated from [PContent], because it does not really make sense to contain a page within a page
 class PSubContent extends PContent {
   PSubContent({
     String caption,
@@ -71,6 +71,11 @@ class PElementListConverter {
         case "PString":
           list.add(PString.fromJson(entryCopy));
           break;
+        case "PPart":
+          {
+            list.add(PPart.fromJson(entryCopy));
+            break;
+          }
 
         default:
           final msg = "JSON conversion has not been implemented for $elementType";
