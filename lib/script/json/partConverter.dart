@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/part/pString.dart';
 
 class PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
   const PPartConverter();
@@ -10,8 +9,8 @@ class PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
   PPart fromJson(Map<String, dynamic> json) {
     final partType = json["-part-"];
     switch (partType) {
-      case "PStringPart":
-        return PString.fromJson(json);
+      case "PPart":
+        return PPart.fromJson(json);
       default:
         throw PreceptException("part type $partType not recognised");
     }

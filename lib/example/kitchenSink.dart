@@ -1,7 +1,6 @@
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/style.dart';
@@ -31,7 +30,7 @@ final kitchenSinkScript = PScript(
               style: PHeadingStyle(background: PColor.primary),
             ),
             content: [
-              PString(
+              PPart(
                 property: 'firstName',
                 caption: 'First Name',
               ),

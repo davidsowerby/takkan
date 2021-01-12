@@ -4,7 +4,6 @@ import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -68,14 +67,9 @@ class PElementListConverter {
         case "PPanel":
           list.add(PPanel.fromJson(entryCopy));
           break;
-        case "PString":
-          list.add(PString.fromJson(entryCopy));
-          break;
         case "PPart":
-          {
-            list.add(PPart.fromJson(entryCopy));
-            break;
-          }
+          list.add(PPart.fromJson(entryCopy));
+          break;
 
         default:
           final msg = "JSON conversion has not been implemented for $elementType";

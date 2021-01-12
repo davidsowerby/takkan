@@ -2,7 +2,6 @@ import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/part/pString.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -33,7 +32,7 @@ void main() {
                 PPanel(
                   controlEdit: ControlEdit.noEdit,
                   content: [
-                    PString(),
+                    PPart(),
                   ],
                 ),
               ],
@@ -88,8 +87,8 @@ void main() {
                 content: [
                   PPanel(
                     content: [
-                      PString(),
-                    ],
+                  PPart(),
+                ],
                   ),
                 ],
               ),
