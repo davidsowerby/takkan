@@ -23,7 +23,7 @@ class BackendLibrary {
   }
 
   void init({Map<String, BackendDelegate Function(PBackend)> entries}) {
-    mappings.addAll(entries);
+    mappings.addAll(entries ?? {});
   }
 }
 
