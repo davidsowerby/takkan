@@ -99,14 +99,14 @@ class WidgetTestTree {
     return elementHas(id, (widget) => widget is ChangeNotifierProvider<EditState>, EditState);
   }
 
-  bool elementHasDataBinding(String id, [Type type, WidgetTester tester]) {
+  bool elementHasDataBinding(String id, Type type, WidgetTester tester) {
     final index = _allIndexes[id];
     final Widget widget = widgets[index];
     final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
     return (state.dataBinding is FullDataBinding);
   }
 
-  bool elementHasDataSource(String id, [Type type, WidgetTester tester]) {
+  bool elementHasDataSource(String id, Type type, WidgetTester tester) {
     final index = _allIndexes[id];
     final Widget widget = widgets[index];
     final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
