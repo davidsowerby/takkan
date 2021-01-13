@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_script/common/log.dart';
 
 /// [readMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
@@ -14,9 +13,6 @@ class EditState with ChangeNotifier {
       : _readMode = readMode,
         _canEdit = canEdit;
 
-  EditState.fromDocument(DataSource dataSource)
-      : _canEdit = dataSource.canEdit,
-        _readMode = dataSource.readMode;
 
   bool get readMode {
     return _readMode;

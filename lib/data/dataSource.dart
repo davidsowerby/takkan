@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
+import 'package:precept_script/common/log.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/script.dart';
 
 /// The intersection point between application and data.
 ///
@@ -27,36 +30,67 @@ import 'package:precept_script/script/dataSource.dart';
 /// may have its own.  This class just holds the [GlobalKey] for each, so Form content can be pushed
 /// to the [_temporaryDocument] prior to saving it.
 ///
-class DataSource with ChangeNotifier {
-  final DateTime timestamp;
-  final PDataSource config;
+class DataSource {
   TemporaryDocument _temporaryDocument;
-  bool _readOnlyMode = true;
-  bool _canEdit;
+  PDataSource _dataSource;
+  List<GlobalKey<FormState>> _formKeys;
+  PDocument _documentSchema;
 
-  DataSource({bool canEdit = true, bool readOnlyMode = true, @required this.config})
-      : timestamp = DateTime.now(),
-        _readOnlyMode = readOnlyMode,
-        _canEdit = canEdit {
-    _temporaryDocument = inject<TemporaryDocument>();
+  DataSource(PContent config) {
+    init(config);
   }
 
   RootBinding get rootBinding => _temporaryDocument.rootBinding;
 
-  bool get readMode => _readOnlyMode;
+  PDocument get documentSchema => _documentSchema;
 
-  bool get canEdit => _canEdit;
+  List<GlobalKey<FormState>> get formKeys => _formKeys;
 
-  set readMode(bool value) {
-    _readOnlyMode = value;
-    notifyListeners();
+  init(PContent config) {
+    if (config.dataSourceIsDeclared) {
+      _temporaryDocument = inject<TemporaryDocument>();
+      _dataSource = config.dataSource;
+      _formKeys = List();
+      _documentSchema = config.schema.documents[_dataSource.document];
+    }
   }
 
-  updateData(Map<String, dynamic> data) {
-    _temporaryDocument.updateFromSource(source: data);
+  TemporaryDocument get temporaryDocument => _temporaryDocument;
+
+  PDataSource get dataSource => _dataSource;
+
+  /// Stores a key for a Form.
+  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
+  addForm(GlobalKey<FormState> formKey) {
+    formKeys.add(formKey);
+    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 
+  /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument].
+  /// Keys are added through [addForm], this method 'saves' the [Form] data -
+  /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
+  flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
+    for (GlobalKey<FormState> key in formKeys) {
+      if (key.currentState != null) {
+        key.currentState.save();
+        logType(this.runtimeType).d("Form saved for $key");
+      }
+    }
+    // TODO: purge those with null current state
+  }
 
+  Future<bool> persist(PCommon config) async {
+    flushFormsToModel(temporaryDocument, formKeys);
+    await _doPersist(config);
+    return true;
+  }
 
-
+  _doPersist(PCommon config) async {
+    final Backend backend = Backend(config: config.backend);
+    return backend.save(
+      changedData: temporaryDocument.changes,
+      fullData: temporaryDocument.output,
+      onSuccess: temporaryDocument.saved,
+    );
+  }
 }

@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/backend.dart';
-import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +34,16 @@ class Part extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PartState createState() => _PartState();
+  PartState createState() => PartState();
 }
 
-class _PartState extends State<Part> with ContentBuilder implements ContentState {
+class PartState extends State<Part> with ContentBuilder implements ContentState {
   Widget readParticle;
   Widget editParticle;
   DataSource dataSource;
+  DataBinding dataBinding = NoDataBinding();
+
+  PCommon get config => widget.config;
 
   @override
   void initState() {
@@ -111,83 +109,3 @@ class TrueFunction {
   }
 }
 
-// assert(
-// staticState ? config.staticData != null : true,
-// 'If a Part is static, it must define static text. Remember the `isStatic` setting may have come from a parent Document or Section ',
-// );
-// assert(!staticState ? config.property != null : true,
-// 'If a Part is not static, it must define a property. A property may be an empty String');
-
-class DataSource {
-  TemporaryDocument _temporaryDocument;
-  PDataSource _dataSource;
-  List<GlobalKey<FormState>> _formKeys;
-  PDocument _documentSchema;
-
-  DataSource(PContent config) {
-    init(config);
-  }
-
-  RootBinding get rootBinding => _temporaryDocument.rootBinding;
-
-  PDocument get documentSchema => _documentSchema;
-
-  List<GlobalKey<FormState>> get formKeys => _formKeys;
-
-  init(PContent config) {
-    if (config.dataSourceIsDeclared) {
-      _temporaryDocument = inject<TemporaryDocument>();
-      _dataSource = config.dataSource;
-      _formKeys = List();
-      _documentSchema = config.schema.documents[_dataSource.document];
-    }
-  }
-
-  TemporaryDocument get temporaryDocument => _temporaryDocument;
-
-  PDataSource get dataSource => _dataSource;
-
-  /// Stores a key for a Form.
-  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
-  addForm(GlobalKey<FormState> formKey) {
-    formKeys.add(formKey);
-    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
-  }
-
-  /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument].
-  /// Keys are added through [addForm], this method 'saves' the [Form] data -
-  /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
-  flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        key.currentState.save();
-        logType(this.runtimeType).d("Form saved for $key");
-      }
-    }
-    // TODO: purge those with null current state
-  }
-
-  Future<bool> persist(PCommon config) async {
-    flushFormsToModel(temporaryDocument, formKeys);
-    await _doPersist(config);
-    return true;
-  }
-
-  _doPersist(PCommon config) async {
-    final Backend backend = Backend(config: config.backend);
-    return backend.save(
-      changedData: temporaryDocument.changes,
-      fullData: temporaryDocument.output,
-      onSuccess: temporaryDocument.saved,
-    );
-  }
-}
-
-/// Forms a chain of data and schema bindings down the Widget tree
-class ContentBindings {
-  final ContentBindings parent;
-  final ModelBinding modelBinding;
-  final PDocument schema;
-
-  const ContentBindings({this.parent, this.modelBinding, this.schema});
-}

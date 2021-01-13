@@ -79,7 +79,7 @@ void main() {
       final pageId = 'script00./test.Page 1';
       // expect(testTree.elementHasPanelState(pageId), isFalse);
       expect(testTree.elementHasEditState(pageId), isFalse);
-      expect(testTree.elementHasDataBinding(pageId), isFalse);
+      expect(testTree.elementHasDataBinding(pageId, PreceptPage, tester), isFalse);
       expect(testTree.elementHasDataSource(pageId), isFalse);
 
       final panel2Id = 'script00./test.Page 1.Panel 2';

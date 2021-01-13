@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_script/script/script.dart';
@@ -17,12 +18,14 @@ class PreceptPage extends StatefulWidget {
   const PreceptPage({@required this.config}) : parentBinding = const NoDataBinding();
 
   @override
-  _PreceptPageState createState() => _PreceptPageState();
+  PreceptPageState createState() => PreceptPageState();
 }
 
-class _PreceptPageState extends State<PreceptPage> with ContentBuilder implements ContentState {
+class PreceptPageState extends State<PreceptPage> with ContentBuilder implements ContentState {
   DataSource dataSource;
   DataBinding dataBinding;
+
+  PCommon get config => widget.config;
 
   @override
   void initState() {

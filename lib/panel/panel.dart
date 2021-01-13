@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/part/part.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 
 class Panel extends StatefulWidget {
@@ -22,6 +22,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
   DataSource dataSource;
   DataBinding dataBinding;
 
+  PCommon get config => widget.config;
   @override
   void initState() {
     super.initState();
@@ -34,17 +35,18 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
     return doBuild(context, dataSource, widget.config, buildContent);
   }
 
-  Widget _expandedContent() {
+  Widget _expandedContent(bool editMode) {
     final content = assembleContent(
       parentBinding: dataBinding,
       scrollable: widget.config.scrollable,
       content: widget.config.content,
     );
-    return formWrapped(context, content, dataBinding);
+    return (editMode) ? formWrapped(context, content, dataBinding) : content;
   }
 
   Widget buildContent() {
     return Heading(
+      config: widget.config.heading,
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
       openExpanded: true,

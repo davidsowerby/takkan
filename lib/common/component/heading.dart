@@ -8,6 +8,7 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_script/script/help.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/style.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +20,7 @@ class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
   final PHelp help;
-  final Widget Function() expandedContent;
-  final bool editable;
+  final Widget Function(bool) expandedContent;
   final bool expandable;
   final bool openExpanded;
   final List<Function(BuildContext)> onBeforeEdit;
@@ -30,15 +30,16 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onBeforeSave;
   final List<Function(BuildContext)> onAfterSave;
   final bool showEditIcon;
+  final PPanelHeading config;
 
   const Heading({
     Key key,
+    @required this.config,
     this.headingText,
     this.help,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
     @required this.expandedContent,
-    this.editable = true,
     this.expandable = true,
     this.onAfterEdit = const [],
     this.onBeforeEdit = const [],
@@ -48,7 +49,6 @@ class Heading extends StatefulWidget {
     this.onAfterSave = const [],
     this.showEditIcon = true,
   })  : assert(expandedContent != null),
-        assert((editable) ? expandable : true, "If editable needs also to be expandable"),
         super(key: key);
 
   @override
@@ -68,34 +68,42 @@ class _HeadingState extends State<Heading> with Interpolator {
 
   @override
   Widget build(BuildContext context) {
-    final EditState editState = Provider.of<EditState>(context);
+    final PPanel panelConfig = widget.config.parent;
+    final editable = !(panelConfig.isStatic == IsStatic.yes);
 
     final List<Widget> actionButtons = List();
+    bool editMode = false;
 
-    if (editState.readMode) {
-      actionButtons.add(
-        EditAction(
-          onBefore: widget.onBeforeEdit,
-          onAfter: widget.onAfterEdit,
-        ),
-      );
-    }
+    if (editable) {
+      editMode = Provider
+          .of<EditState>(context)
+          .editMode;
+      if (!editMode) {
+        actionButtons.add(
+          EditAction(
+            onBefore: widget.onBeforeEdit,
+            onAfter: widget.onAfterEdit,
+          ),
+        );
+      }
 
-    if (editState.editMode) {
-      actionButtons.add(CancelEditAction(
-        onBefore: widget.onBeforeCancelEdit,
-        onAfter: widget.onAfterCancelEdit,
-      ));
+      if (editMode) {
+        actionButtons.add(CancelEditAction(
+          onBefore: widget.onBeforeCancelEdit,
+          onAfter: widget.onAfterCancelEdit,
+        ));
 
-      actionButtons.add(SaveAction(
-        onBefore: widget.onBeforeSave,
-        onAfter: widget.onAfterSave,
-      ));
+        actionButtons.add(SaveAction(
+          onBefore: widget.onBeforeSave,
+          onAfter: widget.onAfterSave,
+        ));
+      }
     }
 
     if (widget.expandable) {
       actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
     }
+
 
     final theme = Theme.of(context);
     final borderLibrary = inject<BorderLibrary>();
@@ -141,7 +149,7 @@ class _HeadingState extends State<Heading> with Interpolator {
           if (expanded)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: widget.expandedContent(),
+              child: widget.expandedContent(editMode),
             )
         ],
       ),

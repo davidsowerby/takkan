@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
+import 'package:precept_client/common/contentBuilder.dart';
+import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
@@ -55,8 +59,8 @@ class WidgetTestTree {
   }
 
   int _upFromElement(String id, bool Function(Widget) typeTest) {
-    int index = _allIndexes[id]-1;
-    while (index >= 0 ) {
+    int index = _allIndexes[id] - 1;
+    while (index >= 0) {
       if (typeTest(widgets[index])) {
         return index;
       }
@@ -72,8 +76,8 @@ class WidgetTestTree {
   int _parentOf(String id) {
     final debugNode = script.debugNode;
     final DebugNode parentNode = debugNode.parentOf(debugId: id);
-    final parentId=parentNode.item.debugId;
-    return (_allIndexes.containsKey(parentId)) ?  _allIndexes[parentId] : 0;
+    final parentId = parentNode.item.debugId;
+    return (_allIndexes.containsKey(parentId)) ? _allIndexes[parentId] : 0;
   }
 
   bool elementHas(String id, bool Function(Widget) typeTest, Type lookingFor) {
@@ -95,19 +99,18 @@ class WidgetTestTree {
     return elementHas(id, (widget) => widget is ChangeNotifierProvider<EditState>, EditState);
   }
 
-  // bool elementHasPanelState(String id) {
-  //   return elementHas(id, (widget) => widget is ChangeNotifierProvider<PanelState>, PanelState);
-  // }
-
-  bool elementHasDataBinding(String id) {
-    // return elementHas(id, (widget) => widget is ChangeNotifierProvider<DataBinding>, DataBinding);
-    throw UnimplementedError(
-        'Can this be checked now that the DataBinding is no longer a separate Widget?');
+  bool elementHasDataBinding(String id, [Type type, WidgetTester tester]) {
+    final index = _allIndexes[id];
+    final Widget widget = widgets[index];
+    final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
+    return (state.dataBinding is FullDataBinding);
   }
 
-  bool elementHasDataSource(String id) {
-    throw UnimplementedError(
-        'Can this be checked now that the DataBinding is no longer a DataSource Widget?');
+  bool elementHasDataSource(String id, [Type type, WidgetTester tester]) {
+    final index = _allIndexes[id];
+    final Widget widget = widgets[index];
+    final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
+    return state.dataSource.temporaryDocument != null;
   }
 
   verify() {
@@ -132,7 +135,7 @@ class KitchenSinkTest {
   PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     particleLibrary.init();
-    backendLibrary.init();
+    backendLibrary.init(entries: {'mock': (config) => MockBackendDelegate(config: config)});
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();

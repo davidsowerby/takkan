@@ -5,6 +5,7 @@ import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
@@ -130,14 +131,9 @@ mixin ContentBuilder {
   }
 
   Widget formWrapped(BuildContext context, Widget content, DataBinding dataBinding) {
-    final editState = Provider.of<EditState>(context, listen: false);
-    if (editState.readMode) {
-      return content;
-    } else {
-      final formKey = GlobalKey<FormState>();
-      dataBinding.addForm(formKey);
-      return Form(key: formKey, child: content);
-    }
+    final formKey = GlobalKey<FormState>();
+    dataBinding.addForm(formKey);
+    return Form(key: formKey, child: content);
   }
 
   Widget assembleContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable}) {
@@ -178,4 +174,10 @@ mixin ContentBuilder {
 
 abstract class ContentState {
   Widget buildContent();
+
+  DataSource get dataSource;
+
+  DataBinding get dataBinding;
+
+  PCommon get config;
 }
