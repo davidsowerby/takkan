@@ -1,5 +1,5 @@
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/exception.dart';
+import 'package:precept_common/common/log.dart';
 
 abstract class LibraryModule<KEY, VALUE, CONFIG> {
   Map<KEY, VALUE Function(CONFIG)> get mappings;
@@ -8,7 +8,7 @@ abstract class LibraryModule<KEY, VALUE, CONFIG> {
 abstract class Library<KEY, VALUE, CONFIG> {
   static const String simpleKey = 'simple';
   static const String simpleListKey = 'simple-list';
-  final Map<KEY, VALUE Function(CONFIG)> entries=Map();
+  final Map<KEY, VALUE Function(CONFIG)> entries = Map();
 
   Library();
 

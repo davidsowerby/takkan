@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';

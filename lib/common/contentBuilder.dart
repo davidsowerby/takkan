@@ -10,7 +10,7 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/element.dart';

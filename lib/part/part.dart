@@ -5,7 +5,7 @@ import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';

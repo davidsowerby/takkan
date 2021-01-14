@@ -7,7 +7,7 @@ import 'package:precept_client/app/router.dart';
 import 'package:precept_client/binding/converter.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_client/library/particleLibrary.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/pPart.dart';
