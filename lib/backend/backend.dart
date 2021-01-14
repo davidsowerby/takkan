@@ -156,3 +156,6 @@ class Backend {
     return backendDelegate.delete(documentIds: documentIds);
   }
 }
+
+enum BackendType { firebase, back4app }
+enum Env { dev, test, qa, prod }

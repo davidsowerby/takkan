@@ -1,6 +1,6 @@
 import 'package:precept_backend/backend/delegate.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/exception.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 
 class BackendLibrary {
