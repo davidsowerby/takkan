@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/exception.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/schema/field.dart';
 import 'package:precept_script/schema/list.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/select.dart';
-
 
 class PSchemaElementMapConverter
     implements JsonConverter<Map<String, PSchemaElement>, Map<String, dynamic>> {

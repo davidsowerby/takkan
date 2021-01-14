@@ -1,5 +1,5 @@
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:precept_common/common/exception.dart';
+import 'package:precept_common/common/log.dart';
 import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/pPart.dart';

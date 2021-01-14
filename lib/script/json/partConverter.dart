@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:precept_common/common/exception.dart';
 import 'package:precept_script/script/pPart.dart';
 
 class PPartConverter implements JsonConverter<PPart, Map<String, dynamic>> {
