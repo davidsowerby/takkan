@@ -11,8 +11,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  precept_script:
-    path: ../precept_script
+  precept_common:
+    path: ../precept_common
 dev_dependencies:
   flutter_test:
     sdk: flutter

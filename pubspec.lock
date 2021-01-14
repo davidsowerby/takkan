@@ -60,13 +60,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  logger:
-    dependency: transitive
-    description:
-      name: logger
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.9.4"
   matcher:
     dependency: transitive
     description:
@@ -89,16 +82,9 @@ packages:
     source: hosted
     version: "1.8.0-nullsafety.1"
   precept_common:
-    dependency: transitive
-    description:
-      path: "../precept_common"
-      relative: true
-    source: path
-    version: "0.0.1"
-  precept_script:
     dependency: "direct main"
     description:
-      path: "../precept_script"
+      path: "../precept_common"
       relative: true
     source: path
     version: "0.0.1"
