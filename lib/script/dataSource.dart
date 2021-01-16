@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -72,25 +73,6 @@ class PDataStream extends PDataSource {
   factory PDataStream.fromJson(Map<String, dynamic> json) => _$PDataStreamFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDataStreamToJson(this);
-}
-
-/// Standardised document reference, which is converted to / from whatever the cloud provider uses, by an implementation of
-/// [DocumentIdConverter].
-/// For example, Back4App (ParseServer) uses this as path==className and itemId==objectId
-@JsonSerializable(nullable: true, explicitToJson: true)
-class DocumentId {
-  /// The path to the document, but not including the [itemId]
-  final String path;
-
-  final String itemId;
-
-  const DocumentId({@required this.path, @required this.itemId});
-
-  factory DocumentId.fromJson(Map<String, dynamic> json) => _$DocumentIdFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DocumentIdToJson(this);
-
-  String get toKey => "$path:$itemId";
 }
 
 enum DataSourceReturn { future, futureList, stream, streamList }
