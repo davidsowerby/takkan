@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/backendLibrary.dart';
 import 'package:precept_backend/backend/data.dart';
-import 'package:precept_backend/backend/delegate.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/query/query.dart';
 import 'package:precept_backend/backend/response.dart';
@@ -16,10 +14,10 @@ import 'package:precept_script/script/documentId.dart';
 /// All the work is delegated to [backendDelegate], for a backend-specific implementation.
 ///
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
-class Backend {
-  final BackendDelegate backendDelegate;
+abstract class Backend<CONFIG extends PBackend> {
+  final CONFIG config;
 
-  Backend({@required PBackend config}) : backendDelegate = backendLibrary.find(config);
+  const Backend({@required this.config});
 
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
@@ -29,46 +27,34 @@ class Backend {
   /// Returns a single instance of [Data] identified by [documentId]
   ///
   /// Throws an [APIException] if not found
-  Future<Data> get({@required PDataGet config}) {
-    return backendDelegate.get(documentId: config.documentId);
-  }
+  Future<Data> get({@required PDataGet query});
 
   /// Returns a Stream of [Data] identified by [documentId]
   ///
   /// Throws an [APIException] if not found
-  Stream<Data> getStream({@required DocumentId documentId}) {
-    return backendDelegate.getStream(documentId: documentId);
-  }
+  Stream<Data> getStream({@required DocumentId documentId});
 
   /// Returns a list of [Data] instances for the document selected by [query]
   ///
   /// May return an empty list
   /// Throws an [APIException] if the query is not valid
-  Future<Data> getList({@required Query query}) {
-    return backendDelegate.getList(query: query);
-  }
+  Future<Data> getList({@required Query query});
 
   /// Returns a Stream of List<Data> instances for the document selected by [query]
   ///
   /// May return an empty list
   /// throws an [APIException] if the query is not valid
-  Stream<List<Data>> getListStream({@required Query query}) {
-    return backendDelegate.getListStream(query: query);
-  }
+  Stream<List<Data>> getListStream({@required Query query});
 
   /// Returns a single instance of [Data] for the [query]
   ///
   /// Throws an [APIException] if the result is not exactly one instance
-  Future<Data> getDistinct({@required Query query}) {
-    return backendDelegate.getDistinct(query: query);
-  }
+  Future<Data> getDistinct({@required Query query});
 
   /// Returns a single instance of [Data] for the [query]
   ///
   /// Throws an [APIException] if the result is not exactly one instance
-  Stream<Data> getDistinctStream({@required Query query}) {
-    return backendDelegate.getDistinctStream(query: query);
-  }
+  Stream<Data> getDistinctStream({@required Query query});
 
   /// ================================================================================================
   /// All 'fetchXXX' methods call Cloud Functions
@@ -79,42 +65,32 @@ class Backend {
   /// Returns a single instance of [Data] identified by [documentId], from a CloudFunction
   ///
   /// Throws an [APIException] if not found
-  Future<Data> fetch({@required String functionName, @required DocumentId documentId}) {
-    return backendDelegate.fetch(functionName: functionName, documentId: documentId);
-  }
+  Future<Data> fetch({@required String functionName, @required DocumentId documentId});
 
   /// Returns a single instance of [Data] from a Cloud Function.
   ///
   ///
   /// Throws an [APIException] if the result is not exactly one instance, or the function call fails
-  Future<Data> fetchDistinct({@required String functionName, Map<String, dynamic> params}) {
-    return backendDelegate.fetchDistinct(functionName: functionName, params: params);
-  }
+  Future<Data> fetchDistinct({@required String functionName, Map<String, dynamic> params});
 
   /// Returns a list of [Data] instances by the cloud function [functionName] when executed wth [params]
   ///
   /// May return an empty list
   /// Throws an APIException if the function call fails
-  Future<List<Data>> fetchList({@required functionName, Map<String, String> params}) {
-    return backendDelegate.fetchList(functionName: functionName, params: params);
-  }
+  Future<List<Data>> fetchList({@required functionName, Map<String, String> params});
 
   /// ================================================================================================
   /// Other calls
   /// ================================================================================================
 
   /// Returns true if the document exists, false otherwise
-  Future<bool> exists({@required DocumentId documentId}) {
-    return backendDelegate.exists(documentId: documentId);
-  }
+  Future<bool> exists({@required DocumentId documentId});
 
   /// Invokes a Cloud Function
   ///
   /// The result is determined by the Cloud Function, and is return in the [CloudResponse.result]
   Future<CloudResponse> executeFunction(
-      {@required String functionName, Map<String, dynamic> params}) {
-    return backendDelegate.executeFunction(functionName: functionName, params: params);
-  }
+      {@required String functionName, Map<String, dynamic> params});
 
   /// Saves a document to the backend database.
   ///
@@ -136,26 +112,14 @@ class Backend {
     DocumentType documentType = DocumentType.standard,
     bool saveChangesOnly = true,
     Function() onSuccess,
-  }) async {
-    CloudResponse response = await backendDelegate.save(
-      documentId: documentId,
-      changedData: changedData,
-      fullData: fullData,
-    );
-    if (response.success) {
-      if (onSuccess != null) onSuccess();
-    }
-    return response;
-  }
+  });
 
   /// Deletes one or more documents from persistence.
   ///
   /// Nothing happens if the document does not exist
   /// The [CloudResponse.success] will be false, and [CloudResponse.errorMessage] will be set if other failures occur,
   /// for example lack of permissions.
-  Future<CloudResponse> delete({@required List<DocumentId> documentIds}) {
-    return backendDelegate.delete(documentIds: documentIds);
-  }
+  Future<CloudResponse> delete({@required List<DocumentId> documentIds});
 }
 
 enum BackendType { firebase, back4app }
