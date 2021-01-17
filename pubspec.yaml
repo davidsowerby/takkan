@@ -11,6 +11,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  parse_server_sdk_flutter: ^2.0.1
+  precept_common:
+    path: ../precept_common
   precept_script:
     path: ../precept_script
   precept_backend:

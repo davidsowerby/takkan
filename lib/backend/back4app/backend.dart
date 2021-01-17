@@ -1,22 +1,30 @@
 import 'package:precept_backend/backend/data.dart';
-import 'package:precept_backend/backend/delegate.dart';
+import 'package:precept_backend/backend/document.dart';
+import 'package:precept_backend/backend/exception.dart';
+import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/query/query.dart';
 import 'package:precept_backend/backend/response.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/documentId.dart';
 
 
-class Back4AppBackendDelegate implements BackendDelegate{
+class Back4AppBackend extends Backend<PBack4AppBackend>{
   @override
   Future<CloudResponse> delete({List<DocumentId> documentIds}) {
     // TODO: implement delete
     throw UnimplementedError();
   }
-
   @override
-  Future<CloudResponse> executeFunction({String functionName, Map<String, String> params}) {
-    // TODO: implement executeFunction
-    throw UnimplementedError();
+  Future<CloudResponse> executeFunction({String functionName, Map<String, dynamic> params}) async {
+      final ParseCloudFunction function = ParseCloudFunction(functionName);
+      final result = await function.execute(parameters: params);
+      if (result.success) {
+        return _convertResponse(result);
+      } else {
+        throw APIException(statusCode: result.statusCode, message: result.error.message);
+      }
   }
 
   @override
@@ -37,17 +45,9 @@ class Back4AppBackendDelegate implements BackendDelegate{
     throw UnimplementedError();
   }
 
-  @override
-  Future<List<Data>> fetchList({String functionName, Map<String, String> params}) {
-    // TODO: implement fetchList
-    throw UnimplementedError();
-  }
 
-  @override
-  Future<Data> get({DocumentId documentId}) {
-    // TODO: implement get
-    throw UnimplementedError();
-  }
+
+
 
   @override
   Future<Data> getDistinct({Query query}) {
@@ -79,22 +79,39 @@ class Back4AppBackendDelegate implements BackendDelegate{
     throw UnimplementedError();
   }
 
+
+  CloudResponse _convertResponse(ParseResponse original) {
+    if (original.results != null) {
+      return CloudResponse(result: original.results, success: original.success);
+    }
+    if (original.result != null) {
+      return CloudResponse(result: original.result, success: original.success);
+    }
+    throw APIException(message:  "No results returned");
+  }
+
   @override
-  Future<CloudResponse> loadPreceptModel({int minimumVersion}) {
-    // TODO: implement loadPreceptModel
+  Future<List<Data>> fetchList({functionName, Map<String, String> params}) {
+    // TODO: implement fetchList
     throw UnimplementedError();
   }
 
   @override
-  Future<CloudResponse> loadPreceptSchema({int minimumVersion}) {
-    // TODO: implement loadPreceptSchema
+  Future<Data> get({PDataGet query}) {
+    // TODO: implement get
     throw UnimplementedError();
   }
 
   @override
-  Future<CloudResponse> save({DocumentId documentId, Map<String, dynamic> changedData, Map<String, dynamic> fullData}) {
+  Future<CloudResponse> save({DocumentId documentId, Map<String, dynamic> changedData, Map<String, dynamic> fullData, DocumentType documentType = DocumentType.standard, bool saveChangesOnly = true, Function() onSuccess}) {
     // TODO: implement save
     throw UnimplementedError();
   }
+
+
+
+}
+
+class PBack4AppBackend extends PBackend{
 
 }
