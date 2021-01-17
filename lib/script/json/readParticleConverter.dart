@@ -1,4 +1,4 @@
-import 'package:precept_common/common/exception.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/particle/pText.dart';
 
