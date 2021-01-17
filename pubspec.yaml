@@ -12,8 +12,6 @@ dependencies:
   flutter:
     sdk: flutter
   logger: ^0.9.1
-  precept_common:
-    path: ../precept_common
 
 
 dev_dependencies:
