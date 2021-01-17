@@ -7,6 +7,10 @@ T inject<T>() {
   return getIt.get<T>();
 }
 
+T injectParam<T>({param1, param2, String instanceName}) {
+  return getIt.get<T>(instanceName: instanceName, param1: param1, param2: param2);
+}
+
 void preceptDefaultInjectionBindings() {
   commonInjectionBindings();
   libraryInjectionBindings();

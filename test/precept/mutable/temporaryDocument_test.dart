@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:precept_backend/backend/delegate.dart';
+import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
+import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 
 import '../../helper/listener.dart';
@@ -13,12 +14,12 @@ import '../../helper/mock.dart';
 void main() {
   TemporaryDocument tdoc;
   ChangeListener listener;
-  final MockBackendDelegate mockBackendDelegate = MockBackendDelegate();
+  final MockBackend mockBackend = MockBackend(PMockBackend(instance: 'mock'));
 
   setUp(() {
     getIt.reset();
     getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    getIt.registerFactory<BackendDelegate>(() => mockBackendDelegate);
+    getIt.registerFactory<Backend>(() => mockBackend);
     tdoc = inject<TemporaryDocument>();
     listener = ChangeListener();
     tdoc.addListener(listener.listenToChange);
@@ -130,9 +131,8 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<BackendDelegate>(() => mockBackendDelegate);
-      getIt
-          .registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
+      getIt.registerFactory<Backend>(() => mockBackend);
+      getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
       getIt.registerFactory<Toast>(() => MockToast());
       tdoc = inject<TemporaryDocument>();
     });

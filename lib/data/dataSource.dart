@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/backend.dart';
+import 'package:precept_backend/backend/backendLibrary.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
-import 'package:precept_common/common/log.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
@@ -86,7 +87,7 @@ class DataSource {
   }
 
   _doPersist(PCommon config) async {
-    final Backend backend = Backend(config: config.backend);
+    final Backend backend = backendLibrary.find(config.backend);
     return backend.save(
       changedData: temporaryDocument.changes,
       fullData: temporaryDocument.output,
