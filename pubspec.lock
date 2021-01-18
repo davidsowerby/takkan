@@ -450,13 +450,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  precept_common:
-    dependency: transitive
-    description:
-      path: "../precept_common"
-      relative: true
-    source: path
-    version: "0.0.1"
   precept_mock_backend:
     dependency: "direct dev"
     description:
