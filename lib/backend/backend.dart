@@ -11,7 +11,7 @@ import 'package:precept_script/script/documentId.dart';
 /// The layer between the client and server.
 ///
 /// It provides a common authentication and data access interface regardless of the backend employed.
-/// All the work is delegated to [backendDelegate], for a backend-specific implementation.
+/// Most of the work is actually done in backend-specific implementations.
 ///
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
 abstract class Backend<CONFIG extends PBackend> {
