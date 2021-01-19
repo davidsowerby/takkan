@@ -8,8 +8,8 @@ part 'backend.g.dart';
 
 /// Configuration for a [BackendHandler]
 ///
-/// - [backendType] is used as a key to lookup from the [BackendLibrary]. Unless you change the defaults,
-/// 'mock' is always available
+/// - [instanceName] is used as a key to lookup from the [BackendLibrary], in order to support multiple instances of the same type.
+/// If only a single instance of a type is used (generally the case), no name needs to be specified
 ///
 /// The [connection] will be different for each backend, and is therefore just a map.  Use this to pass things
 /// like connection string, client keys etc
@@ -17,12 +17,12 @@ part 'backend.g.dart';
 /// A [BackendDelegate] implementation should explicitly declare what is required
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PBackend extends PreceptItem {
-  final String backendType;
+  final String instanceName;
   final Map<String, dynamic> connection;
   final PScript parent;
 
    PBackend({
-    @required this.backendType,
+    this.instanceName='default',
     @required this.connection,
     this.parent,
     String id,
@@ -35,8 +35,8 @@ class PBackend extends PreceptItem {
   @override
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if(backendType == null || backendType==''){
-      messages.add(ValidationMessage(item: this, msg: 'backendType cannot be null or empty'));
+    if(instanceName == null || instanceName==''){
+      messages.add(ValidationMessage(item: this, msg: 'instanceName cannot be null or empty'));
     }
     if (connection == null){
       messages.add(ValidationMessage(item: this, msg: 'connection cannot be null'));

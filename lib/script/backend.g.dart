@@ -8,7 +8,7 @@ part of 'backend.dart';
 
 PBackend _$PBackendFromJson(Map<String, dynamic> json) {
   return PBackend(
-    backendType: json['backendType'] as String,
+    instanceName: json['backendType'] as String,
     connection: json['connection'] as Map<String, dynamic>,
     parent:
         json['parent'] == null ? null : PScript.fromJson(json['parent'] as Map<String, dynamic>),
@@ -16,7 +16,7 @@ PBackend _$PBackendFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PBackendToJson(PBackend instance) => <String, dynamic>{
-      'backendType': instance.backendType,
+      'backendType': instance.instanceName,
       'connection': instance.connection,
       'parent': instance.parent?.toJson(),
     };
