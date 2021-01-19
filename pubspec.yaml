@@ -14,8 +14,11 @@ dependencies:
   precept_script:
     path: ../precept_script
 dev_dependencies:
+  test: ^1.14.4
   flutter_test:
     sdk: flutter
+  build_runner:
+  json_serializable: ^3.2.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
