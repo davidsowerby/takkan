@@ -87,7 +87,7 @@ class DataSource {
   }
 
   _doPersist(PCommon config) async {
-    final Backend backend = backendLibrary.find(config.backend);
+    final Backend backend = backendLibrary.find(config: config.backend);
     return backend.save(
       changedData: temporaryDocument.changes,
       fullData: temporaryDocument.output,

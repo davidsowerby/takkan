@@ -32,13 +32,11 @@ class Precept {
       Map<String, Widget Function(PPage)> pageLibraryEntries,
       Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,
       Widget Function(PError) errorPage,
-      Map<String, Backend Function(PBackend)> backendLibraryEntries,
       List<PreceptLoader> loaders = const []}) async {
     if (includePreceptDefaults || injectionBindings == null || injectionBindings.isEmpty) {
       preceptDefaultInjectionBindings();
     }
     await loadModels(loaders: loaders);
-    backendLibrary.init(entries: backendLibraryEntries);
     particleLibrary.init(entries: particleLibraryEntries);
 
     router.init(scripts: precept.models);

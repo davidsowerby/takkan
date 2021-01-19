@@ -135,7 +135,7 @@ class KitchenSinkTest {
   PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     particleLibrary.init();
-    backendLibrary.init(entries: {'mock': (config) => MockBackend(config)});
+    MockBackend.register();
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();
