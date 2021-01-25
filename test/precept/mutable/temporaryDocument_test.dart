@@ -7,6 +7,7 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
+import 'package:precept_script/script/backend.dart';
 
 import '../../helper/listener.dart';
 import '../../helper/mock.dart';
@@ -14,7 +15,7 @@ import '../../helper/mock.dart';
 void main() {
   TemporaryDocument tdoc;
   ChangeListener listener;
-  final MockBackend mockBackend = MockBackend(PMockBackend(instance: 'mock'));
+  final MockBackend mockBackend = MockBackend(PMockBackend(instanceName: 'mock', env: Env.dev));
 
   setUp(() {
     getIt.reset();

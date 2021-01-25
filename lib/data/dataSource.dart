@@ -1,11 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/inject/inject.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -36,8 +38,12 @@ class DataSource {
   PDataSource _dataSource;
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
+  Backend backend;
 
-  DataSource(PContent config) {
+  void Function(BackendConnectionState) callback;
+
+  /// [callback] is usually a setState from a StatefulWidget
+  DataSource(PContent config, this.callback) {
     init(config);
   }
 
@@ -59,6 +65,10 @@ class DataSource {
   TemporaryDocument get temporaryDocument => _temporaryDocument;
 
   PDataSource get dataSource => _dataSource;
+
+  _backendStateChange(BackendConnectionState state) {
+    callback(state);
+  }
 
   /// Stores a key for a Form.
   /// Forms are 'flushed' to the backing data by [flushFormsToModel]

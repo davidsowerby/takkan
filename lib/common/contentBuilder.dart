@@ -4,6 +4,7 @@ import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/exception.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -12,7 +13,6 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/pPart.dart';
@@ -85,6 +85,7 @@ mixin ContentBuilder {
 
   doBuild(BuildContext context, DataSource dataSource, PContent config,
       Widget Function() buildContent) {
+
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
       return buildContent();
@@ -108,27 +109,25 @@ mixin ContentBuilder {
     /// TemporaryDocument and RootBinding
 
     /// Select the configured backend
-    final backend = backendLibrary.find(config:config.backend); //Backend(config: config.backend);
+    final backend = backendLibrary.find(config: config.backend); //Backend(config: config.backend);
+    /// This is safe, because it is ignored by [backend] if already connected
+    backend.connect();
     final dataSourceConfig = config.dataSource;
-    Widget builder;
-    PDocument schema;
-
-    switch (dataSourceConfig.runtimeType) {
-      case PDataGet:
-        builder = futureBuilder(
-            backend.get(query: dataSourceConfig), dataSource.temporaryDocument, buildContent);
-        schema = config.schema.documents[dataSourceConfig.document];
-        break;
-      case PDataStream:
-        builder = streamBuilder(backend, dataSource.temporaryDocument, buildContent);
-        break;
-      default:
-        final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';
-        logType(this.runtimeType).e(msg);
-        throw ConfigurationException(msg);
+    if (backend.isConnected) {
+      switch (dataSourceConfig.runtimeType) {
+        case PDataGet:
+         return futureBuilder(
+              backend.get(query: dataSourceConfig), dataSource.temporaryDocument, buildContent);
+        case PDataStream:
+          return streamBuilder(backend, dataSource.temporaryDocument, buildContent);
+        default:
+          final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';
+          logType(this.runtimeType).e(msg);
+          throw ConfigurationException(msg);
+      }
+    } else {
+      return CircularProgressIndicator();
     }
-
-    return builder;
   }
 
   Widget formWrapped(BuildContext context, Widget content, DataBinding dataBinding) {

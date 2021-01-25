@@ -6,9 +6,12 @@ import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
+import 'package:precept_backend/backend/backendLibrary.dart';
+import 'package:precept_backend/backend/backend.dart';
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
@@ -42,13 +45,17 @@ class PartState extends State<Part> with ContentBuilder implements ContentState 
   Widget editParticle;
   DataSource dataSource;
   DataBinding dataBinding = NoDataBinding();
+  Backend backend;
 
   PCommon get config => widget.config;
 
   @override
   void initState() {
     super.initState();
-    dataSource = DataSource(widget.config);
+    dataSource = DataSource(widget.config, _backendStateChange);
+    backend = backendLibrary.find(config: config.backend);
+    backend.addListener(_backendStateChange);
+    backend.connect();
   }
 
   @override
@@ -80,6 +87,12 @@ class PartState extends State<Part> with ContentBuilder implements ContentState 
       }
       return editParticle;
     }
+  }
+
+  _backendStateChange(BackendConnectionState state){
+    setState(() {
+
+    });
   }
 }
 
