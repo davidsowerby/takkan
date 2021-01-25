@@ -1,24 +1,25 @@
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/script/backend.dart';
 
 /// Reads Back4App config from file secrets.json, held at project root.  Use for API keys etc, that MUST NOT be under
 /// version control.  Build script in CI creates the file
 
-class Back4AppConfig {
+class Back4AppKeyLoader {
   Map<String, dynamic> _data;
   final String secretPath;
 
-  Back4AppConfig({this.secretPath = "secrets.json"});
+  Back4AppKeyLoader({this.secretPath = "secrets.json"});
 
-  Future<ParseServerConfig> config(Env env) async {
+  Future<ParseServerConfig> load(Env env) async {
     final environment = env.toString().split('.').last;
     if (_data == null) {
-      await load();
+      await loadFile();
       if (_data == null) {
         logType(this.runtimeType).e("Failed to locate Application configuration asset");
       } else {
@@ -34,7 +35,7 @@ class Back4AppConfig {
   /// Tries to load secrets from an environmental variable with key [envVariableName], and or if that is not
   /// available, tries to load a file from [secretPath]
   ///
-  Future<bool> load() async {
+  Future<bool> loadFile() async {
     Map<dynamic, dynamic> rawMap = await rootBundle.loadStructuredData<Map<dynamic, dynamic>>(
         this.secretPath, (value) => Future.value(json.decode(value)));
     _data = Map.castFrom(rawMap);

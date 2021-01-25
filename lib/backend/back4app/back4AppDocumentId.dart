@@ -17,19 +17,4 @@ class Back4AppDocumentIdConverter implements DocumentIdConverter {
 
 }
 
-//abstract class DocumentIdModel extends SectionModel{
-//  DocumentId get documentId => DocumentId();
-//  set  documentId(DocumentId value);
-//}
-//
-//class Back4AppDocumentIdModel extends DocumentIdModel{
-//  @override
-//  DocumentId documentId;
-//
-//}
-//
-//class FirebaseDocumentIdModel extends DocumentIdModel{
-//  @override
-//  DocumentId documentId;
-//
-//}
+
