@@ -72,7 +72,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-        backend: PBackend(instanceName: 'mock', connection: const {'instanceKey': 'test'}),
+        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -97,7 +97,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          backend: PBackend(instanceName: 'mock', connection: const {'instanceKey': 'test'}),
+          backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
           routes: {
             "/home": PRoute(
               page: PPage(
@@ -123,7 +123,7 @@ void main() {
       final withoutDataSourceOrBackend = PScript(
         routes: {
           "/home": PRoute(
-            backend: PBackend(instanceName: 'mock', connection: const {'instanceKey': 'test'}),
+            backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
@@ -134,7 +134,7 @@ void main() {
       );
 
       final withoutDataSource = PScript(
-        backend: PBackend(instanceName: 'mock', connection: const {'instanceKey': 'test'}),
+        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -147,7 +147,7 @@ void main() {
       );
 
       final withDataSourceAndBackend = PScript(
-        backend: PBackend(instanceName: 'mock', connection: const {'instanceKey': 'test'}),
+        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         // ignore: missing_required_param
 
         routes: {

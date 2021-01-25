@@ -6,27 +6,33 @@ import 'package:precept_script/validation/message.dart';
 
 part 'backend.g.dart';
 
-/// Configuration for a [BackendHandler]
+/// Configuration for a [Backend]
 ///
-/// - [instanceName] is used as a key to lookup from the [BackendLibrary], in order to support multiple instances of the same type.
-/// If only a single instance of a type is used (generally the case), no name needs to be specified
+/// - [instanceName] and [env] serve much the same purpose.  Either can be used as an additional key
+/// to lookup from the [BackendLibrary], in order to support multiple instances of the same type.
+/// If only a single instance of a type is used (generally the case), neither need to be specified.
+/// If both are specified, [instanceName] takes precedence
 ///
-/// The [connection] will be different for each backend, and is therefore just a map.  Use this to pass things
-/// like connection string, client keys etc
+/// [connectionData] is different for each backend implementation, and is therefore just a map.
+/// Use this to pass things like connection string, client keys etc
+/// This may be redundant if a backend specific sub-class captures properties differently.
 ///
-/// A [BackendDelegate] implementation should explicitly declare what is required
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PBackend extends PreceptItem {
   final String instanceName;
-  final Map<String, dynamic> connection;
+  final Map<String, dynamic> connectionData;
   final PScript parent;
+  final bool checkHealthOnConnect;
+  final Env env;
 
-   PBackend({
-    this.instanceName='default',
-    @required this.connection,
+  PBackend({
+    @required String instanceName,
+    @required this. env,
+    @required this.connectionData,
     this.parent,
+    this.checkHealthOnConnect=true,
     String id,
-  }) : super(id: id );
+  }) : instanceName = instanceName ?? ((env==null) ? 'default' : env.toString()), super(id: id);
 
   factory PBackend.fromJson(Map<String, dynamic> json) => _$PBackendFromJson(json);
 
@@ -35,17 +41,18 @@ class PBackend extends PreceptItem {
   @override
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if(instanceName == null || instanceName==''){
+    if (instanceName == null || instanceName == '') {
       messages.add(ValidationMessage(item: this, msg: 'instanceName cannot be null or empty'));
     }
-    if (connection == null){
-      messages.add(ValidationMessage(item: this, msg: 'connection cannot be null'));
+    if (connectionData == null) {
+      messages.add(ValidationMessage(item: this, msg: 'connection cannot be null, but may be empty'));
     }
   }
 
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
   }
-
-
 }
+
+enum Env { dev, test, qa, prod }
+enum BackendConnectionState { idle, connecting, connected, failed }
