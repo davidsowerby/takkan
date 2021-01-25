@@ -11,7 +11,7 @@ import 'package:precept_script/script/backend.dart';
 ///
 /// Note: The original plan was to use GetIt for this, but there are a couple of obstacles to that approach:
 /// - the GetIt.registerFactory signature is type based, and does not fit for returning a Backend instance from a PBackend
-/// - the use of 'instanceName' is discouraged, although not the reason why
+/// - the use of 'instanceName' is discouraged, although it is not clear why.
 class BackendLibrary {
   final Map<Type, Backend Function(PBackend)> builders = Map();
   final Map<String, Backend> instances = Map();
@@ -24,6 +24,7 @@ class BackendLibrary {
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
   Backend find({@required PBackend config}) {
+    assert(config!=null);
     final lookupKey = '${config.runtimeType.toString()}:${config.instanceName}';
     logType(this.runtimeType).d("Finding Backend for lookupKey: $lookupKey");
     if (instances.containsKey(lookupKey)) {
@@ -35,9 +36,12 @@ class BackendLibrary {
         throw PreceptException(msg);
       }
       instances[lookupKey]=builders[config.runtimeType](config);
+      // instances[lookupKey].connect();
       return instances[lookupKey];
     }
   }
+
+
 
   /// Is there a way to check that [config] is a [PBackend] ?
   register({@required Type config, @required Backend Function(PBackend) builder}) {

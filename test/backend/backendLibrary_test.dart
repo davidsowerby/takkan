@@ -21,17 +21,24 @@ void main() {
 
     tearDown(() {});
 
-    test('two instances', () {
+    test('multiple instances, instanceName and env', () {
       // given
       backendLibrary.register(
           config: PTestBackend, builder: (config) => TestBackend(config: config));
+
       // when
       final b1 = backendLibrary.find(config: PTestBackend());
       final b2 = backendLibrary.find(config: PTestBackend(instanceName: 'second'));
+      final b3 = backendLibrary.find(config: PTestBackend(env: Env.prod));
+      final b4 = backendLibrary.find(config: PTestBackend(env: Env.prod, instanceName: 'third'));
       // then
       expect(b1.config.instanceName, 'default');
       expect(b2.config.instanceName, 'second');
+      expect(b3.config.instanceName, 'Env.prod');
+      expect(b3.config.env, Env.prod);
+      expect(b4.config.instanceName, 'third');
     });
+
     test('builder not registered', () {
       // given
       backendLibrary.clear();
@@ -41,17 +48,18 @@ void main() {
 
       expect(() => backendLibrary.find(config: PTestBackend()), throwsPreceptException);
     });
+
   });
 }
 
 class PTestBackend2 extends PBackend {
-  PTestBackend2({String instanceName = 'default', PTestBackend config})
-      : super(instanceName: instanceName, connection: {});
+  PTestBackend2({String instanceName , PTestBackend config, Env env})
+      : super(instanceName: instanceName, connectionData: {}, env:env);
 }
 
 class PTestBackend extends PBackend {
-  PTestBackend({String instanceName = 'default', PTestBackend config})
-      : super(instanceName: instanceName, connection: {});
+  PTestBackend({String instanceName, PTestBackend config, Env env})
+      : super(instanceName: instanceName, connectionData: {}, env: env);
 }
 
 class TestBackend extends Backend {
@@ -59,73 +67,61 @@ class TestBackend extends Backend {
 
   @override
   Future<CloudResponse> delete({List<DocumentId> documentIds}) {
-    // TODO: implement delete
     throw UnimplementedError();
   }
 
   @override
   Future<CloudResponse> executeFunction({String functionName, Map<String, dynamic> params}) {
-    // TODO: implement executeFunction
     throw UnimplementedError();
   }
 
   @override
   Future<bool> exists({DocumentId documentId}) {
-    // TODO: implement exists
     throw UnimplementedError();
   }
 
   @override
   Future<Data> fetch({String functionName, DocumentId documentId}) {
-    // TODO: implement fetch
     throw UnimplementedError();
   }
 
   @override
   Future<Data> fetchDistinct({String functionName, Map<String, dynamic> params}) {
-    // TODO: implement fetchDistinct
     throw UnimplementedError();
   }
 
   @override
   Future<List<Data>> fetchList({functionName, Map<String, String> params}) {
-    // TODO: implement fetchList
     throw UnimplementedError();
   }
 
   @override
   Future<Data> get({PDataGet query}) {
-    // TODO: implement get
     throw UnimplementedError();
   }
 
   @override
   Future<Data> getDistinct({Query query}) {
-    // TODO: implement getDistinct
     throw UnimplementedError();
   }
 
   @override
   Stream<Data> getDistinctStream({Query query}) {
-    // TODO: implement getDistinctStream
     throw UnimplementedError();
   }
 
   @override
   Future<Data> getList({Query query}) {
-    // TODO: implement getList
     throw UnimplementedError();
   }
 
   @override
   Stream<List<Data>> getListStream({Query query}) {
-    // TODO: implement getListStream
     throw UnimplementedError();
   }
 
   @override
   Stream<Data> getStream({DocumentId documentId}) {
-    // TODO: implement getStream
     throw UnimplementedError();
   }
 
@@ -137,7 +133,11 @@ class TestBackend extends Backend {
       DocumentType documentType = DocumentType.standard,
       bool saveChangesOnly = true,
       Function() onSuccess}) {
-    // TODO: implement save
     throw UnimplementedError();
+  }
+
+  @override
+  doConnect() async {
+    return true;
   }
 }

@@ -16,8 +16,10 @@ import 'package:precept_script/script/documentId.dart';
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
 abstract class Backend<CONFIG extends PBackend> {
   final CONFIG config;
+  BackendConnectionState _connectionState = BackendConnectionState.idle;
+  final List<Function(BackendConnectionState)> _listeners = List();
 
-  const Backend({@required this.config});
+  Backend({@required this.config});
 
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
@@ -120,7 +122,71 @@ abstract class Backend<CONFIG extends PBackend> {
   /// The [CloudResponse.success] will be false, and [CloudResponse.errorMessage] will be set if other failures occur,
   /// for example lack of permissions.
   Future<CloudResponse> delete({@required List<DocumentId> documentIds});
+
+  _connecting() {
+    _connectionState = BackendConnectionState.connecting;
+    _fireListeners();
+  }
+
+  _connected() {
+    _connectionState = BackendConnectionState.connected;
+    _fireListeners();
+  }
+
+  _reset() {
+    _connectionState = BackendConnectionState.idle;
+    _fireListeners();
+  }
+
+  BackendConnectionState get connectionState => _connectionState;
+
+  bool get isConnected => _connectionState == BackendConnectionState.connected;
+
+  /// Add a listener to be notified when [connectionState] changes
+  addListener(Function(BackendConnectionState) listener) {
+    _listeners.add(listener);
+  }
+
+  removeListener(Function() listener) {
+    _listeners.remove(listener);
+  }
+
+  _fireListeners() {
+    for (Function(BackendConnectionState) listener in _listeners) {
+      listener(connectionState);
+    }
+  }
+
+  /// Connects the backend, with implementation specific actions provided by [doConnect]
+  /// Simply returns true if already connected.
+  Future<bool> connect() async {
+    // if (connectionState==BackendConnectionState.connecting || connectionState==BackendConnectionState.connected){
+    //   return true;
+    // }
+    if (isConnected){
+      return true;
+    }
+    _connecting();
+    final connectionSuccess = await doConnect();
+    if (connectionSuccess) {
+      _connected();
+    } else {
+      _reset();
+    }
+    return connectionSuccess;
+  }
+
+  Future<bool> doConnect();
+
+  void fail() {
+    _connectionState = BackendConnectionState.failed;
+    _fireListeners();
+  }
+
+  void reset() {
+    _connectionState = BackendConnectionState.idle;
+    _fireListeners();
+  }
 }
 
-enum BackendType { firebase, back4app }
-enum Env { dev, test, qa, prod }
+
