@@ -4,7 +4,6 @@ import 'package:precept_backend/backend/backend.dart';
 import 'package:precept_backend/backend/backendLibrary.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -26,7 +25,7 @@ mixin ContentBuilder {
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          temporaryDocument.updateFromSource(source: snapshot.data.data, fireListeners: false);
+          temporaryDocument.updateFromSource(source: snapshot.data.data, documentId: snapshot.data.documentId,fireListeners: false);
           return buildContent();
         } else if (snapshot.hasError) {
           final APIException error = snapshot.error;
@@ -79,7 +78,7 @@ mixin ContentBuilder {
   /// Updates data and rebuilds using [PanelBuilder]
   Widget activeBuilder(
       TemporaryDocument temporaryDocument, Data update, Widget Function() buildContent) {
-    temporaryDocument.updateFromSource(source: update.data, fireListeners: false);
+    temporaryDocument.updateFromSource(source: update.data, documentId:update.documentId,fireListeners: false);
     return buildContent();
   }
 

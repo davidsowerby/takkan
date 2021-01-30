@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/script/documentId.dart';
 
 enum ChangeType { update, remove, add, clear, createNew }
 
@@ -73,7 +74,7 @@ abstract class TemporaryDocument with ChangeNotifier {
   dynamic operator [](Object key);
 
   TemporaryDocument updateFromSource(
-      {@required Map<String, dynamic> source, bool fireListeners = false});
+      {@required Map<String, dynamic> source, @required DocumentId documentId, bool fireListeners = false});
 
   /// Creates a "new" document from [initialData], clearing any existing data
   TemporaryDocument createNew({Map<String, dynamic> initialData = const {}});
@@ -85,6 +86,8 @@ abstract class TemporaryDocument with ChangeNotifier {
 //  void prepareMetaData(UserState user, {DocumentType documentType = DocumentType.standard});
 
   List<ChangeEntry> get changeList;
+
+  DocumentId get documentId;
 }
 
 class DefaultTemporaryDocument extends MapBase<String, dynamic>
@@ -97,10 +100,14 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   final Map<String, dynamic> _initialData = Map<String, dynamic>();
   final instance = DateTime.now();
   RootBinding _rootBinding;
+  DocumentId _documentId;
 
   DefaultTemporaryDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
   }
+
+  DocumentId get documentId => _documentId;
+
 
   @override
   Iterable<String> get keys => _output.keys;
@@ -127,6 +134,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
     _output.clear();
     _changeList.clear();
     _changes.clear();
+    _documentId=null;
     notifyListeners();
   }
 
@@ -155,11 +163,12 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// override this default
   ///
   /// See also [createNew]
-  TemporaryDocument updateFromSource({@required Map<String, dynamic> source, bool fireListeners = false}) {
+  TemporaryDocument updateFromSource({@required Map<String, dynamic> source, @required DocumentId documentId, bool fireListeners = false}) {
     assert(source != null);
     _output.clear(); // we have to clear - keys may have been deleted
     _output.addAll(source); // output is now a copy of the source
     _output.addAll(_changes); // re-apply changes
+    _documentId=documentId;
     return this;
   }
 

@@ -91,7 +91,7 @@ void main() {
 
     setUp(() {
       mockBackend.initialData(
-        instanceKey: 'mock',
+        instanceName: 'mock',
         tables: [
           MockTable(
             name: 'Account',
