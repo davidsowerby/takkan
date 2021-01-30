@@ -1,0 +1,27 @@
+{
+  "dev": {
+    "applicationId": "test",
+    "clientId": "test",
+    "restId": "test",
+    "serverUrl": "http://localhost:1337/parse/"
+  },
+  "test": {
+    "applicationId": "test",
+    "clientId": "test",
+    "restId": "test",
+    "serverUrl": "http://localhost:1337/parse/"
+  },
+  "qa": {
+    "applicationId": "test",
+    "clientId": "test",
+    "restId": "test",
+    "serverUrl": "http://localhost:1337/parse/"
+  },
+  "prod": {
+    "applicationId": "test",
+    "clientId": "test",
+    "restId": "test",
+    "serverUrl": "http://localhost:1337/parse/"
+  },
+  "testValue" : "only used to test access to this file"
+}

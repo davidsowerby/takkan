@@ -14,7 +14,7 @@ class Back4AppKeyLoader {
   Map<String, dynamic> _data;
   final String secretPath;
 
-  Back4AppKeyLoader({this.secretPath = "secrets.json"});
+  Back4AppKeyLoader({this.secretPath = "back4app.json"});
 
   Future<ParseServerConfig> load(Env env) async {
     final environment = env.toString().split('.').last;

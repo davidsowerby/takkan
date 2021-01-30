@@ -36,7 +36,7 @@ class Back4AppBackend extends Backend<PBack4AppBackend> {
     if (config.checkHealthOnConnect) {
       await healthCheck();
     }
-return true; // TODO: What are the errors that need to be trapped?
+    return true; // TODO: What are the errors that need to be trapped?
   }
 
   @override
@@ -125,8 +125,8 @@ return true; // TODO: What are the errors that need to be trapped?
     ParseResponse response =
         await ParseObject(query.documentId.path).getObject(query.documentId.itemId);
     if (response.success) {
-      final result = response.results.first;
-      return Data(data: result);
+      final ParseObject result = response.results.first;
+      return Data(data: result.toJson(full: true), documentId: query.documentId);
     } else {
       throw APIException(message: 'Failed to get data', statusCode: response.statusCode);
     }
@@ -139,9 +139,11 @@ return true; // TODO: What are the errors that need to be trapped?
       Map<String, dynamic> fullData,
       DocumentType documentType = DocumentType.standard,
       bool saveChangesOnly = true,
-      Function() onSuccess}) {
-    // TODO: implement save
-    throw UnimplementedError();
+      Function() onSuccess}) async {
+    ParseObject p =ParseObject(documentId.path);
+    fullData.forEach((key, value) {p.set(key, value);});
+    final response = await p.save();
+    return _convertResponse(response);
   }
 
   static register() {
