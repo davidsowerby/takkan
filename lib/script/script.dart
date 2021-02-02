@@ -4,11 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
+import 'package:precept_script/script/json/dataProviderConverter.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
@@ -36,8 +37,8 @@ class PScript extends PCommon {
     this.name,
     PSchema schema,
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider dataProvider,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -45,7 +46,7 @@ class PScript extends PCommon {
   }) : super(
           id: id,
           isStatic: isStatic,
-          backend: backend,
+          dataProvider: dataProvider,
           dataSource: dataSource,
           controlEdit: controlEdit,
           schema: schema,
@@ -57,8 +58,8 @@ class PScript extends PCommon {
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(includeIfNull: false, nullable: true)
-  PBackend get backend => _backend;
+  @JsonKey(nullable: true, includeIfNull: false, fromJson: PDataProviderConverter.fromJson, toJson: PDataProviderConverter.toJson)
+  PDataProvider get dataProvider => _dataProvider;
 
   @JsonKey(ignore: true)
   PSchema get schema => _schema;
@@ -70,7 +71,7 @@ class PScript extends PCommon {
       toJson: PDataSourceConverter.toJson,
       nullable: true,
       includeIfNull: false)
-  PDataSource get dataSource => _dataSource;
+  PQuery get dataSource => _dataSource;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   IsStatic get isStatic => _isStatic;
@@ -157,14 +158,14 @@ class PRoute extends PCommon {
   PRoute({
     @required this.page,
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider dataProvider,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
   }) : super(
           isStatic: isStatic,
-          backend: backend,
+          dataProvider: dataProvider,
           controlEdit: controlEdit,
         );
 
@@ -215,8 +216,8 @@ class PPage extends PContent {
     this.scrollable = true,
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider backend,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -242,7 +243,7 @@ class PPage extends PContent {
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
     if (backendIsDeclared) {
-      children.add(backend.debugNode);
+      children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);
@@ -294,10 +295,10 @@ class PPage extends PContent {
 
   String get title => caption;
 
-  /// [backend] is always
+  /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get backendIsDeclared => backend != null;
+  bool get backendIsDeclared => dataProvider != null;
 
   /// [dataSource] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
@@ -336,8 +337,8 @@ class PPanel extends PSubContent {
     this.help,
     this.style = const PPanelStyle(),
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider backend,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -346,7 +347,7 @@ class PPanel extends PSubContent {
         super(
           id: id,
           isStatic: isStatic,
-          backend: backend,
+          dataProvider: backend,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
@@ -377,7 +378,7 @@ class PPanel extends PSubContent {
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
     if (backendIsDeclared) {
-      children.add(backend.debugNode);
+      children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);
@@ -441,7 +442,7 @@ enum ControlEdit {
 ///
 /// [PScript] and its constituents mimic this 'inheritance' structure for the purpose of validation.
 ///
-/// - [backend]
+/// - [dataProvider]
 /// - [dataSource]
 /// - [writingStyle] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
 /// - [panelStyle] defines borders and other styling for panels
@@ -475,11 +476,11 @@ class PCommon extends PreceptItem {
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(nullable: true, includeIfNull: false)
-  PBackend _backend;
+  PDataProvider _dataProvider;
   @JsonKey(ignore: true)
   PSchema _schema;
 
-  PDataSource _dataSource;
+  PQuery _dataSource;
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -487,8 +488,8 @@ class PCommon extends PreceptItem {
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider dataProvider,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.notSetAtThisLevel,
@@ -496,7 +497,7 @@ class PCommon extends PreceptItem {
     String id,
   })  : _schema = schema,
         _isStatic = isStatic,
-        _backend = backend,
+        _dataProvider = dataProvider,
         _dataSource = dataSource,
         _panelStyle = panelStyle,
         _writingStyle = writingStyle,
@@ -506,18 +507,18 @@ class PCommon extends PreceptItem {
 
   bool get hasEditControl => _hasEditControl;
 
-  @JsonKey(nullable: true, includeIfNull: false)
-  PBackend get backend => _backend ?? parent.backend;
+  @JsonKey(nullable: true, includeIfNull: false, fromJson: PDataProviderConverter.fromJson, toJson: PDataProviderConverter.toJson)
+  PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
 
-  /// [backend] is declared rather than inherited
-  bool get backendIsDeclared => (_backend != null);
+  /// [dataProvider] is declared rather than inherited
+  bool get backendIsDeclared => (_dataProvider != null);
 
   @JsonKey(
       fromJson: PDataSourceConverter.fromJson,
       toJson: PDataSourceConverter.toJson,
       nullable: true,
       includeIfNull: false)
-  PDataSource get dataSource => _dataSource ?? parent.dataSource;
+  PQuery get dataSource => _dataSource ?? parent.dataSource;
 
   /// [dataSource] is declared rather than inherited
   bool get dataSourceIsDeclared => (_dataSource != null);
@@ -546,7 +547,7 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     _setupControlEdit(inherited);
-    if (_backend != null) _backend.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataProvider != null) _dataProvider.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     if (_dataSource != null) _dataSource.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
@@ -604,8 +605,8 @@ class PCommon extends PreceptItem {
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (backend != null) {
-      backend.doValidate(messages);
+    if (dataProvider != null) {
+      dataProvider.doValidate(messages);
     }
     if (dataSource != null) {
       dataSource.doValidate(messages);
@@ -621,8 +622,8 @@ class PContent extends PCommon {
     this.caption,
     this.property,
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider backend,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -635,7 +636,7 @@ class PContent extends PCommon {
           controlEdit: controlEdit,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
-          backend: backend,
+          dataProvider: backend,
           isStatic: isStatic,
         );
 }

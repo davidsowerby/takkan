@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:precept_script/example/kitchenSink.dart';
+import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -30,7 +31,7 @@ void main() {
       final p = c0.page;
       expect(p.title, "Home Page");
       expect(p.content.length, 2);
-      expect(p.backend.connectionData['id'], 'mock1');
+      expect((p.dataProvider as PRestDataProvider).connectionData['id'], 'mock1');
 
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });

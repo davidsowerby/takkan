@@ -16,10 +16,13 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     edit: PEditParticleConverter.fromJson(json['edit'] as Map<String, dynamic>),
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     staticData: json['staticData'] as String,
-    help: json['help'] == null ? null : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    help: json['help'] == null
+        ? null
+        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+    dataProvider: PDataProviderConverter.fromJson(
+        json['dataProvider'] as Map<String, dynamic>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     tooltip: json['tooltip'] as String,
   );
@@ -37,7 +40,8 @@ Map<String, dynamic> _$PPartToJson(PPart instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
+  writeNotNull(
+      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['caption'] = instance.caption;
   val['readOnly'] = instance.readOnly;
@@ -61,7 +65,9 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
 
-  final value = enumValues.entries.singleWhere((e) => e.value == source, orElse: () => null)?.key;
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
 
   if (value == null && unknownValue == null) {
     throw ArgumentError('`$source` is not one of the supported values: '

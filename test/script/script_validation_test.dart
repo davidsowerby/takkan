@@ -1,5 +1,5 @@
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
@@ -72,13 +72,13 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         routes: {
           "/home": PRoute(
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
-              dataSource: PDataGet(
+              dataSource: PGet(
                 documentId: DocumentId(),
               ),
             ),
@@ -97,13 +97,13 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+          dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
           routes: {
             "/home": PRoute(
               page: PPage(
                 pageType: "mine",
                 title: "Wiggly",
-                dataSource: PDataGet(
+                dataSource: PGet(
                   // ignore: missing_required_param
                   documentId: DocumentId(), // ignore: missing_required_param
                 ),
@@ -123,7 +123,7 @@ void main() {
       final withoutDataSourceOrBackend = PScript(
         routes: {
           "/home": PRoute(
-            backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+            dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
@@ -134,7 +134,7 @@ void main() {
       );
 
       final withoutDataSource = PScript(
-        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -147,7 +147,7 @@ void main() {
       );
 
       final withDataSourceAndBackend = PScript(
-        backend: PBackend(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
         // ignore: missing_required_param
 
         routes: {
@@ -155,7 +155,7 @@ void main() {
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
-              dataSource: PDataGet(
+              dataSource: PGet(
                 // ignore: missing_required_param
                 documentId: DocumentId(), // ignore: missing_required_param
               ),

@@ -1,7 +1,7 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/script.dart';
@@ -15,8 +15,8 @@ class PSubContent extends PContent {
     String caption,
     String property,
     IsStatic isStatic = IsStatic.inherited,
-    PBackend backend,
-    PDataSource dataSource,
+    PDataProvider dataProvider,
+    PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -25,7 +25,7 @@ class PSubContent extends PContent {
           caption: caption,
           property: property,
           isStatic: isStatic,
-          backend: backend,
+          backend: dataProvider,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
@@ -42,7 +42,7 @@ class PSubContent extends PContent {
       }
     }
     if (dataSource != null) {
-      if (backend == null) {
+      if (dataProvider == null) {
         messages.add(ValidationMessage(
             item: this,
             msg: 'has declared a data source> it must have a backend available as well'));

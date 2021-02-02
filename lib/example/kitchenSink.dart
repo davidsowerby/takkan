@@ -1,4 +1,4 @@
-import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pText.dart';
@@ -7,7 +7,7 @@ import 'package:precept_script/script/style/style.dart';
 
 final kitchenSinkScript = PScript(
   name: 'Kitchen Sink',
-  backend: PBackend(instanceName: 'mock', connectionData: {'id': 'mock1'}),
+  dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: {'id': 'mock1'}),
   routes: {
     '/': PRoute(
       page: PPage(

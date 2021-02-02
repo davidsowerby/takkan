@@ -13,7 +13,8 @@ GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) => <String, dynamic>{
+Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) =>
+    <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
     };
@@ -25,7 +26,8 @@ GeoLocation _$GeoLocationFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$GeoLocationToJson(GeoLocation instance) => <String, dynamic>{
+Map<String, dynamic> _$GeoLocationToJson(GeoLocation instance) =>
+    <String, dynamic>{
       'latitude': instance.latitude,
       'longitude': instance.longitude,
     };

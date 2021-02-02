@@ -4,7 +4,7 @@ import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/validation/message.dart';
 
-part 'dataSource.g.dart';
+part 'query.g.dart';
 
 /// Roughly equivalent to a query with an expected result of one document, or a List of documents
 /// as either a Future or a Stream. Implementations are in broad categories of 'get',
@@ -19,10 +19,10 @@ part 'dataSource.g.dart';
 /// explicitly - it is typically derived from whatever is used to select the required data
 ///
 ///
-abstract class PDataSource extends PreceptItem {
+abstract class PQuery extends PreceptItem {
   String get document;
 
-  PDataSource({this.params});
+  PQuery({this.params});
 
   final Map<String, dynamic> params;
 
@@ -31,19 +31,19 @@ abstract class PDataSource extends PreceptItem {
 
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDataGet extends PDataSource {
+class PGet extends PQuery {
   final DocumentId documentId;
 
-  PDataGet({
+  PGet({
     @required this.documentId,
     Map<String, dynamic> params = const {},
   }) : super(
     params: params,
   );
 
-  factory PDataGet.fromJson(Map<String, dynamic> json) => _$PDataGetFromJson(json);
+  factory PGet.fromJson(Map<String, dynamic> json) => _$PGetFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDataGetToJson(this);
+  Map<String, dynamic> toJson() => _$PGetToJson(this);
 
   String get document => documentId.path;
 
@@ -58,10 +58,10 @@ class PDataGet extends PDataSource {
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PDataStream extends PDataSource {
+class PGetStream extends PQuery {
   final DocumentId documentId;
 
-  PDataStream({
+  PGetStream({
     @required this.documentId,
     Map<String, dynamic> params = const {},
   }) : super(
@@ -70,9 +70,9 @@ class PDataStream extends PDataSource {
 
   String get document => documentId.path;
 
-  factory PDataStream.fromJson(Map<String, dynamic> json) => _$PDataStreamFromJson(json);
+  factory PGetStream.fromJson(Map<String, dynamic> json) => _$PGetStreamFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDataStreamToJson(this);
+  Map<String, dynamic> toJson() => _$PGetStreamToJson(this);
 }
 
 enum DataSourceReturn { future, futureList, stream, streamList }

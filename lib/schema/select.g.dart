@@ -8,20 +8,24 @@ part of 'select.dart';
 
 PSelectBoolean _$PSelectBooleanFromJson(Map<String, dynamic> json) {
   return PSelectBoolean(
-    defaultValue: (json['defaultValue'] as List)?.map((e) => e as bool)?.toList(),
+    defaultValue:
+        (json['defaultValue'] as List)?.map((e) => e as bool)?.toList(),
   );
 }
 
-Map<String, dynamic> _$PSelectBooleanToJson(PSelectBoolean instance) => <String, dynamic>{
+Map<String, dynamic> _$PSelectBooleanToJson(PSelectBoolean instance) =>
+    <String, dynamic>{
       'defaultValue': instance.defaultValue,
     };
 
 PSelectString _$PSelectStringFromJson(Map<String, dynamic> json) {
   return PSelectString(
-    defaultValue: (json['defaultValue'] as List)?.map((e) => e as String)?.toList(),
+    defaultValue:
+        (json['defaultValue'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
-Map<String, dynamic> _$PSelectStringToJson(PSelectString instance) => <String, dynamic>{
+Map<String, dynamic> _$PSelectStringToJson(PSelectString instance) =>
+    <String, dynamic>{
       'defaultValue': instance.defaultValue,
     };

@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
+import 'package:precept_script/script/json/dataProviderConverter.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/json/editParticleConverter.dart';
 import 'package:precept_script/script/json/readParticleConverter.dart';
@@ -51,8 +52,8 @@ class PPart extends PSubContent {
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
-      PBackend backend,
-      PDataSource dataSource,
+      PDataProvider dataProvider,
+      PQuery dataSource,
       PPanelStyle panelStyle,
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
@@ -61,7 +62,7 @@ class PPart extends PSubContent {
       : super(
           id: id,
           isStatic: isStatic,
-          backend: backend,
+          dataProvider: dataProvider,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
@@ -77,7 +78,7 @@ class PPart extends PSubContent {
   DebugNode get debugNode {
     final List<DebugNode> children = List();
     if (backendIsDeclared) {
-      children.add(backend.debugNode);
+      children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
       children.add(dataSource.debugNode);

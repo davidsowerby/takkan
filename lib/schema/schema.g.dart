@@ -9,7 +9,8 @@ part of 'schema.dart';
 PSchema _$PSchemaFromJson(Map<String, dynamic> json) {
   return PSchema(
     documents: (json['documents'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e == null ? null : PDocument.fromJson(e as Map<String, dynamic>)),
+      (k, e) => MapEntry(
+          k, e == null ? null : PDocument.fromJson(e as Map<String, dynamic>)),
     ),
     name: json['name'] as String,
   );
@@ -22,7 +23,8 @@ Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
 
 PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
   return PDocument(
-    fields: const PSchemaElementMapConverter().fromJson(json['fields'] as Map<String, dynamic>),
+    fields: const PSchemaElementMapConverter()
+        .fromJson(json['fields'] as Map<String, dynamic>),
   );
 }
 

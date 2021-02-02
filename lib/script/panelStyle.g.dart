@@ -13,7 +13,8 @@ PPanelStyle _$PPanelStyleFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPanelStyleToJson(PPanelStyle instance) => <String, dynamic>{
+Map<String, dynamic> _$PPanelStyleToJson(PPanelStyle instance) =>
+    <String, dynamic>{
       'expandable': instance.expandable,
       'openExpanded': instance.openExpanded,
     };

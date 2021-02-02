@@ -13,7 +13,8 @@ DocumentId _$DocumentIdFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$DocumentIdToJson(DocumentId instance) => <String, dynamic>{
+Map<String, dynamic> _$DocumentIdToJson(DocumentId instance) =>
+    <String, dynamic>{
       'path': instance.path,
       'itemId': instance.itemId,
     };

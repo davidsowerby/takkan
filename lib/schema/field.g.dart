@@ -38,8 +38,9 @@ Map<String, dynamic> _$PStringToJson(PString instance) => <String, dynamic>{
 
 PDate _$PDateFromJson(Map<String, dynamic> json) {
   return PDate(
-    defaultValue:
-        json['defaultValue'] == null ? null : DateTime.parse(json['defaultValue'] as String),
+    defaultValue: json['defaultValue'] == null
+        ? null
+        : DateTime.parse(json['defaultValue'] as String),
   );
 }
 
@@ -71,7 +72,8 @@ PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) => <String, dynamic>{
+Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) =>
+    <String, dynamic>{
       'defaultValue': instance.defaultValue?.toJson(),
     };
 
@@ -95,6 +97,7 @@ PGeoLocation _$PGeoLocationFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PGeoLocationToJson(PGeoLocation instance) => <String, dynamic>{
+Map<String, dynamic> _$PGeoLocationToJson(PGeoLocation instance) =>
+    <String, dynamic>{
       'defaultValue': instance.defaultValue?.toJson(),
     };

@@ -13,9 +13,10 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     ),
     name: json['name'] as String,
     isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    dataProvider: PDataProviderConverter.fromJson(
+        json['dataProvider'] as Map<String, dynamic>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   );
 }
@@ -33,7 +34,8 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
+  writeNotNull(
+      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['isStatic'] = _$IsStaticEnumMap[instance.isStatic];
   return val;
@@ -49,7 +51,9 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
 
-  final value = enumValues.entries.singleWhere((e) => e.value == source, orElse: () => null)?.key;
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
 
   if (value == null && unknownValue == null) {
     throw ArgumentError('`$source` is not one of the supported values: '
@@ -77,11 +81,14 @@ const _$ControlEditEnumMap = {
 
 PRoute _$PRouteFromJson(Map<String, dynamic> json) {
   return PRoute(
-    page: json['page'] == null ? null : PPage.fromJson(json['page'] as Map<String, dynamic>),
+    page: json['page'] == null
+        ? null
+        : PPage.fromJson(json['page'] as Map<String, dynamic>),
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    dataProvider: PDataProviderConverter.fromJson(
+        json['dataProvider'] as Map<String, dynamic>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   );
 }
@@ -98,7 +105,8 @@ Map<String, dynamic> _$PRouteToJson(PRoute instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
+  writeNotNull(
+      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['page'] = instance.page?.toJson();
   return val;
@@ -120,10 +128,10 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     pageType: json['pageType'] as String,
     scrollable: json['scrollable'] as bool,
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    content: PElementListConverter.fromJson(json['content'] as List<Map<String, dynamic>>),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    content: PElementListConverter.fromJson(
+        json['content'] as List<Map<String, dynamic>>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     property: json['property'] as String,
     title: json['title'] as String,
@@ -142,7 +150,6 @@ Map<String, dynamic> _$PPageToJson(PPage instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['property'] = instance.property;
   val['pageType'] = instance.pageType;
@@ -155,19 +162,22 @@ Map<String, dynamic> _$PPageToJson(PPage instance) {
 PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   return PPanel(
     property: json['property'] as String,
-    content: PElementListConverter.fromJson(json['content'] as List<Map<String, dynamic>>),
+    content: PElementListConverter.fromJson(
+        json['content'] as List<Map<String, dynamic>>),
     heading: json['heading'] == null
         ? null
         : PPanelHeading.fromJson(json['heading'] as Map<String, dynamic>),
     caption: json['caption'] as String,
     scrollable: json['scrollable'] as bool,
-    help: json['help'] == null ? null : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    style:
-        json['style'] == null ? null : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
+    help: json['help'] == null
+        ? null
+        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+    style: json['style'] == null
+        ? null
+        : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   );
 }
@@ -184,7 +194,6 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['caption'] = instance.caption;
   val['content'] = PElementListConverter.toJson(instance.content);
@@ -201,14 +210,17 @@ PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
     expandable: json['expandable'] as bool,
     openExpanded: json['openExpanded'] as bool,
     canEdit: json['canEdit'] as bool,
-    help: json['help'] == null ? null : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+    help: json['help'] == null
+        ? null
+        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     style: json['style'] == null
         ? null
         : PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) => <String, dynamic>{
+Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
+    <String, dynamic>{
       'expandable': instance.expandable,
       'openExpanded': instance.openExpanded,
       'canEdit': instance.canEdit,
@@ -219,9 +231,10 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) => <String, d
 PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    backend:
-        json['backend'] == null ? null : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(json['dataSource'] as Map<String, dynamic>),
+    dataProvider: PDataProviderConverter.fromJson(
+        json['dataProvider'] as Map<String, dynamic>),
+    dataSource: PDataSourceConverter.fromJson(
+        json['dataSource'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   );
 }
@@ -238,7 +251,8 @@ Map<String, dynamic> _$PCommonToJson(PCommon instance) {
     }
   }
 
-  writeNotNull('backend', instance.backend?.toJson());
+  writeNotNull(
+      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   return val;
 }
