@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_backend/backend/backend.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataProvider.dart';
 
 /// A lookup facility for instances of [Backend] implementations.
 /// Provides an instance from the [find] method, from a supplied [PBackend]
@@ -12,18 +12,18 @@ import 'package:precept_script/script/backend.dart';
 /// Note: The original plan was to use GetIt for this, but there are a couple of obstacles to that approach:
 /// - the GetIt.registerFactory signature is type based, and does not fit for returning a Backend instance from a PBackend
 /// - the use of 'instanceName' is discouraged, although it is not clear why.
-class BackendLibrary {
-  final Map<Type, Backend Function(PBackend)> builders = Map();
-  final Map<String, Backend> instances = Map();
+class DataProviderLibrary {
+  final Map<Type, DataProvider Function(PDataProvider)> builders = Map();
+  final Map<String, DataProvider> instances = Map();
 
-  BackendLibrary() : super();
+  DataProviderLibrary() : super();
 
   /// Finds an entry in the library matching [key], and returns an instance of it with [config].
   /// [config] must be of the type appropriate to the [Backend] implementation required.
   /// [config.instanceName] is only needed if you require two instances of the same [Backend] type.
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
-  Backend find({@required PBackend config}) {
+  DataProvider find({@required PDataProvider config}) {
     assert(config!=null);
     final lookupKey = '${config.runtimeType.toString()}:${config.instanceName}';
     logType(this.runtimeType).d("Finding Backend for lookupKey: $lookupKey");
@@ -44,7 +44,7 @@ class BackendLibrary {
 
 
   /// Is there a way to check that [config] is a [PBackend] ?
-  register({@required Type config, @required Backend Function(PBackend) builder}) {
+  register({@required Type config, @required DataProvider Function(PDataProvider) builder}) {
     builders[config] = builder;
   }
 
@@ -55,6 +55,6 @@ class BackendLibrary {
   }
 }
 
-final BackendLibrary _backendLibrary = BackendLibrary();
+final DataProviderLibrary _dataProviderLibrary = DataProviderLibrary();
 
-BackendLibrary get backendLibrary => _backendLibrary;
+DataProviderLibrary get dataProviderLibrary => _dataProviderLibrary;

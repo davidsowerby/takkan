@@ -1,26 +1,24 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/document.dart';
-import 'package:precept_backend/backend/query/query.dart';
 import 'package:precept_backend/backend/response.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
+import 'package:precept_script/script/query.dart';
 
 /// The layer between the client and server.
 ///
-/// It provides a common authentication and data access interface regardless of the backend employed.
-/// Most of the work is actually done in backend-specific implementations.
+/// It provides a consistent data access interface regardless of the type of data provider used.
+/// Most of the work is actually done in specific implementations.
+///
+/// It is hoped that differences between for example, Firebase and Back4App can be manageed by using
+/// the relevant implementation of [PDataProvider].  However, in case that is not possible, it is simple
+/// to [register] an alternative implementation of [DataProvider]
+///
 ///
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
-abstract class Backend<CONFIG extends PBackend> {
-  final CONFIG config;
-  BackendConnectionState _connectionState = BackendConnectionState.idle;
-  final List<Function(BackendConnectionState)> _listeners = List();
 
-  Backend({@required this.config});
-
+abstract class DataProvider {
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
   /// For methods accessing Cloud Functions, use the 'fetchXXXX' methods
@@ -29,7 +27,7 @@ abstract class Backend<CONFIG extends PBackend> {
   /// Returns a single instance of [Data] identified by [documentId]
   ///
   /// Throws an [APIException] if not found
-  Future<Data> get({@required PDataGet query});
+  Future<Data> get({@required PGet query});
 
   /// Returns a Stream of [Data] identified by [documentId]
   ///
@@ -40,23 +38,23 @@ abstract class Backend<CONFIG extends PBackend> {
   ///
   /// May return an empty list
   /// Throws an [APIException] if the query is not valid
-  Future<Data> getList({@required Query query});
+  Future<Data> getList({@required PQuery query});
 
   /// Returns a Stream of List<Data> instances for the document selected by [query]
   ///
   /// May return an empty list
   /// throws an [APIException] if the query is not valid
-  Stream<List<Data>> getListStream({@required Query query});
+  Stream<List<Data>> getListStream({@required PQuery query});
 
   /// Returns a single instance of [Data] for the [query]
   ///
   /// Throws an [APIException] if the result is not exactly one instance
-  Future<Data> getDistinct({@required Query query});
+  Future<Data> getDistinct({@required PQuery query});
 
   /// Returns a single instance of [Data] for the [query]
   ///
   /// Throws an [APIException] if the result is not exactly one instance
-  Stream<Data> getDistinctStream({@required Query query});
+  Stream<Data> getDistinctStream({@required PQuery query});
 
   /// ================================================================================================
   /// All 'fetchXXX' methods call Cloud Functions
@@ -123,70 +121,7 @@ abstract class Backend<CONFIG extends PBackend> {
   /// for example lack of permissions.
   Future<CloudResponse> delete({@required List<DocumentId> documentIds});
 
-  _connecting() {
-    _connectionState = BackendConnectionState.connecting;
-    _fireListeners();
-  }
 
-  _connected() {
-    _connectionState = BackendConnectionState.connected;
-    _fireListeners();
-  }
-
-  _reset() {
-    _connectionState = BackendConnectionState.idle;
-    _fireListeners();
-  }
-
-  BackendConnectionState get connectionState => _connectionState;
-
-  bool get isConnected => _connectionState == BackendConnectionState.connected;
-
-  /// Add a listener to be notified when [connectionState] changes
-  addListener(Function(BackendConnectionState) listener) {
-    _listeners.add(listener);
-  }
-
-  removeListener(Function() listener) {
-    _listeners.remove(listener);
-  }
-
-  _fireListeners() {
-    for (Function(BackendConnectionState) listener in _listeners) {
-      listener(connectionState);
-    }
-  }
-
-  /// Connects the backend, with implementation specific actions provided by [doConnect]
-  /// Simply returns true if already connected.
-  Future<bool> connect() async {
-    // if (connectionState==BackendConnectionState.connecting || connectionState==BackendConnectionState.connected){
-    //   return true;
-    // }
-    if (isConnected){
-      return true;
-    }
-    _connecting();
-    final connectionSuccess = await doConnect();
-    if (connectionSuccess) {
-      _connected();
-    } else {
-      _reset();
-    }
-    return connectionSuccess;
-  }
-
-  Future<bool> doConnect();
-
-  void fail() {
-    _connectionState = BackendConnectionState.failed;
-    _fireListeners();
-  }
-
-  void reset() {
-    _connectionState = BackendConnectionState.idle;
-    _fireListeners();
-  }
 }
 
 
