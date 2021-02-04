@@ -7,7 +7,7 @@ import 'package:precept_script/script/style/style.dart';
 
 final kitchenSinkScript = PScript(
   name: 'Kitchen Sink',
-  dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: {'id': 'mock1'}),
+  dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
   routes: {
     '/': PRoute(
       page: PPage(

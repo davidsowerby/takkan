@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/configLoader.dart';
+import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
@@ -15,19 +16,19 @@ part 'dataProvider.g.dart';
 /// If only a single instance of a type is used (generally the case), neither need to be specified.
 /// If both are specified, [instanceName] takes precedence
 ///
-/// [connectionData] is different for each backend implementation, and is therefore just a map.
+/// [headers] is different for each backend implementation, and is therefore just a map.
 /// Use this to pass things like connection string, client keys etc
 /// This may be redundant if a backend specific sub-class captures properties differently.
 /// This may be specified directly, or loaded using [loadConfig]
 ///
 /// if [loadConfig] is used, [configFilePath] must be specified
-/// Either [configFilePath] or [connectionData] must be specified
+/// Either [configFilePath] or [headers] must be specified
 ///
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRestDataProvider extends PDataProvider  {
+  final String baseUrl;
   final String instanceName;
-  final Map<String, dynamic> connectionData;
   final PScript parent;
   final bool checkHealthOnConnect;
   final Env env;
@@ -38,7 +39,7 @@ class PRestDataProvider extends PDataProvider  {
   PRestDataProvider({
     @required String instanceName,
     @required this.env,
-    this.connectionData,
+    this.baseUrl,
     this.parent,
     this.checkHealthOnConnect = true,
     this.configFilePath,
@@ -56,22 +57,24 @@ class PRestDataProvider extends PDataProvider  {
     if (instanceName == null || instanceName == '') {
       messages.add(ValidationMessage(item: this, msg: 'instanceName cannot be null or empty'));
     }
-    if (connectionData == null && configFilePath == null) {
+    if (headers == null && configFilePath == null) {
       messages.add(
           ValidationMessage(item: this, msg: 'connectionData or configFilePath must be specified'));
     }
   }
+
+  Map<String,String> get headers=> {};
 
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// This method must always be called before attempting to use this configuration, even if the
-  /// [connectionData] is manually specified.  This ensures that [_configState] is correct.
+  /// [headers] is manually specified.  This ensures that [_configState] is correct.
   ///
   /// The listener is added to listeners, as there may be other listeners as well
   ///
-  /// If [connectionData] has been manually specified, config loaded from file is added to it, overwriting
+  /// If [headers] has been manually specified, config loaded from file is added to it, overwriting
   /// any entries with the same keys.
   ///
   /// [listeners] is a Set, so this may be called multiple times with the same [listener], and the
@@ -90,7 +93,7 @@ class PRestDataProvider extends PDataProvider  {
     _notifyListeners();
     try {
       final data = await configLoader.loadFile(filePath: null);
-      connectionData.addAll(data);
+      headers.addAll(data);
       _configState = ConfigState.loaded;
       _notifyListeners();
       return configState;
@@ -109,11 +112,24 @@ class PRestDataProvider extends PDataProvider  {
   }
 
   ConfigState get configState => _configState;
+
+  bool get isLoaded=> _configState==ConfigState.loaded;
+
+  String get documentBaseUrl => baseUrl;
+
+  String  documentUrl(DocumentId documentId){
+    return '$documentBaseUrl/${documentId.path}/${documentId.itemId}';
+  }
 }
 
 enum Env { dev, test, qa, prod }
 enum ConfigState { idle, loading, loaded, failed }
 
 abstract class PDataProvider extends PreceptItem{
+  String get instanceName;
   PDataProvider({String id}) : super(id: id);
+
+  bool get isLoaded;
+  Future<ConfigState> loadConfig(
+      {@required ConfigLoader configLoader,@required Function(ConfigState) listener, bool forceReload = false});
 }

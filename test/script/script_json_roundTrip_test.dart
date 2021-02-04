@@ -31,7 +31,6 @@ void main() {
       final p = c0.page;
       expect(p.title, "Home Page");
       expect(p.content.length, 2);
-      expect((p.dataProvider as PRestDataProvider).connectionData['id'], 'mock1');
 
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });

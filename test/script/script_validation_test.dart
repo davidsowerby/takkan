@@ -72,7 +72,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -97,7 +97,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+          dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
           routes: {
             "/home": PRoute(
               page: PPage(
@@ -123,7 +123,7 @@ void main() {
       final withoutDataSourceOrBackend = PScript(
         routes: {
           "/home": PRoute(
-            dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+            dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
@@ -134,7 +134,7 @@ void main() {
       );
 
       final withoutDataSource = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -147,7 +147,7 @@ void main() {
       );
 
       final withDataSourceAndBackend = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', connectionData: const {'instanceKey': 'test'}),
+        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         // ignore: missing_required_param
 
         routes: {

@@ -10,7 +10,7 @@ PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
   return PRestDataProvider(
     instanceName: json['instanceName'] as String,
     env: _$enumDecodeNullable(_$EnvEnumMap, json['env']),
-    connectionData: json['connectionData'] as Map<String, dynamic>,
+    baseUrl: json['baseUrl'] as String,
     parent: json['parent'] == null
         ? null
         : PScript.fromJson(json['parent'] as Map<String, dynamic>),
@@ -21,8 +21,8 @@ PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
     <String, dynamic>{
+      'baseUrl': instance.baseUrl,
       'instanceName': instance.instanceName,
-      'connectionData': instance.connectionData,
       'parent': instance.parent?.toJson(),
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'env': _$EnvEnumMap[instance.env],
