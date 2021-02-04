@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/document.dart';
+import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/response.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
@@ -92,25 +93,52 @@ abstract class DataProvider {
   Future<CloudResponse> executeFunction(
       {@required String functionName, Map<String, dynamic> params});
 
-  /// Saves a document to the backend database.
+  /// Saves a complete document to the data provider
   ///
-  /// If [saveChangesOnly] is true (the default) only changed properties are passed to the backend.
-  ///
-  ///
-  /// [documentId] is only required if [script] does not contain a valid [documentId], or this is to be saved to a document
-  /// different to the one from which the data was taken.  If [documentId] is provided, it takes precedence over that
-  /// within the model, effectively making this a "save as" call.
+  /// [documentId] identifies the document to be saved
   ///
   /// [documentType] affects the meta data applied to the document - not yet implemented
   ///
-  /// [script] contains the data to be saved
+  /// [fullData] contains the data to be saved
   ///
   Future<CloudResponse> save({
-    DocumentId documentId,
-    @required Map<String, dynamic> changedData,
+    @required DocumentId documentId,
     @required Map<String, dynamic> fullData,
     DocumentType documentType = DocumentType.standard,
-    bool saveChangesOnly = true,
+    Function() onSuccess,
+  });
+
+  /// Creates new document to the data provider
+  ///
+  /// [documentId.path] must be provided.  [documentId.itemId] is ignored
+  ///
+  /// [documentType] affects the meta data applied to the document - not yet implemented
+  ///
+  /// [fullData] provides the data to be saved
+  ///
+  Future<CloudResponse> create({
+    @required DocumentId documentId,
+    @required Map<String, dynamic> fullData,
+    DocumentType documentType = DocumentType.standard,
+    Function() onSuccess,
+  });
+
+  /// Updates a document to the data provider.
+  ///
+  /// [changedData] should contain only those properties which should be updated
+  ///
+  /// [documentId] identifies the document to be updated
+  ///
+  /// [documentType] affects the meta data applied to the document - not yet implemented
+  ///
+  /// [onSuccess] is a callback invoked on successful update
+  ///
+  /// returns true if successful, throws an [APIException] on failure
+  /// see also [save]
+  Future<bool> update({
+    @required DocumentId documentId,
+    @required Map<String, dynamic> changedData,
+    DocumentType documentType = DocumentType.standard,
     Function() onSuccess,
   });
 

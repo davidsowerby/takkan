@@ -15,8 +15,7 @@ import 'package:precept_script/script/query.dart';
 class RestDataProvider implements DataProvider {
   final PRestDataProvider config;
 
-  const RestDataProvider({@required this.config})
-      : assert(config != null);
+  const RestDataProvider({@required this.config}) : assert(config != null);
 
   @override
   Future<CloudResponse> delete({List<DocumentId> documentIds}) {
@@ -56,11 +55,9 @@ class RestDataProvider implements DataProvider {
 
   @override
   Future<Data> get({PGet query}) async {
-    final url =
-        '${config.baseUrl}/classes/${query.documentId.path}/${query.documentId.itemId}';
-    final Response response = await Dio(BaseOptions(headers: config.headers)).get(url);
+    final Response response =
+        await Dio(BaseOptions(headers: config.headers)).get(config.documentUrl(query.documentId));
     if (response.statusCode == HttpStatus.ok) {
-      // final Map<String, dynamic> json = jsonDecode(response.data);
       return Data(data: response.data, documentId: query.documentId);
     }
     throw APIException(message: response.statusMessage, statusCode: response.statusCode);
@@ -104,12 +101,45 @@ class RestDataProvider implements DataProvider {
   @override
   Future<CloudResponse> save(
       {DocumentId documentId,
-      Map<String, dynamic> changedData,
       Map<String, dynamic> fullData,
       DocumentType documentType = DocumentType.standard,
-      bool saveChangesOnly = true,
       Function() onSuccess}) {
     // TODO: implement save
     throw UnimplementedError();
+  }
+
+  @override
+  Future<CloudResponse> create({
+    DocumentId documentId,
+    Map<String, dynamic> fullData,
+    DocumentType documentType = DocumentType.standard,
+    Function() onSuccess,
+  }) {
+    // TODO: implement create
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> update({
+    DocumentId documentId,
+    Map<String, dynamic> changedData,
+    DocumentType documentType = DocumentType.standard,
+    Function() onSuccess,
+  }) async {
+    final Response response = await Dio(BaseOptions(headers: config.headers)).put(
+      config.documentUrl(documentId),
+      data: changedData,
+    );
+    if (response.statusCode == HttpStatus.ok) {
+      return true;
+    }
+    throw APIException(message: response.statusMessage, statusCode: response.statusCode);
+    // # Don't forget to set the OBJECT_ID parameter
+    // curl -X PUT \
+    // -H "X-Parse-Application-Id: at4dM5dN0oCRryJp7VtTccIKZY9l3GtfHre0Hoow" \
+    // -H "X-Parse-REST-API-Key: Em49eaT0rrvEnL1tdH6F4TKyrObO3pNtEjwUAk1u" \
+    // -H "Content-Type: application/json" \
+    // -d "{ \"category\": \"A string\",\"accountNumber\": \"A string\" }" \
+    // https://parseapi.back4app.com/classes/Account/<OBJECT_ID>
   }
 }
