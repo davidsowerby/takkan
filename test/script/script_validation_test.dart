@@ -1,8 +1,12 @@
+import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('PScript all level validation', () {
@@ -10,16 +14,19 @@ void main() {
 
     tearDownAll(() {});
 
-    setUp(() {});
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<ConfigLoader>(() => MockConfigLoader());
+    });
 
     tearDown(() {});
 
     group('PScript validation', () {
-      test('Insufficient components', () {
+      test('Insufficient components', ()  {
         // given
         final script1 = PScript();
         // when
-        final result = script1.validate();
+        final result =  script1.validate();
         // then
 
         expect(result.length, 1);
@@ -29,7 +36,7 @@ void main() {
   });
 
   group('PRoute validation', () {
-    test('Must have path and page', () {
+    test('Must have path and page', ()  {
       // given
       final script = PScript(
         name: 'test',
@@ -38,7 +45,7 @@ void main() {
         },
       ); // ignore: missing_required_param
       // when
-      final messages = script.validate();
+      final messages =  script.validate();
       // then
 
       expect(messages.length, 3);
@@ -49,7 +56,7 @@ void main() {
   });
 
   group('PPage validation', () {
-    test('Must have pageType and title', () {
+    test('Must have pageType and title', ()  {
       // given
       final component = PScript(
         isStatic: IsStatic.yes,
@@ -61,7 +68,7 @@ void main() {
       ); // ignore: missing_required_param
 
       // when
-      final messages = component.validate();
+      final messages =  component.validate();
       // then
 
       expect(messages.length, 2);
@@ -69,7 +76,7 @@ void main() {
       expect(messages[1].toString(), 'PPage : Script:0./home.Page:0 : must define a pageType');
     });
 
-    test('No errors', () {
+    test('No errors', ()  {
       // given
       final component = PScript(
         dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
@@ -86,7 +93,7 @@ void main() {
         },
       );
       // when
-      final messages = component.validate();
+      final messages =  component.validate();
       // then
 
       expect(messages.length, 0);
@@ -94,31 +101,30 @@ void main() {
   });
 
   group('PPanel validation', () {
-    test('No errors', () {
+    test('No errors', ()  {
       // given
-      final component = PScript(
-          dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
-          routes: {
-            "/home": PRoute(
-              page: PPage(
-                pageType: "mine",
-                title: "Wiggly",
-                dataSource: PGet(
-                  // ignore: missing_required_param
-                  documentId: DocumentId(), // ignore: missing_required_param
-                ),
-                content: [PPanel()],
-              ),
-            )
-          });
+      final component =
+          PScript(dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test), routes: {
+        "/home": PRoute(
+          page: PPage(
+            pageType: "mine",
+            title: "Wiggly",
+            dataSource: PGet(
+              // ignore: missing_required_param
+              documentId: DocumentId(), // ignore: missing_required_param
+            ),
+            content: [PPanel()],
+          ),
+        )
+      });
       // when
-      final messages = component.validate();
+      final messages =  component.validate();
       // then
 
       expect(messages.length, 0);
     });
 
-    test('any non-static PPanel must be able to access DataSource', () {
+    test('any non-static PPanel must be able to access DataSource', ()  {
       // given
       final withoutDataSourceOrBackend = PScript(
         routes: {
@@ -166,9 +172,9 @@ void main() {
       );
 
       // when
-      final withoutDataSourceOrBackendResults = withoutDataSourceOrBackend.validate();
-      final withoutDataSourceResults = withoutDataSource.validate();
-      final withDataSourceAndBackendResults = withDataSourceAndBackend.validate();
+      final withoutDataSourceOrBackendResults =  withoutDataSourceOrBackend.validate();
+      final withoutDataSourceResults =  withoutDataSource.validate();
+      final withDataSourceAndBackendResults =  withDataSourceAndBackend.validate();
       // then
 
       expect(withoutDataSourceOrBackendResults.length, 1);

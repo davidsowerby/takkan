@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/json/dataSourceConverter.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('PDocumentSelectorConverter', () {

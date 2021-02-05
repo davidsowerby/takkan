@@ -50,7 +50,7 @@ class PreceptItem {
 
   PreceptItem get parent => _parent;
 
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
     _parent = parent;
     _index = index;
 
@@ -65,7 +65,7 @@ class PreceptItem {
       uid = "$type:$index";
     }
 
-    /// Explicitly set [_id] override other settings
+    /// Explicitly set [_id] overrides other settings
     if (_id != null && _id.isNotEmpty) {
       uid = _id;
     }
@@ -86,7 +86,8 @@ class PreceptItem {
     return this.runtimeType.toString().replaceFirst('P', '');
   }
 
-  void doValidate(List<ValidationMessage> messages) {}
+  void doValidate(List<ValidationMessage> messages)  {
+  }
 
   int get index => _index;
 

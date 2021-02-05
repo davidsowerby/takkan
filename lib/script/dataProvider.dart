@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
@@ -16,25 +17,24 @@ part 'dataProvider.g.dart';
 /// If only a single instance of a type is used (generally the case), neither need to be specified.
 /// If both are specified, [instanceName] takes precedence
 ///
-/// [headers] is different for each backend implementation, and is therefore just a map.
-/// Use this to pass things like connection string, client keys etc
-/// This may be redundant if a backend specific sub-class captures properties differently.
+/// [headers] specify things like client keys, and is therefore different for each backend implementation.
+/// Each implementation must must provide the appropriate override.
+///
 /// This may be specified directly, or loaded using [loadConfig]
 ///
-/// if [loadConfig] is used, [configFilePath] must be specified
-/// Either [configFilePath] or [headers] must be specified
+/// If [configFilePath] is specified, [loadConfig] is invoked by [doInit], and should normally override
+/// directly declared declare entries - however this may be done differently in different implementations.
 ///
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PRestDataProvider extends PDataProvider  {
+class PRestDataProvider extends PDataProvider {
   final String baseUrl;
   final String instanceName;
   final PScript parent;
   final bool checkHealthOnConnect;
   final Env env;
   final String configFilePath;
-  ConfigState _configState = ConfigState.idle;
-  final Set<Function(ConfigState)> listeners = Set();
+
 
   PRestDataProvider({
     @required String instanceName,
@@ -44,10 +44,12 @@ class PRestDataProvider extends PDataProvider  {
     this.checkHealthOnConnect = true,
     this.configFilePath,
     String id,
-  })  : instanceName = instanceName ?? ((env == null) ? 'default' : env.toString()),
+  })
+      : instanceName = instanceName ?? ((env == null) ? 'default' : env.toString()),
         super(id: id);
 
-  factory PRestDataProvider.fromJson(Map<String, dynamic> json) => _$PRestDataProviderFromJson(json);
+  factory PRestDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$PRestDataProviderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PRestDataProviderToJson(this);
 
@@ -63,73 +65,70 @@ class PRestDataProvider extends PDataProvider  {
     }
   }
 
-  Map<String,String> get headers=> {};
+  Map<String, String> get headers => {};
 
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
+     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    loadConfig();
   }
 
   /// This method must always be called before attempting to use this configuration, even if the
-  /// [headers] is manually specified.  This ensures that [_configState] is correct.
-  ///
-  /// The listener is added to listeners, as there may be other listeners as well
+  /// [headers] is manually specified.  By default this is invoked by [doInit] method.
   ///
   /// If [headers] has been manually specified, config loaded from file is added to it, overwriting
   /// any entries with the same keys.
   ///
-  /// [listeners] is a Set, so this may be called multiple times with the same [listener], and the
-  /// listener will only be invoke once for each invocation of [_notifyListeners]
-  ///
   /// Repeated calls will be ignored - once it is loaded it will not attempt to reload unless [forceReload] is true
-  Future<ConfigState> loadConfig(
-      {@required ConfigLoader configLoader,@required Function(ConfigState) listener, bool forceReload = false}) async {
-    if (configState==ConfigState.loaded && !forceReload){
-      return _configState;
+  Future<bool> loadConfig({bool forceReload = false}) async {
+    if (_loaded && !forceReload) {
+      return true;
     }
-    assert(listener != null);
-    assert(configLoader!=null);
-    listeners.add(listener);
-    _configState = ConfigState.loading;
-    _notifyListeners();
     try {
-      final data = await configLoader.loadFile(filePath: null);
-      headers.addAll(data);
-      _configState = ConfigState.loaded;
-      _notifyListeners();
-      return configState;
+      final configLoader = inject<ConfigLoader>();
+      if (configFilePath != null) {
+        final data = await configLoader.loadFile(filePath: configFilePath);
+        headers.addAll(data);
+      }
+      _loaded = true;
+      if (_listener != null) {
+        _listener();
+      }
+      return true;
     } catch (e) {
       logType(this.runtimeType).e('Failed to load configuration from $configFilePath', e);
-      _configState = ConfigState.failed;
-      _notifyListeners();
-      return configState;
+      return false;
     }
   }
 
-  void _notifyListeners() {
-    for (var listener in listeners) {
-      listener(configState);
-    }
-  }
 
-  ConfigState get configState => _configState;
-
-  bool get isLoaded=> _configState==ConfigState.loaded;
+  bool get isLoaded => _loaded;
 
   String get documentBaseUrl => baseUrl;
 
-  String  documentUrl(DocumentId documentId){
+  String documentUrl(DocumentId documentId) {
     return '$documentBaseUrl/${documentId.path}/${documentId.itemId}';
   }
 }
 
 enum Env { dev, test, qa, prod }
-enum ConfigState { idle, loading, loaded, failed }
 
-abstract class PDataProvider extends PreceptItem{
+abstract class PDataProvider extends PreceptItem {
   String get instanceName;
+
+  @JsonKey(ignore: true)
+  Function() _listener;
+  @JsonKey(ignore: true)
+  bool _loaded = false;
+
   PDataProvider({String id}) : super(id: id);
 
   bool get isLoaded;
-  Future<ConfigState> loadConfig(
-      {@required ConfigLoader configLoader,@required Function(ConfigState) listener, bool forceReload = false});
+
+  Future<bool> loadConfig({bool forceReload = false});
+
+  set listener(Function() listener) {
+    _listener = listener;
+  }
+
 }

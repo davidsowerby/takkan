@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:precept_script/example/kitchenSink.dart';
-import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('PScript JSON Round trip', () {
@@ -11,7 +14,10 @@ void main() {
 
     tearDownAll(() {});
 
-    setUp(() {});
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<ConfigLoader>(() => MockConfigLoader());
+    });
 
     tearDown(() {});
     test('full model', () {

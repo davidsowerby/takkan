@@ -80,7 +80,7 @@ class PScript extends PCommon {
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
   List<ValidationMessage> validate({bool throwOnFail = false, bool useCaptionsAsIds = true}) {
-    init(useCaptionsAsIds: useCaptionsAsIds);
+     init(useCaptionsAsIds: useCaptionsAsIds);
     _validationMessages = List();
     doValidate(_validationMessages);
 
@@ -108,14 +108,14 @@ class PScript extends PCommon {
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
   /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
-  init({bool useCaptionsAsIds = true}) {
-    doInit(null, 0, useCaptionsAsIds: useCaptionsAsIds);
+  init({bool useCaptionsAsIds = true})  {
+     doInit(null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// Passes call to all components, and sets the components names from their keys in parent
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    super.doInit(null, 0);
     _setupControlEdit(ControlEdit.notSetAtThisLevel);
     int i = 0;
     for (var entry in routes.entries) {
@@ -189,9 +189,9 @@ class PRoute extends PCommon {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (page != null) {
-      page.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+       page.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
   }
 
@@ -277,7 +277,7 @@ class PPage extends PContent {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
       if (element is PPanel) {
@@ -357,7 +357,7 @@ class PPanel extends PSubContent {
 
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (heading != null) {
       heading.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
@@ -532,8 +532,8 @@ class PCommon extends PreceptItem {
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
+     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
     PCommon p = parent;
     if (parent != null) {
       _schema = p._schema;
@@ -547,8 +547,8 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     _setupControlEdit(inherited);
-    if (_dataProvider != null) _dataProvider.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_dataSource != null) _dataSource.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataProvider != null)  _dataProvider.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataSource != null)  _dataSource.doInit(this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything

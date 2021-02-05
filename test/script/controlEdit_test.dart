@@ -1,6 +1,6 @@
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('ControlEdit settings', () {
@@ -12,7 +12,7 @@ void main() {
 
     tearDown(() {});
 
-    test('defaults', () {
+    test('defaults', ()  {
       // given
       final script = PScript(
             routes: {
@@ -46,7 +46,7 @@ void main() {
       final pagePart = page.content[1] as PPart;
 
       // when
-      script.init();
+       script.init();
       // then
       expect(script.controlEdit, ControlEdit.notSetAtThisLevel);
       expect(route.controlEdit, ControlEdit.notSetAtThisLevel);
@@ -103,7 +103,7 @@ void main() {
       final pagePart = page.content[1] as PPart;
 
       // when
-      script.init();
+       script.init();
       // then
 
       expect(script.hasEditControl, false);
@@ -116,7 +116,7 @@ void main() {
       expect(pagePart.hasEditControl, true);
     });
 
-    test('firstLevelPanels with Part override', () {
+    test('firstLevelPanels with Part override', ()  {
       // given
       final script = PScript(
 
@@ -152,7 +152,7 @@ void main() {
       final pagePart = page.content[1] as PPart;
 
       // when
-      script.init();
+       script.init();
       // then
 
       expect(script.hasEditControl, false);

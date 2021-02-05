@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/example/kitchenSinkSchema.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:test/test.dart';
 
 void main() {
   group('PScript JSON Round trip', () {
