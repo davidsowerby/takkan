@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/backend.dart';
+import 'package:precept_script/script/dataProvider.dart';
 
 /// Reads Back4App config from file secrets.json, held at project root.  Use for API keys etc, that MUST NOT be under
 /// version control.  Build script in CI creates the file
