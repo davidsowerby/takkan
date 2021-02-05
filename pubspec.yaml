@@ -12,7 +12,10 @@ dependencies:
   dio: ^3.0.10
   precept_script:
     path: ../precept_script
+
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   test: ^1.14.4
   build_runner:
   json_serializable: ^3.2.0
