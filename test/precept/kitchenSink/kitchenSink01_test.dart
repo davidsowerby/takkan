@@ -8,11 +8,10 @@ import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/schema/field.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';
@@ -47,8 +46,8 @@ final PScript kitchenSink01 = PScript(
               PPanel(
                 caption: 'Panel 1-3',
                 isStatic: IsStatic.no,
-                backend: PMockBackend(instanceName: 'mock', env: Env.dev),
-                dataSource: PDataGet(documentId: DocumentId(path: 'Account', itemId: 'objectId1')),
+                backend: PMockDataProvider(instanceName: 'mock'),
+                dataSource: PGet(documentId: DocumentId(path: 'Account', itemId: 'objectId1')),
                 controlEdit: ControlEdit.thisOnly,
                 content: [
                   PPart(

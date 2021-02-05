@@ -3,7 +3,7 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 
 class FullDataBinding extends DataBinding {
@@ -80,7 +80,7 @@ abstract class DataBinding {
     activeDataSource.addForm(formKey);
   }
 
-  DataBinding childFromDataSource(PDataSource dataSource, RootBinding rootBinding,
+  DataBinding childFromDataSource(PQuery dataSource, RootBinding rootBinding,
       PDocument documentSchema, DataSource activeDataSource) {
     return RootDataBinding(
         binding: rootBinding, schema: documentSchema, activeDataSource: activeDataSource);

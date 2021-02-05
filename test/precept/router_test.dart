@@ -1,7 +1,7 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/app/router.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:test/test.dart';
 
 void main() {
   group('Precept Router', () {

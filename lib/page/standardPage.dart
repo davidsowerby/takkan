@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_backend/backend/backendLibrary.dart';
-import 'package:precept_backend/backend/backend.dart';
 
 class PreceptPage extends StatefulWidget {
   final PPage config;
@@ -18,27 +17,36 @@ class PreceptPage extends StatefulWidget {
   /// Precept data above it in the Widget tree.
   ///
   /// Doing it this way keeps the structure consistent with [Panel] and [Part]
-  const PreceptPage({@required this.config}) : parentBinding = const NoDataBinding();
+  const PreceptPage({@required this.config})
+      : parentBinding = const NoDataBinding();
 
   @override
   PreceptPageState createState() => PreceptPageState();
 }
 
-class PreceptPageState extends State<PreceptPage> with ContentBuilder implements ContentState {
+class PreceptPageState extends State<PreceptPage>
+    with ContentBuilder
+    implements ContentState {
   DataSource dataSource;
   DataBinding dataBinding;
-  Backend backend;
+  DataProvider dataProvider;
 
   PCommon get config => widget.config;
 
   @override
   void initState() {
     super.initState();
-    dataSource = DataSource(widget.config, _backendStateChange);
-    dataBinding = widget.parentBinding.child(widget.config, widget.parentBinding, dataSource);
-    backend = backendLibrary.find(config: config.backend);
-    backend.addListener(_backendStateChange);
-    backend.connect();
+    if (config.dataProvider != null) {
+      config.dataProvider.listener = _onConfigLoaded;
+      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+    }
+    dataSource = DataSource(widget.config);
+    dataBinding = widget.parentBinding
+        .child(widget.config, widget.parentBinding, dataSource);
+  }
+
+  _onConfigLoaded() {
+    setState(() {});
   }
 
   @override
@@ -49,12 +57,6 @@ class PreceptPageState extends State<PreceptPage> with ContentBuilder implements
       ),
       body: doBuild(context, dataSource, widget.config, buildContent),
     );
-  }
-
-  _backendStateChange(BackendConnectionState state){
-    setState(() {
-
-    });
   }
 
   @override

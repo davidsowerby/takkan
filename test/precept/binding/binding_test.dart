@@ -6,7 +6,7 @@ import 'package:precept_client/binding/listBinding.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/binding/stringBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/catcher.dart';
 import '../../helper/listener.dart';
@@ -37,6 +37,7 @@ void main() {
         "attempting to write with WriteableRootBinding throws BindingException",
         () {
       expect(() => rootBinding.write({}), throwsBindingException);
+      // expect(() => rootBinding.write({}), throwsBindingException);
     });
 
     test("editHost returns non null", () {

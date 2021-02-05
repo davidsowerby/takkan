@@ -1,13 +1,12 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/backend.dart';
-import 'package:precept_backend/backend/backendLibrary.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/inject/inject.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/backend.dart';
-import 'package:precept_script/script/dataSource.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 
 /// The intersection point between application and data.
@@ -34,15 +33,12 @@ import 'package:precept_script/script/script.dart';
 ///
 class DataSource {
   TemporaryDocument _temporaryDocument;
-  PDataSource _dataSource;
+  PQuery _query;
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
-  Backend backend;
-
-  void Function(BackendConnectionState) callback;
 
   /// [callback] is usually a setState from a StatefulWidget
-  DataSource(PContent config, this.callback) {
+  DataSource(PContent config) {
     init(config);
   }
 
@@ -55,19 +51,17 @@ class DataSource {
   init(PContent config) {
     if (config.dataSourceIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
-      _dataSource = config.dataSource;
+      _query = config.dataSource;
       _formKeys = List();
-      _documentSchema = config.schema.documents[_dataSource.document];
+      _documentSchema = config.schema.documents[_query.document];
     }
   }
 
   TemporaryDocument get temporaryDocument => _temporaryDocument;
 
-  PDataSource get dataSource => _dataSource;
+  PQuery get query => _query;
 
-  _backendStateChange(BackendConnectionState state) {
-    callback(state);
-  }
+
 
   /// Stores a key for a Form.
   /// Forms are 'flushed' to the backing data by [flushFormsToModel]
@@ -96,11 +90,10 @@ class DataSource {
   }
 
   _doPersist(PCommon config) async {
-    final Backend backend = backendLibrary.find(config: config.backend);
-    return backend.save(
+    final DataProvider dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+    return dataProvider.update(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
-      fullData: temporaryDocument.output,
       onSuccess: temporaryDocument.saved,
     );
   }

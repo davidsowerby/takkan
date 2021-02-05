@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -6,12 +8,9 @@ import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
-import 'package:precept_backend/backend/backendLibrary.dart';
-import 'package:precept_backend/backend/backend.dart';
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
@@ -45,19 +44,22 @@ class PartState extends State<Part> with ContentBuilder implements ContentState 
   Widget editParticle;
   DataSource dataSource;
   DataBinding dataBinding = NoDataBinding();
-  Backend backend;
+  DataProvider dataProvider;
 
   PCommon get config => widget.config;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
-    dataSource = DataSource(widget.config, _backendStateChange);
-    backend = backendLibrary.find(config: config.backend);
-    backend.addListener(_backendStateChange);
-    backend.connect();
+    dataSource = DataSource(widget.config);
+    if (config.dataProvider != null) {
+      config.dataProvider.listener = _onConfigLoaded;
+      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+    }
   }
-
+  _onConfigLoaded() {
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     return doBuild(context, dataSource, widget.config, buildContent);
@@ -89,11 +91,7 @@ class PartState extends State<Part> with ContentBuilder implements ContentState 
     }
   }
 
-  _backendStateChange(BackendConnectionState state){
-    setState(() {
 
-    });
-  }
 }
 
 /// Common base class for part specific read only options which support [Part]

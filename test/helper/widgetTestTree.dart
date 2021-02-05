@@ -3,13 +3,13 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_mock_backend/precept_mock_backend.dart';
+import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
@@ -134,7 +134,7 @@ class KitchenSinkTest {
   PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     particleLibrary.init();
-    MockBackend.register();
+    PMockDataProvider.register();
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();

@@ -1,7 +1,7 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/inject/inject.dart';
-import 'package:test/test.dart';
+import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
 import 'binding_test.dart';

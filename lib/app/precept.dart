@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/binding/converter.dart';
-import 'package:precept_client/inject/inject.dart';
+import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/backend.dart';
 
 /// Loads the Precept models and initialises various parts of Precept
 ///
