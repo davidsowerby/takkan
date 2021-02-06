@@ -1,11 +1,15 @@
 import 'package:precept_back4app_backend/backend/back4app/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/restDataProvider.dart';
+import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('DataProvider', () {
@@ -13,7 +17,10 @@ void main() {
 
     tearDownAll(() {});
 
-    setUp(() {});
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<ConfigLoader>(() => MockConfigLoader());
+    });
 
     tearDown(() {});
 
@@ -37,7 +44,7 @@ void main() {
 
       expect(result.documentId.path, 'Account');
       expect(result.documentId.itemId, 'wVdGK8TDXR');
-      expect(result.data['category'], 'direct mid');
+      expect(result.data['category'], 'updated5');
 
       // when
       final updateResponse = await dataProvider.update(
