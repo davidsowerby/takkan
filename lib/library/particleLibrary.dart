@@ -117,7 +117,7 @@ class ConnectorFactory {
     final binding =
         _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
     final converter = _converter(schema: fieldSchema, particleDataType: viewDataType);
-    final connector = ModelConnector(binding: binding, converter: converter);
+    final connector = ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
 

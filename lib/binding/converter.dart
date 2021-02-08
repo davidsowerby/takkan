@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/common/exceptions.dart';
-import 'package:validators/validators.dart';
+import 'package:precept_script/schema/field.dart';
+import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/schema/validation/validator.dart';
 
 /// Function class to read dropdown selection list from a data source
 abstract class SelectionReader {
@@ -18,9 +20,10 @@ abstract class SelectionReader {
 class ModelConnector<MODEL, VIEW> {
   final Binding<MODEL> binding;
   final ModelViewConverter<MODEL, VIEW> converter;
+  final PSchemaElement fieldSchema;
 
   ModelConnector(
-      {@required this.binding, this.converter = const PassThroughConverter()});
+      {@required this.binding, this.converter = const PassThroughConverter(), this.fieldSchema});
 
   /// It is generally better to keep the default settings of the Binding for consistency - using [readFromModel] is therefore
   /// preferred.  Use this method only if you specifically need to override the Binding settings
@@ -34,8 +37,8 @@ class ModelConnector<MODEL, VIEW> {
         createIfAbsent: createIfAbsent));
   }
 
-  String validate<VIEW>(VIEW inputData) {
-    return converter.validate(inputData);
+  String validate(VIEW inputData) {
+    return converter.validate(inputData, fieldSchema);
   }
 
   /// See also [readFromModelOverridingDefaults]
@@ -55,8 +58,16 @@ abstract class ModelViewConverter<MODEL, VIEW> {
 
   MODEL viewToModel(VIEW view);
 
-  String validate(VIEW inputData) {
-    return viewModelValidate(inputData);
+  /// Two stage validation.
+  /// - Conversion validation from Form input data, for example, is String input a valid Integer
+  /// - Model validation using [fieldSchema], for example isGreaterThan 3
+  ///
+  /// If conversion fails, returns the error message for that (model validation is not possible)
+  /// If conversion succeeds, return result of model validation
+  String validate(VIEW inputData,PField fieldSchema) {
+    final conversionValidation= viewModelValidate(inputData);
+    if (conversionValidation != null) return conversionValidation;
+    return fieldSchema.validate(viewToModel(inputData));
   }
 
   /// Makes sure that the conversion can happen:
@@ -141,7 +152,7 @@ class IntStringConverter extends ModelViewConverter<int, String> {
 
   @override
   String viewModelValidate(String inputData) {
-    return  (isInt(inputData)? null : ;
+    return  validateString(Validation.isInt,inputData);
   }
 }
 
@@ -160,8 +171,15 @@ class DoubleStringConverter extends ModelViewConverter<double, String> {
       return double.parse(view);
     }
   }
+
+  @override
+  String viewModelValidate(String inputData) {
+    return validateString(Validation.isDouble,inputData);
+  }
 }
 
+
+// TODO: Move timestamps to Firebase implmenetaion
 class TimestampDateConverter extends ModelViewConverter<Timestamp, DateTime> {
   @override
   DateTime modelToView(Timestamp model, {DateTime defaultValue}) {
@@ -173,6 +191,11 @@ class TimestampDateConverter extends ModelViewConverter<Timestamp, DateTime> {
   Timestamp viewToModel(DateTime view) {
     assert(view != null);
     return Timestamp.fromDate(view);
+  }
+
+  @override
+  String viewModelValidate(DateTime inputData) {
+    throw UnimplementedError();
   }
 }
 
@@ -187,6 +210,11 @@ class TimestampStringConverter extends ModelViewConverter<Timestamp, String> {
   Timestamp viewToModel(String view) {
     assert(view != null);
     return Timestamp.fromDate(DateFormat().parse(view));
+  }
+
+  @override
+  String viewModelValidate(String inputData) {
+throw UnimplementedError();
   }
 }
 
