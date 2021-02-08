@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/common/exceptions.dart';
+import 'package:validators/validators.dart';
 
 /// Function class to read dropdown selection list from a data source
 abstract class SelectionReader {
@@ -33,6 +34,10 @@ class ModelConnector<MODEL, VIEW> {
         createIfAbsent: createIfAbsent));
   }
 
+  String validate<VIEW>(VIEW inputData) {
+    return converter.validate(inputData);
+  }
+
   /// See also [readFromModelOverridingDefaults]
   VIEW readFromModel() {
     return converter.modelToView(binding.read());
@@ -49,6 +54,16 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   VIEW modelToView(MODEL model, {VIEW defaultValue});
 
   MODEL viewToModel(VIEW view);
+
+  String validate(VIEW inputData) {
+    return viewModelValidate(inputData);
+  }
+
+  /// Makes sure that the conversion can happen:
+  ///
+  /// Example: [IntStringConverter] will check the String only contains digits
+  /// returns null if no error, otherwise contains error message
+  String viewModelValidate(VIEW inputData);
 }
 
 class PassThroughConverter<T> extends ModelViewConverter<T, T> {
@@ -63,6 +78,12 @@ class PassThroughConverter<T> extends ModelViewConverter<T, T> {
   T viewToModel(T view) {
     return view;
   }
+
+  /// No conversion, no validation needed
+  @override
+  String viewModelValidate(T inputData) {
+    return null;
+  }
 }
 
 class StaticConnector extends ModelConnector<String, String> {
@@ -76,11 +97,12 @@ class StaticConnector extends ModelConnector<String, String> {
   }
 
   writeToModel(String value) {
-    throw ConfigurationException('Static converter only works from model to view');
+    throw ConfigurationException(
+        'Static converter only works from model to view');
   }
 }
 
-/// Converting back to the model rounds a double value
+/// Converting view back to the model rounds a double value
 class IntDoubleConverter extends ModelViewConverter<int, double> {
   const IntDoubleConverter();
 
@@ -92,6 +114,12 @@ class IntDoubleConverter extends ModelViewConverter<int, double> {
   @override
   int viewToModel(double view) {
     return view.toInt();
+  }
+
+  /// Any double can be converted back to an integer, although rounding will occur
+  @override
+  String viewModelValidate(double inputData) {
+    return null;
   }
 }
 
@@ -109,6 +137,11 @@ class IntStringConverter extends ModelViewConverter<int, String> {
     } else {
       return int.parse(view);
     }
+  }
+
+  @override
+  String viewModelValidate(String inputData) {
+    return  (isInt(inputData)? null : ;
   }
 }
 

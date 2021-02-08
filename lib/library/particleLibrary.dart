@@ -63,9 +63,9 @@ class ParticleLibrary {
   }
 
   Widget findParticle(DataBinding dataBinding, PPart config, bool read) {
-    Type particleDataType = _findDataType(config, read);
+    Type particleDataType = _findViewDataType(config, read);
     final connector = ConnectorFactory().buildConnector(
-        particleDataType: particleDataType, config: config, dataBinding: dataBinding);
+        viewDataType: particleDataType, config: config, dataBinding: dataBinding);
     return _createParticle(config, read, connector);
   }
 
@@ -74,7 +74,7 @@ class ParticleLibrary {
     return _createParticle(config, true, connector);
   }
 
-  Type _findDataType(PPart config, bool read) {
+  Type _findViewDataType(PPart config, bool read) {
     final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;
     switch (particleType) {
       case PText:
@@ -109,14 +109,14 @@ class ParticleLibrary {
 class ConnectorFactory {
   ModelConnector buildConnector({@required DataBinding dataBinding,
     @required PPart config,
-    @required Type particleDataType}) {
+    @required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
     final PDocument schema = dataBinding.schema;
     final PSchemaElement fieldSchema = schema.fields[config.property];
     assert(fieldSchema != null, "No schema found for property ${config.property}");
     final binding =
         _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
-    final converter = _converter(schema: fieldSchema, particleDataType: particleDataType);
+    final converter = _converter(schema: fieldSchema, particleDataType: viewDataType);
     final connector = ModelConnector(binding: binding, converter: converter);
     return connector;
   }

@@ -14,7 +14,8 @@ class TextBoxParticle extends StatelessWidget {
     final theme = Theme.of(context);
     return TextFormField(
       initialValue: connector.readFromModel(),
-      onSaved: (value) => connector.writeToModel(value),
+      validator: (inputData) => connector.validate(inputData),
+      onSaved: (inputData) => connector.writeToModel(inputData),
       decoration: InputDecoration(
         isDense: true,
         labelStyle: theme.textTheme.overline.apply(color: theme.primaryColor),
