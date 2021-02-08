@@ -23,8 +23,7 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
         json['dataProvider'] as Map<String, dynamic>),
     dataSource: PDataSourceConverter.fromJson(
         json['dataSource'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     tooltip: json['tooltip'] as String,
   );
 }

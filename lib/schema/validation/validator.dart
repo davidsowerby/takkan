@@ -9,16 +9,17 @@ validateString(Validation validation, String value) {
 
 String validationMessage(Validation validation, dynamic value, {List<dynamic> params = const []}) {
   final pattern = validationPattern(validation);
-  params.insert(0, value.toString());
   return interpolate(pattern,  params);
 }
 
 /// This is temporary, it should be a lookup from something sent by the server as part of the PScript
 String validationPattern(Validation validation) {
+  assert(validation!=null);
   switch (validation) {
     case Validation.isAlpha:
-      return '{0} must be all letters';
+      return 'must be all letters';
   }
+  return null; // unreachable
 }
 
 abstract class Validator<T> {
@@ -42,13 +43,17 @@ class StringValidator implements Validator<String> {
 
   String validate(String value) {
     final StringBuffer buf = StringBuffer();
+    int count=0;
     for (Validation validation in validations) {
       final bool isValid = validateString(validation, value);
       if (!isValid) {
         final message = validationMessage(validation, value);
-        buf.writeln(validationMessage);
+        if (count>0) buf.write(';');
+        buf.write(message);
+        count++;
       }
     }
+    return buf.toString();
   }
 }
 

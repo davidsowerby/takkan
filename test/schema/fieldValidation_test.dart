@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_script/schema/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 void main() {
-  group('StringValidator', () {
+  group('Unit test', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -11,16 +12,14 @@ void main() {
 
     tearDown(() {});
 
-    test('isAlpha', () {
+    test('output', () {
       // given
-      final StringValidator validator = StringValidator(validations: [Validation.isAlpha]);
-
+      final PString field = PString(validation: [Validation.isAlpha]);
       // when
 
       // then
 
-      expect(validator.validate('a'), '');
-      expect(validator.validate('-'), validationPattern(Validation.isAlpha));
+      expect(1, 0);
     });
   });
 }

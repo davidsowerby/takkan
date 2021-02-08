@@ -9,30 +9,81 @@ part of 'field.dart';
 PBoolean _$PBooleanFromJson(Map<String, dynamic> json) {
   return PBoolean(
     defaultValue: json['defaultValue'] as bool,
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PBooleanToJson(PBoolean instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue,
     };
+
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError('A value must be provided. Supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$ValidationEnumMap = {
+  Validation.isAlpha: 'isAlpha',
+};
 
 PInteger _$PIntegerFromJson(Map<String, dynamic> json) {
   return PInteger(
     defaultValue: json['defaultValue'] as int,
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PIntegerToJson(PInteger instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue,
     };
 
 PString _$PStringFromJson(Map<String, dynamic> json) {
   return PString(
     defaultValue: json['defaultValue'] as String,
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PStringToJson(PString instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue,
     };
 
@@ -41,26 +92,43 @@ PDate _$PDateFromJson(Map<String, dynamic> json) {
     defaultValue: json['defaultValue'] == null
         ? null
         : DateTime.parse(json['defaultValue'] as String),
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PDateToJson(PDate instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue?.toIso8601String(),
     };
 
 PPointer _$PPointerFromJson(Map<String, dynamic> json) {
-  return PPointer();
+  return PPointer(
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
+  );
 }
 
-Map<String, dynamic> _$PPointerToJson(PPointer instance) => <String, dynamic>{};
+Map<String, dynamic> _$PPointerToJson(PPointer instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
+    };
 
 PDouble _$PDoubleFromJson(Map<String, dynamic> json) {
   return PDouble(
     defaultValue: (json['defaultValue'] as num)?.toDouble(),
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PDoubleToJson(PDouble instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue,
     };
 
@@ -69,11 +137,16 @@ PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
     defaultValue: json['defaultValue'] == null
         ? null
         : GeoPosition.fromJson(json['defaultValue'] as Map<String, dynamic>),
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) =>
     <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue?.toJson(),
     };
 
@@ -82,10 +155,15 @@ PPostCode _$PPostCodeFromJson(Map<String, dynamic> json) {
     defaultValue: json['defaultValue'] == null
         ? null
         : PostCode.fromJson(json['defaultValue'] as Map<String, dynamic>),
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PPostCodeToJson(PPostCode instance) => <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue?.toJson(),
     };
 
@@ -94,10 +172,15 @@ PGeoLocation _$PGeoLocationFromJson(Map<String, dynamic> json) {
     defaultValue: json['defaultValue'] == null
         ? null
         : GeoLocation.fromJson(json['defaultValue'] as Map<String, dynamic>),
+    validation: (json['validation'] as List)
+        ?.map((e) => _$enumDecodeNullable(_$ValidationEnumMap, e))
+        ?.toList(),
   );
 }
 
 Map<String, dynamic> _$PGeoLocationToJson(PGeoLocation instance) =>
     <String, dynamic>{
+      'validation':
+          instance.validation?.map((e) => _$ValidationEnumMap[e])?.toList(),
       'defaultValue': instance.defaultValue?.toJson(),
     };
