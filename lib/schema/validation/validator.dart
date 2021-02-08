@@ -4,20 +4,26 @@ validateString(Validation validation, String value) {
   switch (validation) {
     case Validation.isAlpha:
       return isAlpha(value);
+    case Validation.isInt:
+      return isInt(value);
+      break;
   }
 }
 
-String validationMessage(Validation validation, dynamic value, {List<dynamic> params = const []}) {
+String validationMessage(Validation validation, dynamic value,
+    {List<dynamic> params = const []}) {
   final pattern = validationPattern(validation);
-  return interpolate(pattern,  params);
+  return interpolate(pattern, params);
 }
 
 /// This is temporary, it should be a lookup from something sent by the server as part of the PScript
 String validationPattern(Validation validation) {
-  assert(validation!=null);
+  assert(validation != null);
   switch (validation) {
     case Validation.isAlpha:
       return 'must be all letters';
+    case Validation.isInt:
+      return 'must be a whole number';
   }
   return null; // unreachable
 }
@@ -26,10 +32,10 @@ abstract class Validator<T> {
   String validate(T value);
 }
 
-String interpolate(String pattern,List<dynamic> params) {
-  int count=0;
+String interpolate(String pattern, List<dynamic> params) {
+  int count = 0;
   String result = pattern;
-  for (var param in params){
+  for (var param in params) {
     result = pattern.replaceFirst('{$count}', param.toString());
     count++;
   }
@@ -43,12 +49,12 @@ class StringValidator implements Validator<String> {
 
   String validate(String value) {
     final StringBuffer buf = StringBuffer();
-    int count=0;
+    int count = 0;
     for (Validation validation in validations) {
       final bool isValid = validateString(validation, value);
       if (!isValid) {
         final message = validationMessage(validation, value);
-        if (count>0) buf.write(';');
+        if (count > 0) buf.write(';');
         buf.write(message);
         count++;
       }
@@ -57,4 +63,4 @@ class StringValidator implements Validator<String> {
   }
 }
 
-enum Validation { isAlpha }
+enum Validation { isAlpha, isInt }
