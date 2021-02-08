@@ -15,6 +15,8 @@ class PListBoolean extends PListField {
   factory PListBoolean.fromJson(Map<String, dynamic> json) => _$PListBooleanFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListBooleanToJson(this);
+
+  Type get modelType=> List;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -27,6 +29,9 @@ class PListString extends PListField {
       _$PListStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListStringToJson(this);
+
+  @override
+  Type get modelType => String;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -40,4 +45,7 @@ class PGeoRegion extends PListField {
       _$PGeoRegionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGeoRegionToJson(this);
+
+  @override
+  Type get modelType => GeoPosition;
 }

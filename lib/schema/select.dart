@@ -15,6 +15,9 @@ class PSelectBoolean extends PSelectField {
       _$PSelectBooleanFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSelectBooleanToJson(this);
+
+  @override
+  Type get modelType => bool;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -28,4 +31,7 @@ class PSelectString extends PSelectField {
       _$PSelectStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSelectStringToJson(this);
+
+  @override
+  Type get modelType => String;
 }

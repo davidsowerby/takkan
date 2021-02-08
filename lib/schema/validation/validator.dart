@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:precept_script/schema/field.dart';
 import 'package:validators/validators.dart';
 
 validateString(Validation validation, String value) {
@@ -6,30 +8,28 @@ validateString(Validation validation, String value) {
       return isAlpha(value);
     case Validation.isInt:
       return isInt(value);
-      break;
+    case Validation.isDouble:
+      return isFloat(value);
   }
 }
 
-String validationMessage(Validation validation, dynamic value,
-    {List<dynamic> params = const []}) {
-  final pattern = validationPattern(validation);
+String validationMessage(Validation validation, dynamic value, {List<dynamic> params = const []}) {
+  final pattern = validationFailPattern(validation);
   return interpolate(pattern, params);
 }
 
 /// This is temporary, it should be a lookup from something sent by the server as part of the PScript
-String validationPattern(Validation validation) {
+String validationFailPattern(Validation validation) {
   assert(validation != null);
   switch (validation) {
     case Validation.isAlpha:
       return 'must be all letters';
     case Validation.isInt:
       return 'must be a whole number';
+    case Validation.isDouble:
+      return 'must be a number';
   }
   return null; // unreachable
-}
-
-abstract class Validator<T> {
-  String validate(T value);
 }
 
 String interpolate(String pattern, List<dynamic> params) {
@@ -42,16 +42,16 @@ String interpolate(String pattern, List<dynamic> params) {
   return result;
 }
 
-class StringValidator implements Validator<String> {
-  final List<Validation> validations;
+class FieldValidator<MODEL> {
+  final PField field;
 
-  const StringValidator({this.validations = const []});
+  const FieldValidator({@required this.field}) : assert(field != null);
 
-  String validate(String value) {
+  String validate(MODEL value) {
     final StringBuffer buf = StringBuffer();
     int count = 0;
-    for (Validation validation in validations) {
-      final bool isValid = validateString(validation, value);
+    for (Validation validation in field.validations) {
+      final bool isValid = callValidation(validation, value);
       if (!isValid) {
         final message = validationMessage(validation, value);
         if (count > 0) buf.write(';');
@@ -61,6 +61,17 @@ class StringValidator implements Validator<String> {
     }
     return buf.toString();
   }
+
+  bool callValidation(Validation validation, dynamic value) {
+    switch (field.modelType) {
+      case String:
+        return validateString(validation, value);
+      default:
+        throw UnimplementedError();
+    }
+  }
 }
 
-enum Validation { isAlpha, isInt }
+class ListValidator {}
+
+enum Validation { isAlpha, isInt, isDouble }

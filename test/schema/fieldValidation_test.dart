@@ -14,7 +14,7 @@ void main() {
 
     test('output', () {
       // given
-      final PString field = PString(validation: [Validation.isAlpha]);
+      final PString field = PString(validations: [Validation.isAlpha]);
       // when
 
       // then
