@@ -16,16 +16,16 @@ class Panel extends StatefulWidget {
         assert(parentBinding != null);
 
   @override
-  _PanelState createState() => _PanelState();
+  PanelState createState() => PanelState();
 }
 
-class _PanelState extends State<Panel> with ContentBuilder implements ContentState {
+class PanelState extends State<Panel> with ContentBuilder implements ContentState {
   bool expanded;
   DataSource dataSource;
   DataBinding dataBinding;
   DataProvider dataProvider;
 
-  PCommon get config => widget.config;
+  PPanel get config => widget.config;
 
   @override
   void initState() {
@@ -36,6 +36,7 @@ class _PanelState extends State<Panel> with ContentBuilder implements ContentSta
     }
     dataSource = DataSource(config);
     dataBinding = widget.parentBinding.child(config, widget.parentBinding, dataSource);
+    expanded=config.openExpanded;
   }
 
   _onConfigLoaded() {

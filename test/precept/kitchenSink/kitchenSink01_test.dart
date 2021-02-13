@@ -49,6 +49,7 @@ final PScript kitchenSink01 = PScript(
                 backend: PMockDataProvider(instanceName: 'mock'),
                 dataSource: PGet(documentId: DocumentId(path: 'Account', itemId: 'objectId1')),
                 controlEdit: ControlEdit.thisOnly,
+                property:'',
                 content: [
                   PPart(
                     property: 'firstName',

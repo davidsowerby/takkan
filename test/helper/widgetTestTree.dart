@@ -57,6 +57,12 @@ class WidgetTestTree {
     }
   }
 
+  Widget panelWidget({panelIndex=0}){
+    final key=_panelIndexes.keys.toList()[panelIndex];
+    final widgetIndex=_panelIndexes[key];
+    return widgets[widgetIndex];
+  }
+
   int _upFromElement(String id, bool Function(Widget) typeTest) {
     int index = _allIndexes[id] - 1;
     while (index >= 0) {
