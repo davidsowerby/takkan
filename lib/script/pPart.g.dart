@@ -94,7 +94,7 @@ const _$IsStaticEnumMap = {
 };
 
 const _$ControlEditEnumMap = {
-  ControlEdit.notSetAtThisLevel: 'notSetAtThisLevel',
+  ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
   ControlEdit.thisAndBelow: 'thisAndBelow',
   ControlEdit.pagesOnly: 'pagesOnly',

@@ -69,7 +69,7 @@ const _$IsStaticEnumMap = {
 };
 
 const _$ControlEditEnumMap = {
-  ControlEdit.notSetAtThisLevel: 'notSetAtThisLevel',
+  ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
   ControlEdit.thisAndBelow: 'thisAndBelow',
   ControlEdit.pagesOnly: 'pagesOnly',
@@ -161,6 +161,7 @@ Map<String, dynamic> _$PPageToJson(PPage instance) {
 
 PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   return PPanel(
+    openExpanded: json['openExpanded'] as bool,
     property: json['property'] as String,
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
@@ -197,6 +198,7 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) {
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['caption'] = instance.caption;
   val['content'] = PElementListConverter.toJson(instance.content);
+  val['openExpanded'] = instance.openExpanded;
   val['scrollable'] = instance.scrollable;
   val['help'] = instance.help?.toJson();
   val['property'] = instance.property;
@@ -208,7 +210,6 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) {
 PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
   return PPanelHeading(
     expandable: json['expandable'] as bool,
-    openExpanded: json['openExpanded'] as bool,
     canEdit: json['canEdit'] as bool,
     help: json['help'] == null
         ? null
@@ -222,7 +223,6 @@ PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
     <String, dynamic>{
       'expandable': instance.expandable,
-      'openExpanded': instance.openExpanded,
       'canEdit': instance.canEdit,
       'help': instance.help?.toJson(),
       'style': instance.style?.toJson(),

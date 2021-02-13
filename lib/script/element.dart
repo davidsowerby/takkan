@@ -1,9 +1,9 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -19,7 +19,7 @@ class PSubContent extends PContent {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   }) : super(
           caption: caption,
@@ -36,16 +36,50 @@ class PSubContent extends PContent {
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes) {
-      if (dataSource == null) {
-        messages.add(ValidationMessage(
-            item: this, msg: "must either be static or have a dataSource defined"));
+      if (property == null) {
+        messages.add(
+          ValidationMessage(
+            item: this,
+            msg: 'is not static, and must therefore declare a property (which can be an empty String)',
+          ),
+        );
       }
+      if (!hasEditControl && !(inheritedEditControl)) {
+        messages.add(
+          ValidationMessage(
+            item: this,
+            msg: 'is not static, but there is no editControl set in this or its parent chain',
+          ),
+        );
+      }
+      if (dataSource == null) {
+        messages.add(
+          ValidationMessage(
+            item: this,
+            msg: "must either be static or have a dataSource defined",
+          ),
+        );
+      }
+
     }
     if (dataSource != null) {
       if (dataProvider == null) {
-        messages.add(ValidationMessage(
+        messages.add(
+          ValidationMessage(
             item: this,
-            msg: 'has declared a data source> it must have a backend available as well'));
+            msg: 'has declared a data source, but it must have a dataProvider available as well',
+          ),
+        );
+      }
+    }
+    if (dataProvider != null) {
+      if (schema == null) {
+        messages.add(
+          ValidationMessage(
+            item: this,
+            msg: 'has declared a Provider, but it must have a schema as well',
+          ),
+        );
       }
     }
   }

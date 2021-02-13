@@ -80,7 +80,7 @@ void main() {
       expect(part.isStatic, IsStatic.yes);
       expect(part.dataProvider, isNotNull);
       expect(part.dataSource, isNotNull);
-      expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(part.controlEdit, ControlEdit.inherited);
       expect(part.schema, schema);
       expect(part.dataSourceIsDeclared, false);
       expect(part.backendIsDeclared, false);
@@ -118,21 +118,21 @@ void main() {
       expect(page.isStatic, IsStatic.inherited);
       expect(page.dataProvider, isNull);
       expect(page.dataSource, isNull);
-      expect(page.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(page.controlEdit, ControlEdit.inherited);
       expect(page.dataSourceIsDeclared, false);
       expect(page.backendIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
       expect(panel.dataProvider, isNull);
       expect(panel.dataSource, isNull);
-      expect(panel.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(panel.controlEdit, ControlEdit.inherited);
       expect(panel.dataSourceIsDeclared, false);
       expect(panel.backendIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
       expect(part.dataProvider, isNull);
       expect(part.dataSource, isNull);
-      expect(part.controlEdit, ControlEdit.notSetAtThisLevel);
+      expect(part.controlEdit, ControlEdit.inherited);
       expect(part.dataSourceIsDeclared, false);
       expect(part.backendIsDeclared, false);
     });

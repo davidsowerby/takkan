@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
@@ -12,6 +11,7 @@ import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/particle/pTextBox.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -56,7 +56,7 @@ class PPart extends PSubContent {
       PQuery dataSource,
       PPanelStyle panelStyle,
       WritingStyle writingStyle,
-      ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+      ControlEdit controlEdit = ControlEdit.inherited,
       String id,
       this.tooltip})
       : super(

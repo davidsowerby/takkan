@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
@@ -14,6 +14,7 @@ import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/preceptItem.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/style/style.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -41,7 +42,7 @@ class PScript extends PCommon {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,
   }) : super(
           id: id,
@@ -79,7 +80,7 @@ class PScript extends PCommon {
   /// Validates the structure and content of the model
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
-  List<ValidationMessage> validate({bool throwOnFail = false, bool useCaptionsAsIds = true}) {
+  List<ValidationMessage> validate({bool throwOnFail = false, bool useCaptionsAsIds = true, bool logFailures=true}) {
      init(useCaptionsAsIds: useCaptionsAsIds);
     _validationMessages = List();
     doValidate(_validationMessages);
@@ -96,9 +97,21 @@ class PScript extends PCommon {
         entry.value.doValidate(_validationMessages);
       }
     }
-    if (throwOnFail && _validationMessages.isNotEmpty) {
-      throw PreceptException(_validationMessages.toString());
+
+    if (logFailures || throwOnFail){
+      final StringBuffer buf=StringBuffer();
+      for (ValidationMessage message in _validationMessages){
+        buf.writeln(message.toString());
+      }
+      if(_validationMessages.isEmpty){
+        buf.writeln('No validation errors found in PScript $name');
+      }
+      if (throwOnFail && _validationMessages.isNotEmpty) {
+        throw PreceptException(buf.toString());
+      }else{
+      logType(this.runtimeType).i(buf.toString());}
     }
+
     return _validationMessages;
   }
 
@@ -116,7 +129,7 @@ class PScript extends PCommon {
   @override
   doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(null, 0);
-    _setupControlEdit(ControlEdit.notSetAtThisLevel);
+    _setupControlEdit(ControlEdit.inherited);
     int i = 0;
     for (var entry in routes.entries) {
       entry.value._path = entry.key;
@@ -162,7 +175,7 @@ class PRoute extends PCommon {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
@@ -220,7 +233,7 @@ class PPage extends PContent {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
     @required String title,
@@ -319,6 +332,7 @@ class PPanel extends PSubContent {
   final List<PSubContent> content;
   @JsonKey(ignore: true)
   final PPanelHeading _heading;
+  final bool openExpanded;
   final bool scrollable;
   final PHelp help;
   final String property;
@@ -329,6 +343,7 @@ class PPanel extends PSubContent {
   Map<String, dynamic> toJson() => _$PPanelToJson(this);
 
   PPanel({
+    this.openExpanded=true,
     this.property,
     this.content = const [],
     PPanelHeading heading,
@@ -341,7 +356,7 @@ class PPanel extends PSubContent {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   })  : _heading = heading ?? PPanelHeading(),
         super(
@@ -392,14 +407,12 @@ class PPanel extends PSubContent {
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPanelHeading extends PreceptItem {
   final bool expandable;
-  final bool openExpanded;
   final bool canEdit;
   final PHelp help;
   final PHeadingStyle style;
 
   PPanelHeading({
     this.expandable = true,
-    this.openExpanded = true,
     this.canEdit = false,
     this.help,
     this.style = const PHeadingStyle(),
@@ -419,10 +432,10 @@ enum IsStatic { yes, no, inherited }
 /// [partsOnly] edit only at [Part] level (can be set higher up the hierarchy, even at [PScript])
 /// [panelsOnly] all panels from this level down (can be set higher up the hierarchy, even at [PScript])
 /// [thisOnly] enables edit for this instance only, overriding any inherited value
-/// [noEdit] cancels anything defined above (effectively the opposite of [thisOnly])
-/// [notSetAtThisLevel] accepts inherited value
+/// [noEdit] negates anything defined above
+/// [inherited] accepts inherited value
 enum ControlEdit {
-  notSetAtThisLevel,
+  inherited,
   thisOnly,
   thisAndBelow,
   pagesOnly,
@@ -492,7 +505,7 @@ class PCommon extends PreceptItem {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    this.controlEdit = ControlEdit.notSetAtThisLevel,
+    this.controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
   })  : _schema = schema,
@@ -506,6 +519,16 @@ class PCommon extends PreceptItem {
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
+  bool get inheritedEditControl {
+    PCommon p=parent;
+    while (p !=null){
+      if (p.hasEditControl){
+        return true;
+      }
+      p=p.parent;
+    }
+    return false;
+  }
 
   @JsonKey(nullable: true, includeIfNull: false, fromJson: PDataProviderConverter.fromJson, toJson: PDataProviderConverter.toJson)
   PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
@@ -538,9 +561,9 @@ class PCommon extends PreceptItem {
     if (parent != null) {
       _schema = p._schema;
     }
-    ControlEdit inherited = ControlEdit.notSetAtThisLevel;
+    ControlEdit inherited = ControlEdit.inherited;
     while (p != null) {
-      if (p.controlEdit != ControlEdit.notSetAtThisLevel) {
+      if (p.controlEdit != ControlEdit.inherited) {
         inherited = p.controlEdit;
         break;
       }
@@ -626,7 +649,7 @@ class PContent extends PCommon {
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
-    ControlEdit controlEdit = ControlEdit.notSetAtThisLevel,
+    ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
   }) : super(
