@@ -10,10 +10,14 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/schema/field.dart';
-import 'package:precept_script/schema/list.dart';
+import 'package:precept_script/schema/field/date.dart';
+import 'package:precept_script/schema/field/double.dart';
+import 'package:precept_script/schema/field/geoPosition.dart';
+import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/pointer.dart';
+import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/select.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pText.dart';
@@ -75,11 +79,11 @@ final validationSchema = PSchema(
           },
         ),
         'address': PPointer(),
-        'notifications': PSelectBoolean(),
+        // 'notifications': PSelectBoolean(),
         'linkedAccounts': PPointer(),
         'joinDate': PDate(),
         'average': PDouble(),
-        'colourChoices': PSelectString(),
+        // 'colourChoices': PSelectString(),
         'successRate': PDouble(),
       },
     ),
@@ -87,9 +91,9 @@ final validationSchema = PSchema(
       fields: {
         'firstLine': PString(),
         'secondLine': PString(),
-        'country': PSelectString(),
+        // 'country': PSelectString(),
         'location': PGeoPosition(),
-        'region': PGeoRegion(),
+        // 'region': PGeoRegion(),
         'postCode': PPostCode(),
       },
     ),

@@ -1,9 +1,12 @@
 import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/converter.dart';
+import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/particle/particle.dart';
-import 'package:precept_script/schema/field.dart';
+import 'package:precept_script/data/converter/converter.dart';
+import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/pPart.dart';
 

@@ -62,7 +62,6 @@ class DataSource {
   PQuery get query => _query;
 
 
-
   /// Stores a key for a Form.
   /// Forms are 'flushed' to the backing data by [flushFormsToModel]
   addForm(GlobalKey<FormState> formKey) {
@@ -73,20 +72,32 @@ class DataSource {
   /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument].
   /// Keys are added through [addForm], this method 'saves' the [Form] data -
   /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
-  flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
+  ///
+  /// Returns true if validation is successful, and form data is saved back [TemporaryDocument]
+  bool flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
-        key.currentState.save();
-        logType(this.runtimeType).d("Form saved for $key");
+        final validated = key.currentState.validate();
+        if (validated) {
+          key.currentState.save();
+          logType(this.runtimeType).d("Form saved for $key");
+          return true;
+        } else {
+          logType(this.runtimeType).d("Form not saved, it has validation errors");
+          return false;
+        }
       }
     }
     // TODO: purge those with null current state
   }
 
   Future<bool> persist(PCommon config) async {
-    flushFormsToModel(temporaryDocument, formKeys);
-    await _doPersist(config);
-    return true;
+    final formValidatedAndFlushed = flushFormsToModel(temporaryDocument, formKeys);
+    if (formValidatedAndFlushed) {
+      await _doPersist(config);
+      return true;
+    }
+    return false;
   }
 
   _doPersist(PCommon config) async {

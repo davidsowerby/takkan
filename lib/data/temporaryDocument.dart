@@ -189,7 +189,6 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 //  /// defined metaData
 //  /// If no [documentType] is specified either by parameter or previous document content, a default of [DocumentType.standard]
 //  /// is used.
-//  /// TODO this is incomplete - only standard has been fully implemented
 //  void prepareMetaData(UserState user, {DocumentType documentType = DocumentType.standard}) {
 //    assert(documentType != null);
 //    if (metaData == null || metaData.isEmpty) {
@@ -217,7 +216,6 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 //        "${metaData[TemporaryDocument.updatedByUserIdProperty]}:$dateStr";
 //        break;
 //      case DocumentType.formal:
-//      // TODO: Handle this case.
 //        break;
 //    }
 //  }

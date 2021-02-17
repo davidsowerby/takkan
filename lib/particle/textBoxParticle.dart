@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/binding/converter.dart';
+import 'package:precept_client/binding/connector.dart';
 import 'package:precept_script/script/pPart.dart';
 
 class TextBoxParticle extends StatelessWidget {
@@ -14,7 +14,7 @@ class TextBoxParticle extends StatelessWidget {
     final theme = Theme.of(context);
     return TextFormField(
       initialValue: connector.readFromModel(),
-      validator: (inputData) => connector.validate(inputData),
+      validator: (inputData) => connector.validate(inputData, config.script),
       onSaved: (inputData) => connector.writeToModel(inputData),
       decoration: InputDecoration(
         isDense: true,

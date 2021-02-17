@@ -6,7 +6,7 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
-import 'package:precept_script/schema/field.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/pPart.dart';

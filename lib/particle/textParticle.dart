@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/binding/converter.dart';
+import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_client/widget/caption.dart';

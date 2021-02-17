@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/converter.dart';
+import 'package:precept_client/binding/connector.dart';
 
 /// If specified, [onChange] is called after the widget state has been updated to the model
 class CheckboxStateful extends StatefulWidget {
