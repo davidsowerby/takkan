@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/converter/converter.dart';
 import 'package:precept_script/script/script.dart';
 
-part 'conversionPattern.g.dart';
+part 'conversionErrorMessages.g.dart';
 
 /// Holds error message patterns for [ModelViewConverter] implementations
 /// This will become part of [PScript]

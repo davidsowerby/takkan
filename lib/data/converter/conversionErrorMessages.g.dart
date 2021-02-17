@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'patterns.dart';
+part of 'conversionErrorMessages.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ValidationErrorMessages _$ValidationErrorMessagesFromJson(
+ConversionErrorMessages _$ConversionErrorMessagesFromJson(
     Map<String, dynamic> json) {
-  return ValidationErrorMessages(
-    (json['typePatterns'] as Map<String, dynamic>)?.map(
+  return ConversionErrorMessages(
+    (json['patterns'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
   );
 }
 
-Map<String, dynamic> _$ValidationErrorMessagesToJson(
-        ValidationErrorMessages instance) =>
+Map<String, dynamic> _$ConversionErrorMessagesToJson(
+        ConversionErrorMessages instance) =>
     <String, dynamic>{
-      'typePatterns': instance.typePatterns,
+      'patterns': instance.patterns,
     };

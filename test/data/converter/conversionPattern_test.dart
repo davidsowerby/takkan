@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_script/data/converter/conversionPattern.dart';
+import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 
 void main() {
   group('ConversionPattern', () {
