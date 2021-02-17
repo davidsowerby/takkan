@@ -50,7 +50,7 @@ class PreceptItem {
 
   PreceptItem get parent => _parent;
 
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
     _parent = parent;
     _index = index;
 

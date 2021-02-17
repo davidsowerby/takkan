@@ -1,10 +1,11 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/documentId.dart';
+import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import '../fixtures.dart';
 
@@ -22,11 +23,11 @@ void main() {
     tearDown(() {});
 
     group('PScript validation', () {
-      test('Insufficient components', ()  {
+      test('Insufficient components', () {
         // given
         final script1 = PScript();
         // when
-        final result =  script1.validate();
+        final result = script1.validate();
         // then
 
         expect(result.length, 1);
@@ -36,7 +37,7 @@ void main() {
   });
 
   group('PRoute validation', () {
-    test('Must have path and page', ()  {
+    test('Must have path and page', () {
       // given
       final script = PScript(
         name: 'test',
@@ -45,7 +46,7 @@ void main() {
         },
       ); // ignore: missing_required_param
       // when
-      final messages =  script.validate();
+      final messages = script.validate();
       // then
 
       expect(messages.length, 3);
@@ -56,7 +57,7 @@ void main() {
   });
 
   group('PPage validation', () {
-    test('Must have pageType and title', ()  {
+    test('Must have pageType and title', () {
       // given
       final component = PScript(
         isStatic: IsStatic.yes,
@@ -68,7 +69,7 @@ void main() {
       ); // ignore: missing_required_param
 
       // when
-      final messages =  component.validate();
+      final messages = component.validate();
       // then
 
       expect(messages.length, 2);
@@ -76,7 +77,7 @@ void main() {
       expect(messages[1].toString(), 'PPage : Script:0./home.Page:0 : must define a pageType');
     });
 
-    test('No errors', ()  {
+    test('No errors', () {
       // given
       final component = PScript(
         dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
@@ -93,7 +94,7 @@ void main() {
         },
       );
       // when
-      final messages =  component.validate();
+      final messages = component.validate();
       // then
 
       expect(messages.length, 0);
@@ -101,35 +102,38 @@ void main() {
   });
 
   group('PPanel validation', () {
-    test('No errors', ()  {
+    test('No errors', () {
       // given
-      final component =
-          PScript(dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test), routes: {
-        "/home": PRoute(
-          page: PPage(
-            pageType: "mine",
-            title: "Wiggly",
-            dataSource: PGet(
-              // ignore: missing_required_param
-              documentId: DocumentId(), // ignore: missing_required_param
-            ),
-            content: [PPanel()],
-          ),
-        )
-      });
+      final component = PScript(
+          schema: PSchema(),
+          dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
+          routes: {
+            "/home": PRoute(
+              page: PPage(
+                pageType: "mine",
+                title: "Wiggly",
+                dataSource: PGet(
+                  // ignore: missing_required_param
+                  documentId: DocumentId(), // ignore: missing_required_param
+                ),
+                content: [
+                  PPanel(property: ''),
+                ],
+              ),
+            )
+          });
       // when
-      final messages =  component.validate();
+      final messages = component.validate();
       // then
 
       expect(messages.length, 0);
     });
 
-    test('any non-static PPanel must be able to access DataSource', ()  {
+    test('any non-static PPanel must be able to access DataSource', () {
       // given
-      final withoutDataSourceOrBackend = PScript(
+      final withoutDataSourceOrDataProvider = PScript(
         routes: {
           "/home": PRoute(
-            dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
@@ -152,7 +156,7 @@ void main() {
         },
       );
 
-      final withDataSourceAndBackend = PScript(
+      final withDataSourceAndProvider = PScript(
         dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         // ignore: missing_required_param
 
@@ -172,18 +176,25 @@ void main() {
       );
 
       // when
-      final withoutDataSourceOrBackendResults =  withoutDataSourceOrBackend.validate();
-      final withoutDataSourceResults =  withoutDataSource.validate();
-      final withDataSourceAndBackendResults =  withDataSourceAndBackend.validate();
+      final withoutDataSourceOrProviderResults = withoutDataSourceOrDataProvider.validate().map((e) => e.toString());
+      final withoutDataSourceResults = withoutDataSource.validate().map((e) => e.toString());
+      final withDataSourceAndProviderResults = withDataSourceAndProvider.validate().map((e) => e.toString());
       // then
 
-      expect(withoutDataSourceOrBackendResults.length, 1);
-      expect(withoutDataSourceOrBackendResults[0].toString(),
-          'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined');
-      expect(withoutDataSourceResults.length, 1);
-      expect(withoutDataSourceResults[0].toString(),
-          'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined');
-      expect(withDataSourceAndBackendResults.length, 0);
+      expect(withoutDataSourceOrProviderResults, [
+        'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined',
+      ]);
+      expect(withoutDataSourceResults,
+          [
+            'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+            'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined',
+            'PPanel : Script:0./home.Wiggly.panel1 : has declared a Provider, but it must have a schema as well'
+          ]);
+      expect(withDataSourceAndProviderResults, [
+        'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : Script:0./home.Wiggly.panel1 : has declared a Provider, but it must have a schema as well',
+      ]);
     });
   });
 }

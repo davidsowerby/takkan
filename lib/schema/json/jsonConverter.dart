@@ -1,10 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/field.dart';
-import 'package:precept_script/schema/list.dart';
+import 'package:precept_script/schema/field/boolean.dart';
+import 'package:precept_script/schema/field/date.dart';
+import 'package:precept_script/schema/field/double.dart';
+import 'package:precept_script/schema/field/geoLocation.dart';
+import 'package:precept_script/schema/field/geoPosition.dart';
+import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/pointer.dart';
+import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/select.dart';
 
 class PSchemaElementMapConverter
     implements JsonConverter<Map<String, PSchemaElement>, Map<String, dynamic>> {
@@ -55,8 +61,8 @@ class PSchemaElementConverter implements JsonConverter<PSchemaElement, Map<Strin
         return PDouble.fromJson(json);
       case 'PGeoPosition':
         return PGeoPosition.fromJson(json);
-      case 'PGeoRegion':
-        return PGeoRegion.fromJson(json);
+      // case 'PGeoRegion':
+      //   return PGeoRegion.fromJson(json);
       case 'PGeoRegion':
         return PGeoLocation.fromJson(json);
         case 'PPointer':
@@ -64,15 +70,15 @@ class PSchemaElementConverter implements JsonConverter<PSchemaElement, Map<Strin
         case 'PPostCode':
         return PPostCode.fromJson(json);
 
-      case 'PListBoolean':
-        return PListBoolean.fromJson(json);
+      // case 'PListBoolean':
+      //   return PListBoolean.fromJson(json);
       case 'PListString':
         return PListString.fromJson(json);
 
-      case 'PSelectBoolean':
-        return PSelectBoolean.fromJson(json);
-      case 'PSelectString':
-        return PSelectString.fromJson(json);
+      // case 'PSelectBoolean':
+      //   return PSelectBoolean.fromJson(json);
+      // case 'PSelectString':
+      //   return PSelectString.fromJson(json);
 
       default:
         final msg = "SchemaElement type $elementType not recognised";

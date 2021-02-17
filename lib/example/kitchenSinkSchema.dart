@@ -1,17 +1,25 @@
-
-import 'package:precept_script/schema/field.dart';
-import 'package:precept_script/schema/list.dart';
+import 'package:precept_script/schema/field/date.dart';
+import 'package:precept_script/schema/field/double.dart';
+import 'package:precept_script/schema/field/geoPosition.dart';
+import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/pointer.dart';
+import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/select.dart';
 
 final kitchenSinkSchema = PSchema(
   name: 'kitchenSink',
-  documents:  {
+  documents: {
     'Account': PDocument(
       fields: {
         'objectId': PString(),
-        'accountNumber':PString(),
-        'category': PString(),
+        'accountNumber': PString(
+
+        ),
+        'category': PString(         validations: [
+          StringValidation(method: ValidateString.isLongerThan, param: 2),
+          StringValidation(method: ValidateString.isShorterThan, param: 5),
+        ],),
         'recordDate': PDate(),
         'customer': PDocument(
           fields: {
@@ -21,11 +29,11 @@ final kitchenSinkSchema = PSchema(
           },
         ),
         'address': PPointer(),
-        'notifications': PSelectBoolean(),
+        // 'notifications': PSelectBoolean(),
         'linkedAccounts': PPointer(),
         'joinDate': PDate(),
         'average': PDouble(),
-        'colourChoices' : PSelectString(),
+        // 'colourChoices': PSelectString(),
         'successRate': PDouble(),
       },
     ),
@@ -33,9 +41,9 @@ final kitchenSinkSchema = PSchema(
       fields: {
         'firstLine': PString(),
         'secondLine': PString(),
-        'country': PSelectString(),
-        'location':PGeoPosition(),
-        'region': PGeoRegion(),
+        // 'country': PSelectString(),
+        'location': PGeoPosition(),
+        // 'region': PGeoRegion(),
         'postCode': PPostCode(),
       },
     ),

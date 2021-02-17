@@ -68,8 +68,8 @@ class PRestDataProvider extends PDataProvider {
   Map<String, String> get headers => {};
 
 
-  doInit(PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
-     super.doInit(parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
+     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
     loadConfig();
   }
 
