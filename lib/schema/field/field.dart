@@ -1,3 +1,4 @@
+import 'package:precept_script/common/interpolate.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -22,7 +23,7 @@ abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement
     for (VAL validation in validations) {
       bool failedValidation=!doValidation(validation, value);
       if(failedValidation){
-        String errorMsg =pScript.validationErrorMessages.find(validation.method);
+        String errorMsg =pScript.validationErrorMessages.find(validation);
         if (errorMsg==null){
           errorMsg='error message not defined for ${validation.method}';
           logType(this.runtimeType).e(errorMsg);
@@ -35,13 +36,5 @@ abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement
 
   bool doValidation(VAL validation, MODEL value);
 
-  String interpolate(String pattern, List<dynamic> params) {
-    int count = 0;
-    String result = pattern;
-    for (var param in params) {
-      result = pattern.replaceFirst('{$count}', param.toString());
-      count++;
-    }
-    return result;
-  }
+
 }

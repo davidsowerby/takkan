@@ -39,7 +39,7 @@ class PScript extends PCommon {
 
   PScript({
      this.conversionErrorMessages=const ConversionErrorMessages(defaultConversionPatterns),
-    this.validationErrorMessages=const ValidationErrorMessages(defaultValidationPatterns),
+    this.validationErrorMessages=const ValidationErrorMessages(defaultValidationErrorMessages),
     this.routes = const {},
     this.name,
     PSchema schema,

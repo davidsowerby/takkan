@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
+import 'package:precept_script/schema/validation/validator.dart';
 
 part 'validationErrorMessages.g.dart';
 
@@ -18,13 +19,12 @@ class ValidationErrorMessages {
 
   Map<String, dynamic> toJson() => _$ValidationErrorMessagesToJson(this);
 
-  /// Unfortunately we cannot make this type safe, but [key] needs to be an enum constant such as [ValidateInteger.isGreaterThan]
-  String find(dynamic key){
-    return typePatterns[key.toString()];
+  String find(ModelValidation validation){
+    return typePatterns[validation.method];
   }
 }
 
-const Map<dynamic, String> defaultValidationPatterns = const {
+const Map<dynamic, String> defaultValidationErrorMessages = const {
   ValidateInteger.isGreaterThan: 'must be greater than {0}',
   ValidateInteger.isLessThan: 'must be less than {0}',
   ValidateString.isLongerThan: 'must be more than {0} characters',
