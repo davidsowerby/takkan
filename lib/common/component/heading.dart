@@ -2,7 +2,9 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/action/editSave.dart';
+import 'package:precept_client/common/component/editSaveCancel.dart';
 import 'package:precept_client/common/locale.dart';
+import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
@@ -13,9 +15,10 @@ import 'package:precept_script/script/style/style.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
-/// - actions are supported for Edit, Save and Cancel, but an [EditSaveCancel] instance should be added if required
 /// - [actionButtons], if present, are placed before the 'expand' widget
-/// - [showEditIcon] can be set to false to override the default situation of showing the edit icon when [EditState.canEdit] is true.
+/// - [showEditSave] can be set to false to override the default behaviour of showing the edit/save icons.
+/// These icons are supplied by a [EditSaveCancel] widget when [EditState.canEdit] is true.
+/// - [dataSource] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
 class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
@@ -29,13 +32,15 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onAfterCancelEdit;
   final List<Function(BuildContext)> onBeforeSave;
   final List<Function(BuildContext)> onAfterSave;
-  final bool showEditIcon;
+  final bool showEditSave;
   final PPanelHeading config;
+  final DataSource dataSource;
 
   const Heading({
     Key key,
     @required this.config,
     this.headingText,
+    this.dataSource,
     this.help,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
@@ -47,7 +52,7 @@ class Heading extends StatefulWidget {
     this.onAfterCancelEdit = const [],
     this.onBeforeSave = const [],
     this.onAfterSave = const [],
-    this.showEditIcon = true,
+    this.showEditSave = true,
   })  : assert(expandedContent != null),
         super(key: key);
 
@@ -75,9 +80,7 @@ class _HeadingState extends State<Heading> with Interpolator {
     bool editMode = false;
 
     if (editable) {
-      editMode = Provider
-          .of<EditState>(context)
-          .editMode;
+      editMode = Provider.of<EditState>(context).editMode;
       if (!editMode) {
         actionButtons.add(
           EditAction(
@@ -103,7 +106,6 @@ class _HeadingState extends State<Heading> with Interpolator {
     if (widget.expandable) {
       actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
     }
-
 
     final theme = Theme.of(context);
     final borderLibrary = inject<BorderLibrary>();

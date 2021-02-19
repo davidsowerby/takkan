@@ -13,33 +13,57 @@ class EditSaveCancel extends StatelessWidget {
 
   final DataSource dataSource;
 
-  EditSaveCancel({
+  const EditSaveCancel({
+    Key key,
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
     this.dataSource,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final editState = Provider.of<EditState>(context);
-    bool editMode=editState.editMode;
+    bool editMode = editState.editMode;
     if (editMode) {
+      final rowKeyString = '${key.toString()}:row';
+      final rowKey = Key(rowKeyString);
+      final cancelKey = Key('$rowKeyString:cancelButton');
+      final saveKey = Key('$rowKeyString:saveButton');
       return Row(
+        key: rowKey,
         children: [
-          IconButton(icon: Icon(cancelIcon), onPressed: ()=>_onCancel(editState)),
-          IconButton(icon: Icon(saveIcon), onPressed: ()=>_onSave(editState)),
+          IconButton(
+            key: cancelKey,
+            icon: Icon(cancelIcon),
+            onPressed: () => _onCancel(editState),
+          ),
+          IconButton(
+            key: saveKey,
+            icon: Icon(saveIcon),
+            onPressed: () => _onSave(editState),
+          ),
         ],
       );
     } else {
+      final rowKeyString = '${key.toString()}:row';
+      final rowKey = Key(rowKeyString);
+      final blankKey = Key('$rowKeyString:blankButton');
+      final editKey = Key('$rowKeyString:editButton');
       return Row(
+        key: rowKey,
         children: [
           Container(
+            key: blankKey,
             // TODO: Make this a 'blank' icon as a separate thing, taking size from IconTheme
             width: 24.0,
             height: 24.0,
           ),
-          IconButton(icon: Icon(editIcon), onPressed:()=> _onEdit(editState)),
+          IconButton(
+            key: editKey,
+            icon: Icon(editIcon),
+            onPressed: () => _onEdit(editState),
+          ),
         ],
       );
     }
@@ -47,7 +71,7 @@ class EditSaveCancel extends StatelessWidget {
 
   _onCancel(EditState editState) {
     dataSource.reset();
-    editState.readMode=true;
+    editState.readMode = true;
   }
 
   _onSave(EditState editState) {
@@ -55,11 +79,11 @@ class EditSaveCancel extends StatelessWidget {
     if (isValid) {
       dataSource.flushFormsToModel();
       dataSource.persist();
-      editState.readMode=true;
+      editState.readMode = true;
     }
   }
 
   _onEdit(EditState editState) {
-    editState.readMode=false;
+    editState.readMode = false;
   }
 }
