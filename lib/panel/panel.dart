@@ -63,7 +63,7 @@ class PanelState extends State<Panel> with ContentBuilder implements ContentStat
       headingText: widget.config.caption,
       expandedContent: _expandedContent,
       openExpanded: true,
-      onAfterSave: [(_) => dataBinding.activeDataSource.persist(widget.config)],
+      onAfterSave: [(_) => dataBinding.activeDataSource.persist],
     );
   }
 }

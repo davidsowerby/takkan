@@ -36,6 +36,7 @@ class DataSource {
   PQuery _query;
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
+  PContent config;
 
   /// [callback] is usually a setState from a StatefulWidget
   DataSource(PContent config) {
@@ -49,6 +50,7 @@ class DataSource {
   List<GlobalKey<FormState>> get formKeys => _formKeys;
 
   init(PContent config) {
+    this.config = config;
     if (config.dataSourceIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
       _query = config.dataSource;
@@ -60,7 +62,6 @@ class DataSource {
   TemporaryDocument get temporaryDocument => _temporaryDocument;
 
   PQuery get query => _query;
-
 
   /// Stores a key for a Form.
   /// Forms are 'flushed' to the backing data by [flushFormsToModel]
@@ -74,38 +75,38 @@ class DataSource {
   /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
   ///
   /// Returns true if validation is successful, and form data is saved back [TemporaryDocument]
-  bool flushFormsToModel(TemporaryDocument temporaryDocument, List<GlobalKey<FormState>> formKeys) {
+  flushFormsToModel() {
+    for (GlobalKey<FormState> key in formKeys) {
+      if (key.currentState != null) {
+        key.currentState.save();
+        logType(this.runtimeType).d("Form saved for $key");
+      }
+    }
+// TODO: purge those with null current state
+  }
+
+  bool validate() {
+    bool isValid = true;
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
         final validated = key.currentState.validate();
-        if (validated) {
-          key.currentState.save();
-          logType(this.runtimeType).d("Form saved for $key");
-          return true;
-        } else {
-          logType(this.runtimeType).d("Form not saved, it has validation errors");
-          return false;
-        }
+        if (!validated) isValid = false;
       }
     }
-    // TODO: purge those with null current state
+    return isValid;
   }
 
-  Future<bool> persist(PCommon config) async {
-    final formValidatedAndFlushed = flushFormsToModel(temporaryDocument, formKeys);
-    if (formValidatedAndFlushed) {
-      await _doPersist(config);
-      return true;
-    }
-    return false;
-  }
-
-  _doPersist(PCommon config) async {
-    final DataProvider dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+  Future<bool> persist() async {
+    final DataProvider dataProvider =
+        dataProviderLibrary.find(config: config.dataProvider);
     return dataProvider.update(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
       onSuccess: temporaryDocument.saved,
     );
+  }
+
+  reset(){
+    temporaryDocument.reset();
   }
 }
