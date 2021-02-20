@@ -1,8 +1,8 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
-import 'package:precept_client/common/action/editSave.dart';
 import 'package:precept_client/common/component/editSaveCancel.dart';
+import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/borderLibrary.dart';
@@ -74,34 +74,10 @@ class _HeadingState extends State<Heading> with Interpolator {
   @override
   Widget build(BuildContext context) {
     final PPanel panelConfig = widget.config.parent;
-    final editable = !(panelConfig.isStatic == IsStatic.yes);
+    final EditState editState = Provider.of<EditState>(context);
+    final editable = (!(panelConfig.isStatic == IsStatic.yes) && editState.canEdit);
 
     final List<Widget> actionButtons = List();
-    bool editMode = false;
-
-    if (editable) {
-      editMode = Provider.of<EditState>(context).editMode;
-      if (!editMode) {
-        actionButtons.add(
-          EditAction(
-            onBefore: widget.onBeforeEdit,
-            onAfter: widget.onAfterEdit,
-          ),
-        );
-      }
-
-      if (editMode) {
-        actionButtons.add(CancelEditAction(
-          onBefore: widget.onBeforeCancelEdit,
-          onAfter: widget.onAfterCancelEdit,
-        ));
-
-        actionButtons.add(SaveAction(
-          onBefore: widget.onBeforeSave,
-          onAfter: widget.onAfterSave,
-        ));
-      }
-    }
 
     if (widget.expandable) {
       actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
@@ -140,6 +116,8 @@ class _HeadingState extends State<Heading> with Interpolator {
                       help: widget.help,
                     ),
                   Spacer(),
+                  if (editable)
+                    EditSaveCancel(key: keys(widget.key, ['esc']), dataSource: widget.dataSource),
                   if (actionButtons.isNotEmpty)
                     Row(
                       children: actionButtons,
@@ -151,7 +129,7 @@ class _HeadingState extends State<Heading> with Interpolator {
           if (expanded)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: widget.expandedContent(editMode),
+              child: widget.expandedContent(editState.editMode),
             )
         ],
       ),

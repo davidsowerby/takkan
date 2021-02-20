@@ -76,6 +76,7 @@ class DataSource {
   ///
   /// Returns true if validation is successful, and form data is saved back [TemporaryDocument]
   flushFormsToModel() {
+    logType(this.runtimeType).d('Flushing forms data to Temporary Document');
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
         key.currentState.save();
@@ -86,6 +87,7 @@ class DataSource {
   }
 
   bool validate() {
+    logType(this.runtimeType).d('Validating data source');
     bool isValid = true;
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
@@ -93,10 +95,12 @@ class DataSource {
         if (!validated) isValid = false;
       }
     }
+    logType(this.runtimeType).d('Changes are valid? :  $isValid');
     return isValid;
   }
 
   Future<bool> persist() async {
+    logType(this.runtimeType).d('Persisting data source');
     final DataProvider dataProvider =
         dataProviderLibrary.find(config: config.dataProvider);
     return dataProvider.update(

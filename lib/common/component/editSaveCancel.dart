@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/page/editState.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';
 
 class EditSaveCancel extends StatelessWidget {
@@ -81,12 +82,13 @@ class EditSaveCancel extends StatelessWidget {
     editState.readMode = true;
   }
 
-  _onSave(EditState editState) {
+  _onSave(EditState editState) async {
     bool isValid = dataSource.validate();
     if (isValid) {
       dataSource.flushFormsToModel();
-      dataSource.persist();
+      await dataSource.persist();
       editState.readMode = true;
+      logType(this.runtimeType).d('Save completed by $key');
     }
   }
 

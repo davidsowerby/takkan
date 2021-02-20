@@ -14,12 +14,15 @@ class EditState with ChangeNotifier {
         _canEdit = canEdit;
 
 
+  /// If you want to be sure that you use editMode correctly, do not invert this.  See [editMode]
   bool get readMode {
     return _readMode;
   }
 
+  /// returns true only if not in read mode AND canEdit is true, thus not directly the inverse of
+  /// [readMode]
   bool get editMode {
-    return !_readMode;
+    return (!_readMode) && (canEdit);
   }
 
   bool get canEdit {
