@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +13,13 @@ class EditSaveCancel extends StatelessWidget {
   final IconData saveIcon;
 
   final DataSource dataSource;
+  
+  final _saveKey='save';
+  final _cancelKey='cancel';
+  final _rowKey='row';
+  final _editKey='edit';
+  final _blankKey='blank';
+
 
   const EditSaveCancel({
     Key key,
@@ -21,15 +29,18 @@ class EditSaveCancel extends StatelessWidget {
     this.dataSource,
   }) : super(key: key);
 
+
+  Key get rowKey => keys(key,[_rowKey]);
+  Key get saveKey => keys(key,[_rowKey,_saveKey]);
+  Key get editKey => keys(key,[_rowKey,_editKey]);
+  Key get cancelKey => keys(key,[_rowKey,_cancelKey]);
+  Key get blankKey => keys(key,[_rowKey,_blankKey]);
+
   @override
   Widget build(BuildContext context) {
     final editState = Provider.of<EditState>(context);
     bool editMode = editState.editMode;
     if (editMode) {
-      final rowKeyString = '${key.toString()}:row';
-      final rowKey = Key(rowKeyString);
-      final cancelKey = Key('$rowKeyString:cancelButton');
-      final saveKey = Key('$rowKeyString:saveButton');
       return Row(
         key: rowKey,
         children: [
@@ -46,10 +57,6 @@ class EditSaveCancel extends StatelessWidget {
         ],
       );
     } else {
-      final rowKeyString = '${key.toString()}:row';
-      final rowKey = Key(rowKeyString);
-      final blankKey = Key('$rowKeyString:blankButton');
-      final editKey = Key('$rowKeyString:editButton');
       return Row(
         key: rowKey,
         children: [
