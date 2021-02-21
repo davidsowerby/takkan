@@ -5,9 +5,7 @@ import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_client/page/editState.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:provider/provider.dart';
 
 class Panel extends StatefulWidget {
   final PPanel config;
@@ -60,7 +58,6 @@ class PanelState extends State<Panel> with ContentBuilder implements ContentStat
   }
 
   Widget buildContent() {
-    final editState=Provider.of<EditState>(context, listen: false);
     return Heading(
       config: widget.config.heading,
       headingText: widget.config.caption,

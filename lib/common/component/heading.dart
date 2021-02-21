@@ -74,8 +74,14 @@ class _HeadingState extends State<Heading> with Interpolator {
   @override
   Widget build(BuildContext context) {
     final PPanel panelConfig = widget.config.parent;
-    final EditState editState = Provider.of<EditState>(context);
-    final editable = (!(panelConfig.isStatic == IsStatic.yes) && editState.canEdit);
+    bool editMode=false;
+    bool editable=false;
+
+    if (panelConfig.isStatic != IsStatic.yes){
+      final EditState editState = Provider.of<EditState>(context);
+      editable = editState.canEdit;
+      editMode=editState.editMode;
+    }
 
     final List<Widget> actionButtons = List();
 
@@ -129,20 +135,11 @@ class _HeadingState extends State<Heading> with Interpolator {
           if (expanded)
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: widget.expandedContent(editState.editMode),
+              child: widget.expandedContent(editMode),
             )
         ],
       ),
     );
-  }
-
-  Future<bool> _expand(BuildContext context, bool readOnly) async {
-    if (!expanded) {
-      setState(() {
-        expanded = true;
-      });
-    }
-    return true;
   }
 
   /// [context] is not used, but needs it for the callback signature

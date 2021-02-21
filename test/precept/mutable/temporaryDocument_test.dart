@@ -3,8 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_mock_backend/pMockBackend.dart';
-import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
@@ -13,7 +11,6 @@ import '../../helper/mock.dart';
 void main() {
   TemporaryDocument tdoc;
   ChangeListener listener;
-  final MockDataProvider mockBackend = MockDataProvider(config: PMockDataProvider(instanceName: 'mock'));
 
   setUp(() {
     getIt.reset();

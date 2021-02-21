@@ -11,7 +11,6 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -76,13 +75,6 @@ class WidgetTestTree {
       index--;
     }
     return -1;
-  }
-
-  int _parentOf(String id) {
-    final debugNode = script.debugNode;
-    final DebugNode parentNode = debugNode.parentOf(debugId: id);
-    final parentId = parentNode.item.debugId;
-    return (_allIndexes.containsKey(parentId)) ? _allIndexes[parentId] : 0;
   }
 
   bool elementHas(String id, bool Function(Widget) typeTest, Type lookingFor) {

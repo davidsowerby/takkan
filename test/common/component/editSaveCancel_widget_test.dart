@@ -7,12 +7,10 @@ import 'package:precept_client/page/editState.dart';
 import 'package:provider/provider.dart';
 
 import '../../helper/mock.dart';
-import '../../helper/widgetTestTree.dart';
 import '../../testAssist.dart';
 
 void main() {
   group('Static Page (kitchen-sink-00)', () {
-    WidgetTestTree testTree;
     setUpAll(() {});
 
     tearDownAll(() {});

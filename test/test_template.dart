@@ -6,7 +6,6 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/standardPage.dart';
-import 'package:precept_client/panel/panel.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -155,7 +154,6 @@ void main() {
 
     testWidgets('??? ', (WidgetTester tester) async {
       // given
-      final validation = kitchenSinkValidation.validate();
       // when
       final app = MaterialApp(
           home: PreceptPage(
@@ -168,8 +166,6 @@ void main() {
           pages: 1, panels: 1, parts: 2);
       testTree.verify();
       // then
-      final panel = testTree.panelWidget();
-      final PanelState panelState = tester.state(find.byWidget(panel));
 
       final EditAction editAction = testTree.widgets[191];
       editAction.doAction(null);
