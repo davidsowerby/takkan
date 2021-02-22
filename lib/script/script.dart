@@ -33,6 +33,7 @@ class PScript extends PCommon {
 
   final Map<String, PRoute> routes;
   final ConversionErrorMessages conversionErrorMessages;
+  @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
   List<ValidationMessage> _validationMessages;

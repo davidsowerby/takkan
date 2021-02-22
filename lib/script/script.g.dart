@@ -10,8 +10,6 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
   return PScript(
     conversionErrorMessages: ConversionErrorMessages.fromJson(
         json['conversionErrorMessages'] as Map<String, dynamic>),
-    validationErrorMessages: ValidationErrorMessages.fromJson(
-        json['validationErrorMessages'] as Map<String, dynamic>),
     routes: (json['routes'] as Map<String, dynamic>).map(
       (k, e) => MapEntry(k, PRoute.fromJson(e as Map<String, dynamic>)),
     ),
@@ -32,7 +30,6 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'name': instance.name,
     'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
-    'validationErrorMessages': instance.validationErrorMessages.toJson(),
   };
 
   void writeNotNull(String key, dynamic value) {
