@@ -14,7 +14,7 @@ import 'package:precept_script/script/query.dart';
 ///
 /// It is hoped that differences between for example, Firebase and Back4App can be manageed by using
 /// the relevant implementation of [PDataProvider].  However, in case that is not possible, it is simple
-/// to [register] an alternative implementation of [DataProvider]
+/// to [registerWithEmail] an alternative implementation of [DataProvider]
 ///
 ///
 /// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
