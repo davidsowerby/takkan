@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
@@ -16,6 +17,7 @@ class PRestDataProvider extends PDataProvider {
   final bool checkHealthOnConnect;
 
   PRestDataProvider({
+    @required PSchema schema,
     @required String instanceName,
     String configFilePath,
     this.baseUrl,
@@ -27,6 +29,7 @@ class PRestDataProvider extends PDataProvider {
           configFilePath: configFilePath,
           instanceName: instanceName,
           env: env,
+          schema: schema,
         );
 
   factory PRestDataProvider.fromJson(Map<String, dynamic> json) =>
@@ -61,18 +64,19 @@ enum Env { dev, test, qa, prod }
 ///
 class PDataProvider extends PreceptItem {
   final String instanceName;
+  final PSchema schema;
   final Env env;
   final String configFilePath;
   @JsonKey(ignore: true)
-  bool _isLoaded=false;
+  bool _isLoaded = false;
   @JsonKey(ignore: true)
-  bool _isLoading=false;
+  bool _isLoading = false;
 
   @JsonKey(ignore: true)
   Function() _listener;
 
-
-  PDataProvider({String id, String instanceName, @required this.configFilePath, this.env})
+  PDataProvider(
+      {this.schema, String id, String instanceName, @required this.configFilePath, this.env})
       : instanceName = instanceName ?? ((env == null) ? 'default' : env.toString()),
         super(id: id);
 
@@ -110,11 +114,11 @@ class PDataProvider extends PreceptItem {
   ///
   /// Repeated calls will be ignored - once it is loaded it will not attempt to reload unless [forceReload] is true
   Future<bool> loadConfig({bool forceReload = false}) async {
-    if ((_isLoading  || _isLoaded) && !forceReload) {
+    if ((_isLoading || _isLoaded) && !forceReload) {
       return true;
     }
-    _isLoaded=false;
-    _isLoading=true;
+    _isLoaded = false;
+    _isLoading = true;
     try {
       final configLoader = inject<ConfigLoader>();
       if (configFilePath != null) {
@@ -122,14 +126,14 @@ class PDataProvider extends PreceptItem {
         headers.addAll(data);
       }
       _isLoaded = true;
-      _isLoading=false;
+      _isLoading = false;
       if (_listener != null) {
         _listener();
       }
       return true;
     } catch (e) {
       logType(this.runtimeType).e('Failed to load configuration from $configFilePath', e);
-      _isLoading=false;
+      _isLoading = false;
       return false;
     }
   }

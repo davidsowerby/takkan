@@ -72,16 +72,7 @@ class PSubContent extends PContent {
         );
       }
     }
-    if (dataProvider != null) {
-      if (schema == null) {
-        messages.add(
-          ValidationMessage(
-            item: this,
-            msg: 'has declared a Provider, but it must have a schema as well',
-          ),
-        );
-      }
-    }
+
   }
 
   @override

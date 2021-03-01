@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
@@ -105,7 +104,6 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          schema: PSchema(),
           dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
           routes: {
             "/home": PRoute(
@@ -189,11 +187,9 @@ void main() {
           [
             'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
             'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined',
-            'PPanel : Script:0./home.Wiggly.panel1 : has declared a Provider, but it must have a schema as well'
           ]);
       expect(withDataSourceAndProviderResults, [
         'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-        'PPanel : Script:0./home.Wiggly.panel1 : has declared a Provider, but it must have a schema as well',
       ]);
     });
   });

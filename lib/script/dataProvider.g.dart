@@ -8,6 +8,9 @@ part of 'dataProvider.dart';
 
 PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
   return PRestDataProvider(
+    schema: json['schema'] == null
+        ? null
+        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
     instanceName: json['instanceName'] as String,
     configFilePath: json['configFilePath'] as String,
     baseUrl: json['baseUrl'] as String,
@@ -21,6 +24,7 @@ Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
     <String, dynamic>{
       'id': instance.id,
       'instanceName': instance.instanceName,
+      'schema': instance.schema?.toJson(),
       'env': _$EnvEnumMap[instance.env],
       'configFilePath': instance.configFilePath,
       'baseUrl': instance.baseUrl,

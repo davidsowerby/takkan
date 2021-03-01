@@ -47,7 +47,6 @@ class PScript extends PCommon {
     this.routes = const {},
     this.name,
     this.authenticator,
-    PSchema schema,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery dataSource,
@@ -61,7 +60,6 @@ class PScript extends PCommon {
           dataProvider: dataProvider,
           dataSource: dataSource,
           controlEdit: controlEdit,
-          schema: schema,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -77,8 +75,7 @@ class PScript extends PCommon {
       toJson: PDataProviderConverter.toJson)
   PDataProvider get dataProvider => _dataProvider;
 
-  @JsonKey(ignore: true)
-  PSchema get schema => _schema;
+
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
@@ -524,8 +521,6 @@ class PCommon extends PreceptItem {
   @JsonKey(nullable: true, includeIfNull: false)
   PDataProvider _dataProvider;
   @JsonKey(ignore: true)
-  PSchema _schema;
-  @JsonKey(ignore: true)
   PScript _script;
 
   PQuery _dataSource;
@@ -543,7 +538,7 @@ class PCommon extends PreceptItem {
     this.controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
-  })  : _schema = schema,
+  })  :
         _isStatic = isStatic,
         _dataProvider = dataProvider,
         _dataSource = dataSource,
@@ -591,8 +586,7 @@ class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
 
-  @JsonKey(ignore: true)
-  PSchema get schema => _schema;
+
 
   @JsonKey(ignore: true)
   PScript get script => _script;
@@ -604,9 +598,7 @@ class PCommon extends PreceptItem {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _script = script;
     PCommon p = parent;
-    if (parent != null) {
-      _schema = p._schema;
-    }
+
     ControlEdit inherited = ControlEdit.inherited;
     while (p != null) {
       if (p.controlEdit != ControlEdit.inherited) {
