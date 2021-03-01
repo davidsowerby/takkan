@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'date.g.dart';
@@ -11,7 +12,7 @@ class PDate extends PField<DateValidation,DateTime> {
 
   Type get modelType => DateTime;
 
-  PDate({this.defaultValue, List<DateValidation> validations}) : super(validations: validations);
+  PDate({this.defaultValue, List<DateValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
 

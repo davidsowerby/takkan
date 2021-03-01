@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'integer.g.dart';
@@ -11,8 +12,7 @@ class PInteger extends PField<IntegerValidation, int> {
 
   Type get modelType => int;
 
-  PInteger({this.defaultValue, List<IntegerValidation> validations})
-      : super(validations: validations);
+  PInteger({this.defaultValue, List<IntegerValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PInteger.fromJson(Map<String, dynamic> json) => _$PIntegerFromJson(json);
 

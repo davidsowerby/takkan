@@ -1,30 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'dataProvider.dart';
+part of 'authenticator.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
-  return PRestDataProvider(
-    instanceName: json['instanceName'] as String,
-    configFilePath: json['configFilePath'] as String,
-    baseUrl: json['baseUrl'] as String,
-    checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
+PAuthenticator _$PAuthenticatorFromJson(Map<String, dynamic> json) {
+  return PAuthenticator(
+    signInOptions: json['signInOptions'] == null
+        ? null
+        : PSignInOptions.fromJson(
+            json['signInOptions'] as Map<String, dynamic>),
     id: json['id'] as String,
+    instanceName: json['instanceName'] as String,
     env: _$enumDecodeNullable(_$EnvEnumMap, json['env']),
+    configFilePath: json['configFilePath'] as String,
   );
 }
 
-Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
+Map<String, dynamic> _$PAuthenticatorToJson(PAuthenticator instance) =>
     <String, dynamic>{
       'id': instance.id,
       'instanceName': instance.instanceName,
       'env': _$EnvEnumMap[instance.env],
       'configFilePath': instance.configFilePath,
-      'baseUrl': instance.baseUrl,
-      'checkHealthOnConnect': instance.checkHealthOnConnect,
+      'signInOptions': instance.signInOptions?.toJson(),
     };
 
 T _$enumDecode<T>(

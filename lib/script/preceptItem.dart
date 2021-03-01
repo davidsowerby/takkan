@@ -39,6 +39,7 @@ class PreceptItem {
   int _index;
 
   PreceptItem({String id}) : _id = id;
+  
 
   factory PreceptItem.fromJson(Map<String, dynamic> json) => _$PreceptItemFromJson(json);
 
@@ -49,6 +50,8 @@ class PreceptItem {
   String get debugId => _debugId;
 
   PreceptItem get parent => _parent;
+  String get id => _id;
+
 
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
     _parent = parent;

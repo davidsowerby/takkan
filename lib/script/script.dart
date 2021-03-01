@@ -7,6 +7,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
+import 'package:precept_script/script/authenticator.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
@@ -27,22 +28,25 @@ part 'script.g.dart';
 ///
 /// For more see the [overview](https://www.preceptblog.co.uk/user-guide/#overview) of the User Guide,
 /// and the [detailed description](https://www.preceptblog.co.uk/user-guide/precept-script.html#introduction) of PScript
+/// - [_scriptValidationMessages] are collected during the [validate] process
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-
+  @JsonKey(nullable: true)
+  final PAuthenticator authenticator;
   final Map<String, PRoute> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
-  List<ValidationMessage> _validationMessages;
+  List<ValidationMessage> _scriptValidationMessages;
 
   PScript({
-     this.conversionErrorMessages=const ConversionErrorMessages(defaultConversionPatterns),
-    this.validationErrorMessages=const ValidationErrorMessages(defaultValidationErrorMessages),
+    this.conversionErrorMessages = const ConversionErrorMessages(defaultConversionPatterns),
+    this.validationErrorMessages = const ValidationErrorMessages(defaultValidationErrorMessages),
     this.routes = const {},
     this.name,
+    this.authenticator,
     PSchema schema,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
@@ -66,7 +70,11 @@ class PScript extends PCommon {
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(nullable: true, includeIfNull: false, fromJson: PDataProviderConverter.fromJson, toJson: PDataProviderConverter.toJson)
+  @JsonKey(
+      nullable: true,
+      includeIfNull: false,
+      fromJson: PDataProviderConverter.fromJson,
+      toJson: PDataProviderConverter.toJson)
   PDataProvider get dataProvider => _dataProvider;
 
   @JsonKey(ignore: true)
@@ -87,49 +95,55 @@ class PScript extends PCommon {
   /// Validates the structure and content of the model
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
-  List<ValidationMessage> validate({bool throwOnFail = false, bool useCaptionsAsIds = true, bool logFailures=true}) {
-     init(useCaptionsAsIds: useCaptionsAsIds);
-    _validationMessages = List();
-    doValidate(_validationMessages);
+  List<ValidationMessage> validate(
+      {bool throwOnFail = false, bool useCaptionsAsIds = true, bool logFailures = true}) {
+    init(useCaptionsAsIds: useCaptionsAsIds);
+    _scriptValidationMessages = List();
+    doValidate(_scriptValidationMessages);
 
     if (routes == null || routes.length == 0) {
-      _validationMessages
+      _scriptValidationMessages
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
       for (var entry in routes.entries) {
         if (entry.key.isEmpty) {
-          _validationMessages
+          _scriptValidationMessages
               .add(ValidationMessage(item: this, msg: "PRoute path cannot be an empty String"));
         }
-        entry.value.doValidate(_validationMessages);
+        entry.value.doValidate(_scriptValidationMessages);
       }
     }
-    
-    if (conversionErrorMessages==null){
-      _validationMessages
-          .add(ValidationMessage(item: this, msg: "conversionErrorMessages must be provided, they are required for data conversion error messages"));
+
+    if (conversionErrorMessages == null) {
+      _scriptValidationMessages.add(ValidationMessage(
+          item: this,
+          msg:
+              "conversionErrorMessages must be provided, they are required for data conversion error messages"));
     }
 
-     if (validationErrorMessages==null){
-       _validationMessages
-           .add(ValidationMessage(item: this, msg: "validationErrorMessages must be provided, they are required for data validation error messages"));
-     }
+    if (validationErrorMessages == null) {
+      _scriptValidationMessages.add(ValidationMessage(
+          item: this,
+          msg:
+              "validationErrorMessages must be provided, they are required for data validation error messages"));
+    }
 
-    if (logFailures || throwOnFail){
-      final StringBuffer buf=StringBuffer();
-      for (ValidationMessage message in _validationMessages){
+    if (logFailures || throwOnFail) {
+      final StringBuffer buf = StringBuffer();
+      for (ValidationMessage message in _scriptValidationMessages) {
         buf.writeln(message.toString());
       }
-      if(_validationMessages.isEmpty){
+      if (_scriptValidationMessages.isEmpty) {
         buf.writeln('No validation errors found in PScript $name');
       }
-      if (throwOnFail && _validationMessages.isNotEmpty) {
+      if (throwOnFail && _scriptValidationMessages.isNotEmpty) {
         throw PreceptException(buf.toString());
-      }else{
-      logType(this.runtimeType).i(buf.toString());}
+      } else {
+        logType(this.runtimeType).i(buf.toString());
+      }
     }
 
-    return _validationMessages;
+    return _scriptValidationMessages;
   }
 
   /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user
@@ -138,28 +152,28 @@ class PScript extends PCommon {
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
   /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
-  init({bool useCaptionsAsIds = true})  {
-     doInit(this,null, 0, useCaptionsAsIds: useCaptionsAsIds);
+  init({bool useCaptionsAsIds = true}) {
+    doInit(this, null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// Passes call to all components, and sets the components names from their keys in parent
   @override
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(script,null, 0);
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, null, 0);
     _setupControlEdit(ControlEdit.inherited);
     int i = 0;
     for (var entry in routes.entries) {
       entry.value._path = entry.key;
 
       /// This must be done first or validation messages get wrong debugId
-      entry.value.doInit(script,this, i, useCaptionsAsIds: useCaptionsAsIds);
+      entry.value.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
 
-  bool get failed => _validationMessages.length > 0;
+  bool get failed => _scriptValidationMessages.length > 0;
 
-  bool get passed => _validationMessages.length == 0;
+  bool get passed => _scriptValidationMessages.length == 0;
 
   String get idAlternative => name;
 
@@ -168,7 +182,7 @@ class PScript extends PCommon {
     buf.writeln('============================================================================');
     buf.writeln('=                        PScript Validation Failed                         =');
     buf.writeln('============================================================================');
-    buf.writeAll(_validationMessages.map((e) => e.toString()), '\n');
+    buf.writeAll(_scriptValidationMessages.map((e) => e.toString()), '\n');
     buf.writeln();
     buf.writeln('============================================================================');
     buf.writeln();
@@ -218,10 +232,10 @@ class PRoute extends PCommon {
   }
 
   @override
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (page != null) {
-       page.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+      page.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
   }
 
@@ -306,12 +320,12 @@ class PPage extends PContent {
   }
 
   @override
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
       if (element is PPanel) {
-        element.doInit(script,this, i, useCaptionsAsIds: useCaptionsAsIds);
+        element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
       }
       if (element is PPart) {
         element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
@@ -360,7 +374,7 @@ class PPanel extends PSubContent {
   Map<String, dynamic> toJson() => _$PPanelToJson(this);
 
   PPanel({
-    this.openExpanded=true,
+    this.openExpanded = true,
     this.property,
     this.content = const [],
     PPanelHeading heading,
@@ -388,14 +402,14 @@ class PPanel extends PSubContent {
         );
 
   @override
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (heading != null) {
-      heading.doInit(script,this, index, useCaptionsAsIds: useCaptionsAsIds);
+      heading.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
     int i = 0;
     for (var element in content) {
-      element.doInit(script,this, i, useCaptionsAsIds: useCaptionsAsIds);
+      element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
   }
@@ -540,18 +554,25 @@ class PCommon extends PreceptItem {
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
+  PPanelStyle get panelStyle => _panelStyle;
+  WritingStyle get writingStyle => _writingStyle;
+
   bool get inheritedEditControl {
-    PCommon p=parent;
-    while (p !=null){
-      if (p.hasEditControl){
+    PCommon p = parent;
+    while (p != null) {
+      if (p.hasEditControl) {
         return true;
       }
-      p=p.parent;
+      p = p.parent;
     }
     return false;
   }
 
-  @JsonKey(nullable: true, includeIfNull: false, fromJson: PDataProviderConverter.fromJson, toJson: PDataProviderConverter.toJson)
+  @JsonKey(
+      nullable: true,
+      includeIfNull: false,
+      fromJson: PDataProviderConverter.fromJson,
+      toJson: PDataProviderConverter.toJson)
   PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
@@ -574,14 +595,14 @@ class PCommon extends PreceptItem {
   PSchema get schema => _schema;
 
   @JsonKey(ignore: true)
-  PScript get script=> _script;
+  PScript get script => _script;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
-     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
-     _script=script;
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    _script = script;
     PCommon p = parent;
     if (parent != null) {
       _schema = p._schema;
@@ -595,8 +616,10 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     _setupControlEdit(inherited);
-    if (_dataProvider != null)  _dataProvider.doInit(script,this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_dataSource != null)  _dataSource.doInit(script,this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataProvider != null)
+      _dataProvider.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataSource != null)
+      _dataSource.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
@@ -660,8 +683,6 @@ class PCommon extends PreceptItem {
       dataSource.doValidate(messages);
     }
   }
-
-
 }
 
 class PContent extends PCommon {

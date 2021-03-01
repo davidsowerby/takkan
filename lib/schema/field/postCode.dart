@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/postCode.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 import 'package:validators/validators.dart';
 
@@ -15,7 +16,7 @@ class PPostCode extends PField<PostCodeValidation,PostCode> {
 
   Type get modelType => PostCode;
 
-  PPostCode({this.defaultValue, List<PostCodeValidation> validations}) : super(validations: validations);
+  PPostCode({this.defaultValue, List<PostCodeValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PPostCode.fromJson(Map<String, dynamic> json) => _$PPostCodeFromJson(json);
 

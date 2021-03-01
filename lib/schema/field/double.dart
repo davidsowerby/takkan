@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'double.g.dart';
@@ -11,8 +12,14 @@ class PDouble extends PField<DoubleValidation, double> {
 
   Type get modelType => double;
 
-  PDouble({this.defaultValue, List<DoubleValidation> validations})
-      : super(validations: validations);
+  PDouble({
+    this.defaultValue,
+    List<DoubleValidation> validations,
+    Permissions permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
   factory PDouble.fromJson(Map<String, dynamic> json) => _$PDoubleFromJson(json);
 

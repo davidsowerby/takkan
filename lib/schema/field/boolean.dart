@@ -1,15 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'boolean.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PBoolean extends PField<BooleanValidation,bool> {
+class PBoolean extends PField<BooleanValidation, bool> {
   final bool defaultValue;
 
-  PBoolean({this.defaultValue, List<BooleanValidation> validations}) : super(validations: validations);
+  PBoolean({
+    this.defaultValue,
+    List<BooleanValidation> validations,
+    Permissions permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
   Type get modelType => bool;
 
@@ -36,16 +44,13 @@ class BooleanValidation implements ModelValidation<ValidateBoolean, bool> {
   Map<String, dynamic> toJson() => _$BooleanValidationToJson(this);
 }
 
-
 enum ValidateBoolean { isTrue, isFalse }
 
 validateBoolean(BooleanValidation validation, bool value) {
   switch (validation.method) {
     case ValidateBoolean.isTrue:
-      return value==true;
+      return value == true;
     case ValidateBoolean.isFalse:
-      return value==false;
+      return value == false;
   }
 }
-
-

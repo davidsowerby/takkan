@@ -58,10 +58,15 @@ class PSchema extends PSchemaElement {
 }
 
 abstract class PSchemaElement {
+  final Permissions permissions;
+
   @JsonKey(ignore: true)
   PSchemaElement _parent;
   @JsonKey(ignore: true)
   String _name;
+
+  PSchemaElement({this.permissions});
+
   Map<String, dynamic> toJson();
 
   doInit({PSchemaElement parent, String name}){
@@ -72,15 +77,35 @@ abstract class PSchemaElement {
   PSchemaElement get parent => _parent;
 }
 
+@JsonSerializable(nullable: true, explicitToJson: true)
+class Permissions  {
+
+  final Map<String,String> readRoles;
+  final Map<String,String> writeRoles;
 
 
+  Permissions(Map<String,String> readRoles, Map<String,String> writeRoles) : readRoles= readRoles ?? Map(), writeRoles = writeRoles ?? writeRoles;
+
+  factory Permissions.fromJson(Map<String, dynamic> json) =>
+      _$PermissionsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PermissionsToJson(this);
+}
+
+/// - [readRequiresAuthentication] can be set to true if a user needs only to be authenticated to read this document.  
+/// Does not need to be set if [permissions.readRoles] has at least one entry, as [readRequiresAuth] takes account of roles
+/// - [writeRequiresAuthentication] can be set to true if a user needs only to be authenticated to write this document
+/// Does not need to be set if [permissions.writeRoles] has at least one entry, as [writeRequiresAuth] takes account of roles
+/// 
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
 
   final Map<String, PSchemaElement> fields;
+  final bool readRequiresAuthentication;
+  final bool writeRequiresAuthentication;
 
-  PDocument({@required this.fields});
+  PDocument({@required this.fields, Permissions permissions, this.readRequiresAuthentication=false, this.writeRequiresAuthentication=false}) : super(permissions:permissions);
 
   String get name => _name;
 
@@ -95,4 +120,7 @@ class PDocument extends PSchemaElement {
     _parent = parent;
     _name=name;
   }
+  
+  bool get readRequiresAuth => readRequiresAuthentication || (permissions !=null && permissions.readRoles.isNotEmpty);
+  bool get writeRequiresAuth => writeRequiresAuthentication || (permissions !=null && permissions.writeRoles.isNotEmpty);
 }

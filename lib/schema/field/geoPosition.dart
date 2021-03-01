@@ -2,17 +2,25 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/geoPosition.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'geoPosition.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PGeoPosition extends PField<GeoPositionValidation,GeoPosition> {
+class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
   final GeoPosition defaultValue;
 
   Type get modelType => GeoPosition;
 
-  PGeoPosition({this.defaultValue, List<GeoPositionValidation> validations}) : super(validations: validations);
+  PGeoPosition({
+    this.defaultValue,
+    List<GeoPositionValidation> validations,
+    Permissions permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
   factory PGeoPosition.fromJson(Map<String, dynamic> json) => _$PGeoPositionFromJson(json);
 
@@ -46,4 +54,3 @@ validateGeoPosition(GeoPositionValidation validation, GeoPosition value) {
       return true;
   }
 }
-

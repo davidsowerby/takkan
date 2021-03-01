@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/select.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -13,7 +14,11 @@ class PString extends PField<StringValidation, String> {
   PString({
     this.defaultValue,
     List<StringValidation> validations,
-  }) : super(validations: validations);
+    Permissions permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
   Type get modelType => String;
 

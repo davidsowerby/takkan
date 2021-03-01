@@ -10,11 +10,44 @@ import 'package:precept_script/validation/message.dart';
 
 part 'dataProvider.g.dart';
 
-/// Configuration for a [Backend]
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PRestDataProvider extends PDataProvider {
+  final String baseUrl;
+  final bool checkHealthOnConnect;
+
+  PRestDataProvider({
+    @required String instanceName,
+    String configFilePath,
+    this.baseUrl,
+    this.checkHealthOnConnect = true,
+    String id,
+    Env env,
+  }) : super(
+          id: id,
+          configFilePath: configFilePath,
+          instanceName: instanceName,
+          env: env,
+        );
+
+  factory PRestDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$PRestDataProviderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PRestDataProviderToJson(this);
+
+  String get documentBaseUrl => baseUrl;
+
+  String documentUrl(DocumentId documentId) {
+    return '$documentBaseUrl/${documentId.path}/${documentId.itemId}';
+  }
+}
+
+enum Env { dev, test, qa, prod }
+
+/// Configuration for a [DataProvider]
 ///
 /// - [instanceName] and [env] serve much the same purpose.  Either can be used as an additional key
 /// to lookup from the [BackendLibrary], in order to support multiple instances of the same type.
-/// If only a single instance of a type is used (generally the case), neither need to be specified.
+/// If only a single instance of a type is used, neither need to be specified.
 /// If both are specified, [instanceName] takes precedence
 ///
 /// [headers] specify things like client keys, and is therefore different for each backend implementation.
@@ -26,32 +59,29 @@ part 'dataProvider.g.dart';
 /// directly declared declare entries - however this may be done differently in different implementations.
 ///
 ///
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PRestDataProvider extends PDataProvider {
-  final String baseUrl;
+class PDataProvider extends PreceptItem {
   final String instanceName;
-  final PScript parent;
-  final bool checkHealthOnConnect;
   final Env env;
   final String configFilePath;
+  @JsonKey(ignore: true)
+  bool _isLoaded=false;
+  @JsonKey(ignore: true)
+  bool _isLoading=false;
+
+  @JsonKey(ignore: true)
+  Function() _listener;
 
 
-  PRestDataProvider({
-    @required String instanceName,
-    @required this.env,
-    this.baseUrl,
-    this.parent,
-    this.checkHealthOnConnect = true,
-    this.configFilePath,
-    String id,
-  })
+  PDataProvider({String id, String instanceName, @required this.configFilePath, this.env})
       : instanceName = instanceName ?? ((env == null) ? 'default' : env.toString()),
         super(id: id);
 
-  factory PRestDataProvider.fromJson(Map<String, dynamic> json) =>
-      _$PRestDataProviderFromJson(json);
+  @JsonKey(ignore: true)
+  bool get isLoaded => _isLoaded;
 
-  Map<String, dynamic> toJson() => _$PRestDataProviderToJson(this);
+  set listener(Function() listener) {
+    _listener = listener;
+  }
 
   @override
   void doValidate(List<ValidationMessage> messages) {
@@ -67,9 +97,8 @@ class PRestDataProvider extends PDataProvider {
 
   Map<String, String> get headers => {};
 
-
-  doInit(PScript script,PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
-     super.doInit(script,parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     loadConfig();
   }
 
@@ -81,54 +110,27 @@ class PRestDataProvider extends PDataProvider {
   ///
   /// Repeated calls will be ignored - once it is loaded it will not attempt to reload unless [forceReload] is true
   Future<bool> loadConfig({bool forceReload = false}) async {
-    if (_loaded && !forceReload) {
+    if ((_isLoading  || _isLoaded) && !forceReload) {
       return true;
     }
+    _isLoaded=false;
+    _isLoading=true;
     try {
       final configLoader = inject<ConfigLoader>();
       if (configFilePath != null) {
         final data = await configLoader.loadFile(filePath: configFilePath);
         headers.addAll(data);
       }
-      _loaded = true;
+      _isLoaded = true;
+      _isLoading=false;
       if (_listener != null) {
         _listener();
       }
       return true;
     } catch (e) {
       logType(this.runtimeType).e('Failed to load configuration from $configFilePath', e);
+      _isLoading=false;
       return false;
     }
   }
-
-
-  bool get isLoaded => _loaded;
-
-  String get documentBaseUrl => baseUrl;
-
-  String documentUrl(DocumentId documentId) {
-    return '$documentBaseUrl/${documentId.path}/${documentId.itemId}';
-  }
-}
-
-enum Env { dev, test, qa, prod }
-
-abstract class PDataProvider extends PreceptItem {
-  String get instanceName;
-
-  @JsonKey(ignore: true)
-  Function() _listener;
-  @JsonKey(ignore: true)
-  bool _loaded = false;
-
-  PDataProvider({String id}) : super(id: id);
-
-  bool get isLoaded;
-
-  Future<bool> loadConfig({bool forceReload = false});
-
-  set listener(Function() listener) {
-    _listener = listener;
-  }
-
 }

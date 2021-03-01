@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/example/kitchenSink.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 import '../fixtures.dart';
 
