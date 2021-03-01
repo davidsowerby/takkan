@@ -16,7 +16,7 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
         ?.toList(),
     permissions: json['permissions'] == null
         ? null
-        : Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
+        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
   );
 }
 

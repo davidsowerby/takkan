@@ -12,7 +12,7 @@ class PInteger extends PField<IntegerValidation, int> {
 
   Type get modelType => int;
 
-  PInteger({this.defaultValue, List<IntegerValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
+  PInteger({this.defaultValue, List<IntegerValidation> validations, PPermissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PInteger.fromJson(Map<String, dynamic> json) => _$PIntegerFromJson(json);
 

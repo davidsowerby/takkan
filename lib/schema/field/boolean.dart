@@ -13,7 +13,7 @@ class PBoolean extends PField<BooleanValidation, bool> {
   PBoolean({
     this.defaultValue,
     List<BooleanValidation> validations,
-    Permissions permissions,
+    PPermissions permissions,
   }) : super(
           validations: validations,
           permissions: permissions,

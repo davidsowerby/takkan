@@ -13,7 +13,7 @@ class PPointer extends PField<PointerValidation, Pointer> {
 
   Type get modelType => Pointer;
 
-  PPointer({this.defaultValue, List<PointerValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
+  PPointer({this.defaultValue, List<PointerValidation> validations, PPermissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PPointer.fromJson(Map<String, dynamic> json) => _$PPointerFromJson(json);
 

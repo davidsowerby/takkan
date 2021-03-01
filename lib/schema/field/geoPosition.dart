@@ -16,7 +16,7 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
   PGeoPosition({
     this.defaultValue,
     List<GeoPositionValidation> validations,
-    Permissions permissions,
+    PPermissions permissions,
   }) : super(
           validations: validations,
           permissions: permissions,

@@ -15,7 +15,7 @@ class PDouble extends PField<DoubleValidation, double> {
   PDouble({
     this.defaultValue,
     List<DoubleValidation> validations,
-    Permissions permissions,
+    PPermissions permissions,
   }) : super(
           validations: validations,
           permissions: permissions,

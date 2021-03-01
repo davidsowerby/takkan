@@ -21,8 +21,8 @@ Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'documents': instance.documents?.map((k, e) => MapEntry(k, e?.toJson())),
     };
 
-Permissions _$PermissionsFromJson(Map<String, dynamic> json) {
-  return Permissions(
+PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) {
+  return PPermissions(
     (json['readRoles'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
@@ -32,7 +32,7 @@ Permissions _$PermissionsFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PermissionsToJson(Permissions instance) =>
+Map<String, dynamic> _$PPermissionsToJson(PPermissions instance) =>
     <String, dynamic>{
       'readRoles': instance.readRoles,
       'writeRoles': instance.writeRoles,
@@ -44,7 +44,7 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
         .fromJson(json['fields'] as Map<String, dynamic>),
     permissions: json['permissions'] == null
         ? null
-        : Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
+        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     readRequiresAuthentication: json['readRequiresAuthentication'] as bool,
     writeRequiresAuthentication: json['writeRequiresAuthentication'] as bool,
   );

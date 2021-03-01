@@ -14,7 +14,7 @@ class PString extends PField<StringValidation, String> {
   PString({
     this.defaultValue,
     List<StringValidation> validations,
-    Permissions permissions,
+    PPermissions permissions,
   }) : super(
           validations: validations,
           permissions: permissions,

@@ -16,7 +16,7 @@ class PPostCode extends PField<PostCodeValidation,PostCode> {
 
   Type get modelType => PostCode;
 
-  PPostCode({this.defaultValue, List<PostCodeValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
+  PPostCode({this.defaultValue, List<PostCodeValidation> validations, PPermissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PPostCode.fromJson(Map<String, dynamic> json) => _$PPostCodeFromJson(json);
 

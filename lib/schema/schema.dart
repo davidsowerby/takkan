@@ -58,7 +58,7 @@ class PSchema extends PSchemaElement {
 }
 
 abstract class PSchemaElement {
-  final Permissions permissions;
+  final PPermissions permissions;
 
   @JsonKey(ignore: true)
   PSchemaElement _parent;
@@ -78,18 +78,18 @@ abstract class PSchemaElement {
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class Permissions  {
+class PPermissions  {
 
   final Map<String,String> readRoles;
   final Map<String,String> writeRoles;
 
 
-  Permissions(Map<String,String> readRoles, Map<String,String> writeRoles) : readRoles= readRoles ?? Map(), writeRoles = writeRoles ?? writeRoles;
+  PPermissions(Map<String,String> readRoles, Map<String,String> writeRoles) : readRoles= readRoles ?? Map(), writeRoles = writeRoles ?? writeRoles;
 
-  factory Permissions.fromJson(Map<String, dynamic> json) =>
-      _$PermissionsFromJson(json);
+  factory PPermissions.fromJson(Map<String, dynamic> json) =>
+      _$PPermissionsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PermissionsToJson(this);
+  Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
 }
 
 /// - [readRequiresAuthentication] can be set to true if a user needs only to be authenticated to read this document.  
@@ -105,7 +105,7 @@ class PDocument extends PSchemaElement {
   final bool readRequiresAuthentication;
   final bool writeRequiresAuthentication;
 
-  PDocument({@required this.fields, Permissions permissions, this.readRequiresAuthentication=false, this.writeRequiresAuthentication=false}) : super(permissions:permissions);
+  PDocument({@required this.fields, PPermissions permissions, this.readRequiresAuthentication=false, this.writeRequiresAuthentication=false}) : super(permissions:permissions);
 
   String get name => _name;
 

@@ -12,7 +12,7 @@ class PDate extends PField<DateValidation,DateTime> {
 
   Type get modelType => DateTime;
 
-  PDate({this.defaultValue, List<DateValidation> validations, Permissions permissions,}) : super(validations: validations,permissions: permissions,);
+  PDate({this.defaultValue, List<DateValidation> validations, PPermissions permissions,}) : super(validations: validations,permissions: permissions,);
 
   factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
 
