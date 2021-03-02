@@ -1,21 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
+import 'package:precept_script/script/dataProvider.dart';
 
 part 'schema.g.dart';
 
-/// This is how I would like to create a schema, but it does not play well with the [PreceptModel]
-/// There needs to be a code generation step between this and [Schema] but that does not look possible using the standard Dart build_runner.
-/// The problem is referencing an instance of this class from within the code generator
-
-/// The root for a backend-agnostic definition of a data structure, including data types, validation
+/// The root for a backend-agnostic definition of a data structure, including data types, validation, permissions
 /// and relationships.
 ///
-/// This is just a definition, which is used by Precept, and may or may not be used to create a backend schema.
-/// If it is used that way, the interpretation of it is a matter for each [SchemaInterpreter} implementation.
+/// A [PSchema] is associated with a [PDataProvider] instance.  The [name] must be unique
+/// within a [PSchema] instance, but has no other constraint.
+///
+/// [PSchema] provides a definition for use by Precept, but could be create a backend schema.
+/// If it is used that way, the interpretation of it is a matter for a SchemaInterpreter implementation
+/// within the backend-specific library.
 ///
 ///
-/// The terminology used reflects the intention to keep this backend-agnostic - see:
+/// The terminology used reflects the intention to keep this backend-agnostic, although there may be cases where
+/// a backend does not support a particular data type.
 ///
 /// How these translate to the structure in the backend will depend on the backend itself, and the user's
 /// preferences.
@@ -25,10 +27,10 @@ part 'schema.g.dart';
 ///
 /// - In [documents], the map key is the document property / name.  For a top level document,
 /// this may be interpreted as something like a Parse Server Class or a Firestore collection,
-/// as determined by the `BackendDelegate` implementation. For a nested, sub-document, it is treated
+/// as determined by the backend implementation. For a nested, sub-document, it is treated
 /// as a property name within the parent document.
 ///
-/// - The [name] must be unique for all schemas in an app, but has no other constraint.
+///
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PSchema extends PSchemaElement {

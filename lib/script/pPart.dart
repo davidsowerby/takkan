@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
@@ -11,7 +10,6 @@ import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/particle/pTextBox.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
 import 'package:precept_script/validation/message.dart';
@@ -28,7 +26,7 @@ part 'pPart.g.dart';
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
-
+/// [dataProvider] and [dataSource] are theoretically available by virtue of inheriting [PSubContent], but do not make sense for a [PPart], as it represents a single field
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PSubContent {
   final bool readOnly;
@@ -45,15 +43,13 @@ class PPart extends PSubContent {
   PPart(
       {String caption,
       this.readOnly = false,
-        this.particleHeight=60,
+      this.particleHeight = 60,
       this.property,
       this.read = const PText(),
-      this.edit=const PTextBox(),
+      this.edit = const PTextBox(),
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
-      PDataProvider dataProvider,
-      PQuery dataSource,
       PPanelStyle panelStyle,
       WritingStyle writingStyle,
       ControlEdit controlEdit = ControlEdit.inherited,
@@ -62,8 +58,6 @@ class PPart extends PSubContent {
       : super(
           id: id,
           isStatic: isStatic,
-          dataProvider: dataProvider,
-          dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
@@ -77,7 +71,7 @@ class PPart extends PSubContent {
 
   DebugNode get debugNode {
     final List<DebugNode> children = List();
-    if (backendIsDeclared) {
+    if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
@@ -92,7 +86,8 @@ class PPart extends PSubContent {
       if (property == null || property.isEmpty) {
         messages.add(ValidationMessage(
             item: this,
-            msg: 'unless a Part is static or readOnly, it must provide a non-null, non-empty property'));
+            msg:
+                'unless a Part is static or readOnly, it must provide a non-null, non-empty property'));
       }
     }
     // if (readModeOptions.showCaption) {

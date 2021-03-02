@@ -64,21 +64,21 @@ void main() {
       expect(page.dataSource, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
       expect(page.dataSourceIsDeclared, true);
-      expect(page.backendIsDeclared, true);
+      expect(page.dataProviderIsDeclared, true);
 
       expect(panel.isStatic, IsStatic.yes);
       expect(panel.dataProvider, isNotNull);
       expect(panel.dataSource, isNotNull);
       expect(panel.controlEdit, ControlEdit.noEdit);
       expect(panel.dataSourceIsDeclared, false);
-      expect(panel.backendIsDeclared, false);
+      expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.yes);
       expect(part.dataProvider, isNotNull);
       expect(part.dataSource, isNotNull);
       expect(part.controlEdit, ControlEdit.inherited);
       expect(part.dataSourceIsDeclared, false);
-      expect(part.backendIsDeclared, false);
+      expect(part.dataProviderIsDeclared, false);
     });
 
     test('defaults, unset', () {
@@ -115,21 +115,21 @@ void main() {
       expect(page.dataSource, isNull);
       expect(page.controlEdit, ControlEdit.inherited);
       expect(page.dataSourceIsDeclared, false);
-      expect(page.backendIsDeclared, false);
+      expect(page.dataProviderIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
       expect(panel.dataProvider, isNull);
       expect(panel.dataSource, isNull);
       expect(panel.controlEdit, ControlEdit.inherited);
       expect(panel.dataSourceIsDeclared, false);
-      expect(panel.backendIsDeclared, false);
+      expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
       expect(part.dataProvider, isNull);
       expect(part.dataSource, isNull);
       expect(part.controlEdit, ControlEdit.inherited);
       expect(part.dataSourceIsDeclared, false);
-      expect(part.backendIsDeclared, false);
+      expect(part.dataProviderIsDeclared, false);
     });
   });
 }

@@ -10,6 +10,9 @@ import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
 /// Separated from [PContent], because it does not really make sense to contain a page within a page
+///
+/// However, it does not really make sense for a [PPart] to define a [dataProvider] or [dataSource],
+/// so these are not declared by a [PPart], and therefore effectively unused by a [PPart]
 class PSubContent extends PContent {
   PSubContent({
     String caption,
@@ -25,7 +28,7 @@ class PSubContent extends PContent {
           caption: caption,
           property: property,
           isStatic: isStatic,
-          backend: dataProvider,
+          dataProvider: dataProvider,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,

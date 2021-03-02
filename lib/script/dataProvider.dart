@@ -49,9 +49,9 @@ enum Env { dev, test, qa, prod }
 /// Configuration for a [DataProvider]
 ///
 /// - [instanceName] and [env] serve much the same purpose.  Either can be used as an additional key
-/// to lookup from the [BackendLibrary], in order to support multiple instances of the same type.
-/// If only a single instance of a type is used, neither need to be specified.
-/// If both are specified, [instanceName] takes precedence
+/// to lookup from the DataProviderLibrary (defined by the 'backend' library'), in order to support
+/// multiple instances of the same type. If only a single instance of a type is used, neither need
+/// to be specified. If both are specified, [instanceName] takes precedence
 ///
 /// [headers] specify things like client keys, and is therefore different for each backend implementation.
 /// Each implementation must must provide the appropriate override.

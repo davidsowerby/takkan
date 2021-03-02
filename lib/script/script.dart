@@ -257,7 +257,7 @@ class PPage extends PContent {
     this.scrollable = true,
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
-    PDataProvider backend,
+    PDataProvider dataProvider,
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
@@ -267,7 +267,7 @@ class PPage extends PContent {
     @required String title,
   }) : super(
           isStatic: isStatic,
-          backend: backend,
+          dataProvider: dataProvider,
           dataSource: dataSource,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
@@ -283,7 +283,7 @@ class PPage extends PContent {
 
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
-    if (backendIsDeclared) {
+    if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
@@ -339,7 +339,7 @@ class PPage extends PContent {
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get backendIsDeclared => dataProvider != null;
+  bool get dataProviderIsDeclared => dataProvider != null;
 
   /// [dataSource] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
@@ -420,7 +420,7 @@ class PPanel extends PSubContent {
 
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
-    if (backendIsDeclared) {
+    if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
     if (dataSourceIsDeclared) {
@@ -571,7 +571,7 @@ class PCommon extends PreceptItem {
   PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
-  bool get backendIsDeclared => (_dataProvider != null);
+  bool get dataProviderIsDeclared => (_dataProvider != null);
 
   @JsonKey(
       fromJson: PDataSourceConverter.fromJson,
@@ -685,7 +685,7 @@ class PContent extends PCommon {
     this.caption,
     this.property,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider backend,
+    PDataProvider dataProvider,
     PQuery dataSource,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
@@ -699,7 +699,7 @@ class PContent extends PCommon {
           controlEdit: controlEdit,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
-          dataProvider: backend,
+          dataProvider: dataProvider,
           isStatic: isStatic,
         );
 }
