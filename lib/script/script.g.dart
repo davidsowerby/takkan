@@ -158,6 +158,8 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
+    dataProvider: PDataProviderConverter.fromJson(
+        json['dataProvider'] as Map<String, dynamic>),
     dataSource: PDataSourceConverter.fromJson(
         json['dataSource'] as Map<String, dynamic>),
     panelStyle: json['panelStyle'] == null
@@ -189,6 +191,8 @@ Map<String, dynamic> _$PPageToJson(PPage instance) {
     }
   }
 
+  writeNotNull(
+      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
   val['property'] = instance.property;
   val['pageType'] = instance.pageType;

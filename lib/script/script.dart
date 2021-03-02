@@ -50,7 +50,7 @@ class PScript extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery dataSource,
-    PPanelStyle panelStyle,
+    PPanelStyle panelStyle=const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,

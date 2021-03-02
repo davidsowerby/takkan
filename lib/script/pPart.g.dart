@@ -19,10 +19,6 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
-    dataSource: PDataSourceConverter.fromJson(
-        json['dataSource'] as Map<String, dynamic>),
     panelStyle: json['panelStyle'] == null
         ? null
         : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
@@ -36,35 +32,22 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPartToJson(PPart instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$IsStaticEnumMap[instance.isStatic],
-    'panelStyle': instance.panelStyle?.toJson(),
-    'writingStyle': instance.writingStyle?.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
-  writeNotNull('dataSource', PDataSourceConverter.toJson(instance.dataSource));
-  val['caption'] = instance.caption;
-  val['readOnly'] = instance.readOnly;
-  val['property'] = instance.property;
-  val['staticData'] = instance.staticData;
-  val['help'] = instance.help?.toJson();
-  val['tooltip'] = instance.tooltip;
-  val['particleHeight'] = instance.particleHeight;
-  val['read'] = PReadParticleConverter.toJson(instance.read);
-  val['edit'] = PEditParticleConverter.toJson(instance.edit);
-  return val;
-}
+Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
+      'id': instance.id,
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'isStatic': _$IsStaticEnumMap[instance.isStatic],
+      'panelStyle': instance.panelStyle?.toJson(),
+      'writingStyle': instance.writingStyle?.toJson(),
+      'caption': instance.caption,
+      'readOnly': instance.readOnly,
+      'property': instance.property,
+      'staticData': instance.staticData,
+      'help': instance.help?.toJson(),
+      'tooltip': instance.tooltip,
+      'particleHeight': instance.particleHeight,
+      'read': PReadParticleConverter.toJson(instance.read),
+      'edit': PEditParticleConverter.toJson(instance.edit),
+    };
 
 T _$enumDecode<T>(
   Map<T, dynamic> enumValues,
