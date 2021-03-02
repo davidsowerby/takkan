@@ -96,7 +96,7 @@ mixin ContentBuilder {
     /// We know this is not static, and if we are not using a data source constructed at this level, then
     /// we create a new DataBinding for this level, but only for Part or Panel.
 
-    if (!config.dataSourceIsDeclared) {
+    if (!config.queryIsDeclared) {
       /// A Page cannot have a DataBinding above it, except when created as part of a [DataSource],
       /// and we wouldn't be here then
       if (config is PPage) {
@@ -116,17 +116,17 @@ mixin ContentBuilder {
     /// This is safe, because it is ignored by [backend] if already connected
     final providerConfig = config.dataProvider;
 
-    final dataSourceConfig = config.dataSource;
+    final query = config.query;
 
     if (providerConfig.isLoaded) {
-      switch (dataSourceConfig.runtimeType) {
+      switch (query.runtimeType) {
         case PGet:
           return futureBuilder(
-              provider.get(query: dataSourceConfig), dataSource.temporaryDocument, buildContent);
+              provider.get(query: query), dataSource.temporaryDocument, buildContent);
         case PGetStream:
           return streamBuilder(provider, dataSource.temporaryDocument, buildContent);
         default:
-          final msg = 'Unrecognised data source type:  ${dataSourceConfig.runtimeType}';
+          final msg = 'Unrecognised data source type:  ${query.runtimeType}';
           logType(this.runtimeType).e(msg);
           throw ConfigurationException(msg);
       }

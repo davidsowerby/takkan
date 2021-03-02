@@ -1,7 +1,10 @@
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/user/emailLoginSection.dart';
 
-class EmailSignInPage extends StatelessWidget {
+class
+EmailSignInPage extends StatelessWidget {
   static const String emailHintText =
       "If you already have a Kayman account with a different club, it is easier just to use the same log in email.  You can still use a different email address to communicate with each club if you wish.";
   static const String passwordHint =
@@ -13,14 +16,14 @@ class EmailSignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultScaffold(
-        pageTitle: "Login / Register",
+    return Scaffold(
+        // pageTitle: "Login / Register",
         body: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Align(
               alignment: Alignment.topCenter,
               child: ListView(
-                children: <Widget>[KaymanHeadline(),
+                children: <Widget>[Text ('App Name Here'),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                   child: EmailLoginSection(nextRoute: "/member/home"),

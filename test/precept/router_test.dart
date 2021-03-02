@@ -13,19 +13,15 @@ void main() {
 
     tearDown(() {});
 
-    test('builds route map on init', () async {
+    test('redirects to signIn when auth needed', () async {
       // given
       buildInjector();
       // when
       final script = PScript(
         routes: {'/home': PRoute()},
       );
-      script.init();
-      await router.init(
-        scripts: [script],
-      );
       // then
-      expect(router.hasRoute('/home'), isTrue);
+      expect(0,1);
       // expect(router.hasSection(CorePart.address), isTrue);
     });
   });

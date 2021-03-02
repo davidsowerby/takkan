@@ -22,7 +22,6 @@ import '../../helper/widgetTestTree.dart';
 final PScript kitchenSink01 = PScript(
   name: 'script01',
   isStatic: IsStatic.yes,
-  schema: kitchenSinkSchema01,
   routes: {
     'test': PRoute(
       page: PPage(
@@ -46,10 +45,15 @@ final PScript kitchenSink01 = PScript(
               PPanel(
                 caption: 'Panel 1-3',
                 isStatic: IsStatic.no,
-                backend: PMockDataProvider(instanceName: 'mock'),
-                dataSource: PGet(documentId: DocumentId(path: 'Account', itemId: 'objectId1')),
+                dataProvider: PMockDataProvider(
+                  schema: kitchenSinkSchema01,
+                  instanceName: 'mock',
+                ),
+                query: PGet(
+                  documentId: DocumentId(path: 'Account', itemId: 'objectId1'),
+                ),
                 controlEdit: ControlEdit.thisOnly,
-                property:'',
+                property: '',
                 content: [
                   PPart(
                     property: 'firstName',

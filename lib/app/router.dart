@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_client/app/precept.dart';
+import 'package:precept_client/common/page/signInPage.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/page/standardPage.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/error.dart';
@@ -28,40 +30,32 @@ import 'package:precept_script/script/script.dart';
 //     );
 ///
 class PreceptRouter {
-  final Map<String, PRoute> _preceptRoutes = Map();
-  bool _indexed = false;
+  PRoute _preSignInRoute;
 
   PreceptRouter();
 
-  Route<dynamic> generateRoute(RouteSettings settings) {
-    if (!_indexed) {
-      final msg = "PreceptRouter: must invoke 'init()' before calling 'generateRoute'";
-      logType(this.runtimeType).d(msg);
-      throw PreceptException(msg);
-    }
+  Route<dynamic> generateRoute(RouteSettings settings, UserState userState) {
     logType(this.runtimeType)
         .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
-    PRoute preceptRoute = _preceptRoutes[settings.name];
+    PRoute preceptRoute = script.routes[settings.name];
     if (preceptRoute == null) {
       return _routeNotRecognised(settings);
     }
-    return _route(preceptRoute);
+    return _route(preceptRoute, userState);
   }
 
-  /// Merges [PRoutes] from all [PScript] instances into [_preceptRoutes], mapped by route path
-  /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  init({@required List<PScript> scripts}) {
-    for (PScript script in scripts) {
-      _preceptRoutes.addAll(script.routes);
-    }
-    _indexed = true;
-  }
-
-  bool get ready => _indexed;
-
-  /// Returns the Widget representing page [route.page.pageType], configured with [route.page]
+  /// Returns the Widget representing the page type specified by [PRoute.page], configured with [route.page]
   /// If [PageBuilder] throws an exception - perhaps because there is no matching key in the [PageLibrary], an error page is returned.
-  Route<dynamic> _route(PRoute route) {
+  ///
+  /// If a page requires the user to be authenticated, and that has not yet happened, redirects to
+  /// the [SignIn] page, which is defined through GetIt injection
+  Route<dynamic> _route(PRoute route, UserState userState) {
+    final requiresAuth = false;//(route.page.schema == null) ? false : (route.page.schema as PDocument).readRequiresAuth;
+    if (requiresAuth && (!userState.isAuthenticated)) {
+      _preSignInRoute=route;
+      final pageWidget = injectParam<SignInPage>(param1: script.authenticator.signInOptions);
+      return MaterialPageRoute(builder: (_) => pageWidget);
+    }
     try {
       final pageWidget = PreceptPage(config: route.page);
       return MaterialPageRoute(builder: (_) => pageWidget);
@@ -76,7 +70,7 @@ class PreceptRouter {
   }
 
   hasRoute(String path) {
-    return _preceptRoutes.containsKey(path);
+    return script.routes.containsKey(path);
   }
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {

@@ -51,11 +51,11 @@ class DataSource {
 
   init(PContent config) {
     this.config = config;
-    if (config.dataSourceIsDeclared) {
+    if (config.queryIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
-      _query = config.dataSource;
+      _query = config.query;
       _formKeys = List();
-      _documentSchema = config.schema.documents[_query.document];
+      _documentSchema = config.dataProvider.schema.documents[_query.schemaPath];
     }
   }
 

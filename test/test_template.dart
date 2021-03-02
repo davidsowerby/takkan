@@ -101,8 +101,10 @@ final validationSchema = PSchema(
 
 final PScript kitchenSinkValidation = PScript(
   name: 'data validation test',
-  dataProvider: PMockDataProvider(instanceName: 'mock1'),
-  schema: validationSchema,
+  dataProvider: PMockDataProvider(
+    instanceName: 'mock1',
+    schema: validationSchema,
+  ),
   routes: {
     '/test': PRoute(
       page: PPage(
@@ -111,7 +113,7 @@ final PScript kitchenSinkValidation = PScript(
         content: [
           PPart(caption: 'Part 1', staticData: 'Part 1', read: PText(), isStatic: IsStatic.yes),
           PPanel(
-            dataSource: PGet(
+            query: PGet(
               documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
             ),
             caption: 'Panel 2',

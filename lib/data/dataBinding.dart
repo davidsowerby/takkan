@@ -87,9 +87,9 @@ abstract class DataBinding {
   }
 
   DataBinding child(PContent config, DataBinding parentBinding, DataSource dataSource) {
-    return (config.dataSourceIsDeclared)
+    return (config.queryIsDeclared)
         ? parentBinding.childFromDataSource(
-            config.dataSource, dataSource.rootBinding, dataSource.documentSchema, dataSource)
+            config.query, dataSource.rootBinding, dataSource.documentSchema, dataSource)
         : parentBinding.childFromConfig(config);
   }
 }

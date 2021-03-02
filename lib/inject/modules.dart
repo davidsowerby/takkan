@@ -1,5 +1,6 @@
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/locale.dart';
+import 'package:precept_client/common/page/signInPage.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/config/configLoader.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
@@ -7,6 +8,7 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/configLoader.dart';
+import 'package:precept_script/script/signIn.dart';
 
 
 void preceptDefaultInjectionBindings() {
@@ -34,6 +36,7 @@ documentInjectionBindings(){
 
 routerInjectionBindings(){
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
+  getIt.registerFactoryParam<SignInPage, PSignInOptions,int>((param1, param2) => DefaultSignInPage(signInOptions: param1));
   getIt.registerSingleton<PreceptRouter>(PreceptRouter());
 }
 

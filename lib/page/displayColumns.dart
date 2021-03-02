@@ -22,7 +22,7 @@ mixin DisplayColumns {
 
     for (int i = 0; i < widgets.length; i++) {
       int targetColumn = i % dim.numberOfColumns;
-      columnChildren[targetColumn].add(widgets[i] as Widget);
+      columnChildren[targetColumn].add(widgets[i] );
     }
     final views = List<Widget>();
     for (int i = 0; i < dim.numberOfColumns; i++) {
