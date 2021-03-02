@@ -54,7 +54,6 @@ class PGet extends PQuery {
     }
   }
 
-// DataSourceReturn get returnType=> throw PreceptException('returnType This must ')
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -75,4 +74,3 @@ class PGetStream extends PQuery {
   Map<String, dynamic> toJson() => _$PGetStreamToJson(this);
 }
 
-enum DataSourceReturn { future, futureList, stream, streamList }

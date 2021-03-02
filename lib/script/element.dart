@@ -11,7 +11,7 @@ import 'package:precept_script/validation/message.dart';
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
 /// Separated from [PContent], because it does not really make sense to contain a page within a page
 ///
-/// However, it does not really make sense for a [PPart] to define a [dataProvider] or [dataSource],
+/// However, it does not really make sense for a [PPart] to define a [dataProvider] or [query],
 /// so these are not declared by a [PPart], and therefore effectively unused by a [PPart]
 class PSubContent extends PContent {
   PSubContent({
@@ -19,7 +19,7 @@ class PSubContent extends PContent {
     String property,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
@@ -29,7 +29,7 @@ class PSubContent extends PContent {
           property: property,
           isStatic: isStatic,
           dataProvider: dataProvider,
-          dataSource: dataSource,
+          query: query,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
@@ -55,17 +55,17 @@ class PSubContent extends PContent {
           ),
         );
       }
-      if (dataSource == null) {
+      if (query == null) {
         messages.add(
           ValidationMessage(
             item: this,
-            msg: "must either be static or have a dataSource defined",
+            msg: "must either be static or have a query defined",
           ),
         );
       }
 
     }
-    if (dataSource != null) {
+    if (query != null) {
       if (dataProvider == null) {
         messages.add(
           ValidationMessage(

@@ -30,7 +30,7 @@ void main() {
         name: 'test',
         dataProvider: PRestDataProvider(),
         isStatic: IsStatic.yes,
-        dataSource: PGet(),
+        query: PGet(),
         routes: {
           '': PRoute(
             page: PPage(
@@ -57,27 +57,27 @@ void main() {
 
       expect(route.isStatic, IsStatic.yes);
       expect(route.dataProvider, isNotNull);
-      expect(route.dataSource, isNotNull);
+      expect(route.query, isNotNull);
 
       expect(page.isStatic, IsStatic.yes);
       expect(page.dataProvider, isNotNull);
-      expect(page.dataSource, isNotNull);
+      expect(page.query, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
-      expect(page.dataSourceIsDeclared, true);
+      expect(page.queryIsDeclared, true);
       expect(page.dataProviderIsDeclared, true);
 
       expect(panel.isStatic, IsStatic.yes);
       expect(panel.dataProvider, isNotNull);
-      expect(panel.dataSource, isNotNull);
+      expect(panel.query, isNotNull);
       expect(panel.controlEdit, ControlEdit.noEdit);
-      expect(panel.dataSourceIsDeclared, false);
+      expect(panel.queryIsDeclared, false);
       expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.yes);
       expect(part.dataProvider, isNotNull);
-      expect(part.dataSource, isNotNull);
+      expect(part.query, isNotNull);
       expect(part.controlEdit, ControlEdit.inherited);
-      expect(part.dataSourceIsDeclared, false);
+      expect(part.queryIsDeclared, false);
       expect(part.dataProviderIsDeclared, false);
     });
 
@@ -108,27 +108,27 @@ void main() {
 
       expect(route.isStatic, IsStatic.inherited);
       expect(route.dataProvider, isNull);
-      expect(route.dataSource, isNull);
+      expect(route.query, isNull);
 
       expect(page.isStatic, IsStatic.inherited);
       expect(page.dataProvider, isNull);
-      expect(page.dataSource, isNull);
+      expect(page.query, isNull);
       expect(page.controlEdit, ControlEdit.inherited);
-      expect(page.dataSourceIsDeclared, false);
+      expect(page.queryIsDeclared, false);
       expect(page.dataProviderIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
       expect(panel.dataProvider, isNull);
-      expect(panel.dataSource, isNull);
+      expect(panel.query, isNull);
       expect(panel.controlEdit, ControlEdit.inherited);
-      expect(panel.dataSourceIsDeclared, false);
+      expect(panel.queryIsDeclared, false);
       expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
       expect(part.dataProvider, isNull);
-      expect(part.dataSource, isNull);
+      expect(part.query, isNull);
       expect(part.controlEdit, ControlEdit.inherited);
-      expect(part.dataSourceIsDeclared, false);
+      expect(part.queryIsDeclared, false);
       expect(part.dataProviderIsDeclared, false);
     });
   });

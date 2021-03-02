@@ -2,8 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
-import 'package:precept_script/script/json/dataProviderConverter.dart';
-import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:precept_script/script/json/editParticleConverter.dart';
 import 'package:precept_script/script/json/readParticleConverter.dart';
 import 'package:precept_script/script/panelStyle.dart';
@@ -26,7 +24,7 @@ part 'pPart.g.dart';
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
-/// [dataProvider] and [dataSource] are theoretically available by virtue of inheriting [PSubContent], but do not make sense for a [PPart], as it represents a single field
+/// [dataProvider] and [query] are theoretically available by virtue of inheriting [PSubContent], but do not make sense for a [PPart], as it represents a single field
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PSubContent {
   final bool readOnly;
@@ -74,8 +72,8 @@ class PPart extends PSubContent {
     if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
-    if (dataSourceIsDeclared) {
-      children.add(dataSource.debugNode);
+    if (queryIsDeclared) {
+      children.add(query.debugNode);
     }
     return DebugNode(this, children);
   }

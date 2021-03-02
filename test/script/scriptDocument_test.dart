@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:precept_script/script/query.dart';
-import 'package:precept_script/script/documentId.dart';
-import 'package:precept_script/script/json/dataSourceConverter.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_script/script/documentId.dart';
+import 'package:precept_script/script/json/queryConverter.dart';
+import 'package:precept_script/script/query.dart';
 
 void main() {
   group('PDocumentSelectorConverter', () {
@@ -24,8 +24,8 @@ void main() {
         ),
       );
       // when
-      final Map<String, dynamic> j = PDataSourceConverter.toJson(g);
-      final mirror =PDataSourceConverter.fromJson(j);
+      final Map<String, dynamic> j = PQueryConverter.toJson(g);
+      final mirror =PQueryConverter.fromJson(j);
       // then
 
       expect(json.encode(g), json.encode(mirror));

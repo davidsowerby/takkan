@@ -1,7 +1,8 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/query.dart';
 
-class PDataSourceConverter {
+/// JSON converter for [PQuery] sub-classes
+class PQueryConverter {
   static final elementKey = '-type-';
   static PQuery fromJson(Map<String, dynamic> json) {
     if (json == null) {

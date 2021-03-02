@@ -85,7 +85,7 @@ void main() {
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
-              dataSource: PGet(
+              query: PGet(
                 documentId: DocumentId(),
               ),
             ),
@@ -110,7 +110,7 @@ void main() {
               page: PPage(
                 pageType: "mine",
                 title: "Wiggly",
-                dataSource: PGet(
+                query: PGet(
                   // ignore: missing_required_param
                   documentId: DocumentId(), // ignore: missing_required_param
                 ),
@@ -127,9 +127,9 @@ void main() {
       expect(messages.length, 0);
     });
 
-    test('any non-static PPanel must be able to access DataSource', () {
+    test('any non-static PPanel must be able to access Query', () {
       // given
-      final withoutDataSourceOrDataProvider = PScript(
+      final withoutQueryOrDataProvider = PScript(
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -141,7 +141,7 @@ void main() {
         },
       );
 
-      final withoutDataSource = PScript(
+      final withoutQuery = PScript(
         dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         routes: {
           "/home": PRoute(
@@ -154,7 +154,7 @@ void main() {
         },
       );
 
-      final withDataSourceAndProvider = PScript(
+      final withQueryAndProvider = PScript(
         dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
         // ignore: missing_required_param
 
@@ -163,7 +163,7 @@ void main() {
             page: PPage(
               pageType: "mine",
               title: "Wiggly",
-              dataSource: PGet(
+              query: PGet(
                 // ignore: missing_required_param
                 documentId: DocumentId(), // ignore: missing_required_param
               ),
@@ -174,21 +174,21 @@ void main() {
       );
 
       // when
-      final withoutDataSourceOrProviderResults = withoutDataSourceOrDataProvider.validate().map((e) => e.toString());
-      final withoutDataSourceResults = withoutDataSource.validate().map((e) => e.toString());
-      final withDataSourceAndProviderResults = withDataSourceAndProvider.validate().map((e) => e.toString());
+      final withoutQueryOrProviderResults = withoutQueryOrDataProvider.validate().map((e) => e.toString());
+      final withoutQueryResults = withoutQuery.validate().map((e) => e.toString());
+      final withQueryAndProviderResults = withQueryAndProvider.validate().map((e) => e.toString());
       // then
 
-      expect(withoutDataSourceOrProviderResults, [
+      expect(withoutQueryOrProviderResults, [
         'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-        'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined',
+        'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a query defined',
       ]);
-      expect(withoutDataSourceResults,
+      expect(withoutQueryResults,
           [
             'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-            'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a dataSource defined',
+            'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a query defined',
           ]);
-      expect(withDataSourceAndProviderResults, [
+      expect(withQueryAndProviderResults, [
         'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
       ]);
     });

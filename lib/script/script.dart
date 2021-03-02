@@ -13,7 +13,7 @@ import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataProviderConverter.dart';
-import 'package:precept_script/script/json/dataSourceConverter.dart';
+import 'package:precept_script/script/json/queryConverter.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/preceptItem.dart';
@@ -49,7 +49,7 @@ class PScript extends PCommon {
     this.authenticator,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle=const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
@@ -58,7 +58,7 @@ class PScript extends PCommon {
           id: id,
           isStatic: isStatic,
           dataProvider: dataProvider,
-          dataSource: dataSource,
+          query: query,
           controlEdit: controlEdit,
         );
 
@@ -80,11 +80,11 @@ class PScript extends PCommon {
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
   @JsonKey(
-      fromJson: PDataSourceConverter.fromJson,
-      toJson: PDataSourceConverter.toJson,
+      fromJson: PQueryConverter.fromJson,
+      toJson: PQueryConverter.toJson,
       nullable: true,
       includeIfNull: false)
-  PQuery get dataSource => _dataSource;
+  PQuery get query => _query;
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   IsStatic get isStatic => _isStatic;
@@ -200,7 +200,7 @@ class PRoute extends PCommon {
     @required this.page,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
@@ -258,7 +258,7 @@ class PPage extends PContent {
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
@@ -268,7 +268,7 @@ class PPage extends PContent {
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
-          dataSource: dataSource,
+          query: query,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
@@ -286,8 +286,8 @@ class PPage extends PContent {
     if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
-    if (dataSourceIsDeclared) {
-      children.add(dataSource.debugNode);
+    if (queryIsDeclared) {
+      children.add(query.debugNode);
     }
     return DebugNode(this, children);
   }
@@ -341,10 +341,10 @@ class PPage extends PContent {
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get dataProviderIsDeclared => dataProvider != null;
 
-  /// [dataSource] is always
+  /// [query] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataSourceIsDeclared => dataSource != null;
+  bool get queryIsDeclared => query != null;
 }
 
 enum PageType { standard }
@@ -380,8 +380,8 @@ class PPanel extends PSubContent {
     this.help,
     this.style = const PPanelStyle(),
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider backend,
-    PQuery dataSource,
+    PDataProvider dataProvider,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
@@ -390,8 +390,8 @@ class PPanel extends PSubContent {
         super(
           id: id,
           isStatic: isStatic,
-          dataProvider: backend,
-          dataSource: dataSource,
+          dataProvider: dataProvider,
+          query: query,
           panelStyle: panelStyle,
           writingStyle: writingStyle,
           controlEdit: controlEdit,
@@ -423,8 +423,8 @@ class PPanel extends PSubContent {
     if (dataProviderIsDeclared) {
       children.add(dataProvider.debugNode);
     }
-    if (dataSourceIsDeclared) {
-      children.add(dataSource.debugNode);
+    if (queryIsDeclared) {
+      children.add(query.debugNode);
     }
     return DebugNode(this, children);
   }
@@ -484,7 +484,7 @@ enum ControlEdit {
 /// [PScript] and its constituents mimic this 'inheritance' structure for the purpose of validation.
 ///
 /// - [dataProvider]
-/// - [dataSource]
+/// - [query]
 /// - [writingStyle] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
 /// - [panelStyle] defines borders and other styling for panels
 /// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
@@ -523,7 +523,7 @@ class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PScript _script;
 
-  PQuery _dataSource;
+  PQuery _query;
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
@@ -532,7 +532,7 @@ class PCommon extends PreceptItem {
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     this.controlEdit = ControlEdit.inherited,
@@ -541,7 +541,7 @@ class PCommon extends PreceptItem {
   })  :
         _isStatic = isStatic,
         _dataProvider = dataProvider,
-        _dataSource = dataSource,
+        _query = query,
         _panelStyle = panelStyle,
         _writingStyle = writingStyle,
         super(id: id);
@@ -574,14 +574,14 @@ class PCommon extends PreceptItem {
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
   @JsonKey(
-      fromJson: PDataSourceConverter.fromJson,
-      toJson: PDataSourceConverter.toJson,
+      fromJson: PQueryConverter.fromJson,
+      toJson: PQueryConverter.toJson,
       nullable: true,
       includeIfNull: false)
-  PQuery get dataSource => _dataSource ?? parent.dataSource;
+  PQuery get query => _query ?? parent.query;
 
-  /// [dataSource] is declared rather than inherited
-  bool get dataSourceIsDeclared => (_dataSource != null);
+  /// [query] is declared rather than inherited
+  bool get queryIsDeclared => (_query != null);
 
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
@@ -610,8 +610,8 @@ class PCommon extends PreceptItem {
     _setupControlEdit(inherited);
     if (_dataProvider != null)
       _dataProvider.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_dataSource != null)
-      _dataSource.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_query != null)
+      _query.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
@@ -671,8 +671,8 @@ class PCommon extends PreceptItem {
     if (dataProvider != null) {
       dataProvider.doValidate(messages);
     }
-    if (dataSource != null) {
-      dataSource.doValidate(messages);
+    if (query != null) {
+      query.doValidate(messages);
     }
   }
 }
@@ -686,14 +686,14 @@ class PContent extends PCommon {
     this.property,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
-    PQuery dataSource,
+    PQuery query,
     PPanelStyle panelStyle,
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
   }) : super(
-          dataSource: dataSource,
+          query: query,
           schema: schema,
           id: id,
           controlEdit: controlEdit,
