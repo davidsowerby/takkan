@@ -1,22 +1,25 @@
-import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/authenticator/authenticator.dart';
 import 'package:precept_backend/backend/authenticator/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
 
-class Back4AppSignInOut extends Authenticator {
+/// This should be instantiated as a Singleton (to keep _parseUser)
+/// That is currently done in [PBack4AppDataProvider.register]
+class Back4AppAuthenticatorDelegate implements AuthenticatorDelegate {
   final Function(SignInStatus) statusCallback;
-  ParseUser _user;
+  ParseUser _parseUser;
 
-  Back4AppSignInOut({this.statusCallback});
+  Back4AppAuthenticatorDelegate({this.statusCallback});
 
   init() async {}
 
   /// Username defaults to email address
   Future<bool> signInWithEmail(PreceptUser user, String password) async {
     statusCallback(SignInStatus.Authenticating);
-    if (_user == null) {
-      _user = ParseUser(user.userName, password, user.email);
-      final ParseResponse authResult = await _user.login();
+    if (_parseUser == null) {
+      _parseUser = ParseUser(user.userName, password, user.email);
+      final ParseResponse authResult = await _parseUser.login();
       if (authResult.success) {
         statusCallback(SignInStatus.Authenticated);
         return true;
@@ -46,10 +49,10 @@ class Back4AppSignInOut extends Authenticator {
 
   Future<void> signOut() async {
     statusCallback(SignInStatus.Uninitialized);
-    if (_user != null) {
-      await _user.logout();
+    if (_parseUser != null) {
+      await _parseUser.logout();
 
-      _user = null;
+      _parseUser = null;
     }
   }
 
@@ -65,7 +68,7 @@ class Back4AppSignInOut extends Authenticator {
   @override
   Future<bool> registerWithEmail(PreceptUser user) async {
     statusCallback(SignInStatus.Registering);
-    ParseResponse authResult = await _user.signUp();
+    ParseResponse authResult = await _parseUser.signUp();
     if (authResult.success) {
       statusCallback(SignInStatus.Registered);
       return true;

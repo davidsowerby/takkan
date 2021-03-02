@@ -20,10 +20,10 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(Map<String, dynamic> json)
 
 Map<String, dynamic> _$PBack4AppDataProviderToJson(PBack4AppDataProvider instance) =>
     <String, dynamic>{
-      'baseUrl': instance.baseUrl,
       'instanceName': instance.instanceName,
-      'checkHealthOnConnect': instance.checkHealthOnConnect,
       'env': _$EnvEnumMap[instance.env],
+      'baseUrl': instance.baseUrl,
+      'checkHealthOnConnect': instance.checkHealthOnConnect,
       'debug': instance.debug,
       'appId': instance.appId,
       'clientKey': instance.clientKey,

@@ -1,4 +1,4 @@
-import 'package:precept_back4app_backend/backend/back4app/pBack4AppDataProvider.dart';
+import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/restDataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -35,7 +35,7 @@ void main() {
             clientKey: 'DPAF2DQCDVJ9Zmbp8vyaDhfC1XXjDdEveJqIwLYc',
             baseUrl: 'https://parseapi.back4app.com',
           ),
-          dataSource: query);
+          query: query);
       script.init();
       RestDataProvider dataProvider = RestDataProvider(config: script.dataProvider);
       // when
