@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/authenticator/authenticator.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
+import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
 import 'package:precept_script/script/authenticator.dart';
@@ -30,6 +32,7 @@ import 'package:precept_script/script/style/writingStyle.dart';
 /// [init] must be called before the app is run
 class Precept {
   PScript _rootModel;
+  Map<String,dynamic> _jsonConfig;
 
   Precept();
 
@@ -45,9 +48,15 @@ class Precept {
     if (includePreceptDefaults || injectionBindings == null || injectionBindings.isEmpty) {
       preceptDefaultInjectionBindings();
     }
+    WidgetsFlutterBinding.ensureInitialized();
+    _jsonConfig=await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
     await loadModels(loaders: loaders);
     particleLibrary.init(entries: particleLibraryEntries);
     authenticator.init(_rootModel);
+  }
+
+  Map<String,dynamic> getConfig(String segment){
+    return _jsonConfig[segment];
   }
 
   loadModels({@required List<PreceptLoader> loaders}) async {
