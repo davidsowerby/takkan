@@ -20,7 +20,7 @@ class PSubContent extends PContent {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle,
+    PPanelStyle panelStyle=const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,

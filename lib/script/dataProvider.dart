@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/configLoader.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/script.dart';
@@ -120,11 +118,11 @@ class PDataProvider extends PreceptItem {
     _isLoaded = false;
     _isLoading = true;
     try {
-      final configLoader = inject<ConfigLoader>();
-      if (configFilePath != null) {
-        final data = await configLoader.loadFile(filePath: configFilePath);
-        headers.addAll(data);
-      }
+      // final configLoader = inject<AssetLoader>();
+      // if (configFilePath != null) {
+      //   final data = await configLoader.loadFile(filePath: configFilePath);
+      //   headers.addAll(data);
+      // }
       _isLoaded = true;
       _isLoading = false;
       if (_listener != null) {
