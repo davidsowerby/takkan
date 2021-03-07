@@ -1,13 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'query.g.dart';
 
-/// Roughly equivalent to a query with an expected result of one document, or a List of documents
-/// as either a Future or a Stream. Implementations are in broad categories of 'get',
+/// This abstract base class is common for queries with an expected result of one document, or a List of documents.
+/// Results may be returned as either a Future or a Stream. Implementations are in broad categories of 'get',
 /// Specifies how to retrieve a single document or a list of documents in a backend-neutral way
 /// Supports various ways of identifying the document:
 /// - 'get' with a document id
@@ -15,17 +17,18 @@ part 'query.g.dart';
 /// - 'select first'
 /// - 'select last'
 ///
-/// [document] is usually the equivalent of something like a table name, and does not usually need to be specified
-/// explicitly - it is typically derived from whatever is used to select the required data
+/// [schemaPath] is usually the equivalent of something like a table name, and does not usually need to be specified
+/// explicitly - it is typically derived from whatever is used to select the required data.  Usually overridden in sub-classes
 ///
 ///
 abstract class PQuery extends PreceptItem {
-  String get document;
+  String get schemaPath;
 
   PQuery({this.params});
 
   final Map<String, dynamic> params;
 
+  PDocument get schema => (parent as PCommon).dataProvider.schema.documents[schemaPath];
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
 
@@ -45,7 +48,7 @@ class PGet extends PQuery {
 
   Map<String, dynamic> toJson() => _$PGetToJson(this);
 
-  String get document => documentId.path;
+  String get schemaPath => documentId.path;
 
   @override
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {
@@ -67,7 +70,7 @@ class PGetStream extends PQuery {
     params: params,
   );
 
-  String get document => documentId.path;
+  String get schemaPath => documentId.path;
 
   factory PGetStream.fromJson(Map<String, dynamic> json) => _$PGetStreamFromJson(json);
 
