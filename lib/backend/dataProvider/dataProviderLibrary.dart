@@ -25,7 +25,7 @@ class DataProviderLibrary {
   /// Throws a [PreceptException] if a builder for this config has not been registered
   DataProvider find({@required PDataProvider config}) {
     assert(config!=null);
-    final lookupKey = '${config.runtimeType.toString()}:${config.instanceName}';
+    final lookupKey = '${config.runtimeType.toString()}';
     logType(this.runtimeType).d("Finding DataProvider for lookupKey: $lookupKey");
     if (instances.containsKey(lookupKey)) {
       return instances[lookupKey];
