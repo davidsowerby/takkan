@@ -73,8 +73,13 @@ abstract class TemporaryDocument with ChangeNotifier {
 
   dynamic operator [](Object key);
 
+  /// Updates both [initialData] and [output].
+  /// - [initialData] reflects exactly what is received from the source
+  /// - [output] reflects what has been received from the source, but with changes reapplied from the [changeList]
   TemporaryDocument updateFromSource(
-      {@required Map<String, dynamic> source, @required DocumentId documentId, bool fireListeners = false});
+      {@required Map<String, dynamic> source,
+      @required DocumentId documentId,
+      bool fireListeners = false});
 
   /// Creates a "new" document from [initialData], clearing any existing data
   TemporaryDocument createNew({Map<String, dynamic> initialData = const {}});
@@ -95,7 +100,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
     implements TemporaryDocument {
   final DateTime timestamp;
   final Map<String, dynamic> _output = Map<String, dynamic>();
-  final List<ChangeEntry> _changeList = List();
+  final List<ChangeEntry> _changeList = List.empty(growable: true);
   final Map<String, dynamic> _changes = Map<String, dynamic>();
   final Map<String, dynamic> _initialData = Map<String, dynamic>();
   final instance = DateTime.now();
@@ -107,7 +112,6 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   }
 
   DocumentId get documentId => _documentId;
-
 
   @override
   Iterable<String> get keys => _output.keys;
@@ -134,13 +138,15 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
     _output.clear();
     _changeList.clear();
     _changes.clear();
-    _documentId=null;
+    _output.addAll(_initialData);
     notifyListeners();
   }
 
   @override
   void clear() {
     reset();
+    _documentId = null;
+    _initialData.clear();
   }
 
   @override
@@ -163,12 +169,17 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// override this default
   ///
   /// See also [createNew]
-  TemporaryDocument updateFromSource({@required Map<String, dynamic> source, @required DocumentId documentId, bool fireListeners = false}) {
+  TemporaryDocument updateFromSource(
+      {@required Map<String, dynamic> source,
+      @required DocumentId documentId,
+      bool fireListeners = false}) {
     assert(source != null);
+    _initialData.clear();
+    _initialData.addAll(source);
     _output.clear(); // we have to clear - keys may have been deleted
     _output.addAll(source); // output is now a copy of the source
     _output.addAll(_changes); // re-apply changes
-    _documentId=documentId;
+    _documentId = documentId;
     return this;
   }
 
@@ -222,8 +233,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 
   /// Called by bindings to indicate a change below the first level of keys.
   void nestedChange(String firstLevelKey) {
-    logType(this.runtimeType)
-        .d("nested change notification received for '$firstLevelKey'");
+    logType(this.runtimeType).d("nested change notification received for '$firstLevelKey'");
     _changeList.add(ChangeEntry(type: ChangeType.update, key: firstLevelKey));
     _changes[firstLevelKey] = _output[firstLevelKey];
     notifyListeners();

@@ -55,7 +55,7 @@ void main() {
         expect(tdoc.keys, contains("item2"));
         tdoc.reset();
         expect(listener.changeCount, 6);
-        expect(tdoc.output.isEmpty, true);
+        expect(tdoc.output, tdoc.initialData);
         expect(tdoc.changes.isEmpty, true);
         expect(tdoc.changeList.isEmpty, true);
       });
@@ -88,17 +88,27 @@ void main() {
   });
   group("updating source", () {
     test("changes are maintained after source updated", () {
+      // given
       Map<String, dynamic> originalSource = {
         "item1": "original1",
         "item2": "original2",
         "item3": "original3",
         "item4": "original4"
       };
+
+      // when
       tdoc.updateFromSource(source: originalSource);
+
+      // then
+      expect(tdoc.initialData,originalSource);
+
+
+      // given
       final item1 = tdoc.rootBinding.stringBinding(property: "item1");
       final item2 = tdoc.rootBinding.stringBinding(property: "item2");
       final item3 = tdoc.rootBinding.stringBinding(property: "item3");
       final item4 = tdoc.rootBinding.stringBinding(property: "item4");
+
 
       item1.write("localupdated1");
       item2.write("localupdated2");
@@ -109,12 +119,16 @@ void main() {
         "item3": "remoteupdated3",
         "item4": "original4"
       };
+
+      // when
       tdoc.updateFromSource(source: updatedSource);
 
+      // then
       expect(item1.read(), "localupdated1");
       expect(item2.read(), "localupdated2");
       expect(item3.read(), "remoteupdated3");
       expect(item4.read(), "original4");
+      expect(tdoc.initialData, updatedSource);
     });
   });
 
