@@ -6,62 +6,29 @@ part of 'pBack4AppDataProvider.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PBack4AppDataProvider _$PBack4AppDataProviderFromJson(Map<String, dynamic> json) {
+PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
+    Map<String, dynamic> json) {
   return PBack4AppDataProvider(
     debug: json['debug'] as bool,
     appId: json['appId'] as String,
-    clientKey: json['clientKey'] as String,
+    clientId: json['clientId'] as String,
     baseUrl: json['baseUrl'] as String,
-    instanceName: json['instanceName'] as String,
-    env: _$enumDecodeNullable(_$EnvEnumMap, json['env']),
+    id: json['id'] as String,
+    schema: json['schema'] == null
+        ? null
+        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
   );
 }
 
-Map<String, dynamic> _$PBack4AppDataProviderToJson(PBack4AppDataProvider instance) =>
+Map<String, dynamic> _$PBack4AppDataProviderToJson(
+        PBack4AppDataProvider instance) =>
     <String, dynamic>{
-      'instanceName': instance.instanceName,
-      'env': _$EnvEnumMap[instance.env],
+      'id': instance.id,
+      'schema': instance.schema?.toJson(),
       'baseUrl': instance.baseUrl,
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'debug': instance.debug,
       'appId': instance.appId,
-      'clientKey': instance.clientKey,
+      'clientId': instance.clientId,
     };
-
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-
-  final value = enumValues.entries.singleWhere((e) => e.value == source, orElse: () => null)?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$EnvEnumMap = {
-  Env.dev: 'dev',
-  Env.test: 'test',
-  Env.qa: 'qa',
-  Env.prod: 'prod',
-};

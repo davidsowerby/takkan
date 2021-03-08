@@ -1,5 +1,5 @@
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
-import 'package:precept_backend/backend/authenticator/preceptUser.dart';
+import 'package:precept_backend/backend/preceptUser.dart';
 
 class Back4AppUserConverter implements PreceptUserConverter<ParseUser> {
   @override

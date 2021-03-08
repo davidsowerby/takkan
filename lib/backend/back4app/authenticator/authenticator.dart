@@ -1,16 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_backend/backend/authenticator/authenticator.dart';
-import 'package:precept_backend/backend/authenticator/preceptUser.dart';
+import 'package:precept_backend/backend/authenticator.dart';
+import 'package:precept_backend/backend/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/schema/schema.dart';
 
 /// This should be instantiated as a Singleton (to keep _parseUser)
 /// That is currently done in [PBack4AppDataProvider.register]
-class Back4AppAuthenticatorDelegate implements AuthenticatorDelegate {
+class Back4AppAuthenticator implements Authenticator<PBack4AppDataProvider> {
   final Function(SignInStatus) statusCallback;
   ParseUser _parseUser;
 
-  Back4AppAuthenticatorDelegate({this.statusCallback});
+  Back4AppAuthenticator({this.statusCallback});
 
   init() async {}
 
@@ -35,7 +37,7 @@ class Back4AppAuthenticatorDelegate implements AuthenticatorDelegate {
               return false;
             }
 
-          /// Invalid username / password
+        /// Invalid username / password
         }
       }
     }
@@ -95,4 +97,14 @@ class Back4AppAuthenticatorDelegate implements AuthenticatorDelegate {
     // TODO: implement updateUser
     throw UnimplementedError();
   }
+
+  @override
+  String get configKey => 'back4app';
+
+  @override
+  PBack4AppDataProvider dataProvider(
+      {@required PSchema schema, @required Map<String, dynamic> jsonConfig}) {
+    return PBack4AppDataProvider.fromConfig(schema: schema, jsonConfig: jsonConfig);
+  }
+
 }
