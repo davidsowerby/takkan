@@ -1,34 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'authenticator.dart';
+part of 'backend.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PAuthenticator _$PAuthenticatorFromJson(Map<String, dynamic> json) {
-  return PAuthenticator(
+PBackend _$PBackendFromJson(Map<String, dynamic> json) {
+  return PBackend(
+    instanceName: json['instanceName'] as String,
+    schema: json['schema'] == null
+        ? null
+        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+    env: _$enumDecodeNullable(_$EnvEnumMap, json['env']),
+    id: json['id'] as String,
     signInOptions: json['signInOptions'] == null
         ? null
         : PSignInOptions.fromJson(
             json['signInOptions'] as Map<String, dynamic>),
-    id: json['id'] as String,
-    instanceName: json['instanceName'] as String,
-    env: _$enumDecodeNullable(_$EnvEnumMap, json['env']),
-    configFilePath: json['configFilePath'] as String,
-    schema: json['schema'] == null
-        ? null
-        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$PAuthenticatorToJson(PAuthenticator instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PBackendToJson(PBackend instance) => <String, dynamic>{
       'id': instance.id,
       'instanceName': instance.instanceName,
       'schema': instance.schema?.toJson(),
       'env': _$EnvEnumMap[instance.env],
-      'configFilePath': instance.configFilePath,
       'signInOptions': instance.signInOptions?.toJson(),
     };
 

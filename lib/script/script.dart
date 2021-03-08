@@ -7,7 +7,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/script/authenticator.dart';
+import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
@@ -33,24 +33,26 @@ part 'script.g.dart';
 class PScript extends PCommon {
   final String name;
   @JsonKey(nullable: true)
-  final PAuthenticator authenticator;
+  final PBackend backend;
   final Map<String, PRoute> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
   List<ValidationMessage> _scriptValidationMessages;
+  @JsonKey(ignore: true)
+  PDataProvider _defaultDataProvider;
 
   PScript({
     this.conversionErrorMessages = const ConversionErrorMessages(defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(defaultValidationErrorMessages),
     this.routes = const {},
     this.name,
-    this.authenticator,
+    this.backend,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
+    PPanelStyle panelStyle = const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,
@@ -73,9 +75,13 @@ class PScript extends PCommon {
       includeIfNull: false,
       fromJson: PDataProviderConverter.fromJson,
       toJson: PDataProviderConverter.toJson)
-  PDataProvider get dataProvider => _dataProvider;
+  PDataProvider get dataProvider => _dataProvider ?? _defaultDataProvider;
+  @JsonKey(ignore: true)
+  PDataProvider get defaultDataProvider => _defaultDataProvider;
 
-
+  set defaultDataProvider(value) {
+    _defaultDataProvider = value;
+  }
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
@@ -382,7 +388,7 @@ class PPanel extends PSubContent {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
+    PPanelStyle panelStyle = const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
@@ -538,8 +544,7 @@ class PCommon extends PreceptItem {
     this.controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
-  })  :
-        _isStatic = isStatic,
+  })  : _isStatic = isStatic,
         _dataProvider = dataProvider,
         _query = query,
         _panelStyle = panelStyle,
@@ -549,7 +554,9 @@ class PCommon extends PreceptItem {
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
+
   PPanelStyle get panelStyle => _panelStyle;
+
   WritingStyle get writingStyle => _writingStyle;
 
   bool get inheritedEditControl {
@@ -586,8 +593,6 @@ class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
 
-
-
   @JsonKey(ignore: true)
   PScript get script => _script;
 
@@ -610,8 +615,7 @@ class PCommon extends PreceptItem {
     _setupControlEdit(inherited);
     if (_dataProvider != null)
       _dataProvider.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_query != null)
-      _query.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_query != null) _query.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
@@ -687,7 +691,7 @@ class PContent extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
+    PPanelStyle panelStyle = const PPanelStyle(),
     WritingStyle writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,

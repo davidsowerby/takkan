@@ -75,7 +75,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
+        dataProvider: PRestDataProvider( env: Env.test),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -100,7 +100,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
+          dataProvider: PRestDataProvider(env: Env.test),
           routes: {
             "/home": PRoute(
               page: PPage(
@@ -138,7 +138,7 @@ void main() {
       );
 
       final withoutQuery = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
+        dataProvider: PRestDataProvider(env: Env.test),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -151,7 +151,7 @@ void main() {
       );
 
       final withQueryAndProvider = PScript(
-        dataProvider: PRestDataProvider(instanceName: 'mock', env: Env.test),
+        dataProvider: PRestDataProvider( env: Env.test),
         // ignore: missing_required_param
 
         routes: {
