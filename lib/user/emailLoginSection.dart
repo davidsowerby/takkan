@@ -1,7 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/authenticator/authenticator.dart';
+import 'package:precept_backend/backend/authenticator.dart';
+import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/component/messagePanel.dart';
 import 'package:precept_client/common/component/text.dart';
@@ -186,14 +187,14 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
   }
 
   registrationComplete(UserState userState) async {
-    await authenticator.updateUser(userState.user);
+    await backend.updateUser(userState.user);
     Navigator.pushNamed(context, widget.nextRoute);
   }
 
   /// Submits credentials for email log in.  A failed login automatically registers a new account (email and password are validated before submission).
   /// This does mean that an account could be incorrectly created
   submitCredentials(BuildContext context, UserState userState) async {
-    bool successful = await authenticator.signInByEmail(userState.user);
+    bool successful = await backend.signInByEmail(userState.user);
     if (successful) {
       if (userState.status == SignInStatus.Authenticated) {
         Navigator.pushNamed(context, widget.nextRoute);

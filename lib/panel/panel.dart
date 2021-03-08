@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
@@ -31,7 +32,8 @@ class PanelState extends State<Panel> with ContentBuilder implements ContentStat
   void initState() {
     super.initState();
     if (config.dataProvider != null) {
-      config.dataProvider.listener = _onConfigLoaded;
+      /// Call is not actioned if Precept already in ready state
+      precept.addReadyListener ( _onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider);
     }
     dataSource = DataSource(config);
@@ -39,7 +41,7 @@ class PanelState extends State<Panel> with ContentBuilder implements ContentStat
     expanded=config.openExpanded;
   }
 
-  _onConfigLoaded() {
+  _onPreceptReady() {
     setState(() {});
   }
 

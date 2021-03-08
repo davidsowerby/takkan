@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_backend/backend/authenticator/authenticator.dart';
-import 'package:precept_backend/backend/authenticator/preceptUser.dart';
+import 'package:precept_backend/backend/authenticator.dart';
+import 'package:precept_backend/backend/preceptUser.dart';
 
 class UserState with ChangeNotifier{
   PreceptUser _user;

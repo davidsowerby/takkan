@@ -53,7 +53,7 @@ class PreceptRouter {
     final requiresAuth = false;//(route.page.schema == null) ? false : (route.page.schema as PDocument).readRequiresAuth;
     if (requiresAuth && (!userState.isAuthenticated)) {
       _preSignInRoute=route;
-      final pageWidget = injectParam<SignInPage>(param1: script.authenticator.signInOptions);
+      final pageWidget = injectParam<SignInPage>(param1: script.backend.signInOptions);
       return MaterialPageRoute(builder: (_) => pageWidget);
     }
     try {

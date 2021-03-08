@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/authenticator/authenticator.dart';
 import 'package:precept_client/app/loader.dart';
+import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
@@ -11,7 +11,7 @@ import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/script/authenticator.dart';
+import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/pPart.dart';
@@ -33,6 +33,8 @@ import 'package:precept_script/script/style/writingStyle.dart';
 class Precept {
   PScript _rootModel;
   Map<String,dynamic> _jsonConfig;
+  bool _isReady=false;
+  final List<Function()> _readyListeners=List.empty(growable: true);
 
   Precept();
 
@@ -52,8 +54,26 @@ class Precept {
     _jsonConfig=await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
     await loadModels(loaders: loaders);
     particleLibrary.init(entries: particleLibraryEntries);
-    authenticator.init(_rootModel);
+    backend.init(_rootModel,_jsonConfig);
+    _rootModel.defaultDataProvider=backend.dataProvider;
+    _isReady=true;
+    notifyReadyListeners();
   }
+
+  /// Call is not actioned if Precept already in ready state
+  addReadyListener(Function() listener){
+    if (!_isReady) {
+      _readyListeners.add(listener);
+    }
+  }
+
+  notifyReadyListeners(){
+    for (Function() listener in _readyListeners){
+      listener();
+    }
+  }
+  
+  bool get isReady => _isReady;
 
   Map<String,dynamic> getConfig(String segment){
     return _jsonConfig[segment];
@@ -86,7 +106,7 @@ class Precept {
   _mergeModels(List<PScript> models) {
     String name = models[0].name;
     String id = models[0].id;
-    PAuthenticator authenticator;
+    PBackend backend;
     Map<String, PRoute> routes = Map();
     final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(Map());
     final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(Map());
@@ -98,7 +118,7 @@ class Precept {
     WritingStyle writingStyle;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      if (s.authenticator != null) authenticator = s.authenticator;
+      if (s.backend != null) backend = s.backend;
       if (s.routes != null) routes.addAll(s.routes);
       if (s.conversionErrorMessages != null)
         conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
@@ -112,7 +132,7 @@ class Precept {
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
-        authenticator: authenticator,
+        backend: backend,
         routes: routes,
         id: id,
         conversionErrorMessages: conversionErrorMessages,

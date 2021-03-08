@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -53,11 +54,12 @@ class PartState extends State<Part> with ContentBuilder implements ContentState 
     super.initState();
     dataSource = DataSource(widget.config);
     if (config.dataProvider != null) {
-      config.dataProvider.listener = _onConfigLoaded;
+      /// Call is not actioned if Precept already in ready state
+      precept.addReadyListener ( _onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider);
     }
   }
-  _onConfigLoaded() {
+  _onPreceptReady() {
     setState(() {});
   }
   @override

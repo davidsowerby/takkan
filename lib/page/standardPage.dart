@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/contentBuilder.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -37,7 +38,8 @@ class PreceptPageState extends State<PreceptPage>
   void initState() {
     super.initState();
     if (config.dataProvider != null) {
-      config.dataProvider.listener = _onConfigLoaded;
+      /// Call is not actioned if Precept already in ready state
+      precept.addReadyListener ( _onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider);
     }
     dataSource = DataSource(widget.config);
@@ -45,7 +47,7 @@ class PreceptPageState extends State<PreceptPage>
         .child(widget.config, widget.parentBinding, dataSource);
   }
 
-  _onConfigLoaded() {
+  _onPreceptReady() {
     setState(() {});
   }
 

@@ -4,6 +4,7 @@ import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/exception.dart';
+import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -112,13 +113,11 @@ mixin ContentBuilder {
 
     /// Select the dataProvider, supplying the config for it
     final provider = dataProviderLibrary.find(config: config.dataProvider);
-    // final backend = backendLibrary.find(config: config.backend); //Backend(config: config.backend);
-    /// This is safe, because it is ignored by [backend] if already connected
-    final providerConfig = config.dataProvider;
 
     final query = config.query;
 
-    if (providerConfig.isLoaded) {
+    /// Make sure we don't start before Precept has finished init
+    if (precept.isReady) {
       switch (query.runtimeType) {
         case PGet:
           return futureBuilder(
@@ -130,7 +129,7 @@ mixin ContentBuilder {
           logType(this.runtimeType).e(msg);
           throw ConfigurationException(msg);
       }
-    }else{
+    } else {
       return CircularProgressIndicator();
     }
   }
