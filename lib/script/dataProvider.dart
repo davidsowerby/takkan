@@ -40,6 +40,7 @@ class PRestDataProvider extends PDataProvider {
 
 enum Env { dev, test, qa, prod }
 
+@JsonSerializable(nullable: true, explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSchema schema;
 

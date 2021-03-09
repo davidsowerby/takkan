@@ -529,11 +529,19 @@ class PCommon extends PreceptItem {
   IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
-  @JsonKey(nullable: true, includeIfNull: false)
+  @JsonKey(
+      nullable: true,
+      includeIfNull: false,
+      fromJson: PDataProviderConverter.fromJson,
+      toJson: PDataProviderConverter.toJson)
   PDataProvider _dataProvider;
   @JsonKey(ignore: true)
   PScript _script;
-
+  @JsonKey(
+      fromJson: PQueryConverter.fromJson,
+      toJson: PQueryConverter.toJson,
+      nullable: true,
+      includeIfNull: false)
   PQuery _query;
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
@@ -556,6 +564,7 @@ class PCommon extends PreceptItem {
         _writingStyle = writingStyle,
         super(id: id);
 
+  @JsonKey(ignore: true)
   IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   bool get hasEditControl => _hasEditControl;
@@ -575,21 +584,13 @@ class PCommon extends PreceptItem {
     return false;
   }
 
-  @JsonKey(
-      nullable: true,
-      includeIfNull: false,
-      fromJson: PDataProviderConverter.fromJson,
-      toJson: PDataProviderConverter.toJson)
+  @JsonKey(ignore: true)
   PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
-  @JsonKey(
-      fromJson: PQueryConverter.fromJson,
-      toJson: PQueryConverter.toJson,
-      nullable: true,
-      includeIfNull: false)
+@JsonKey(ignore: true)
   PQuery get query => _query ?? parent.query;
 
   /// [query] is declared rather than inherited

@@ -17,7 +17,6 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     backend: json['backend'] == null
         ? null
         : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    isStatic: _$enumDecode(_$IsStaticEnumMap, json['isStatic']),
     dataProvider: PDataProviderConverter.fromJson(
         json['dataProvider'] as Map<String, dynamic>),
     query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
@@ -51,7 +50,6 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
   writeNotNull(
       'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('query', PQueryConverter.toJson(instance.query));
-  val['isStatic'] = _$IsStaticEnumMap[instance.isStatic];
   return val;
 }
 
@@ -76,12 +74,6 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-const _$IsStaticEnumMap = {
-  IsStatic.yes: 'yes',
-  IsStatic.no: 'no',
-  IsStatic.inherited: 'inherited',
-};
-
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
@@ -98,10 +90,6 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     page: json['page'] == null
         ? null
         : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
-    query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
@@ -110,48 +98,19 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PRouteToJson(PRoute instance) {
-  final val = <String, dynamic>{
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$IsStaticEnumMap[instance.isStatic],
-    'panelStyle': instance.panelStyle.toJson(),
-    'writingStyle': instance.writingStyle.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
-  writeNotNull('query', PQueryConverter.toJson(instance.query));
-  val['page'] = instance.page?.toJson();
-  return val;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
+Map<String, dynamic> _$PRouteToJson(PRoute instance) => <String, dynamic>{
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
+      'page': instance.page?.toJson(),
+    };
 
 PPage _$PPageFromJson(Map<String, dynamic> json) {
   return PPage(
     pageType: json['pageType'] as String,
     scrollable: json['scrollable'] as bool,
-    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
-    query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
@@ -163,31 +122,17 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPageToJson(PPage instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$IsStaticEnumMap[instance.isStatic],
-    'panelStyle': instance.panelStyle.toJson(),
-    'writingStyle': instance.writingStyle.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
-  writeNotNull('query', PQueryConverter.toJson(instance.query));
-  val['property'] = instance.property;
-  val['pageType'] = instance.pageType;
-  val['scrollable'] = instance.scrollable;
-  val['content'] = PElementListConverter.toJson(instance.content);
-  val['title'] = instance.title;
-  return val;
-}
+Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
+      'id': instance.id,
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
+      'property': instance.property,
+      'pageType': instance.pageType,
+      'scrollable': instance.scrollable,
+      'content': PElementListConverter.toJson(instance.content),
+      'title': instance.title,
+    };
 
 PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   return PPanel(
@@ -206,10 +151,6 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     style: json['style'] == null
         ? null
         : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
-    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
-    query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
@@ -219,34 +160,20 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPanelToJson(PPanel instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$IsStaticEnumMap[instance.isStatic],
-    'panelStyle': instance.panelStyle.toJson(),
-    'writingStyle': instance.writingStyle.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
-  writeNotNull('query', PQueryConverter.toJson(instance.query));
-  val['caption'] = instance.caption;
-  val['content'] = PElementListConverter.toJson(instance.content);
-  val['openExpanded'] = instance.openExpanded;
-  val['scrollable'] = instance.scrollable;
-  val['help'] = instance.help?.toJson();
-  val['property'] = instance.property;
-  val['style'] = instance.style?.toJson();
-  val['heading'] = instance.heading?.toJson();
-  return val;
-}
+Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
+      'id': instance.id,
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
+      'caption': instance.caption,
+      'content': PElementListConverter.toJson(instance.content),
+      'openExpanded': instance.openExpanded,
+      'scrollable': instance.scrollable,
+      'help': instance.help?.toJson(),
+      'property': instance.property,
+      'style': instance.style?.toJson(),
+      'heading': instance.heading?.toJson(),
+    };
 
 PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
   return PPanelHeading(
@@ -273,10 +200,6 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
 
 PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
-    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
-    query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
@@ -286,23 +209,9 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PCommonToJson(PCommon instance) {
-  final val = <String, dynamic>{
-    'id': instance.id,
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'isStatic': _$IsStaticEnumMap[instance.isStatic],
-    'panelStyle': instance.panelStyle.toJson(),
-    'writingStyle': instance.writingStyle.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
-  writeNotNull('query', PQueryConverter.toJson(instance.query));
-  return val;
-}
+Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
+      'id': instance.id,
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
+    };

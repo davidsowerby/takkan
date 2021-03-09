@@ -1,13 +1,12 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/particle/pParticle.dart';
-import 'package:precept_script/script/particle/pTextBox.dart';
 
 class PDataProviderConverter {
 
   static final elementKey='-dataProvider-';
 
   static PDataProvider fromJson(Map<String, dynamic> json) {
+    if (json==null) return null;
     final providerType = json[elementKey];
     switch (providerType) {
       case "PRestDataProvider":
@@ -18,6 +17,7 @@ class PDataProviderConverter {
   }
 
   static Map<String, dynamic> toJson(PDataProvider object) {
+    if (object==null) return null;
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = object.toJson();
     jsonMap[elementKey] = type.toString();

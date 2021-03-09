@@ -41,3 +41,40 @@ final kitchenSinkScript = PScript(
     ),
   },
 );
+
+
+final kitchenSinkScriptWithoutDataProvider = PScript(
+  name: 'Kitchen Sink',
+  routes: {
+    '/': PRoute(
+      page: PPage(
+        title: 'Home Page',
+        content: [
+          PPart(
+            isStatic: IsStatic.yes,
+            staticData: 'Welcome to the Precept Kitchen Sink, starting with a bit of static text',
+            read: PText(showCaption: false),
+          ),
+          PPanel(
+            property: '',
+            caption: 'Person',
+            help: PHelp(
+              title: 'Display options',
+              message:
+              'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
+            ),
+            heading: PPanelHeading(
+              style: PHeadingStyle(background: PColor.primary),
+            ),
+            content: [
+              PPart(
+                property: 'firstName',
+                caption: 'First Name',
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  },
+);

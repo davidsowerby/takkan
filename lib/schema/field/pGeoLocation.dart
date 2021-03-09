@@ -5,7 +5,7 @@ import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
-part 'geoLocation.g.dart';
+part 'pGeoLocation.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PGeoLocation extends PField<GeoLocationValidation, GeoLocation> {

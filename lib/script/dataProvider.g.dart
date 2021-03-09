@@ -28,3 +28,18 @@ Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'headers': instance.headers,
     };
+
+PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
+  return PDataProvider(
+    schema: json['schema'] == null
+        ? null
+        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+    id: json['id'] as String,
+  );
+}
+
+Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'schema': instance.schema?.toJson(),
+    };

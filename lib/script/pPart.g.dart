@@ -14,7 +14,6 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     property: json['property'] as String,
     read: PReadParticleConverter.fromJson(json['read'] as Map<String, dynamic>),
     edit: PEditParticleConverter.fromJson(json['edit'] as Map<String, dynamic>),
-    isStatic: _$enumDecodeNullable(_$IsStaticEnumMap, json['isStatic']),
     staticData: json['staticData'] as String,
     help: json['help'] == null
         ? null
@@ -32,7 +31,6 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'isStatic': _$IsStaticEnumMap[instance.isStatic],
       'panelStyle': instance.panelStyle.toJson(),
       'writingStyle': instance.writingStyle.toJson(),
       'caption': instance.caption,
@@ -66,23 +64,6 @@ T _$enumDecode<T>(
   }
   return value ?? unknownValue;
 }
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
-const _$IsStaticEnumMap = {
-  IsStatic.yes: 'yes',
-  IsStatic.no: 'no',
-  IsStatic.inherited: 'inherited',
-};
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
