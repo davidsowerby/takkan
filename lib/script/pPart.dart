@@ -48,8 +48,8 @@ class PPart extends PSubContent {
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
-      PPanelStyle panelStyle,
-      WritingStyle writingStyle,
+      PPanelStyle panelStyle=const PPanelStyle(),
+      WritingStyle writingStyle=const WritingStyle(),
       ControlEdit controlEdit = ControlEdit.inherited,
       String id,
       this.tooltip})

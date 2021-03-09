@@ -53,7 +53,7 @@ class PScript extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle,
+    WritingStyle writingStyle = const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,
   }) : super(
@@ -62,6 +62,8 @@ class PScript extends PCommon {
           dataProvider: dataProvider,
           query: query,
           controlEdit: controlEdit,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -76,6 +78,7 @@ class PScript extends PCommon {
       fromJson: PDataProviderConverter.fromJson,
       toJson: PDataProviderConverter.toJson)
   PDataProvider get dataProvider => _dataProvider ?? _defaultDataProvider;
+
   @JsonKey(ignore: true)
   PDataProvider get defaultDataProvider => _defaultDataProvider;
 
@@ -207,13 +210,15 @@ class PRoute extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle,
-    WritingStyle writingStyle,
+    PPanelStyle panelStyle = const PPanelStyle(),
+    WritingStyle writingStyle = const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
           controlEdit: controlEdit,
+          panelStyle: panelStyle,
+          writingStyle: writingStyle,
         );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
@@ -265,8 +270,8 @@ class PPage extends PContent {
     this.content = const [],
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle,
-    WritingStyle writingStyle,
+    PPanelStyle panelStyle=const PPanelStyle(),
+    WritingStyle writingStyle=const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
@@ -388,8 +393,8 @@ class PPanel extends PSubContent {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle,
+    PPanelStyle panelStyle=const PPanelStyle(),
+    WritingStyle writingStyle=const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   })  : _heading = heading ?? PPanelHeading(),

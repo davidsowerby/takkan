@@ -5,7 +5,7 @@ part 'writingStyle.g.dart';
 @JsonSerializable(nullable: true, explicitToJson: true)
 class WritingStyle  {
 
-  WritingStyle() ;
+  const WritingStyle() ;
 
   factory WritingStyle.fromJson(Map<String, dynamic> json) =>
       _$WritingStyleFromJson(json);
