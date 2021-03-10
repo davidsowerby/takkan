@@ -26,11 +26,12 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
         WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PScriptToJson(PScript instance) {
   final val = <String, dynamic>{
+    'version': instance.version,
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'panelStyle': instance.panelStyle.toJson(),
@@ -95,10 +96,11 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     writingStyle:
         WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PRouteToJson(PRoute instance) => <String, dynamic>{
+      'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),
       'writingStyle': instance.writingStyle.toJson(),
@@ -119,10 +121,11 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     id: json['id'] as String,
     property: json['property'] as String,
     title: json['title'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),
@@ -157,10 +160,11 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
         WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),
@@ -186,11 +190,12 @@ PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
         ? null
         : PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
     id: json['id'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
     <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'expandable': instance.expandable,
       'canEdit': instance.canEdit,
@@ -206,10 +211,11 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) {
         WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),

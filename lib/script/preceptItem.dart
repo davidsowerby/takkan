@@ -38,8 +38,11 @@ class PreceptItem {
   @JsonKey(ignore: true)
   int _index;
 
-  PreceptItem({String id}) : _id = id;
-  
+  PreceptItem({String id, int version})
+      : _id = id,
+        version = version ?? 0;
+
+  int version = 0;
 
   factory PreceptItem.fromJson(Map<String, dynamic> json) => _$PreceptItemFromJson(json);
 
@@ -50,10 +53,10 @@ class PreceptItem {
   String get debugId => _debugId;
 
   PreceptItem get parent => _parent;
+
   String get id => _id;
 
-
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true})  {
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     _parent = parent;
     _index = index;
 
@@ -89,11 +92,9 @@ class PreceptItem {
     return this.runtimeType.toString().replaceFirst('P', '');
   }
 
-  void doValidate(List<ValidationMessage> messages)  {
-  }
+  void doValidate(List<ValidationMessage> messages) {}
 
   int get index => _index;
 
-  DebugNode get debugNode => DebugNode(this,const []);
-
+  DebugNode get debugNode => DebugNode(this, const []);
 }

@@ -37,7 +37,7 @@ class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> documents;
 
-  PSchema({@required this.documents, @required this.name}) ;
+  PSchema({@required this.documents, @required this.name});
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -46,12 +46,12 @@ class PSchema extends PSchemaElement {
   PSchemaElement get parent => null;
 
   init() {
-    doInit(parent: this, name:name);
+    doInit(parent: this, name: name);
   }
 
   @override
   doInit({PSchemaElement parent, String name}) {
-    _name=name;
+    _name = name;
     for (var entry in documents.entries) {
       final document = entry.value;
       document.doInit(parent: this, name: entry.key);
@@ -71,43 +71,46 @@ abstract class PSchemaElement {
 
   Map<String, dynamic> toJson();
 
-  doInit({PSchemaElement parent, String name}){
-    _parent=parent;
-    _name=name;
+  doInit({PSchemaElement parent, String name}) {
+    _parent = parent;
+    _name = name;
   }
 
   PSchemaElement get parent => _parent;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PPermissions  {
+class PPermissions {
+  final Map<String, String> readRoles;
+  final Map<String, String> writeRoles;
 
-  final Map<String,String> readRoles;
-  final Map<String,String> writeRoles;
+  PPermissions(Map<String, String> readRoles, Map<String, String> writeRoles)
+      : readRoles = readRoles ?? Map(),
+        writeRoles = writeRoles ?? writeRoles;
 
-
-  PPermissions(Map<String,String> readRoles, Map<String,String> writeRoles) : readRoles= readRoles ?? Map(), writeRoles = writeRoles ?? writeRoles;
-
-  factory PPermissions.fromJson(Map<String, dynamic> json) =>
-      _$PPermissionsFromJson(json);
+  factory PPermissions.fromJson(Map<String, dynamic> json) => _$PPermissionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
 }
 
-/// - [readRequiresAuthentication] can be set to true if a user needs only to be authenticated to read this document.  
+/// - [readRequiresAuthentication] can be set to true if a user needs only to be authenticated to read this document.
 /// Does not need to be set if [permissions.readRoles] has at least one entry, as [readRequiresAuth] takes account of roles
 /// - [writeRequiresAuthentication] can be set to true if a user needs only to be authenticated to write this document
 /// Does not need to be set if [permissions.writeRoles] has at least one entry, as [writeRequiresAuth] takes account of roles
-/// 
+///
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
-
   final Map<String, PSchemaElement> fields;
   final bool readRequiresAuthentication;
   final bool writeRequiresAuthentication;
 
-  PDocument({@required this.fields, PPermissions permissions, this.readRequiresAuthentication=false, this.writeRequiresAuthentication=false}) : super(permissions:permissions);
+  PDocument(
+      {@required this.fields,
+      PPermissions permissions,
+      this.readRequiresAuthentication = false,
+      this.writeRequiresAuthentication = false})
+      : super(permissions: permissions);
 
   String get name => _name;
 
@@ -120,9 +123,29 @@ class PDocument extends PSchemaElement {
   @override
   doInit({PSchemaElement parent, String name}) {
     _parent = parent;
-    _name=name;
+    _name = name;
   }
-  
-  bool get readRequiresAuth => readRequiresAuthentication || (permissions !=null && permissions.readRoles.isNotEmpty);
-  bool get writeRequiresAuth => writeRequiresAuthentication || (permissions !=null && permissions.writeRoles.isNotEmpty);
+
+  bool get readRequiresAuth =>
+      readRequiresAuthentication || (permissions != null && permissions.readRoles.isNotEmpty);
+
+  bool get writeRequiresAuth =>
+      writeRequiresAuthentication || (permissions != null && permissions.writeRoles.isNotEmpty);
+}
+
+/// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure
+/// the application.
+///
+/// [segment] relates to the first level within *precept.json*
+/// [instance] relates to the second level within *precept.json*
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PSchemaSource {
+  final String segment;
+  final String instance;
+
+  const PSchemaSource({@required this.segment,@required this.instance});
+
+  factory PSchemaSource.fromJson(Map<String, dynamic> json) => _$PSchemaSourceFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PSchemaSourceToJson(this);
 }

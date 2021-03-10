@@ -56,3 +56,16 @@ Map<String, dynamic> _$PDocumentToJson(PDocument instance) => <String, dynamic>{
       'readRequiresAuthentication': instance.readRequiresAuthentication,
       'writeRequiresAuthentication': instance.writeRequiresAuthentication,
     };
+
+PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) {
+  return PSchemaSource(
+    segment: json['segment'] as String,
+    instance: json['instance'] as String,
+  );
+}
+
+Map<String, dynamic> _$PSchemaSourceToJson(PSchemaSource instance) =>
+    <String, dynamic>{
+      'segment': instance.segment,
+      'instance': instance.instance,
+    };

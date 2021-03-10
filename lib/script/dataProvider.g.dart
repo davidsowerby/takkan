@@ -8,22 +8,23 @@ part of 'dataProvider.dart';
 
 PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
   return PRestDataProvider(
-    schema: json['schema'] == null
+    schemaSource: json['schemaSource'] == null
         ? null
-        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+        : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
     baseUrl: json['baseUrl'] as String,
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
     id: json['id'] as String,
     headers: (json['headers'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
     <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
-      'schema': instance.schema?.toJson(),
+      'schemaSource': instance.schemaSource?.toJson(),
       'baseUrl': instance.baseUrl,
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'headers': instance.headers,
@@ -31,15 +32,16 @@ Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
   return PDataProvider(
-    schema: json['schema'] == null
+    schemaSource: json['schemaSource'] == null
         ? null
-        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+        : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
     id: json['id'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
     <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
-      'schema': instance.schema?.toJson(),
+      'schemaSource': instance.schemaSource?.toJson(),
     };

@@ -104,7 +104,7 @@ class PScript extends PCommon {
   List<ValidationMessage> validate(
       {bool throwOnFail = false, bool useCaptionsAsIds = true, bool logFailures = true}) {
     init(useCaptionsAsIds: useCaptionsAsIds);
-    _scriptValidationMessages = List();
+    _scriptValidationMessages = List.empty(growable: true);
     doValidate(_scriptValidationMessages);
 
     if (routes == null || routes.length == 0) {

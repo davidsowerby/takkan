@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
+import 'package:precept_script/validation/message.dart';
 
 part 'dataProvider.g.dart';
 
@@ -15,7 +15,8 @@ class PRestDataProvider extends PDataProvider {
   final Map<String, String> headers;
 
   PRestDataProvider({
-    @required PSchema schema,
+    PSchemaSource schemaSource,
+    PSchema schema,
     this.baseUrl,
     this.checkHealthOnConnect = true,
     String id,
@@ -24,6 +25,7 @@ class PRestDataProvider extends PDataProvider {
   }) : super(
           id: id,
           schema: schema,
+          schemaSource: schemaSource,
         );
 
   factory PRestDataProvider.fromJson(Map<String, dynamic> json) =>
@@ -40,14 +42,30 @@ class PRestDataProvider extends PDataProvider {
 
 enum Env { dev, test, qa, prod }
 
+/// Either [schema] or [schemaSource] can be set.
+/// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PDataProvider extends PreceptItem {
-  final PSchema schema;
+  @JsonKey(ignore: true)
+  PSchema _schema;
+  final PSchemaSource schemaSource;
+
+  @JsonKey(ignore: true)
+  PSchema get schema => _schema;
+
+  set schema(value) => _schema = value;
 
   PDataProvider({
-    this.schema,
+    PSchema schema,
+    this.schemaSource,
     String id,
   }) : super(id: id);
 
-
+  void doValidate(List<ValidationMessage> messages) {
+    super.doValidate(messages);
+    if (schema == null && schemaSource == null) {
+      messages.add(ValidationMessage(
+          item: this, msg: "Either 'schema' or 'schemaSource' must be specified"));
+    }
+  }
 }

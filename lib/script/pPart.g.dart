@@ -25,10 +25,11 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     tooltip: json['tooltip'] as String,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),

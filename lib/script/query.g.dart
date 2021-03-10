@@ -12,10 +12,11 @@ PGet _$PGetFromJson(Map<String, dynamic> json) {
         ? null
         : DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
     params: json['params'] as Map<String, dynamic>,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PGetToJson(PGet instance) => <String, dynamic>{
+      'version': instance.version,
       'params': instance.params,
       'documentId': instance.documentId?.toJson(),
     };
@@ -26,11 +27,12 @@ PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) {
         ? null
         : DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
     params: json['params'] as Map<String, dynamic>,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
     <String, dynamic>{
+      'version': instance.version,
       'params': instance.params,
       'documentId': instance.documentId?.toJson(),
     };

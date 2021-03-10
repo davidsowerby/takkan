@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
@@ -75,7 +76,10 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-        dataProvider: PRestDataProvider( env: Env.test),
+        dataProvider: PRestDataProvider(
+          env: Env.test,
+          schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
+        ),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -100,7 +104,13 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
-          dataProvider: PRestDataProvider(env: Env.test),
+          dataProvider: PRestDataProvider(
+            env: Env.test,
+            schemaSource: PSchemaSource(
+              segment: 'back4app',
+              instance: 'dev',
+            ),
+          ),
           routes: {
             "/home": PRoute(
               page: PPage(
@@ -138,7 +148,10 @@ void main() {
       );
 
       final withoutQuery = PScript(
-        dataProvider: PRestDataProvider(env: Env.test),
+        dataProvider: PRestDataProvider(env: Env.test,schemaSource: PSchemaSource(
+          segment: 'back4app',
+          instance: 'dev',
+        ),),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -151,7 +164,10 @@ void main() {
       );
 
       final withQueryAndProvider = PScript(
-        dataProvider: PRestDataProvider( env: Env.test),
+        dataProvider: PRestDataProvider(env: Env.test,schemaSource: PSchemaSource(
+          segment: 'back4app',
+          instance: 'dev',
+        ),),
         // ignore: missing_required_param
 
         routes: {
@@ -170,7 +186,8 @@ void main() {
       );
 
       // when
-      final withoutQueryOrProviderResults = withoutQueryOrDataProvider.validate().map((e) => e.toString());
+      final withoutQueryOrProviderResults =
+          withoutQueryOrDataProvider.validate().map((e) => e.toString());
       final withoutQueryResults = withoutQuery.validate().map((e) => e.toString());
       final withQueryAndProviderResults = withQueryAndProvider.validate().map((e) => e.toString());
       // then
@@ -179,11 +196,10 @@ void main() {
         'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
         'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a query defined',
       ]);
-      expect(withoutQueryResults,
-          [
-            'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-            'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a query defined',
-          ]);
+      expect(withoutQueryResults, [
+        'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : Script:0./home.Wiggly.panel1 : must either be static or have a query defined',
+      ]);
       expect(withQueryAndProviderResults, [
         'PPanel : Script:0./home.Wiggly.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
       ]);

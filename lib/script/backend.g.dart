@@ -18,10 +18,11 @@ PBackend _$PBackendFromJson(Map<String, dynamic> json) {
         ? null
         : PSignInOptions.fromJson(
             json['signInOptions'] as Map<String, dynamic>),
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PBackendToJson(PBackend instance) => <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
       'instanceName': instance.instanceName,
       'schema': instance.schema?.toJson(),
