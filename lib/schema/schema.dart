@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/preceptItem.dart';
 
 part 'schema.g.dart';
 
@@ -139,11 +140,16 @@ class PDocument extends PSchemaElement {
 /// [segment] relates to the first level within *precept.json*
 /// [instance] relates to the second level within *precept.json*
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PSchemaSource {
+class PSchemaSource extends PreceptItem {
   final String segment;
   final String instance;
 
-  const PSchemaSource({@required this.segment,@required this.instance});
+  PSchemaSource({
+    @required this.segment,
+    @required this.instance,
+    String id,
+    int version = 0,
+  }) : super(id: id, version: version);
 
   factory PSchemaSource.fromJson(Map<String, dynamic> json) => _$PSchemaSourceFromJson(json);
 

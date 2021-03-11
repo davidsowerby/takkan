@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/visitor.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'preceptItem.g.dart';
@@ -97,4 +98,10 @@ class PreceptItem {
   int get index => _index;
 
   DebugNode get debugNode => DebugNode(this, const []);
+  
+  walk(List<ScriptVisitor> visitors){
+    for (ScriptVisitor visitor in visitors){
+      visitor.step(this);
+    }
+  }
 }

@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
+import 'package:precept_script/script/visitor.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'dataProvider.g.dart';
@@ -67,5 +68,10 @@ class PDataProvider extends PreceptItem {
       messages.add(ValidationMessage(
           item: this, msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
+  }
+
+  walk(List<ScriptVisitor> visitors){
+    super.walk(visitors);
+    if(schemaSource != null) schemaSource.walk(visitors);
   }
 }

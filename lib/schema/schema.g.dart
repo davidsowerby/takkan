@@ -61,11 +61,15 @@ PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) {
   return PSchemaSource(
     segment: json['segment'] as String,
     instance: json['instance'] as String,
+    id: json['id'] as String,
+    version: json['version'] as int,
   );
 }
 
 Map<String, dynamic> _$PSchemaSourceToJson(PSchemaSource instance) =>
     <String, dynamic>{
+      'version': instance.version,
+      'id': instance.id,
       'segment': instance.segment,
       'instance': instance.instance,
     };

@@ -18,11 +18,14 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle: json['panelStyle'] == null
+        ? null
+        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle: json['writingStyle'] == null
+        ? null
+        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     tooltip: json['tooltip'] as String,
   )..version = json['version'] as int;
@@ -32,8 +35,8 @@ Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'writingStyle': instance.writingStyle.toJson(),
+      'panelStyle': instance.panelStyle?.toJson(),
+      'writingStyle': instance.writingStyle?.toJson(),
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'property': instance.property,
@@ -64,6 +67,17 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
   return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$ControlEditEnumMap = {

@@ -20,6 +20,7 @@ import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/style/style.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/visitor.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'script.g.dart';
@@ -177,6 +178,13 @@ class PScript extends PCommon {
     }
   }
 
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    for (PRoute entry in routes.values) {
+      entry.walk(visitors);
+    }
+  }
+
   bool get failed => _scriptValidationMessages.length > 0;
 
   bool get passed => _scriptValidationMessages.length == 0;
@@ -247,6 +255,11 @@ class PRoute extends PCommon {
     }
   }
 
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    page.walk(visitors);
+  }
+
   @override
   String get idAlternative => path;
 
@@ -270,8 +283,8 @@ class PPage extends PContent {
     this.content = const [],
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
-    WritingStyle writingStyle=const WritingStyle(),
+    PPanelStyle panelStyle = const PPanelStyle(),
+    WritingStyle writingStyle = const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
@@ -342,6 +355,13 @@ class PPage extends PContent {
     }
   }
 
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    for (PSubContent entry in content) {
+      entry.walk(visitors);
+    }
+  }
+
   @override
   String get idAlternative => title;
 
@@ -393,8 +413,8 @@ class PPanel extends PSubContent {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
-    WritingStyle writingStyle=const WritingStyle(),
+    PPanelStyle panelStyle = const PPanelStyle(),
+    WritingStyle writingStyle = const WritingStyle(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   })  : _heading = heading ?? PPanelHeading(),
@@ -419,6 +439,13 @@ class PPanel extends PSubContent {
     for (var element in content) {
       element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
+    }
+  }
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    if(heading!=null) heading.walk(visitors);
+    for(PSubContent entry in content){
+      entry.walk(visitors);
     }
   }
 
@@ -590,7 +617,7 @@ class PCommon extends PreceptItem {
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
-@JsonKey(ignore: true)
+  @JsonKey(ignore: true)
   PQuery get query => _query ?? parent.query;
 
   /// [query] is declared rather than inherited
@@ -674,6 +701,12 @@ class PCommon extends PreceptItem {
         return;
       }
     }
+  }
+
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    if (_query != null) _query.walk(visitors);
+    if (_dataProvider != null) _dataProvider.walk(visitors);
   }
 
   void doValidate(List<ValidationMessage> messages) {
