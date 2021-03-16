@@ -13,10 +13,9 @@ import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
 
 /// The REST implementation of a [DataProvider]
-class RestDataProvider extends DataProvider {
-  final PRestDataProvider config;
+class RestDataProvider extends DataProvider<PRestDataProvider> {
 
-   RestDataProvider({@required this.config}) : assert(config != null), super(config: config);
+   RestDataProvider({@required PRestDataProvider config}) : assert(config != null), super(config: config);
 
   @override
   Future<CloudResponse> delete({List<DocumentId> documentIds}) {

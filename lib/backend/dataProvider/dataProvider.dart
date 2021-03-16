@@ -35,8 +35,8 @@ import 'package:precept_script/script/query.dart';
 /// effectively of singleton scope.  In theory, this means that a single client app could actually
 /// log in as a different user for each [DataProvider] it uses, though this does seem an unlikely use case.
 
-abstract class DataProvider {
-  final PDataProvider config;
+abstract class DataProvider<CONFIG extends PDataProvider> {
+  final CONFIG config;
   Authenticator get authenticator;
 
   UserState get userState=> authenticator.userState;
