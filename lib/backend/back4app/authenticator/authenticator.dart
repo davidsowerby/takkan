@@ -1,110 +1,84 @@
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:precept_back4app_backend/backend/back4app/authenticator/userConverter.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_backend/backend/authenticator.dart';
-import 'package:precept_backend/backend/preceptUser.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_backend/backend/user/preceptUser.dart';
 
-/// This should be instantiated as a Singleton (to keep _parseUser)
-/// That is currently done in [PBack4AppDataProvider.register]
-class Back4AppAuthenticator implements Authenticator<PBack4AppDataProvider> {
-  final Function(SignInStatus) statusCallback;
+class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider> {
   ParseUser _parseUser;
+  Parse parse;
+  PBack4AppDataProvider config;
 
-  Back4AppAuthenticator({this.statusCallback});
+  Back4AppAuthenticator({@required this.config});
 
-  init() async {}
+  init() async {
+    parse = await Parse().initialize(config.appId, config.serverUrl);
+  }
 
+// TODO: should not allow call if already logged in (_parseUser would be overwritten)
   /// Username defaults to email address
-  Future<bool> signInWithEmail(PreceptUser user, String password) async {
-    statusCallback(SignInStatus.Authenticating);
-    if (_parseUser == null) {
-      _parseUser = ParseUser(user.userName, password, user.email);
-      final ParseResponse authResult = await _parseUser.login();
-      if (authResult.success) {
-        statusCallback(SignInStatus.Authenticated);
-        return true;
-      } else {
-        if (authResult.error.message == "unauthorized") {
-          throw UnimplementedError(
-              "this could be either a coding error or maybe a lost connection between initial connect and user sign in");
-        }
-        switch (authResult.error.code) {
-          case 101:
-            {
-              statusCallback(SignInStatus.Authentication_Failed);
-              return false;
-            }
-
-        /// Invalid username / password
-        }
-      }
-    }
-
-    return false;
-  }
-
-  Future<bool> signInWithGoogle() async {
-    throw UnimplementedError();
-  }
-
-  Future<void> signOut() async {
-    statusCallback(SignInStatus.Uninitialized);
-    if (_parseUser != null) {
-      await _parseUser.logout();
-
-      _parseUser = null;
-    }
-  }
-
-  Future<void> requestRegistration() async {
-    statusCallback(SignInStatus.Registering);
-  }
-
-  @override
-  Future<bool> deRegister(PreceptUser user) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> registerWithEmail(PreceptUser user) async {
-    statusCallback(SignInStatus.Registering);
-    ParseResponse authResult = await _parseUser.signUp();
+  @protected
+  Future<AuthenticationResult> doSignInByEmail(
+      {@required String username, @required String password}) async {
+    final userConverter = Back4AppUserConverter();
+    _parseUser = ParseUser(username, password, username);
+    _parseUser.password = password;
+    final ParseResponse authResult = await _parseUser.login();
     if (authResult.success) {
-      statusCallback(SignInStatus.Registered);
-      return true;
+      final updatedUser = userConverter.fromSDK(_parseUser);
+      return AuthenticationResult(success: true, user: updatedUser);
+    } else {
+      if (authResult.error.code == 101) {
+        return AuthenticationResult(success: false, errorCode: -1, user: PreceptUser.unknownUser());
+      }
+      return AuthenticationResult(
+          success: false, message: authResult.error.message, user: PreceptUser.unknownUser());
     }
-    logType(this.runtimeType).e(authResult.error.message);
-    statusCallback(SignInStatus.RegistrationFailed);
-    return false;
+  }
+
+// TODO: should ignore call if already logged out, but log it
+  Future<void> signOut() async {
+    await _parseUser.logout();
+    _parseUser = null;
   }
 
   @override
-  Future<bool> requestPasswordReset(PreceptUser user) {
-    // TODO: implement requestPasswordReset
+  Future<bool> doDeRegister(PreceptUser user) {
+    // TODO: implement doDeRegister
     throw UnimplementedError();
   }
 
+  // TODO: should not allow call if already logged in (_parseUser would be overwritten)
   @override
-  Future<bool> signInByEmail(PreceptUser user) {
-    // TODO: implement signInByEmail
+  Future<AuthenticationResult> doRegisterWithEmail(
+      {@required String username, @required String password}) async {
+    final userConverter = Back4AppUserConverter();
+    _parseUser = ParseUser(username, password, username);
+    final ParseResponse authResult = await _parseUser.signUp();
+    final updatedUser = userConverter.fromSDK(_parseUser);
+    if (authResult.success) {
+      return AuthenticationResult(success: true, user: updatedUser);
+    } else {
+      if (authResult.error.code == 101) {
+        return AuthenticationResult(success: false, errorCode: -1, user: PreceptUser.unknownUser());
+      }
+      return AuthenticationResult(
+          success: false, message: authResult.error.message, user: PreceptUser.unknownUser());
+    }
+  }
+
+  @override
+  Future<bool> doRequestPasswordReset(PreceptUser user) async {
+    final userConverter = Back4AppUserConverter();
+    _parseUser = userConverter.toSDK(user);
+    final result = await _parseUser.requestPasswordReset();
+    return result.success;
+  }
+
+  @override
+  Future<bool> doUpdateUser(PreceptUser user) {
+    // TODO: implement doUpdateUser
     throw UnimplementedError();
   }
-
-  @override
-  Future<bool> updateUser(PreceptUser user) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
-  }
-
-  @override
-  String get configKey => 'back4app';
-
-  @override
-  PBack4AppDataProvider dataProvider(
-      {@required PSchema schema, @required Map<String, dynamic> jsonConfig}) {
-    return PBack4AppDataProvider.fromConfig(schema: schema, jsonConfig: jsonConfig);
-  }
-
 }

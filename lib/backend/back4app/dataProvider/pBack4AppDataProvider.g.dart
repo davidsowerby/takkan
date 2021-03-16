@@ -10,25 +10,20 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
     Map<String, dynamic> json) {
   return PBack4AppDataProvider(
     debug: json['debug'] as bool,
-    appId: json['appId'] as String,
-    clientId: json['clientId'] as String,
-    baseUrl: json['baseUrl'] as String,
-    id: json['id'] as String,
-    schema: json['schema'] == null
+    configSource: json['configSource'] == null
         ? null
-        : PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+        : PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
+    id: json['id'] as String,
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
-  );
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PBack4AppDataProviderToJson(
         PBack4AppDataProvider instance) =>
     <String, dynamic>{
+      'version': instance.version,
       'id': instance.id,
-      'schema': instance.schema?.toJson(),
-      'baseUrl': instance.baseUrl,
+      'configSource': instance.configSource?.toJson(),
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'debug': instance.debug,
-      'appId': instance.appId,
-      'clientId': instance.clientId,
     };
