@@ -6,8 +6,11 @@ class PreceptUser{
   final String lastName;
   final String email;
   final String userName;
+  final bool isUnknown;
 
-  PreceptUser({@required this.firstName, this.knownAs,@required this.lastName, this.email, @required this.userName});
+  const PreceptUser({@required this.firstName, this.knownAs,@required this.lastName, this.email, @required this.userName}) : isUnknown=false;
+
+  const PreceptUser.unknownUser() : firstName='', knownAs='', lastName='', email='', userName='', isUnknown=true;
 }
 
 /// If an SDK is used to provide a specific backend implementation it will need a way to convert their user

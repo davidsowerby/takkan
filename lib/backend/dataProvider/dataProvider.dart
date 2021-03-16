@@ -1,25 +1,48 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/data.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/response.dart';
+import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
 
-/// The layer between the client and server.
+/// A base class representing the layer between the client and server.
 ///
 /// It provides a consistent data access interface regardless of the type of data provider used.
 /// Most of the work is actually done in specific implementations.
 ///
-/// It is hoped that differences between for example, Firebase and Back4App can be manageed by using
-/// the relevant implementation of [PDataProvider].  However, in case that is not possible, it is simple
-/// to [registerWithEmail] an alternative implementation of [DataProvider]
+/// Fulfils two functions:
 ///
+/// - Provides methods for translating [PQuery] types into calls appropriate to a particular data provider,
+/// for example Back4App or Firestore
 ///
-/// Some calls may not be supported by an implementation, in which case it will throw a [APINotSupportedException]
+/// - Provides a backend-specific [Authenticator] implementation, for use where a user is required
+/// to authenticate for a particular data provider.  The [Authenticator] also contains a [UserState]
+/// object for this data provider, used to hold basic user information and authentication status.
+///
+/// The [DataProvider] sub-class type is instantiated by look up from the [dataProviderLibrary].
+/// Registration with the library is done during app initialisation with calls to
+/// [DataProviderLibrary.register]
+///
+/// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
+///
+/// Note that the [DataProviderLibrary] acts as a cache, effectively making instances of a particular
+/// [DataProvider] type appear as Singletons.  This means of course that any contained state is also
+/// effectively of singleton scope.  In theory, this means that a single client app could actually
+/// log in as a different user for each [DataProvider] it uses, though this does seem an unlikely use case.
 
 abstract class DataProvider {
+  final PDataProvider config;
+  Authenticator get authenticator;
+
+  UserState get userState=> authenticator.userState;
+
+  DataProvider({@required this.config });
+
   /// ================================================================================================
   /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
   /// For methods accessing Cloud Functions, use the 'fetchXXXX' methods

@@ -7,15 +7,16 @@ import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/response.dart';
+import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
 
 /// The REST implementation of a [DataProvider]
-class RestDataProvider implements DataProvider {
+class RestDataProvider extends DataProvider {
   final PRestDataProvider config;
 
-  const RestDataProvider({@required this.config}) : assert(config != null);
+   RestDataProvider({@required this.config}) : assert(config != null), super(config: config);
 
   @override
   Future<CloudResponse> delete({List<DocumentId> documentIds}) {
@@ -142,4 +143,8 @@ class RestDataProvider implements DataProvider {
     // -d "{ \"category\": \"A string\",\"accountNumber\": \"A string\" }" \
     // https://parseapi.back4app.com/classes/Account/<OBJECT_ID>
   }
+
+  @override
+  // TODO: implement authenticator
+  Authenticator<PDataProvider> get authenticator => throw UnimplementedError();
 }
