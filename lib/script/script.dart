@@ -7,7 +7,6 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/debug.dart';
 import 'package:precept_script/script/element.dart';
@@ -33,23 +32,18 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-  @JsonKey(nullable: true)
-  final PBackend backend;
   final Map<String, PRoute> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
   List<ValidationMessage> _scriptValidationMessages;
-  @JsonKey(ignore: true)
-  PDataProvider _defaultDataProvider;
 
   PScript({
     this.conversionErrorMessages = const ConversionErrorMessages(defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(defaultValidationErrorMessages),
     this.routes = const {},
     this.name,
-    this.backend,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
@@ -60,7 +54,7 @@ class PScript extends PCommon {
   }) : super(
           id: id,
           isStatic: isStatic,
-          dataProvider: dataProvider,
+          dataProvider: dataProvider ?? PNoDataProvider(),
           query: query,
           controlEdit: controlEdit,
           panelStyle: panelStyle,
@@ -70,22 +64,6 @@ class PScript extends PCommon {
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
   Map<String, dynamic> toJson() => _$PScriptToJson(this);
-
-  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
-  @override
-  @JsonKey(
-      nullable: true,
-      includeIfNull: false,
-      fromJson: PDataProviderConverter.fromJson,
-      toJson: PDataProviderConverter.toJson)
-  PDataProvider get dataProvider => _dataProvider ?? _defaultDataProvider;
-
-  @JsonKey(ignore: true)
-  PDataProvider get defaultDataProvider => _defaultDataProvider;
-
-  set defaultDataProvider(value) {
-    _defaultDataProvider = value;
-  }
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
@@ -178,6 +156,8 @@ class PScript extends PCommon {
     }
   }
 
+  /// Walks through all instances of [PreceptItem] or its sub-classes held within the [PScript].
+  /// At each instance, the [ScriptVisitor.step] is invoked
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     for (PRoute entry in routes.values) {
@@ -370,7 +350,7 @@ class PPage extends PContent {
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataProviderIsDeclared => dataProvider != null;
+  bool get dataProviderIsDeclared => (dataProvider != null && !(dataProvider is PNoDataProvider));
 
   /// [query] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
@@ -441,10 +421,11 @@ class PPanel extends PSubContent {
       i++;
     }
   }
+
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if(heading!=null) heading.walk(visitors);
-    for(PSubContent entry in content){
+    if (heading != null) heading.walk(visitors);
+    for (PSubContent entry in content) {
       entry.walk(visitors);
     }
   }

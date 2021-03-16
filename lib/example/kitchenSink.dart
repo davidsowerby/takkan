@@ -7,7 +7,12 @@ import 'package:precept_script/script/style/style.dart';
 
 final kitchenSinkScript = PScript(
   name: 'Kitchen Sink',
-  dataProvider: PRestDataProvider( env: Env.test),
+  dataProvider: PRestDataProvider(
+    configSource: PConfigSource(
+      segment: 'back4app',
+      instance: 'dev',
+    ),
+  ),
   routes: {
     '/': PRoute(
       page: PPage(
@@ -42,7 +47,6 @@ final kitchenSinkScript = PScript(
   },
 );
 
-
 final kitchenSinkScriptWithoutDataProvider = PScript(
   name: 'Kitchen Sink',
   routes: {
@@ -61,7 +65,7 @@ final kitchenSinkScriptWithoutDataProvider = PScript(
             help: PHelp(
               title: 'Display options',
               message:
-              'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
+                  'All supported data types are shown.  To demonstrate different display options, some fields are shown multiple times',
             ),
             heading: PPanelHeading(
               style: PHeadingStyle(background: PColor.primary),

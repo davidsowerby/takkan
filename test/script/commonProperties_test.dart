@@ -103,25 +103,25 @@ void main() {
       final part = panel.content[0] as PPart;
 
       expect(route.isStatic, IsStatic.inherited);
-      expect(route.dataProvider, isNull);
+      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(route.query, isNull);
 
       expect(page.isStatic, IsStatic.inherited);
-      expect(page.dataProvider, isNull);
+      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(page.query, isNull);
       expect(page.controlEdit, ControlEdit.inherited);
       expect(page.queryIsDeclared, false);
       expect(page.dataProviderIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
-      expect(panel.dataProvider, isNull);
+      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(panel.query, isNull);
       expect(panel.controlEdit, ControlEdit.inherited);
       expect(panel.queryIsDeclared, false);
       expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
-      expect(part.dataProvider, isNull);
+      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(part.query, isNull);
       expect(part.controlEdit, ControlEdit.inherited);
       expect(part.queryIsDeclared, false);

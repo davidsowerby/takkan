@@ -14,20 +14,12 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
       (k, e) => MapEntry(k, PRoute.fromJson(e as Map<String, dynamic>)),
     ),
     name: json['name'] as String,
-    backend: json['backend'] == null
-        ? null
-        : PBackend.fromJson(json['backend'] as Map<String, dynamic>),
-    dataProvider: PDataProviderConverter.fromJson(
-        json['dataProvider'] as Map<String, dynamic>),
     query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
-    panelStyle: json['panelStyle'] == null
-        ? null
-        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle: json['writingStyle'] == null
-        ? null
-        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle:
+        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle:
+        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
 }
@@ -37,10 +29,9 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'version': instance.version,
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'panelStyle': instance.panelStyle?.toJson(),
-    'writingStyle': instance.writingStyle?.toJson(),
+    'panelStyle': instance.panelStyle.toJson(),
+    'writingStyle': instance.writingStyle.toJson(),
     'name': instance.name,
-    'backend': instance.backend?.toJson(),
     'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
   };
@@ -51,8 +42,6 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     }
   }
 
-  writeNotNull(
-      'dataProvider', PDataProviderConverter.toJson(instance.dataProvider));
   writeNotNull('query', PQueryConverter.toJson(instance.query));
   return val;
 }
@@ -78,17 +67,6 @@ T _$enumDecode<T>(
   return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
@@ -105,22 +83,19 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     page: json['page'] == null
         ? null
         : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    panelStyle: json['panelStyle'] == null
-        ? null
-        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle: json['writingStyle'] == null
-        ? null
-        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle:
+        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle:
+        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PRouteToJson(PRoute instance) => <String, dynamic>{
       'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle?.toJson(),
-      'writingStyle': instance.writingStyle?.toJson(),
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
       'page': instance.page?.toJson(),
     };
 
@@ -130,14 +105,11 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     scrollable: json['scrollable'] as bool,
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
-    panelStyle: json['panelStyle'] == null
-        ? null
-        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle: json['writingStyle'] == null
-        ? null
-        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle:
+        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle:
+        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     property: json['property'] as String,
     title: json['title'] as String,
@@ -148,8 +120,8 @@ Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle?.toJson(),
-      'writingStyle': instance.writingStyle?.toJson(),
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
       'property': instance.property,
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
@@ -174,14 +146,11 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     style: json['style'] == null
         ? null
         : PPanelStyle.fromJson(json['style'] as Map<String, dynamic>),
-    panelStyle: json['panelStyle'] == null
-        ? null
-        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle: json['writingStyle'] == null
-        ? null
-        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle:
+        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle:
+        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
 }
@@ -190,8 +159,8 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle?.toJson(),
-      'writingStyle': instance.writingStyle?.toJson(),
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
       'caption': instance.caption,
       'content': PElementListConverter.toJson(instance.content),
       'openExpanded': instance.openExpanded,
@@ -228,14 +197,11 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
 
 PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
-    panelStyle: json['panelStyle'] == null
-        ? null
-        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle: json['writingStyle'] == null
-        ? null
-        : WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    panelStyle:
+        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    writingStyle:
+        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
 }
@@ -244,6 +210,6 @@ Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle?.toJson(),
-      'writingStyle': instance.writingStyle?.toJson(),
+      'panelStyle': instance.panelStyle.toJson(),
+      'writingStyle': instance.writingStyle.toJson(),
     };

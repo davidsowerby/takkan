@@ -77,7 +77,6 @@ void main() {
       // given
       final component = PScript(
         dataProvider: PRestDataProvider(
-          env: Env.test,
           schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
         routes: {
@@ -105,7 +104,10 @@ void main() {
       // given
       final component = PScript(
           dataProvider: PRestDataProvider(
-            env: Env.test,
+            configSource: PConfigSource(
+              segment: 'back4app',
+              instance: 'dev',
+            ),
             schemaSource: PSchemaSource(
               segment: 'back4app',
               instance: 'dev',
@@ -148,10 +150,16 @@ void main() {
       );
 
       final withoutQuery = PScript(
-        dataProvider: PRestDataProvider(env: Env.test,schemaSource: PSchemaSource(
-          segment: 'back4app',
-          instance: 'dev',
-        ),),
+        dataProvider: PRestDataProvider(
+          configSource: PConfigSource(
+            segment: 'back4app',
+            instance: 'dev',
+          ),
+          schemaSource: PSchemaSource(
+            segment: 'back4app',
+            instance: 'dev',
+          ),
+        ),
         routes: {
           "/home": PRoute(
             page: PPage(
@@ -164,10 +172,16 @@ void main() {
       );
 
       final withQueryAndProvider = PScript(
-        dataProvider: PRestDataProvider(env: Env.test,schemaSource: PSchemaSource(
-          segment: 'back4app',
-          instance: 'dev',
-        ),),
+        dataProvider: PRestDataProvider(
+          configSource: PConfigSource(
+            segment: 'back4app',
+            instance: 'dev',
+          ),
+          schemaSource: PSchemaSource(
+            segment: 'back4app',
+            instance: 'dev',
+          ),
+        ),
         // ignore: missing_required_param
 
         routes: {
