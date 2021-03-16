@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:precept_client/app/loader.dart';
-import 'package:precept_client/backend/backend.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
@@ -11,14 +10,15 @@ import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/script/backend.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
+import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/visitor.dart';
 
 // TODO error handling, loader may fail
 
@@ -32,15 +32,16 @@ import 'package:precept_script/script/style/writingStyle.dart';
 /// [init] must be called before the app is run
 class Precept {
   PScript _rootModel;
-  Map<String,dynamic> _jsonConfig;
-  bool _isReady=false;
-  final List<Function()> _readyListeners=List.empty(growable: true);
+  Map<String, dynamic> _jsonConfig;
+  bool _isReady = false;
+  final List<Function()> _readyListeners = List.empty(growable: true);
+  List<PreceptLoader> _loaders;
+  Map<Type, Widget Function(PPart, ModelConnector)> _particleLibraryEntries;
 
   Precept();
 
   init({
     List<Function()> injectionBindings,
-    Env env = Env.dev,
     bool includePreceptDefaults = true,
     Map<String, Widget Function(PPage)> pageLibraryEntries,
     Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,
@@ -51,37 +52,73 @@ class Precept {
       preceptDefaultInjectionBindings();
     }
     WidgetsFlutterBinding.ensureInitialized();
-    _jsonConfig=await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
-    await loadModels(loaders: loaders);
-    particleLibrary.init(entries: particleLibraryEntries);
-    backend.init(_rootModel,_jsonConfig);
-    _rootModel.defaultDataProvider=backend.dataProvider;
-    _isReady=true;
+    _jsonConfig = await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
+    _loaders = loaders;
+    _particleLibraryEntries = particleLibraryEntries;
+    await loadScripts(loaders: _loaders);
+    await _doAfterLoad();
+  }
+
+  _doAfterLoad() async {
+    await _loadSchemas();
+    particleLibrary.init(entries: _particleLibraryEntries);
+    _isReady = true;
     notifyReadyListeners();
   }
 
+  reload() async {
+    _isReady = false;
+    notifyReadyListeners();
+    await loadScripts(loaders: _loaders);
+    await _doAfterLoad();
+  }
+
+  /// Walks the PScript to find any declared [PSchemaSource] instances, and calls them to be loaded,
+  /// if they are not already loaded
+  Future<bool> _loadSchemas() async {
+    final visitor = DataProviderVisitor();
+    _rootModel.walk([visitor]);
+    final List<PDataProvider> requireLoading = List.empty(growable: true);
+
+    /// select those which have no schema, for loading
+    /// Also sets gives the provider a copy of the JSON config loaded from **precept.json**
+    for (PDataProvider provider in visitor.dataProviders) {
+      if (provider.schema == null) {
+        requireLoading.add(provider);
+      }
+      provider.appConfig=_jsonConfig;
+    }
+
+    if(requireLoading.length > 0){
+      for(PDataProvider provider in requireLoading){
+        RestPreceptLoader loader=RestPreceptLoader();
+      }
+    }
+  }
+
   /// Call is not actioned if Precept already in ready state
-  addReadyListener(Function() listener){
+  addReadyListener(Function() listener) {
     if (!_isReady) {
       _readyListeners.add(listener);
     }
   }
 
-  notifyReadyListeners(){
-    for (Function() listener in _readyListeners){
+  notifyReadyListeners() {
+    for (Function() listener in _readyListeners) {
       listener();
     }
   }
-  
+
   bool get isReady => _isReady;
 
-  Map<String,dynamic> getConfig(String segment){
+  Map<String, dynamic> getConfig(String segment) {
     return _jsonConfig[segment];
   }
 
-  loadModels({@required List<PreceptLoader> loaders}) async {
+  /// Loads all requested [PScript], and merges them into a single [_rootModel]
+  loadScripts({@required List<PreceptLoader> loaders}) async {
     logType(this.runtimeType).d("Loading models");
-    List<Future<PScript>> modelFutures = List();
+    List<Future<PScript>> modelFutures = List.empty(growable: true);
     for (PreceptLoader loader in loaders) {
       modelFutures.add(loader.load());
     }
@@ -106,11 +143,9 @@ class Precept {
   _mergeModels(List<PScript> models) {
     String name = models[0].name;
     String id = models[0].id;
-    PBackend backend;
     Map<String, PRoute> routes = Map();
     final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(Map());
     final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(Map());
-    PSchema schema = PSchema(documents: Map(), name: 'root');
     IsStatic isStatic = IsStatic.inherited;
     PDataProvider dataProvider;
     PQuery query;
@@ -118,7 +153,6 @@ class Precept {
     WritingStyle writingStyle;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      if (s.backend != null) backend = s.backend;
       if (s.routes != null) routes.addAll(s.routes);
       if (s.conversionErrorMessages != null)
         conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
@@ -132,7 +166,6 @@ class Precept {
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
-        backend: backend,
         routes: routes,
         id: id,
         conversionErrorMessages: conversionErrorMessages,
@@ -153,3 +186,15 @@ final Precept _precept = Precept();
 Precept get precept => _precept;
 
 PScript script = _precept._rootModel;
+
+/// When used with [script.walk] returns all [PDataProvider] instances
+class DataProviderVisitor implements ScriptVisitor {
+  List<PDataProvider> dataProviders=List.empty(growable: true);
+
+  @override
+  step(PreceptItem entry) {
+    if (entry is PDataProvider) {
+      dataProviders.add(entry);
+    }
+  }
+}

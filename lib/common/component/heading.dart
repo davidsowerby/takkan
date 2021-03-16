@@ -74,13 +74,13 @@ class _HeadingState extends State<Heading> with Interpolator {
   @override
   Widget build(BuildContext context) {
     final PPanel panelConfig = widget.config.parent;
-    bool editMode=false;
-    bool editable=false;
+    bool editMode = false;
+    bool editable = false;
 
-    if (panelConfig.isStatic != IsStatic.yes){
+    if (panelConfig.isStatic != IsStatic.yes) {
       final EditState editState = Provider.of<EditState>(context);
       editable = editState.canEdit;
-      editMode=editState.editMode;
+      editMode = editState.editMode;
     }
 
     final List<Widget> actionButtons = List();
@@ -196,3 +196,5 @@ class HelpButton extends ActionIcon with Interpolator {
     ); // TODO interpolate with params, but params from where.  A Binding with property names maybe?
   }
 }
+
+

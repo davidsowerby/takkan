@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/contentBuilder.dart';
+import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/particle.dart';
@@ -37,38 +33,23 @@ class Part extends StatefulWidget {
       : super(key: key);
 
   @override
-  PartState createState() => PartState();
+  PartState createState() => PartState(config,parentBinding);
 }
 
-class PartState extends State<Part> with ContentBuilder implements ContentState {
+class PartState extends ContentState<Part>  {
   Widget readParticle;
   Widget editParticle;
-  DataSource dataSource;
-  DataBinding dataBinding = NoDataBinding();
-  DataProvider dataProvider;
 
-  PCommon get config => widget.config;
 
-  @override
-  void initState()  {
-    super.initState();
-    dataSource = DataSource(widget.config);
-    if (config.dataProvider != null) {
-      /// Call is not actioned if Precept already in ready state
-      precept.addReadyListener ( _onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
-    }
-  }
-  _onPreceptReady() {
-    setState(() {});
-  }
+  PartState(PPart config, DataBinding parentBinding):super(config,parentBinding);
+
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, dataSource, widget.config, buildContent);
+    return doBuild(context, dataSource, widget.config);
   }
 
   @override
-  Widget buildContent() {
+  Widget assembleContent() {
     if (widget.config.isStatic == IsStatic.yes) {
       if (readParticle == null) {
         readParticle = particleLibrary.findStaticParticle(widget.config);

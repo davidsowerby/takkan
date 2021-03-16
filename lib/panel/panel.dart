@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/common/contentBuilder.dart';
+import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_script/script/script.dart';
 
 class Panel extends StatefulWidget {
@@ -17,49 +13,28 @@ class Panel extends StatefulWidget {
         assert(parentBinding != null);
 
   @override
-  PanelState createState() => PanelState();
+  PanelState createState() => PanelState(config, parentBinding);
 }
 
-class PanelState extends State<Panel> with ContentBuilder implements ContentState {
+class PanelState extends ContentState<Panel> {
+  PanelState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
   bool expanded;
-  DataSource dataSource;
-  DataBinding dataBinding;
-  DataProvider dataProvider;
-
-  PPanel get config => widget.config;
-
-  @override
-  void initState() {
-    super.initState();
-    if (config.dataProvider != null) {
-      /// Call is not actioned if Precept already in ready state
-      precept.addReadyListener ( _onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
-    }
-    dataSource = DataSource(config);
-    dataBinding = widget.parentBinding.child(config, widget.parentBinding, dataSource);
-    expanded=config.openExpanded;
-  }
-
-  _onPreceptReady() {
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, dataSource, widget.config, buildContent);
+    return doBuild(context, dataSource, widget.config);
   }
 
   Widget _expandedContent(bool editMode) {
-    final content = assembleContent(
-      parentBinding: dataBinding,
-      scrollable: widget.config.scrollable,
-      content: widget.config.content,
-    );
-    return (editMode) ? formWrapped(context, content, dataBinding) : content;
+    final content = buildSubContent(
+        content: widget.config.content,
+        scrollable: widget.config.scrollable,
+        parentBinding: dataBinding);
+
+    return (editMode) ? wrapInForm(context, content, dataBinding) : content;
   }
 
-  Widget buildContent() {
+  Widget assembleContent() {
     return Heading(
       config: widget.config.heading,
       headingText: widget.config.caption,

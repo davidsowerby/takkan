@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/contentBuilder.dart';
+import 'package:precept_client/common/action/actionIcon.dart';
+import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_script/script/script.dart';
@@ -18,54 +16,50 @@ class PreceptPage extends StatefulWidget {
   /// Precept data above it in the Widget tree.
   ///
   /// Doing it this way keeps the structure consistent with [Panel] and [Part]
-  const PreceptPage({@required this.config})
-      : parentBinding = const NoDataBinding();
+  const PreceptPage({@required this.config}) : parentBinding = const NoDataBinding();
 
   @override
-  PreceptPageState createState() => PreceptPageState();
+  PreceptPageState createState() => PreceptPageState(config,parentBinding);
 }
 
-class PreceptPageState extends State<PreceptPage>
-    with ContentBuilder
-    implements ContentState {
-  DataSource dataSource;
-  DataBinding dataBinding;
-  DataProvider dataProvider;
+class PreceptPageState extends   ContentState<PreceptPage> {
 
-  PCommon get config => widget.config;
+  PreceptPageState(PContent config, DataBinding parentBinding) : super(config,parentBinding );
 
   @override
   void initState() {
     super.initState();
-    if (config.dataProvider != null) {
-      /// Call is not actioned if Precept already in ready state
-      precept.addReadyListener ( _onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
-    }
-    dataSource = DataSource(widget.config);
-    dataBinding = widget.parentBinding
-        .child(widget.config, widget.parentBinding, dataSource);
-  }
-
-  _onPreceptReady() {
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(actions: [PreceptRefreshButton()],
         title: Text(widget.config.title),
       ),
-      body: doBuild(context, dataSource, widget.config, buildContent),
+      body: doBuild(context, dataSource, widget.config),
     );
   }
 
   @override
-  Widget buildContent() {
-    return assembleContent(
+  Widget assembleContent() {
+    return buildSubContent(
         content: widget.config.content,
         scrollable: widget.config.scrollable,
         parentBinding: dataBinding);
   }
+}
+
+class PreceptRefreshButton extends ActionIcon {
+  @override
+  void doAction(BuildContext context) {
+    precept.reload();
+  }
+
+  const PreceptRefreshButton({
+    Key key,
+    IconData icon = Icons.update,
+    List<Function(BuildContext)> onBefore = const [],
+    List<Function(BuildContext)> onAfter = const [],
+  }) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
 }
