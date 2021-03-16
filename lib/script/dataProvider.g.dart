@@ -11,12 +11,8 @@ PRestDataProvider _$PRestDataProviderFromJson(Map<String, dynamic> json) {
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
-    serverUrl: json['serverUrl'] as String,
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
     id: json['id'] as String,
-    headers: (json['headers'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
     configSource: json['configSource'] == null
         ? null
         : PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
@@ -29,9 +25,7 @@ Map<String, dynamic> _$PRestDataProviderToJson(PRestDataProvider instance) =>
       'id': instance.id,
       'configSource': instance.configSource?.toJson(),
       'schemaSource': instance.schemaSource?.toJson(),
-      'serverUrl': instance.serverUrl,
       'checkHealthOnConnect': instance.checkHealthOnConnect,
-      'headers': instance.headers,
     };
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {

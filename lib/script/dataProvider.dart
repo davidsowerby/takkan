@@ -13,17 +13,14 @@ part 'dataProvider.g.dart';
 /// Each implementation must provide the appropriate override.
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRestDataProvider extends PDataProvider {
-  final String serverUrl;
+
   final bool checkHealthOnConnect;
-  final Map<String, String> headers;
 
   PRestDataProvider({
     PSchemaSource schemaSource,
     PSchema schema,
-    this.serverUrl,
     this.checkHealthOnConnect = true,
     String id,
-    this.headers = const {},
     PConfigSource configSource,
   }) : super(
           id: id,
@@ -51,11 +48,15 @@ class PRestDataProvider extends PDataProvider {
 /// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
 /// The presence of [schema] should therefore be tested before using it.
 ///
+/// [_appConfig] is set during app initialisation (see [Precept.init]), and represents the contents of
+/// **precept.json**
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
   final PConfigSource configSource;
+  @JsonKey(ignore: true)
+  Map<String, dynamic> _appConfig;
   @JsonKey(ignore: true)
   PSchema _schema;
   final PSchemaSource schemaSource;
@@ -65,13 +66,19 @@ class PDataProvider extends PreceptItem {
 
   set schema(value) => _schema = value;
 
+  set appConfig(value) => _appConfig = value;
+
+  @JsonKey(ignore: true)
+  Map<String, dynamic> get appConfig => _appConfig;
+
   PDataProvider({
     @required this.configSource,
     this.signInOptions = const PSignInOptions(),
     PSchema schema,
     this.schemaSource,
     String id,
-  }) : super(id: id);
+  })  : _schema = schema,
+        super(id: id);
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
@@ -80,6 +87,11 @@ class PDataProvider extends PreceptItem {
           item: this, msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
   }
+
+  /// Creates headers from [appConfig] using [configSource] to look up the appropriate part of the data.
+  /// [appConfig] has been loaded from **precept.json**
+  Map<String, String> get headers => {};
+  String get serverUrl=>'';
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -113,5 +125,3 @@ class PNoDataProvider extends PDataProvider {
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
 }
-
-
