@@ -37,7 +37,15 @@ import 'package:precept_script/script/query.dart';
 
 abstract class DataProvider<CONFIG extends PDataProvider> {
   final CONFIG config;
-  Authenticator get authenticator;
+  Authenticator _authenticator;
+  Authenticator get authenticator {
+    if (_authenticator==null){
+      _authenticator = createAuthenticator(config);
+    }
+    return _authenticator;
+  }
+
+  Authenticator createAuthenticator(CONFIG config);
 
   UserState get userState=> authenticator.userState;
 
