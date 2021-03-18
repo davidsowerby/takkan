@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   dio: ^3.0.10
+  graphql: ^4.0.1
   precept_script:
     path: ../precept_script
 
