@@ -3,11 +3,13 @@ import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
+
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
@@ -15,7 +17,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 /// [Part] contains exactly one or two [Particle] instances, one for reading data and one for editing data
 /// [config] is a [PPart] instance, which is contained within a [PScript].  It has the following properties:
-///
+/// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [Part]
 /// [isStatic] - if true, the value is taken from [staticData], if false, the value is dynamic data loaded via [property]
 /// [staticData] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [caption] - the text to display as a caption.  See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
@@ -28,24 +30,27 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 class Part extends StatefulWidget {
   final PPart config;
   final DataBinding parentBinding;
-
-  const Part({Key key, @required this.config, this.parentBinding = const NoDataBinding()})
+  final Map<String, dynamic> pageArguments;
+  const Part(
+      {Key key,
+      @required this.config,
+      this.pageArguments,
+      this.parentBinding = const NoDataBinding()})
       : super(key: key);
 
   @override
-  PartState createState() => PartState(config,parentBinding);
+  PartState createState() => PartState(config, parentBinding);
 }
 
-class PartState extends ContentState<Part>  {
+class PartState extends ContentState<Part> {
   Widget readParticle;
   Widget editParticle;
 
-
-  PartState(PPart config, DataBinding parentBinding):super(config,parentBinding);
+  PartState(PPart config, DataBinding parentBinding) : super(config, parentBinding);
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, dataSource, widget.config);
+    return doBuild(context, dataSource, widget.config, widget.pageArguments);
   }
 
   @override
@@ -73,8 +78,6 @@ class PartState extends ContentState<Part>  {
       return editParticle;
     }
   }
-
-
 }
 
 /// Common base class for part specific read only options which support [Part]
@@ -102,4 +105,3 @@ class TrueFunction {
     return true;
   }
 }
-

@@ -54,8 +54,8 @@ class DataSource {
     if (config.queryIsDeclared) {
       _temporaryDocument = inject<TemporaryDocument>();
       _query = config.query;
-      _formKeys = List();
-      _documentSchema = config.dataProvider.schema.documents[_query.schemaPath];
+      _formKeys = List.empty(growable: true);
+      _documentSchema = config.dataProvider.schema.documents[_query.table];
     }
   }
 

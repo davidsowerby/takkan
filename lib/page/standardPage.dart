@@ -11,20 +11,25 @@ import 'package:precept_script/script/script.dart';
 class PreceptPage extends StatefulWidget {
   final PPage config;
   final DataBinding parentBinding;
+  final Map<String, dynamic> pageArguments;
 
   /// [parentBinding] is always a [NoDataBinding] for a page, because there is nothing relating to
   /// Precept data above it in the Widget tree.
   ///
+  /// [pageArguments] are optional and are passed from the [RouteSettings] associated with the route
+  /// producing this page.  Note that [RouteSettings.arguments] is an Object, but [pageArguments] requires
+  /// a Map<String,dynamic>
+  ///
   /// Doing it this way keeps the structure consistent with [Panel] and [Part]
-  const PreceptPage({@required this.config}) : parentBinding = const NoDataBinding();
+  const PreceptPage({@required this.config, this.pageArguments = const {}})
+      : parentBinding = const NoDataBinding();
 
   @override
-  PreceptPageState createState() => PreceptPageState(config,parentBinding);
+  PreceptPageState createState() => PreceptPageState(config, parentBinding);
 }
 
-class PreceptPageState extends   ContentState<PreceptPage> {
-
-  PreceptPageState(PContent config, DataBinding parentBinding) : super(config,parentBinding );
+class PreceptPageState extends ContentState<PreceptPage> {
+  PreceptPageState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
 
   @override
   void initState() {
@@ -34,19 +39,22 @@ class PreceptPageState extends   ContentState<PreceptPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(actions: [PreceptRefreshButton()],
+      appBar: AppBar(
+        actions: [PreceptRefreshButton()],
         title: Text(widget.config.title),
       ),
-      body: doBuild(context, dataSource, widget.config),
+      body: doBuild(context, dataSource, widget.config, widget.pageArguments),
     );
   }
 
   @override
   Widget assembleContent() {
     return buildSubContent(
-        content: widget.config.content,
-        scrollable: widget.config.scrollable,
-        parentBinding: dataBinding);
+      content: widget.config.content,
+      scrollable: widget.config.scrollable,
+      parentBinding: dataBinding,
+      pageArguments: widget.pageArguments,
+    );
   }
 }
 

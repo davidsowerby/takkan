@@ -3,9 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_client/data/dataSource.dart';
@@ -13,10 +11,8 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -57,7 +53,8 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
 
   Widget assembleContent();
 
-  doBuild(BuildContext context, DataSource dataSource, PContent config) {
+  doBuild(BuildContext context, DataSource dataSource, PContent config,Map<String, dynamic> pageArguments) {
+    assert(pageArguments!=null);
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
       return buildContent();
@@ -74,16 +71,8 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
 
     /// Make sure we don't start before Precept has finished init
     if (precept.isReady) {
-      switch (query.runtimeType) {
-        case PGet:
-          return futureBuilder(dataProvider.get(query: query), dataSource.temporaryDocument);
-        case PGetStream:
-          return streamBuilder(dataProvider, dataSource.temporaryDocument);
-        default:
-          final msg = 'Unrecognised data source type:  ${query.runtimeType}';
-          logType(this.runtimeType).e(msg);
-          throw ConfigurationException(msg);
-      }
+      return futureBuilder(dataProvider.query(query: query, pageArguments: pageArguments),
+          dataSource.temporaryDocument);
     } else {
       return CircularProgressIndicator();
     }
@@ -100,8 +89,8 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
               fireListeners: false);
           return buildContent();
         } else if (snapshot.hasError) {
-          final APIException error = snapshot.error;
-          return Text('Error in Future ${error.message}');
+          final error = snapshot.error;
+          return Text('Error in Future ${error.runtimeType}');
         } else {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
@@ -120,33 +109,34 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
   }
 
   Widget streamBuilder(DataProvider backend, TemporaryDocument temporaryDocument) {
-    return StreamBuilder<Data>(
-        stream: backend.getStream(documentId: null),
-        initialData: Data(data: {}),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-              return Center(
-                child: Text('No connection'),
-              );
-            case ConnectionState.waiting:
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            case ConnectionState.active:
-              return activeBuilder(
-                temporaryDocument,
-                snapshot.data,
-              );
-            case ConnectionState.done:
-              return Center(
-                child: Text("Connection closed"),
-              );
-            default:
-              return null; // unreachable
-          }
-        });
+    // return StreamBuilder<Data>(
+    //     stream: backend.getStream(documentId: null),
+    //     initialData: Data(data: {}),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+    //       switch (snapshot.connectionState) {
+    //         case ConnectionState.none:
+    //           return Center(
+    //             child: Text('No connection'),
+    //           );
+    //         case ConnectionState.waiting:
+    //           return Center(
+    //             child: CircularProgressIndicator(),
+    //           );
+    //         case ConnectionState.active:
+    //           return activeBuilder(
+    //             temporaryDocument,
+    //             snapshot.data,
+    //           );
+    //         case ConnectionState.done:
+    //           return Center(
+    //             child: Text("Connection closed"),
+    //           );
+    //         default:
+    //           return null; // unreachable
+    //       }
+    //     });
+    throw UnimplementedError();
   }
 
   /// Updates data and rebuilds using [buildContent]
@@ -157,7 +147,7 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
   }
 
   /// Build any nested Panel or Part widgets. Not used by Part
-  Widget buildSubContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable}) {
+  Widget buildSubContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable,Map<String, dynamic> pageArguments}) {
     assert(parentBinding != null);
     final List<Widget> children = List.empty(growable: true);
     for (var element in content) {
@@ -166,12 +156,14 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
         child = Panel(
           parentBinding: parentBinding,
           config: element,
+          pageArguments: pageArguments,
         );
       }
       if (element is PPart) {
         child = Part(
           parentBinding: parentBinding,
           config: element,
+          pageArguments: pageArguments,
         );
       }
       child = addEditControl(widget: child, config: element);
