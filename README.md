@@ -9,5 +9,5 @@ Precept BackendDelegate implementation for Back4App
 Uses json_serializable.
 
 ```bash
-flutter packages pub run build_runner watch --delete-conflicting-outputs
+flutter packages pub run --no-sound-null-safety build_runner watch --delete-conflicting-outputs
 ```

@@ -13,9 +13,10 @@ void main() {
     Map<String, Map<String, Map<String, dynamic>>> appConfig = {
       'back4app': {
         'dev': {
-          PBack4AppDataProvider.appIdKey: 'at4dM5dN0oCRryJp7VtTccIKZY9l3GtfHre0Hoow',
+          PBack4AppDataProvider.applicationIdKey: 'at4dM5dN0oCRryJp7VtTccIKZY9l3GtfHre0Hoow',
           PBack4AppDataProvider.clientIdKey: 'DPAF2DQCDVJ9Zmbp8vyaDhfC1XXjDdEveJqIwLYc',
           PBack4AppDataProvider.serverUrlKey: 'https://parseapi.back4app.com',
+          PBack4AppDataProvider.endpointKey: 'https://parseapi.back4app.com/graphql',
         }
       }
     };
@@ -41,7 +42,7 @@ void main() {
       script.init();
       Back4AppDataProvider dataProvider = Back4AppDataProvider(config: script.dataProvider);
       // when
-      final Data result = await dataProvider.get(query: query);
+      final Data result = await dataProvider.query(query: query);
       // then
 
       expect(result.documentId.path, 'Account');

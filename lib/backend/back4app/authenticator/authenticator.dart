@@ -13,7 +13,8 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider> {
   Back4AppAuthenticator({@required this.config});
 
   init() async {
-    parse = await Parse().initialize(config.appId, config.serverUrl);
+    // parse = await Parse().initialize(config.applicationId, config.serverUrl);
+    throw UnimplementedError();
   }
 
 // TODO: should not allow call if already logged in (_parseUser would be overwritten)
