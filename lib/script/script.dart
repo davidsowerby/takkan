@@ -376,6 +376,7 @@ class PPanel extends PSubContent {
   final PHelp help;
   final String property;
   final PPanelStyle style;
+  final Map<String, dynamic> pageArguments;
 
   factory PPanel.fromJson(Map<String, dynamic> json) => _$PPanelFromJson(json);
 
@@ -385,6 +386,7 @@ class PPanel extends PSubContent {
     this.openExpanded = true,
     this.property,
     this.content = const [],
+    this.pageArguments=const {},
     PPanelHeading heading,
     String caption,
     this.scrollable = false,

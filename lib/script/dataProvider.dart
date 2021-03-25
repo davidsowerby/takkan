@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/preceptItem.dart';
@@ -13,10 +15,10 @@ part 'dataProvider.g.dart';
 /// Each implementation must provide the appropriate override.
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PRestDataProvider extends PDataProvider {
-
   final bool checkHealthOnConnect;
 
   PRestDataProvider({
+    PSignInOptions signInOptions,
     PSchemaSource schemaSource,
     PSchema schema,
     this.checkHealthOnConnect = true,
@@ -24,6 +26,7 @@ class PRestDataProvider extends PDataProvider {
     PConfigSource configSource,
   }) : super(
           id: id,
+          signInOptions: signInOptions,
           schema: schema,
           schemaSource: schemaSource,
           configSource: configSource,
@@ -34,10 +37,10 @@ class PRestDataProvider extends PDataProvider {
 
   Map<String, dynamic> toJson() => _$PRestDataProviderToJson(this);
 
-  String get documentBaseUrl => serverUrl;
+  String get endPointBase => serverUrl;
 
   String documentUrl(DocumentId documentId) {
-    return '$documentBaseUrl/${documentId.path}/${documentId.itemId}';
+    return '$endPointBase/${documentId.path}/${documentId.itemId}';
   }
 }
 
@@ -51,8 +54,8 @@ class PRestDataProvider extends PDataProvider {
 /// [_appConfig] is set during app initialisation (see [Precept.init]), and represents the contents of
 /// **precept.json**
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PDataProvider extends PreceptItem {
+// @JsonSerializable(nullable: true, explicitToJson: true)
+abstract class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
   final PConfigSource configSource;
   @JsonKey(ignore: true)
@@ -89,9 +92,21 @@ class PDataProvider extends PreceptItem {
   }
 
   /// Creates headers from [appConfig] using [configSource] to look up the appropriate part of the data.
-  /// [appConfig] has been loaded from **precept.json**
-  Map<String, String> get headers => {};
-  String get serverUrl=>'';
+  /// [appConfig] has been loaded from **precept.json**.
+  /// By default, all keys containing a '-' are assumed to be header keys
+  Map<String, String> get headers {
+
+    final h = Map<String, String>();
+    for (MapEntry<String, dynamic> entry in instanceConfig.entries) {
+      if (entry.key.contains('-')) {
+        h[entry.key] = entry.value.toString();
+      }
+    }
+    return h;
+  }
+
+  String get serverUrl => instanceConfig['serverUrl'];
+  Map<String,dynamic> get instanceConfig=> _appConfig[configSource.segment][configSource.instance];
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -124,4 +139,40 @@ class PNoDataProvider extends PDataProvider {
   factory PNoDataProvider.fromJson(Map<String, dynamic> json) => _$PNoDataProviderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PGraphQLDataProvider extends PDataProvider {
+  final bool checkHealthOnConnect;
+
+  PGraphQLDataProvider({
+    PSignInOptions signInOptions,
+    PSchemaSource schemaSource,
+    PSchema schema,
+    this.checkHealthOnConnect = true,
+    String id,
+    PConfigSource configSource,
+  }) : super(
+          id: id,
+          signInOptions: signInOptions,
+          schema: schema,
+          schemaSource: schemaSource,
+          configSource: configSource,
+        );
+
+  factory PGraphQLDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$PGraphQLDataProviderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PGraphQLDataProviderToJson(this);
+
+  String get endpoint {
+    final instanceConfig = appConfig[configSource.segment][configSource.instance];
+    final value=instanceConfig['graphqlEndpoint'];
+    if (value==null){
+      final msg='graphqlEndpoint must be specified in precept.json';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return value;
+  }
 }
