@@ -54,11 +54,11 @@ class RestDataProvider<T extends PRestDataProvider> extends DataProvider<T> {
   }
 
   @override
-  Future<Data> get({PGet query}) async {
+  Future<Data> getDocument({DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
     final Response response =
-        await Dio(BaseOptions(headers: config.headers)).get(config.documentUrl(query.documentId));
+        await Dio(BaseOptions(headers: config.headers)).get(config.documentUrl(documentId));
     if (response.statusCode == HttpStatus.ok) {
-      return Data(data: response.data, documentId: query.documentId);
+      return Data(data: response.data, documentId: documentId);
     }
     throw APIException(message: response.statusMessage, statusCode: response.statusCode);
   }
@@ -92,11 +92,7 @@ class RestDataProvider<T extends PRestDataProvider> extends DataProvider<T> {
     throw UnimplementedError();
   }
 
-  @override
-  Stream<Data> getStream({DocumentId documentId}) {
-    // TODO: implement getStream
-    throw UnimplementedError();
-  }
+
 
   @override
   Future<CloudResponse> save(
@@ -145,4 +141,16 @@ class RestDataProvider<T extends PRestDataProvider> extends DataProvider<T> {
 
   @override
   Authenticator<T> createAuthenticator(T config) => throw UnimplementedError();
+
+  @override
+  Stream<Data> getStream({PGet query, Map<String, dynamic> pageArguments = const {}}) {
+    // TODO: implement getStream
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Data> query({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) {
+    // TODO: implement query
+    throw UnimplementedError();
+  }
 }

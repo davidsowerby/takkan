@@ -38,8 +38,9 @@ import 'package:precept_script/script/query.dart';
 abstract class DataProvider<CONFIG extends PDataProvider> {
   final CONFIG config;
   Authenticator _authenticator;
+
   Authenticator get authenticator {
-    if (_authenticator==null){
+    if (_authenticator == null) {
       _authenticator = createAuthenticator(config);
     }
     return _authenticator;
@@ -47,24 +48,32 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Authenticator createAuthenticator(CONFIG config);
 
-  UserState get userState=> authenticator.userState;
+  UserState get userState => authenticator.userState;
 
-  DataProvider({@required this.config });
+  DataProvider({@required this.config});
 
   /// ================================================================================================
-  /// All 'getXXX' methods use the standard 'database' access of a typical backend SDK
+  /// The 'query' method is the most fundamental method of retrieving data.  Its execution is determined
+  /// by the relevant implementation, but is essentially an interpretation of a GraphQL string.
+  /// Methods below offer some more specific query methods
+  /// ================================================================================================
+
+  Future<Data> query({PQuery query, String script, Map<String, dynamic> pageArguments = const {}});
+
+  /// ================================================================================================
+  /// 'getXXX' methods return a Future<Data> using standard SDK read methods or GraphQL
   /// For methods accessing Cloud Functions, use the 'fetchXXXX' methods
   /// ================================================================================================
 
-  /// Returns a single instance of [Data] identified by [documentId]
+  /// Returns a single instance of [Data] identified by [PGet.documentId]
   ///
   /// Throws an [APIException] if not found
-  Future<Data> get({@required PGet query});
+  Future<Data> getDocument({@required DocumentId documentId});
 
-  /// Returns a Stream of [Data] identified by [documentId]
+  /// Returns a Stream of [Data] identified by [PGet.documentId]
   ///
   /// Throws an [APIException] if not found
-  Stream<Data> getStream({@required DocumentId documentId});
+  Stream<Data> getStream({@required PGet query, Map<String, dynamic> pageArguments = const {}});
 
   /// Returns a list of [Data] instances for the document selected by [query]
   ///
@@ -179,8 +188,4 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// The [CloudResponse.success] will be false, and [CloudResponse.errorMessage] will be set if other failures occur,
   /// for example lack of permissions.
   Future<CloudResponse> delete({@required List<DocumentId> documentIds});
-
-
 }
-
-

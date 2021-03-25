@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:graphql/client.dart';
+import 'package:precept_backend/backend/dataProvider/graphqlDataProvider.dart';
+import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/script/query.dart';
 
 void main() {
   group('Unit test', () {
@@ -12,57 +14,40 @@ void main() {
     tearDown(() {});
 
     test('output', () async {
-// ...
+      // given
+      final PGraphQLDataProvider config = PGraphQLDataProvider();
+      config.appConfig = appConfig;
+      final provider = GraphQLDataProvider<PGraphQLDataProvider>(config: config);
 
-      final _httpLink = HttpLink(
-        'https://parseapi.back4app.com/graphql',defaultHeaders:{
-        "X-Parse-Application-Id": "at4dM5dN0oCRryJp7VtTccIKZY9l3GtfHre0Hoow",
-        "X-Parse-Master-Key": "W7X6nqPOslfmfAfNRj9VxrMBXh0GvbbjAV900IyX",
-        "X-Parse-Client-Key": "DPAF2DQCDVJ9Zmbp8vyaDhfC1XXjDdEveJqIwLYc"
-      },
-      );
-
-      // final _authLink = AuthLink(
-      //   getToken: () async => 'Bearer $YOUR_PERSONAL_ACCESS_TOKEN',
-      // );
-
-      Link _link = _httpLink;
-      // Link _link = _authLink.concat(_httpLink);
-
-      /// subscriptions must be split otherwise `HttpLink` will. swallow them
-      // if (websocketEndpoint != null){
-      //   final _wsLink = WebSocketLink(websockeEndpoint);
-      //   _link = Link.split((request) => request.isSubscription, _wsLink, _link);
-      // }
-
-      final GraphQLClient client = GraphQLClient(
-        /// **NOTE** The default store is the InMemoryStore, which does NOT persist to disk
-        cache: GraphQLCache(),
-        link: _link,
-      );
-
-      final QueryResult result = await client.query(
-        QueryOptions(
-          document: gql(
-            r'''
-                 query GetAccount {
-  account(id: "wVdGK8TDXR") {
-    id,
-    category,
-    accountNumber,
-    createdAt,
-    updatedAt
-  }
-}
-               ''',
-          ),
-          variables: {
-
-          },
+      // when
+      var s = r'In a raw string, not even $n gets special treatment.';
+      final result = await provider.gQuery(
+        query: PGQuery(
+          variables: {"id": "wVdGK8TDXR"},
+          script:
+              'query GetAccount(\$id : ID!) {account(id: \$id) {id,objectId,category,accountNumber,createdAt,updatedAt}}',
+          // r'query GetAccount($id : ID!) {account(id: $id) {id,objectId,category,accountNumber,createdAt,updatedAt}}',
         ),
       );
+      // then
+      expect(result.data['account']['category'], 'ue2y');
 
-      if (result.hasException) {}
+      final result2 = await provider.pQuery(
+        query: PPQuery(
+          types: {'id': 'ID!'},
+          variables: {"id": "wVdGK8TDXR"},
+          table: 'Account',
+          fields: 'id,category,accountNumber,createdAt,updatedAt',
+        ),
+      );
+      expect(result2.data['account']['category'], 'ue2y');
     });
   });
 }
+
+final appConfig = {
+  "X-Parse-Application-Id": "xLWKrOqVNy3O1u3z9ovoalO2XFuKQn0NlHPksJV6",
+  "X-Parse-Client-Key": "Ib1NDOh4ph4fkCci0IIxWF01flSxhpJf6FO1gAkQ",
+  "serverUrl": "https://parseapi.back4app.com/",
+  "graphqlEndpoint": "https://parseapi.back4app.com/graphql/"
+};
