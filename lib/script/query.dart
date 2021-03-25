@@ -83,7 +83,7 @@ class PGQuery extends PQuery {
   // TODO: implement table
   String get table => throw UnimplementedError();
 }
-
+/// [fields] and [types] must contain 'id' if data is going to be edited, so that data can be updated
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPQuery extends PQuery {
   final String fields;
