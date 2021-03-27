@@ -1,43 +1,65 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart' as dio;
 import 'package:flutter/foundation.dart';
+import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_backend/backend/response.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_backend/backend/user/userState.dart';
+import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/documentId.dart';
 import 'package:precept_script/script/query.dart';
 
-/// A base class representing the layer between the client and server.
+/// The layer between the client and server.
 ///
 /// It provides a consistent data access interface regardless of the type of data provider used.
-/// Most of the work is actually done in specific implementations.
 ///
-/// Fulfils two functions:
+/// This default class works on the principle of using GraphQL to specify queries, but uses
+/// a REST call for updates.  This is purely for pragmatic (or possibly lazy) reasons.  Using
+/// GraphQL for queries makes perfect sense as many cloud providers provide a GraphQL interface.
+/// Using REST for updates is pragmatic - it is easier than constructing a GraphQL Mutation.
 ///
-/// - Provides methods for translating [PQuery] types into calls appropriate to a particular data provider,
-/// for example Back4App or Firestore
+/// Sub-classes may change some elements of how the provider works. To achieve this, an implementation
+/// must register a sub-class of this with with calls to [DataProviderLibrary.register]
 ///
-/// - Provides a backend-specific [Authenticator] implementation, for use where a user is required
-/// to authenticate for a particular data provider.  The [Authenticator] also contains a [UserState]
-/// object for this data provider, used to hold basic user information and authentication status.
-///
-/// The [DataProvider] sub-class type is instantiated by look up from the [dataProviderLibrary].
-/// Registration with the library is done during app initialisation with calls to
-/// [DataProviderLibrary.register]
+/// In addition to queries and updates, this class also provides a backend-specific [Authenticator]
+/// implementation, for use where a user is required to authenticate for a particular data provider.
+/// The [Authenticator] also contains a [UserState] object for this data provider, used to hold
+/// basic user information and authentication status.
 ///
 /// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
 ///
 /// Note that the [DataProviderLibrary] acts as a cache, effectively making instances of a particular
-/// [DataProvider] type appear as Singletons.  This means of course that any contained state is also
-/// effectively of singleton scope.  In theory, this means that a single client app could actually
-/// log in as a different user for each [DataProvider] it uses, though this does seem an unlikely use case.
+/// [DataProvider] type appear as Singletons.  This means of course that any contained state,
+/// including [UserState], is also effectively of singleton scope.  In theory, this means that a
+/// single client app could actually log in as a different user for each [DataProvider] it uses,
+/// though this does seem an unlikely use case.
 
-abstract class DataProvider<CONFIG extends PDataProvider> {
+class DataProvider<CONFIG extends PDataProvider> {
   final CONFIG config;
   Authenticator _authenticator;
+  GraphQLClient _client;
+
+  DataProvider({@required this.config})
+      : assert(config != null),
+        super() {
+    HttpLink _httpLink = HttpLink(
+      config.graphqlEndpoint,
+      defaultHeaders: config.headers,
+    );
+
+    _client = GraphQLClient(
+      /// TODO: The default store is the InMemoryStore, which does NOT persist to disk
+      cache: GraphQLCache(),
+      link: _httpLink,
+    );
+  }
 
   Authenticator get authenticator {
     if (_authenticator == null) {
@@ -46,146 +68,140 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _authenticator;
   }
 
-  Authenticator createAuthenticator(CONFIG config);
+  Authenticator createAuthenticator(CONFIG config) {return NoAuthenticator();}
 
   UserState get userState => authenticator.userState;
 
-  DataProvider({@required this.config});
+  Future<Data> query(
+      {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    return (query is PGQuery)
+        ? gQuery(query: query, pageArguments: pageArguments)
+        : pQuery(query: query, pageArguments: pageArguments);
+  }
 
-  /// ================================================================================================
-  /// The 'query' method is the most fundamental method of retrieving data.  Its execution is determined
-  /// by the relevant implementation, but is essentially an interpretation of a GraphQL string.
-  /// Methods below offer some more specific query methods
-  /// ================================================================================================
+  Future<Data> gQuery({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+    return _query(query: query, script: query.script, pageArguments: pageArguments);
+  }
 
-  Future<Data> query({PQuery query, String script, Map<String, dynamic> pageArguments = const {}});
+  Future<Data> _query(
+      {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
+    final queryOptions = QueryOptions(document: gql(script), variables: variables);
+    final QueryResult response = await _client.query(queryOptions);
+    final String method = decapitalize(query.table);
+    final actualData = response.data[method];
+    return Data(data: actualData, documentId: DocumentId(path: query.table, itemId: actualData[config.idPropertyName]));
+  }
 
-  /// ================================================================================================
-  /// 'getXXX' methods return a Future<Data> using standard SDK read methods or GraphQL
-  /// For methods accessing Cloud Functions, use the 'fetchXXXX' methods
-  /// ================================================================================================
+  Future<Data> pQuery({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+    final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
+    final StringBuffer buf = StringBuffer();
+    buf.write('query Get');
+    buf.write(query.table);
+    buf.write('(');
+    bool first = true;
+    for (MapEntry<String, String> entry in query.types.entries) {
+      if (!first) {
+        buf.write(',');
+      } else {
+        first = false;
+      }
+      buf.write(' \$${entry.key}: ${entry.value}');
+    }
+    buf.write(') {');
+    buf.write(decapitalize(query.table));
+    buf.write('(');
+    first = true;
+    for (MapEntry<String, dynamic> entry in variables.entries) {
+      if (!first) {
+        buf.write(',');
+      } else {
+        first = false;
+      }
+      buf.write('${entry.key}: \$${entry.key}');
+    }
+    buf.write(') {');
+    buf.write(query.fields);
+    buf.write('}}');
+    return _query(query: query, script: buf.toString(), pageArguments: pageArguments);
+  }
 
-  /// Returns a single instance of [Data] identified by [PGet.documentId]
-  ///
-  /// Throws an [APIException] if not found
-  Future<Data> getDocument({@required DocumentId documentId});
+  @override
+  Future<Data> getDocument({@required DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
+    final PPQuery q =
+    PPQuery(table: documentId.path, variables: {config.idPropertyName: documentId.itemId}, types: {config.idPropertyName: 'String!'});
+    return pQuery(query: q);
+  }
 
-  /// Returns a Stream of [Data] identified by [PGet.documentId]
-  ///
-  /// Throws an [APIException] if not found
-  Stream<Data> getStream({@required PGet query, Map<String, dynamic> pageArguments = const {}});
+  Map<String, dynamic> _combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
+    assert(pageArguments!=null);
+    final variables = Map<String, dynamic>();
+    final propertyVariables = _buildPropertyVariables(query.propertyReferences);
+    variables.addAll(pageArguments);
+    variables.addAll(propertyVariables);
+    variables.addAll(query.variables);
+    return variables;
+  }
+// TODO: get variable values from property references
+  Map<String, dynamic> _buildPropertyVariables(List<String> propertyReferences) {
+    return {};
+  }
 
-  /// Returns a list of [Data] instances for the document selected by [query]
-  ///
-  /// May return an empty list
-  /// Throws an [APIException] if the query is not valid
-  Future<Data> getList({@required PQuery query});
-
-  /// Returns a Stream of List<Data> instances for the document selected by [query]
-  ///
-  /// May return an empty list
-  /// throws an [APIException] if the query is not valid
-  Stream<List<Data>> getListStream({@required PQuery query});
-
-  /// Returns a single instance of [Data] for the [query]
-  ///
-  /// Throws an [APIException] if the result is not exactly one instance
-  Future<Data> getDistinct({@required PQuery query});
-
-  /// Returns a single instance of [Data] for the [query]
-  ///
-  /// Throws an [APIException] if the result is not exactly one instance
-  Stream<Data> getDistinctStream({@required PQuery query});
-
-  /// ================================================================================================
-  /// All 'fetchXXX' methods call Cloud Functions
-  /// To access the standard 'database' access of a typical backend SDK, use the 'getXXXX' methods
-  /// Note there are no Streams returned by these calls
-  /// ================================================================================================
-
-  /// Returns a single instance of [Data] identified by [documentId], from a CloudFunction
-  ///
-  /// Throws an [APIException] if not found
-  Future<Data> fetch({@required String functionName, @required DocumentId documentId});
-
-  /// Returns a single instance of [Data] from a Cloud Function.
-  ///
-  ///
-  /// Throws an [APIException] if the result is not exactly one instance, or the function call fails
-  Future<Data> fetchDistinct({@required String functionName, Map<String, dynamic> params});
-
-  /// Returns a list of [Data] instances by the cloud function [functionName] when executed wth [params]
-  ///
-  /// May return an empty list
-  /// Throws an APIException if the function call fails
-  Future<List<Data>> fetchList({@required functionName, Map<String, String> params});
-
-  /// ================================================================================================
-  /// Other calls
-  /// ================================================================================================
-
-  /// Returns true if the document exists, false otherwise
-  Future<bool> exists({@required DocumentId documentId});
-
-  /// Invokes a Cloud Function
-  ///
-  /// The result is determined by the Cloud Function, and is return in the [CloudResponse.result]
-  Future<CloudResponse> executeFunction(
-      {@required String functionName, Map<String, dynamic> params});
-
-  /// Saves a complete document to the data provider
-  ///
-  /// [documentId] identifies the document to be saved
-  ///
-  /// [documentType] affects the meta data applied to the document - not yet implemented
-  ///
-  /// [fullData] contains the data to be saved
-  ///
-  Future<CloudResponse> save({
-    @required DocumentId documentId,
-    @required Map<String, dynamic> fullData,
-    DocumentType documentType = DocumentType.standard,
-    Function() onSuccess,
-  });
-
-  /// Creates new document to the data provider
-  ///
-  /// [documentId.path] must be provided.  [documentId.itemId] is ignored
-  ///
-  /// [documentType] affects the meta data applied to the document - not yet implemented
-  ///
-  /// [fullData] provides the data to be saved
-  ///
-  Future<CloudResponse> create({
-    @required DocumentId documentId,
-    @required Map<String, dynamic> fullData,
-    DocumentType documentType = DocumentType.standard,
-    Function() onSuccess,
-  });
-
-  /// Updates a document to the data provider.
-  ///
-  /// [changedData] should contain only those properties which should be updated
-  ///
-  /// [documentId] identifies the document to be updated
-  ///
-  /// [documentType] affects the meta data applied to the document - not yet implemented
-  ///
-  /// [onSuccess] is a callback invoked on successful update
-  ///
-  /// returns true if successful, throws an [APIException] on failure
-  /// see also [save]
   Future<bool> update({
-    @required DocumentId documentId,
-    @required Map<String, dynamic> changedData,
+    DocumentId documentId,
+    Map<String, dynamic> changedData,
     DocumentType documentType = DocumentType.standard,
     Function() onSuccess,
-  });
+  }) async {
+    assert(documentId !=null);
+    assert(documentId.path!=null);
+    assert(documentId.itemId!=null);
+    logType(this.runtimeType).d('Updating data provider');
+    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: config.headers)).put(
+      documentUrl(documentId),
+      data: changedData,
+    );
+    if (response.statusCode == HttpStatus.ok) {
+      logType(this.runtimeType).d('Data provider updated');
+      return true;
+    }
+    throw APIException(message: response.statusMessage, statusCode: response.statusCode);
+  }
 
-  /// Deletes one or more documents from persistence.
-  ///
-  /// Nothing happens if the document does not exist
-  /// The [CloudResponse.success] will be false, and [CloudResponse.errorMessage] will be set if other failures occur,
-  /// for example lack of permissions.
-  Future<CloudResponse> delete({@required List<DocumentId> documentIds});
+  String documentUrl(DocumentId documentId) {
+    return '${config.documentEndpoint}/${documentId.path}/${documentId.itemId}';
+  }
+}
+
+class NoAuthenticator extends Authenticator{
+  final String msg='If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
+
+  @override
+  Future<bool> doDeRegister(PreceptUser user) {
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  Future<AuthenticationResult> doRegisterWithEmail({String username, String password}) {
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  Future<bool> doRequestPasswordReset(PreceptUser user) {
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  Future<AuthenticationResult> doSignInByEmail({String username, String password}) {
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  Future<bool> doUpdateUser(PreceptUser user) {
+    throw UnimplementedError(msg);
+  }
+
+  @override
+  init() { logType(this.runtimeType).i("Authenticator not set"); }
+
 }

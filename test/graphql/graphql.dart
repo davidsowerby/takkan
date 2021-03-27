@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_backend/backend/dataProvider/graphqlDataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_script/script/dataProvider.dart';
 import 'package:precept_script/script/query.dart';
 
@@ -15,9 +15,9 @@ void main() {
 
     test('output', () async {
       // given
-      final PGraphQLDataProvider config = PGraphQLDataProvider();
+      final PDataProvider config = PDataProvider();
       config.appConfig = appConfig;
-      final provider = GraphQLDataProvider<PGraphQLDataProvider>(config: config);
+      final provider = DataProvider<PDataProvider>(config: config);
 
       // when
       var s = r'In a raw string, not even $n gets special treatment.';
