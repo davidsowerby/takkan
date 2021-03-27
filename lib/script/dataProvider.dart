@@ -54,8 +54,8 @@ class PRestDataProvider extends PDataProvider {
 /// [_appConfig] is set during app initialisation (see [Precept.init]), and represents the contents of
 /// **precept.json**
 
-// @JsonSerializable(nullable: true, explicitToJson: true)
-abstract class PDataProvider extends PreceptItem {
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
   final PConfigSource configSource;
   @JsonKey(ignore: true)
@@ -63,6 +63,7 @@ abstract class PDataProvider extends PreceptItem {
   @JsonKey(ignore: true)
   PSchema _schema;
   final PSchemaSource schemaSource;
+  final bool checkHealthOnConnect;
 
   @JsonKey(ignore: true)
   PSchema get schema => _schema;
@@ -76,6 +77,7 @@ abstract class PDataProvider extends PreceptItem {
 
   PDataProvider({
     @required this.configSource,
+    this.checkHealthOnConnect=false,
     this.signInOptions = const PSignInOptions(),
     PSchema schema,
     this.schemaSource,
@@ -106,12 +108,39 @@ abstract class PDataProvider extends PreceptItem {
   }
 
   String get serverUrl => instanceConfig['serverUrl'];
-  Map<String,dynamic> get instanceConfig=> _appConfig[configSource.segment][configSource.instance];
+  Map<String,dynamic> get instanceConfig=> _instanceConfig();
+
+  String get graphqlEndpoint {
+    final value=instanceConfig['graphqlEndpoint'];
+    if (value==null){
+      final msg='graphqlEndpoint must be specified in precept.json';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return value;
+  }
+
+  String get documentEndpoint {
+    final value=instanceConfig['documentEndpoint'];
+    if (value==null){
+      final msg='documentEndpoint must be specified in precept.json';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return value;
+  }
+
+  _instanceConfig(){
+    return appConfig[configSource.segment][configSource.instance];
+  }
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (schemaSource != null) schemaSource.walk(visitors);
   }
+
+  /// This can be overridden, because Back4App for example, uses the objectId field value
+  String get idPropertyName => 'id';
 }
 
 /// [segment] and [instance] together define which part **precept.json** is used to
@@ -141,38 +170,4 @@ class PNoDataProvider extends PDataProvider {
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PGraphQLDataProvider extends PDataProvider {
-  final bool checkHealthOnConnect;
 
-  PGraphQLDataProvider({
-    PSignInOptions signInOptions,
-    PSchemaSource schemaSource,
-    PSchema schema,
-    this.checkHealthOnConnect = true,
-    String id,
-    PConfigSource configSource,
-  }) : super(
-          id: id,
-          signInOptions: signInOptions,
-          schema: schema,
-          schemaSource: schemaSource,
-          configSource: configSource,
-        );
-
-  factory PGraphQLDataProvider.fromJson(Map<String, dynamic> json) =>
-      _$PGraphQLDataProviderFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PGraphQLDataProviderToJson(this);
-
-  String get endpoint {
-    final instanceConfig = appConfig[configSource.segment][configSource.instance];
-    final value=instanceConfig['graphqlEndpoint'];
-    if (value==null){
-      final msg='graphqlEndpoint must be specified in precept.json';
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    return value;
-  }
-}

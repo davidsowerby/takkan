@@ -13,7 +13,8 @@ import 'package:validators/validators.dart';
 // }
 
 
-
+/// Converts data from the model to the view and back again.  If the model and the view use the same data type,
+/// a [PassThroughConverter] is used
 abstract class ModelViewConverter<MODEL, VIEW> {
   const ModelViewConverter();
 
