@@ -6,7 +6,7 @@ part 'pBack4AppDataProvider.g.dart';
 
 /// When [debug] enabled, prints logs to console
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PBack4AppDataProvider extends PGraphQLDataProvider {
+class PBack4AppDataProvider extends PDataProvider {
   static const String applicationIdKey = "X-Parse-Application-Id";
   static const String clientIdKey = "X-Parse-Client-Key";
   static const String serverUrlKey = "serverUrl";
@@ -34,6 +34,5 @@ class PBack4AppDataProvider extends PGraphQLDataProvider {
 
   String get documentBaseUrl => '$serverUrl/classes';
 
-
-
+  String get idPropertyName => 'objectId';
 }
