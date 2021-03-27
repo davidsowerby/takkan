@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
@@ -13,6 +14,7 @@ import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/script/particle/navigation.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/particle/pTextBox.dart';
 
@@ -59,6 +61,11 @@ class ParticleLibrary {
           config: config,
           connector: connector,
         );
+      case PNavigationButton:
+        return NavigationButton(
+          partConfig: config,
+          connector: connector,
+        );
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
@@ -67,8 +74,8 @@ class ParticleLibrary {
 
   Widget findParticle(DataBinding dataBinding, PPart config, bool read) {
     Type particleDataType = _findViewDataType(config, read);
-    final connector = ConnectorFactory().buildConnector(
-        viewDataType: particleDataType, config: config, dataBinding: dataBinding);
+    final connector = ConnectorFactory()
+        .buildConnector(viewDataType: particleDataType, config: config, dataBinding: dataBinding);
     return _createParticle(config, read, connector);
   }
 
@@ -97,7 +104,6 @@ class ParticleLibrary {
 //   }
 // }
 
-
 }
 
 // class ParticleRecord{
@@ -108,11 +114,9 @@ class ParticleLibrary {
 //
 // }
 
-
 class ConnectorFactory {
-  ModelConnector buildConnector({@required DataBinding dataBinding,
-    @required PPart config,
-    @required Type viewDataType}) {
+  ModelConnector buildConnector(
+      {@required DataBinding dataBinding, @required PPart config, @required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
     final PDocument schema = dataBinding.schema;
     final PSchemaElement fieldSchema = schema.fields[config.property];
@@ -120,7 +124,8 @@ class ConnectorFactory {
     final binding =
         _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
     final converter = _converter(schema: fieldSchema, particleDataType: viewDataType);
-    final connector = ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
+    final connector =
+        ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
 
