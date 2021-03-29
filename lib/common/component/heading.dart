@@ -11,7 +11,7 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/style/style.dart';
+import 'package:precept_script/script/trait/style.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
@@ -113,7 +113,7 @@ class _HeadingState extends State<Heading> with Interpolator {
                       widget.headingText,
                       style: themeLookup.textStyle(
                         theme: theme,
-                        style: widget.headingStyle.style,
+                        style: widget.headingStyle.textTrait.textStyle,
                       ),
                     ),
                   ),

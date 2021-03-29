@@ -17,7 +17,7 @@ import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/trait/textTrait.dart';
 import 'package:precept_script/script/visitor.dart';
 
 // TODO error handling, loader may fail
@@ -150,7 +150,7 @@ class Precept {
     PDataProvider dataProvider;
     PQuery query;
     PPanelStyle panelStyle;
-    WritingStyle writingStyle;
+    PTextTrait textTrait;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
       if (s.routes != null) routes.addAll(s.routes);
@@ -162,7 +162,7 @@ class Precept {
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
       if (s.queryIsDeclared) query = s.query;
       if (s.panelStyle != null) panelStyle = s.panelStyle;
-      if (s.writingStyle != null) writingStyle = s.writingStyle;
+      if (s.writingStyle != null) textTrait = s.writingStyle;
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
@@ -175,7 +175,7 @@ class Precept {
         dataProvider: dataProvider,
         controlEdit: controlEdit,
         panelStyle: panelStyle,
-        writingStyle: writingStyle,
+        writingStyle: textTrait,
       );
     }
   }

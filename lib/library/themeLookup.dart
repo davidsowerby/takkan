@@ -3,11 +3,18 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/style/style.dart';
+import 'package:precept_script/script/trait/style.dart';
+import 'package:precept_script/script/trait/textTrait.dart';
 
+/// A utility class to enable (decode) the serialization of of a Flutter [TextStyle].  It is assumed
+/// that a [Theme] is being used.
 abstract class ThemeLookup {
+  /// Returns a Flutter [Color] from a Precept [PColor].  A [PColor] is used as a
+  /// proxy to 'serialize' a [Color] within a [PScript]
   Color color({@required ThemeData theme, @required PColor pColor});
 
+  /// Returns a Flutter [TextStyle] from a Precept [PTextStyle].  A [PTextStyle] is used as a
+  /// proxy to 'serialize' a [TextStyle] within a [PScript]
   TextStyle textStyle({@required ThemeData theme, @required PTextStyle style});
 }
 
