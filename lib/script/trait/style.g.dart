@@ -8,7 +8,9 @@ part of 'style.dart';
 
 PHeadingStyle _$PHeadingStyleFromJson(Map<String, dynamic> json) {
   return PHeadingStyle(
-    style: _$enumDecodeNullable(_$PTextStyleEnumMap, json['style']),
+    textTrait: json['textTrait'] == null
+        ? null
+        : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     background: _$enumDecodeNullable(_$PColorEnumMap, json['background']),
     textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']),
     height: (json['height'] as num)?.toDouble(),
@@ -21,7 +23,7 @@ PHeadingStyle _$PHeadingStyleFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PHeadingStyleToJson(PHeadingStyle instance) =>
     <String, dynamic>{
-      'style': _$PTextStyleEnumMap[instance.style],
+      'textTrait': instance.textTrait?.toJson(),
       'border': instance.border?.toJson(),
       'background': _$PColorEnumMap[instance.background],
       'textTheme': _$PTextThemeEnumMap[instance.textTheme],
@@ -61,22 +63,6 @@ T _$enumDecodeNullable<T>(
   return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$PTextStyleEnumMap = {
-  PTextStyle.headline1: 'headline1',
-  PTextStyle.headline2: 'headline2',
-  PTextStyle.headline3: 'headline3',
-  PTextStyle.headline4: 'headline4',
-  PTextStyle.headline5: 'headline5',
-  PTextStyle.headline6: 'headline6',
-  PTextStyle.subtitle1: 'subtitle1',
-  PTextStyle.subtitle2: 'subtitle2',
-  PTextStyle.bodyText1: 'bodyText1',
-  PTextStyle.bodyText2: 'bodyText2',
-  PTextStyle.caption: 'caption',
-  PTextStyle.button: 'button',
-  PTextStyle.overline: 'overline',
-};
-
 const _$PColorEnumMap = {
   PColor.primary: 'primary',
   PColor.primaryLight: 'primaryLight',
@@ -93,6 +79,7 @@ const _$PTextThemeEnumMap = {
   PTextTheme.standard: 'standard',
   PTextTheme.primary: 'primary',
   PTextTheme.accent: 'accent',
+  PTextTheme.auto: 'auto',
 };
 
 PBorder _$PBorderFromJson(Map<String, dynamic> json) {

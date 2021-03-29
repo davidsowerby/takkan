@@ -8,12 +8,14 @@ part of 'pText.dart';
 
 PText _$PTextFromJson(Map<String, dynamic> json) {
   return PText(
-    styleName: json['styleName'] as String,
+    textTrait: json['textTrait'] == null
+        ? null
+        : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     showCaption: json['showCaption'] as bool,
   );
 }
 
 Map<String, dynamic> _$PTextToJson(PText instance) => <String, dynamic>{
-      'styleName': instance.styleName,
       'showCaption': instance.showCaption,
+      'textTrait': instance.textTrait?.toJson(),
     };

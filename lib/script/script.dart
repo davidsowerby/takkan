@@ -17,8 +17,8 @@ import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/preceptItem.dart';
 import 'package:precept_script/script/query.dart';
-import 'package:precept_script/script/style/style.dart';
-import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/trait/style.dart';
+import 'package:precept_script/script/trait/textTrait.dart';
 import 'package:precept_script/script/visitor.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -48,7 +48,7 @@ class PScript extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle = const WritingStyle(),
+    PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,
   }) : super(
@@ -199,7 +199,7 @@ class PRoute extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle = const WritingStyle(),
+    PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           isStatic: isStatic,
@@ -264,7 +264,7 @@ class PPage extends PContent {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle = const WritingStyle(),
+    PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
@@ -396,7 +396,7 @@ class PPanel extends PSubContent {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle = const WritingStyle(),
+    PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   })  : _heading = heading ?? PPanelHeading(),
@@ -406,7 +406,7 @@ class PPanel extends PSubContent {
           dataProvider: dataProvider,
           query: query,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          textTrait: writingStyle,
           controlEdit: controlEdit,
           caption: caption,
         );
@@ -556,14 +556,14 @@ class PCommon extends PreceptItem {
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
-  WritingStyle _writingStyle;
+  PTextTrait _writingStyle;
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle,
-    WritingStyle writingStyle,
+    PTextTrait writingStyle,
     this.controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
@@ -581,7 +581,7 @@ class PCommon extends PreceptItem {
 
   PPanelStyle get panelStyle => _panelStyle;
 
-  WritingStyle get writingStyle => _writingStyle;
+  PTextTrait get writingStyle => _writingStyle;
 
   bool get inheritedEditControl {
     PCommon p = parent;
@@ -714,7 +714,7 @@ class PContent extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    WritingStyle writingStyle,
+    PTextTrait writingStyle,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,

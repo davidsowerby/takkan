@@ -5,7 +5,7 @@ import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
@@ -21,7 +21,7 @@ class PSubContent extends PContent {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle=const PPanelStyle(),
-    WritingStyle writingStyle,
+    PTextTrait textTrait,
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   }) : super(
@@ -31,7 +31,7 @@ class PSubContent extends PContent {
           dataProvider: dataProvider,
           query: query,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          writingStyle: textTrait,
           controlEdit: controlEdit,
           id: id,
         );

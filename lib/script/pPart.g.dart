@@ -21,7 +21,7 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     tooltip: json['tooltip'] as String,

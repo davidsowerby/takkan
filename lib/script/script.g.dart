@@ -18,7 +18,7 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
@@ -86,7 +86,7 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   )..version = json['version'] as int;
 }
@@ -108,7 +108,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     property: json['property'] as String,
@@ -150,7 +150,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
@@ -202,7 +202,7 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     writingStyle:
-        WritingStyle.fromJson(json['writingStyle'] as Map<String, dynamic>),
+        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;

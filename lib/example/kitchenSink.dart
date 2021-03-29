@@ -3,7 +3,7 @@ import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/style/style.dart';
+import 'package:precept_script/script/trait/style.dart';
 
 final kitchenSinkScript = PScript(
   name: 'Kitchen Sink',

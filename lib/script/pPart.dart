@@ -9,7 +9,7 @@ import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/particle/pText.dart';
 import 'package:precept_script/script/particle/pTextBox.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/style/writingStyle.dart';
+import 'package:precept_script/script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'pPart.g.dart';
@@ -49,7 +49,7 @@ class PPart extends PSubContent {
       this.staticData,
       this.help,
       PPanelStyle panelStyle=const PPanelStyle(),
-      WritingStyle writingStyle=const WritingStyle(),
+      PTextTrait writingStyle=const PTextTrait(),
       ControlEdit controlEdit = ControlEdit.inherited,
       String id,
       this.tooltip})
@@ -57,7 +57,7 @@ class PPart extends PSubContent {
           id: id,
           isStatic: isStatic,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          textTrait: writingStyle,
           controlEdit: controlEdit,
           caption: caption,
         );
