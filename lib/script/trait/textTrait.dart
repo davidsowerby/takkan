@@ -1,18 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/script/script.dart';
 
 part 'textTrait.g.dart';
 
+/// Used only if the Trait library is set up remotely (that is, using [PScript])
 /// Brings together various aspects of styling for text
 /// - [textStyle] is an enum representation of Flutter's TextStyle
-/// - [textTheme] is an enum representation of Flutter's TextStyle, except for the 'auto' value, which is used
-/// to select the theme based on the background
+/// - [textTheme] is an enum representation of Flutter's TextTheme, and in this context indicates the
+/// background behind this text
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PTextTrait  {
   final PTextStyle textStyle;
   final PTextTheme textTheme;
   final PTextAlign textAlign;
 
-  const PTextTrait({this.textStyle=PTextStyle.bodyText1, this.textTheme=PTextTheme.auto, this.textAlign=PTextAlign.start}) ;
+  const PTextTrait({this.textStyle=PTextStyle.bodyText1, this.textTheme=PTextTheme.standard, this.textAlign=PTextAlign.start}) ;
 
   factory PTextTrait.fromJson(Map<String, dynamic> json) =>
       _$PTextTraitFromJson(json);
@@ -36,7 +38,10 @@ enum PTextStyle {
   overline,
 }
 
-enum PTextTheme { standard, primary, accent, auto }
+/// - [PTextTheme.standard] relates to [ThemeData.textTheme], used when background is a Card or Canvas
+/// - [PTextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
+/// - [PTextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
+enum PTextTheme { standard, primary, accent }
 
 /// This is a direct copy of Flutter's TextAlign, but is used to avoid introducing a direct
 /// dependency on Flutter
