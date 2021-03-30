@@ -5,6 +5,7 @@ import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/particleLibrary.dart';
+import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -42,6 +43,7 @@ class Precept {
 
   init({
     List<Function()> injectionBindings,
+    Map<String, TextTrait> Function(ThemeData theme) textTraits,
     bool includePreceptDefaults = true,
     Map<String, Widget Function(PPage)> pageLibraryEntries,
     Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,
@@ -86,12 +88,12 @@ class Precept {
       if (provider.schema == null) {
         requireLoading.add(provider);
       }
-      provider.appConfig=_jsonConfig;
+      provider.appConfig = _jsonConfig;
     }
 
-    if(requireLoading.length > 0){
-      for(PDataProvider provider in requireLoading){
-        RestPreceptLoader loader=RestPreceptLoader();
+    if (requireLoading.length > 0) {
+      for (PDataProvider provider in requireLoading) {
+        RestPreceptLoader loader = RestPreceptLoader();
       }
     }
   }
@@ -189,7 +191,7 @@ PScript script = _precept._rootModel;
 
 /// When used with [script.walk] returns all [PDataProvider] instances
 class DataProviderVisitor implements ScriptVisitor {
-  List<PDataProvider> dataProviders=List.empty(growable: true);
+  List<PDataProvider> dataProviders = List.empty(growable: true);
 
   @override
   step(PreceptItem entry) {
