@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/particle/pParticle.dart';
 import 'package:precept_script/script/trait/textTrait.dart';
@@ -16,7 +15,7 @@ class PText extends PReadParticle {
   final String traitName;
   final PTextTheme background;
 
-  const PText({@required this.traitName, this.background=PTextTheme.standard, bool showCaption = true})
+  const PText({this.traitName='default', this.background=PTextTheme.standard, bool showCaption = true})
       : super(showCaption: showCaption);
 
   factory PText.fromJson(Map<String, dynamic> json) => _$PTextFromJson(json);
