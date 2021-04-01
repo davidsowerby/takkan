@@ -61,7 +61,7 @@ class ParticleLibrary {
           config: config,
           connector: connector,
         );
-      case PNavigationButton:
+      case PNavParticle:
         return NavigationButton(
           partConfig: config,
           connector: connector,

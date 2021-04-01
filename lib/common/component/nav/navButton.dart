@@ -25,7 +25,7 @@ class NavigationButton extends StatelessWidget with ConnectorBuilder implements 
   }
 
   navigateTo(BuildContext context) {
-    final PNavigationButton config = partConfig.read as PNavigationButton;
+    final PNavParticle config = partConfig.read as PNavParticle;
     Navigator.pushNamed(context, config.route, arguments: config.args);
   }
 
