@@ -6,8 +6,8 @@ part of 'navigation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PNavigationButton _$PNavigationButtonFromJson(Map<String, dynamic> json) {
-  return PNavigationButton(
+PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) {
+  return PNavButton(
     route: json['route'] as String,
     args: json['args'] as Map<String, dynamic>,
     caption: json['caption'] as String,
@@ -16,7 +16,7 @@ PNavigationButton _$PNavigationButtonFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PNavigationButtonToJson(PNavigationButton instance) =>
+Map<String, dynamic> _$PNavButtonToJson(PNavButton instance) =>
     <String, dynamic>{
       'styleName': instance.styleName,
       'showCaption': instance.showCaption,
