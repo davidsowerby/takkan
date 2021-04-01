@@ -370,7 +370,7 @@ class PPanel extends PSubContent {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
   @JsonKey(ignore: true)
-  final PPanelHeading _heading;
+  PPanelHeading _heading;
   final bool openExpanded;
   final bool scrollable;
   final PHelp help;
@@ -399,7 +399,7 @@ class PPanel extends PSubContent {
     PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
-  })  : _heading = heading ?? PPanelHeading(),
+  })  :
         super(
           id: id,
           isStatic: isStatic,
