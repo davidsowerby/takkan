@@ -41,3 +41,31 @@ Map<String, dynamic> _$PNavPartToJson(PNavPart instance) => <String, dynamic>{
       'property': instance.property,
       'staticData': instance.staticData,
     };
+
+PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) {
+  return PNavButtonSet()..version = json['version'] as int;
+}
+
+Map<String, dynamic> _$PNavButtonSetToJson(PNavButtonSet instance) =>
+    <String, dynamic>{
+      'version': instance.version,
+    };
+
+PNavButtonSetParticle _$PNavButtonSetParticleFromJson(
+    Map<String, dynamic> json) {
+  return PNavButtonSetParticle(
+    buttons: (json['buttons'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+    width: (json['width'] as num)?.toDouble(),
+    height: (json['height'] as num)?.toDouble(),
+  );
+}
+
+Map<String, dynamic> _$PNavButtonSetParticleToJson(
+        PNavButtonSetParticle instance) =>
+    <String, dynamic>{
+      'buttons': instance.buttons,
+      'width': instance.width,
+      'height': instance.height,
+    };
