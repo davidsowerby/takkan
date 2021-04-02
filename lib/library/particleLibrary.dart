@@ -3,6 +3,7 @@ import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/nav/navButton.dart';
+import 'package:precept_client/common/component/nav/navButtonSet.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
@@ -66,6 +67,8 @@ class ParticleLibrary {
           partConfig: config,
           connector: connector,
         );
+      case PNavButtonSetParticle:
+        return NavigationButtonSet(config: config);
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
