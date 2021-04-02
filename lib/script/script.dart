@@ -13,6 +13,7 @@ import 'package:precept_script/script/element.dart';
 import 'package:precept_script/script/help.dart';
 import 'package:precept_script/script/json/dataProviderConverter.dart';
 import 'package:precept_script/script/json/queryConverter.dart';
+import 'package:precept_script/script/layout/layout.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/panelStyle.dart';
 import 'package:precept_script/script/preceptItem.dart';
@@ -254,11 +255,13 @@ class PPage extends PContent {
   final bool scrollable;
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
+  final PPageLayout layout;
 
   @JsonKey(ignore: true)
   PPage({
     this.pageType = 'defaultPage',
     this.scrollable = true,
+    this.layout=const PPageLayout(),
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
     PDataProvider dataProvider,
@@ -371,6 +374,7 @@ class PPanel extends PSubContent {
   final List<PSubContent> content;
   @JsonKey(ignore: true)
   PPanelHeading _heading;
+  final PPanelLayout layout;
   final bool openExpanded;
   final bool scrollable;
   final PHelp help;
@@ -386,7 +390,8 @@ class PPanel extends PSubContent {
     this.openExpanded = true,
     this.property,
     this.content = const [],
-    this.pageArguments=const {},
+    this.pageArguments = const {},
+    this.layout=const PPanelLayout(),
     PPanelHeading heading,
     String caption,
     this.scrollable = false,
@@ -399,8 +404,7 @@ class PPanel extends PSubContent {
     PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
-  })  :
-        super(
+  }) : super(
           id: id,
           isStatic: isStatic,
           dataProvider: dataProvider,
@@ -729,3 +733,5 @@ class PContent extends PCommon {
           isStatic: isStatic,
         );
 }
+
+
