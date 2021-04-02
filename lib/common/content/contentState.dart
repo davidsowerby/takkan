@@ -16,7 +16,7 @@ import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
-abstract class ContentState<T extends StatefulWidget> extends State<T> {
+abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
   DataSource dataSource;
   DataBinding dataBinding;
   DataProvider dataProvider;
@@ -53,8 +53,10 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
 
   Widget assembleContent();
 
-  doBuild(BuildContext context, DataSource dataSource, PContent config,Map<String, dynamic> pageArguments) {
-    assert(pageArguments!=null);
+  doBuild(BuildContext context, DataSource dataSource, PContent config,
+      Map<String, dynamic> pageArguments) {
+    assert(pageArguments != null);
+
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
       return buildContent();
@@ -147,8 +149,15 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
   }
 
   /// Build any nested Panel or Part widgets. Not used by Part
-  Widget buildSubContent({DataBinding parentBinding, List<PSubContent> content, bool scrollable,Map<String, dynamic> pageArguments}) {
+  Widget buildSubContent(
+      {DataBinding parentBinding, CONFIG config, Map<String, dynamic> pageArguments}) {
     assert(parentBinding != null);
+
+    /// There is no common interface for the 'content' property of PPage and PPanel.
+    /// Perhaps there should be
+
+    final List<PSubContent> content =
+        (config is PPanel) ? config.content : (config as PPage).content;
     final List<Widget> children = List.empty(growable: true);
     for (var element in content) {
       Widget child;
@@ -169,10 +178,11 @@ abstract class ContentState<T extends StatefulWidget> extends State<T> {
       child = addEditControl(widget: child, config: element);
       children.add(child);
     }
-    return (scrollable)
-        ? ListView(children: children)
-        : Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    final screenSize = MediaQuery.of(context).size;
+    return layout(children: children, screenSize: screenSize, config:config);
   }
+
+  Widget layout({List<Widget> children, Size screenSize, CONFIG config});
 
   /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
   Widget addEditControl({@required Widget widget, @required PCommon config}) {

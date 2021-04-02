@@ -42,7 +42,7 @@ class Part extends StatefulWidget {
   PartState createState() => PartState(config, parentBinding);
 }
 
-class PartState extends ContentState<Part> {
+class PartState extends ContentState<Part, PPart> {
   Widget readParticle;
   Widget editParticle;
 
@@ -77,6 +77,12 @@ class PartState extends ContentState<Part> {
       }
       return editParticle;
     }
+  }
+
+  @override
+  Widget layout({List<Widget> children, Size screenSize, PPart config}) {
+    // TODO: implement layout
+    throw UnimplementedError();
   }
 }
 

@@ -6,6 +6,7 @@ import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/script/pPart.dart';
 import 'package:precept_script/script/particle/navigation.dart';
 
+
 class NavigationButton extends StatelessWidget with ConnectorBuilder implements Particle {
   final PPart partConfig;
   final ModelConnector connector;
@@ -18,9 +19,13 @@ class NavigationButton extends StatelessWidget with ConnectorBuilder implements 
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => navigateTo(context),
-      child: Text(connector.readFromModel()),
+    return Row(
+      children: [Expanded(child: Container()),
+        ElevatedButton(
+          onPressed: () => navigateTo(context),
+          child: Text(connector.readFromModel()),
+        ),
+        Expanded(child: Container(),),],
     );
   }
 

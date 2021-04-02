@@ -6,7 +6,7 @@ import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/component/messagePanel.dart';
 import 'package:precept_client/common/component/text.dart';
-import 'package:precept_client/common/page/displayColumns.dart';
+import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';

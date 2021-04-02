@@ -1,6 +1,5 @@
-import 'package:flutter/rendering.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/panel/panel.dart';
 
 /// Organises display columns according to screen size
 mixin DisplayColumns {
@@ -13,18 +12,18 @@ mixin DisplayColumns {
   /// issue #258 to warn user when their screen is narrower than [preferredColumnWidth]
   ///
   Row distributeWidgets(
-      {@required Size screenSize, @required double preferredColumnWidth, @required List<Panel> widgets}) {
+      {@required Size screenSize, @required double preferredColumnWidth, @required List<Widget> widgets}) {
     final dim = dimensions(screenSize: screenSize, preferredColumnWidth: preferredColumnWidth);
-    final List<List<Widget>> columnChildren = List();
+    final List<List<Widget>> columnChildren = List.empty(growable: true);
     for (int i = 0; i < dim.numberOfColumns; i++) {
-      columnChildren.add(List<Widget>());
+      columnChildren.add(List<Widget>.empty(growable: true));
     }
 
     for (int i = 0; i < widgets.length; i++) {
       int targetColumn = i % dim.numberOfColumns;
-      columnChildren[targetColumn].add(widgets[i] );
+      columnChildren[targetColumn].add(widgets[i]);
     }
-    final views = List<Widget>();
+    final views = List<Widget>.empty(growable: true);
     for (int i = 0; i < dim.numberOfColumns; i++) {
       views.add(Container(
           width: dim.columnWidth,
@@ -41,8 +40,8 @@ mixin DisplayColumns {
       width: dim.columnWidth,
       child: ListView(
         children: widgets,
-        ),
-      );
+      ),
+    );
   }
 
   /// Returns calculated [DisplayColumnDimensions] from [screenSize] and [preferredColumnWidth].  If [ screenSize.width]

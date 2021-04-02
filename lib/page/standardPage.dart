@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/content/contentState.dart';
+import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
@@ -28,7 +29,7 @@ class PreceptPage extends StatefulWidget {
   PreceptPageState createState() => PreceptPageState(config, parentBinding);
 }
 
-class PreceptPageState extends ContentState<PreceptPage> {
+class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColumns {
   PreceptPageState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
 
   @override
@@ -50,11 +51,43 @@ class PreceptPageState extends ContentState<PreceptPage> {
   @override
   Widget assembleContent() {
     return buildSubContent(
-      content: widget.config.content,
-      scrollable: widget.config.scrollable,
+      config: widget.config,
       parentBinding: dataBinding,
       pageArguments: widget.pageArguments,
     );
+  }
+
+  /// Simple page layout :
+  /// - Calculate the number of columns based on the width of the display, and allocate the children
+  /// left to right
+  /// - Add margin to each column as specified in [config.layout]
+  ///
+  /// This needs to be expanded to support more sophisticated layout options
+  /// See https://gitlab.com/precept1/precept_client/-/issues/37
+  Widget layout({List<Widget> children, Size screenSize, PPage config}) {
+    final margins = config.layout.margins;
+    return Padding(
+      padding: EdgeInsets.only(
+        top: margins.top,
+        bottom: margins.bottom,
+        left: margins.left,
+        right: margins.right,
+      ),
+      child: distributeWidgets(
+          screenSize: screenSize,
+          preferredColumnWidth: widget.config.layout.preferredColumnWidth,
+          widgets: children),
+    );
+    // false
+    //     ? Padding(
+    //         padding: const EdgeInsets.all(8.0),
+    //         child: ListView(children: widgets),
+    //       )
+    //     : Column(
+    //         crossAxisAlignment: CrossAxisAlignment.stretch,
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         children: children,
+    //       );
   }
 }
 

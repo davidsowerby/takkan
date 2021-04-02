@@ -24,7 +24,7 @@ class Panel extends StatefulWidget {
   PanelState createState() => PanelState(config, parentBinding);
 }
 
-class PanelState extends ContentState<Panel> {
+class PanelState extends ContentState<Panel, PPanel> {
   PanelState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
   bool expanded;
 
@@ -35,10 +35,10 @@ class PanelState extends ContentState<Panel> {
 
   Widget _expandedContent(bool editMode) {
     final content = buildSubContent(
-        content: widget.config.content,
-        scrollable: widget.config.scrollable,
-        pageArguments: widget.pageArguments,
-        parentBinding: dataBinding);
+      config: widget.config,
+      pageArguments: widget.pageArguments,
+      parentBinding: dataBinding,
+    );
 
     return (editMode) ? wrapInForm(context, content, dataBinding) : content;
   }
@@ -54,6 +54,18 @@ class PanelState extends ContentState<Panel> {
       );
     }
     final EditState editState = Provider.of<EditState>(context, listen: false);
-    return Container(child: _expandedContent(editState.editMode));
+    return Center(child: Container(child: _expandedContent(editState.editMode)));
+  }
+
+  @override
+  Widget layout({List<Widget> children, Size screenSize, PPanel config}) {
+    final Widget wrapped = (widget.config.scrollable)
+        ? ListView(
+            children: children,
+          )
+        : Column(
+            children: children,
+          );
+    return Container(child: wrapped, width: widget.config.layout.width,);
   }
 }
