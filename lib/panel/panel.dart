@@ -25,6 +25,8 @@ class Panel extends StatefulWidget {
 }
 
 class PanelState extends ContentState<Panel, PPanel> {
+  final formKey =GlobalKey<FormState>();
+
   PanelState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
   bool expanded;
 
@@ -40,7 +42,7 @@ class PanelState extends ContentState<Panel, PPanel> {
       parentBinding: dataBinding,
     );
 
-    return (editMode) ? wrapInForm(context, content, dataBinding) : content;
+    return (editMode) ? wrapInForm(context, content, dataBinding, formKey) : content;
   }
 
   Widget assembleContent() {

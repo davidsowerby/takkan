@@ -194,8 +194,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         : widget;
   }
 
-  Widget wrapInForm(BuildContext context, Widget content, DataBinding dataBinding) {
-    final formKey = GlobalKey<FormState>();
+  /// [formKey] must be provided from outside the [build] method
+  Widget wrapInForm(BuildContext context, Widget content, DataBinding dataBinding, GlobalKey<FormState> formKey) {
     dataBinding.addForm(formKey);
     return Form(key: formKey, child: content);
   }
