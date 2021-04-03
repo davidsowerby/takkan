@@ -404,7 +404,7 @@ class PPanel extends PSubContent {
     PTextTrait writingStyle = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
-  }) : super(
+  }) : _heading=heading, super(
           id: id,
           isStatic: isStatic,
           dataProvider: dataProvider,
