@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/data/pointer.dart';
+import 'package:precept_script/data/object/pointer.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';

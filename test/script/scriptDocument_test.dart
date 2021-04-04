@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_script/script/documentId.dart';
-import 'package:precept_script/script/json/queryConverter.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/query/query.dart';
+import 'package:precept_script/query/queryConverter.dart';
 
 void main() {
   group('PDocumentSelectorConverter', () {

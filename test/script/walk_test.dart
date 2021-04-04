@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/example/kitchenSink.dart';
-import 'package:precept_script/script/preceptItem.dart';
-import 'package:precept_script/script/visitor.dart';
 
 void main() {
   group('Walking', () {

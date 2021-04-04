@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/pPart.dart';
 import 'package:precept_script/script/script.dart';
 
 void main() {

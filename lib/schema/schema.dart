@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/preceptItem.dart';
 
 part 'schema.g.dart';
 

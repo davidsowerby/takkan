@@ -1,9 +1,11 @@
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/help.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/help.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/pPart.dart';
+import 'package:precept_script/particle/text.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/trait/style.dart';
+import 'package:precept_script/trait/style.dart';
 
 final kitchenSinkScript = PScript(
   name: 'Kitchen Sink',

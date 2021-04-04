@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_script/script/preceptItem.dart';
+import 'package:precept_script/common/script/preceptItem.dart';
 
 class ValidationMessage {
   final String type;
