@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_backend/backend/user/userState.dart';
-import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 
 abstract class Authenticator<T extends PDataProvider> {
   final UserState _userState = UserState();

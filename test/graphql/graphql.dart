@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/query/query.dart';
 
 void main() {
   group('Unit test', () {

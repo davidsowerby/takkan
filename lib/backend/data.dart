@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:precept_script/script/documentId.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 
 class Data {
   final DocumentId documentId;

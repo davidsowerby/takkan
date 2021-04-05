@@ -12,9 +12,9 @@ import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/util/string.dart';
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/documentId.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/query/query.dart';
 
 /// The layer between the client and server.
 ///
@@ -79,8 +79,19 @@ class DataProvider<CONFIG extends PDataProvider> {
         : pQuery(query: query, pageArguments: pageArguments);
   }
 
+  Future<List<Data>> queryList(
+      {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    return (query is PGQuery)
+        ? gQueryList(query: query, pageArguments: pageArguments)
+        : pQueryList(query: query, pageArguments: pageArguments);
+  }
+
   Future<Data> gQuery({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     return _query(query: query, script: query.script, pageArguments: pageArguments);
+  }
+
+  Future<List<Data>> gQueryList({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+    return _queryList(query: query, script: query.script, pageArguments: pageArguments);
   }
 
   Future<Data> _query(
@@ -91,6 +102,15 @@ class DataProvider<CONFIG extends PDataProvider> {
     final String method = decapitalize(query.table);
     final actualData = response.data[method];
     return Data(data: actualData, documentId: DocumentId(path: query.table, itemId: actualData[config.idPropertyName]));
+  }
+
+  Future<List<Data>> _queryList({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
+    final queryOptions = QueryOptions(document: gql(script), variables: variables);
+    final QueryResult response = await _client.query(queryOptions);
+    final String method = decapitalize(query.table);
+    final actualData = response.data[method];
+    return List.empty(); // TODO:
   }
 
   Future<Data> pQuery({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
@@ -126,6 +146,10 @@ class DataProvider<CONFIG extends PDataProvider> {
     return _query(query: query, script: buf.toString(), pageArguments: pageArguments);
   }
 
+  Future<List<Data>> pQueryList({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+    throw UnimplementedError();
+  }
+
   @override
   Future<Data> getDocument({@required DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
     final PPQuery q =
@@ -133,6 +157,11 @@ class DataProvider<CONFIG extends PDataProvider> {
     return pQuery(query: q);
   }
 
+  /// Combines variable values from 3 possible sources. Order of precedence is:
+  ///
+  /// 1. [PQuery.variables]
+  /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
+  /// 1. Values passed as [pageArguments]
   Map<String, dynamic> _combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
     assert(pageArguments!=null);
     final variables = Map<String, dynamic>();

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 
 /// A lookup facility for instances of [DataProvider] implementations.
 /// Provides an instance from the [find] method, from a supplied [PDataProvider]
