@@ -56,3 +56,25 @@ class PNavButtonSetParticle extends PReadParticle {
 
   Map<String, dynamic> toJson() => _$PNavButtonSetParticleToJson(this);
 }
+
+/// A simple way to specify a list of buttons which only route to another page
+/// [buttons] should be specified as a map, for example {'button text':'route'}
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PNavButtonSet extends PPart {
+  PNavButtonSet({
+    Map<String, String> buttons = const {},
+    double width = 150,
+    double height,
+  }) : super(
+      readOnly: true,
+      isStatic: IsStatic.yes,
+      read: PNavButtonSetParticle(
+        buttons: buttons,
+        width: width,
+        height: height,
+      ));
+
+  factory PNavButtonSet.fromJson(Map<String, dynamic> json) => _$PNavButtonSetFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PNavButtonSetToJson(this);
+}
