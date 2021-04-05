@@ -1,10 +1,10 @@
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/data.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/documentId.dart';
-import 'package:precept_script/script/query.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 

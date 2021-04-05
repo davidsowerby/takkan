@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/dataProvider.dart';
 
 part 'pBack4AppDataProvider.g.dart';
 
