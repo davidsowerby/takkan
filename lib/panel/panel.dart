@@ -3,7 +3,8 @@ import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/page/editState.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:precept_script/common/script/content.dart';
+import 'package:precept_script/panel/panel.dart';
 import 'package:provider/provider.dart';
 
 /// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [Panel]

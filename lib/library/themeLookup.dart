@@ -3,8 +3,8 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/trait/style.dart';
-import 'package:precept_script/script/trait/textTrait.dart';
+import 'package:precept_script/trait/style.dart';
+import 'package:precept_script/trait/textTrait.dart';
 
 /// A utility class to enable (decode) the serialization of of a Flutter [TextStyle].  It is assumed
 /// that a [Theme] is being used.

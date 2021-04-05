@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/trait/style.dart';
+import 'package:precept_script/trait/style.dart';
 
 // TODO: think about iteration order, it could be used to 'overwrite' previous declarations
 class BorderLibrary {

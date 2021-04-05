@@ -6,12 +6,14 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_mock_backend/precept_mock_backend.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/documentId.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/pText.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';

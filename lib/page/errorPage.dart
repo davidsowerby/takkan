@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_script/script/error.dart';
+import 'package:precept_script/common/script/error.dart';
 
 class PreceptDefaultErrorPage extends StatelessWidget {
   final PError config;

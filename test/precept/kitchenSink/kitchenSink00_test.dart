@@ -4,8 +4,10 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/particle/text.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';

@@ -8,10 +8,11 @@ import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/help.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/trait/style.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/trait/style.dart';
 import 'package:provider/provider.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created

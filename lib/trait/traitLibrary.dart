@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:precept_script/script/particle/pText.dart';
-import 'package:precept_script/script/trait/textTrait.dart';
+import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/trait/textTrait.dart';
 
 class TraitLibrary {
   final Map<String, TextTrait> _textTraits = Map();

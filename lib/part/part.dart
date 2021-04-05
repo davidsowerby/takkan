@@ -6,7 +6,8 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 

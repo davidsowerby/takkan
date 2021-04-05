@@ -7,7 +7,7 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/signIn.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 
 void preceptDefaultInjectionBindings() {

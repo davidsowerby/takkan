@@ -11,8 +11,11 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/script/element.dart';
-import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/content.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +45,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     }
   }
 
+  /// Trigger a refresh once Precept fully loaded
   _onPreceptReady() {
     setState(() {});
   }
@@ -73,8 +77,26 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
     /// Make sure we don't start before Precept has finished init
     if (precept.isReady) {
-      return futureBuilder(dataProvider.query(query: query, pageArguments: pageArguments),
-          dataSource.temporaryDocument);
+      switch (config.query.returnType) {
+        case QueryReturnType.futureSingle:
+          return futureBuilder(
+              dataProvider.query(
+                query: query,
+                pageArguments: pageArguments,
+              ),
+              dataSource.temporaryDocument);
+        case QueryReturnType.futureList:
+          return futureListBuilder(dataProvider.queryList(
+            query: query,
+            pageArguments: pageArguments,
+          ));
+        case QueryReturnType.streamSingle:
+          // TODO: Handle this case.
+          break;
+        case QueryReturnType.streamList:
+          // TODO: Handle this case.
+          break;
+      }
     } else {
       return CircularProgressIndicator();
     }
@@ -108,6 +130,37 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         }
       },
     );
+  }
+
+  Widget futureListBuilder(Future<List<Data>> future) {
+    return FutureBuilder<List<Data>>(
+      future: future,
+      builder: (context, snapshot) {if (snapshot.hasData) {
+        final snapshotBuilder=SnapshotBuilder(snapshot.data, config);
+        return ListView.builder(itemBuilder: (context, index) => snapshotBuilder.buildItem(context, index, config));
+      }
+      else if (snapshot.hasError) {
+          final error = snapshot.error;
+          return Text('Error in Future ${error.runtimeType}');
+        } else {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              return buildContent();
+
+            case ConnectionState.none:
+              return Text('Error in Future, it may have returned null');
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+          }
+          return null; // unreachable
+        }
+      },
+    );
+  }
+
+  tileBuilder(){
+
   }
 
   Widget streamBuilder(DataProvider backend, TemporaryDocument temporaryDocument) {
@@ -179,7 +232,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       children.add(child);
     }
     final screenSize = MediaQuery.of(context).size;
-    return layout(children: children, screenSize: screenSize, config:config);
+    return layout(children: children, screenSize: screenSize, config: config);
   }
 
   Widget layout({List<Widget> children, Size screenSize, CONFIG config});
@@ -195,8 +248,19 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// [formKey] must be provided from outside the [build] method
-  Widget wrapInForm(BuildContext context, Widget content, DataBinding dataBinding, GlobalKey<FormState> formKey) {
+  Widget wrapInForm(
+      BuildContext context, Widget content, DataBinding dataBinding, GlobalKey<FormState> formKey) {
     dataBinding.addForm(formKey);
     return Form(key: formKey, child: content);
+  }
+}
+
+class SnapshotBuilder{
+  final List<Data> snapshot;
+  final PContent config;
+
+  const SnapshotBuilder(this.snapshot,this.config );
+  buildItem(BuildContext context, int index, PContent config){
+
   }
 }

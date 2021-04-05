@@ -4,10 +4,10 @@ import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/query.dart';
-import 'package:precept_script/script/script.dart';
 
 /// The intersection point between application and data.
 ///

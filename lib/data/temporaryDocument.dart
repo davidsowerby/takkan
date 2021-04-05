@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter/foundation.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/documentId.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 
 enum ChangeType { update, remove, add, clear, createNew }
 

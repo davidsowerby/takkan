@@ -6,8 +6,8 @@ import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/error.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 

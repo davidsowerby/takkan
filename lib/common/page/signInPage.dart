@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_script/script/signIn.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 /// This is just used as an interface so that users can define their own implementations through
 /// GetIt

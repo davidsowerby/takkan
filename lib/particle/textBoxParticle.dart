@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
-import 'package:precept_script/script/pPart.dart';
+import 'package:precept_script/part/part.dart';
 
 class TextBoxParticle extends StatelessWidget {
   final PPart config;

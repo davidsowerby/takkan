@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/particle/particle.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/navigation.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/particle/navigation.dart';
 
 class NavigationButton extends StatelessWidget with ConnectorBuilder implements Particle {
   final PPart partConfig;

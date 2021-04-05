@@ -7,19 +7,20 @@ import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/error.dart';
+import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/panel/panelStyle.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/script/dataProvider.dart';
-import 'package:precept_script/script/error.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/panelStyle.dart';
-import 'package:precept_script/script/preceptItem.dart';
-import 'package:precept_script/script/query.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/trait/textTrait.dart';
-import 'package:precept_script/script/visitor.dart';
+import 'package:precept_script/trait/textTrait.dart';
 
 // TODO error handling, loader may fail
 

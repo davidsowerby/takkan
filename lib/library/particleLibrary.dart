@@ -10,14 +10,14 @@ import 'package:precept_client/particle/textParticle.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/converter.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/particle/navigation.dart';
+import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/navigation.dart';
-import 'package:precept_script/script/particle/pText.dart';
-import 'package:precept_script/script/particle/pTextBox.dart';
 
 ParticleLibrary _particleLibrary = ParticleLibrary();
 

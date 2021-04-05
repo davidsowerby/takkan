@@ -5,8 +5,8 @@ import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/particle/particle.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_client/widget/caption.dart';
-import 'package:precept_script/script/pPart.dart';
-import 'package:precept_script/script/particle/pText.dart';
+import 'package:precept_script/part/part.dart';
+import 'package:precept_script/particle/text.dart';
 
 class TextParticle extends StatelessWidget with ConnectorBuilder implements Particle {
   final PPart config;

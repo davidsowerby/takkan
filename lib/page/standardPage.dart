@@ -7,6 +7,7 @@ import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/script/script.dart';
 
 class PreceptPage extends StatefulWidget {
