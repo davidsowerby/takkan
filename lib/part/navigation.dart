@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/part/pPart.dart';
+import 'package:precept_script/part/part.dart';
 import 'package:precept_script/particle/navigation.dart';
 import 'package:precept_script/particle/particle.dart';
 

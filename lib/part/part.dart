@@ -13,7 +13,7 @@ import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
-part 'pPart.g.dart';
+part 'part.g.dart';
 
 /// Contained within a [PScript] a [PPart] describes a [Part]
 /// [T] is the data type as held by the database.  Depending on how it is displayed, this may need conversion

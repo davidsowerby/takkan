@@ -2,7 +2,7 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/pPart.dart';
+import 'package:precept_script/part/part.dart';
 
 
 class PElementListConverter {

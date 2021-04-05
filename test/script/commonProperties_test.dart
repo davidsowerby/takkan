@@ -3,7 +3,7 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/pPart.dart';
+import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
