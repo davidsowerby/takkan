@@ -5,6 +5,7 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -101,8 +102,7 @@ class DataSource {
 
   Future<bool> persist() async {
     logType(this.runtimeType).d('Persisting data source');
-    final DataProvider dataProvider =
-        dataProviderLibrary.find(config: config.dataProvider);
+    final DataProvider dataProvider = dataProviderLibrary.find(config: config.dataProvider);
     return dataProvider.update(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
@@ -110,7 +110,20 @@ class DataSource {
     );
   }
 
-  reset(){
+  reset() {
     temporaryDocument.reset();
+  }
+
+  TemporaryDocument updateData(
+      {Map<String, dynamic> source, DocumentId documentId, bool fireListeners}) {
+    return _temporaryDocument.updateFromSource(
+      source: source,
+      documentId: documentId,
+      fireListeners: fireListeners,
+    );
+  }
+
+  void storeQueryResults({List<Map<String, dynamic>> queryResults, bool fireListeners}) {
+    throw UnimplementedError();
   }
 }

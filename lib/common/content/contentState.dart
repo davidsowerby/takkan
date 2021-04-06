@@ -79,14 +79,13 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     if (precept.isReady) {
       switch (config.query.returnType) {
         case QueryReturnType.futureSingle:
-          return futureBuilder(
+          return futureDataCapture(
               dataProvider.query(
                 query: query,
                 pageArguments: pageArguments,
-              ),
-              dataSource.temporaryDocument);
+              ));
         case QueryReturnType.futureList:
-          return futureListBuilder(dataProvider.queryList(
+          return futureDataListCapture(dataProvider.queryList(
             query: query,
             pageArguments: pageArguments,
           ));
@@ -102,12 +101,12 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     }
   }
 
-  Widget futureBuilder(Future<Data> future, TemporaryDocument temporaryDocument) {
+  Widget futureDataCapture(Future<Data> future) {
     return FutureBuilder<Data>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          temporaryDocument.updateFromSource(
+          dataSource.updateData(
               source: snapshot.data.data,
               documentId: snapshot.data.documentId,
               fireListeners: false);
@@ -132,35 +131,32 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     );
   }
 
-  Widget futureListBuilder(Future<List<Data>> future) {
-    return FutureBuilder<List<Data>>(
+
+  /// retrieves results of a query and stores them in the [dataSource]
+  /// Once the connection is made, calls [buildContent]
+  Widget futureDataListCapture(Future<List<Map<String, dynamic>>> future) {
+    return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
-      builder: (context, snapshot) {if (snapshot.hasData) {
-        final snapshotBuilder=SnapshotBuilder(snapshot.data, config);
-        return ListView.builder(itemBuilder: (context, index) => snapshotBuilder.buildItem(context, index, config));
-      }
-      else if (snapshot.hasError) {
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
           final error = snapshot.error;
           return Text('Error in Future ${error.runtimeType}');
-        } else {
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-            case ConnectionState.done:
-              return buildContent();
-
-            case ConnectionState.none:
-              return Text('Error in Future, it may have returned null');
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-          }
-          return null; // unreachable
         }
+        if (snapshot.hasData) {
+          dataSource.storeQueryResults(queryResults: snapshot.data, fireListeners: false);
+        }
+        switch (snapshot.connectionState) {
+          case ConnectionState.active:
+          case ConnectionState.done:
+            return buildContent();
+          case ConnectionState.none:
+            return Text('Error in Future, it may have returned null');
+          case ConnectionState.waiting:
+            return Center(child: CircularProgressIndicator());
+        }
+        return null; // unreachable
       },
     );
-  }
-
-  tileBuilder(){
-
   }
 
   Widget streamBuilder(DataProvider backend, TemporaryDocument temporaryDocument) {
