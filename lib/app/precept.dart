@@ -165,7 +165,7 @@ class Precept {
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
       if (s.queryIsDeclared) query = s.query;
       if (s.panelStyle != null) panelStyle = s.panelStyle;
-      if (s.writingStyle != null) textTrait = s.writingStyle;
+      if (s.textTrait != null) textTrait = s.textTrait;
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
@@ -178,7 +178,7 @@ class Precept {
         dataProvider: dataProvider,
         controlEdit: controlEdit,
         panelStyle: panelStyle,
-        writingStyle: textTrait,
+        textTrait: textTrait,
       );
     }
   }
