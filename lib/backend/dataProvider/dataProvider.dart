@@ -41,7 +41,7 @@ import 'package:precept_script/query/query.dart';
 /// single client app could actually log in as a different user for each [DataProvider] it uses,
 /// though this does seem an unlikely use case.
 
-class DataProvider<CONFIG extends PDataProvider> {
+abstract class DataProvider<CONFIG extends PDataProvider> {
   final CONFIG config;
   Authenticator _authenticator;
   GraphQLClient _client;
@@ -101,7 +101,7 @@ class DataProvider<CONFIG extends PDataProvider> {
     final QueryResult response = await _client.query(queryOptions);
     final String method = decapitalize(query.table);
     final actualData = response.data[method];
-    return Data(data: actualData, documentId: DocumentId(path: query.table, itemId: actualData[config.idPropertyName]));
+    return Data(data: actualData, documentId: documentIdFromData(actualData));
   }
 
   Future<List<Data>> _queryList({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
@@ -200,6 +200,7 @@ class DataProvider<CONFIG extends PDataProvider> {
   String documentUrl(DocumentId documentId) {
     return '${config.documentEndpoint}/${documentId.path}/${documentId.itemId}';
   }
+  DocumentId documentIdFromData(Map<String, dynamic> data);
 }
 
 class NoAuthenticator extends Authenticator{
