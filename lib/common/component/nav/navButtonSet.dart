@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_script/part/navigation.dart';
+import 'package:precept_script/particle/navigation.dart';
 
 class NavigationButtonSet extends StatelessWidget {
   final PNavButtonSet config;
