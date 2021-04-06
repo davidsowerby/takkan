@@ -79,7 +79,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
         : pQuery(query: query, pageArguments: pageArguments);
   }
 
-  Future<List<Data>> queryList(
+  Future<List<Map<String,dynamic>>> queryList(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     return (query is PGQuery)
         ? gQueryList(query: query, pageArguments: pageArguments)
@@ -90,7 +90,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _query(query: query, script: query.script, pageArguments: pageArguments);
   }
 
-  Future<List<Data>> gQueryList({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String,dynamic>>> gQueryList({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     return _queryList(query: query, script: query.script, pageArguments: pageArguments);
   }
 
@@ -104,7 +104,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return Data(data: actualData, documentId: documentIdFromData(actualData));
   }
 
-  Future<List<Data>> _queryList({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String,dynamic>>> _queryList({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
@@ -146,7 +146,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _query(query: query, script: buf.toString(), pageArguments: pageArguments);
   }
 
-  Future<List<Data>> pQueryList({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String,dynamic>>> pQueryList({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     throw UnimplementedError();
   }
 
