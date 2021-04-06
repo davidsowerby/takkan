@@ -22,4 +22,7 @@ class PText extends PReadParticle {
 
   @override
   Map<String, dynamic> toJson() => _$PTextToJson(this);
+
+  @override
+  Type get viewDataType => String;
 }

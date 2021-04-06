@@ -12,4 +12,7 @@ class PTextBox extends PEditParticle{
 
   @override
   Map<String, dynamic> toJson() => _$PTextBoxToJson(this);
+
+  @override
+  Type get viewDataType => String;
 }

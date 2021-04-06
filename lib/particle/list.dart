@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/particle/particle.dart';
 
 part 'list.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PListReadParticle  {
+class PListReadParticle extends PReadParticle {
 
   PListReadParticle() ;
 
@@ -11,10 +12,13 @@ class PListReadParticle  {
       _$PListReadParticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListReadParticleToJson(this);
+
+  @override
+  Type get viewDataType => List;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PListEditParticle  {
+class PListEditParticle extends PEditParticle {
 
   PListEditParticle() ;
 
@@ -22,4 +26,7 @@ class PListEditParticle  {
       _$PListEditParticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListEditParticleToJson(this);
+
+  @override
+  Type get viewDataType => List;
 }

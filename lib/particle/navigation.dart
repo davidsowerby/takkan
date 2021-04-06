@@ -24,6 +24,9 @@ class PNavParticle extends PReadParticle {
   factory PNavParticle.fromJson(Map<String, dynamic> json) => _$PNavParticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNavParticleToJson(this);
+
+  @override
+  Type get viewDataType => String;
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -42,4 +45,7 @@ class PNavButtonSetParticle extends PReadParticle {
       _$PNavButtonSetParticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNavButtonSetParticleToJson(this);
+
+  @override
+  Type get viewDataType => String;
 }
