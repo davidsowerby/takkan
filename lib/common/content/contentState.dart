@@ -138,23 +138,27 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
+        if (snapshot.hasData) {
+          if (snapshot.hasData) {
+            dataSource.storeQueryResults(queryResults: snapshot.data, fireListeners: false);
+          }
+          return buildContent();
+        } else if (snapshot.hasError) {
           final error = snapshot.error;
           return Text('Error in Future ${error.runtimeType}');
+        } else {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              return buildContent();
+
+            case ConnectionState.none:
+              return Text('Error in Future, it may have returned null');
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+          }
+          return null; // unreachable
         }
-        if (snapshot.hasData) {
-          dataSource.storeQueryResults(queryResults: snapshot.data, fireListeners: false);
-        }
-        switch (snapshot.connectionState) {
-          case ConnectionState.active:
-          case ConnectionState.done:
-            return buildContent();
-          case ConnectionState.none:
-            return Text('Error in Future, it may have returned null');
-          case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
-        }
-        return null; // unreachable
       },
     );
   }
