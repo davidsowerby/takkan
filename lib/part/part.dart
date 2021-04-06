@@ -4,7 +4,6 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
-import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/part/part.dart';

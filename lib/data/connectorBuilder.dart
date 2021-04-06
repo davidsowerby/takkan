@@ -2,7 +2,6 @@ import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/data/converter/converter.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/schema/field/field.dart';
@@ -12,13 +11,13 @@ import 'package:precept_script/schema/schema.dart';
 
 mixin ConnectorBuilder {
   ModelConnector buildConnector(
-      {Particle particle, DataBinding dataBinding, PPart config, Type viewDataType}) {
+      { DataBinding dataBinding, PPart config, Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
     final PDocument schema = dataBinding.schema;
     final PSchemaElement fieldSchema = schema.fields[config.property];
     final binding =
         _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
-    final converter = _converter(schema: fieldSchema, particle: particle);
+    final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
     final connector = ModelConnector(binding: binding, converter: converter);
     return connector;
   }
@@ -33,37 +32,37 @@ mixin ConnectorBuilder {
     }
   }
 
-  ModelViewConverter _converter({PField schema, Particle particle}) {
+  ModelViewConverter _converter({PField schema, Type viewDataType}) {
     switch (schema.runtimeType) {
       case PInteger:
-        return _intConverter(particle);
+        return _intConverter(viewDataType);
       case PString:
-        return _stringConverter(particle);
+        return _stringConverter(viewDataType);
       default:
         throw UnimplementedError(
             "No defined ModelViewConverter for field data type ${schema.runtimeType.toString()}");
     }
   }
 
-  ModelViewConverter _intConverter(Particle particle) {
-    switch (particle.viewDataType) {
+  ModelViewConverter _intConverter(Type viewDataType) {
+    switch (viewDataType) {
       case int:
         return PassThroughConverter<int>();
       case String:
         return IntStringConverter();
       default:
         throw UnimplementedError(
-            "No defined ModelViewConverter for field data type 'int' for Particle ${particle.runtimeType.toString()}");
+            "No defined ModelViewConverter for field data type 'int' for Particle ${viewDataType.toString()}");
     }
   }
 
-  ModelViewConverter _stringConverter(Particle particle) {
-    switch (particle.viewDataType) {
+  ModelViewConverter _stringConverter(Type viewDataType) {
+    switch (viewDataType) {
       case String:
         return PassThroughConverter<String>();
       default:
         throw UnimplementedError(
-            "No defined ModelViewConverter for field data type 'String' for Particle ${particle.runtimeType.toString()}");
+            "No defined ModelViewConverter for field data type 'String' for Particle ${viewDataType.toString()}");
     }
   }
 }

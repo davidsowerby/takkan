@@ -76,9 +76,9 @@ class ParticleLibrary {
   }
 
   Widget findParticle(DataBinding dataBinding, PPart config, bool read) {
-    Type particleDataType = _findViewDataType(config, read);
+    Type viewDataType = (read) ? config.read.viewDataType : config.edit.viewDataType;
     final connector = ConnectorFactory()
-        .buildConnector(viewDataType: particleDataType, config: config, dataBinding: dataBinding);
+        .buildConnector(viewDataType: viewDataType, config: config, dataBinding: dataBinding);
     return _createParticle(config, read, connector);
   }
 
@@ -87,17 +87,6 @@ class ParticleLibrary {
     return _createParticle(config, true, connector);
   }
 
-  Type _findViewDataType(PPart config, bool read) {
-    final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;
-    switch (particleType) {
-      case PText:
-      case PTextBox:
-        return String;
-    }
-    String msg = "No Particle is defined for $particleType in $runtimeType";
-    logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
-  }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
 //   final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;

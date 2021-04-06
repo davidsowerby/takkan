@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
-import 'package:precept_client/particle/particle.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/particle/navigation.dart';
 
-class NavigationButton extends StatelessWidget with ConnectorBuilder implements Particle {
+class NavigationButton extends StatelessWidget with ConnectorBuilder  {
   final PPart partConfig;
   final ModelConnector connector;
 
@@ -29,8 +28,7 @@ class NavigationButton extends StatelessWidget with ConnectorBuilder implements 
     Navigator.pushNamed(context, config.route, arguments: config.args);
   }
 
-  @override
-  Type get viewDataType => String;
+
 }
 
 
