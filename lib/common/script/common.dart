@@ -48,7 +48,7 @@ enum ControlEdit {
 ///
 /// - [dataProvider]
 /// - [query]
-/// - [writingStyle] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
+/// - [textTrait] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
 /// - [panelStyle] defines borders and other styling for panels
 /// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
 /// This also means that no [DataBinding] is needed.  Although this really only applies at [Part] level, it can be set
@@ -98,14 +98,14 @@ class PCommon extends PreceptItem {
   @JsonKey(nullable: true, includeIfNull: false)
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
-  PTextTrait _writingStyle;
+  PTextTrait _textTrait;
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle,
-    PTextTrait writingStyle,
+    PTextTrait textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
@@ -113,7 +113,7 @@ class PCommon extends PreceptItem {
         _dataProvider = dataProvider,
         _query = query,
         _panelStyle = panelStyle,
-        _writingStyle = writingStyle,
+        _textTrait = textTrait,
         super(id: id);
 
   @JsonKey(ignore: true)
@@ -128,7 +128,7 @@ class PCommon extends PreceptItem {
 
   PPanelStyle get panelStyle => _panelStyle;
 
-  PTextTrait get writingStyle => _writingStyle;
+  PTextTrait get textTrait => _textTrait;
 
   bool get inheritedEditControl {
     PCommon p = parent;

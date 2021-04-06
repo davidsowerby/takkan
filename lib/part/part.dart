@@ -50,7 +50,7 @@ class PPart extends PSubContent {
       this.staticData,
       this.help,
       PPanelStyle panelStyle=const PPanelStyle(),
-      PTextTrait writingStyle=const PTextTrait(),
+      PTextTrait textTrait=const PTextTrait(),
       ControlEdit controlEdit = ControlEdit.inherited,
       String id,
       this.tooltip})
@@ -58,7 +58,7 @@ class PPart extends PSubContent {
           id: id,
           isStatic: isStatic,
           panelStyle: panelStyle,
-          textTrait: writingStyle,
+          textTrait: textTrait,
           controlEdit: controlEdit,
           caption: caption,
         );

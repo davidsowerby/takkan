@@ -10,8 +10,7 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) {
   return PCommon(
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    writingStyle:
-        PTextTrait.fromJson(json['writingStyle'] as Map<String, dynamic>),
+    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
   )..version = json['version'] as int;
@@ -22,7 +21,7 @@ Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'panelStyle': instance.panelStyle.toJson(),
-      'writingStyle': instance.writingStyle.toJson(),
+      'textTrait': instance.textTrait.toJson(),
     };
 
 T _$enumDecode<T>(

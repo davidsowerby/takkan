@@ -1,38 +1,40 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'part.dart';
+part of 'list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPart _$PPartFromJson(Map<String, dynamic> json) {
-  return PPart(
-    caption: json['caption'] as String,
-    readOnly: json['readOnly'] as bool,
-    particleHeight: (json['particleHeight'] as num)?.toDouble(),
-    property: json['property'] as String,
+PList _$PListFromJson(Map<String, dynamic> json) {
+  return PList(
     read: PReadParticleConverter.fromJson(json['read'] as Map<String, dynamic>),
     edit: PEditParticleConverter.fromJson(json['edit'] as Map<String, dynamic>),
-    staticData: json['staticData'] as String,
+    readOnly: json['readOnly'] as bool,
+    particleHeight: (json['particleHeight'] as num)?.toDouble(),
+    caption: json['caption'] as String,
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
+    staticData: json['staticData'] as String,
+    property: json['property'] as String,
     tooltip: json['tooltip'] as String,
+    panelStyle: json['panelStyle'] == null
+        ? null
+        : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    textTrait: json['textTrait'] == null
+        ? null
+        : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
+    controlEdit:
+        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
+Map<String, dynamic> _$PListToJson(PList instance) => <String, dynamic>{
       'version': instance.version,
-      'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'textTrait': instance.textTrait.toJson(),
+      'panelStyle': instance.panelStyle?.toJson(),
+      'textTrait': instance.textTrait?.toJson(),
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'property': instance.property,
@@ -63,6 +65,17 @@ T _$enumDecode<T>(
         '${enumValues.values.join(', ')}');
   }
   return value ?? unknownValue;
+}
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$ControlEditEnumMap = {

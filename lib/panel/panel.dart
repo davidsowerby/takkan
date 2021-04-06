@@ -50,7 +50,7 @@ class PPanel extends PSubContent{
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait writingStyle = const PTextTrait(),
+    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   }) : _heading=heading, super(
@@ -59,7 +59,7 @@ class PPanel extends PSubContent{
     dataProvider: dataProvider,
     query: query,
     panelStyle: panelStyle,
-    textTrait: writingStyle,
+    textTrait: textTrait,
     controlEdit: controlEdit,
     caption: caption,
   );

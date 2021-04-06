@@ -24,7 +24,7 @@ class PContent extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait writingStyle,
+    PTextTrait textTrait,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
@@ -34,7 +34,7 @@ class PContent extends PCommon {
     id: id,
     controlEdit: controlEdit,
     panelStyle: panelStyle,
-    writingStyle: writingStyle,
+    textTrait: textTrait,
     dataProvider: dataProvider,
     isStatic: isStatic,
   );
@@ -63,7 +63,7 @@ class PSubContent extends PContent {
     dataProvider: dataProvider,
     query: query,
     panelStyle: panelStyle,
-    writingStyle: textTrait,
+    textTrait: textTrait,
     controlEdit: controlEdit,
     id: id,
   );

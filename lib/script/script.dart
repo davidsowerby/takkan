@@ -48,7 +48,7 @@ class PScript extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait writingStyle = const PTextTrait(),
+    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String id,
   }) : super(
@@ -58,7 +58,7 @@ class PScript extends PCommon {
           query: query,
           controlEdit: controlEdit,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          textTrait: textTrait,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -199,14 +199,14 @@ class PRoute extends PCommon {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait writingStyle = const PTextTrait(),
+    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
           controlEdit: controlEdit,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          textTrait: textTrait,
         );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
@@ -266,7 +266,7 @@ class PPage extends PContent {
     PDataProvider dataProvider,
     PQuery query,
     PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait writingStyle = const PTextTrait(),
+    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
@@ -276,7 +276,7 @@ class PPage extends PContent {
           dataProvider: dataProvider,
           query: query,
           panelStyle: panelStyle,
-          writingStyle: writingStyle,
+          textTrait: textTrait,
           controlEdit: controlEdit,
           id: id,
           property: property,
