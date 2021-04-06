@@ -4,6 +4,7 @@ import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4App
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 
 class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
   Back4AppDataProvider({@required PBack4AppDataProvider config}) : super(config: config);
@@ -11,6 +12,11 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
   @override
   Authenticator<PBack4AppDataProvider> createAuthenticator(PBack4AppDataProvider config) =>
       Back4AppAuthenticator(config: config);
+
+  @override
+  DocumentId documentIdFromData(Map<String, dynamic> data) {
+    return DocumentId(path: data['__typename'], itemId: data['objectId']);
+  }
 }
 
 class Back4App {
