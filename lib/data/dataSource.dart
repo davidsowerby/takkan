@@ -56,7 +56,7 @@ class DataSource {
       _temporaryDocument = inject<TemporaryDocument>();
       _query = config.query;
       _formKeys = List.empty(growable: true);
-      _documentSchema = config.dataProvider.schema.documents[_query.table];
+      _documentSchema = config.dataProvider.schema.document(_query.table);
     }
   }
 
@@ -123,7 +123,10 @@ class DataSource {
     );
   }
 
-  void storeQueryResults({List<Map<String, dynamic>> queryResults, bool fireListeners}) {
-    throw UnimplementedError();
+  /// Delegate call to [TemporaryDocument.storeQueryResults]
+  TemporaryDocument storeQueryResults(
+      {List<Map<String, dynamic>> queryResults, bool fireListeners = false}){
+    return _temporaryDocument.storeQueryResults(queryResults: queryResults,fireListeners: fireListeners);
   }
+
 }
