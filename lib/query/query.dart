@@ -58,7 +58,7 @@ abstract class PQuery extends PreceptItem {
   });
 
   @JsonKey(ignore: true)
-  PDocument get schema => (parent as PCommon).dataProvider.schema.documents[table];
+  PDocument get schema => (parent as PCommon).dataProvider.schema.document(table);
 
   String get table;
 
@@ -73,16 +73,21 @@ abstract class PQuery extends PreceptItem {
 /// 1. [PQuery.variables]
 /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
 /// 1. Values passed as [pageArguments]
+///
+/// [table] currently has to be specified, but it is intended that it will be automatically derived
+/// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PGQuery extends PQuery {
   final String script;
+  final String _table;
 
   PGQuery({
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
+    @required String table,
     @required this.script,
     QueryReturnType returnType=QueryReturnType.futureSingle,
-  }) : super(
+  }) : _table = table, super(
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
@@ -93,8 +98,7 @@ class PGQuery extends PQuery {
   Map<String, dynamic> toJson() => _$PGQueryToJson(this);
 
   @override
-  // TODO: implement table
-  String get table => throw UnimplementedError();
+  String get table => _table;
 }
 
 /// **EXPERIMENTAL** A currently very limited attempt to simplify the specification of a GraphQL query.

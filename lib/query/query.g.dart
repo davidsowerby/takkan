@@ -11,6 +11,7 @@ PGQuery _$PGQueryFromJson(Map<String, dynamic> json) {
     variables: json['variables'] as Map<String, dynamic>,
     propertyReferences:
         (json['propertyReferences'] as List)?.map((e) => e as String)?.toList(),
+    table: json['table'] as String,
     script: json['script'] as String,
     returnType:
         _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']),
@@ -23,6 +24,7 @@ Map<String, dynamic> _$PGQueryToJson(PGQuery instance) => <String, dynamic>{
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
       'script': instance.script,
+      'table': instance.table,
     };
 
 T _$enumDecode<T>(

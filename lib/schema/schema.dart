@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
@@ -36,9 +38,9 @@ part 'schema.g.dart';
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PSchema extends PSchemaElement {
   final String name;
-  final Map<String, PDocument> documents;
+  final Map<String, PDocument> _documents;
 
-  PSchema({@required this.documents, @required this.name});
+  PSchema({@required Map<String, PDocument> documents, @required this.name}):_documents=documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -53,11 +55,23 @@ class PSchema extends PSchemaElement {
   @override
   doInit({PSchemaElement parent, String name}) {
     _name = name;
-    for (var entry in documents.entries) {
+    for (var entry in _documents.entries) {
       final document = entry.value;
       document.doInit(parent: this, name: entry.key);
     }
   }
+
+  PDocument document(String key) {
+    final doc = _documents[key];
+    if (doc == null) {
+      String msg = "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return doc;
+  }
+
+  int get documentCount => _documents.length;
 }
 
 abstract class PSchemaElement {

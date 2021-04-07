@@ -8,17 +8,12 @@ part of 'schema.dart';
 
 PSchema _$PSchemaFromJson(Map<String, dynamic> json) {
   return PSchema(
-    documents: (json['documents'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k, e == null ? null : PDocument.fromJson(e as Map<String, dynamic>)),
-    ),
     name: json['name'] as String,
   );
 }
 
 Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'name': instance.name,
-      'documents': instance.documents?.map((k, e) => MapEntry(k, e?.toJson())),
     };
 
 PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) {

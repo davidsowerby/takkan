@@ -22,13 +22,13 @@ void main() {
       Map<String, dynamic> jsonMap = script.toJson();
       PSchema script2 = PSchema.fromJson(jsonMap);
 
-      expect(script2.documents.length, 2);
+      expect(script2.documentCount, 2);
       script2.doInit();
       // then
 
 
 
-      final PDocument accountDoc = script2.documents['Account'];
+      final PDocument accountDoc = script2.document('Account');
       expect(accountDoc.name, 'Account');
       expect(accountDoc.parent, script2);
 
