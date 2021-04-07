@@ -46,6 +46,7 @@ class PSchema extends PSchemaElement {
 
   Map<String, dynamic> toJson() => _$PSchemaToJson(this);
 
+  @JsonKey(ignore: true)
   PSchemaElement get parent => null;
 
   init() {
