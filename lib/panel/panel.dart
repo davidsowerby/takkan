@@ -33,7 +33,8 @@ class PanelState extends ContentState<Panel, PPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return doBuild(context, dataSource, widget.config, widget.pageArguments);
+    final theme=Theme.of(context);
+    return doBuild(context, theme,dataSource, widget.config, widget.pageArguments);
   }
 
   Widget _expandedContent(bool editMode) {
@@ -46,7 +47,7 @@ class PanelState extends ContentState<Panel, PPanel> {
     return (editMode) ? wrapInForm(context, content, dataBinding, formKey) : content;
   }
 
-  Widget assembleContent() {
+  Widget assembleContent(ThemeData theme) {
     if (widget.config.heading != null) {
       return Heading(
         config: widget.config.heading,

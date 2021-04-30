@@ -40,6 +40,8 @@ class Part extends StatefulWidget {
 
   @override
   PartState createState() => PartState(config, parentBinding);
+
+
 }
 
 class PartState extends ContentState<Part, PPart> {
@@ -49,15 +51,22 @@ class PartState extends ContentState<Part, PPart> {
   PartState(PPart config, DataBinding parentBinding) : super(config, parentBinding);
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return doBuild(context, dataSource, widget.config, widget.pageArguments);
+    final theme=Theme.of(context);
+    return doBuild(context, theme, dataSource, widget.config, widget.pageArguments);
   }
 
   @override
-  Widget assembleContent() {
+  Widget assembleContent(ThemeData theme) {
     if (widget.config.isStatic == IsStatic.yes) {
       if (readParticle == null) {
-        readParticle = particleLibrary.findStaticParticle(widget.config);
+        loadStaticParticle(theme);
       }
       return readParticle;
     }
@@ -68,15 +77,28 @@ class PartState extends ContentState<Part, PPart> {
         .d("caption: ${widget.config.caption}, EditState readOnly: ${widget.config.readOnly}");
     if (readOnly) {
       if (readParticle == null) {
-        readParticle = particleLibrary.findParticle(widget.parentBinding, widget.config, true);
+        loadReadParticle(theme);
       }
       return readParticle;
     } else {
       if (editParticle == null) {
-        editParticle = particleLibrary.findParticle(widget.parentBinding, widget.config, false);
+        loadEditParticle(theme);
       }
       return editParticle;
     }
+  }
+  @protected
+  loadStaticParticle(ThemeData theme){
+    readParticle = particleLibrary.findStaticParticle(theme, widget.config);
+  }
+  @protected
+  loadReadParticle(ThemeData theme){
+    readParticle = particleLibrary.findParticle(theme, widget.parentBinding, widget.config, true);
+  }
+
+  @protected
+  loadEditParticle(ThemeData theme){
+    editParticle = particleLibrary.findParticle(theme, widget.parentBinding, widget.config, false);
   }
 
   @override

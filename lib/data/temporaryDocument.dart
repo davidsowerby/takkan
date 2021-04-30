@@ -81,11 +81,14 @@ abstract class TemporaryDocument with ChangeNotifier {
       @required DocumentId documentId,
       bool fireListeners = false});
 
-  /// Holds the most recent results (list) of a query.  Standardises use of bindings to access the data
+  /// Stores the most recent results (list) of a query.  Standardises use of bindings to access the data
   /// Does not cache paged queries, just holds the most recent page.
   /// Does not attempt to update existing results, simply replaces them
-  TemporaryDocument storeQueryResults(
-      {List<Map<String, dynamic>> queryResults, bool fireListeners = false});
+  TemporaryDocument storeQueryResults({
+    @required String queryName,
+    @required List<Map<String, dynamic>> queryResults,
+    bool fireListeners = false,
+  });
 
   /// Creates a "new" document from [initialData], clearing any existing data
   TemporaryDocument createNew({Map<String, dynamic> initialData = const {}});
@@ -261,13 +264,16 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// standard use of bindings to avoid special handling of lists elsewhere.
   ///
   /// The [rootBinding] still points to the base data, with a [ListBinding] pointing to a property
-  /// named 'query', which is the actual data.
+  /// [queryName], which holds the query results as a list.
   ///
   /// Unlike [updateFromSource], a query result is always treated as a fresh data set, even if just
   /// paging a query.
   ///
   @override
-  TemporaryDocument storeQueryResults({List<Map<String, dynamic>> queryResults, bool fireListeners = false}) {
+  TemporaryDocument storeQueryResults(
+      {@required String queryName,
+      @required List<Map<String, dynamic>> queryResults,
+      bool fireListeners = false}) {
     _initialData.clear();
     _initialData['query']=queryResults;
     _output.addAll(_initialData);

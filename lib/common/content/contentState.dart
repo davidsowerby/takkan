@@ -50,24 +50,24 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     setState(() {});
   }
 
-  Widget buildContent() {
+  Widget buildContent(ThemeData theme) {
     return ChangeNotifierProvider<DataProviderState>(
-        create: (_) => DataProviderState(dataProvider), child: assembleContent());
+        create: (_) => DataProviderState(dataProvider), child: assembleContent(theme));
   }
 
-  Widget assembleContent();
+  Widget assembleContent(ThemeData theme);
 
-  doBuild(BuildContext context, DataSource dataSource, PContent config,
+  doBuild(BuildContext context, ThemeData theme, DataSource dataSource, PContent config,
       Map<String, dynamic> pageArguments) {
     assert(pageArguments != null);
 
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
-      return buildContent();
+      return buildContent(theme);
     }
 
     if (!config.queryIsDeclared) {
-      return buildContent();
+      return buildContent(theme);
     }
 
     /// Now we know we need to construct a data source. [initState] has already created the
@@ -79,16 +79,19 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     if (precept.isReady) {
       switch (config.query.returnType) {
         case QueryReturnType.futureSingle:
-          return futureDataCapture(
+          return loadData(
+              context,theme,
               dataProvider.query(
                 query: query,
                 pageArguments: pageArguments,
               ));
         case QueryReturnType.futureList:
-          return futureDataListCapture(dataProvider.queryList(
-            query: query,
-            pageArguments: pageArguments,
-          ));
+          return loadList(theme,
+              query.name,
+              dataProvider.queryList(
+                query: query,
+                pageArguments: pageArguments,
+              ));
         case QueryReturnType.streamSingle:
           // TODO: Handle this case.
           break;
@@ -101,48 +104,43 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     }
   }
 
-  Widget futureDataCapture(Future<Data> future) {
-    return FutureBuilder<Data>(
-      future: future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          dataSource.updateData(
-              source: snapshot.data.data,
-              documentId: snapshot.data.documentId,
-              fireListeners: false);
-          return buildContent();
-        } else if (snapshot.hasError) {
-          final error = snapshot.error;
-          return Text('Error in Future ${error.runtimeType}');
-        } else {
-          switch (snapshot.connectionState) {
-            case ConnectionState.active:
-            case ConnectionState.done:
-              return buildContent();
+  /// Loads data with an expected single result
+  Widget loadData(BuildContext context, ThemeData theme, Future<Map<String, dynamic>> future) {
+    return _loadData<Map<String, dynamic>>(context, theme, future, dataSource.updateDocument);
+  }
 
-            case ConnectionState.none:
-              return Text('Error in Future, it may have returned null');
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-          }
-          return null; // unreachable
+  /// Loads data into [dataSource], using a Future, and returns a Widget produced by [buildContent]
+  Widget _loadData<T>(
+      BuildContext context,
+      ThemeData theme,
+      Future<T> future,
+      TemporaryDocument Function({T source, DataProvider dataProvider, bool fireListeners})
+          storeData) {
+    return FutureBuilder<T>(
+      future: future,
+      builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+        if (snapshot.hasData) {
+          storeData(source: snapshot.data, dataProvider: dataProvider, fireListeners: false);
+          return buildContent(theme);
+        } else if (snapshot.hasError) {
+          return Text('Error in Future ${snapshot.error.runtimeType}');
+        } else {
+          return Center(child: CircularProgressIndicator());
         }
       },
     );
   }
 
-
   /// retrieves results of a query and stores them in the [dataSource]
   /// Once the connection is made, calls [buildContent]
-  Widget futureDataListCapture(Future<List<Map<String, dynamic>>> future) {
+  Widget loadList( ThemeData theme,String queryName, Future<List<Map<String, dynamic>>> future) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.hasData) {
-            dataSource.storeQueryResults(queryResults: snapshot.data, fireListeners: false);
-          }
-          return buildContent();
+          dataSource.storeQueryResults(
+              queryName: queryName, queryResults: snapshot.data, fireListeners: false);
+          return buildContent(theme);
         } else if (snapshot.hasError) {
           final error = snapshot.error;
           return Text('Error in Future ${error.runtimeType}');
@@ -150,8 +148,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
-              return buildContent();
-
+              return buildContent(theme);
             case ConnectionState.none:
               return Text('Error in Future, it may have returned null');
             case ConnectionState.waiting:
@@ -195,10 +192,10 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// Updates data and rebuilds using [buildContent]
-  Widget activeBuilder(TemporaryDocument temporaryDocument, Data update) {
+  Widget activeBuilder(ThemeData theme,TemporaryDocument temporaryDocument, Data update) {
     temporaryDocument.updateFromSource(
         source: update.data, documentId: update.documentId, fireListeners: false);
-    return buildContent();
+    return buildContent(theme);
   }
 
   /// Build any nested Panel or Part widgets. Not used by Part
@@ -255,12 +252,11 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 }
 
-class SnapshotBuilder{
+class SnapshotBuilder {
   final List<Data> snapshot;
   final PContent config;
 
-  const SnapshotBuilder(this.snapshot,this.config );
-  buildItem(BuildContext context, int index, PContent config){
+  const SnapshotBuilder(this.snapshot, this.config);
 
-  }
+  buildItem(BuildContext context, int index, PContent config) {}
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
@@ -10,6 +11,7 @@ import 'package:precept_client/particle/textParticle.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/converter/converter.dart';
+import 'package:precept_script/part/list.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/particle/navigation.dart';
 import 'package:precept_script/particle/text.dart';
@@ -49,44 +51,53 @@ class ParticleLibrary {
   /// a call to [Precept.init] which should be before your runApp statement
   init({Map<Type, Widget Function(PPart, ModelConnector)> entries}) {}
 
-  Widget _createParticle(PPart config, bool read, ModelConnector connector) {
-    final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;
+  Widget _createParticle(ThemeData theme, PPart partConfig, bool read, ModelConnector connector) {
+    final Type particleType = (read) ? partConfig.read.runtimeType : partConfig.edit.runtimeType;
     switch (particleType) {
       case PText:
         return TextParticle(
-          config: config,
+          config: partConfig,
           connector: connector,
         );
       case PTextBox:
         return TextBoxParticle(
-          config: config,
+          config: partConfig,
           connector: connector,
         );
       case PNavParticle:
         return NavigationButton(
-          partConfig: config,
+          partConfig: partConfig,
           connector: connector,
         );
       case PNavButtonSetParticle:
-        return NavigationButtonSet(config: config);
+        return NavigationButtonSet(config: partConfig);
+
+      // case PListView:
+      //   // final particleConfig = partConfig.read;
+      //   // final ListViewReadTrait trait =
+      //   //     traitLibrary.listTrait(theme: theme, traitName: particleConfig.traitName);
+      //   // return ListViewPart(
+      //   //   config: partConfig,
+      //   //   connector: connector,
+      //   //   trait: trait,
+      //   // );
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
 
-  Widget findParticle(DataBinding dataBinding, PPart config, bool read) {
+  Widget findParticle(ThemeData theme, DataBinding dataBinding, PPart config, bool read) {
     Type viewDataType = (read) ? config.read.viewDataType : config.edit.viewDataType;
     final connector = ConnectorFactory()
         .buildConnector(viewDataType: viewDataType, config: config, dataBinding: dataBinding);
-    return _createParticle(config, read, connector);
+    return _createParticle(theme, config, read, connector);
   }
 
-  Widget findStaticParticle(PPart config) {
+  Widget findStaticParticle(ThemeData theme,PPart config) {
     final connector = StaticConnector(config.staticData);
-    return _createParticle(config, true, connector);
+    return _createParticle(theme,config, true, connector);
   }
-
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
 //   final Type particleType = (read) ? config.read.runtimeType : config.edit.runtimeType;
@@ -110,58 +121,73 @@ class ConnectorFactory {
   ModelConnector buildConnector(
       {@required DataBinding dataBinding, @required PPart config, @required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
-    final PDocument schema = dataBinding.schema;
-    final PSchemaElement fieldSchema = schema.fields[config.property];
-    assert(fieldSchema != null, "No schema found for property ${config.property}");
+
+    /// If this is a list, we need to lookup the schema from schema.lists, otherwise schema.documents
+    /// We won't actually know the model data type until we look up the schema, but assume that if
+    /// viewDataType is a list, the model type must be as well
+    final PSchemaElement fieldSchema = (viewDataType == List)
+        ? dataBinding.schema.root.lists[config.property]
+        : dataBinding.schema.fields[config.property];
+    if (fieldSchema == null) {
+      String msg =
+          'No schema found for property ${config.property}, have you forgotten to add it to PSchema?';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
     final binding =
         _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
-    final converter = _converter(schema: fieldSchema, particleDataType: viewDataType);
+    final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
     final connector =
         ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
+}
 
-  Binding _binding({ModelBinding parentBinding, PField schema, String property}) {
-    switch (schema.runtimeType) {
-      case PString:
-        return parentBinding.stringBinding(property: property);
-      default:
-        throw UnimplementedError(
-            "No defined binding for field data type ${schema.runtimeType.toString()}");
-    }
+Binding _binding({ModelBinding parentBinding, PField schema, String property}) {
+  switch (schema.runtimeType) {
+    case PString:
+      return parentBinding.stringBinding(property: property);
+    case PList:
+      return parentBinding.listBinding(property: property);
+    default:
+      throw UnimplementedError(
+          "No defined binding for field data type ${schema.runtimeType.toString()}");
   }
+}
 
-  ModelViewConverter _converter({PField schema, Type particleDataType}) {
-    switch (schema.runtimeType) {
-      case PInteger:
-        return _intConverter(particleDataType);
-      case PString:
-        return _stringConverter(particleDataType);
-      default:
-        throw UnimplementedError(
-            "No defined ModelViewConverter for field data type ${schema.runtimeType.toString()}");
-    }
+ModelViewConverter _converter({PField schema, Type viewDataType}) {
+  if (schema.modelType == viewDataType) {
+    return PassThroughConverter();
   }
-
-  ModelViewConverter _intConverter(Type particleDataType) {
-    switch (particleDataType) {
-      case int:
-        return PassThroughConverter<int>();
-      case String:
-        return IntStringConverter();
-      default:
-        throw UnimplementedError(
-            "No defined ModelViewConverter for field data type 'int' for Particle $particleDataType");
-    }
+  switch (schema.runtimeType) {
+    case PInteger:
+      return _intConverter(viewDataType);
+    case PString:
+      return _stringConverter(viewDataType);
+    default:
+      throw UnimplementedError(
+          "No defined ModelViewConverter for field data type ${schema.runtimeType.toString()}");
   }
+}
 
-  ModelViewConverter _stringConverter(Type particleDataType) {
-    switch (particleDataType) {
-      case String:
-        return PassThroughConverter<String>();
-      default:
-        throw UnimplementedError(
-            "No defined ModelViewConverter for field data type 'String' for Particle $particleDataType");
-    }
+/// We won't get here if the [viewDataType] is the same as the model data type
+ModelViewConverter _intConverter(Type viewDataType) {
+  switch (viewDataType) {
+    case String:
+      return IntStringConverter();
+    default:
+      throw UnimplementedError(
+          "No defined ModelViewConverter for field data type 'int' for Particle $viewDataType");
+  }
+}
+
+/// We won't get here if the [viewDataType] is the same as the model data type
+ModelViewConverter _stringConverter(Type viewDataType) {
+  switch (viewDataType) {
+    case String:
+      return PassThroughConverter<String>();
+    default:
+      throw UnimplementedError(
+          "No defined ModelViewConverter for field data type 'String' for Particle $viewDataType");
   }
 }

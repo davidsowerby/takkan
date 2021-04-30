@@ -114,8 +114,9 @@ class DataSource {
     temporaryDocument.reset();
   }
 
-  TemporaryDocument updateData(
-      {Map<String, dynamic> source, DocumentId documentId, bool fireListeners}) {
+  TemporaryDocument updateDocument(
+      {Map<String, dynamic> source, DataProvider dataProvider, bool fireListeners}) {
+    final DocumentId documentId = dataProvider.documentIdFromData(source);
     return _temporaryDocument.updateFromSource(
       source: source,
       documentId: documentId,
@@ -124,9 +125,16 @@ class DataSource {
   }
 
   /// Delegate call to [TemporaryDocument.storeQueryResults]
-  TemporaryDocument storeQueryResults(
-      {List<Map<String, dynamic>> queryResults, bool fireListeners = false}){
-    return _temporaryDocument.storeQueryResults(queryResults: queryResults,fireListeners: fireListeners);
+  TemporaryDocument storeQueryResults({
+    @required String queryName,
+    @required List<Map<String, dynamic>> queryResults,
+    bool fireListeners = false,
+  }) {
+    return _temporaryDocument.storeQueryResults(
+      queryName: queryName,
+      queryResults: queryResults,
+      fireListeners: fireListeners,
+    );
   }
 
 }

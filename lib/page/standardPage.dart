@@ -40,17 +40,18 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme=Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         actions: [PreceptRefreshButton()],
         title: Text(widget.config.title),
       ),
-      body: doBuild(context, dataSource, widget.config, widget.pageArguments),
+      body: doBuild(context, theme, dataSource, widget.config, widget.pageArguments),
     );
   }
 
   @override
-  Widget assembleContent() {
+  Widget assembleContent(ThemeData theme) {
     return buildSubContent(
       config: widget.config,
       parentBinding: dataBinding,
