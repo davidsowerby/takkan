@@ -13,6 +13,7 @@ PGQuery _$PGQueryFromJson(Map<String, dynamic> json) {
         (json['propertyReferences'] as List)?.map((e) => e as String)?.toList(),
     table: json['table'] as String,
     script: json['script'] as String,
+    name: json['name'] as String,
     returnType:
         _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']),
   )..version = json['version'] as int;
@@ -23,6 +24,7 @@ Map<String, dynamic> _$PGQueryToJson(PGQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
+      'name': instance.name,
       'script': instance.script,
       'table': instance.table,
     };
@@ -73,6 +75,7 @@ PPQuery _$PPQueryFromJson(Map<String, dynamic> json) {
       (k, e) => MapEntry(k, e as String),
     ),
     table: json['table'] as String,
+    name: json['name'] as String,
     variables: json['variables'] as Map<String, dynamic>,
     propertyReferences:
         (json['propertyReferences'] as List)?.map((e) => e as String)?.toList(),
@@ -86,6 +89,7 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
+      'name': instance.name,
       'fields': instance.fields,
       'table': instance.table,
       'types': instance.types,
@@ -111,6 +115,7 @@ Map<String, dynamic> _$PGetToJson(PGet instance) => <String, dynamic>{
 
 PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) {
   return PGetStream(
+    name: json['name'] as String,
     propertyReferences:
         (json['propertyReferences'] as List)?.map((e) => e as String)?.toList(),
     documentId: json['documentId'] == null
@@ -123,5 +128,6 @@ Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
     <String, dynamic>{
       'version': instance.version,
       'propertyReferences': instance.propertyReferences,
+      'name': instance.name,
       'documentId': instance.documentId?.toJson(),
     };

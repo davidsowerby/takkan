@@ -50,17 +50,22 @@ abstract class PQuery extends PreceptItem {
   final Map<String, dynamic> variables;
   final List<String> propertyReferences;
   final QueryReturnType returnType;
+  final String name;
 
   PQuery({
     this.variables = const {},
     this.propertyReferences = const [],
     this.returnType = QueryReturnType.futureSingle,
+    this.name,
   });
 
   @JsonKey(ignore: true)
   PDocument get schema => (parent as PCommon).dataProvider.schema.document(table);
 
   String get table;
+
+  /// For queries, the name is used as a property to lookup its data (query results) in local storage
+  String get property => name;
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
@@ -74,7 +79,7 @@ abstract class PQuery extends PreceptItem {
 /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
 /// 1. Values passed as [pageArguments]
 ///
-/// [table] currently has to be specified, but it is intended that it will be automatically derived
+/// [table]and [name] have to be specified, but it is intended that it will be automatically derived
 /// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PGQuery extends PQuery {
@@ -86,11 +91,14 @@ class PGQuery extends PQuery {
     List<String> propertyReferences = const [],
     @required String table,
     @required this.script,
-    QueryReturnType returnType=QueryReturnType.futureSingle,
-  }) : _table = table, super(
+    String name,
+    QueryReturnType returnType = QueryReturnType.futureSingle,
+  })  : _table = table,
+        super(
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
+          name: name,
         );
 
   factory PGQuery.fromJson(Map<String, dynamic> json) => _$PGQueryFromJson(json);
@@ -126,13 +134,15 @@ class PPQuery extends PQuery {
     this.fields = '',
     this.types = const {},
     this.table,
+    String name,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
-    QueryReturnType returnType=QueryReturnType.futureSingle,
+    QueryReturnType returnType = QueryReturnType.futureSingle,
   }) : super(
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
+          name: name,
         );
 
   factory PPQuery.fromJson(Map<String, dynamic> json) => _$PPQueryFromJson(json);
@@ -178,6 +188,7 @@ class PGetStream extends PQuery {
   PGetStream({
     @required String script,
     @required String fields,
+    String name,
     Map<String, dynamic> arguments = const {},
     List<String> propertyReferences = const [],
     @required this.documentId,
@@ -185,6 +196,7 @@ class PGetStream extends PQuery {
   }) : super(
           propertyReferences: propertyReferences,
           variables: arguments,
+          name: name,
         );
 
   String get table => documentId.path;

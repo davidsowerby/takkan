@@ -4,6 +4,7 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/part/list.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 
 part 'schema.g.dart';
@@ -14,7 +15,7 @@ part 'schema.g.dart';
 /// A [PSchema] is associated with a [PDataProvider] instance.  The [name] must be unique
 /// within a [PSchema] instance, but has no other constraint.
 ///
-/// [PSchema] provides a definition for use by Precept, but could be create a backend schema.
+/// [PSchema] provides a definition for use by Precept, but could also be used to create a backend schema.
 /// If it is used that way, the interpretation of it is a matter for a SchemaInterpreter implementation
 /// within the backend-specific library.
 ///
@@ -33,14 +34,16 @@ part 'schema.g.dart';
 /// as determined by the backend implementation. For a nested, sub-document, it is treated
 /// as a property name within the parent document.
 ///
+/// - [lists] have their own schema type
 ///
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
+  final Map<String, PList> lists;
 
-  PSchema({@required Map<String, PDocument> documents, @required this.name}):_documents=documents;
+  PSchema({@required Map<String, PDocument> documents, @required this.name, this.lists=const {}}):_documents=documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -93,6 +96,21 @@ abstract class PSchemaElement {
   }
 
   PSchemaElement get parent => _parent;
+
+  PSchema get root{
+    if (_parent==null){
+      return this;
+    }
+    var p =_parent;
+
+    while (true){
+        if (p.parent!=null){
+          p=p.parent;
+        }else{
+          return p;
+        }
+    }
+  }
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
