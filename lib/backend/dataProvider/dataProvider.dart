@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/foundation.dart';
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
@@ -68,52 +67,65 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _authenticator;
   }
 
-  Authenticator createAuthenticator(CONFIG config) {return NoAuthenticator();}
+  Authenticator createAuthenticator(CONFIG config) {
+    return NoAuthenticator();
+  }
 
   UserState get userState => authenticator.userState;
 
-  Future<Data> query(
+  Future<Map<String, dynamic>> query(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     return (query is PGQuery)
         ? gQuery(query: query, pageArguments: pageArguments)
         : pQuery(query: query, pageArguments: pageArguments);
   }
 
-  Future<List<Map<String,dynamic>>> queryList(
+  Future<List<Map<String, dynamic>>> queryList(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     return (query is PGQuery)
         ? gQueryList(query: query, pageArguments: pageArguments)
         : pQueryList(query: query, pageArguments: pageArguments);
   }
 
-  Future<Data> gQuery({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<Map<String, dynamic>> gQuery(
+      {PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     return _query(query: query, script: query.script, pageArguments: pageArguments);
   }
 
-  Future<List<Map<String,dynamic>>> gQueryList({PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String, dynamic>>> gQueryList(
+      {PGQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     return _queryList(query: query, script: query.script, pageArguments: pageArguments);
   }
 
-  Future<Data> _query(
+  Future<Map<String, dynamic>> _query(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
     final String method = decapitalize(query.table);
     final actualData = response.data[method];
-    return Data(data: actualData, documentId: documentIdFromData(actualData));
+    return actualData;
   }
 
-  Future<List<Map<String,dynamic>>> _queryList({PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String, dynamic>>> _queryList(
+      {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
-    final String method = decapitalize(query.table);
-    final actualData = response.data[method];
-    return List.empty(); // TODO:
+
+    /// GraphQL uses the plural form for the method name when retrieving a list
+    final String method = "${decapitalize(query.table)}s";
+    final rawData = response.data[method];
+    final List edges = rawData['edges'];
+    final List<Map<String, dynamic>> results = List.empty(growable: true);
+    for (var e in edges) {
+      results.add(e['node']);
+    }
+    return results;
   }
 
-  Future<Data> pQuery({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<Map<String, dynamic>> pQuery(
+      {PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final StringBuffer buf = StringBuffer();
     buf.write('query Get');
@@ -146,14 +158,17 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _query(query: query, script: buf.toString(), pageArguments: pageArguments);
   }
 
-  Future<List<Map<String,dynamic>>> pQueryList({PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
+  Future<List<Map<String, dynamic>>> pQueryList(
+      {PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     throw UnimplementedError();
   }
 
-  @override
-  Future<Data> getDocument({@required DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
-    final PPQuery q =
-    PPQuery(table: documentId.path, variables: {config.idPropertyName: documentId.itemId}, types: {config.idPropertyName: 'String!'});
+  Future<Map<String, dynamic>> getDocument(
+      {@required DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
+    final PPQuery q = PPQuery(
+        table: documentId.path,
+        variables: {config.idPropertyName: documentId.itemId},
+        types: {config.idPropertyName: 'String!'});
     return pQuery(query: q);
   }
 
@@ -163,7 +178,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
   /// 1. Values passed as [pageArguments]
   Map<String, dynamic> _combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
-    assert(pageArguments!=null);
+    assert(pageArguments != null);
     final variables = Map<String, dynamic>();
     final propertyVariables = _buildPropertyVariables(query.propertyReferences);
     variables.addAll(pageArguments);
@@ -171,6 +186,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     variables.addAll(query.variables);
     return variables;
   }
+
 // TODO: get variable values from property references
   Map<String, dynamic> _buildPropertyVariables(List<String> propertyReferences) {
     return {};
@@ -182,9 +198,9 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     DocumentType documentType = DocumentType.standard,
     Function() onSuccess,
   }) async {
-    assert(documentId !=null);
-    assert(documentId.path!=null);
-    assert(documentId.itemId!=null);
+    assert(documentId != null);
+    assert(documentId.path != null);
+    assert(documentId.itemId != null);
     logType(this.runtimeType).d('Updating data provider');
     final dio.Response response = await dio.Dio(dio.BaseOptions(headers: config.headers)).put(
       documentUrl(documentId),
@@ -200,11 +216,13 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   String documentUrl(DocumentId documentId) {
     return '${config.documentEndpoint}/${documentId.path}/${documentId.itemId}';
   }
+
   DocumentId documentIdFromData(Map<String, dynamic> data);
 }
 
-class NoAuthenticator extends Authenticator{
-  final String msg='If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
+class NoAuthenticator extends Authenticator {
+  final String msg =
+      'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
 
   @override
   Future<bool> doDeRegister(PreceptUser user) {
@@ -232,6 +250,7 @@ class NoAuthenticator extends Authenticator{
   }
 
   @override
-  init() { logType(this.runtimeType).i("Authenticator not set"); }
-
+  init() {
+    logType(this.runtimeType).i("Authenticator not set");
+  }
 }
