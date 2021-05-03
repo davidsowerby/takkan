@@ -8,16 +8,15 @@ part of 'list.dart';
 
 PList _$PListFromJson(Map<String, dynamic> json) {
   return PList(
-    read: PReadParticleConverter.fromJson(json['read'] as Map<String, dynamic>),
-    edit: PEditParticleConverter.fromJson(json['edit'] as Map<String, dynamic>),
     readOnly: json['readOnly'] as bool,
-    particleHeight: (json['particleHeight'] as num)?.toDouble(),
     caption: json['caption'] as String,
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     staticData: json['staticData'] as String,
     property: json['property'] as String,
+    readTraitName: json['readTraitName'] as String,
+    editTraitName: json['editTraitName'] as String,
     tooltip: json['tooltip'] as String,
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
@@ -37,9 +36,8 @@ Map<String, dynamic> _$PListToJson(PList instance) => <String, dynamic>{
       'staticData': instance.staticData,
       'help': instance.help?.toJson(),
       'tooltip': instance.tooltip,
-      'particleHeight': instance.particleHeight,
-      'read': PReadParticleConverter.toJson(instance.read),
-      'edit': PEditParticleConverter.toJson(instance.edit),
+      'readTraitName': instance.readTraitName,
+      'editTraitName': instance.editTraitName,
     };
 
 T _$enumDecode<T>(

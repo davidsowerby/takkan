@@ -4,9 +4,7 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/editParticleConverter.dart';
 import 'package:precept_script/particle/list.dart';
-import 'package:precept_script/particle/readParticleConverter.dart';
 import 'package:precept_script/trait/textTrait.dart';
 
 part 'list.g.dart';
@@ -23,6 +21,8 @@ class PList extends PPart {
     PHelp help,
     String staticData,
     @required String property,
+    @required String readTraitName,
+    String editTraitName,
     String tooltip,
     PPanelStyle panelStyle=const PPanelStyle(),
     PTextTrait textTrait=const PTextTrait(),
@@ -31,16 +31,14 @@ class PList extends PPart {
           caption: caption,
           controlEdit: controlEdit,
           staticData: staticData,
-          panelStyle: panelStyle,
-          textTrait: textTrait,
           property: property,
           tooltip: tooltip,
           help: help,
-          particleHeight: particleHeight,
+          height: particleHeight,
           readOnly: readOnly,
           isStatic: isStatic,
-          read: read,
-          edit: edit,
+          readTraitName: readTraitName,
+          editTraitName: editTraitName,
         );
 
   factory PList.fromJson(Map<String, dynamic> json) => _$PListFromJson(json);

@@ -22,7 +22,7 @@ class PHeadingStyle {
   const PHeadingStyle({
     this.textTrait = const PTextTrait(textStyle: PTextStyle.subtitle1),
     this.background = PColor.canvas,
-    this.textTheme = PTextTheme.standard,
+    this.textTheme = PTextTheme.cardCanvas,
     this.height = 40,
     this.elevation = 20,
     this.border=const PBorder(),
@@ -34,7 +34,7 @@ class PHeadingStyle {
 }
 
 
-/// - [PTextTheme.standard] relates to [ThemeData.textTheme], used when background is a Card or Canvas
+/// - [PTextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
 /// - [PTextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
 /// - [PTextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
 /// - [PTextTheme.auto] is used to select one of the above depending on the background

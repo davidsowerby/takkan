@@ -40,17 +40,15 @@ class PListRead extends PReadParticle {
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
 /// level of granularity
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PListEdit extends PEditParticle {
+class PListEdit  {
   final PListTile itemConfigAsTile;
   final PPanel itemConfigAsPanel;
-  PListEdit({String styleName = 'default', bool showCaption, this.itemConfigAsPanel, this.itemConfigAsTile})
-      : super(showCaption: showCaption, styleName: styleName);
+  PListEdit({String styleName = 'default', bool showCaption, this.itemConfigAsPanel, this.itemConfigAsTile});
 
   factory PListEdit.fromJson(Map<String, dynamic> json) => _$PListEditFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListEditToJson(this);
 
-  @override
   Type get viewDataType => List;
 }
 

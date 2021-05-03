@@ -28,8 +28,6 @@ Map<String, dynamic> _$PListReadToJson(PListRead instance) => <String, dynamic>{
 
 PListEdit _$PListEditFromJson(Map<String, dynamic> json) {
   return PListEdit(
-    styleName: json['styleName'] as String,
-    showCaption: json['showCaption'] as bool,
     itemConfigAsPanel: json['itemConfigAsPanel'] == null
         ? null
         : PPanel.fromJson(json['itemConfigAsPanel'] as Map<String, dynamic>),
@@ -40,8 +38,6 @@ PListEdit _$PListEditFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PListEditToJson(PListEdit instance) => <String, dynamic>{
-      'styleName': instance.styleName,
-      'showCaption': instance.showCaption,
       'itemConfigAsTile': instance.itemConfigAsTile?.toJson(),
       'itemConfigAsPanel': instance.itemConfigAsPanel?.toJson(),
     };

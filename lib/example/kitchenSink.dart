@@ -3,7 +3,7 @@ import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/style.dart';
 
@@ -20,10 +20,9 @@ final kitchenSinkScript = PScript(
       page: PPage(
         title: 'Home Page',
         content: [
-          PPart(
+          PText(
             isStatic: IsStatic.yes,
             staticData: 'Welcome to the Precept Kitchen Sink, starting with a bit of static text',
-            read: PText(showCaption: false),
           ),
           PPanel(
             property: '',
@@ -59,7 +58,7 @@ final kitchenSinkScriptWithoutDataProvider = PScript(
           PPart(
             isStatic: IsStatic.yes,
             staticData: 'Welcome to the Precept Kitchen Sink, starting with a bit of static text',
-            read: PText(showCaption: false),
+            // readTraitName: PText(showCaption: false),
           ),
           PPanel(
             property: '',

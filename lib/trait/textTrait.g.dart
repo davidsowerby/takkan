@@ -11,11 +11,13 @@ PTextTrait _$PTextTraitFromJson(Map<String, dynamic> json) {
     textStyle: _$enumDecodeNullable(_$PTextStyleEnumMap, json['textStyle']),
     textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']),
     textAlign: _$enumDecodeNullable(_$PTextAlignEnumMap, json['textAlign']),
+    caption: json['caption'] as String,
   );
 }
 
 Map<String, dynamic> _$PTextTraitToJson(PTextTrait instance) =>
     <String, dynamic>{
+      'caption': instance.caption,
       'textStyle': _$PTextStyleEnumMap[instance.textStyle],
       'textTheme': _$PTextThemeEnumMap[instance.textTheme],
       'textAlign': _$PTextAlignEnumMap[instance.textAlign],
@@ -70,7 +72,7 @@ const _$PTextStyleEnumMap = {
 };
 
 const _$PTextThemeEnumMap = {
-  PTextTheme.standard: 'standard',
+  PTextTheme.cardCanvas: 'cardCanvas',
   PTextTheme.primary: 'primary',
   PTextTheme.accent: 'accent',
 };

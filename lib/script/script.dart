@@ -57,7 +57,6 @@ class PScript extends PCommon {
           dataProvider: dataProvider ?? PNoDataProvider(),
           query: query,
           controlEdit: controlEdit,
-          panelStyle: panelStyle,
           textTrait: textTrait,
         );
 
@@ -198,15 +197,11 @@ class PRoute extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
           controlEdit: controlEdit,
-          panelStyle: panelStyle,
-          textTrait: textTrait,
         );
 
   factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
@@ -265,8 +260,6 @@ class PPage extends PContent {
     this.content = const [],
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
     String property,
@@ -275,8 +268,6 @@ class PPage extends PContent {
           isStatic: isStatic,
           dataProvider: dataProvider,
           query: query,
-          panelStyle: panelStyle,
-          textTrait: textTrait,
           controlEdit: controlEdit,
           id: id,
           property: property,

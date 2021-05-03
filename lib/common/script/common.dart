@@ -104,7 +104,6 @@ class PCommon extends PreceptItem {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle,
     PTextTrait textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema schema,
@@ -112,7 +111,6 @@ class PCommon extends PreceptItem {
   })  : _isStatic = isStatic,
         _dataProvider = dataProvider,
         _query = query,
-        _panelStyle = panelStyle,
         _textTrait = textTrait,
         super(id: id);
 

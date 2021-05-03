@@ -2,59 +2,62 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/navigation.dart';
 
 part 'navigation.g.dart';
 
-
-
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PNavPart extends PPart {
-  PNavPart({
+class PNavButton extends PPart {
+  static const defaultReadTrait='PNavButton-default';
+  final String route;
+
+  PNavButton({
     bool readOnly = true,
-    String styleName = 'default',
-    @required String route,
+    @required this.route,
     String caption,
     bool showCaption = false,
     IsStatic isStatic = IsStatic.yes,
+    String readTraitName=defaultReadTrait,
+    String editTraitName,
+    double height = 100,
     String property,
     String staticData = '',
     final Map<String, dynamic> args = const {},
   }) : super(
-            readOnly: readOnly,
-            caption: caption,
-            isStatic: isStatic,
-            staticData: staticData,
-            property: property,
-            read: PNavParticle(
-                route: route,
-                caption: caption,
-                showCaption: showCaption,
-                args: args,
-                styleName: styleName));
+          readOnly: readOnly,
+          caption: caption,
+          isStatic: isStatic,
+          staticData: staticData,
+          property: property,
+          height: height,
+          readTraitName: readTraitName,
+          editTraitName: editTraitName,
+        );
 
-  factory PNavPart.fromJson(Map<String, dynamic> json) => _$PNavPartFromJson(json);
+  factory PNavButton.fromJson(Map<String, dynamic> json) => _$PNavButtonFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PNavPartToJson(this);
+  Map<String, dynamic> toJson() => _$PNavButtonToJson(this);
 }
-
 
 /// A simple way to specify a list of buttons which only route to another page
 /// [buttons] should be specified as a map, for example {'button text':'route'}
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PNavButtonSet extends PPart {
+  static const defaultReadTrait='PNavButtonSet-default';
+  final Map<String, String> buttons;
+  final String buttonTraitName;
+
   PNavButtonSet({
-    Map<String, String> buttons = const {},
+    @required this.buttons,
     double width = 150,
     double height,
+    String readTraitName=defaultReadTrait,
+    this.buttonTraitName = PNavButton.defaultReadTrait,
   }) : super(
-      readOnly: true,
-      isStatic: IsStatic.yes,
-      read: PNavButtonSetParticle(
-        buttons: buttons,
-        width: width,
-        height: height,
-      ));
+          readOnly: true,
+          height: height,
+          isStatic: IsStatic.yes,
+          readTraitName: readTraitName,
+        );
 
   factory PNavButtonSet.fromJson(Map<String, dynamic> json) => _$PNavButtonSetFromJson(json);
 

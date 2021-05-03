@@ -59,8 +59,6 @@ class PPanel extends PSubContent{
     isStatic: isStatic,
     dataProvider: dataProvider,
     query: query,
-    panelStyle: panelStyle,
-    textTrait: textTrait,
     controlEdit: controlEdit,
     caption: caption,
   );

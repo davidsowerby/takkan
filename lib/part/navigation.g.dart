@@ -6,28 +6,48 @@ part of 'navigation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PNavPart _$PNavPartFromJson(Map<String, dynamic> json) {
-  return PNavPart(
+PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) {
+  return PNavButton(
     readOnly: json['readOnly'] as bool,
+    route: json['route'] as String,
     caption: json['caption'] as String,
+    readTraitName: json['readTraitName'] as String,
+    editTraitName: json['editTraitName'] as String,
+    height: (json['height'] as num)?.toDouble(),
     property: json['property'] as String,
     staticData: json['staticData'] as String,
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PNavPartToJson(PNavPart instance) => <String, dynamic>{
+Map<String, dynamic> _$PNavButtonToJson(PNavButton instance) =>
+    <String, dynamic>{
       'version': instance.version,
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'property': instance.property,
       'staticData': instance.staticData,
+      'height': instance.height,
+      'readTraitName': instance.readTraitName,
+      'editTraitName': instance.editTraitName,
+      'route': instance.route,
     };
 
 PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) {
-  return PNavButtonSet()..version = json['version'] as int;
+  return PNavButtonSet(
+    buttons: (json['buttons'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+    height: (json['height'] as num)?.toDouble(),
+    readTraitName: json['readTraitName'] as String,
+    buttonTraitName: json['buttonTraitName'] as String,
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PNavButtonSetToJson(PNavButtonSet instance) =>
     <String, dynamic>{
       'version': instance.version,
+      'height': instance.height,
+      'readTraitName': instance.readTraitName,
+      'buttons': instance.buttons,
+      'buttonTraitName': instance.buttonTraitName,
     };

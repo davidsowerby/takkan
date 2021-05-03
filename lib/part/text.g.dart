@@ -1,24 +1,42 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'common.dart';
+part of 'text.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PCommon _$PCommonFromJson(Map<String, dynamic> json) {
-  return PCommon(
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
+PText _$PTextFromJson(Map<String, dynamic> json) {
+  return PText(
+    caption: json['caption'] as String,
+    readOnly: json['readOnly'] as bool,
+    height: (json['height'] as num)?.toDouble(),
+    property: json['property'] as String,
+    readTraitName: json['readTraitName'] as String,
+    editTraitName: json['editTraitName'] as String,
+    staticData: json['staticData'] as String,
+    help: json['help'] == null
+        ? null
+        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
+    tooltip: json['tooltip'] as String,
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
+Map<String, dynamic> _$PTextToJson(PText instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'textTrait': instance.textTrait.toJson(),
+      'caption': instance.caption,
+      'readOnly': instance.readOnly,
+      'property': instance.property,
+      'staticData': instance.staticData,
+      'help': instance.help?.toJson(),
+      'tooltip': instance.tooltip,
+      'height': instance.height,
+      'readTraitName': instance.readTraitName,
+      'editTraitName': instance.editTraitName,
     };
 
 T _$enumDecode<T>(

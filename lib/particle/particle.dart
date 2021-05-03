@@ -14,9 +14,3 @@ abstract class PReadParticle extends PParticle {
   Map<String, dynamic> toJson();
 }
 
-abstract class PEditParticle extends PParticle {
-  const PEditParticle({String styleName = 'default', bool showCaption = true})
-      : super(styleName: styleName, showCaption: showCaption);
-
-  Map<String, dynamic> toJson();
-}

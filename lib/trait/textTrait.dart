@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/trait/trait.dart';
 
 part 'textTrait.g.dart';
 
@@ -9,18 +10,23 @@ part 'textTrait.g.dart';
 /// - [textTheme] is an enum representation of Flutter's TextTheme, and in this context indicates the
 /// background behind this text
 @JsonSerializable(nullable: true, explicitToJson: true)
-class PTextTrait  {
+class PTextTrait extends PTrait {
   final PTextStyle textStyle;
   final PTextTheme textTheme;
   final PTextAlign textAlign;
 
-  const PTextTrait({this.textStyle=PTextStyle.bodyText1, this.textTheme=PTextTheme.standard, this.textAlign=PTextAlign.start}) ;
+  const PTextTrait(
+      {this.textStyle = PTextStyle.bodyText1,
+      this.textTheme = PTextTheme.cardCanvas,
+      this.textAlign = PTextAlign.start,
+      String caption})
+      : super(caption: caption);
 
-  factory PTextTrait.fromJson(Map<String, dynamic> json) =>
-      _$PTextTraitFromJson(json);
+  factory PTextTrait.fromJson(Map<String, dynamic> json) => _$PTextTraitFromJson(json);
 
   Map<String, dynamic> toJson() => _$PTextTraitToJson(this);
 }
+
 /// Enum representation of Flutter's TextStyle constants
 enum PTextStyle {
   headline1,
@@ -38,10 +44,11 @@ enum PTextStyle {
   overline,
 }
 
-/// - [PTextTheme.standard] relates to [ThemeData.textTheme], used when background is a Card or Canvas
+/// - Used to select the appropriate text theme depending on the background
+/// - [PTextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
 /// - [PTextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
 /// - [PTextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
-enum PTextTheme { standard, primary, accent }
+enum PTextTheme { cardCanvas, primary, accent }
 
 /// This is a direct copy of Flutter's TextAlign, but is used to avoid introducing a direct
 /// dependency on Flutter

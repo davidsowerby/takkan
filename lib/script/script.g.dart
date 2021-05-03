@@ -82,9 +82,6 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
     page: json['page'] == null
         ? null
         : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   )..version = json['version'] as int;
 }
@@ -92,8 +89,6 @@ PRoute _$PRouteFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PRouteToJson(PRoute instance) => <String, dynamic>{
       'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'textTrait': instance.textTrait.toJson(),
       'page': instance.page?.toJson(),
     };
 
@@ -106,9 +101,6 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
         : PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     property: json['property'] as String,
@@ -120,8 +112,6 @@ Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'textTrait': instance.textTrait.toJson(),
       'property': instance.property,
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,

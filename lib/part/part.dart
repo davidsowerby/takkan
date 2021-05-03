@@ -3,14 +3,7 @@ import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/panel/panelStyle.dart';
-import 'package:precept_script/particle/editParticleConverter.dart';
-import 'package:precept_script/particle/particle.dart';
-import 'package:precept_script/particle/readParticleConverter.dart';
-import 'package:precept_script/particle/text.dart';
-import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'part.g.dart';
@@ -24,7 +17,7 @@ part 'part.g.dart';
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
-/// [particleHeight] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
+/// [height] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 /// [dataProvider] and [query] are theoretically available by virtue of inheriting [PSubContent], but do not make sense for a [PPart], as it represents a single field
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPart extends PSubContent {
@@ -33,32 +26,26 @@ class PPart extends PSubContent {
   final String staticData;
   final PHelp help;
   final String tooltip;
-  final double particleHeight;
-  @JsonKey(fromJson: PReadParticleConverter.fromJson, toJson: PReadParticleConverter.toJson)
-  final PReadParticle read;
-  @JsonKey(fromJson: PEditParticleConverter.fromJson, toJson: PEditParticleConverter.toJson)
-  final PEditParticle edit;
+  final double height;
+  final String readTraitName;
+  final String editTraitName;
 
   PPart(
       {String caption,
       this.readOnly = false,
-      this.particleHeight = 60,
+      this.height = 60,
       this.property,
-      this.read = const PText(),
-      this.edit = const PTextBox(),
+      this.readTraitName,
+      this.editTraitName,
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
-      PPanelStyle panelStyle=const PPanelStyle(),
-      PTextTrait textTrait=const PTextTrait(),
       ControlEdit controlEdit = ControlEdit.inherited,
       String id,
       this.tooltip})
       : super(
           id: id,
           isStatic: isStatic,
-          panelStyle: panelStyle,
-          textTrait: textTrait,
           controlEdit: controlEdit,
           caption: caption,
         );

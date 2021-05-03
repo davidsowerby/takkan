@@ -10,17 +10,14 @@ PPart _$PPartFromJson(Map<String, dynamic> json) {
   return PPart(
     caption: json['caption'] as String,
     readOnly: json['readOnly'] as bool,
-    particleHeight: (json['particleHeight'] as num)?.toDouble(),
+    height: (json['height'] as num)?.toDouble(),
     property: json['property'] as String,
-    read: PReadParticleConverter.fromJson(json['read'] as Map<String, dynamic>),
-    edit: PEditParticleConverter.fromJson(json['edit'] as Map<String, dynamic>),
+    readTraitName: json['readTraitName'] as String,
+    editTraitName: json['editTraitName'] as String,
     staticData: json['staticData'] as String,
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String,
     tooltip: json['tooltip'] as String,
@@ -31,17 +28,15 @@ Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'textTrait': instance.textTrait.toJson(),
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'property': instance.property,
       'staticData': instance.staticData,
       'help': instance.help?.toJson(),
       'tooltip': instance.tooltip,
-      'particleHeight': instance.particleHeight,
-      'read': PReadParticleConverter.toJson(instance.read),
-      'edit': PEditParticleConverter.toJson(instance.edit),
+      'height': instance.height,
+      'readTraitName': instance.readTraitName,
+      'editTraitName': instance.editTraitName,
     };
 
 T _$enumDecode<T>(

@@ -1,11 +1,9 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
 
@@ -23,8 +21,6 @@ class PContent extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait textTrait,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema schema,
     String id,
@@ -33,8 +29,6 @@ class PContent extends PCommon {
     schema: schema,
     id: id,
     controlEdit: controlEdit,
-    panelStyle: panelStyle,
-    textTrait: textTrait,
     dataProvider: dataProvider,
     isStatic: isStatic,
   );
@@ -52,8 +46,6 @@ class PSubContent extends PContent {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
     PQuery query,
-    PPanelStyle panelStyle=const PPanelStyle(),
-    PTextTrait textTrait,
     ControlEdit controlEdit = ControlEdit.inherited,
     String id,
   }) : super(
@@ -62,8 +54,6 @@ class PSubContent extends PContent {
     isStatic: isStatic,
     dataProvider: dataProvider,
     query: query,
-    panelStyle: panelStyle,
-    textTrait: textTrait,
     controlEdit: controlEdit,
     id: id,
   );

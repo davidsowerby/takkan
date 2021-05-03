@@ -76,7 +76,7 @@ const _$PColorEnumMap = {
 };
 
 const _$PTextThemeEnumMap = {
-  PTextTheme.standard: 'standard',
+  PTextTheme.cardCanvas: 'cardCanvas',
   PTextTheme.primary: 'primary',
   PTextTheme.accent: 'accent',
 };
