@@ -37,8 +37,9 @@ class PanelState extends ContentState<Panel, PPanel> {
     return doBuild(context, theme,dataSource, widget.config, widget.pageArguments);
   }
 
-  Widget _expandedContent(bool editMode) {
+  Widget _expandedContent(ThemeData theme, bool editMode) {
     final content = buildSubContent(
+      theme:theme,
       config: widget.config,
       pageArguments: widget.pageArguments,
       parentBinding: dataBinding,
@@ -52,13 +53,13 @@ class PanelState extends ContentState<Panel, PPanel> {
       return Heading(
         config: widget.config.heading,
         headingText: widget.config.caption,
-        expandedContent: (es) => _expandedContent(es),
+        expandedContent: (es) => _expandedContent(theme, es),
         dataSource: dataSource,
         openExpanded: true,
       );
     }
     final EditState editState = Provider.of<EditState>(context, listen: false);
-    return Center(child: Container(child: _expandedContent(editState.editMode)));
+    return Center(child: Container(child: _expandedContent(theme,editState.editMode)));
   }
 
   @override

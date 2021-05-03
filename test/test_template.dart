@@ -12,9 +12,7 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/text.dart';
-import 'package:precept_script/particle/textBox.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
@@ -113,7 +111,7 @@ final PScript kitchenSinkValidation = PScript(
         pageType: Library.simpleKey,
         title: 'Page 1',
         content: [
-          PPart(caption: 'Part 1', staticData: 'Part 1', read: PText(), isStatic: IsStatic.yes),
+          PText(caption: 'Part 1', staticData: 'Part 1',  isStatic: IsStatic.yes),
           PPanel(
             query: PGet(
               documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
@@ -122,10 +120,8 @@ final PScript kitchenSinkValidation = PScript(
             property: '',
             heading: PPanelHeading(),
             content: [
-              PPart(
+              PText(
                 property: 'category',
-                read: PText(showCaption: false),
-                edit: PTextBox(),
                 id: 'Part 2-1-2',
               ),
             ],

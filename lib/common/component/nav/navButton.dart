@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/navigation.dart';
+import 'package:precept_client/trait/navigation.dart';
+import 'package:precept_script/part/navigation.dart';
 
 class NavigationButton extends StatelessWidget with ConnectorBuilder  {
-  final PPart partConfig;
+  final PNavButton partConfig;
   final ModelConnector connector;
+  final NavigationButtonTrait trait;
+  final Map<String, dynamic> pageArguments;
 
   NavigationButton({
     Key key,
     this.partConfig,
     this.connector,
+    this.trait,
+    this.pageArguments=const {},
   }) : super(key: key);
 
   @override
@@ -24,8 +28,7 @@ class NavigationButton extends StatelessWidget with ConnectorBuilder  {
   }
 
   navigateTo(BuildContext context) {
-    final PNavParticle config = partConfig.read as PNavParticle;
-    Navigator.pushNamed(context, config.route, arguments: config.args);
+    Navigator.pushNamed(context, partConfig.route, arguments: pageArguments);
   }
 
 

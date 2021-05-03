@@ -7,7 +7,7 @@ import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../../helper/widgetTestTree.dart';
@@ -24,7 +24,7 @@ final PScript kitchenSink00 = PScript(
         pageType: Library.simpleKey,
         title: 'Page 1',
         content: [
-          PPart(caption: 'Part 1', staticData: 'Part 1', read: PText()),
+          PText(caption: 'Part 1', staticData: 'Part 1'),
           PPanel(
             caption: 'Panel 2',
             heading: PPanelHeading(),
@@ -34,15 +34,14 @@ final PScript kitchenSink00 = PScript(
                 heading: PPanelHeading(),
                 content: [
                   PPart(caption: 'Part 2-1-1', staticData: 'Part 2-1-1'),
-                  PPart(
-                    read: PText(showCaption: false),
+                  PText(
                     id: 'Part 2-1-2',
                     staticData: 'Part 2-1-2',
                   ),
                 ],
               ),
               PPart(caption: 'Part 2-2', staticData: 'Part 2-2'),
-              PPart(read: PText(showCaption: false), id: 'Part 2-3', staticData: 'Part 2-3'),
+              PText( id: 'Part 2-3', staticData: 'Part 2-3'),
             ],
           ),
           PPart(caption: 'Part 3', staticData: 'Part 3'),

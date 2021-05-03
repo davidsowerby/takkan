@@ -10,7 +10,7 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/text.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -34,15 +34,13 @@ final PScript kitchenSink01 = PScript(
             caption: 'Panel 1',
             heading: PPanelHeading(),
             content: [
-              PPart(
+              PText(
                 id: 'Part 1-1',
                 staticData: 'Part 1-1',
-                read: PText(showCaption: false),
               ),
-              PPart(
+              PText(
                 id: 'Part 1-2',
                 staticData: 'Part 1-2',
-                read: PText(showCaption: false),
               ),
               PPanel(
                 caption: 'Panel 1-3',

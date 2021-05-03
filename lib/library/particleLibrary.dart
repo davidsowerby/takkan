@@ -6,16 +6,19 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_client/common/component/nav/navButtonSet.dart';
 import 'package:precept_client/data/dataBinding.dart';
+import 'package:precept_client/part/part.dart';
 import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
+import 'package:precept_client/trait/navigation.dart';
+import 'package:precept_client/trait/text.dart';
+import 'package:precept_client/trait/textBox.dart';
+import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/converter/converter.dart';
 import 'package:precept_script/part/list.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/navigation.dart';
-import 'package:precept_script/particle/text.dart';
-import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
@@ -30,17 +33,49 @@ class ParticleLibrary {
 
   ParticleLibrary();
 
-  /// Finds an entry in the library matching [key], and returns an instance of it with [config]
-  /// Throws a [PreceptException] if not found
-  Widget find(Type key, PPart config, ModelConnector connector) {
-    logType(this.runtimeType).d("Finding $key in $runtimeType");
-    final func = entries[key];
-    if (func == null) {
-      String msg = "No entry is defined for ${key.toString()} in $runtimeType";
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+  /// Builds and returns a [Part] from the current [partConfig].  Particle instances are created,
+  /// and configured according to the [theme].  This allows the [Part] to be configured once on construction,
+  /// rather than repeatedly as it would be if configuration were during the [Part.build] method.
+  Part partBuilder({
+    @required PPart partConfig,
+    @required ThemeData theme,
+    @required DataBinding dataBinding,
+    final Map<String, dynamic> pageArguments = const {},
+  }) {
+    final readTrait = traitLibrary.findParticleTrait(
+      theme: theme,
+      traitName: partConfig.readTraitName,
+      partConfig: partConfig,
+    );
+    final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
+        ? findStaticParticle(theme, readTrait, partConfig, pageArguments ?? const {})
+        : findParticle(theme, dataBinding, readTrait, partConfig, pageArguments ?? const {});
+
+    /// Either of these conditions mean we do not need an edit particle
+    if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
+      return Part(
+        readParticle: readParticle,
+        config: partConfig,
+        pageArguments: pageArguments,
+        parentBinding: dataBinding,
+      );
     }
-    return (func == null) ? null : func(config, connector);
+
+    final editTrait = traitLibrary.findParticleTrait(
+      theme: theme,
+      traitName: partConfig.editTraitName,
+      partConfig: partConfig,
+    );
+    final editParticle =
+        findParticle(theme, dataBinding, editTrait, partConfig, pageArguments ?? const {});
+
+    return Part(
+      readParticle: readParticle,
+      editParticle: editParticle,
+      config: partConfig,
+      pageArguments: pageArguments,
+      parentBinding: dataBinding,
+    );
   }
 
   /// Loads library entries defined by the developer
@@ -49,54 +84,64 @@ class ParticleLibrary {
   /// Defaults are loaded first, so to replace, define another with the key 'default'
   /// There should be no need to call this directly, init for all libraries is carried out in
   /// a call to [Precept.init] which should be before your runApp statement
-  init({Map<Type, Widget Function(PPart, ModelConnector)> entries}) {}
+  init({Map<Type, Widget Function(PPart, ModelConnector)> entries}) {
+    // TODO
+  }
 
-  Widget _createParticle(ThemeData theme, PPart partConfig, bool read, ModelConnector connector) {
-    final Type particleType = (read) ? partConfig.read.runtimeType : partConfig.edit.runtimeType;
+  Widget _createParticle(
+    ThemeData theme,
+    Trait trait,
+    ModelConnector connector,
+    PPart partConfig,
+    final Map<String, dynamic> pageArguments,
+  ) {
+    final particleType = trait.runtimeType;
     switch (particleType) {
-      case PText:
+      case TextTrait:
         return TextParticle(
-          config: partConfig,
+          trait: trait,
           connector: connector,
+          partConfig: partConfig,
         );
-      case PTextBox:
+      case TextBoxTrait:
         return TextBoxParticle(
-          config: partConfig,
+          trait: trait,
           connector: connector,
+          partConfig: partConfig,
         );
-      case PNavParticle:
+      case NavigationButtonTrait:
         return NavigationButton(
+          trait: trait,
           partConfig: partConfig,
           connector: connector,
         );
-      case PNavButtonSetParticle:
-        return NavigationButtonSet(config: partConfig);
-
-      // case PListView:
-      //   // final particleConfig = partConfig.read;
-      //   // final ListViewReadTrait trait =
-      //   //     traitLibrary.listTrait(theme: theme, traitName: particleConfig.traitName);
-      //   // return ListViewPart(
-      //   //   config: partConfig,
-      //   //   connector: connector,
-      //   //   trait: trait,
-      //   // );
+      case NavigationButtonSetTrait:
+        final String buttonTraitName = (trait as NavigationButtonSetTrait).buttonTraitName;
+        final Trait buttonTrait = traitLibrary.findParticleTrait(
+            theme: theme, traitName: buttonTraitName, partConfig: partConfig);
+        return NavigationButtonSet(
+            config: partConfig,
+            buttonTrait: buttonTrait,
+            trait: trait,
+            pageArguments: pageArguments ?? const {});
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
 
-  Widget findParticle(ThemeData theme, DataBinding dataBinding, PPart config, bool read) {
-    Type viewDataType = (read) ? config.read.viewDataType : config.edit.viewDataType;
+  Widget findParticle(ThemeData theme, DataBinding dataBinding, Trait trait, PPart partConfig,
+      final Map<String, dynamic> pageArguments) {
+    Type viewDataType = trait.viewDataType;
     final connector = ConnectorFactory()
-        .buildConnector(viewDataType: viewDataType, config: config, dataBinding: dataBinding);
-    return _createParticle(theme, config, read, connector);
+        .buildConnector(viewDataType: viewDataType, config: partConfig, dataBinding: dataBinding);
+    return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
   }
 
-  Widget findStaticParticle(ThemeData theme,PPart config) {
-    final connector = StaticConnector(config.staticData);
-    return _createParticle(theme,config, true, connector);
+  Widget findStaticParticle(
+      ThemeData theme, Trait trait, PPart partConfig, final Map<String, dynamic> pageArguments) {
+    final connector = StaticConnector(partConfig.staticData);
+    return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
   }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){

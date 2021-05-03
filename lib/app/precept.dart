@@ -44,7 +44,7 @@ class Precept {
 
   init({
     List<Function()> injectionBindings,
-    Map<String, TextTrait> Function(ThemeData theme) textTraits,
+    Map<String, Trait> Function(ThemeData theme) traits,
     bool includePreceptDefaults = true,
     Map<String, Widget Function(PPage)> pageLibraryEntries,
     Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,

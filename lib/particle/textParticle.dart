@@ -2,37 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/data/connectorBuilder.dart';
-import 'package:precept_client/trait/traitLibrary.dart';
+import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/widget/caption.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/text.dart';
 
 class TextParticle extends StatelessWidget with ConnectorBuilder {
-  final PPart config;
+  final TextTrait trait;
+  final PPart partConfig;
 
   final ModelConnector connector;
 
-  const TextParticle({Key key, @required this.config, @required this.connector}) : super(key: key);
+  const TextParticle({Key key, @required this.trait, @required this.connector, @required this.partConfig}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final PText textConfig = config.read as PText;
     final text = Text(
       connector.readFromModel(),
-      style: traitLibrary.textTrait(theme: theme, config: textConfig).textStyle,
-      textAlign: traitLibrary.textTrait(theme: theme, config: textConfig).textAlign,
+      style: trait.textStyle,
+      textAlign: trait.textAlign,
     );
-    if (config.read.showCaption) {
+    if (partConfig.caption !=null && trait.showCaption) {
       return Container(
-        height: config.particleHeight,
+        height: partConfig.height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Caption(
-                text: config.caption,
+                text: trait.caption,
               ),
             ),
             text,
@@ -40,7 +38,7 @@ class TextParticle extends StatelessWidget with ConnectorBuilder {
         ),
       );
     }
-    return Container(height: config.particleHeight, child: text);
+    return Container(height: partConfig.height, child: text);
   }
 
 

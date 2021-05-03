@@ -8,9 +8,9 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
-import 'package:precept_client/part/part.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -80,13 +80,15 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       switch (config.query.returnType) {
         case QueryReturnType.futureSingle:
           return loadData(
-              context,theme,
+              context,
+              theme,
               dataProvider.query(
                 query: query,
                 pageArguments: pageArguments,
               ));
         case QueryReturnType.futureList:
-          return loadList(theme,
+          return loadList(
+              theme,
               query.name,
               dataProvider.queryList(
                 query: query,
@@ -133,7 +135,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   /// retrieves results of a query and stores them in the [dataSource]
   /// Once the connection is made, calls [buildContent]
-  Widget loadList( ThemeData theme,String queryName, Future<List<Map<String, dynamic>>> future) {
+  Widget loadList(ThemeData theme, String queryName, Future<List<Map<String, dynamic>>> future) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: future,
       builder: (context, snapshot) {
@@ -192,15 +194,19 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// Updates data and rebuilds using [buildContent]
-  Widget activeBuilder(ThemeData theme,TemporaryDocument temporaryDocument, Data update) {
+  Widget activeBuilder(ThemeData theme, TemporaryDocument temporaryDocument, Data update) {
     temporaryDocument.updateFromSource(
         source: update.data, documentId: update.documentId, fireListeners: false);
     return buildContent(theme);
   }
 
   /// Build any nested Panel or Part widgets. Not used by Part
-  Widget buildSubContent(
-      {DataBinding parentBinding, CONFIG config, Map<String, dynamic> pageArguments}) {
+  Widget buildSubContent({
+    ThemeData theme,
+    DataBinding parentBinding,
+    CONFIG config,
+    Map<String, dynamic> pageArguments,
+  }) {
     assert(parentBinding != null);
 
     /// There is no common interface for the 'content' property of PPage and PPanel.
@@ -219,11 +225,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         );
       }
       if (element is PPart) {
-        child = Part(
-          parentBinding: parentBinding,
-          config: element,
-          pageArguments: pageArguments,
-        );
+        child = particleLibrary.partBuilder(
+            partConfig: element, theme: theme, dataBinding: dataBinding, pageArguments: pageArguments);
       }
       child = addEditControl(widget: child, config: element);
       children.add(child);

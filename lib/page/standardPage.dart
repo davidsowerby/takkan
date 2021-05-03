@@ -53,6 +53,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
   @override
   Widget assembleContent(ThemeData theme) {
     return buildSubContent(
+      theme:theme,
       config: widget.config,
       parentBinding: dataBinding,
       pageArguments: widget.pageArguments,
