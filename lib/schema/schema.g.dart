@@ -9,24 +9,24 @@ part of 'schema.dart';
 PSchema _$PSchemaFromJson(Map<String, dynamic> json) {
   return PSchema(
     name: json['name'] as String,
-    lists: (json['lists'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(
-          k, e == null ? null : PList.fromJson(e as Map<String, dynamic>)),
+    queries: (json['queries'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k,
+          e == null ? null : PQueryResult.fromJson(e as Map<String, dynamic>)),
     ),
   );
 }
 
 Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'name': instance.name,
-      'lists': instance.lists?.map((k, e) => MapEntry(k, e?.toJson())),
+      'queries': instance.queries?.map((k, e) => MapEntry(k, e?.toJson())),
     };
 
 PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) {
   return PPermissions(
-    (json['readRoles'] as Map<String, dynamic>)?.map(
+    readRoles: (json['readRoles'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
-    (json['writeRoles'] as Map<String, dynamic>)?.map(
+    writeRoles: (json['writeRoles'] as Map<String, dynamic>)?.map(
       (k, e) => MapEntry(k, e as String),
     ),
   );

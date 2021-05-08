@@ -4,7 +4,7 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/part/list.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 
 part 'schema.g.dart';
@@ -34,16 +34,16 @@ part 'schema.g.dart';
 /// as determined by the backend implementation. For a nested, sub-document, it is treated
 /// as a property name within the parent document.
 ///
-/// - [lists] have their own schema type
+/// - [queries] are instances of [ListSchema], but held separately, indexed by query name
 ///
 ///
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
-  final Map<String, PList> lists;
+  final Map<String, PQueryResult> queries;
 
-  PSchema({@required Map<String, PDocument> documents, @required this.name, this.lists=const {}}):_documents=documents;
+  PSchema({@required Map<String, PDocument> documents, @required this.name, this.queries=const {}}):_documents=documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -97,20 +97,6 @@ abstract class PSchemaElement {
 
   PSchemaElement get parent => _parent;
 
-  PSchema get root{
-    if (_parent==null){
-      return this;
-    }
-    var p =_parent;
-
-    while (true){
-        if (p.parent!=null){
-          p=p.parent;
-        }else{
-          return p;
-        }
-    }
-  }
 }
 
 @JsonSerializable(nullable: true, explicitToJson: true)
@@ -118,9 +104,7 @@ class PPermissions {
   final Map<String, String> readRoles;
   final Map<String, String> writeRoles;
 
-  PPermissions(Map<String, String> readRoles, Map<String, String> writeRoles)
-      : readRoles = readRoles ?? Map(),
-        writeRoles = writeRoles ?? writeRoles;
+  const PPermissions({this.readRoles=const {}, this.writeRoles=const {}});
 
   factory PPermissions.fromJson(Map<String, dynamic> json) => _$PPermissionsFromJson(json);
 

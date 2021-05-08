@@ -70,7 +70,7 @@ abstract class PQuery extends PreceptItem {
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
 
-/// A 'pure' GraphQL query.  [script] should contain a complete GraphQL script
+/// A 'pure' GraphQL query.  [script] must contain a complete GraphQL script
 /// Variable values can be added directly with [variables] or can be looked up from the [propertyReferences].
 /// Both can be specified.  When used within the Precept client, variables are combined with those
 /// passed as page arguments.  They are combined in the following order of precedence:
@@ -91,7 +91,7 @@ class PGQuery extends PQuery {
     List<String> propertyReferences = const [],
     @required String table,
     @required this.script,
-    String name,
+    @required String name,
     QueryReturnType returnType = QueryReturnType.futureSingle,
   })  : _table = table,
         super(

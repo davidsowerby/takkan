@@ -1,13 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'list.dart';
+part of 'listView.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PList _$PListFromJson(Map<String, dynamic> json) {
-  return PList(
+PListView _$PListViewFromJson(Map<String, dynamic> json) {
+  return PListView(
+    isQuery: json['isQuery'] as bool,
+    titleProperty: json['titleProperty'] as String,
+    itemType:
+        _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']),
+    subtitleProperty: json['subtitleProperty'] as String,
     readOnly: json['readOnly'] as bool,
     caption: json['caption'] as String,
     help: json['help'] == null
@@ -18,18 +23,13 @@ PList _$PListFromJson(Map<String, dynamic> json) {
     readTraitName: json['readTraitName'] as String,
     editTraitName: json['editTraitName'] as String,
     tooltip: json['tooltip'] as String,
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PListToJson(PList instance) => <String, dynamic>{
+Map<String, dynamic> _$PListViewToJson(PListView instance) => <String, dynamic>{
       'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'panelStyle': instance.panelStyle.toJson(),
-      'textTrait': instance.textTrait.toJson(),
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'property': instance.property,
@@ -38,6 +38,10 @@ Map<String, dynamic> _$PListToJson(PList instance) => <String, dynamic>{
       'tooltip': instance.tooltip,
       'readTraitName': instance.readTraitName,
       'editTraitName': instance.editTraitName,
+      'isQuery': instance.isQuery,
+      'titleProperty': instance.titleProperty,
+      'subtitleProperty': instance.subtitleProperty,
+      'itemType': _$PListViewItemTypeEnumMap[instance.itemType],
     };
 
 T _$enumDecode<T>(
@@ -60,6 +64,23 @@ T _$enumDecode<T>(
   }
   return value ?? unknownValue;
 }
+
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$PListViewItemTypeEnumMap = {
+  PListViewItemType.tile: 'tile',
+  PListViewItemType.navTile: 'navTile',
+  PListViewItemType.panel: 'panel',
+};
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',

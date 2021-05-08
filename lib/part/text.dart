@@ -8,7 +8,7 @@ part 'text.g.dart';
 
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PText extends PPart {
-  static  const String defaultReadTrait ='text-default';
+  static  const String defaultReadTrait ='text-read-default';
   static const String heading1='text-heading-1';
   static const String heading2='text-heading-2';
   static const String heading3='text-heading-3';

@@ -156,7 +156,7 @@ class PPanelLayout {
   final PPadding padding;
   final double width;
 
-  const PPanelLayout({this.padding = const PPadding(), this.width=150});
+  const PPanelLayout({this.padding = const PPadding(), this.width});
 
   factory PPanelLayout.fromJson(Map<String, dynamic> json) => _$PPanelLayoutFromJson(json);
 
