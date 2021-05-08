@@ -7,9 +7,13 @@ import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_client/common/component/nav/navButtonSet.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_client/particle/listViewParticle.dart';
+import 'package:precept_client/particle/queryViewParticle.dart';
 import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
+import 'package:precept_client/trait/list.dart';
 import 'package:precept_client/trait/navigation.dart';
+import 'package:precept_client/trait/query.dart';
 import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/textBox.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
@@ -17,10 +21,12 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/converter/converter.dart';
-import 'package:precept_script/part/list.dart';
 import 'package:precept_script/part/part.dart';
+import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/list.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 
@@ -67,7 +73,7 @@ class ParticleLibrary {
       partConfig: partConfig,
     );
     final editParticle =
-        findParticle(theme, dataBinding, editTrait, partConfig, pageArguments ?? const {});
+    findParticle(theme, dataBinding, editTrait, partConfig, pageArguments ?? const {});
 
     return Part(
       readParticle: readParticle,
@@ -88,13 +94,11 @@ class ParticleLibrary {
     // TODO
   }
 
-  Widget _createParticle(
-    ThemeData theme,
-    Trait trait,
-    ModelConnector connector,
-    PPart partConfig,
-    final Map<String, dynamic> pageArguments,
-  ) {
+  Widget _createParticle(ThemeData theme,
+      Trait trait,
+      ModelConnector connector,
+      PPart partConfig,
+      final Map<String, dynamic> pageArguments,) {
     final particleType = trait.runtimeType;
     switch (particleType) {
       case TextTrait:
@@ -124,6 +128,14 @@ class ParticleLibrary {
             buttonTrait: buttonTrait,
             trait: trait,
             pageArguments: pageArguments ?? const {});
+      case QueryViewReadTrait:
+        return QueryViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: true);
+      case QueryViewEditTrait:
+        return QueryViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: false);
+      case ListViewReadTrait:
+        return ListViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: true);
+      case ListViewEditTrait:
+        return ListViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: false);
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
@@ -138,8 +150,8 @@ class ParticleLibrary {
     return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
   }
 
-  Widget findStaticParticle(
-      ThemeData theme, Trait trait, PPart partConfig, final Map<String, dynamic> pageArguments) {
+  Widget findStaticParticle(ThemeData theme, Trait trait, PPart partConfig,
+      final Map<String, dynamic> pageArguments) {
     final connector = StaticConnector(partConfig.staticData);
     return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
   }
@@ -167,33 +179,37 @@ class ConnectorFactory {
       {@required DataBinding dataBinding, @required PPart config, @required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
 
-    /// If this is a list, we need to lookup the schema from schema.lists, otherwise schema.documents
-    /// We won't actually know the model data type until we look up the schema, but assume that if
-    /// viewDataType is a list, the model type must be as well
-    final PSchemaElement fieldSchema = (viewDataType == List)
-        ? dataBinding.schema.root.lists[config.property]
+    final PSchemaElement fieldSchema = (config is PQueryView)
+        ? dataBinding.activeDataSource.dataProvider.config.schema.queries[config.property]
         : dataBinding.schema.fields[config.property];
     if (fieldSchema == null) {
       String msg =
-          'No schema found for property ${config.property}, have you forgotten to add it to PSchema?';
+          'No schema found for property ${config
+          .property}, have you forgotten to add it to PSchema?';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
     final binding =
-        _binding(parentBinding: parentBinding, schema: fieldSchema, property: config.property);
+    _binding(dataBinding: dataBinding,
+      parentBinding: parentBinding,
+      schema: fieldSchema,
+      property: config.property,);
     final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
     final connector =
-        ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
+    ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
 }
 
-Binding _binding({ModelBinding parentBinding, PField schema, String property}) {
+Binding _binding(
+    {DataBinding dataBinding, ModelBinding parentBinding, PField schema, String property}) {
   switch (schema.runtimeType) {
     case PString:
       return parentBinding.stringBinding(property: property);
     case PList:
       return parentBinding.listBinding(property: property);
+    case PQueryResult:
+      return dataBinding.activeDataSource.temporaryDocument.queryRootBinding.listBinding(property: property);
     default:
       throw UnimplementedError(
           "No defined binding for field data type ${schema.runtimeType.toString()}");

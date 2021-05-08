@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
-import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +13,7 @@ class EditSaveCancel extends StatelessWidget {
 
   final IconData saveIcon;
 
-  final DataSource dataSource;
+  final DataBinding dataBinding;
   
   final _saveKey='save';
   final _cancelKey='cancel';
@@ -27,7 +27,7 @@ class EditSaveCancel extends StatelessWidget {
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
-    this.dataSource,
+    this.dataBinding,
   }) : super(key: key);
 
 
@@ -78,15 +78,15 @@ class EditSaveCancel extends StatelessWidget {
   }
 
   _onCancel(EditState editState) {
-    dataSource.reset();
+    dataBinding.activeDataSource.reset();
     editState.readMode = true;
   }
 
   _onSave(EditState editState) async {
-    bool isValid = dataSource.validate();
+    bool isValid = dataBinding.activeDataSource.validate();
     if (isValid) {
-      dataSource.flushFormsToModel();
-      await dataSource.persist();
+      dataBinding.activeDataSource.flushFormsToModel();
+      await dataBinding.activeDataSource.persist();
       editState.readMode = true;
       logType(this.runtimeType).d('Save completed by $key');
     }

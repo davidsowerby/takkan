@@ -127,13 +127,8 @@ class RootBinding extends ModelBinding {
   final String id;
   final instance = DateTime.now();
 
-  RootBinding(
-      {@required this.data, TemporaryDocument editHost, @required this.id})
-      : super.private(
-            editHost: editHost,
-            property: "-root-",
-            firstLevelKey: null,
-            parent: null);
+  RootBinding({@required this.data, TemporaryDocument editHost, @required this.id})
+      : super.private(editHost: editHost, property: "-root-", firstLevelKey: null, parent: null);
 
   @override
   Map<String, dynamic> read(
@@ -179,4 +174,18 @@ class ModelBinding extends MapBinding<String, dynamic> {
   Map<String, dynamic> emptyValue() {
     return Map<String, dynamic>();
   }
+}
+
+/// A specialised form of [RootBinding] used with the [TemporaryDocument.queryResults]
+class QueryRootBinding extends RootBinding {
+  QueryRootBinding({
+    @required Map<String, dynamic> data,
+    TemporaryDocument editHost,
+    @required String id,
+    @required queryName,
+  }) : super(
+          id: id,
+          data: data,
+          editHost: editHost,
+        );
 }

@@ -27,11 +27,11 @@ class PreceptPage extends StatefulWidget {
       : parentBinding = const NoDataBinding();
 
   @override
-  PreceptPageState createState() => PreceptPageState(config, parentBinding);
+  PreceptPageState createState() => PreceptPageState(config, parentBinding,pageArguments);
 }
 
 class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColumns {
-  PreceptPageState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
+  PreceptPageState(PContent config, DataBinding parentBinding,Map<String, dynamic> pageArguments) : super(config, parentBinding, pageArguments);
 
   @override
   void initState() {

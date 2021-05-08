@@ -80,15 +80,23 @@ abstract class DataBinding {
     activeDataSource.addForm(formKey);
   }
 
-  DataBinding childFromDataSource(PQuery dataSource, RootBinding rootBinding,
+  DataBinding rootFromDataSource(PQuery dataSource, RootBinding rootBinding,
       PDocument documentSchema, DataSource activeDataSource) {
     return RootDataBinding(
         binding: rootBinding, schema: documentSchema, activeDataSource: activeDataSource);
   }
 
+  DataBinding rootFromPreloadedData(DataSource activeDataSource) {
+    return RootDataBinding(
+      binding: activeDataSource.rootBinding,
+      schema: activeDataSource.documentSchema,
+      activeDataSource: activeDataSource,
+    );
+  }
+
   DataBinding child(PContent config, DataBinding parentBinding, DataSource dataSource) {
     return (config.queryIsDeclared)
-        ? parentBinding.childFromDataSource(
+        ? parentBinding.rootFromDataSource(
             config.query, dataSource.rootBinding, dataSource.documentSchema, dataSource)
         : parentBinding.childFromConfig(config);
   }

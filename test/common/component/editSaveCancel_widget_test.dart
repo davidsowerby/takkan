@@ -22,10 +22,12 @@ void main() {
     testWidgets('All ', (WidgetTester tester) async {
       // given
       MockDataSource dataSource = MockDataSource();
+      MockDataBinding dataBinding = MockDataBinding();
+      when(dataBinding.activeDataSource).thenReturn(dataSource);
       final escKey = 'esc';
       final esc = EditSaveCancel(
         key: keys(null,[escKey]),
-        dataSource: dataSource,
+        dataBinding: dataBinding,
       );
       final EditState editState = EditState(readMode: true);
       // when

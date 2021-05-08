@@ -20,14 +20,16 @@ import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
+  static const String preloadDataKey = 'preload-data';
   DataSource dataSource;
   DataBinding dataBinding;
   DataProvider dataProvider;
 
   final PContent config;
   final DataBinding parentBinding;
+  final Map<String, dynamic> pageArguments;
 
-  ContentState(this.config, this.parentBinding) : super();
+  ContentState(this.config, this.parentBinding, this.pageArguments) : super();
 
   @override
   void initState() {
@@ -37,13 +39,22 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       precept.addReadyListener(_onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider);
     }
-    dataSource = DataSource(config);
+    final String dataTable = (config.queryIsDeclared)
+        ? config.query.table
+        : (preloaded)
+            ? pageArguments[preloadDataKey]['__typename'] // TODO: back4app specific
+            : null;
+    dataSource = DataSource(config, dataProvider, preloaded, dataTable);
     if (config is PPart) {
       dataBinding = NoDataBinding();
     } else {
-      dataBinding = parentBinding.child(config, parentBinding, dataSource);
+      dataBinding = (preloaded)
+          ? parentBinding.rootFromPreloadedData(dataSource)
+          : parentBinding.child(config, parentBinding, dataSource);
     }
   }
+
+  bool get preloaded => ((pageArguments != null) && pageArguments[preloadDataKey] != null);
 
   /// Trigger a refresh once Precept fully loaded
   _onPreceptReady() {
@@ -66,7 +77,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       return buildContent(theme);
     }
 
-    if (!config.queryIsDeclared) {
+    if (!config.queryIsDeclared && !preloaded) {
       return buildContent(theme);
     }
 
@@ -77,6 +88,18 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
     /// Make sure we don't start before Precept has finished init
     if (precept.isReady) {
+      /// if data has been passed to the page during construction (usually as a result of navigating
+      /// from a query result list), we don't need to invoke a query, but we want to use the same
+      /// mechanism
+
+      if (preloaded) {
+        return loadData(
+          context,
+          theme,
+          _preloadData(),
+        );
+      }
+
       switch (config.query.returnType) {
         case QueryReturnType.futureSingle:
           return loadData(
@@ -104,6 +127,10 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     } else {
       return CircularProgressIndicator();
     }
+  }
+
+  Future<Map<String, dynamic>> _preloadData() async {
+    return pageArguments[ContentState.preloadDataKey];
   }
 
   /// Loads data with an expected single result
@@ -226,7 +253,10 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       }
       if (element is PPart) {
         child = particleLibrary.partBuilder(
-            partConfig: element, theme: theme, dataBinding: dataBinding, pageArguments: pageArguments);
+            partConfig: element,
+            theme: theme,
+            dataBinding: dataBinding,
+            pageArguments: pageArguments);
       }
       child = addEditControl(widget: child, config: element);
       children.add(child);

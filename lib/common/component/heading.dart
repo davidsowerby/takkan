@@ -4,7 +4,7 @@ import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/component/editSaveCancel.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/locale.dart';
-import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/editState.dart';
@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 /// - [actionButtons], if present, are placed before the 'expand' widget
 /// - [showEditSave] can be set to false to override the default behaviour of showing the edit/save icons.
 /// These icons are supplied by a [EditSaveCancel] widget when [EditState.canEdit] is true.
-/// - [dataSource] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
+/// - [dataBinding] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
 class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
@@ -35,13 +35,13 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onAfterSave;
   final bool showEditSave;
   final PPanelHeading config;
-  final DataSource dataSource;
+  final DataBinding dataBinding;
 
   const Heading({
     Key key,
     @required this.config,
     this.headingText,
-    this.dataSource,
+    this.dataBinding,
     this.help,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
@@ -84,7 +84,7 @@ class _HeadingState extends State<Heading> with Interpolator {
       editMode = editState.editMode;
     }
 
-    final List<Widget> actionButtons = List();
+    final List<Widget> actionButtons = List.empty(growable: true);
 
     if (widget.expandable) {
       actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
@@ -124,7 +124,7 @@ class _HeadingState extends State<Heading> with Interpolator {
                     ),
                   Spacer(),
                   if (editable)
-                    EditSaveCancel(key: keys(widget.key, ['esc']), dataSource: widget.dataSource),
+                    EditSaveCancel(key: keys(widget.key, ['esc']), dataBinding: widget.dataBinding),
                   if (actionButtons.isNotEmpty)
                     Row(
                       children: actionButtons,

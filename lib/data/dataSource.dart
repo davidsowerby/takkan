@@ -12,10 +12,10 @@ import 'package:precept_script/schema/schema.dart';
 
 /// The intersection point between application and data.
 ///
-/// Retrieval of data is specified by [config], which specifies both the data required (effectively a Query) and the
-/// [PBackend] to retrieve it from.
+/// Retrieval of data, where required, is specified by a [query] defined within [config].  This query
+/// relates to a specific [DataProvider].  A fully static page does not of course require data at all.
 ///
-/// Holds a copy of the retrieved data in [_temporaryDocument], and notifies listeners
+/// A copy of the retrieved data is held in [_temporaryDocument], and notifies listeners
 /// as the retrieval state changes.  The retrieval state mirrors that used by [FutureBuilder] and [StreamBuilder]
 /// depending on whether [config] requires a Future or Stream in response.
 ///
@@ -24,6 +24,10 @@ import 'package:precept_script/schema/schema.dart';
 /// Once data has been retrieved, [_temporaryDocument.output] is connected to a [RootBinding],
 /// for [DataBinding] instances to connect to.  In this way, [DataBindings] provide a connection chain
 /// from the data source to the element which actually displays the data.
+///
+/// In addition to retrieving data from [query], data may also be passed in [initialData].  This is usually
+/// passed from a page displaying a list of query results. A query is then automatically created so that
+/// data can be refreshed if required.
 ///
 /// When [readMode] is true, the document and therefore pages using it, are read only.
 /// When [canEdit] is true, [readMode] can be changed to false (thus allowing editing) by user action
@@ -38,9 +42,12 @@ class DataSource {
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
   PContent config;
+  final DataProvider dataProvider;
+  final bool preloadedData;
+  final String preloadedTable;
 
   /// [callback] is usually a setState from a StatefulWidget
-  DataSource(PContent config) {
+  DataSource(PContent config, this.dataProvider, this.preloadedData, this.preloadedTable) {
     init(config);
   }
 
@@ -52,11 +59,16 @@ class DataSource {
 
   init(PContent config) {
     this.config = config;
-    if (config.queryIsDeclared) {
+    if (config.queryIsDeclared || preloadedData) {
       _temporaryDocument = inject<TemporaryDocument>();
-      _query = config.query;
       _formKeys = List.empty(growable: true);
-      _documentSchema = config.dataProvider.schema.document(_query.table);
+      if (preloadedData) {
+        /// _query is not set, but should we in case of the need to refresh?  Would have to construct query.
+        _documentSchema = config.dataProvider.schema.document(preloadedTable);
+      } else {
+        _query = config.query;
+        _documentSchema = config.dataProvider.schema.document(_query.table);
+      }
     }
   }
 
@@ -136,5 +148,4 @@ class DataSource {
       fireListeners: fireListeners,
     );
   }
-
 }

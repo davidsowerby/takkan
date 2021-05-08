@@ -38,11 +38,12 @@ class PreceptRouter {
   Route<dynamic> generateRoute(RouteSettings settings, BuildContext context) {
     logType(this.runtimeType)
         .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
-    PRoute preceptRoute = script.routes[settings.name];
+    final PRoute preceptRoute = script.routes[settings.name];
+    final Map<String,dynamic> pageArguments=settings.arguments ?? {};
     if (preceptRoute == null) {
       return _routeNotRecognised(settings);
     }
-    return _route(context, preceptRoute);
+    return _route(context, preceptRoute, pageArguments);
   }
 
   /// Returns the Widget representing the page type specified by [PRoute.page], configured with [route.page]
@@ -50,7 +51,7 @@ class PreceptRouter {
   ///
   /// If a page requires the user to be authenticated, and that has not yet happened, redirects to
   /// the [SignIn] page, which is defined through GetIt injection
-  Route<dynamic> _route(BuildContext context, PRoute route) {
+  Route<dynamic> _route(BuildContext context, PRoute route, Map<String,dynamic> pageArguments) {
     final requiresAuth =
         false; //(route.page.schema == null) ? false : (route.page.schema as PDocument).readRequiresAuth;
     if (requiresAuth) {
@@ -59,12 +60,12 @@ class PreceptRouter {
       if (!dataProviderState.isAuthenticated) {
         _preSignInRoute = route;
         final pageWidget =
-            injectParam<SignInPage>(param1: dataProviderState.dataProvider.config.signInOptions);
+            injectParam<SignInPage>(param1: dataProviderState.dataProvider.config.signInOptions); // TODO: should this also have pageArguments
         return MaterialPageRoute(builder: (_) => pageWidget);
       }
     }
     try {
-      final pageWidget = PreceptPage(config: route.page);
+      final pageWidget = PreceptPage(config: route.page,pageArguments: pageArguments,);
       return MaterialPageRoute(builder: (_) => pageWidget);
     } catch (e) {
       final errorPageWidget = PreceptDefaultErrorPage(

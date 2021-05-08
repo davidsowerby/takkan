@@ -22,13 +22,13 @@ class Panel extends StatefulWidget {
         assert(parentBinding != null);
 
   @override
-  PanelState createState() => PanelState(config, parentBinding);
+  PanelState createState() => PanelState(config, parentBinding,pageArguments);
 }
 
 class PanelState extends ContentState<Panel, PPanel> {
   final formKey =GlobalKey<FormState>();
 
-  PanelState(PContent config, DataBinding parentBinding) : super(config, parentBinding);
+  PanelState(PContent config, DataBinding parentBinding,Map<String, dynamic> pageArguments) : super(config, parentBinding,pageArguments);
   bool expanded;
 
   @override
@@ -54,7 +54,7 @@ class PanelState extends ContentState<Panel, PPanel> {
         config: widget.config.heading,
         headingText: widget.config.caption,
         expandedContent: (es) => _expandedContent(theme, es),
-        dataSource: dataSource,
+        dataBinding: dataBinding,
         openExpanded: true,
       );
     }
@@ -73,4 +73,7 @@ class PanelState extends ContentState<Panel, PPanel> {
           );
     return Container(child: wrapped, width: widget.config.layout.width,);
   }
+
+  @override
+  bool get preloaded => false;
 }

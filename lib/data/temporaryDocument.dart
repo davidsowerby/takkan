@@ -58,6 +58,8 @@ abstract class TemporaryDocument with ChangeNotifier {
 
   Map<String, dynamic> get initialData;
 
+  QueryRootBinding get queryRootBinding;
+
   RootBinding get rootBinding;
 
   Object remove(Object key);
@@ -112,12 +114,16 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   final List<ChangeEntry> _changeList = List.empty(growable: true);
   final Map<String, dynamic> _changes = Map<String, dynamic>();
   final Map<String, dynamic> _initialData = Map<String, dynamic>();
+  final Map<String, List> _queryResults = Map<String, List>();
   final instance = DateTime.now();
   RootBinding _rootBinding;
+  QueryRootBinding _queryBinding;
+
   DocumentId _documentId;
 
   DefaultTemporaryDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
+    _queryBinding = QueryRootBinding(data: _queryResults, editHost: this, id: 'query root');
   }
 
   DocumentId get documentId => _documentId;
@@ -132,6 +138,8 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   Map<String, dynamic> get output => Map.from(_output);
 
   RootBinding get rootBinding => _rootBinding;
+
+  QueryRootBinding get queryRootBinding => _queryBinding;
 
   @override
   Object remove(Object key) {
@@ -260,11 +268,10 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
     _changeList.clear();
   }
 
-  /// A slightly contrived way of holding a list of results returned from a query, but it maintains the
-  /// standard use of bindings to avoid special handling of lists elsewhere.
+  /// Stores query results in [queryResults] with a key of [queryName]
   ///
-  /// The [rootBinding] still points to the base data, with a [ListBinding] pointing to a property
-  /// [queryName], which holds the query results as a list.
+  /// The [QueryRootBinding] (derived from [RootBinding] points [queryResults], and every query result can then be accessed
+  /// using a [ListBinding] with a property of 'queryName'
   ///
   /// Unlike [updateFromSource], a query result is always treated as a fresh data set, even if just
   /// paging a query.
@@ -274,9 +281,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
       {@required String queryName,
       @required List<Map<String, dynamic>> queryResults,
       bool fireListeners = false}) {
-    _initialData.clear();
-    _initialData['query']=queryResults;
-    _output.addAll(_initialData);
+    _queryResults[queryName] = queryResults;
     return this;
   }
 }
