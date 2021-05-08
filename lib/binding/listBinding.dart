@@ -12,7 +12,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,

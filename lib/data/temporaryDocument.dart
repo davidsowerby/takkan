@@ -30,13 +30,13 @@ class ChangeEntry {
 ///
 /// Presents a Map interface to users. When a change to data is made, the first level key that has changed value
 /// is captured in the [changeList].  When a nested change is made (for example to a collection deeper into the document structure),
-/// the [Binding] notifies the [TemporaryDocument] so that the change is recorded.
+/// the [Binding] notifies the [MutableDocument] so that the change is recorded.
 ///
 /// Data is set by calling [createNew] and externally modified by [updateFromSource]
 ///
 ///
 
-abstract class TemporaryDocument with ChangeNotifier {
+abstract class MutableDocument with ChangeNotifier {
   static const String documentTypeProperty = "documentType";
   static const String updatedByUserIdProperty = "updatedByUserId";
   static const String updatedByUserTimestampProperty = "updatedByUserTimestamp";
@@ -78,7 +78,7 @@ abstract class TemporaryDocument with ChangeNotifier {
   /// Updates both [initialData] and [output].
   /// - [initialData] reflects exactly what is received from the source
   /// - [output] reflects what has been received from the source, but with changes reapplied from the [changeList]
-  TemporaryDocument updateFromSource(
+  MutableDocument updateFromSource(
       {@required Map<String, dynamic> source,
       @required DocumentId documentId,
       bool fireListeners = false});
@@ -86,14 +86,14 @@ abstract class TemporaryDocument with ChangeNotifier {
   /// Stores the most recent results (list) of a query.  Standardises use of bindings to access the data
   /// Does not cache paged queries, just holds the most recent page.
   /// Does not attempt to update existing results, simply replaces them
-  TemporaryDocument storeQueryResults({
+  MutableDocument storeQueryResults({
     @required String queryName,
     @required List<Map<String, dynamic>> queryResults,
     bool fireListeners = false,
   });
 
   /// Creates a "new" document from [initialData], clearing any existing data
-  TemporaryDocument createNew({Map<String, dynamic> initialData = const {}});
+  MutableDocument createNew({Map<String, dynamic> initialData = const {}});
 
   void nestedChange(String firstLevelKey);
 
@@ -106,9 +106,9 @@ abstract class TemporaryDocument with ChangeNotifier {
   DocumentId get documentId;
 }
 
-class DefaultTemporaryDocument extends MapBase<String, dynamic>
+class DefaultMutableDocument extends MapBase<String, dynamic>
     with ChangeNotifier
-    implements TemporaryDocument {
+    implements MutableDocument {
   final DateTime timestamp;
   final Map<String, dynamic> _output = Map<String, dynamic>();
   final List<ChangeEntry> _changeList = List.empty(growable: true);
@@ -121,7 +121,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 
   DocumentId _documentId;
 
-  DefaultTemporaryDocument() : timestamp = DateTime.now() {
+  DefaultMutableDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
     _queryBinding = QueryRootBinding(data: _queryResults, editHost: this, id: 'query root');
   }
@@ -186,7 +186,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// override this default
   ///
   /// See also [createNew]
-  TemporaryDocument updateFromSource(
+  MutableDocument updateFromSource(
       {@required Map<String, dynamic> source,
       @required DocumentId documentId,
       bool fireListeners = false}) {
@@ -202,7 +202,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
 
   /// 'Creates' a new document [output], [changes] and [changeList] are cleared, but instances not changed.  This is to
   /// ensure that the [RootBinding] connected to this document remains connected.  All changes are lost.
-  TemporaryDocument createNew({Map<String, dynamic> initialData = const {}}) {
+  MutableDocument createNew({Map<String, dynamic> initialData = const {}}) {
     reset();
     _initialData.clear();
     _initialData.addAll(initialData);
@@ -257,7 +257,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   }
 
   Map get metaData {
-    return _output[TemporaryDocument.metaProperty];
+    return _output[MutableDocument.metaProperty];
   }
 
   @override
@@ -277,7 +277,7 @@ class DefaultTemporaryDocument extends MapBase<String, dynamic>
   /// paging a query.
   ///
   @override
-  TemporaryDocument storeQueryResults(
+  MutableDocument storeQueryResults(
       {@required String queryName,
       @required List<Map<String, dynamic>> queryResults,
       bool fireListeners = false}) {

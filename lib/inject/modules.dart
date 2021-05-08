@@ -30,7 +30,7 @@ libraryInjectionBindings() {
 }
 
 documentInjectionBindings(){
-  getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
+  getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
 }
 
 routerInjectionBindings(){

@@ -11,7 +11,7 @@ import 'package:precept_client/data/temporaryDocument.dart';
 /// If this binding is looked up from a [ListBinding], [index] is used
 /// Either [property] or [index] may be null, but not both.  If both are specified, [property] takes precedence
 abstract class Binding<T> {
-  final TemporaryDocument editHost;
+  final MutableDocument editHost;
   final String firstLevelKey;
   final CollectionBinding parent;
   final String property;
@@ -100,7 +100,7 @@ abstract class CollectionBinding<T> extends Binding<T> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             firstLevelKey: firstLevelKey,
@@ -142,7 +142,7 @@ class DynamicBinding extends Binding<dynamic> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -162,7 +162,7 @@ class BooleanBinding extends Binding<bool> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -182,7 +182,7 @@ class DoubleBinding extends Binding<double> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -212,7 +212,7 @@ class IntBinding extends Binding<int> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -233,7 +233,7 @@ class TableBinding<T> extends ListBinding<Map<String, T>> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,

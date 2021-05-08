@@ -138,7 +138,7 @@ void main() {
     setUpAll(() {
       PMockDataProvider.register();
       getIt.reset();
-      getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
+      getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
       getIt
           .registerSingleton<BorderLibrary>(BorderLibrary(modules: [PreceptBorderLibraryModule()]));

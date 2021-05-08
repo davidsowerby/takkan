@@ -143,7 +143,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       BuildContext context,
       ThemeData theme,
       Future<T> future,
-      TemporaryDocument Function({T source, DataProvider dataProvider, bool fireListeners})
+      MutableDocument Function({T source, DataProvider dataProvider, bool fireListeners})
           storeData) {
     return FutureBuilder<T>(
       future: future,
@@ -189,7 +189,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     );
   }
 
-  Widget streamBuilder(DataProvider backend, TemporaryDocument temporaryDocument) {
+  Widget streamBuilder(DataProvider backend, MutableDocument temporaryDocument) {
     // return StreamBuilder<Data>(
     //     stream: backend.getStream(documentId: null),
     //     initialData: Data(data: {}),
@@ -221,7 +221,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// Updates data and rebuilds using [buildContent]
-  Widget activeBuilder(ThemeData theme, TemporaryDocument temporaryDocument, Data update) {
+  Widget activeBuilder(ThemeData theme, MutableDocument temporaryDocument, Data update) {
     temporaryDocument.updateFromSource(
         source: update.data, documentId: update.documentId, fireListeners: false);
     return buildContent(theme);

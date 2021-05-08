@@ -11,7 +11,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -117,9 +117,9 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
   }
 }
 
-/// Binds to [data], which is typically either from a [TemporaryDocument] for editing, or from a [DocumentSnapshot] in a read only situation.
-/// If data is to be written back to a [TemporaryDocument], [editHost] must not be null.
-/// Bindings can then make the [TemporaryDocument] aware of changes at level below that of the first level keys.
+/// Binds to [data], which is typically either from a [MutableDocument] for editing, or from a [DocumentSnapshot] in a read only situation.
+/// If data is to be written back to a [MutableDocument], [editHost] must not be null.
+/// Bindings can then make the [MutableDocument] aware of changes at level below that of the first level keys.
 /// [id] is primarily used for debugging, to ensure bindings are associated with the correct source
 /// [createIfAbsent] will create a value if not present, but only if [editHost] is not null (because a null [editHost] indicates a read only binding)
 class RootBinding extends ModelBinding {
@@ -127,7 +127,7 @@ class RootBinding extends ModelBinding {
   final String id;
   final instance = DateTime.now();
 
-  RootBinding({@required this.data, TemporaryDocument editHost, @required this.id})
+  RootBinding({@required this.data, MutableDocument editHost, @required this.id})
       : super.private(editHost: editHost, property: "-root-", firstLevelKey: null, parent: null);
 
   @override
@@ -162,7 +162,7 @@ class ModelBinding extends MapBinding<String, dynamic> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -176,11 +176,11 @@ class ModelBinding extends MapBinding<String, dynamic> {
   }
 }
 
-/// A specialised form of [RootBinding] used with the [TemporaryDocument.queryResults]
+/// A specialised form of [RootBinding] used with the [MutableDocument.queryResults]
 class QueryRootBinding extends RootBinding {
   QueryRootBinding({
     @required Map<String, dynamic> data,
-    TemporaryDocument editHost,
+    MutableDocument editHost,
     @required String id,
     @required queryName,
   }) : super(

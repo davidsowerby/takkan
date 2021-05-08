@@ -19,7 +19,7 @@ import 'package:precept_script/schema/schema.dart';
 /// as the retrieval state changes.  The retrieval state mirrors that used by [FutureBuilder] and [StreamBuilder]
 /// depending on whether [config] requires a Future or Stream in response.
 ///
-/// [_temporaryDocument] records all changes in its [TemporaryDocument.changeList]
+/// [_temporaryDocument] records all changes in its [MutableDocument.changeList]
 ///
 /// Once data has been retrieved, [_temporaryDocument.output] is connected to a [RootBinding],
 /// for [DataBinding] instances to connect to.  In this way, [DataBindings] provide a connection chain
@@ -37,7 +37,7 @@ import 'package:precept_script/schema/schema.dart';
 /// to the [_temporaryDocument] prior to saving it.
 ///
 class DataSource {
-  TemporaryDocument _temporaryDocument;
+  MutableDocument _temporaryDocument;
   PQuery _query;
   List<GlobalKey<FormState>> _formKeys;
   PDocument _documentSchema;
@@ -60,7 +60,7 @@ class DataSource {
   init(PContent config) {
     this.config = config;
     if (config.queryIsDeclared || preloadedData) {
-      _temporaryDocument = inject<TemporaryDocument>();
+      _temporaryDocument = inject<MutableDocument>();
       _formKeys = List.empty(growable: true);
       if (preloadedData) {
         /// _query is not set, but should we in case of the need to refresh?  Would have to construct query.
@@ -72,7 +72,7 @@ class DataSource {
     }
   }
 
-  TemporaryDocument get temporaryDocument => _temporaryDocument;
+  MutableDocument get temporaryDocument => _temporaryDocument;
 
   PQuery get query => _query;
 
@@ -87,7 +87,7 @@ class DataSource {
   /// Keys are added through [addForm], this method 'saves' the [Form] data -
   /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
   ///
-  /// Returns true if validation is successful, and form data is saved back [TemporaryDocument]
+  /// Returns true if validation is successful, and form data is saved back [MutableDocument]
   flushFormsToModel() {
     logType(this.runtimeType).d('Flushing forms data to Temporary Document');
     for (GlobalKey<FormState> key in formKeys) {
@@ -126,7 +126,7 @@ class DataSource {
     temporaryDocument.reset();
   }
 
-  TemporaryDocument updateDocument(
+  MutableDocument updateDocument(
       {Map<String, dynamic> source, DataProvider dataProvider, bool fireListeners}) {
     final DocumentId documentId = dataProvider.documentIdFromData(source);
     return _temporaryDocument.updateFromSource(
@@ -136,8 +136,8 @@ class DataSource {
     );
   }
 
-  /// Delegate call to [TemporaryDocument.storeQueryResults]
-  TemporaryDocument storeQueryResults({
+  /// Delegate call to [MutableDocument.storeQueryResults]
+  MutableDocument storeQueryResults({
     @required String queryName,
     @required List<Map<String, dynamic>> queryResults,
     bool fireListeners = false,

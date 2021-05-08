@@ -8,7 +8,7 @@ class StringBinding extends Binding<String> {
       String property,
       int index,
       @required String firstLevelKey,
-      TemporaryDocument editHost})
+      MutableDocument editHost})
       : super.private(
             parent: parent,
             property: property,

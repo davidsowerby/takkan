@@ -13,15 +13,15 @@ import '../../helper/listener.dart';
 
 void main() {
   Map<String, dynamic> data;
-  TemporaryDocument temporaryDocument;
+  MutableDocument temporaryDocument;
   RootBinding rootBinding;
   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
     getIt.reset();
-    getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    temporaryDocument = inject<TemporaryDocument>();
+    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
+    temporaryDocument = inject<MutableDocument>();
     rootBinding =
         RootBinding(id: "-root-", data: data, editHost: temporaryDocument);
     changeListener = ChangeListener();

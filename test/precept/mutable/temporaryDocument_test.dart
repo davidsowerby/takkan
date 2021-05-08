@@ -9,13 +9,13 @@ import '../../helper/listener.dart';
 import '../../helper/mock.dart';
 
 void main() {
-  TemporaryDocument tdoc;
+  MutableDocument tdoc;
   ChangeListener listener;
 
   setUp(() {
     getIt.reset();
-    getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    tdoc = inject<TemporaryDocument>();
+    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
+    tdoc = inject<MutableDocument>();
     listener = ChangeListener();
     tdoc.addListener(listener.listenToChange);
   });
@@ -140,9 +140,9 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
+      getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
       getIt.registerFactory<Toast>(() => MockToast());
-      tdoc = inject<TemporaryDocument>();
+      tdoc = inject<MutableDocument>();
     });
 
   //   test(

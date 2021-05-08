@@ -14,15 +14,15 @@ const String updateValue = "an update";
 
 void main() {
   Map<String, dynamic> data;
-  TemporaryDocument temporaryDocument;
+  MutableDocument temporaryDocument;
   RootBinding rootBinding;
   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
     getIt.reset();
-    getIt.registerFactory<TemporaryDocument>(() => DefaultTemporaryDocument());
-    temporaryDocument = inject<TemporaryDocument>();
+    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
+    temporaryDocument = inject<MutableDocument>();
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
