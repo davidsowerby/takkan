@@ -68,7 +68,7 @@ class PanelState extends ContentState<Panel, PPanel> {
         ? ListView(
             children: children,
           )
-        : Column(
+        : Column(crossAxisAlignment: CrossAxisAlignment.start,
             children: children,
           );
     return Container(child: wrapped, width: widget.config.layout.width,);
