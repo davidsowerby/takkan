@@ -19,8 +19,7 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) {
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     readOnly: json['readOnly'] as bool,
-    controlEdit:
-        _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']),
+    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     readTraitName: json['readTraitName'] as String,
     editTraitName: json['editTraitName'] as String,
   )..version = json['version'] as int;

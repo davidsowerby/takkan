@@ -12,7 +12,7 @@ abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement
 
   Type get modelType;
 
-  PField({this.validations, PPermissions permissions}) : super(permissions:permissions);
+  PField({this.validations, PPermissions permissions}) : super();
 
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> validate(MODEL value, PScript pScript) {

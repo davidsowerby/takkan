@@ -43,7 +43,9 @@ class PSchema extends PSchemaElement {
   final Map<String, PDocument> _documents;
   final Map<String, PQueryResult> queries;
 
-  PSchema({@required Map<String, PDocument> documents, @required this.name, this.queries=const {}}):_documents=documents;
+  PSchema(
+      {@required Map<String, PDocument> documents, @required this.name, this.queries = const {}})
+      : _documents = documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -68,7 +70,8 @@ class PSchema extends PSchemaElement {
   PDocument document(String key) {
     final doc = _documents[key];
     if (doc == null) {
-      String msg = "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
+      String msg =
+          "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
@@ -79,14 +82,12 @@ class PSchema extends PSchemaElement {
 }
 
 abstract class PSchemaElement {
-  final PPermissions permissions;
-
   @JsonKey(ignore: true)
   PSchemaElement _parent;
   @JsonKey(ignore: true)
   String _name;
 
-  PSchemaElement({this.permissions});
+  PSchemaElement();
 
   Map<String, dynamic> toJson();
 
@@ -96,39 +97,69 @@ abstract class PSchemaElement {
   }
 
   PSchemaElement get parent => _parent;
-
 }
 
+/// If a CRUD action only requires that the user is authenticated, specify it in [requiresAuthentication].
+///
+/// If a CRUD action requires that the user has a specific role, specify that role in the appropriate
+/// role list,  [readRoles], [updateRoles], [createRoles], [deleteRoles]
+///
+/// If a role is specified - for example in [readRoles] - there is no need to also specify 'read' in
+/// [requiresAuthentication], provided you use [requiresReadAuthentication]
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPermissions {
-  final Map<String, String> readRoles;
-  final Map<String, String> writeRoles;
+  final List<RequiresAuth> _requiresAuthentication;
+  final List<String> readRoles;
+  final List<String> updateRoles;
+  final List<String> createRoles;
+  final List<String> deleteRoles;
 
-  const PPermissions({this.readRoles=const {}, this.writeRoles=const {}});
+  const PPermissions({
+    List<RequiresAuth> requiresAuthentication = const [],
+    this.readRoles = const [],
+    this.updateRoles = const [],
+    this.createRoles = const [],
+    this.deleteRoles = const [],
+  }) : _requiresAuthentication = requiresAuthentication;
 
   factory PPermissions.fromJson(Map<String, dynamic> json) => _$PPermissionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
+
+  bool get requiresCreateAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.create) ||
+      createRoles.isNotEmpty;
+
+  bool get requiresReadAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.read) ||
+      readRoles.isNotEmpty;
+
+  bool get requiresUpdateAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.update) ||
+      updateRoles.isNotEmpty;
+
+  bool get requiresDeleteAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.delete) ||
+      deleteRoles.isNotEmpty;
 }
 
-/// - [readRequiresAuthentication] can be set to true if a user needs only to be authenticated to read this document.
-/// Does not need to be set if [permissions.readRoles] has at least one entry, as [readRequiresAuth] takes account of roles
-/// - [writeRequiresAuthentication] can be set to true if a user needs only to be authenticated to write this document
-/// Does not need to be set if [permissions.writeRoles] has at least one entry, as [writeRequiresAuth] takes account of roles
-///
+enum RequiresAuth { all, create, read, update, delete }
+
+/// Schema for a 'Class' in Back4App, 'Document' in Firebase
 @JsonSerializable(nullable: true, explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
+  final PPermissions permissions;
   final Map<String, PSchemaElement> fields;
-  final bool readRequiresAuthentication;
-  final bool writeRequiresAuthentication;
 
-  PDocument(
-      {@required this.fields,
-      PPermissions permissions,
-      this.readRequiresAuthentication = false,
-      this.writeRequiresAuthentication = false})
-      : super(permissions: permissions);
+  PDocument({
+    @required this.fields,
+    this.permissions = const PPermissions(),
+  }) : super();
 
   String get name => _name;
 
@@ -144,11 +175,13 @@ class PDocument extends PSchemaElement {
     _name = name;
   }
 
-  bool get readRequiresAuth =>
-      readRequiresAuthentication || (permissions != null && permissions.readRoles.isNotEmpty);
+  bool get requiresCreateAuthentication => permissions.requiresCreateAuthentication;
 
-  bool get writeRequiresAuth =>
-      writeRequiresAuthentication || (permissions != null && permissions.writeRoles.isNotEmpty);
+  bool get requiresReadAuthentication => permissions.requiresReadAuthentication;
+
+  bool get requiresUpdateAuthentication => permissions.requiresUpdateAuthentication;
+
+  bool get requiresDeleteAuthentication => permissions.requiresDeleteAuthentication;
 }
 
 /// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure

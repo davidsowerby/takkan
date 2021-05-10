@@ -23,19 +23,22 @@ Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
 
 PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) {
   return PPermissions(
-    readRoles: (json['readRoles'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
-    writeRoles: (json['writeRoles'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
+    readRoles: (json['readRoles'] as List)?.map((e) => e as String)?.toList(),
+    updateRoles:
+        (json['updateRoles'] as List)?.map((e) => e as String)?.toList(),
+    createRoles:
+        (json['createRoles'] as List)?.map((e) => e as String)?.toList(),
+    deleteRoles:
+        (json['deleteRoles'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
 Map<String, dynamic> _$PPermissionsToJson(PPermissions instance) =>
     <String, dynamic>{
       'readRoles': instance.readRoles,
-      'writeRoles': instance.writeRoles,
+      'updateRoles': instance.updateRoles,
+      'createRoles': instance.createRoles,
+      'deleteRoles': instance.deleteRoles,
     };
 
 PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
@@ -45,16 +48,12 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
     permissions: json['permissions'] == null
         ? null
         : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
-    readRequiresAuthentication: json['readRequiresAuthentication'] as bool,
-    writeRequiresAuthentication: json['writeRequiresAuthentication'] as bool,
   );
 }
 
 Map<String, dynamic> _$PDocumentToJson(PDocument instance) => <String, dynamic>{
       'permissions': instance.permissions?.toJson(),
       'fields': const PSchemaElementMapConverter().toJson(instance.fields),
-      'readRequiresAuthentication': instance.readRequiresAuthentication,
-      'writeRequiresAuthentication': instance.writeRequiresAuthentication,
     };
 
 PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) {
