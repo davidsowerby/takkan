@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/listBinding.dart';
 import 'package:precept_client/binding/mapBinding.dart';
@@ -123,12 +121,7 @@ void main() {
   });
 }
 
-Future<RootBinding> readDataRoot(StateChangeRecorder recorder) async {
-  final db = Firestore.instance;
-  DocumentSnapshot documentSnapshot =
-      await db.collection("test").document("test data").get();
-  return RootBinding(data: documentSnapshot.data, id: "test");
-}
+
 
 class StateChangeRecorder {
   int count = 0;
@@ -139,8 +132,8 @@ class StateChangeRecorder {
   }
 }
 
-class MockDocument extends Mock implements DocumentSnapshot {}
-
+// class MockDocument extends Mock implements DocumentSnapshot {}
+//
 generateData() {
   Map<String, dynamic> data = Map();
   List<int> list = [7, 93];
@@ -153,9 +146,8 @@ generateData() {
   data["table"] = table;
   data["int"] = 23;
   data["double"] = 2.0;
-  data["timestamp"] = Timestamp.fromDate(DateTime(2019, 11, 1));
+  data["timestamp"] = DateTime(2019, 11, 1);
   data["boolean"] = true;
-  data["geopoint"] = GeoPoint(23.13, 17.45);
   data["map"] = {"column0": "cell00"};
   return data;
 }

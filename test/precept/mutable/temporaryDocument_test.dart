@@ -1,12 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
-import '../../helper/mock.dart';
 
 void main() {
   MutableDocument tdoc;
@@ -75,8 +71,7 @@ void main() {
     });
     group("using binding on first level", () {
       test("fires only one change event", () {
-        final stringBinding =
-            tdoc.rootBinding.stringBinding(property: "First level");
+        final stringBinding = tdoc.rootBinding.stringBinding(property: "First level");
         stringBinding.write("something");
         expect(listener.changeCount, 1);
         expect(tdoc.changeList[0].type, ChangeType.update);
@@ -100,15 +95,13 @@ void main() {
       tdoc.updateFromSource(source: originalSource);
 
       // then
-      expect(tdoc.initialData,originalSource);
-
+      expect(tdoc.initialData, originalSource);
 
       // given
       final item1 = tdoc.rootBinding.stringBinding(property: "item1");
       final item2 = tdoc.rootBinding.stringBinding(property: "item2");
       final item3 = tdoc.rootBinding.stringBinding(property: "item3");
       final item4 = tdoc.rootBinding.stringBinding(property: "item4");
-
 
       item1.write("localupdated1");
       item2.write("localupdated2");
@@ -131,56 +124,55 @@ void main() {
       expect(tdoc.initialData, updatedSource);
     });
   });
-
-  group("Saving and updating, using model to ensure response to deep changes",
-      () {
-    DocumentSnapshot documentSnapshot =
-        MockDocumentSnapshot(); // TODO should not be using backend specific entity
-    when(documentSnapshot.data).thenReturn(testData1());
-
-    setUp(() {
-      getIt.reset();
-      getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
-      getIt.registerFactory<Toast>(() => MockToast());
-      tdoc = inject<MutableDocument>();
-    });
-
-  //   test(
-  //       "saving with changesOnly=false, saves all, no documentId uses existing",
-  //       () async {
-  //     // given
-  //     final backend = Backend();
-  //     //when
-  //
-  //     model.peek();
-  //     model.setItem1("item1 amended");
-  //     model.list1.insertRow(2, 12);
-  //     model.list1.deleteRow(0);
-  //     model.map1.intBinding(property: "mapitem2").write(999);
-  //     //then
-  //     await backend.save(
-  //         saveChangesOnly: false,
-  //         documentType: DocumentType.standard,
-  //         data: model.temporaryDocument);
-  //     //expect
-  //     final data = mockBackendDelegate.store;
-  //     expect(data["item1"], "item1 amended");
-  //     expect(data["list1"], [2, 12, 3, 4]);
-  //     expect(data["item2"], 444);
-  //     expect(data["map1"]["mapitem2"], 999);
-  //   });
-  });
 }
 
+// group("Saving and updating, using model to ensure response to deep changes",
+//     () {
+//   DocumentSnapshot documentSnapshot =
+//       MockDocumentSnapshot(); // TODO should not be using backend specific entity
+//   when(documentSnapshot.data).thenReturn(testData1());
+//
+//   setUp(() {
+//     getIt.reset();
+//     getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
+//     getIt.registerFactory<Toast>(() => MockToast());
+//     tdoc = inject<MutableDocument>();
+//   });
 
+//   test(
+//       "saving with changesOnly=false, saves all, no documentId uses existing",
+//       () async {
+//     // given
+//     final backend = Backend();
+//     //when
+//
+//     model.peek();
+//     model.setItem1("item1 amended");
+//     model.list1.insertRow(2, 12);
+//     model.list1.deleteRow(0);
+//     model.map1.intBinding(property: "mapitem2").write(999);
+//     //then
+//     await backend.save(
+//         saveChangesOnly: false,
+//         documentType: DocumentType.standard,
+//         data: model.temporaryDocument);
+//     //expect
+//     final data = mockBackendDelegate.store;
+//     expect(data["item1"], "item1 amended");
+//     expect(data["list1"], [2, 12, 3, 4]);
+//     expect(data["item2"], 444);
+//     expect(data["map1"]["mapitem2"], 999);
+//   });
+//   });
+// }
 
-Map<String, dynamic> testData1() {
-  return {
-    "className": "TestClass",
-    "objectId": "anObject",
-    "item1": "item1",
-    "list1": [1, 2, 3, 4],
-    "map1": {"map1item1": "map1item1", "map1item2": 399},
-    "item2": 444,
-  };
-}
+// Map<String, dynamic> testData1() {
+//   return {
+//     "className": "TestClass",
+//     "objectId": "anObject",
+//     "item1": "item1",
+//     "list1": [1, 2, 3, 4],
+//     "map1": {"map1item1": "map1item1", "map1item2": 399},
+//     "item2": 444,
+//   };
+// }

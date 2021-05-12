@@ -1,26 +1,31 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/component/messagePanel.dart';
 import 'package:precept_client/common/component/text.dart';
 import 'package:precept_client/common/page/layout.dart';
-import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:provider/provider.dart';
 
 const String createPasswordText =
     "If this is a new account, create a password of at least 8 characters, containing at least one letter, one capital letter and one number";
 
 class EmailLoginSection extends StatefulWidget {
   final String passwordHint;
-  final String nextRoute;
+  final String successRoute;
+  final String failureRoute;
+  final DataProvider dataProvider;
 
-  const EmailLoginSection(
-      {Key key, this.passwordHint = "Enter your password", @required this.nextRoute})
-      : super(key: key);
+  const EmailLoginSection({
+    Key key,
+    this.passwordHint = "Enter your password",
+    @required this.successRoute,
+    @required this.failureRoute,
+    @required this.dataProvider,
+  }) : super(key: key);
 
   @override
   _EmailLoginSectionState createState() => _EmailLoginSectionState();
@@ -40,13 +45,13 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
 
   @override
   Widget build(BuildContext context) {
-    final DataProviderState dataProviderState = Provider.of<DataProviderState>(context);
+    final dataProvider = widget.dataProvider;
     final screenSize = MediaQuery.of(context).size;
     final dim = dimensions(screenSize: screenSize);
-    logType(this.runtimeType).d("login status is ${dataProviderState.userState.status}");
-    switch (dataProviderState.userState.status) {
+    logType(this.runtimeType).d("login status is ${dataProvider.userState.status}");
+    switch (dataProvider.userState.status) {
       case SignInStatus.Authenticated:
-        dataProviderState.userState.newToSystem = false;
+        dataProvider.userState.newToSystem = false;
         return Container(
           width: dim.columnWidth,
           height: 200,
@@ -67,7 +72,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
           ),
         );
       case SignInStatus.Registered:
-        dataProviderState.userState.newToSystem = true;
+        dataProvider.userState.newToSystem = true;
         final theme = Theme.of(context);
         return Align(
           alignment: Alignment.topCenter,
@@ -83,7 +88,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(dataProviderState.userState.user.email,
+                  child: Text(dataProvider.user.email,
                       style: theme.textTheme.headline6),
                 ),
                 Padding(
@@ -95,7 +100,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                   ),
                 ),
                 RaisedButton(
-                    child: Text('OK'), onPressed: () => registrationAcknowledged(dataProviderState))
+                    child: Text('OK'), onPressed: () => registrationAcknowledged(dataProvider))
               ],
             ),
           ),
@@ -106,13 +111,13 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
           width: dim.columnWidth,
           height: 300,
           child: (showPasswordBox)
-              ? passwordSection(dataProviderState, dim.columnWidth)
-              : usernameSection(dataProviderState, dim.columnWidth),
+              ? passwordSection(dataProvider, dim.columnWidth)
+              : usernameSection(dataProvider, dim.columnWidth),
         );
     }
   }
 
-  usernameSection(DataProviderState dataProviderState, double columnWidth) {
+  usernameSection(DataProvider dataProvider, double columnWidth) {
     return Column(
       children: <Widget>[
         Container(
@@ -129,7 +134,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
           child: RaisedButton(
             key: keys(widget.key, ['okButton']),
             child: Text('OK'),
-            onPressed: () => checkUsername(dataProviderState.userState),
+            onPressed: () => checkUsername(dataProvider.userState),
           ),
         ),
       ],
@@ -142,7 +147,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     });
   }
 
-  passwordSection(DataProviderState dataProviderState, double columnWidth) {
+  passwordSection(DataProvider dataProvider, double columnWidth) {
     return Container(
       width: columnWidth,
       child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -171,7 +176,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              (dataProviderState.userState.status == SignInStatus.Authentication_Failed)
+              (dataProvider.userState.status == SignInStatus.Authentication_Failed)
                   ? "The password or username is incorrect"
                   : "",
               style: TextStyle(color: Colors.red),
@@ -181,31 +186,34 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
         RaisedButton(
           key: keys(widget.key, ['submitButton']),
           child: Text('Submit'),
-          onPressed: () => submitCredentials(context, dataProviderState),
+          onPressed: () => submitCredentials(context, dataProvider),
         ),
         RaisedButton(
           child: Text("I've forgotten my password"),
-          onPressed: () => forgottenPassword(dataProviderState),
+          onPressed: () => forgottenPassword(dataProvider),
         ),
       ]),
     );
   }
 
-  registrationAcknowledged(DataProviderState dataProviderState) async {
-    await dataProviderState.authenticator.registrationAcknowledged();
-    Navigator.pushNamed(context, widget.nextRoute);
+  registrationAcknowledged(DataProvider dataProvider) async {
+    await dataProvider.authenticator.registrationAcknowledged();
+    Navigator.pushNamed(context, widget.successRoute);
   }
 
   /// Submits credentials for email log in.  A failed login automatically registers a new account (email and password are validated before submission).
   /// This does mean that an account could be incorrectly created
-  submitCredentials(BuildContext context, DataProviderState dataProviderState) async {
-    bool success = await dataProviderState.authenticator.signInByEmail(username: emailController.text, password: passwordController.text);
-    if (success) {
-      Navigator.pushNamed(context, widget.nextRoute);
+  submitCredentials(BuildContext context, DataProvider dataProvider) async {
+    AuthenticationResult result = await dataProvider.authenticator
+        .signInByEmail(username: emailController.text, password: passwordController.text);
+    if (result.success) {
+      Navigator.pushNamed(context, widget.successRoute);
+    }else{
+      logType(this.runtimeType).d("login unsuccessful");
     }
   }
 
-  forgottenPassword(DataProviderState dataProviderState) {
+  forgottenPassword(DataProvider dataProvider) {
     throw UnimplementedError('Forgotten password not implemented');
   }
 }

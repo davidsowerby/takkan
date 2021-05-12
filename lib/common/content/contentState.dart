@@ -61,6 +61,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     setState(() {});
   }
 
+  /// First checks whether this page requires the user to have permissions, as defined in
   Widget buildContent(ThemeData theme) {
     return ChangeNotifierProvider<DataProviderState>(
         create: (_) => DataProviderState(dataProvider), child: assembleContent(theme));

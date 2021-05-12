@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
@@ -7,6 +8,7 @@ import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -27,20 +29,40 @@ class PreceptPage extends StatefulWidget {
       : parentBinding = const NoDataBinding();
 
   @override
-  PreceptPageState createState() => PreceptPageState(config, parentBinding,pageArguments);
+  PreceptPageState createState() => PreceptPageState(config, parentBinding, pageArguments);
 }
 
 class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColumns {
-  PreceptPageState(PContent config, DataBinding parentBinding,Map<String, dynamic> pageArguments) : super(config, parentBinding, pageArguments);
+  PreceptPageState(PContent config, DataBinding parentBinding, Map<String, dynamic> pageArguments)
+      : super(config, parentBinding, pageArguments);
+
+  bool _needsAuthentication = true;
 
   @override
   void initState() {
     super.initState();
+    final requiresAuth =
+    (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
+    final userAuthenticated = dataProvider.authenticator.userState.isAuthenticated;
+    _needsAuthentication = requiresAuth && !userAuthenticated;
+    if (_needsAuthentication) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, 'signIn', arguments: {
+          'returnRoute': config.parent,
+          'signInConfig': dataProvider.config.signInOptions,
+          'dataProvider':dataProvider,
+        });
+      });
+    }
+    logType(this.runtimeType).d("needs authentication: $_needsAuthentication");
   }
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme=Theme.of(context);
+    if (_needsAuthentication){
+      return Center(child: CircularProgressIndicator());
+    }
+    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         actions: [PreceptRefreshButton()],
@@ -53,7 +75,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
   @override
   Widget assembleContent(ThemeData theme) {
     return buildSubContent(
-      theme:theme,
+      theme: theme,
       config: widget.config,
       parentBinding: dataBinding,
       pageArguments: widget.pageArguments,
@@ -100,10 +122,75 @@ class PreceptRefreshButton extends ActionIcon {
     precept.reload();
   }
 
-  const PreceptRefreshButton({
-    Key key,
-    IconData icon = Icons.update,
-    List<Function(BuildContext)> onBefore = const [],
-    List<Function(BuildContext)> onAfter = const [],
-  }) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
+  const PreceptRefreshButton
+
+  (
+
+  {
+
+  Key
+
+  key
+
+  ,
+
+  IconData
+
+  icon
+
+  =
+
+  Icons
+
+      .
+
+  update
+
+  ,
+
+  List
+
+  <
+
+  Function
+
+  (
+
+  BuildContext
+
+  )
+
+  >
+
+  onBefore
+
+  =
+
+  const
+
+  [
+
+  ]
+
+  ,
+
+  List<Function(BuildContext)
+
+  >
+
+  onAfter
+
+  =
+
+  const
+
+  [
+
+  ]
+
+  ,
+}) :
+super
+(
+key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
 }

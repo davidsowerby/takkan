@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/page/signInPage.dart';
-import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_client/user/signInFactory.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:provider/provider.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 /// Router for Precept.
 ///
@@ -38,8 +38,31 @@ class PreceptRouter {
   Route<dynamic> generateRoute(RouteSettings settings, BuildContext context) {
     logType(this.runtimeType)
         .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
+    final Map<String, dynamic> pageArguments = settings.arguments ?? {};
+    if (settings.name == 'signIn') {
+      _preSignInRoute = pageArguments['returnRoute'];
+      final PSignInOptions options = pageArguments['signInConfig'];
+      final DataProvider dataProvider = pageArguments['dataProvider'];
+      final SignInFactory pageFactory = inject<SignInFactory>();
+      final pageWidget = pageFactory.signInPage(
+        options: options,
+        pageArguments: pageArguments,
+        dataProvider: dataProvider,
+      );
+      return MaterialPageRoute(builder: (_) => pageWidget);
+    }
+    if (settings.name == 'emailSignIn') {
+      final factory = inject<EmailSignInFactory>();
+      final DataProvider dataProvider = pageArguments['dataProvider'];
+      final pageWidget = factory.emailSignInPage(
+        successRoute: _preSignInRoute.path,
+        failureRoute: 'tbd',
+        pageArguments: pageArguments,
+        dataProvider: dataProvider,
+      );
+      return MaterialPageRoute(builder: (_) => pageWidget);
+    }
     final PRoute preceptRoute = script.routes[settings.name];
-    final Map<String,dynamic> pageArguments=settings.arguments ?? {};
     if (preceptRoute == null) {
       return _routeNotRecognised(settings);
     }
@@ -51,21 +74,12 @@ class PreceptRouter {
   ///
   /// If a page requires the user to be authenticated, and that has not yet happened, redirects to
   /// the [SignIn] page, which is defined through GetIt injection
-  Route<dynamic> _route(BuildContext context, PRoute route, Map<String,dynamic> pageArguments) {
-    final requiresAuth =
-        false; //(route.page.schema == null) ? false : (route.page.schema as PDocument).readRequiresAuth;
-    if (requiresAuth) {
-      final dataProviderState = Provider.of<DataProviderState>(context, listen: false);
-
-      if (!dataProviderState.isAuthenticated) {
-        _preSignInRoute = route;
-        final pageWidget =
-            injectParam<SignInPage>(param1: dataProviderState.dataProvider.config.signInOptions); // TODO: should this also have pageArguments
-        return MaterialPageRoute(builder: (_) => pageWidget);
-      }
-    }
+  Route<dynamic> _route(BuildContext context, PRoute route, Map<String, dynamic> pageArguments) {
     try {
-      final pageWidget = PreceptPage(config: route.page,pageArguments: pageArguments,);
+      final pageWidget = PreceptPage(
+        config: route.page,
+        pageArguments: pageArguments,
+      );
       return MaterialPageRoute(builder: (_) => pageWidget);
     } catch (e) {
       final errorPageWidget = PreceptDefaultErrorPage(

@@ -6,6 +6,7 @@ import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/themeLookup.dart';
+import 'package:precept_client/user/signInFactory.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/signin/signIn.dart';
 
@@ -23,6 +24,9 @@ commonInjectionBindings() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());
   getIt.registerFactory<Toast>(() => Toast());
   getIt.registerFactory<JsonAssetLoader>(() => DefaultJsonAssetLoader());
+  getIt.registerFactory<SignInFactory>(() => DefaultSignInFactory());
+  getIt.registerFactory<EmailSignInFactory>(() => DefaultEmailSignInFactory());
+
 }
 
 libraryInjectionBindings() {

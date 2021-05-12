@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mockito/mockito.dart';
@@ -16,7 +15,6 @@ class MockBuildOwner extends Mock implements BuildOwner {
   bool get debugBuilding => true;
 }
 
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
 
 class MockToast extends Mock implements Toast {}
 class MockDataSource extends Mock implements DataSource {}
