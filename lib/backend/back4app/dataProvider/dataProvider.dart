@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:precept_back4app_backend/backend/back4app/authenticator/authenticator.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
@@ -10,7 +11,8 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
   Back4AppDataProvider({@required PBack4AppDataProvider config}) : super(config: config);
 
   @override
-  Authenticator<PBack4AppDataProvider> createAuthenticator(PBack4AppDataProvider config) =>
+  Authenticator<PBack4AppDataProvider, ParseUser> createAuthenticator(
+          PBack4AppDataProvider config) =>
       Back4AppAuthenticator(config: config);
 
   @override

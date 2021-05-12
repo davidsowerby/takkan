@@ -35,4 +35,8 @@ class PBack4AppDataProvider extends PDataProvider {
   String get documentBaseUrl => '$serverUrl/classes';
 
   String get idPropertyName => 'objectId';
+
+  String get applicationId => instanceConfig[applicationIdKey];
+
+  String get clientKey => instanceConfig[clientIdKey];
 }
