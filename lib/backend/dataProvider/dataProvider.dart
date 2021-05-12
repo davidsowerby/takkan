@@ -63,6 +63,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   Authenticator get authenticator {
     if (_authenticator == null) {
       _authenticator = createAuthenticator(config);
+      _authenticator.init();
     }
     return _authenticator;
   }
@@ -71,6 +72,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return NoAuthenticator();
   }
 
+  PreceptUser get user=> authenticator.user;
   UserState get userState => authenticator.userState;
 
   Future<Map<String, dynamic>> query(
@@ -252,5 +254,15 @@ class NoAuthenticator extends Authenticator {
   @override
   init() {
     logType(this.runtimeType).i("Authenticator not set");
+  }
+
+  @override
+  PreceptUser preceptUserFromNative(nativeUser) {
+    throw UnimplementedError();
+  }
+
+  @override
+  preceptUserToNative(PreceptUser preceptUser) {
+    throw UnimplementedError();
   }
 }

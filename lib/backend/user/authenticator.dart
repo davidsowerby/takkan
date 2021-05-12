@@ -3,29 +3,44 @@ import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 
-abstract class Authenticator<T extends PDataProvider> {
+abstract class Authenticator<T extends PDataProvider, USER> {
   final UserState _userState = UserState();
+  USER nativeUser;
 
-  Future<bool> registerWithEmail({@required String username,@required  String password}) async {
+  PreceptUser get user => preceptUserFromNative(nativeUser);
+
+  USER preceptUserToNative(PreceptUser preceptUser);
+  PreceptUser preceptUserFromNative(USER nativeUser);
+
+
+  Future<bool> registerWithEmail({@required String username, @required String password}) async {
     _userState.status = SignInStatus.Registering;
-    final result = await doRegisterWithEmail(username:username,password:password);
-    _userState.status=(result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
+    final result = await doRegisterWithEmail(username: username, password: password);
+    _userState.status =
+        (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
     return result.success;
   }
-  Future<AuthenticationResult> doRegisterWithEmail({@required String username,@required  String password});
+
+  Future<AuthenticationResult> doRegisterWithEmail(
+      {@required String username, @required String password});
 
   // TODO: this needs to handle other failures (lost connections etc)
-  Future<bool> signInByEmail({@required String username,@required  String password}) async {
+  Future<AuthenticationResult> signInByEmail(
+      {@required String username, @required String password}) async {
     _userState.status = SignInStatus.Authenticating;
-    final AuthenticationResult result = await doSignInByEmail(username:username,password: password);
+    final AuthenticationResult result =
+        await doSignInByEmail(username: username, password: password);
     if (result.success) {
       _userState.status = SignInStatus.Authenticated;
-      return true;
+      return result;
+    } else {
+      _userState.status = SignInStatus.Authentication_Failed;
+      return result;
     }
-    return false;
   }
 
-  Future<AuthenticationResult> doSignInByEmail({@required String username,@required  String password});
+  Future<AuthenticationResult> doSignInByEmail(
+      {@required String username, @required String password});
 
   Future<bool> requestPasswordReset(PreceptUser user) async {
     final result = await doRequestPasswordReset(user);
@@ -56,9 +71,7 @@ abstract class Authenticator<T extends PDataProvider> {
   Future<bool> doDeRegister(PreceptUser user);
 
   /// Not sure what this is need for :-)
-  registrationAcknowledged(){
-
-  }
+  registrationAcknowledged() {}
 
   /// Implementation specific, may not be needed
   init();
@@ -92,5 +105,5 @@ class AuthenticationResult {
   final String message;
 
   // TODO standardise for all implementations
-  AuthenticationResult({@required this.success,@required this.user, this.errorCode, this.message});
+  AuthenticationResult({@required this.success, @required this.user, this.errorCode, this.message});
 }
