@@ -11,7 +11,7 @@ environment:
 dependencies:
   logger: ^0.9.1
   get_it: ^4.0.2
-  validators: ^2.0.1
+  validators: ^3.0.0
 
 
 dev_dependencies:
