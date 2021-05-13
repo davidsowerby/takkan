@@ -233,8 +233,6 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return '${config.documentEndpoint}/${documentId.path}/${documentId.itemId}';
   }
 
-  Future<List<String>> userRoles();
-
   DocumentId documentIdFromData(Map<String, dynamic> data);
 }
 
@@ -279,6 +277,12 @@ class NoAuthenticator extends Authenticator {
 
   @override
   preceptUserToNative(PreceptUser preceptUser) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<String>> userRoles() {
+    // TODO: implement userRoles
     throw UnimplementedError();
   }
 }
