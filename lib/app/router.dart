@@ -49,7 +49,12 @@ class PreceptRouter {
         pageArguments: pageArguments,
         dataProvider: dataProvider,
       );
-      return MaterialPageRoute(builder: (_) => pageWidget);
+      return MaterialPageRoute(
+          settings: RouteSettings(
+            name: settings.name,
+            arguments: settings.arguments,
+          ),
+          builder: (_) => pageWidget);
     }
     if (settings.name == 'emailSignIn') {
       final factory = inject<EmailSignInFactory>();
@@ -60,7 +65,12 @@ class PreceptRouter {
         pageArguments: pageArguments,
         dataProvider: dataProvider,
       );
-      return MaterialPageRoute(builder: (_) => pageWidget);
+      return MaterialPageRoute(
+          settings: RouteSettings(
+            name: settings.name,
+            arguments: settings.arguments,
+          ),
+          builder: (_) => pageWidget);
     }
     final PRoute preceptRoute = script.routes[settings.name];
     if (preceptRoute == null) {
@@ -80,14 +90,24 @@ class PreceptRouter {
         config: route.page,
         pageArguments: pageArguments,
       );
-      return MaterialPageRoute(builder: (_) => pageWidget);
+      return MaterialPageRoute(
+          settings: RouteSettings(
+            name: route.path,
+            arguments: pageArguments,
+          ),
+          builder: (_) => pageWidget);
     } catch (e) {
       final errorPageWidget = PreceptDefaultErrorPage(
         config: PError(
             message:
                 "Page '${route.page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${route.path}'"),
       ); // TODO message should come from Precept
-      return MaterialPageRoute(builder: (_) => errorPageWidget);
+      return MaterialPageRoute(
+          settings: RouteSettings(
+            name: route.path,
+            arguments: pageArguments,
+          ),
+          builder: (_) => errorPageWidget);
     }
   }
 

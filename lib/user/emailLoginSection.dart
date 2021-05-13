@@ -207,7 +207,9 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     AuthenticationResult result = await dataProvider.authenticator
         .signInByEmail(username: emailController.text, password: passwordController.text);
     if (result.success) {
-      Navigator.pushNamed(context, widget.successRoute);
+      /// Remove the sign in pages from Navigator history
+      Navigator.of(context).popUntil(_notSignInRoute);
+      Navigator.of(context).pushNamed(widget.successRoute);
     }else{
       logType(this.runtimeType).d("login unsuccessful");
     }
@@ -215,5 +217,9 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
 
   forgottenPassword(DataProvider dataProvider) {
     throw UnimplementedError('Forgotten password not implemented');
+  }
+  
+  bool _notSignInRoute(Route route){
+    return !route.settings.name.toLowerCase().contains('signin');
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
@@ -273,6 +274,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     if (config.isStatic == IsStatic.yes) {
       return widget;
     }
+    final PreceptUser user = dataProvider.user;
     return (config.hasEditControl)
         ? ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget)
         : widget;

@@ -42,7 +42,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
   void initState() {
     super.initState();
     final requiresAuth =
-    (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
+        (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
     final userAuthenticated = dataProvider.authenticator.userState.isAuthenticated;
     _needsAuthentication = requiresAuth && !userAuthenticated;
     if (_needsAuthentication) {
@@ -50,7 +50,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
         Navigator.pushNamed(context, 'signIn', arguments: {
           'returnRoute': config.parent,
           'signInConfig': dataProvider.config.signInOptions,
-          'dataProvider':dataProvider,
+          'dataProvider': dataProvider,
         });
       });
     }
@@ -59,7 +59,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
 
   @override
   Widget build(BuildContext context) {
-    if (_needsAuthentication){
+    if (_needsAuthentication) {
       return Center(child: CircularProgressIndicator());
     }
     final ThemeData theme = Theme.of(context);
@@ -122,75 +122,10 @@ class PreceptRefreshButton extends ActionIcon {
     precept.reload();
   }
 
-  const PreceptRefreshButton
-
-  (
-
-  {
-
-  Key
-
-  key
-
-  ,
-
-  IconData
-
-  icon
-
-  =
-
-  Icons
-
-      .
-
-  update
-
-  ,
-
-  List
-
-  <
-
-  Function
-
-  (
-
-  BuildContext
-
-  )
-
-  >
-
-  onBefore
-
-  =
-
-  const
-
-  [
-
-  ]
-
-  ,
-
-  List<Function(BuildContext)
-
-  >
-
-  onAfter
-
-  =
-
-  const
-
-  [
-
-  ]
-
-  ,
-}) :
-super
-(
-key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
+  const PreceptRefreshButton({
+    Key key,
+    IconData icon = Icons.update,
+    List<Function(BuildContext)> onBefore = const [],
+    List<Function(BuildContext)> onAfter = const [],
+  }) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
 }
