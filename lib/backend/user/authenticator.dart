@@ -38,7 +38,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
       return result;
     }
   }
-
+/// Must set [UserState.sessionToken]
   Future<AuthenticationResult> doSignInByEmail(
       {@required String username, @required String password});
 

@@ -60,6 +60,8 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     );
   }
 
+  GraphQLClient get client=>_client;
+
   Authenticator get authenticator {
     if (_authenticator == null) {
       _authenticator = createAuthenticator(config);
@@ -68,11 +70,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return _authenticator;
   }
 
+  String get sessionTokenKey;
+
   Authenticator createAuthenticator(CONFIG config) {
     return NoAuthenticator();
   }
 
-  PreceptUser get user=> authenticator.user;
+  PreceptUser get user => authenticator.user;
+
   UserState get userState => authenticator.userState;
 
   Future<Map<String, dynamic>> query(
@@ -101,6 +106,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Future<Map<String, dynamic>> _query(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    _addSessionToken();
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
@@ -111,6 +117,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Future<List<Map<String, dynamic>>> _queryList(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
+    _addSessionToken();
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
@@ -124,6 +131,13 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
       results.add(e['node']);
     }
     return results;
+  }
+
+  _addSessionToken() {
+    if (authenticator.userState.isAuthenticated) {
+      HttpLink link = _client.link as HttpLink;
+      link.defaultHeaders[sessionTokenKey] = user.sessionToken;
+    }
   }
 
   Future<Map<String, dynamic>> pQuery(
@@ -218,6 +232,8 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   String documentUrl(DocumentId documentId) {
     return '${config.documentEndpoint}/${documentId.path}/${documentId.itemId}';
   }
+
+  Future<List<String>> userRoles();
 
   DocumentId documentIdFromData(Map<String, dynamic> data);
 }
