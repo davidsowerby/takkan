@@ -1,14 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
+import 'package:precept_script/query/query.dart';
 
 class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUser> {
   Parse parse;
-  PBack4AppDataProvider config;
+  final PBack4AppDataProvider config;
+  final Back4AppDataProvider parent;
 
-  Back4AppAuthenticator({@required this.config});
+  Back4AppAuthenticator({@required this.config, this.parent});
 
   init() async {
     parse = await Parse().initialize(
@@ -104,4 +107,29 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
   ParseUser preceptUserToNative(PreceptUser preceptUser) {
     return ParseUser(preceptUser.userName, '?', preceptUser.email);
   }
+
+  @override
+  Future<List<String>> userRoles() async {
+    PGQuery query = PGQuery(
+        name: 'userRoles',
+        table: 'Role',
+        script: userRolesScript,
+        returnType: QueryReturnType.futureList,
+        variables: {'id': user.objectId});
+    final List<Map<String, dynamic>> result = await parent.gQueryList(query: query);
+    final List<String> roles = List.empty(growable: true);
+    result.forEach((element) {
+      roles.add(element['name']);
+    });
+    return roles;
+  }
 }
+
+final userRolesScript = r'''query GetRoles  ($id: ID!) {
+  roles (where: {users: {have: {id:{equalTo: $id}}}}){
+    edges {
+    node{name}
+    }
+    }
+
+}''';
