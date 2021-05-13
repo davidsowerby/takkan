@@ -85,12 +85,18 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
 
   @override
   PreceptUser preceptUserFromNative(ParseUser nativeUser) {
+    if (nativeUser == null) {
+      return PreceptUser.unknownUser();
+    }
     final Map<String, dynamic> json = nativeUser.toJson();
     return PreceptUser(
       firstName: json['firstName'] ?? 'unknown',
       lastName: json['lastName'] ?? 'unknown',
       knownAs: json['name'] ?? json['knownAs'] ?? json['firstName'] ?? 'unknown',
       userName: nativeUser.username,
+      email: json['email'] ?? 'unknown',
+      objectId: json['objectId'],
+      sessionToken: json['sessionToken'],
     );
   }
 
