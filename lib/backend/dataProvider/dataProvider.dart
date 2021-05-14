@@ -286,4 +286,10 @@ class NoAuthenticator extends Authenticator {
     // TODO: implement userRoles
     throw UnimplementedError();
   }
+
+  @override
+  doSignOut() {
+    // TODO: implement doSignOut
+    throw UnimplementedError();
+  }
 }

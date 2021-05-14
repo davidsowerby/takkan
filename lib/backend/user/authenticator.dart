@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_backend/backend/user/userState.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 
 abstract class Authenticator<T extends PDataProvider, USER> {
   final UserState _userState = UserState();
-  final List<String> _userRoles=List.empty(growable: true);
+  final List<String> _userRoles = List.empty(growable: true);
   USER nativeUser;
 
   PreceptUser get user => preceptUserFromNative(nativeUser);
 
   USER preceptUserToNative(PreceptUser preceptUser);
+
   PreceptUser preceptUserFromNative(USER nativeUser);
 
 
@@ -18,9 +20,24 @@ abstract class Authenticator<T extends PDataProvider, USER> {
     _userState.status = SignInStatus.Registering;
     final result = await doRegisterWithEmail(username: username, password: password);
     _userState.status =
-        (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
+    (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
     return result.success;
   }
+
+  Future<bool> signOut() async {
+    if (userState.isAuthenticated) {
+      await doSignOut();
+      userState.status = SignInStatus.Unauthenticated;
+      nativeUser = null;
+      return true;
+    } else {
+      logType(this.runtimeType).i("already logged out");
+      return false;
+    }
+  }
+
+  @protected
+  doSignOut();
 
   Future<AuthenticationResult> doRegisterWithEmail(
       {@required String username, @required String password});
@@ -30,7 +47,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
       {@required String username, @required String password}) async {
     _userState.status = SignInStatus.Authenticating;
     final AuthenticationResult result =
-        await doSignInByEmail(username: username, password: password);
+    await doSignInByEmail(username: username, password: password);
     if (result.success) {
       _userState.status = SignInStatus.Authenticated;
       await _loadUserRoles();
@@ -48,7 +65,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
 
   Future<List<String>> loadUserRoles();
 
-/// Must set [UserState.sessionToken]
+  /// Must set [UserState.sessionToken]
   Future<AuthenticationResult> doSignInByEmail(
       {@required String username, @required String password});
 
@@ -87,6 +104,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   init();
 
   UserState get userState => _userState;
+
   List<String> get userRoles => _userRoles;
 }
 
