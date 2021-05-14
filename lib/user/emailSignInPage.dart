@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_client/user/emailLoginSection.dart';
+import 'package:precept_client/user/userState.dart';
+import 'package:provider/provider.dart';
 
 class EmailSignInPage extends StatelessWidget {
   static const String emailHintText =
@@ -23,23 +25,30 @@ class EmailSignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return ChangeNotifierProvider<UserState>(
+      create: (_) => UserState(dataProvider.authenticator),
+      child: Scaffold(
         // pageTitle: "Login / Register",
         body: Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Align(
-          alignment: Alignment.topCenter,
-          child: ListView(children: <Widget>[
-            Text('App Name Here'),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: EmailLoginSection(
-                successRoute: successRoute,
-                failureRoute: failureRoute,
-                dataProvider: dataProvider,
-              ),
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ListView(
+              children: <Widget>[
+                Text('App Name Here'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: EmailLoginSection(
+                    successRoute: successRoute,
+                    failureRoute: failureRoute,
+                    dataProvider: dataProvider,
+                  ),
+                ),
+              ],
             ),
-          ])),
-    ));
+          ),
+        ),
+      ),
+    );
   }
 }

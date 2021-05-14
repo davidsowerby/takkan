@@ -44,7 +44,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
     super.initState();
     final requiresAuth =
         (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
-    final userAuthenticated = dataProvider.authenticator.userState.isAuthenticated;
+    final userAuthenticated = dataProvider.authenticator.isAuthenticated;
     _needsAuthentication = requiresAuth && !userAuthenticated;
     if (_needsAuthentication) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -81,7 +81,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
 
   _doSignOut(BuildContext context) async{
     if (dataProvider!=null){
-      if(dataProvider.userState.isAuthenticated){
+      if(dataProvider.authenticator.isAuthenticated){
         await dataProvider.authenticator.signOut();
         Navigator.of(context).pushNamed("/");
       }

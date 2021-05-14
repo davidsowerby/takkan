@@ -11,6 +11,7 @@ import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_client/library/particleLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
+import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -259,6 +260,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
             dataBinding: dataBinding,
             pageArguments: pageArguments);
       }
+      child= addUserState(widget: child, config: config);
       child = addEditControl(widget: child, config: element);
       children.add(child);
     }
@@ -267,6 +269,15 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   Widget layout({List<Widget> children, Size screenSize, CONFIG config});
+
+  addUserState({@required Widget widget, @required PCommon config}) {
+    if (config.dataProviderIsDeclared) {
+      return ChangeNotifierProvider<UserState>(
+          create: (_) => UserState(dataProvider.authenticator), child: widget);
+    } else {
+      return widget;
+    }
+  }
 
   /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
@@ -291,16 +302,15 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     if (dataProvider == null) return false;
     if (dataBinding is NoDataBinding) return false;
 
-
-    if(!dataProvider.userState.isAuthenticated){
-      if (dataBinding.schema.permissions.requiresUpdateAuthentication){
+    if (!dataProvider.authenticator.isAuthenticated) {
+      if (dataBinding.schema.permissions.requiresUpdateAuthentication) {
         return false;
       }
     }
     final userRoles = dataProvider.userRoles;
     final requiredRoles = dataBinding.schema.permissions.updateRoles;
     if (requiredRoles.isEmpty) return true;
-    final bool userHasPermissions= userRoles.any((role) => requiredRoles.contains(role));
+    final bool userHasPermissions = userRoles.any((role) => requiredRoles.contains(role));
     return userHasPermissions;
   }
 
