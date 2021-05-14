@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
-import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 
+import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
+
 abstract class Authenticator<T extends PDataProvider, USER> {
-  final UserState _userState = UserState();
   final List<String> _userRoles = List.empty(growable: true);
+  final List<Function(SignInStatus)> _signInStatusListeners = List.empty(growable: true);
+  SignInStatus _status = SignInStatus.Uninitialized;
   USER nativeUser;
 
   PreceptUser get user => preceptUserFromNative(nativeUser);
@@ -15,19 +17,28 @@ abstract class Authenticator<T extends PDataProvider, USER> {
 
   PreceptUser preceptUserFromNative(USER nativeUser);
 
+  addSignInStatusListener(Function(SignInStatus) listener) {
+    _signInStatusListeners.add(listener);
+  }
+
+  removeSignInStatusListener(Function(SignInStatus) listener) {
+    _signInStatusListeners.remove(listener);
+  }
 
   Future<bool> registerWithEmail({@required String username, @required String password}) async {
-    _userState.status = SignInStatus.Registering;
+    status = SignInStatus.Registering;
     final result = await doRegisterWithEmail(username: username, password: password);
-    _userState.status =
-    (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
+    status = (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
     return result.success;
   }
 
+  /// Signs the user out.  Clears the [_signInStatusListeners], otherwise we could invoke a listener
+  /// that has been disposed
   Future<bool> signOut() async {
-    if (userState.isAuthenticated) {
+    if (isAuthenticated) {
       await doSignOut();
-      userState.status = SignInStatus.Unauthenticated;
+      _signInStatusListeners.clear();
+      status = SignInStatus.Unauthenticated;
       nativeUser = null;
       return true;
     } else {
@@ -35,6 +46,8 @@ abstract class Authenticator<T extends PDataProvider, USER> {
       return false;
     }
   }
+
+  bool get isAuthenticated => _status == SignInStatus.Authenticated;
 
   @protected
   doSignOut();
@@ -45,15 +58,15 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   // TODO: this needs to handle other failures (lost connections etc)
   Future<AuthenticationResult> signInByEmail(
       {@required String username, @required String password}) async {
-    _userState.status = SignInStatus.Authenticating;
+    status = SignInStatus.Authenticating;
     final AuthenticationResult result =
-    await doSignInByEmail(username: username, password: password);
+        await doSignInByEmail(username: username, password: password);
     if (result.success) {
-      _userState.status = SignInStatus.Authenticated;
+      status = SignInStatus.Authenticated;
       await _loadUserRoles();
       return result;
     } else {
-      _userState.status = SignInStatus.Authentication_Failed;
+      status = SignInStatus.Authentication_Failed;
       return result;
     }
   }
@@ -71,7 +84,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
 
   Future<bool> requestPasswordReset(PreceptUser user) async {
     final result = await doRequestPasswordReset(user);
-    if (result) _userState.status = SignInStatus.Reset_Requested;
+    if (result) _status == SignInStatus.Reset_Requested;
     return result;
   }
 
@@ -87,11 +100,9 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   Future<bool> doUpdateUser(PreceptUser user);
 
   Future<bool> deRegister(PreceptUser user) async {
-    _userState.status = SignInStatus.Removing_Registration;
+    status = SignInStatus.Removing_Registration;
     final result = await doDeRegister(user);
-    _userState.status = (result)
-        ? _userState.status = SignInStatus.Registration_Removed
-        : SignInStatus.Uninitialized;
+    status = (result) ? status = SignInStatus.Registration_Removed : SignInStatus.Uninitialized;
     return result;
   }
 
@@ -103,9 +114,20 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   /// Implementation specific, may not be needed
   init();
 
-  UserState get userState => _userState;
+  SignInStatus get status => _status;
+
+  set status(value) {
+    _status = value;
+    notifyStatusListeners();
+  }
 
   List<String> get userRoles => _userRoles;
+
+  notifyStatusListeners() {
+    _signInStatusListeners.forEach((element) {
+      element(status);
+    });
+  }
 }
 
 enum SignInStatus {

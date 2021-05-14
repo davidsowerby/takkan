@@ -8,12 +8,13 @@ import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
-import 'package:precept_backend/backend/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
+
+import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
 
 /// The layer between the client and server.
 ///
@@ -79,7 +80,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   PreceptUser get user => authenticator.user;
 
-  UserState get userState => authenticator.userState;
+  SignInStatus get authStatus => authenticator.status;
 
   Future<Map<String, dynamic>> query(
       {PQuery query, String script, Map<String, dynamic> pageArguments = const {}}) async {
@@ -135,7 +136,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   }
 
   _addSessionToken() {
-    if (authenticator.userState.isAuthenticated) {
+    if (authenticator.isAuthenticated) {
       HttpLink link = _client.link as HttpLink;
       link.defaultHeaders[sessionTokenKey] = user.sessionToken;
     }
