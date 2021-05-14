@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
@@ -270,14 +269,39 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   Widget layout({List<Widget> children, Size screenSize, CONFIG config});
 
   /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
+  /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
+  /// see [_canEdit]
   Widget addEditControl({@required Widget widget, @required PCommon config}) {
     if (config.isStatic == IsStatic.yes) {
       return widget;
     }
-    final PreceptUser user = dataProvider.user;
+
     return (config.hasEditControl)
-        ? ChangeNotifierProvider<EditState>(create: (_) => EditState(), child: widget)
+        ? ChangeNotifierProvider<EditState>(
+            create: (_) => EditState(canEdit: _canEdit()), child: widget)
         : widget;
+  }
+
+  /// Returns false if there is no [dataProvider], as it does not make sense to edit something that
+  /// cannot be saved.
+  /// If the user has not authenticated, and the schema requires authentication for update,
+  /// false is returned
+  /// True is then returned if the user has any of the roles specified in the schema
+  _canEdit() {
+    if (dataProvider == null) return false;
+    if (dataBinding is NoDataBinding) return false;
+
+
+    if(!dataProvider.userState.isAuthenticated){
+      if (dataBinding.schema.permissions.requiresUpdateAuthentication){
+        return false;
+      }
+    }
+    final userRoles = dataProvider.userRoles;
+    final requiredRoles = dataBinding.schema.permissions.updateRoles;
+    if (requiredRoles.isEmpty) return true;
+    final bool userHasPermissions= userRoles.any((role) => requiredRoles.contains(role));
+    return userHasPermissions;
   }
 
   /// [formKey] must be provided from outside the [build] method
