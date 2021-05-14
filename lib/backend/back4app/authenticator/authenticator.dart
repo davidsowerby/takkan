@@ -109,7 +109,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
   }
 
   @override
-  Future<List<String>> userRoles() async {
+  Future<List<String>> loadUserRoles() async {
     PGQuery query = PGQuery(
         name: 'userRoles',
         table: 'Role',
