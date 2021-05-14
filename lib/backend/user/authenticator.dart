@@ -5,7 +5,7 @@ import 'package:precept_script/data/provider/dataProvider.dart';
 
 abstract class Authenticator<T extends PDataProvider, USER> {
   final UserState _userState = UserState();
-  final List<String> _roles=List.empty(growable: true);
+  final List<String> _userRoles=List.empty(growable: true);
   USER nativeUser;
 
   PreceptUser get user => preceptUserFromNative(nativeUser);
@@ -42,11 +42,11 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   }
 
   _loadUserRoles() async {
-    final List<String> roles = await userRoles();
-    _roles.addAll(roles);
+    final List<String> roles = await loadUserRoles();
+    _userRoles.addAll(roles);
   }
 
-  Future<List<String>> userRoles();
+  Future<List<String>> loadUserRoles();
 
 /// Must set [UserState.sessionToken]
   Future<AuthenticationResult> doSignInByEmail(
@@ -87,7 +87,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   init();
 
   UserState get userState => _userState;
-  List<String> get roles => _roles;
+  List<String> get userRoles => _userRoles;
 }
 
 enum SignInStatus {

@@ -61,6 +61,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   }
 
   GraphQLClient get client=>_client;
+  List<String> get userRoles => authenticator.userRoles;
 
   Authenticator get authenticator {
     if (_authenticator == null) {
@@ -281,7 +282,7 @@ class NoAuthenticator extends Authenticator {
   }
 
   @override
-  Future<List<String>> userRoles() {
+  Future<List<String>> loadUserRoles() {
     // TODO: implement userRoles
     throw UnimplementedError();
   }
