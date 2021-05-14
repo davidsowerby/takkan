@@ -43,10 +43,8 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
     }
   }
 
-// TODO: should ignore call if already logged out, but log it
-  Future<void> signOut() async {
+  Future<void> doSignOut() async {
     await nativeUser.logout();
-    nativeUser = null;
   }
 
   @override
