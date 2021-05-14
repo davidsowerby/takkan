@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/action/actionIcon.dart';
 import 'package:precept_client/common/content/contentState.dart';
@@ -65,11 +66,26 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        actions: [PreceptRefreshButton()],
+        actions: [
+          PreceptRefreshButton(),
+          IconButton(
+            icon: Icon(FontAwesomeIcons.signOutAlt),
+            onPressed: () => _doSignOut(context),
+          )
+        ],
         title: Text(widget.config.title),
       ),
       body: doBuild(context, theme, dataSource, widget.config, widget.pageArguments),
     );
+  }
+
+  _doSignOut(BuildContext context) async{
+    if (dataProvider!=null){
+      if(dataProvider.userState.isAuthenticated){
+        await dataProvider.authenticator.signOut();
+        Navigator.of(context).pushNamed("/");
+      }
+    }
   }
 
   @override
