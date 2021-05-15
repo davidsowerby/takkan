@@ -32,6 +32,11 @@ class PanelState extends ContentState<Panel, PPanel> {
   bool expanded;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme=Theme.of(context);
     return doBuild(context, theme,dataSource, widget.config, widget.pageArguments);

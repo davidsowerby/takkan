@@ -22,40 +22,23 @@ import 'package:provider/provider.dart';
 
 abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
   static const String preloadDataKey = 'preload-data';
-  DataSource dataSource;
-  DataBinding dataBinding;
-  DataProvider dataProvider;
 
-  final PContent config;
-  final DataBinding parentBinding;
-  final Map<String, dynamic> pageArguments;
+  final ContentStateBindings stateObject;
 
-  ContentState(this.config, this.parentBinding, this.pageArguments) : super();
+  ContentState(
+    PContent config,
+    DataBinding parentBinding,
+    Map<String, dynamic> pageArguments,
+  )   : stateObject = ContentStateBindings(config, parentBinding, pageArguments),
+        super();
 
   @override
   void initState() {
     super.initState();
-    if (config.dataProvider != null) {
-      /// Call is not actioned if Precept already in ready state
-      precept.addReadyListener(_onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
-    }
-    final String dataTable = (config.queryIsDeclared)
-        ? config.query.table
-        : (preloaded)
-            ? pageArguments[preloadDataKey]['__typename'] // TODO: back4app specific
-            : null;
-    dataSource = DataSource(config, dataProvider, preloaded, dataTable);
-    if (config is PPart) {
-      dataBinding = NoDataBinding();
-    } else {
-      dataBinding = (preloaded)
-          ? parentBinding.rootFromPreloadedData(dataSource)
-          : parentBinding.child(config, parentBinding, dataSource);
-    }
+    stateObject.init(_onPreceptReady);
   }
 
-  bool get preloaded => ((pageArguments != null) && pageArguments[preloadDataKey] != null);
+
 
   /// Trigger a refresh once Precept fully loaded
   _onPreceptReady() {
@@ -260,7 +243,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
             dataBinding: dataBinding,
             pageArguments: pageArguments);
       }
-      child= addUserState(widget: child, config: config);
+      child = addUserState(widget: child, config: config);
       child = addEditControl(widget: child, config: element);
       children.add(child);
     }
@@ -320,19 +303,50 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     dataBinding.addForm(formKey);
     return Form(key: formKey, child: content);
   }
+
+  DataBinding get dataBinding=>stateObject.dataBinding;
+  DataProvider get dataProvider=>stateObject.dataProvider;
+  bool get preloaded=> stateObject.preloaded;
+  Map<String,dynamic> get pageArguments=>stateObject.pageArguments;
+  DataSource get dataSource => stateObject.dataSource;
+  PContent get config=>stateObject.config;
 }
 
-class SnapshotBuilder {
-  final List<Data> snapshot;
+/// A wrapper to hold all the state associated with [ContentState].  This is passed to the
+/// [PartLibrary] so that widgets provided through the library can access the state.
+class ContentStateBindings {
+  DataSource dataSource;
+  DataBinding dataBinding;
+  DataProvider dataProvider;
+
   final PContent config;
+  final DataBinding parentBinding;
+  final Map<String, dynamic> pageArguments;
+  final DateTime timestamp=DateTime.now();
 
-  const SnapshotBuilder(this.snapshot, this.config);
+  ContentStateBindings(this.config, this.parentBinding, this.pageArguments);
 
-  buildItem(BuildContext context, int index, PContent config) {}
-}
+  init(Function() _onPreceptReady){
+    if (config.dataProvider != null) {
+      /// Call is not actioned if Precept already in ready state
+      precept.addReadyListener(_onPreceptReady);
+      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+    }
+    final String dataTable = (config.queryIsDeclared)
+        ? config.query.table
+        : (preloaded)
+        ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
+        : null;
+    dataSource = DataSource(config, dataProvider, preloaded, dataTable);
+    if (config is PPart) {
+      dataBinding = NoDataBinding();
+    } else {
+      dataBinding = (preloaded)
+          ? parentBinding.rootFromPreloadedData(dataSource)
+          : parentBinding.child(config, parentBinding, dataSource);
+    }
+  }
 
-/// A wrapper to hold all the state associated with [ContentState].  This is passed to the 
-/// [PartLibrary] so that widgets can access the state.
-class ContentStateObject{
-  
+  /// Preloaded data is held at page level
+  bool get preloaded =>  ((config is PPage) && (pageArguments != null) && pageArguments[ContentState.preloadDataKey] != null);
 }
