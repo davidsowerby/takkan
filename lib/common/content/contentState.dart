@@ -8,7 +8,7 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/library/particleLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/user/userState.dart';
@@ -254,7 +254,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         );
       }
       if (element is PPart) {
-        child = particleLibrary.partBuilder(
+        child = partLibrary.partBuilder(
             partConfig: element,
             theme: theme,
             dataBinding: dataBinding,
@@ -329,4 +329,10 @@ class SnapshotBuilder {
   const SnapshotBuilder(this.snapshot, this.config);
 
   buildItem(BuildContext context, int index, PContent config) {}
+}
+
+/// A wrapper to hold all the state associated with [ContentState].  This is passed to the 
+/// [PartLibrary] so that widgets can access the state.
+class ContentStateObject{
+  
 }

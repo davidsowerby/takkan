@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/library/particleLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/script/common.dart';
@@ -21,7 +21,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 ///
 /// A [readParticle] is always required, and is displayed when in read mode (or the data is static).
 /// The [editParticle] is displayed when in edit mode.
-/// Both [readParticle] and [editParticle] are constructed by a call to [ParticleLibrary.partBuilder]
+/// Both [readParticle] and [editParticle] are constructed by a call to [PartLibrary.partBuilder]
 ///
 /// If [singleParticle] is true, it signifies that particle makes its own modification in response to
 /// the current edit state.  In other words, it takes care of its own presentation when in either edit or read mode.

@@ -30,14 +30,14 @@ import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 
-ParticleLibrary _particleLibrary = ParticleLibrary();
+PartLibrary _partLibrary = PartLibrary();
 
-ParticleLibrary get particleLibrary => _particleLibrary;
+PartLibrary get partLibrary => _partLibrary;
 
-class ParticleLibrary {
+class PartLibrary {
   final Map<Type, Widget Function(PPart, ModelConnector)> entries = Map();
 
-  ParticleLibrary();
+  PartLibrary();
 
   /// Builds and returns a [Part] from the current [partConfig].  Particle instances are created,
   /// and configured according to the [theme].  This allows the [Part] to be configured once on construction,

@@ -4,7 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/inject/modules.dart';
-import 'package:precept_client/library/particleLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
@@ -131,7 +131,7 @@ class WidgetTestTree {
 class KitchenSinkTest {
   PScript init({PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
-    particleLibrary.init();
+    partLibrary.init();
     PMockDataProvider.register();
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {

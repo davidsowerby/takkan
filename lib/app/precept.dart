@@ -4,7 +4,7 @@ import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
-import 'package:precept_client/library/particleLibrary.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
@@ -64,7 +64,7 @@ class Precept {
 
   _doAfterLoad() async {
     await _loadSchemas();
-    particleLibrary.init(entries: _particleLibraryEntries);
+    partLibrary.init(entries: _particleLibraryEntries);
     _isReady = true;
     notifyReadyListeners();
   }
