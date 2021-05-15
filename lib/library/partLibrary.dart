@@ -5,6 +5,7 @@ import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_client/common/component/nav/navButtonSet.dart';
+import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_client/particle/listViewParticle.dart';
@@ -45,7 +46,7 @@ class PartLibrary {
   Part partBuilder({
     @required PPart partConfig,
     @required ThemeData theme,
-    @required DataBinding dataBinding,
+    @required ContentBindings contentBindings,
     final Map<String, dynamic> pageArguments = const {},
   }) {
     final readTrait = traitLibrary.findParticleTrait(
@@ -55,7 +56,7 @@ class PartLibrary {
     );
     final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
         ? findStaticParticle(theme, readTrait, partConfig, pageArguments ?? const {})
-        : findParticle(theme, dataBinding, readTrait, partConfig, pageArguments ?? const {});
+        : findParticle(theme, contentBindings.dataBinding, readTrait, partConfig, pageArguments ?? const {});
 
     /// Either of these conditions mean we do not need an edit particle
     if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
@@ -63,7 +64,7 @@ class PartLibrary {
         readParticle: readParticle,
         config: partConfig,
         pageArguments: pageArguments,
-        parentBinding: dataBinding,
+        parentBinding: contentBindings.dataBinding,
       );
     }
 
@@ -73,14 +74,14 @@ class PartLibrary {
       partConfig: partConfig,
     );
     final editParticle =
-    findParticle(theme, dataBinding, editTrait, partConfig, pageArguments ?? const {});
+    findParticle(theme, contentBindings.dataBinding, editTrait, partConfig, pageArguments ?? const {});
 
     return Part(
       readParticle: readParticle,
       editParticle: editParticle,
       config: partConfig,
       pageArguments: pageArguments,
-      parentBinding: dataBinding,
+      parentBinding: contentBindings.dataBinding,
     );
   }
 

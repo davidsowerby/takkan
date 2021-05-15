@@ -23,19 +23,19 @@ import 'package:provider/provider.dart';
 abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
   static const String preloadDataKey = 'preload-data';
 
-  final ContentStateBindings stateObject;
+  final ContentBindings contentBindings;
 
   ContentState(
     PContent config,
     DataBinding parentBinding,
     Map<String, dynamic> pageArguments,
-  )   : stateObject = ContentStateBindings(config, parentBinding, pageArguments),
+  )   : contentBindings = ContentBindings(config, parentBinding, pageArguments),
         super();
 
   @override
   void initState() {
     super.initState();
-    stateObject.init(_onPreceptReady);
+    contentBindings.init(_onPreceptReady);
   }
 
 
@@ -240,7 +240,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         child = partLibrary.partBuilder(
             partConfig: element,
             theme: theme,
-            dataBinding: dataBinding,
+            contentBindings: contentBindings,
             pageArguments: pageArguments);
       }
       child = addUserState(widget: child, config: config);
@@ -304,17 +304,18 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     return Form(key: formKey, child: content);
   }
 
-  DataBinding get dataBinding=>stateObject.dataBinding;
-  DataProvider get dataProvider=>stateObject.dataProvider;
-  bool get preloaded=> stateObject.preloaded;
-  Map<String,dynamic> get pageArguments=>stateObject.pageArguments;
-  DataSource get dataSource => stateObject.dataSource;
-  PContent get config=>stateObject.config;
+  DataBinding get dataBinding=>contentBindings.dataBinding;
+  DataProvider get dataProvider=>contentBindings.dataProvider;
+  bool get preloaded=> contentBindings.preloaded;
+  Map<String,dynamic> get pageArguments=>contentBindings.pageArguments;
+  DataSource get dataSource => contentBindings.dataSource;
+  PContent get config=>contentBindings.config;
 }
 
-/// A wrapper to hold all the state associated with [ContentState].  This is passed to the
-/// [PartLibrary] so that widgets provided through the library can access the state.
-class ContentStateBindings {
+/// A wrapper to hold all the data related bindings and configuration associated with [ContentState].
+///  This is passed to the [PartLibrary] so that widgets provided through the library can access 
+///  these bindings.
+class ContentBindings {
   DataSource dataSource;
   DataBinding dataBinding;
   DataProvider dataProvider;
@@ -324,7 +325,7 @@ class ContentStateBindings {
   final Map<String, dynamic> pageArguments;
   final DateTime timestamp=DateTime.now();
 
-  ContentStateBindings(this.config, this.parentBinding, this.pageArguments);
+  ContentBindings(this.config, this.parentBinding, this.pageArguments);
 
   init(Function() _onPreceptReady){
     if (config.dataProvider != null) {
