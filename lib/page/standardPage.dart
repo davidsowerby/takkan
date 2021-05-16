@@ -49,7 +49,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
     if (_needsAuthentication) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
         Navigator.pushNamed(context, 'signIn', arguments: {
-          'returnRoute': config.parent,
+          'returnRoute': (config as PPage).route,
           'signInConfig': dataProvider.config.signInOptions,
           'dataProvider': dataProvider,
         });

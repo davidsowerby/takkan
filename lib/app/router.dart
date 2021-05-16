@@ -92,7 +92,7 @@ class PreceptRouter {
       );
       return MaterialPageRoute(
           settings: RouteSettings(
-            name: page.path,
+            name: page.route,
             arguments: pageArguments,
           ),
           builder: (_) => pageWidget);
@@ -100,11 +100,11 @@ class PreceptRouter {
       final errorPageWidget = PreceptDefaultErrorPage(
         config: PError(
             message:
-                "Page '${page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${page.path}'"),
+                "Page '${page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${page.route}'"),
       ); // TODO message should come from Precept
       return MaterialPageRoute(
           settings: RouteSettings(
-            name: page.path,
+            name: page.route,
             arguments: pageArguments,
           ),
           builder: (_) => errorPageWidget);
