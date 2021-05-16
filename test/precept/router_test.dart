@@ -18,7 +18,7 @@ void main() {
       buildInjector();
       // when
       final script = PScript(
-        routes: {'/home': PRoute()},
+        pages: {'/home': PPage()},
       );
       // then
       expect(0,1);

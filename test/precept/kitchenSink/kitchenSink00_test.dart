@@ -18,9 +18,8 @@ import '../../helper/widgetTestTree.dart';
 final PScript kitchenSink00 = PScript(
   name: 'script00',
   isStatic: IsStatic.yes,
-  routes: {
-    '/test': PRoute(
-      page: PPage(
+  pages: {
+    '/test': PPage(
         pageType: Library.simpleKey,
         title: 'Page 1',
         content: [
@@ -47,7 +46,6 @@ final PScript kitchenSink00 = PScript(
           PPart(caption: 'Part 3', staticData: 'Part 3'),
         ],
       ),
-    ),
   },
 );
 
@@ -72,7 +70,7 @@ void main() {
       // when
       final widgetTree = MaterialApp(
           home: PreceptPage(
-        config: script.routes['/test'].page,
+        config: script.pages['/test'],
       ));
       await tester.pumpWidget(widgetTree);
       testTree = WidgetTestTree(script, tester.allWidgets.toList());

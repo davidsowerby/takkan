@@ -31,7 +31,7 @@ import 'package:precept_script/signin/signIn.dart';
 //     );
 ///
 class PreceptRouter {
-  PRoute _preSignInRoute;
+  String _preSignInRoute;
 
   PreceptRouter();
 
@@ -60,7 +60,7 @@ class PreceptRouter {
       final factory = inject<EmailSignInFactory>();
       final DataProvider dataProvider = pageArguments['dataProvider'];
       final pageWidget = factory.emailSignInPage(
-        successRoute: _preSignInRoute.path,
+        successRoute: _preSignInRoute,
         failureRoute: 'tbd',
         pageArguments: pageArguments,
         dataProvider: dataProvider,
@@ -72,27 +72,27 @@ class PreceptRouter {
           ),
           builder: (_) => pageWidget);
     }
-    final PRoute preceptRoute = script.routes[settings.name];
-    if (preceptRoute == null) {
+    final PPage preceptPage = script.pages[settings.name];
+    if (preceptPage == null) {
       return _routeNotRecognised(settings);
     }
-    return _route(context, preceptRoute, pageArguments);
+    return _route(context, preceptPage, pageArguments);
   }
 
-  /// Returns the Widget representing the page type specified by [PRoute.page], configured with [route.page]
+  /// Returns the Widget representing the page type specified by [PRoute.page], configured with [page.page]
   /// If [PageBuilder] throws an exception - perhaps because there is no matching key in the [PageLibrary], an error page is returned.
   ///
   /// If a page requires the user to be authenticated, and that has not yet happened, redirects to
   /// the [SignIn] page, which is defined through GetIt injection
-  Route<dynamic> _route(BuildContext context, PRoute route, Map<String, dynamic> pageArguments) {
+  Route<dynamic> _route(BuildContext context, PPage page, Map<String, dynamic> pageArguments) {
     try {
       final pageWidget = PreceptPage(
-        config: route.page,
+        config: page,
         pageArguments: pageArguments,
       );
       return MaterialPageRoute(
           settings: RouteSettings(
-            name: route.path,
+            name: page.path,
             arguments: pageArguments,
           ),
           builder: (_) => pageWidget);
@@ -100,11 +100,11 @@ class PreceptRouter {
       final errorPageWidget = PreceptDefaultErrorPage(
         config: PError(
             message:
-                "Page '${route.page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${route.path}'"),
+                "Page '${page.pageType}' has not been defined in the PageLibrary, but was requested by route: '${page.path}'"),
       ); // TODO message should come from Precept
       return MaterialPageRoute(
           settings: RouteSettings(
-            name: route.path,
+            name: page.path,
             arguments: pageArguments,
           ),
           builder: (_) => errorPageWidget);
@@ -112,7 +112,7 @@ class PreceptRouter {
   }
 
   hasRoute(String path) {
-    return script.routes.containsKey(path);
+    return script.pages.containsKey(path);
   }
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {

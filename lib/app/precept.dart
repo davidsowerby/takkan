@@ -146,7 +146,7 @@ class Precept {
   _mergeModels(List<PScript> models) {
     String name = models[0].name;
     String id = models[0].id;
-    Map<String, PRoute> routes = Map();
+    Map<String, PPage> pages = Map();
     final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(Map());
     final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(Map());
     IsStatic isStatic = IsStatic.inherited;
@@ -156,7 +156,7 @@ class Precept {
     PTextTrait textTrait;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      if (s.routes != null) routes.addAll(s.routes);
+      if (s.pages != null) pages.addAll(s.pages);
       if (s.conversionErrorMessages != null)
         conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
       if (s.validationErrorMessages != null)
@@ -169,7 +169,7 @@ class Precept {
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
-        routes: routes,
+        pages: pages,
         id: id,
         conversionErrorMessages: conversionErrorMessages,
         validationErrorMessages: validationErrorMessages,
