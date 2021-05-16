@@ -10,8 +10,8 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
   return PScript(
     conversionErrorMessages: ConversionErrorMessages.fromJson(
         json['conversionErrorMessages'] as Map<String, dynamic>),
-    routes: (json['routes'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(k, PRoute.fromJson(e as Map<String, dynamic>)),
+    pages: (json['pages'] as Map<String, dynamic>).map(
+      (k, e) => MapEntry(k, PPage.fromJson(e as Map<String, dynamic>)),
     ),
     name: json['name'] as String,
     query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
@@ -31,7 +31,7 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'panelStyle': instance.panelStyle.toJson(),
     'textTrait': instance.textTrait.toJson(),
     'name': instance.name,
-    'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
+    'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
   };
 
@@ -76,21 +76,6 @@ const _$ControlEditEnumMap = {
   ControlEdit.firstLevelPanels: 'firstLevelPanels',
   ControlEdit.noEdit: 'noEdit',
 };
-
-PRoute _$PRouteFromJson(Map<String, dynamic> json) {
-  return PRoute(
-    page: json['page'] == null
-        ? null
-        : PPage.fromJson(json['page'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-  )..version = json['version'] as int;
-}
-
-Map<String, dynamic> _$PRouteToJson(PRoute instance) => <String, dynamic>{
-      'version': instance.version,
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-      'page': instance.page?.toJson(),
-    };
 
 PPage _$PPageFromJson(Map<String, dynamic> json) {
   return PPage(

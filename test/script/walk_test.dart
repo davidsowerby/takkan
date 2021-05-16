@@ -21,7 +21,7 @@ void main() {
       script.walk([log]);
       // then
 
-      expect(log.calls,['PScript','PRestDataProvider','PRoute','PPage','PPart','PPanel', 'PPanelHeading','PPart']);
+      expect(log.calls,['PScript','PRestDataProvider','PPage','PText','PPanel', 'PPanelHeading','PPart']);
     });
   });
 }

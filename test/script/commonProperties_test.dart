@@ -29,9 +29,8 @@ void main() {
         dataProvider: PRestDataProvider(),
         isStatic: IsStatic.yes,
         query: PGet(),
-        routes: {
-          '': PRoute(
-            page: PPage(
+        pages: {
+          '': PPage(
               controlEdit: ControlEdit.thisAndBelow,
               content: [
                 PPanel(
@@ -42,20 +41,14 @@ void main() {
                 ),
               ],
             ),
-          ),
         },
       );
       // when
        script.init();
       // then
-      final route = script.routes[''];
-      final page = route.page;
+      final page = script.pages[''];
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
-
-      expect(route.isStatic, IsStatic.yes);
-      expect(route.dataProvider, isNotNull);
-      expect(route.query, isNotNull);
 
       expect(page.isStatic, IsStatic.yes);
       expect(page.dataProvider, isNotNull);
@@ -82,9 +75,8 @@ void main() {
     test('defaults, unset', () {
       // given
       final script = PScript(name: 'test',
-          routes: {
-            '/test': PRoute(
-              page: PPage(
+          pages: {
+            '/test': PPage(
                 content: [
                   PPanel(
                     content: [
@@ -93,37 +85,33 @@ void main() {
                   ),
                 ],
               ),
-            )
       });
       // when
 
       script.init();
       // then
-      final route = script.routes['/test'];
-      final page = route.page;
+      final page = script.pages['/test'];
       final panel = page.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
-      expect(route.isStatic, IsStatic.inherited);
-      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
-      expect(route.query, isNull);
+
 
       expect(page.isStatic, IsStatic.inherited);
-      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
+      expect(page.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(page.query, isNull);
       expect(page.controlEdit, ControlEdit.inherited);
       expect(page.queryIsDeclared, false);
       expect(page.dataProviderIsDeclared, false);
 
       expect(panel.isStatic, IsStatic.inherited);
-      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
+      expect(page.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(panel.query, isNull);
       expect(panel.controlEdit, ControlEdit.inherited);
       expect(panel.queryIsDeclared, false);
       expect(panel.dataProviderIsDeclared, false);
 
       expect(part.isStatic, IsStatic.inherited);
-      expect(route.dataProvider, isInstanceOf<PNoDataProvider>());
+      expect(page.dataProvider, isInstanceOf<PNoDataProvider>());
       expect(part.query, isNull);
       expect(part.controlEdit, ControlEdit.inherited);
       expect(part.queryIsDeclared, false);

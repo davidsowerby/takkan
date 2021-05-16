@@ -32,7 +32,7 @@ part 'script.g.dart';
 @JsonSerializable(nullable: false, explicitToJson: true)
 class PScript extends PCommon {
   final String name;
-  final Map<String, PRoute> routes;
+  final Map<String, PPage> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
@@ -42,7 +42,7 @@ class PScript extends PCommon {
   PScript({
     this.conversionErrorMessages = const ConversionErrorMessages(defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(defaultValidationErrorMessages),
-    this.routes = const {},
+    this.pages = const {},
     this.name,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider dataProvider,
@@ -85,14 +85,14 @@ class PScript extends PCommon {
     _scriptValidationMessages = List.empty(growable: true);
     doValidate(_scriptValidationMessages);
 
-    if (routes == null || routes.length == 0) {
+    if (pages == null || pages.length == 0) {
       _scriptValidationMessages
           .add(ValidationMessage(item: this, msg: "must contain at least one component"));
     } else {
-      for (var entry in routes.entries) {
+      for (var entry in pages.entries) {
         if (entry.key.isEmpty) {
           _scriptValidationMessages
-              .add(ValidationMessage(item: this, msg: "PRoute path cannot be an empty String"));
+              .add(ValidationMessage(item: this, msg: "PPage route cannot be an empty String"));
         }
         entry.value.doValidate(_scriptValidationMessages);
       }
@@ -140,14 +140,14 @@ class PScript extends PCommon {
     doInit(this, null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
-  /// Passes call to all components, and sets the components names from their keys in parent
+  /// Passes call to all components, and sets the [PPage.path] the keys in [pages]
   @override
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(script, null, 0);
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
-    for (var entry in routes.entries) {
-      entry.value._path = entry.key;
+    for (var entry in pages.entries) {
+      entry.value.path = entry.key;
 
       /// This must be done first or validation messages get wrong debugId
       entry.value.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
@@ -159,7 +159,7 @@ class PScript extends PCommon {
   /// At each instance, the [ScriptVisitor.step] is invoked
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    for (PRoute entry in routes.values) {
+    for (PPage entry in pages.values) {
       entry.walk(visitors);
     }
   }
@@ -183,66 +183,12 @@ class PScript extends PCommon {
   }
 
   DebugNode get debugNode =>
-      DebugNode(this, List.from(routes.entries.toList().map((e) => (e as PRoute).debugNode)));
-}
-
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PRoute extends PCommon {
-  String _path;
-  final PPage page;
-
-  @JsonKey(ignore: true)
-  PRoute({
-    @required this.page,
-    IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
-    ControlEdit controlEdit = ControlEdit.inherited,
-  }) : super(
-          isStatic: isStatic,
-          dataProvider: dataProvider,
-          controlEdit: controlEdit,
-        );
-
-  factory PRoute.fromJson(Map<String, dynamic> json) => _$PRouteFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PRouteToJson(this);
-
-  DebugNode get debugNode => DebugNode(this, [page.debugNode]);
-
-  doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
-    if (_path == null || _path.isEmpty) {
-      messages.add(ValidationMessage(item: this, msg: "must define a path"));
-    }
-    if (page == null) {
-      messages.add(ValidationMessage(item: this, msg: "must define a page"));
-    } else {
-      page.doValidate(messages);
-    }
-  }
-
-  @override
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (page != null) {
-      page.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    }
-  }
-
-  walk(List<ScriptVisitor> visitors) {
-    super.walk(visitors);
-    page.walk(visitors);
-  }
-
-  @override
-  String get idAlternative => path;
-
-  String get path => _path;
+      DebugNode(this, List.from(pages.entries.toList().map((e) => (e as PPage).debugNode)));
 }
 
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
+/// [path] is set during script initialisation
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage extends PContent {
   final String pageType;
@@ -250,8 +196,10 @@ class PPage extends PContent {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
   final PPageLayout layout;
-
   @JsonKey(ignore: true)
+  String path;
+
+  // @JsonKey(ignore: true)
   PPage({
     this.pageType = 'defaultPage',
     this.scrollable = true,
@@ -276,7 +224,7 @@ class PPage extends PContent {
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
-  PRoute get parent => super.parent as PRoute;
+  PScript get parent => super.parent as PScript;
 
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();

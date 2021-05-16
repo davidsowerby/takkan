@@ -14,7 +14,7 @@ class PSignInOptions {
   final bool gitHub;
 
   const PSignInOptions({
-    this.pageTitle='SignIn / Register',
+    this.pageTitle = 'SignIn / Register',
     this.google = false,
     this.facebook = false,
     this.gitLab = false,
@@ -26,4 +26,43 @@ class PSignInOptions {
   factory PSignInOptions.fromJson(Map<String, dynamic> json) => _$PSignInOptionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSignInOptionsToJson(this);
+}
+
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PSignIn {
+  final PEmailSignIn email;
+  final String successRoute;
+  final String failureRoute;
+
+  const PSignIn({
+    this.email = const PEmailSignIn(),
+    this.successRoute = '',
+    this.failureRoute = 'signInFail',
+  });
+
+  factory PSignIn.fromJson(Map<String, dynamic> json) => _$PSignInFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PSignInToJson(this);
+}
+
+/// An empty String in [successRoute] (the default) will navigate to the user to the page they were
+/// on before signing in.
+@JsonSerializable(nullable: true, explicitToJson: true)
+class PEmailSignIn {
+  final String emailLabel;
+  final String usernameLabel;
+  final String passwordLabel;
+
+  final String submitLabel;
+
+  const PEmailSignIn({
+    this.emailLabel = 'email',
+    this.usernameLabel = 'username',
+    this.passwordLabel = 'password',
+    this.submitLabel = 'Submit',
+  });
+
+  factory PEmailSignIn.fromJson(Map<String, dynamic> json) => _$PEmailSignInFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PEmailSignInToJson(this);
 }

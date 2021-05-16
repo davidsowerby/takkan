@@ -26,13 +26,13 @@ void main() {
       Map<String, dynamic> jsonMap = script.toJson();
       PScript script2 = PScript.fromJson(jsonMap);
 
-      expect(script2.routes.length, 1);
+      expect(script2.pages.length, 1);
       script2.init();
-      final c0 = script2.routes['/'];
+      final c0 = script2.pages['/'];
       expect(c0.path, '/');
-      final p = c0.page;
-      expect(p.title, "Home Page");
-      expect(p.content.length, 2);
+
+      expect(c0.title, "Home Page");
+      expect(c0.content.length, 2);
 
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });
@@ -47,13 +47,12 @@ void main() {
       Map<String, dynamic> jsonMap = script.toJson();
       PScript script2 = PScript.fromJson(jsonMap);
 
-      expect(script2.routes.length, 1);
+      expect(script2.pages.length, 1);
       script2.init();
-      final c0 = script2.routes['/'];
+      final c0 = script2.pages['/'];
       expect(c0.path, '/');
-      final p = c0.page;
-      expect(p.title, "Home Page");
-      expect(p.content.length, 2);
+      expect(c0.title, "Home Page");
+      expect(c0.content.length, 2);
 
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });

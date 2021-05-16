@@ -15,9 +15,8 @@ final kitchenSinkScript = PScript(
       instance: 'dev',
     ),
   ),
-  routes: {
-    '/': PRoute(
-      page: PPage(
+  pages: {
+    '/': PPage(
         title: 'Home Page',
         content: [
           PText(
@@ -44,15 +43,13 @@ final kitchenSinkScript = PScript(
           ),
         ],
       ),
-    ),
   },
 );
 
 final kitchenSinkScriptWithoutDataProvider = PScript(
   name: 'Kitchen Sink',
-  routes: {
-    '/': PRoute(
-      page: PPage(
+  pages: {
+    '/': PPage(
         title: 'Home Page',
         content: [
           PPart(
@@ -80,6 +77,5 @@ final kitchenSinkScriptWithoutDataProvider = PScript(
           ),
         ],
       ),
-    ),
   },
 );

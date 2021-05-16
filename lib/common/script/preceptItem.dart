@@ -66,6 +66,9 @@ class PreceptItem {
       uid = idAlternative;
     }
 
+    if (this is PPage){
+      uid=(this as PPage).path;
+    }
     /// if we still don't have a uid, generate one
     if (uid == null || uid.isEmpty) {
       final type = _widgetTypeFromPreceptType();

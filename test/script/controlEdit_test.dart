@@ -17,9 +17,8 @@ void main() {
     test('defaults', () {
       // given
       final script = PScript(
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               // ignore: missing_required_param
               content: [
                 PPanel(
@@ -35,12 +34,10 @@ void main() {
                 PPart(caption: 'page-part1'),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -51,7 +48,6 @@ void main() {
       script.init();
       // then
       expect(script.controlEdit, ControlEdit.firstLevelPanels);
-      expect(route.controlEdit, ControlEdit.inherited);
       expect(page.controlEdit, ControlEdit.inherited);
       expect(panel1.controlEdit, ControlEdit.inherited);
       expect(panel11.controlEdit, ControlEdit.inherited);
@@ -60,7 +56,6 @@ void main() {
       expect(pagePart.controlEdit, ControlEdit.inherited);
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
@@ -73,9 +68,8 @@ void main() {
       // given
       final script = PScript(
         controlEdit: ControlEdit.panelsOnly,
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               // ignore: missing_required_param
               content: [
                 PPanel(
@@ -91,12 +85,10 @@ void main() {
                 PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -108,7 +100,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, true);
@@ -120,9 +111,8 @@ void main() {
     test('firstLevelPanels with Part override', () {
       // given
       final script = PScript(
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               title: 'title',
               controlEdit: ControlEdit.firstLevelPanels,
               content: [
@@ -139,12 +129,10 @@ void main() {
                 PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -156,7 +144,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
@@ -168,9 +155,8 @@ void main() {
     test('thisOnly does nothing if too high', () {
       // given
       final script = PScript(
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               // ignore: missing_required_param
               content: [
                 PPanel(
@@ -186,12 +172,10 @@ void main() {
                 PPart(caption: 'page-part1'),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -203,7 +187,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
@@ -216,9 +199,8 @@ void main() {
       // given
       final script = PScript(
         controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               // ignore: missing_required_param
               content: [
                 PPanel(
@@ -235,12 +217,10 @@ void main() {
                 PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -252,7 +232,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, true);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
@@ -265,9 +244,8 @@ void main() {
       // given
       final script = PScript(
         controlEdit: ControlEdit.inherited,
-        routes: {
-          '/home': PRoute(
-            page: PPage(
+        pages: {
+          '/home': PPage(
               // ignore: missing_required_param
               content: [
                 PPanel(
@@ -284,12 +262,10 @@ void main() {
                 PPart(caption: 'page-part1'),
               ],
             ),
-          ),
         },
       );
 
-      final route = script.routes['/home'];
-      final page = route.page;
+      final page = script.pages['/home'];
       final panel1 = page.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -301,7 +277,6 @@ void main() {
       // then
 
       expect(script.hasEditControl, false);
-      expect(route.hasEditControl, false);
       expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);
       expect(panel11.hasEditControl, false);

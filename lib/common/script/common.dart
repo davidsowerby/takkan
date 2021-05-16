@@ -95,7 +95,7 @@ class PCommon extends PreceptItem {
       nullable: true,
       includeIfNull: false)
   PQuery _query;
-  @JsonKey(nullable: true, includeIfNull: false)
+  @JsonKey(nullable: true)
   PPanelStyle _panelStyle;
   @JsonKey(nullable: true, includeIfNull: false)
   PTextTrait _textTrait;
@@ -187,7 +187,7 @@ class PCommon extends PreceptItem {
   /// [ControlEdit.noEdit] overrides everything
   setupControlEdit(ControlEdit inherited) {
     // top levels are not visual elements
-    if (this is PScript || this is PRoute) {
+    if (this is PScript ) {
       _hasEditControl = false;
       return;
     }
