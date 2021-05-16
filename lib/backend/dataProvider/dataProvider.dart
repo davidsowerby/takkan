@@ -183,7 +183,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Future<Map<String, dynamic>> getDocument(
       {@required DocumentId documentId, Map<String, dynamic> pageArguments = const {}}) async {
-    final PPQuery q = PPQuery(
+    final PPQuery q = PPQuery(name: 'getDocument',
         table: documentId.path,
         variables: {config.idPropertyName: documentId.itemId},
         types: {config.idPropertyName: 'String!'});

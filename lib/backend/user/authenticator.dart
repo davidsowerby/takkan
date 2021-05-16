@@ -83,9 +83,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
       {@required String username, @required String password});
 
   Future<bool> requestPasswordReset(PreceptUser user) async {
-    final result = await doRequestPasswordReset(user);
-    if (result) _status == SignInStatus.Reset_Requested;
-    return result;
+    throw UnimplementedError();
   }
 
   Future<bool> doRequestPasswordReset(PreceptUser user);
