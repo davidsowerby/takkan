@@ -29,7 +29,7 @@ void main() {
       expect(script2.pages.length, 1);
       script2.init();
       final c0 = script2.pages['/'];
-      expect(c0.path, '/');
+      expect(c0.route, '/');
 
       expect(c0.title, "Home Page");
       expect(c0.content.length, 2);
@@ -50,7 +50,7 @@ void main() {
       expect(script2.pages.length, 1);
       script2.init();
       final c0 = script2.pages['/'];
-      expect(c0.path, '/');
+      expect(c0.route, '/');
       expect(c0.title, "Home Page");
       expect(c0.content.length, 2);
 

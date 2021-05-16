@@ -140,14 +140,14 @@ class PScript extends PCommon {
     doInit(this, null, 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
-  /// Passes call to all components, and sets the [PPage.path] the keys in [pages]
+  /// Passes call to all components, and sets the [PPage.route] the keys in [pages]
   @override
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(script, null, 0);
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
     for (var entry in pages.entries) {
-      entry.value.path = entry.key;
+      entry.value.route = entry.key;
 
       /// This must be done first or validation messages get wrong debugId
       entry.value.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
@@ -188,7 +188,7 @@ class PScript extends PCommon {
 
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
-/// [path] is set during script initialisation
+/// [route] is set during script initialisation
 @JsonSerializable(nullable: true, explicitToJson: true)
 class PPage extends PContent {
   final String pageType;
@@ -197,7 +197,7 @@ class PPage extends PContent {
   final List<PSubContent> content;
   final PPageLayout layout;
   @JsonKey(ignore: true)
-  String path;
+  String route;
 
   // @JsonKey(ignore: true)
   PPage({

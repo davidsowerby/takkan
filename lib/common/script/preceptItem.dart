@@ -67,7 +67,7 @@ class PreceptItem {
     }
 
     if (this is PPage){
-      uid=(this as PPage).path;
+      uid=(this as PPage).route;
     }
     /// if we still don't have a uid, generate one
     if (uid == null || uid.isEmpty) {
