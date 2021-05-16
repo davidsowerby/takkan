@@ -10,11 +10,10 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) {
   return PQueryView(
     titleProperty: json['titleProperty'] as String,
     subtitleProperty: json['subtitleProperty'] as String,
-    itemType:
-        _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']),
-    height: (json['height'] as num)?.toDouble(),
-    tooltip: json['tooltip'] as String,
-    caption: json['caption'] as String,
+    itemType: _$enumDecode(_$PListViewItemTypeEnumMap, json['itemType']),
+    height: (json['height'] as num?)?.toDouble(),
+    tooltip: json['tooltip'] as String?,
+    caption: json['caption'] as String?,
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
@@ -41,36 +40,30 @@ Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
       'itemType': _$PListViewItemTypeEnumMap[instance.itemType],
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$PListViewItemTypeEnumMap = {

@@ -31,16 +31,14 @@ Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
 
 PSignIn _$PSignInFromJson(Map<String, dynamic> json) {
   return PSignIn(
-    email: json['email'] == null
-        ? null
-        : PEmailSignIn.fromJson(json['email'] as Map<String, dynamic>),
+    email: PEmailSignIn.fromJson(json['email'] as Map<String, dynamic>),
     successRoute: json['successRoute'] as String,
     failureRoute: json['failureRoute'] as String,
   );
 }
 
 Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
-      'email': instance.email?.toJson(),
+      'email': instance.email.toJson(),
       'successRoute': instance.successRoute,
       'failureRoute': instance.failureRoute,
     };

@@ -8,8 +8,8 @@ part of 'geoPosition.dart';
 
 GeoPosition _$GeoPositionFromJson(Map<String, dynamic> json) {
   return GeoPosition(
-    latitude: (json['latitude'] as num)?.toDouble(),
-    longitude: (json['longitude'] as num)?.toDouble(),
+    latitude: (json['latitude'] as num).toDouble(),
+    longitude: (json['longitude'] as num).toDouble(),
   );
 }
 
@@ -21,8 +21,8 @@ Map<String, dynamic> _$GeoPositionToJson(GeoPosition instance) =>
 
 GeoLocation _$GeoLocationFromJson(Map<String, dynamic> json) {
   return GeoLocation(
-    latitude: (json['latitude'] as num)?.toDouble(),
-    longitude: (json['longitude'] as num)?.toDouble(),
+    latitude: (json['latitude'] as num).toDouble(),
+    longitude: (json['longitude'] as num).toDouble(),
   );
 }
 

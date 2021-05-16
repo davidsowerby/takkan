@@ -10,20 +10,20 @@ import 'package:precept_script/validation/message.dart';
 /// [listEntryConfig] is only relevant if this content represents a list, and describes how the list entry
 /// should be displayed.  This can be any [PPanel] implementation, but is usually [PNavTile] or [PListTile]
 class PContent extends PCommon {
-  final String caption;
-  final String property;
-  final PPanel listEntryConfig;
+  final String? caption;
+  final String? property;
+  final PPanel? listEntryConfig;
 
   PContent({
     this.caption,
     this.property,
     this.listEntryConfig,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
+    PDataProvider? dataProvider,
+    PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
-    PSchema schema,
-    String id,
+    PSchema? schema,
+    String? id,
   }) : super(
     query: query,
     schema: schema,
@@ -41,13 +41,13 @@ class PContent extends PCommon {
 /// and are therefore unused by a [PPart]
 class PSubContent extends PContent {
   PSubContent({
-    String caption,
-    String property,
+    String? caption,
+    String? property,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
+    PDataProvider? dataProvider,
+    PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
-    String id,
+    String? id,
   }) : super(
     caption: caption,
     property: property,
@@ -101,5 +101,5 @@ class PSubContent extends PContent {
   }
 
   @override
-  String get idAlternative => caption;
+  String? get idAlternative => caption;
 }

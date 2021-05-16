@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'help.g.dart';
 
-@JsonSerializable(nullable: false, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PHelp {
   final String title;
-  final String message;
+  final String? message;
 
-  const PHelp({@required this.title, this.message});
+  const PHelp({required this.title, this.message});
 
   factory PHelp.fromJson(Map<String, dynamic> json) =>
       _$PHelpFromJson(json);

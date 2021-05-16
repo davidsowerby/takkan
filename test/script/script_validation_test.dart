@@ -23,69 +23,69 @@ void main() {
     group('PScript validation', () {
       test('Insufficient components', () {
         // given
-        final script1 = PScript();
+        final script1 = PScript(name: 'A Script');
         // when
         final result = script1.validate();
         // then
 
         expect(result.length, 1);
-        expect(result[0].toString(), 'PScript : Script:0 : must contain at least one component');
+        expect(result[0].toString(), 'PScript : A Script : must contain at least one page');
       });
     });
   });
 
   group('PPage validation', () {
-    test('Must have path and page', () {
+    test('Must have non-empty route', () {
       // given
       final script = PScript(
         name: 'test',
         pages: {
-          '': PPage(),
+          '': PPage(title: 'A page'),
         },
       ); // ignore: missing_required_param
       // when
       final messages = script.validate();
       // then
 
-      expect(messages.length, 2);
+      expect(messages.length, 1);
       expect(messages[0].toString(), 'PScript : test : PPage route cannot be an empty String');
-      expect(messages[1].toString(), 'PPage : test.Page:0 : must define a title');
     });
   });
 
   group('PPage validation', () {
-    test('Must have pageType and title', () {
+    test('Must have non-empty pageType', () {
       // given
       final component = PScript(
+        name: 'A script',
         isStatic: IsStatic.yes,
         pages: {
-          "/home": PPage(pageType: null),
+          "/home": PPage(title: 'a Page title', pageType: ''),
         },
-      ); // ignore: missing_required_param
+      );
 
       // when
       final messages = component.validate();
       // then
 
-      expect(messages.length, 2);
-      expect(messages[0].toString(), 'PPage : Script:0./home : must define a title');
-      expect(messages[1].toString(), 'PPage : Script:0./home : must define a pageType');
+      expect(messages.length, 1);
+      expect(messages[0].toString(), 'PPage : A script./home : must define a non-empty pageType');
     });
 
     test('No errors', () {
       // given
       final component = PScript(
+        name: 'a script',
         dataProvider: PRestDataProvider(
           schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
         pages: {
           "/home": PPage(
-              pageType: "mine",
-              title: "Wiggly",
-              query: PGet(
-                documentId: DocumentId(),
-              ),
+            pageType: "mine",
+            title: "Wiggly",
+            query: PGet(
+              documentId: DocumentId(path: '', itemId: 'x'),
             ),
+          ),
         },
       );
       // when
@@ -100,6 +100,7 @@ void main() {
     test('No errors', () {
       // given
       final component = PScript(
+          name: 'A Script',
           dataProvider: PRestDataProvider(
             configSource: PConfigSource(
               segment: 'back4app',
@@ -112,16 +113,15 @@ void main() {
           ),
           pages: {
             "/home": PPage(
-                pageType: "mine",
-                title: "Wiggly",
-                query: PGet(
-                  // ignore: missing_required_param
-                  documentId: DocumentId(), // ignore: missing_required_param
-                ),
-                content: [
-                  PPanel(property: ''),
-                ],
+              pageType: "mine",
+              title: "Wiggly",
+              query: PGet(
+                documentId: DocumentId(path: '', itemId: 'x'),
               ),
+              content: [
+                PPanel(property: ''),
+              ],
+            ),
           });
       // when
       final messages = component.validate();
@@ -133,16 +133,18 @@ void main() {
     test('any non-static PPanel must be able to access Query', () {
       // given
       final withoutQueryOrDataProvider = PScript(
+        name: 'A Script',
         pages: {
           "/home": PPage(
-              pageType: "mine",
-              title: "Wiggly",
-              content: [PPanel(caption: 'panel1')],
-            ),
+            pageType: "mine",
+            title: "Wiggly",
+            content: [PPanel(caption: 'panel1')],
+          ),
         },
       );
 
       final withoutQuery = PScript(
+        name: 'A Script',
         dataProvider: PRestDataProvider(
           configSource: PConfigSource(
             segment: 'back4app',
@@ -155,14 +157,15 @@ void main() {
         ),
         pages: {
           "/home": PPage(
-              pageType: "mine",
-              title: "Wiggly",
-              content: [PPanel(caption: 'panel1')],
-            ),
+            pageType: "mine",
+            title: "Wiggly",
+            content: [PPanel(caption: 'panel1')],
+          ),
         },
       );
 
       final withQueryAndProvider = PScript(
+        name: 'A Script',
         dataProvider: PRestDataProvider(
           configSource: PConfigSource(
             segment: 'back4app',
@@ -173,18 +176,15 @@ void main() {
             instance: 'dev',
           ),
         ),
-        // ignore: missing_required_param
-
         pages: {
           "/home": PPage(
-              pageType: "mine",
-              title: "Wiggly",
-              query: PGet(
-                // ignore: missing_required_param
-                documentId: DocumentId(), // ignore: missing_required_param
-              ),
-              content: [PPanel(caption: 'panel1')],
+            pageType: "mine",
+            title: "Wiggly",
+            query: PGet(
+              documentId: DocumentId(itemId: 'xx', path: ''),
             ),
+            content: [PPanel(caption: 'panel1')],
+          ),
         },
       );
 
@@ -196,15 +196,15 @@ void main() {
       // then
 
       expect(withoutQueryOrProviderResults, [
-        'PPanel : Script:0./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-        'PPanel : Script:0./home.panel1 : must either be static or have a query defined',
+        'PPanel : A Script./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : A Script./home.panel1 : must either be static or have a query defined',
       ]);
       expect(withoutQueryResults, [
-        'PPanel : Script:0./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
-        'PPanel : Script:0./home.panel1 : must either be static or have a query defined',
+        'PPanel : A Script./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : A Script./home.panel1 : must either be static or have a query defined'
       ]);
       expect(withQueryAndProviderResults, [
-        'PPanel : Script:0./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
+        'PPanel : A Script./home.panel1 : is not static, and must therefore declare a property (which can be an empty String)',
       ]);
     });
   });

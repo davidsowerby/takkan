@@ -30,9 +30,6 @@ class PSchemaElementMapConverter
   @override
   Map<String, dynamic> toJson(Map<String, PSchemaElement> partMap) {
     final outputMap = Map<String, dynamic>();
-    if (partMap == null) {
-      return outputMap;
-    }
     for (var entry in partMap.entries) {
       outputMap[entry.key] = PSchemaElementConverter().toJson(entry.value);
     }

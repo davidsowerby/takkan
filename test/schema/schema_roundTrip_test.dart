@@ -5,7 +5,7 @@ import 'package:precept_script/example/kitchenSinkSchema.dart';
 import 'package:precept_script/schema/schema.dart';
 
 void main() {
-  group('PScript JSON Round trip', () {
+  group('PSchema JSON Round trip', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -18,12 +18,12 @@ void main() {
       PSchema script = kitchenSinkSchema;
 
       // when
-      script.doInit();
+      script.doInit(name: 'A schema',parent: script);
       Map<String, dynamic> jsonMap = script.toJson();
       PSchema script2 = PSchema.fromJson(jsonMap);
 
       expect(script2.documentCount, 2);
-      script2.doInit();
+      script2.doInit(name: 'A schema',parent: script);
       // then
 
 

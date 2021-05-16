@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/particle/particle.dart';
@@ -12,14 +11,14 @@ part 'list.g.dart';
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
 /// level of granularity
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PListRead extends PReadParticle {
-  final PListTile itemConfigAsTile;
-  final PPanel itemConfigAsPanel;
+  final PListTile? itemConfigAsTile;
+  final PPanel? itemConfigAsPanel;
 
   PListRead(
       {String styleName = 'default',
-        bool showCaption,
+        bool showCaption=false,
         this.itemConfigAsTile,
         this.itemConfigAsPanel})
       : super(showCaption: showCaption, styleName: styleName);
@@ -39,11 +38,11 @@ class PListRead extends PReadParticle {
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
 /// level of granularity
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PListEdit  {
-  final PListTile itemConfigAsTile;
-  final PPanel itemConfigAsPanel;
-  PListEdit({String styleName = 'default', bool showCaption, this.itemConfigAsPanel, this.itemConfigAsTile});
+  final PListTile? itemConfigAsTile;
+  final PPanel? itemConfigAsPanel;
+  PListEdit({String styleName = 'default', bool showCaption=false, this.itemConfigAsPanel, this.itemConfigAsTile});
 
   factory PListEdit.fromJson(Map<String, dynamic> json) => _$PListEditFromJson(json);
 
@@ -53,7 +52,7 @@ class PListEdit  {
 }
 
 /// Defines the property names to used to create a Flutter ListTile
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PListTile {
   final String titleProperty;
   final String subTitleProperty;
@@ -67,12 +66,12 @@ class PListTile {
 
 /// Defines the property names to used to create a Flutter ListTile, and a [route] to navigate to
 /// when tapped
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PNavTile extends PListTile {
   final String route;
 
   PNavTile({
-    @required this.route,
+    required this.route,
     String titleProperty = 'title',
     String subTitleProperty = 'subTitle',
   }) : super(

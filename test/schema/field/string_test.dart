@@ -14,7 +14,7 @@ void main() {
 
     test('length', () {
       // given
-      PScript script=PScript();
+      PScript script=PScript(name: 'A script');
       // script.init();
 
       final PString field = PString(

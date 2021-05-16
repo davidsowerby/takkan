@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -6,14 +5,14 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'boolean.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PBoolean extends PField<BooleanValidation, bool> {
-  final bool defaultValue;
+  final bool? defaultValue;
 
   PBoolean({
     this.defaultValue,
-    List<BooleanValidation> validations,
-    PPermissions permissions,
+    List<BooleanValidation> validations=const [],
+    PPermissions? permissions,
   }) : super(
           validations: validations,
           permissions: permissions,
@@ -31,12 +30,12 @@ class PBoolean extends PField<BooleanValidation, bool> {
   }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class BooleanValidation implements ModelValidation<ValidateBoolean, bool> {
   final ValidateBoolean method;
-  final bool param;
+  final bool? param;
 
-  const BooleanValidation({@required this.method, this.param});
+  const BooleanValidation({required this.method, this.param});
 
   factory BooleanValidation.fromJson(Map<String, dynamic> json) =>
       _$BooleanValidationFromJson(json);

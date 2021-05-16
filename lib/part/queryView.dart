@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
@@ -6,7 +6,7 @@ import 'package:precept_script/part/abstractListView.dart';
 
 part 'queryView.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PQueryView extends PAbstractListView {
   static const String defaultReadTrait = 'queryView-read-default';
   static const String defaultEditTrait = 'queryView-edit-default';
@@ -14,14 +14,14 @@ class PQueryView extends PAbstractListView {
   static const String defaultItemEditTrait = 'queryView-item-edit-default';
 
   PQueryView({
-    @required String queryName,
+    String? queryName,
     String titleProperty = 'title',
     String subtitleProperty = 'subtitle',
     PListViewItemType itemType = PListViewItemType.navTile,
-    double height,
-    String tooltip,
-    String caption,
-    PHelp help,
+    double? height,
+    String? tooltip,
+    String? caption,
+    PHelp? help,
     bool readOnly = false,
     ControlEdit controlEdit = ControlEdit.inherited,
     String readTraitName = defaultReadTrait,

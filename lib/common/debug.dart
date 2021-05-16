@@ -1,10 +1,10 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:precept_script/common/script/preceptItem.dart';
 
 class DebugNode {
   final PreceptItem item;
   final List<DebugNode> children;
-  DebugNode parent;
+  DebugNode? parent;
 
   DebugNode(this.item, this.children) {
     for (DebugNode child in children) {
@@ -13,18 +13,14 @@ class DebugNode {
   }
 
   /// Returns the debugId of the parent of node with debug node of [id]
-  DebugNode parentOf({@required String debugId}) {
-    assert(debugId != null);
-    final DebugNode selectedNode = nodeWithId(debugId);
-    if(selectedNode != null){
-      return selectedNode.parent;
-    }
-    return null;
+  DebugNode? parentOf({required String debugId}) {
+    final DebugNode? selectedNode = nodeWithId(debugId);
+    return selectedNode?.parent;
   }
 
   bool hasDebugId(String debugId) => item.debugId == debugId;
 
-  DebugNode nodeWithId(String debugId) {
+  DebugNode? nodeWithId(String debugId) {
     if (this.hasDebugId(debugId)) {
       return this;
     }

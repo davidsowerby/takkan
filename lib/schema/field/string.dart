@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -7,14 +6,14 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'string.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PString extends PField<StringValidation, String> {
-  final String defaultValue;
+  final String? defaultValue;
 
   PString({
     this.defaultValue,
-    List<StringValidation> validations,
-    PPermissions permissions,
+    List<StringValidation> validations=const[],
+    PPermissions? permissions,
   }) : super(
           validations: validations,
           permissions: permissions,
@@ -32,7 +31,7 @@ class PString extends PField<StringValidation, String> {
   }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PListString extends PListField {
   final List<String> defaultValue;
 
@@ -52,12 +51,12 @@ class PListString extends PListField {
   }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class StringValidation implements ModelValidation<ValidateString, String> {
   final ValidateString method;
   final dynamic param;
 
-  const StringValidation({@required this.method, this.param});
+  const StringValidation({required this.method, this.param});
 
   factory StringValidation.fromJson(Map<String, dynamic> json) => _$StringValidationFromJson(json);
 

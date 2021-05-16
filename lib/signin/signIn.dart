@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'signIn.g.dart';
 
 /// Determines which sign-in options are presented to a user
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PSignInOptions {
   final String pageTitle;
   final bool email;
@@ -28,7 +28,7 @@ class PSignInOptions {
   Map<String, dynamic> toJson() => _$PSignInOptionsToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PSignIn {
   final PEmailSignIn email;
   final String successRoute;
@@ -47,7 +47,7 @@ class PSignIn {
 
 /// An empty String in [successRoute] (the default) will navigate to the user to the page they were
 /// on before signing in.
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PEmailSignIn {
   final String emailLabel;
   final String usernameLabel;

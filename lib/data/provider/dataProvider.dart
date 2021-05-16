@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
@@ -13,17 +12,17 @@ part 'dataProvider.g.dart';
 
 /// [headers] specify things like client keys, and is therefore different for each backend implementation.
 /// Each implementation must provide the appropriate override.
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PRestDataProvider extends PDataProvider {
   final bool checkHealthOnConnect;
 
   PRestDataProvider({
-    PSignInOptions signInOptions,
-    PSchemaSource schemaSource,
-    PSchema schema,
+    PSignInOptions signInOptions=const PSignInOptions(),
+    PSchemaSource? schemaSource,
+    PSchema? schema,
     this.checkHealthOnConnect = true,
-    String id,
-    PConfigSource configSource,
+    String? id,
+    PConfigSource? configSource,
   }) : super(
           id: id,
           signInOptions: signInOptions,
@@ -54,34 +53,34 @@ class PRestDataProvider extends PDataProvider {
 /// [_appConfig] is set during app initialisation (see [Precept.init]), and represents the contents of
 /// **precept.json**
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
-  final PConfigSource configSource;
+  final PConfigSource? configSource;
   @JsonKey(ignore: true)
-  Map<String, dynamic> _appConfig;
+  Map<String, dynamic>? _appConfig;
   @JsonKey(ignore: true)
-  PSchema _schema;
-  final PSchemaSource schemaSource;
+  PSchema? _schema;
+  final PSchemaSource? schemaSource;
   final bool checkHealthOnConnect;
 
   @JsonKey(ignore: true)
-  PSchema get schema => _schema;
+  PSchema? get schema => _schema;
 
   set schema(value) => _schema = value;
 
   set appConfig(value) => _appConfig = value;
 
   @JsonKey(ignore: true)
-  Map<String, dynamic> get appConfig => _appConfig;
+  Map<String, dynamic>? get appConfig => _appConfig;
 
   PDataProvider({
-    @required this.configSource,
+    required this.configSource,
     this.checkHealthOnConnect=false,
     this.signInOptions = const PSignInOptions(),
-    PSchema schema,
+    PSchema? schema,
     this.schemaSource,
-    String id,
+    String? id,
   })  : _schema = schema,
         super(id: id);
 
@@ -131,12 +130,12 @@ class PDataProvider extends PreceptItem {
   }
 
   _instanceConfig(){
-    return appConfig[configSource.segment][configSource.instance];
+    return appConfig?[configSource?.segment][configSource?.instance];
   }
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if (schemaSource != null) schemaSource.walk(visitors);
+    if (schemaSource != null) schemaSource?.walk(visitors);
   }
 
   /// This can be overridden, because Back4App for example, uses the objectId field value
@@ -145,19 +144,19 @@ class PDataProvider extends PreceptItem {
 
 /// [segment] and [instance] together define which part **precept.json** is used to
 /// configure a [DataProvider] connection
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PConfigSource {
   final String segment;
   final String instance;
 
-  const PConfigSource({@required this.segment, @required this.instance});
+  const PConfigSource({required this.segment, required this.instance});
 
   factory PConfigSource.fromJson(Map<String, dynamic> json) => _$PConfigSourceFromJson(json);
 
   Map<String, dynamic> toJson() => _$PConfigSourceToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PNoDataProvider extends PDataProvider {
   PNoDataProvider()
       : super(

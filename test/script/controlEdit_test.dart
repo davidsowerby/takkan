@@ -16,39 +16,39 @@ void main() {
 
     test('defaults', () {
       // given
-      final script = PScript(
+      final script = PScript(name: 'A Script',
         pages: {
-          '/home': PPage(
+          '/home': PPage(title: 'A page',
               // ignore: missing_required_param
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
+                    PPanel(property: '',
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1'),
+                PPart(readTraitName:'default',property:'',caption: 'page-part1'),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
       expect(script.controlEdit, ControlEdit.firstLevelPanels);
-      expect(page.controlEdit, ControlEdit.inherited);
+      expect(page?.controlEdit, ControlEdit.inherited);
       expect(panel1.controlEdit, ControlEdit.inherited);
       expect(panel11.controlEdit, ControlEdit.inherited);
       expect(panel1Part1.controlEdit, ControlEdit.inherited);
@@ -56,7 +56,7 @@ void main() {
       expect(pagePart.controlEdit, ControlEdit.inherited);
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, false);
+      expect(page?.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -66,41 +66,41 @@ void main() {
 
     test('panelsOnly with Part override', () {
       // given
-      final script = PScript(
+      final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.panelsOnly,
         pages: {
-          '/home': PPage(
+          '/home': PPage(title: 'A page',
               // ignore: missing_required_param
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
+                    PPanel(property: '',
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, false);
+      expect(page?.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, true);
       expect(panel1Part1.hasEditControl, false);
@@ -110,41 +110,41 @@ void main() {
 
     test('firstLevelPanels with Part override', () {
       // given
-      final script = PScript(
+      final script = PScript(name: 'A Script',
         pages: {
           '/home': PPage(
               title: 'title',
               controlEdit: ControlEdit.firstLevelPanels,
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
+                    PPanel(property: '',
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, false);
+      expect(page?.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -154,40 +154,39 @@ void main() {
 
     test('thisOnly does nothing if too high', () {
       // given
-      final script = PScript(
+      final script = PScript(name:'A script',
         pages: {
-          '/home': PPage(
-              // ignore: missing_required_param
+          '/home': PPage(title: 'A page',
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
+                    PPanel(property:'',
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1'),
+                PPart(readTraitName: 'part',caption: 'page-part1'),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, false);
+      expect(page?.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -197,42 +196,41 @@ void main() {
 
     test('thisAndBelow with negation', () {
       // given
-      final script = PScript(
+      final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
         pages: {
-          '/home': PPage(
-              // ignore: missing_required_param
+          '/home': PPage(title: 'A page',
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
+                    PPanel(property: '',
                       controlEdit: ControlEdit.noEdit,
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
+                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, true);
+      expect(page?.hasEditControl, true);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, true);
@@ -242,42 +240,41 @@ void main() {
 
     test('partsOnly, single branch', () {
       // given
-      final script = PScript(
+      final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.inherited,
         pages: {
-          '/home': PPage(
-              // ignore: missing_required_param
+          '/home': PPage(title: 'A page',
               content: [
-                PPanel(
+                PPanel(property: '',
                   caption: 'panel1',
                   content: [
-                    PPart(caption: 'panel1-part1'),
-                    PPanel(
+                    PPart(readTraitName:'default',property:'',caption: 'panel1-part1'),
+                    PPanel(property: '',
                       controlEdit: ControlEdit.partsOnly,
                       caption: 'panel11',
-                      content: [PPart(caption: 'panel11-part1')],
+                      content: [PPart(readTraitName:'default',property:'',caption: 'panel11-part1')],
                     ),
                   ],
                 ),
-                PPart(caption: 'page-part1'),
+                PPart(readTraitName:'default',property:'',caption: 'page-part1'),
               ],
             ),
         },
       );
 
       final page = script.pages['/home'];
-      final panel1 = page.content[0] as PPanel;
+      final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
       final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page.content[1] as PPart;
+      final pagePart = page?.content[1] as PPart;
 
       // when
       script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page.hasEditControl, false);
+      expect(page?.hasEditControl, false);
       expect(panel1.hasEditControl, false);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);

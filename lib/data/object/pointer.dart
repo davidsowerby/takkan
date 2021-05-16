@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'pointer.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class Pointer  {
 
   Pointer() ;

@@ -35,7 +35,8 @@ abstract class ModelViewConverter<MODEL, VIEW> {
     if (conversionValidation) {
       return field.validate(viewToModel(inputData), pScript);
     } else {
-      return [pScript.conversionErrorMessages.patterns[this.runtimeType.toString()]];
+      final String key=this.runtimeType.toString();
+      return [pScript.conversionErrorMessages.patterns[key] ?? 'unknown'];
     }
   }
 
@@ -49,7 +50,7 @@ class PassThroughConverter<T> extends ModelViewConverter<T, T> {
   const PassThroughConverter();
 
   @override
-  T modelToView(T model, {T defaultValue}) {
+  T modelToView(T model, {T? defaultValue}) {
     return model;
   }
 
@@ -72,7 +73,7 @@ class IntDoubleConverter extends ModelViewConverter<int, double> {
   const IntDoubleConverter();
 
   @override
-  double modelToView(int model, {double defaultValue}) {
+  double modelToView(int model, {double? defaultValue}) {
     return model.toDouble();
   }
 
@@ -90,13 +91,12 @@ class IntDoubleConverter extends ModelViewConverter<int, double> {
 
 class IntStringConverter extends ModelViewConverter<int, String> {
   @override
-  String modelToView(int model, {String defaultValue}) {
+  String modelToView(int model, {String? defaultValue}) {
     return model.toString();
   }
 
   @override
   int viewToModel(String view) {
-    assert(view != null);
     if (view.isEmpty) {
       return 0;
     } else {
@@ -112,13 +112,12 @@ class IntStringConverter extends ModelViewConverter<int, String> {
 
 class DoubleStringConverter extends ModelViewConverter<double, String> {
   @override
-  String modelToView(double model, {String defaultValue}) {
+  String modelToView(double model, {String? defaultValue}) {
     return model.toString();
   }
 
   @override
   double viewToModel(String view) {
-    assert(view != null);
     if (view.isEmpty) {
       return 0;
     } else {

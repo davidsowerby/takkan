@@ -5,7 +5,7 @@ import 'package:precept_script/schema/field/field.dart';
 abstract class PSelectField extends PField{}
 abstract class PListField extends PField{}
 
-// @JsonSerializable(nullable: true, explicitToJson: true)
+// @JsonSerializable( explicitToJson: true)
 // class PSelectBoolean extends PSelectField {
 //   final List<bool> defaultValue;
 //
@@ -20,7 +20,7 @@ abstract class PListField extends PField{}
 //   Type get modelType => bool;
 // }
 //
-// @JsonSerializable(nullable: true, explicitToJson: true)
+// @JsonSerializable( explicitToJson: true)
 // class PSelectString extends PSelectField {
 //
 //   final List<String> defaultValue;

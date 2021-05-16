@@ -9,9 +9,7 @@ part of 'conversionErrorMessages.dart';
 ConversionErrorMessages _$ConversionErrorMessagesFromJson(
     Map<String, dynamic> json) {
   return ConversionErrorMessages(
-    (json['patterns'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
+    patterns: Map<String, String>.from(json['patterns'] as Map),
   );
 }
 

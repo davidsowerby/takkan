@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/exception.dart';
@@ -29,7 +26,7 @@ part 'script.g.dart';
 /// For more see the [overview](https://www.preceptblog.co.uk/user-guide/#overview) of the User Guide,
 /// and the [detailed description](https://www.preceptblog.co.uk/user-guide/precept-script.html#introduction) of PScript
 /// - [_scriptValidationMessages] are collected during the [validate] process
-@JsonSerializable(nullable: false, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PScript extends PCommon {
   final String name;
   final Map<String, PPage> pages;
@@ -37,20 +34,22 @@ class PScript extends PCommon {
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
-  List<ValidationMessage> _scriptValidationMessages;
+  List<ValidationMessage> _scriptValidationMessages = List.empty(growable: true);
 
   PScript({
-    this.conversionErrorMessages = const ConversionErrorMessages(defaultConversionPatterns),
-    this.validationErrorMessages = const ValidationErrorMessages(defaultValidationErrorMessages),
+    this.conversionErrorMessages =
+        const ConversionErrorMessages(patterns: defaultConversionPatterns),
+    this.validationErrorMessages =
+        const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
-    this.name,
+    required this.name,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
+    PDataProvider? dataProvider,
+    PQuery? query,
     PPanelStyle panelStyle = const PPanelStyle(),
     PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
-    String id,
+    String? id,
   }) : super(
           id: id,
           isStatic: isStatic,
@@ -66,12 +65,8 @@ class PScript extends PCommon {
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(
-      fromJson: PQueryConverter.fromJson,
-      toJson: PQueryConverter.toJson,
-      nullable: true,
-      includeIfNull: false)
-  PQuery get query => getQuery();
+  @JsonKey(fromJson: PQueryConverter.fromJson, toJson: PQueryConverter.toJson, includeIfNull: false)
+  PQuery? get query => getQuery();
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   IsStatic get isStatic => getIsStatic();
@@ -85,9 +80,9 @@ class PScript extends PCommon {
     _scriptValidationMessages = List.empty(growable: true);
     doValidate(_scriptValidationMessages);
 
-    if (pages == null || pages.length == 0) {
+    if (pages.length == 0) {
       _scriptValidationMessages
-          .add(ValidationMessage(item: this, msg: "must contain at least one component"));
+          .add(ValidationMessage(item: this, msg: "must contain at least one page"));
     } else {
       for (var entry in pages.entries) {
         if (entry.key.isEmpty) {
@@ -97,21 +92,6 @@ class PScript extends PCommon {
         entry.value.doValidate(_scriptValidationMessages);
       }
     }
-
-    if (conversionErrorMessages == null) {
-      _scriptValidationMessages.add(ValidationMessage(
-          item: this,
-          msg:
-              "conversionErrorMessages must be provided, they are required for data conversion error messages"));
-    }
-
-    if (validationErrorMessages == null) {
-      _scriptValidationMessages.add(ValidationMessage(
-          item: this,
-          msg:
-              "validationErrorMessages must be provided, they are required for data validation error messages"));
-    }
-
     if (logFailures || throwOnFail) {
       final StringBuffer buf = StringBuffer();
       for (ValidationMessage message in _scriptValidationMessages) {
@@ -137,13 +117,13 @@ class PScript extends PCommon {
   /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
   init({bool useCaptionsAsIds = true}) {
-    doInit(this, null, 0, useCaptionsAsIds: useCaptionsAsIds);
+    doInit(this, NullPreceptItem(), 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// Passes call to all components, and sets the [PPage.route] the keys in [pages]
   @override
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(script, null, 0);
+    super.doInit(script, NullPreceptItem(), 0);
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
     for (var entry in pages.entries) {
@@ -189,7 +169,7 @@ class PScript extends PCommon {
 /// [pageType] is used to look up from [PageLibrary]
 /// although [content] is a list, this simplest page only uses the first one
 /// [route] is set during script initialisation
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PPage extends PContent {
   final String pageType;
   final bool scrollable;
@@ -197,21 +177,21 @@ class PPage extends PContent {
   final List<PSubContent> content;
   final PPageLayout layout;
   @JsonKey(ignore: true)
-  String route;
+  String? route;
 
   // @JsonKey(ignore: true)
   PPage({
     this.pageType = 'defaultPage',
     this.scrollable = true,
-    this.layout=const PPageLayout(),
+    this.layout = const PPageLayout(),
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
-    PDataProvider dataProvider,
-    PQuery query,
+    PDataProvider? dataProvider,
+    PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
-    String id,
-    String property,
-    @required String title,
+    String? id,
+    String? property,
+    required String title,
   }) : super(
           isStatic: isStatic,
           dataProvider: dataProvider,
@@ -229,10 +209,12 @@ class PPage extends PContent {
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
     if (dataProviderIsDeclared) {
-      children.add(dataProvider.debugNode);
+      DebugNode? dn = dataProvider?.debugNode;
+      if (dn != null) children.add(dn);
     }
     if (queryIsDeclared) {
-      children.add(query.debugNode);
+      DebugNode? dn = query?.debugNode;
+      if (dn != null) children.add(dn);
     }
     return DebugNode(this, children);
   }
@@ -241,19 +223,12 @@ class PPage extends PContent {
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (title == null || title.isEmpty) {
+    if (pageType.isEmpty) {
       messages.add(ValidationMessage(
         item: this,
-        msg: 'must define a title',
+        msg: 'must define a non-empty pageType',
       ));
     }
-    if (pageType == null || pageType.isEmpty) {
-      messages.add(ValidationMessage(
-        item: this,
-        msg: 'must define a pageType',
-      ));
-    }
-
     for (var element in content) {
       if (element is PCommon) {
         element.doValidate(messages);
@@ -284,9 +259,9 @@ class PPage extends PContent {
   }
 
   @override
-  String get idAlternative => title;
+  String? get idAlternative => title;
 
-  String get title => caption;
+  String? get title => caption;
 
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
@@ -305,10 +280,3 @@ enum PageType { standard }
 /// parts || sections must be non empty
 
 //
-
-
-
-
-
-
-

@@ -8,7 +8,7 @@ part of 'preceptItem.dart';
 
 PreceptItem _$PreceptItemFromJson(Map<String, dynamic> json) {
   return PreceptItem(
-    id: json['id'] as String,
+    id: json['id'] as String?,
     version: json['version'] as int,
   );
 }

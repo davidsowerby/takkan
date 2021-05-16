@@ -27,21 +27,21 @@ part 'preceptItem.g.dart';
 /// - [_index] is child index within a [_parent] where relevant.  Set to 0 if the parent only has one
 /// child
 //
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PreceptItem {
-  final String _id;
+  final String? _id;
   @JsonKey(ignore: true)
-  String uid;
+  String? uid;
   @JsonKey(ignore: true)
-  String _debugId;
+  String? _debugId;
   @JsonKey(ignore: true)
-  PreceptItem _parent;
+  late PreceptItem _parent;
   @JsonKey(ignore: true)
-  int _index;
+  int? _index;
 
-  PreceptItem({String id, int version})
+  PreceptItem({String? id, int version=0,})
       : _id = id,
-        version = version ?? 0;
+        version = version ;
 
   int version = 0;
 
@@ -51,11 +51,11 @@ class PreceptItem {
 
   /// Used for Widget and Functional testing.  This also becomes the Widget key in [Page], [Part] and [Panel] instances
   /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
-  String get debugId => _debugId;
+  String? get debugId => _debugId;
 
   PreceptItem get parent => _parent;
 
-  String get id => _id;
+  String? get id => _id;
 
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     _parent = parent;
@@ -70,13 +70,13 @@ class PreceptItem {
       uid=(this as PPage).route;
     }
     /// if we still don't have a uid, generate one
-    if (uid == null || uid.isEmpty) {
+    if (uid?.isEmpty==null || uid?.isEmpty==true) {
       final type = _widgetTypeFromPreceptType();
       uid = "$type:$index";
     }
 
     /// Explicitly set [_id] overrides other settings
-    if (_id != null && _id.isNotEmpty) {
+    if (_id != null && _id?.isNotEmpty==true) {
       uid = _id;
     }
 
@@ -90,7 +90,7 @@ class PreceptItem {
   }
 
   /// Not all levels will have one
-  String get idAlternative => null;
+  String? get idAlternative => null;
 
   _widgetTypeFromPreceptType() {
     return this.runtimeType.toString().replaceFirst('P', '');
@@ -98,7 +98,7 @@ class PreceptItem {
 
   void doValidate(List<ValidationMessage> messages) {}
 
-  int get index => _index;
+  int? get index => _index;
 
   DebugNode get debugNode => DebugNode(this, const []);
   
@@ -108,3 +108,5 @@ class PreceptItem {
     }
   }
 }
+
+

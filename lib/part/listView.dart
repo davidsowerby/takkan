@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
@@ -10,7 +10,7 @@ part 'listView.g.dart';
 /// will use these to get and display the data for an item
 ///
 /// [isQuery] should be set to true if the data displayed is directly from a query
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PListView extends PAbstractListView {
   static const String defaultReadTrait = 'list-read-default';
   static const String defaultEditTrait = 'list-edit-default';
@@ -28,14 +28,14 @@ class PListView extends PAbstractListView {
     this.subtitleProperty = 'subtitle',
     bool readOnly = false,
     IsStatic isStatic = IsStatic.inherited,
-    double particleHeight,
-    String caption,
-    PHelp help,
-    String staticData,
-    @required String property,
+    double? particleHeight,
+    String? caption,
+    PHelp? help,
+    String? staticData,
+    required String property,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
-    String tooltip,
+    String? tooltip,
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           caption: caption,

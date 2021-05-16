@@ -11,7 +11,7 @@ part 'queryResult.g.dart';
 ///
 /// [permissions] can be defined but usually permissions are set by the schema of the result
 /// 'documents'
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PQueryResult extends PField<ListValidation, List> {
   PQueryResult({
     PPermissions permissions = const PPermissions(),

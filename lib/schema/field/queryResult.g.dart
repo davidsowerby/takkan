@@ -7,8 +7,13 @@ part of 'queryResult.dart';
 // **************************************************************************
 
 PQueryResult _$PQueryResultFromJson(Map<String, dynamic> json) {
-  return PQueryResult();
+  return PQueryResult(
+    permissions:
+        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
+  );
 }
 
 Map<String, dynamic> _$PQueryResultToJson(PQueryResult instance) =>
-    <String, dynamic>{};
+    <String, dynamic>{
+      'permissions': instance.permissions?.toJson(),
+    };

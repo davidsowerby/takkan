@@ -2,9 +2,9 @@
 
 // part 'trait.g.dart';
 
-// @JsonSerializable(nullable: true, explicitToJson: true)
+// @JsonSerializable( explicitToJson: true)
 abstract class PTrait {
-  final String caption;
+  final String? caption;
 
   const PTrait({this.caption});
 

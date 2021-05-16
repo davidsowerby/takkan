@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/script/common.dart';
@@ -18,18 +17,17 @@ import 'package:precept_script/validation/message.dart';
 
 part 'panel.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PPanel extends PSubContent{
+@JsonSerializable(explicitToJson: true)
+class PPanel extends PSubContent {
   @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
   @JsonKey(ignore: true)
-  PPanelHeading _heading;
+  PPanelHeading? _heading;
   final PPanelLayout layout;
   final bool openExpanded;
   final bool scrollable;
-  final PHelp help;
-  final String property;
-  final PPanelStyle style;
+  final PHelp? help;
+  final PPanelStyle panelStyle;
   final Map<String, dynamic> pageArguments;
 
   factory PPanel.fromJson(Map<String, dynamic> json) => _$PPanelFromJson(json);
@@ -38,36 +36,37 @@ class PPanel extends PSubContent{
 
   PPanel({
     this.openExpanded = true,
-    @required this.property,
+    String? property,
     this.content = const [],
     this.pageArguments = const {},
-    this.layout=const PPanelLayout(),
-    PPanelHeading heading,
-    String caption,
+    this.layout = const PPanelLayout(),
+    PPanelHeading? heading,
+    String? caption,
     this.scrollable = false,
     this.help,
-    this.style = const PPanelStyle(),
+    this.panelStyle = const PPanelStyle(),
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
-    PPanelStyle panelStyle = const PPanelStyle(),
+    PDataProvider? dataProvider,
+    PQuery? query,
     PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
-    String id,
-  }) : _heading=heading, super(
-    id: id,
-    isStatic: isStatic,
-    dataProvider: dataProvider,
-    query: query,
-    controlEdit: controlEdit,
-    caption: caption,
-  );
+    String? id,
+  })  : _heading = heading,
+        super(
+          id: id,
+          isStatic: isStatic,
+          dataProvider: dataProvider,
+          query: query,
+          controlEdit: controlEdit,
+          caption: caption,
+          property: property,
+        );
 
   @override
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (heading != null) {
-      heading.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+      heading?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
     }
     int i = 0;
     for (var element in content) {
@@ -78,7 +77,7 @@ class PPanel extends PSubContent{
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if (heading != null) heading.walk(visitors);
+    if (heading != null) heading?.walk(visitors);
     for (PSubContent entry in content) {
       entry.walk(visitors);
     }
@@ -94,46 +93,28 @@ class PPanel extends PSubContent{
   DebugNode get debugNode {
     final List<DebugNode> children = content.map((e) => e.debugNode).toList();
     if (dataProviderIsDeclared) {
-      children.add(dataProvider.debugNode);
+      final DebugNode? dn = dataProvider?.debugNode;
+      if (dn != null) {
+        children.add(dn);
+      }
     }
     if (queryIsDeclared) {
-      children.add(query.debugNode);
+      final DebugNode? dn = query?.debugNode;
+      if (dn != null) {
+        children.add(dn);
+      }
     }
     return DebugNode(this, children);
   }
 
-  PPanelHeading get heading => _heading;
-
-
+  PPanelHeading? get heading => _heading;
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PListTile extends PPanel  {
-
-  PListTile() : super();
-
-  factory PListTile.fromJson(Map<String, dynamic> json) =>
-      _$PListTileFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PListTileToJson(this);
-}
-
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PNavTile extends PPanel {
-
-  PNavTile() ;
-
-  factory PNavTile.fromJson(Map<String, dynamic> json) =>
-      _$PNavTileFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PNavTileToJson(this);
-}
-
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PPanelHeading extends PreceptItem {
   final bool expandable;
   final bool canEdit;
-  final PHelp help;
+  final PHelp? help;
   final PHeadingStyle style;
 
   PPanelHeading({
@@ -141,20 +122,20 @@ class PPanelHeading extends PreceptItem {
     this.canEdit = false,
     this.help,
     this.style = const PHeadingStyle(),
-    String id,
+    String? id,
   }) : super(id: id);
 
   factory PPanelHeading.fromJson(Map<String, dynamic> json) => _$PPanelHeadingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
 
-  PPanel get parent => super.parent;
+  PPanel get parent => super.parent as PPanel;
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PPanelLayout {
   final PPadding padding;
-  final double width;
+  final double? width;
 
   const PPanelLayout({this.padding = const PPadding(), this.width});
 

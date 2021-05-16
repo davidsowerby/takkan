@@ -19,29 +19,29 @@ part 'part.g.dart';
 /// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
 /// [height] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 /// [dataProvider] and [query] are theoretically available by virtue of inheriting [PSubContent], but do not make sense for a [PPart], as it represents a single field
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PPart extends PSubContent {
   final bool readOnly;
-  final String property;
-  final String staticData;
-  final PHelp help;
-  final String tooltip;
-  final double height;
+  final String? property;
+  final String? staticData;
+  final PHelp? help;
+  final String? tooltip;
+  final double? height;
   final String readTraitName;
-  final String editTraitName;
+  final String? editTraitName;
 
   PPart(
-      {String caption,
+      {String? caption,
       this.readOnly = false,
       this.height = 60,
       this.property,
-      this.readTraitName,
+      required this.readTraitName,
       this.editTraitName,
       IsStatic isStatic = IsStatic.inherited,
       this.staticData,
       this.help,
       ControlEdit controlEdit = ControlEdit.inherited,
-      String id,
+      String? id,
       this.tooltip})
       : super(
           id: id,
@@ -56,12 +56,14 @@ class PPart extends PSubContent {
   Map<String, dynamic> toJson() => _$PPartToJson(this);
 
   DebugNode get debugNode {
-    final List<DebugNode> children = List();
+    final List<DebugNode> children = List.empty(growable: true);
     if (dataProviderIsDeclared) {
-      children.add(dataProvider.debugNode);
+      DebugNode? dn = dataProvider?.debugNode;
+      if (dn != null) children.add(dn);
     }
     if (queryIsDeclared) {
-      children.add(query.debugNode);
+      DebugNode? dn = query?.debugNode;
+      if (dn != null) children.add(dn);
     }
     return DebugNode(this, children);
   }
@@ -69,7 +71,7 @@ class PPart extends PSubContent {
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes || readOnly) {
-      if (property == null || property.isEmpty) {
+      if (property?.isEmpty == null || (property?.isEmpty==true)) {
         messages.add(ValidationMessage(
             item: this,
             msg:

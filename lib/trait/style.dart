@@ -10,7 +10,7 @@ part 'style.g.dart';
 /// [background] sets the background color of the container behind the text, using the current [Theme]
 /// [textTheme] relates to the background in use, see [PTextTheme],
 ///
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PHeadingStyle {
   final PTextTrait textTrait;
   final PBorder border;
@@ -60,7 +60,7 @@ enum PBorderShape {
 /// - [borderName] is the key used to look up the border from [BorderLibrary]
 ///
 /// See also [PBorderDetailed] to define a border from scratch
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PBorder {
   static const String roundedRectangleThinPrimary="roundedRectangleThinPrimary";
   static const String roundedRectangleMediumPrimary="roundedRectangleMediumPrimary";
@@ -80,11 +80,11 @@ class PBorder {
 /// - [side] a single side is defined for all [shape]s except [PBorderShape.directional] and [PBorderShape.border]
 /// - [sideSet] is used only with [PBorderShape.directional] and [PBorderShape.border]
 /// - [gapPadding] is used only with [PBorderShape.outlineInput]
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PBorderDetailed {
   final PBorderShape shape;
   final PBorderSide side;
-  final PBorderSideSet sideSet;
+  final PBorderSideSet? sideSet;
 
   final double gapPadding;
 
@@ -99,7 +99,7 @@ class PBorderDetailed {
   Map<String, dynamic> toJson() => _$PBorderDetailedToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PBorderSideSet {
   final PBorderSide top;
   final PBorderSide left;
@@ -117,7 +117,7 @@ class PBorderSideSet {
   Map<String, dynamic> toJson() => _$PBorderSideSetToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PBorderSide {
   final PColor color;
   final double width;

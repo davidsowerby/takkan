@@ -17,7 +17,7 @@ void main() {
 
     test('round trip, PDocumentGet', () {
       // given
-      PGet g = PGet(// ignore: missing_required_param
+      PGet g = PGet(
         documentId: DocumentId(
           path: "user/prefs",
           itemId: "23",

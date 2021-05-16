@@ -10,11 +10,11 @@ PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) {
   return PNavButton(
     readOnly: json['readOnly'] as bool,
     route: json['route'] as String,
-    caption: json['caption'] as String,
+    caption: json['caption'] as String?,
     readTraitName: json['readTraitName'] as String,
-    editTraitName: json['editTraitName'] as String,
-    height: (json['height'] as num)?.toDouble(),
-    property: json['property'] as String,
+    editTraitName: json['editTraitName'] as String?,
+    height: (json['height'] as num).toDouble(),
+    property: json['property'] as String?,
     staticData: json['staticData'] as String,
   )..version = json['version'] as int;
 }
@@ -34,10 +34,8 @@ Map<String, dynamic> _$PNavButtonToJson(PNavButton instance) =>
 
 PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) {
   return PNavButtonSet(
-    buttons: (json['buttons'] as Map<String, dynamic>)?.map(
-      (k, e) => MapEntry(k, e as String),
-    ),
-    height: (json['height'] as num)?.toDouble(),
+    buttons: Map<String, String>.from(json['buttons'] as Map),
+    height: (json['height'] as num?)?.toDouble(),
     readTraitName: json['readTraitName'] as String,
     buttonTraitName: json['buttonTraitName'] as String,
   )..version = json['version'] as int;

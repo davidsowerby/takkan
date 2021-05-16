@@ -9,7 +9,7 @@ part of 'help.dart';
 PHelp _$PHelpFromJson(Map<String, dynamic> json) {
   return PHelp(
     title: json['title'] as String,
-    message: json['message'] as String,
+    message: json['message'] as String?,
   );
 }
 

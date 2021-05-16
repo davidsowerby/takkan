@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'textBox.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PTextBox {
   static const String defaultTraitName = 'PTextBox-default';
 

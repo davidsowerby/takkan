@@ -6,25 +6,25 @@ import 'package:precept_script/particle/textBox.dart';
 
 part 'text.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PText extends PPart {
   static  const String defaultReadTrait ='text-read-default';
   static const String heading1='text-heading-1';
   static const String heading2='text-heading-2';
   static const String heading3='text-heading-3';
   PText(
-      {String caption,
+      {String? caption,
       bool readOnly = false,
       double height = 60,
-      String property,
+      String? property,
       String readTraitName=defaultReadTrait,
       String editTraitName=PTextBox.defaultTraitName,
       IsStatic isStatic = IsStatic.inherited,
-      String staticData,
-      PHelp help,
+      String? staticData,
+      PHelp? help,
       ControlEdit controlEdit = ControlEdit.inherited,
-      String id,
-      String tooltip})
+      String? id,
+      String? tooltip})
       : super(
           readOnly: readOnly,
           readTraitName: readTraitName,

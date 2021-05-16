@@ -9,10 +9,10 @@ import 'package:precept_script/schema/validation/validator.dart';
 class ValidationErrorMessages {
   final Map<dynamic, String> typePatterns;
 
-  const ValidationErrorMessages( this.typePatterns);
+  const ValidationErrorMessages({this.typePatterns=const {}});
 
 
-  String find(ModelValidation validation){
+  String? find(ModelValidation validation){
     return typePatterns[validation.method];
   }
 }

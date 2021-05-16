@@ -6,11 +6,11 @@ part 'conversionErrorMessages.g.dart';
 
 /// Holds error message patterns for [ModelViewConverter] implementations
 /// This will become part of [PScript]
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class ConversionErrorMessages {
   final Map<String, String> patterns;
 
-  const ConversionErrorMessages(this.patterns);
+  const ConversionErrorMessages({this.patterns=const {}});
 
   factory ConversionErrorMessages.fromJson(Map<String, dynamic> json) =>
       _$ConversionErrorMessagesFromJson(json);

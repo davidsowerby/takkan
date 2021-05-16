@@ -19,7 +19,8 @@ Logger logName(String source) {
 class WebDebugFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
-    var shouldLog = (event.level.index >= level.index);
+    Level reqLevel = level ?? Level.debug;
+    var shouldLog = (event.level.index >= reqLevel.index);
     return shouldLog;
   }
 }
@@ -32,3 +33,4 @@ class WebConsoleOutput extends LogOutput {
     print(message);
   }
 }
+

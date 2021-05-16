@@ -8,10 +8,10 @@ part of 'layout.dart';
 
 PPadding _$PPaddingFromJson(Map<String, dynamic> json) {
   return PPadding(
-    left: (json['left'] as num)?.toDouble(),
-    top: (json['top'] as num)?.toDouble(),
-    bottom: (json['bottom'] as num)?.toDouble(),
-    right: (json['right'] as num)?.toDouble(),
+    left: (json['left'] as num).toDouble(),
+    top: (json['top'] as num).toDouble(),
+    bottom: (json['bottom'] as num).toDouble(),
+    right: (json['right'] as num).toDouble(),
   );
 }
 
@@ -24,10 +24,10 @@ Map<String, dynamic> _$PPaddingToJson(PPadding instance) => <String, dynamic>{
 
 PMargins _$PMarginsFromJson(Map<String, dynamic> json) {
   return PMargins(
-    left: (json['left'] as num)?.toDouble(),
-    top: (json['top'] as num)?.toDouble(),
-    bottom: (json['bottom'] as num)?.toDouble(),
-    right: (json['right'] as num)?.toDouble(),
+    left: (json['left'] as num).toDouble(),
+    top: (json['top'] as num).toDouble(),
+    bottom: (json['bottom'] as num).toDouble(),
+    right: (json['right'] as num).toDouble(),
   );
 }
 
@@ -40,15 +40,13 @@ Map<String, dynamic> _$PMarginsToJson(PMargins instance) => <String, dynamic>{
 
 PPageLayout _$PPageLayoutFromJson(Map<String, dynamic> json) {
   return PPageLayout(
-    margins: json['margins'] == null
-        ? null
-        : PMargins.fromJson(json['margins'] as Map<String, dynamic>),
-    preferredColumnWidth: (json['preferredColumnWidth'] as num)?.toDouble(),
+    margins: PMargins.fromJson(json['margins'] as Map<String, dynamic>),
+    preferredColumnWidth: (json['preferredColumnWidth'] as num).toDouble(),
   );
 }
 
 Map<String, dynamic> _$PPageLayoutToJson(PPageLayout instance) =>
     <String, dynamic>{
-      'margins': instance.margins?.toJson(),
+      'margins': instance.margins.toJson(),
       'preferredColumnWidth': instance.preferredColumnWidth,
     };

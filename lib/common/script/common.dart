@@ -6,7 +6,6 @@ import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/dataProviderConverter.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/queryConverter.dart';
@@ -76,42 +75,38 @@ enum ControlEdit {
 /// is set only after a [init] call.  Unfortunately there seems to be no way to
 /// set this during construction - this also means that the [PScript] structure cannot be **const**
 ///
-@JsonSerializable(nullable: false, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PCommon extends PreceptItem {
   IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(
-      nullable: true,
+
       includeIfNull: false,
       fromJson: PDataProviderConverter.fromJson,
       toJson: PDataProviderConverter.toJson)
-  PDataProvider _dataProvider;
+  PDataProvider? _dataProvider;
   @JsonKey(ignore: true)
-  PScript _script;
+  PScript? _script;
   @JsonKey(
       fromJson: PQueryConverter.fromJson,
       toJson: PQueryConverter.toJson,
-      nullable: true,
+
       includeIfNull: false)
-  PQuery _query;
-  @JsonKey(nullable: true)
-  PPanelStyle _panelStyle;
-  @JsonKey(nullable: true, includeIfNull: false)
-  PTextTrait _textTrait;
+  PQuery? _query;
+
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider dataProvider,
-    PQuery query,
-    PTextTrait textTrait,
+    PDataProvider? dataProvider,
+    PQuery? query,
+    PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
-    PSchema schema,
-    String id,
+    PSchema? schema,
+    String? id,
   })  : _isStatic = isStatic,
         _dataProvider = dataProvider,
         _query = query,
-        _textTrait = textTrait,
         super(id: id);
 
   @JsonKey(ignore: true)
@@ -124,13 +119,10 @@ class PCommon extends PreceptItem {
 
   bool get hasEditControl => _hasEditControl;
 
-  PPanelStyle get panelStyle => _panelStyle;
-
-  PTextTrait get textTrait => _textTrait;
 
   bool get inheritedEditControl {
     PCommon p = parent;
-    while (p != null) {
+    while (!(p is NullPreceptItem)) {
       if (p.hasEditControl) {
         return true;
       }
@@ -140,16 +132,16 @@ class PCommon extends PreceptItem {
   }
 
   @JsonKey(ignore: true)
-  PDataProvider get dataProvider => _dataProvider ?? parent.dataProvider;
+  PDataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
   @JsonKey(ignore: true)
-  PQuery get query => _query ?? parent.query;
+  PQuery? get query => _query ?? parent.query;
 
   /// To give descendant access to private field without messing up property cascading
-  PQuery getQuery() {
+  PQuery? getQuery() {
     return _query;
   }
 
@@ -160,7 +152,7 @@ class PCommon extends PreceptItem {
   PCommon get parent => super.parent as PCommon;
 
   @JsonKey(ignore: true)
-  PScript get script => _script;
+  PScript? get script => _script;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
@@ -168,20 +160,21 @@ class PCommon extends PreceptItem {
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _script = script;
-    PCommon p = parent;
+    PreceptItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
-    while (p != null) {
-      if (p.controlEdit != ControlEdit.inherited) {
-        inherited = p.controlEdit;
+    while (!(p is NullPreceptItem)) {
+      final PCommon p1=p as PCommon;
+      if (p1.controlEdit != ControlEdit.inherited) {
+        inherited = p1.controlEdit;
         break;
       }
       p = p.parent;
     }
     setupControlEdit(inherited);
     if (_dataProvider != null)
-      _dataProvider.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_query != null) _query.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+      _dataProvider?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_query != null) _query?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
@@ -238,17 +231,29 @@ class PCommon extends PreceptItem {
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if (_query != null) _query.walk(visitors);
-    if (_dataProvider != null) _dataProvider.walk(visitors);
+    if (_query != null) _query?.walk(visitors);
+    if (_dataProvider != null) _dataProvider?.walk(visitors);
   }
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (dataProvider != null) {
-      dataProvider.doValidate(messages);
+      dataProvider?.doValidate(messages);
     }
     if (query != null) {
-      query.doValidate(messages);
+      query?.doValidate(messages);
     }
   }
+}
+
+
+class NullPreceptItem extends PCommon{
+
+  NullPreceptItem() : super();
+
+  @override
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, NullPreceptItem(), index);
+  }
+
 }

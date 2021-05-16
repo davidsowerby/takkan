@@ -5,7 +5,7 @@ class PDataProviderConverter {
 
   static final elementKey='-dataProvider-';
 
-  static PDataProvider fromJson(Map<String, dynamic> json) {
+  static PDataProvider? fromJson(Map<String, dynamic>? json) {
     if (json==null) return null;
     final providerType = json[elementKey];
     switch (providerType) {
@@ -16,7 +16,7 @@ class PDataProviderConverter {
     }
   }
 
-  static Map<String, dynamic> toJson(PDataProvider object) {
+  static Map<String, dynamic>? toJson(PDataProvider? object) {
     if (object==null) return null;
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = object.toJson();

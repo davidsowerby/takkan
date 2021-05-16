@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -6,13 +5,20 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'date.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
-class PDate extends PField<DateValidation,DateTime> {
-  final DateTime defaultValue;
+@JsonSerializable(explicitToJson: true)
+class PDate extends PField<DateValidation, DateTime> {
+  final DateTime? defaultValue;
 
   Type get modelType => DateTime;
 
-  PDate({this.defaultValue, List<DateValidation> validations, PPermissions permissions,}) : super(validations: validations,permissions: permissions,);
+  PDate({
+    this.defaultValue,
+    List<DateValidation> validations = const [],
+    PPermissions? permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
   factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
 
@@ -24,19 +30,17 @@ class PDate extends PField<DateValidation,DateTime> {
   }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class DateValidation implements ModelValidation<ValidateDate, DateTime> {
   final ValidateDate method;
   final DateTime param;
 
-  const DateValidation({@required this.method, this.param});
+  const DateValidation({required this.method, required this.param});
 
-  factory DateValidation.fromJson(Map<String, dynamic> json) =>
-      _$DateValidationFromJson(json);
+  factory DateValidation.fromJson(Map<String, dynamic> json) => _$DateValidationFromJson(json);
 
   Map<String, dynamic> toJson() => _$DateValidationToJson(this);
 }
-
 
 enum ValidateDate { isLaterThan, isBefore }
 

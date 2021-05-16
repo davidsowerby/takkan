@@ -7,7 +7,7 @@ part 'layout.g.dart';
 
 /// [padding] is added to the outside of a panel.  Bear in mind that the page containing the panel
 /// may have [PPageLayout.margins] set.  Setting both has a cumulative effect.
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PPadding {
   final double left;
   final double top;
@@ -21,7 +21,7 @@ class PPadding {
   Map<String, dynamic> toJson() => _$PPaddingToJson(this);
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PMargins {
   final double left;
   final double top;
@@ -39,7 +39,7 @@ class PMargins {
 /// to the outside of the panel. Setting both has a cumulative effect.
 /// [preferredColumnWidth] tells the page layout algorithm what to use as as the target column width.  This
 /// applies to single and multi-column layouts.  See PreceptPage.layout for more detail
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PPageLayout  {
   final PMargins margins;
   final double preferredColumnWidth;

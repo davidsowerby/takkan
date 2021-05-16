@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -6,16 +5,16 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'double.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PDouble extends PField<DoubleValidation, double> {
-  final double defaultValue;
+  final double? defaultValue;
 
   Type get modelType => double;
 
   PDouble({
     this.defaultValue,
-    List<DoubleValidation> validations,
-    PPermissions permissions,
+    List<DoubleValidation> validations=const[],
+    PPermissions? permissions,
   }) : super(
           validations: validations,
           permissions: permissions,
@@ -31,12 +30,12 @@ class PDouble extends PField<DoubleValidation, double> {
   }
 }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class DoubleValidation implements ModelValidation<ValidateDouble, double> {
   final ValidateDouble method;
   final double param;
 
-  const DoubleValidation({@required this.method, this.param});
+  const DoubleValidation({required this.method,required this.param});
 
   factory DoubleValidation.fromJson(Map<String, dynamic> json) => _$DoubleValidationFromJson(json);
 

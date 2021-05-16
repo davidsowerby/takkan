@@ -3,13 +3,13 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
-
+import 'package:precept_script/part/text.dart';
 
 class PElementListConverter {
   static const elementKeyName = "-element-";
 
   static List<PSubContent> fromJson(List<Map<String, dynamic>> json) {
-    List<PSubContent> list = List();
+    List<PSubContent> list = List.empty(growable: true);
     for (var entry in json) {
       final elementType = entry[elementKeyName];
       final entryCopy = Map<String, dynamic>.from(entry);
@@ -21,6 +21,9 @@ class PElementListConverter {
         case "PPart":
           list.add(PPart.fromJson(entryCopy));
           break;
+        case "PText":
+          list.add(PText.fromJson(entryCopy));
+          break;
 
         default:
           final msg = "JSON conversion has not been implemented for $elementType";
@@ -31,8 +34,8 @@ class PElementListConverter {
     return list;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PSubContent> elementList) {
-    final outputList = List<Map<String, dynamic>>();
+  static List<Map<String, dynamic>> toJson(List<PSubContent>? elementList) {
+    final outputList = List<Map<String, dynamic>>.empty(growable: true);
     if (elementList == null) {
       return outputList;
     }

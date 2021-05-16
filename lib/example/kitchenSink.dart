@@ -35,7 +35,7 @@ final kitchenSinkScript = PScript(
               style: PHeadingStyle(background: PColor.primary),
             ),
             content: [
-              PPart(
+              PPart(readTraitName: 'part',
                 property: 'firstName',
                 caption: 'First Name',
               ),
@@ -52,7 +52,7 @@ final kitchenSinkScriptWithoutDataProvider = PScript(
     '/': PPage(
         title: 'Home Page',
         content: [
-          PPart(
+          PPart(readTraitName: 'part',
             isStatic: IsStatic.yes,
             staticData: 'Welcome to the Precept Kitchen Sink, starting with a bit of static text',
             // readTraitName: PText(showCaption: false),
@@ -69,7 +69,7 @@ final kitchenSinkScriptWithoutDataProvider = PScript(
               style: PHeadingStyle(background: PColor.primary),
             ),
             content: [
-              PPart(
+              PPart(readTraitName: 'part',
                 property: 'firstName',
                 caption: 'First Name',
               ),

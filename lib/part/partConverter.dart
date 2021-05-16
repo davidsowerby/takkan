@@ -43,9 +43,6 @@ class PPartMapConverter
   @override
   Map<String, dynamic> toJson(Map<String, PPart> partMap) {
     final outputMap = Map<String, dynamic>();
-    if (partMap == null) {
-      return outputMap;
-    }
     for (var entry in partMap.entries) {
       outputMap[entry.key] = PPartConverter().toJson(entry.value);
     }

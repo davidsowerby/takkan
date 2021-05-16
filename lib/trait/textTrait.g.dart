@@ -8,10 +8,10 @@ part of 'textTrait.dart';
 
 PTextTrait _$PTextTraitFromJson(Map<String, dynamic> json) {
   return PTextTrait(
-    textStyle: _$enumDecodeNullable(_$PTextStyleEnumMap, json['textStyle']),
-    textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']),
-    textAlign: _$enumDecodeNullable(_$PTextAlignEnumMap, json['textAlign']),
-    caption: json['caption'] as String,
+    textStyle: _$enumDecode(_$PTextStyleEnumMap, json['textStyle']),
+    textTheme: _$enumDecode(_$PTextThemeEnumMap, json['textTheme']),
+    textAlign: _$enumDecode(_$PTextAlignEnumMap, json['textAlign']),
+    caption: json['caption'] as String?,
   );
 }
 
@@ -23,36 +23,30 @@ Map<String, dynamic> _$PTextTraitToJson(PTextTrait instance) =>
       'textAlign': _$PTextAlignEnumMap[instance.textAlign],
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$PTextStyleEnumMap = {

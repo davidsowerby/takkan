@@ -8,23 +8,25 @@ part of 'integer.dart';
 
 PInteger _$PIntegerFromJson(Map<String, dynamic> json) {
   return PInteger(
-    defaultValue: json['defaultValue'] as int,
-    validations: (json['validations'] as List)
-        ?.map((e) => e == null
-            ? null
-            : IntegerValidation.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    defaultValue: json['defaultValue'] as int?,
+    validations: (json['validations'] as List<dynamic>)
+        .map((e) => IntegerValidation.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    permissions: json['permissions'] == null
+        ? null
+        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$PIntegerToJson(PInteger instance) => <String, dynamic>{
-      'validations': instance.validations?.map((e) => e?.toJson())?.toList(),
+      'validations': instance.validations.map((e) => e.toJson()).toList(),
+      'permissions': instance.permissions?.toJson(),
       'defaultValue': instance.defaultValue,
     };
 
 IntegerValidation _$IntegerValidationFromJson(Map<String, dynamic> json) {
   return IntegerValidation(
-    method: _$enumDecodeNullable(_$ValidateIntegerEnumMap, json['method']),
+    method: _$enumDecode(_$ValidateIntegerEnumMap, json['method']),
     param: json['param'] as int,
   );
 }
@@ -35,36 +37,30 @@ Map<String, dynamic> _$IntegerValidationToJson(IntegerValidation instance) =>
       'param': instance.param,
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$ValidateIntegerEnumMap = {

@@ -15,7 +15,7 @@ void main() {
 
     test('round trip', () {
       // given
-      final patterns = ConversionErrorMessages(defaultConversionPatterns);
+      final patterns = ConversionErrorMessages(patterns: defaultConversionPatterns);
       // when
       // then
       final patternsJson = patterns.toJson();

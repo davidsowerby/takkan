@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
@@ -23,14 +23,14 @@ abstract class PAbstractListView extends PPart {
     this.subtitleProperty='subtitle',
     bool readOnly = false,
     IsStatic isStatic = IsStatic.inherited,
-    double particleHeight,
-    String caption,
-    PHelp help,
-    String staticData,
-    @required String property,
+    double? particleHeight,
+    String? caption,
+    PHelp? help,
+    String? staticData,
+    String? property,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
-    String tooltip,
+    String? tooltip,
     ControlEdit controlEdit = ControlEdit.inherited,
   }) : super(
           caption: caption,

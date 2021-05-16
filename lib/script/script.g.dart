@@ -15,11 +15,8 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
     ),
     name: json['name'] as String,
     query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
+    id: json['id'] as String?,
   )..version = json['version'] as int;
 }
 
@@ -28,8 +25,6 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'version': instance.version,
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'panelStyle': instance.panelStyle.toJson(),
-    'textTrait': instance.textTrait.toJson(),
     'name': instance.name,
     'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
@@ -45,25 +40,30 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
   return val;
 }
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$ControlEditEnumMap = {
@@ -81,14 +81,12 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
   return PPage(
     pageType: json['pageType'] as String,
     scrollable: json['scrollable'] as bool,
-    layout: json['layout'] == null
-        ? null
-        : PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
+    layout: PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String,
-    property: json['property'] as String,
+    id: json['id'] as String?,
+    property: json['property'] as String?,
     title: json['title'] as String,
   )..version = json['version'] as int;
 }
@@ -101,6 +99,6 @@ Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'content': PElementListConverter.toJson(instance.content),
-      'layout': instance.layout?.toJson(),
+      'layout': instance.layout.toJson(),
       'title': instance.title,
     };

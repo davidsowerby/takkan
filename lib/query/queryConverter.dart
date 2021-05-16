@@ -4,11 +4,9 @@ import 'package:precept_script/query/query.dart';
 /// JSON converter for [PQuery] sub-classes
 class PQueryConverter {
   static final elementKey = '-type-';
-  static PQuery fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return null;
-    }
-    final String typeName = json[elementKey];
+  static PQuery? fromJson(Map<String, dynamic> json) {
+    final String? typeName = json[elementKey];
+    if (typeName==null) return null;
     json.remove(elementKey);
     switch (typeName) {
       case 'PGet':
@@ -20,17 +18,15 @@ class PQueryConverter {
     }
   }
 
-  static Map<String, dynamic> toJson(PQuery object) {
-    if (object == null) {
-      return null;
-    }
+  static Map<String, dynamic> toJson(PQuery? object) {
+    if (object==null) return Map();
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
     jsonMap[elementKey] = type.toString();
     switch (type) {
       case PGet:
         {
-          final PGet obj = object;
+          final PGet obj = object as PGet;
           jsonMap.addAll(obj.toJson());
           return jsonMap;
         }

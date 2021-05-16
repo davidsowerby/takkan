@@ -8,59 +8,49 @@ part of 'style.dart';
 
 PHeadingStyle _$PHeadingStyleFromJson(Map<String, dynamic> json) {
   return PHeadingStyle(
-    textTrait: json['textTrait'] == null
-        ? null
-        : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
-    background: _$enumDecodeNullable(_$PColorEnumMap, json['background']),
-    textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']),
-    height: (json['height'] as num)?.toDouble(),
-    elevation: (json['elevation'] as num)?.toDouble(),
-    border: json['border'] == null
-        ? null
-        : PBorder.fromJson(json['border'] as Map<String, dynamic>),
+    textTrait: PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
+    background: _$enumDecode(_$PColorEnumMap, json['background']),
+    textTheme: _$enumDecode(_$PTextThemeEnumMap, json['textTheme']),
+    height: (json['height'] as num).toDouble(),
+    elevation: (json['elevation'] as num).toDouble(),
+    border: PBorder.fromJson(json['border'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$PHeadingStyleToJson(PHeadingStyle instance) =>
     <String, dynamic>{
-      'textTrait': instance.textTrait?.toJson(),
-      'border': instance.border?.toJson(),
+      'textTrait': instance.textTrait.toJson(),
+      'border': instance.border.toJson(),
       'background': _$PColorEnumMap[instance.background],
       'textTheme': _$PTextThemeEnumMap[instance.textTheme],
       'height': instance.height,
       'elevation': instance.elevation,
     };
 
-T _$enumDecode<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
 }) {
   if (source == null) {
-    throw ArgumentError('A value must be provided. Supported values: '
-        '${enumValues.values.join(', ')}');
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
   }
 
-  final value = enumValues.entries
-      .singleWhere((e) => e.value == source, orElse: () => null)
-      ?.key;
-
-  if (value == null && unknownValue == null) {
-    throw ArgumentError('`$source` is not one of the supported values: '
-        '${enumValues.values.join(', ')}');
-  }
-  return value ?? unknownValue;
-}
-
-T _$enumDecodeNullable<T>(
-  Map<T, dynamic> enumValues,
-  dynamic source, {
-  T unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
 }
 
 const _$PColorEnumMap = {
@@ -93,21 +83,19 @@ Map<String, dynamic> _$PBorderToJson(PBorder instance) => <String, dynamic>{
 
 PBorderDetailed _$PBorderDetailedFromJson(Map<String, dynamic> json) {
   return PBorderDetailed(
-    side: json['side'] == null
-        ? null
-        : PBorderSide.fromJson(json['side'] as Map<String, dynamic>),
-    shape: _$enumDecodeNullable(_$PBorderShapeEnumMap, json['shape']),
+    side: PBorderSide.fromJson(json['side'] as Map<String, dynamic>),
+    shape: _$enumDecode(_$PBorderShapeEnumMap, json['shape']),
     sideSet: json['sideSet'] == null
         ? null
         : PBorderSideSet.fromJson(json['sideSet'] as Map<String, dynamic>),
-    gapPadding: (json['gapPadding'] as num)?.toDouble(),
+    gapPadding: (json['gapPadding'] as num).toDouble(),
   );
 }
 
 Map<String, dynamic> _$PBorderDetailedToJson(PBorderDetailed instance) =>
     <String, dynamic>{
       'shape': _$PBorderShapeEnumMap[instance.shape],
-      'side': instance.side?.toJson(),
+      'side': instance.side.toJson(),
       'sideSet': instance.sideSet?.toJson(),
       'gapPadding': instance.gapPadding,
     };
@@ -126,34 +114,26 @@ const _$PBorderShapeEnumMap = {
 
 PBorderSideSet _$PBorderSideSetFromJson(Map<String, dynamic> json) {
   return PBorderSideSet(
-    top: json['top'] == null
-        ? null
-        : PBorderSide.fromJson(json['top'] as Map<String, dynamic>),
-    left: json['left'] == null
-        ? null
-        : PBorderSide.fromJson(json['left'] as Map<String, dynamic>),
-    right: json['right'] == null
-        ? null
-        : PBorderSide.fromJson(json['right'] as Map<String, dynamic>),
-    bottom: json['bottom'] == null
-        ? null
-        : PBorderSide.fromJson(json['bottom'] as Map<String, dynamic>),
+    top: PBorderSide.fromJson(json['top'] as Map<String, dynamic>),
+    left: PBorderSide.fromJson(json['left'] as Map<String, dynamic>),
+    right: PBorderSide.fromJson(json['right'] as Map<String, dynamic>),
+    bottom: PBorderSide.fromJson(json['bottom'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$PBorderSideSetToJson(PBorderSideSet instance) =>
     <String, dynamic>{
-      'top': instance.top?.toJson(),
-      'left': instance.left?.toJson(),
-      'right': instance.right?.toJson(),
-      'bottom': instance.bottom?.toJson(),
+      'top': instance.top.toJson(),
+      'left': instance.left.toJson(),
+      'right': instance.right.toJson(),
+      'bottom': instance.bottom.toJson(),
     };
 
 PBorderSide _$PBorderSideFromJson(Map<String, dynamic> json) {
   return PBorderSide(
-    color: _$enumDecodeNullable(_$PColorEnumMap, json['color']),
-    width: (json['width'] as num)?.toDouble(),
-    style: _$enumDecodeNullable(_$PBorderStyleEnumMap, json['style']),
+    color: _$enumDecode(_$PColorEnumMap, json['color']),
+    width: (json['width'] as num).toDouble(),
+    style: _$enumDecode(_$PBorderStyleEnumMap, json['style']),
   );
 }
 

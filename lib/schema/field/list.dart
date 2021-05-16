@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -6,7 +6,7 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'list.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PList extends PField<ListValidation, List> {
   PList({
     List<ListValidation> validations=const [],
@@ -32,12 +32,12 @@ class PList extends PField<ListValidation, List> {
 
 enum ValidateList { containsLessThan, containsMoreThan }
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class ListValidation implements ModelValidation<ValidateList, List> {
   final ValidateList method;
   final int param;
 
-  const ListValidation({@required this.method, this.param});
+  const ListValidation({required this.method, this.param=0});
 
   factory ListValidation.fromJson(Map<String, dynamic> json) => _$ListValidationFromJson(json);
 

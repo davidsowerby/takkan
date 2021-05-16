@@ -1,13 +1,13 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'error.g.dart';
 
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PError {
   final String message;
 
-  const PError({@required this.message});
+  const PError({required this.message});
 
   factory PError.fromJson(Map<String, dynamic> json) => _$PErrorFromJson(json);
 

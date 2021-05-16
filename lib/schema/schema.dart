@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
@@ -37,14 +36,14 @@ part 'schema.g.dart';
 /// - [queries] are instances of [ListSchema], but held separately, indexed by query name
 ///
 ///
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
   final Map<String, PQueryResult> queries;
 
   PSchema(
-      {@required Map<String, PDocument> documents, @required this.name, this.queries = const {}})
+      {Map<String, PDocument> documents=const{}, required this.name, this.queries = const {}})
       : _documents = documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
@@ -52,14 +51,15 @@ class PSchema extends PSchemaElement {
   Map<String, dynamic> toJson() => _$PSchemaToJson(this);
 
   @JsonKey(ignore: true)
-  PSchemaElement get parent => null;
+  PSchemaElement? get parent => null;
+  Map<String, PDocument> get documents=> _documents;
 
   init() {
     doInit(parent: this, name: name);
   }
 
   @override
-  doInit({PSchemaElement parent, String name}) {
+  doInit({required PSchemaElement parent,required String name}) {
     _name = name;
     for (var entry in _documents.entries) {
       final document = entry.value;
@@ -83,20 +83,20 @@ class PSchema extends PSchemaElement {
 
 abstract class PSchemaElement {
   @JsonKey(ignore: true)
-  PSchemaElement _parent;
+  PSchemaElement? _parent;
   @JsonKey(ignore: true)
-  String _name;
+  String? _name;
 
   PSchemaElement();
 
   Map<String, dynamic> toJson();
 
-  doInit({PSchemaElement parent, String name}) {
+  doInit({required PSchemaElement parent,required String name}) {
     _parent = parent;
     _name = name;
   }
 
-  PSchemaElement get parent => _parent;
+  PSchemaElement? get parent => _parent;
 }
 
 /// If a CRUD action only requires that the user is authenticated, specify it in [requiresAuthentication].
@@ -106,7 +106,7 @@ abstract class PSchemaElement {
 ///
 /// If a role is specified - for example in [readRoles] - there is no need to also specify 'read' in
 /// [requiresAuthentication], provided you use [requiresReadAuthentication]
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PPermissions {
   final List<RequiresAuth> _requiresAuthentication;
   final List<String> readRoles;
@@ -150,27 +150,28 @@ class PPermissions {
 enum RequiresAuth { all, create, read, update, delete }
 
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
   final PPermissions permissions;
   final Map<String, PSchemaElement> fields;
 
   PDocument({
-    @required this.fields,
+    required this.fields,
     this.permissions = const PPermissions(),
   }) : super();
 
-  String get name => _name;
+  String? get name => _name;
 
-  PSchemaElement get parent => _parent;
+  @JsonKey(ignore: true)
+  PSchemaElement? get parent => _parent;
 
   factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 
   @override
-  doInit({PSchemaElement parent, String name}) {
+  doInit({required PSchemaElement parent,required String name}) {
     _parent = parent;
     _name = name;
   }
@@ -189,15 +190,15 @@ class PDocument extends PSchemaElement {
 ///
 /// [segment] relates to the first level within *precept.json*
 /// [instance] relates to the second level within *precept.json*
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PSchemaSource extends PreceptItem {
   final String segment;
   final String instance;
 
   PSchemaSource({
-    @required this.segment,
-    @required this.instance,
-    String id,
+    required this.segment,
+    required this.instance,
+    String? id,
     int version = 0,
   }) : super(id: id, version: version);
 

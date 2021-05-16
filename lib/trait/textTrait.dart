@@ -9,7 +9,7 @@ part 'textTrait.g.dart';
 /// - [textStyle] is an enum representation of Flutter's TextStyle
 /// - [textTheme] is an enum representation of Flutter's TextTheme, and in this context indicates the
 /// background behind this text
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable( explicitToJson: true)
 class PTextTrait extends PTrait {
   final PTextStyle textStyle;
   final PTextTheme textTheme;
@@ -19,7 +19,7 @@ class PTextTrait extends PTrait {
       {this.textStyle = PTextStyle.bodyText1,
       this.textTheme = PTextTheme.cardCanvas,
       this.textAlign = PTextAlign.start,
-      String caption})
+      String? caption})
       : super(caption: caption);
 
   factory PTextTrait.fromJson(Map<String, dynamic> json) => _$PTextTraitFromJson(json);
