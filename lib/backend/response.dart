@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 
 class CloudResponse {
   final dynamic result;
   final bool success;
 
-  const CloudResponse({@required this.success, this.result});
+  const CloudResponse({required this.success, this.result});
 }

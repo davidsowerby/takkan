@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
@@ -23,33 +22,35 @@ class DataProviderLibrary {
   /// [config.instanceName] is only needed if you require two instances of the same [DataProvider] type.
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
-  DataProvider find({@required PDataProvider config}) {
-    assert(config!=null);
+  DataProvider find({required PDataProvider config}) {
     final lookupKey = '${config.runtimeType.toString()}';
     logType(this.runtimeType).d("Finding DataProvider for lookupKey: $lookupKey");
-    if (instances.containsKey(lookupKey)) {
-      return instances[lookupKey];
-    }else{
-      if (!builders.containsKey(config.runtimeType)){
-        String msg = "No entry is defined for ${config.runtimeType.toString()} in $runtimeType";
-        logType(this.runtimeType).e(msg);
-        throw PreceptException(msg);
-      }
-      instances[lookupKey]=builders[config.runtimeType](config);
-      // instances[lookupKey].connect();
-      return instances[lookupKey];
+
+    /// Use existing instance if there is one
+    final instance = instances[lookupKey];
+    if (instance != null) return instance;
+
+    /// Otherwise create instance from builder, store and return it
+    final builder = builders[config.runtimeType];
+    if (builder != null) {
+      final newInstance = builder(config);
+      instances[lookupKey] = newInstance;
+      return newInstance;
     }
+
+    /// Failed
+    String msg = "No entry is defined for ${config.runtimeType.toString()} in $runtimeType";
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
   }
 
-
-
   /// Is there a way to check that [config] is a [PDataProvider] ?
-  register({@required Type config, @required DataProvider Function(PDataProvider) builder}) {
+  register({required Type config, required DataProvider Function(PDataProvider) builder}) {
     builders[config] = builder;
   }
 
   /// Clears all [builders] and [instances]
-  clear(){
+  clear() {
     builders.clear();
     instances.clear();
   }

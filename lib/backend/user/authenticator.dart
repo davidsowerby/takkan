@@ -9,13 +9,13 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners = List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
-  USER nativeUser;
+  USER? nativeUser;
 
   PreceptUser get user => preceptUserFromNative(nativeUser);
 
   USER preceptUserToNative(PreceptUser preceptUser);
 
-  PreceptUser preceptUserFromNative(USER nativeUser);
+  PreceptUser preceptUserFromNative(USER? nativeUser);
 
   addSignInStatusListener(Function(SignInStatus) listener) {
     _signInStatusListeners.add(listener);
@@ -25,7 +25,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
     _signInStatusListeners.remove(listener);
   }
 
-  Future<bool> registerWithEmail({@required String username, @required String password}) async {
+  Future<bool> registerWithEmail({required String username, required String password}) async {
     status = SignInStatus.Registering;
     final result = await doRegisterWithEmail(username: username, password: password);
     status = (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
@@ -53,11 +53,11 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   doSignOut();
 
   Future<AuthenticationResult> doRegisterWithEmail(
-      {@required String username, @required String password});
+      {required String username, required String password});
 
   // TODO: this needs to handle other failures (lost connections etc)
   Future<AuthenticationResult> signInByEmail(
-      {@required String username, @required String password}) async {
+      {required String username, required String password}) async {
     status = SignInStatus.Authenticating;
     final AuthenticationResult result =
         await doSignInByEmail(username: username, password: password);
@@ -80,7 +80,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
 
   /// Must set [UserState.sessionToken]
   Future<AuthenticationResult> doSignInByEmail(
-      {@required String username, @required String password});
+      {required String username, required String password});
 
   Future<bool> requestPasswordReset(PreceptUser user) async {
     throw UnimplementedError();
@@ -154,5 +154,10 @@ class AuthenticationResult {
   final String message;
 
   // TODO standardise for all implementations
-  AuthenticationResult({@required this.success, @required this.user, this.errorCode, this.message});
+  AuthenticationResult({
+    required this.success,
+    required this.user,
+    this.errorCode = -999,
+    this.message = 'Unknown',
+  });
 }

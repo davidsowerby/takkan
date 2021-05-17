@@ -1,21 +1,20 @@
-import 'package:flutter/foundation.dart';
 
 class PreceptUser {
   final String firstName;
-  final String knownAs;
+  final String? knownAs;
   final String lastName;
-  final String email;
+  final String? email;
   final String userName;
   final bool isUnknown;
-  final String objectId;
-  final String sessionToken;
+  final String? objectId;
+  final String? sessionToken;
 
   const PreceptUser({
-    @required this.firstName,
+    required this.firstName,
     this.knownAs,
-    @required this.lastName,
+    required this.lastName,
     this.email,
-    @required this.userName,
+    required this.userName,
     this.objectId,
     this.sessionToken,
   }) : isUnknown = false;
