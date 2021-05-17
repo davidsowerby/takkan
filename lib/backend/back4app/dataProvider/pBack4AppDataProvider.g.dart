@@ -13,7 +13,7 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
     configSource: json['configSource'] == null
         ? null
         : PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
-    id: json['id'] as String,
+    id: json['id'] as String?,
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
   )..version = json['version'] as int;
 }

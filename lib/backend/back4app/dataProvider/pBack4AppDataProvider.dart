@@ -5,7 +5,7 @@ import 'package:precept_script/schema/schema.dart';
 part 'pBack4AppDataProvider.g.dart';
 
 /// When [debug] enabled, prints logs to console
-@JsonSerializable(nullable: true, explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PBack4AppDataProvider extends PDataProvider {
   static const String applicationIdKey = "X-Parse-Application-Id";
   static const String clientIdKey = "X-Parse-Client-Key";
@@ -16,10 +16,10 @@ class PBack4AppDataProvider extends PDataProvider {
 
   PBack4AppDataProvider({
     this.debug = true,
-    PConfigSource configSource,
-    String id,
-    PSchema schema,
-    bool checkHealthOnConnect,
+    PConfigSource? configSource,
+    String? id,
+    PSchema? schema,
+    bool checkHealthOnConnect = false,
   }) : super(
           schema: schema,
           checkHealthOnConnect: checkHealthOnConnect,

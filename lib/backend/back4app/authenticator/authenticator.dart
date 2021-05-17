@@ -7,11 +7,11 @@ import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/query/query.dart';
 
 class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUser> {
-  Parse parse;
+  late Parse parse;
   final PBack4AppDataProvider config;
   final Back4AppDataProvider parent;
 
-  Back4AppAuthenticator({@required this.config, this.parent});
+  Back4AppAuthenticator({required this.config, required this.parent});
 
   init() async {
     parse = await Parse().initialize(
@@ -25,10 +25,10 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
   /// Username defaults to email address
   @protected
   Future<AuthenticationResult> doSignInByEmail(
-      {@required String username, @required String password}) async {
-    nativeUser = ParseUser(username, password, username);
+      {required String username, required String password}) async {
+    final nativeUser = ParseUser(username, password, username);
     nativeUser.password = password;
-
+    this.nativeUser = nativeUser;
     final ParseResponse authResult = await nativeUser.login();
     if (authResult.success) {
       final updatedUser = preceptUserFromNative(nativeUser);
@@ -36,15 +36,15 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
     } else {
       return AuthenticationResult(
         success: false,
-        message: authResult.error.message,
+        message: authResult.error?.message ?? 'Unknown',
         user: PreceptUser.unknownUser(),
-        errorCode: authResult.error.code,
+        errorCode: authResult.error?.code ?? -999,
       );
     }
   }
 
   Future<void> doSignOut() async {
-    await nativeUser.logout();
+    await nativeUser?.logout();
   }
 
   @override
@@ -56,25 +56,30 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
   // TODO: should not allow call if already logged in (_parseUser would be overwritten)
   @override
   Future<AuthenticationResult> doRegisterWithEmail(
-      {@required String username, @required String password}) async {
-    nativeUser = ParseUser(username, password, username);
+      {required String username, required String password}) async {
+    final nativeUser = ParseUser(username, password, username);
     final ParseResponse authResult = await nativeUser.signUp();
     final updatedUser = preceptUserFromNative(nativeUser);
+    this.nativeUser = nativeUser;
     if (authResult.success) {
       return AuthenticationResult(success: true, user: updatedUser);
     } else {
-      if (authResult.error.code == 101) {
+      final errorCode = authResult.error?.code ?? -999;
+      if (errorCode == 101) {
         return AuthenticationResult(success: false, errorCode: -1, user: PreceptUser.unknownUser());
       }
       return AuthenticationResult(
-          success: false, message: authResult.error.message, user: PreceptUser.unknownUser());
+          success: false,
+          message: authResult.error?.message ?? 'Unknown',
+          user: PreceptUser.unknownUser());
     }
   }
 
   @override
   Future<bool> doRequestPasswordReset(PreceptUser user) async {
-    nativeUser = preceptUserToNative(user);
+    final nativeUser = preceptUserToNative(user);
     final result = await nativeUser.requestPasswordReset();
+    this.nativeUser = nativeUser;
     return result.success;
   }
 
@@ -85,7 +90,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
   }
 
   @override
-  PreceptUser preceptUserFromNative(ParseUser nativeUser) {
+  PreceptUser preceptUserFromNative(ParseUser? nativeUser) {
     if (nativeUser == null) {
       return PreceptUser.unknownUser();
     }
@@ -94,7 +99,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
       firstName: json['firstName'] ?? 'unknown',
       lastName: json['lastName'] ?? 'unknown',
       knownAs: json['name'] ?? json['knownAs'] ?? json['firstName'] ?? 'unknown',
-      userName: nativeUser.username,
+      userName: json['username'] ?? 'unknown',
       email: json['email'] ?? 'unknown',
       objectId: json['objectId'],
       sessionToken: json['sessionToken'],
