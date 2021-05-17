@@ -25,7 +25,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     return List<T>();
   }
 
-  BooleanBinding booleanBinding({String property, @required int index}) {
+  BooleanBinding booleanBinding({@required int index}) {
     assert(index != null);
     return BooleanBinding.private(
         parent: this,
@@ -34,7 +34,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  DoubleBinding doubleBinding({String property, @required int index}) {
+  DoubleBinding doubleBinding({@required int index}) {
     assert(index != null);
     return DoubleBinding.private(
         parent: this,
@@ -43,13 +43,13 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  // TimestampBinding timestampBinding({String property, @required int index}) {
+  // TimestampBinding timestampBinding({@required int index}) {
   //   assert(index != null);
   //   return TimestampBinding.private(
   //       parent: this, index: index, firstLevelKey: this.firstLevelKey ?? property, editHost: this.editHost);
   // }
 
-  IntBinding intBinding({String property, @required int index}) {
+  IntBinding intBinding({@required int index}) {
     assert(index != null);
     return IntBinding.private(
         parent: this,
@@ -58,7 +58,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  StringBinding stringBinding({String property, @required int index}) {
+  StringBinding stringBinding({@required int index}) {
     assert(index != null);
     return StringBinding.private(
         parent: this,
@@ -67,7 +67,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  TableBinding tableBinding({String property, @required int index}) {
+  TableBinding tableBinding({@required int index}) {
     assert(index != null);
     return TableBinding.private(
         parent: this,
@@ -76,7 +76,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  ListBinding<T> listBinding<T>({String property, @required int index}) {
+  ListBinding<T> listBinding<T>({@required int index}) {
     assert(index != null);
     return ListBinding.private(
         parent: this,
@@ -85,7 +85,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  ModelBinding modelBinding({String property, @required int index}) {
+  ModelBinding modelBinding({@required int index}) {
     assert(index != null);
     return ModelBinding.private(
         parent: this,
@@ -94,7 +94,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  MapBinding<K, V> mapBinding<K, V>({String property, @required int index}) {
+  MapBinding<K, V> mapBinding<K, V>({@required int index}) {
     assert(index != null);
     return MapBinding.private(
         parent: this,
@@ -103,7 +103,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         editHost: this.editHost);
   }
 
-  DynamicBinding dynamicBinding({String property, @required int index}) {
+  DynamicBinding dynamicBinding({@required int index}) {
     assert(index != null);
     return DynamicBinding.private(
         parent: this,

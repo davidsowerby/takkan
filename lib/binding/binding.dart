@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/binding/listBinding.dart';
 import 'package:precept_client/binding/mapBinding.dart';
-import 'package:precept_client/binding/stringBinding.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 
@@ -107,26 +106,6 @@ abstract class CollectionBinding<T> extends Binding<T> {
             editHost: editHost,
             property: property,
             index: index);
-
-  BooleanBinding booleanBinding({String property, int index});
-
-  DoubleBinding doubleBinding({String property, int index});
-
-  IntBinding intBinding({String property, int index});
-
-  StringBinding stringBinding({String property, int index});
-
-  TableBinding tableBinding({String property, int index});
-
-  ListBinding<T> listBinding<T>({String property, int index});
-
-  ModelBinding modelBinding({String property, int index});
-
-  MapBinding<K, V> mapBinding<K, V>({String property, int index});
-
-  DynamicBinding dynamicBinding({String property, int index});
-
-  // TimestampBinding timestampBinding({String property, int index});  TODO How do we handle backend specific bindings?
 
   /// Creates an empty value in its parent
   /// Invoked when a child binding writes to this binding, but this binding does not actually exist yet in its own parent

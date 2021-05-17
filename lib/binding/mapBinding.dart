@@ -19,7 +19,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
             firstLevelKey: firstLevelKey,
             editHost: editHost);
 
-  BooleanBinding booleanBinding({@required String property, int index}) {
+  BooleanBinding booleanBinding({@required String property}) {
     assert(property != null);
     return BooleanBinding.private(
         parent: this,
@@ -28,7 +28,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  DoubleBinding doubleBinding({@required String property, int index}) {
+  DoubleBinding doubleBinding({@required String property}) {
     assert(property != null);
     return DoubleBinding.private(
         parent: this,
@@ -37,7 +37,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  IntBinding intBinding({@required String property, int index}) {
+  IntBinding intBinding({@required String property}) {
     assert(property != null);
     return IntBinding.private(
         parent: this,
@@ -46,7 +46,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  StringBinding stringBinding({@required String property, int index}) {
+  StringBinding stringBinding({@required String property}) {
     assert(property != null);
     return StringBinding.private(
         parent: this,
@@ -55,7 +55,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  TableBinding tableBinding({@required String property, int index}) {
+  TableBinding tableBinding({@required String property}) {
     assert(property != null);
     return TableBinding.private(
         parent: this,
@@ -64,7 +64,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  ListBinding<T> listBinding<T>({@required String property, int index}) {
+  ListBinding<T> listBinding<T>({@required String property}) {
     assert(property != null);
     return ListBinding.private(
         parent: this,
@@ -73,7 +73,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  ModelBinding modelBinding({@required String property, int index}) {
+  ModelBinding modelBinding({@required String property}) {
     assert(property != null);
     return ModelBinding.private(
         parent: this,
@@ -82,7 +82,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  MapBinding<K, V> mapBinding<K, V>({@required String property, int index}) {
+  MapBinding<K, V> mapBinding<K, V>({@required String property}) {
     assert(property != null);
     return MapBinding<K, V>.private(
         parent: this,
@@ -91,7 +91,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  DynamicBinding dynamicBinding({@required String property, int index}) {
+  DynamicBinding dynamicBinding({@required String property}) {
     assert(property != null);
     return DynamicBinding.private(
         parent: this,
@@ -100,7 +100,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         editHost: this.editHost);
   }
 
-  // TimestampBinding timestampBinding({@required String property, int index}) {
+  // TimestampBinding timestampBinding({@required String property}) {
   //   assert(property != null);
   //   return TimestampBinding.private(
   //       parent: this, property: property, firstLevelKey: this.firstLevelKey ?? property, editHost: this.editHost);
