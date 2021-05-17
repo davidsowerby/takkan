@@ -14,13 +14,11 @@ import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/trait/textTrait.dart';
 
 // TODO error handling, loader may fail
 
@@ -147,13 +145,11 @@ class Precept {
     String name = models[0].name;
     String id = models[0].id;
     Map<String, PPage> pages = Map();
-    final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(Map());
-    final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(Map());
+    final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(patterns: Map());
+    final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(typePatterns: Map());
     IsStatic isStatic = IsStatic.inherited;
     PDataProvider dataProvider;
     PQuery query;
-    PPanelStyle panelStyle;
-    PTextTrait textTrait;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
       if (s.pages != null) pages.addAll(s.pages);
@@ -164,8 +160,6 @@ class Precept {
       if (s.isStatic != null) isStatic = s.isStatic;
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
       if (s.queryIsDeclared) query = s.query;
-      if (s.panelStyle != null) panelStyle = s.panelStyle;
-      if (s.textTrait != null) textTrait = s.textTrait;
       if (s.controlEdit != null) controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
@@ -177,8 +171,6 @@ class Precept {
         query: query,
         dataProvider: dataProvider,
         controlEdit: controlEdit,
-        panelStyle: panelStyle,
-        textTrait: textTrait,
       );
     }
   }

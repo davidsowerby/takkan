@@ -118,7 +118,6 @@ class DataSource {
     return dataProvider.update(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
-      onSuccess: temporaryDocument.saved,
     );
   }
 
