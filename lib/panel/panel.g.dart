@@ -9,7 +9,7 @@ part of 'panel.dart';
 PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   return PPanel(
     openExpanded: json['openExpanded'] as bool,
-    property: json['property'] as String?,
+    property: json['property'] as String,
     content: PElementListConverter.fromJson(
         json['content'] as List<Map<String, dynamic>>),
     pageArguments: json['pageArguments'] as Map<String, dynamic>,

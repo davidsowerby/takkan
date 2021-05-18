@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/element.dart';
 import 'package:precept_script/common/script/help.dart';
@@ -36,7 +37,7 @@ class PPanel extends PSubContent {
 
   PPanel({
     this.openExpanded = true,
-    String? property,
+    String property=notSet,
     this.content = const [],
     this.pageArguments = const {},
     this.layout = const PPanelLayout(),

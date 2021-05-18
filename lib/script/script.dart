@@ -3,6 +3,7 @@ import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/element.dart';
 import 'package:precept_script/common/script/layout.dart';
@@ -11,12 +12,10 @@ import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/queryConverter.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
-import 'package:precept_script/trait/textTrait.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'script.g.dart';
@@ -46,8 +45,6 @@ class PScript extends PCommon {
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
     PQuery? query,
-    PPanelStyle panelStyle = const PPanelStyle(),
-    PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
   }) : super(
@@ -56,7 +53,6 @@ class PScript extends PCommon {
           dataProvider: dataProvider ?? PNoDataProvider(),
           query: query,
           controlEdit: controlEdit,
-          textTrait: textTrait,
         );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
@@ -190,7 +186,7 @@ class PPage extends PContent {
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
-    String? property,
+    String property=notSet,
     required String title,
   }) : super(
           isStatic: isStatic,

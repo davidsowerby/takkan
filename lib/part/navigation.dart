@@ -1,6 +1,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/part/part.dart';
 
 part 'navigation.g.dart';
@@ -19,7 +20,7 @@ class PNavButton extends PPart {
     String readTraitName=defaultReadTrait,
     String? editTraitName,
     double height = 100,
-    String? property,
+    String property=notSet,
     String staticData = '',
     final Map<String, dynamic> args = const {},
   }) : super(

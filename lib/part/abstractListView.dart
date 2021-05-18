@@ -1,5 +1,6 @@
 
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
 
@@ -27,7 +28,7 @@ abstract class PAbstractListView extends PPart {
     String? caption,
     PHelp? help,
     String? staticData,
-    String? property,
+    String property=notSet,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
     String? tooltip,

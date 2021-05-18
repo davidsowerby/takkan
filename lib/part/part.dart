@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/script/script.dart';
@@ -22,7 +23,6 @@ part 'part.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PPart extends PSubContent {
   final bool readOnly;
-  final String? property;
   final String? staticData;
   final PHelp? help;
   final String? tooltip;
@@ -34,7 +34,7 @@ class PPart extends PSubContent {
       {String? caption,
       this.readOnly = false,
       this.height = 60,
-      this.property,
+      String property = notSet,
       required this.readTraitName,
       this.editTraitName,
       IsStatic isStatic = IsStatic.inherited,
@@ -48,6 +48,7 @@ class PPart extends PSubContent {
           isStatic: isStatic,
           controlEdit: controlEdit,
           caption: caption,
+          property: property,
         );
 
   factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
@@ -71,7 +72,7 @@ class PPart extends PSubContent {
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes || readOnly) {
-      if (property?.isEmpty == null || (property?.isEmpty==true)) {
+      if (property?.isEmpty == null || (property?.isEmpty == true)) {
         messages.add(ValidationMessage(
             item: this,
             msg:

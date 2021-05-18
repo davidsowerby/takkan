@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/particle/textBox.dart';
@@ -16,7 +17,7 @@ class PText extends PPart {
       {String? caption,
       bool readOnly = false,
       double height = 60,
-      String? property,
+      String property=notSet,
       String readTraitName=defaultReadTrait,
       String editTraitName=PTextBox.defaultTraitName,
       IsStatic isStatic = IsStatic.inherited,

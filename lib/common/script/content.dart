@@ -1,4 +1,5 @@
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -11,12 +12,12 @@ import 'package:precept_script/validation/message.dart';
 /// should be displayed.  This can be any [PPanel] implementation, but is usually [PNavTile] or [PListTile]
 class PContent extends PCommon {
   final String? caption;
-  final String? property;
+  final String property;
   final PPanel? listEntryConfig;
 
   PContent({
     this.caption,
-    this.property,
+    this.property=notSet,
     this.listEntryConfig,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
@@ -42,7 +43,7 @@ class PContent extends PCommon {
 class PSubContent extends PContent {
   PSubContent({
     String? caption,
-    String? property,
+    String property=notSet,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
     PQuery? query,
