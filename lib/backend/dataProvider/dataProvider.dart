@@ -43,7 +43,7 @@ import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
 
 abstract class DataProvider<CONFIG extends PDataProvider> {
   final CONFIG config;
-  late Authenticator _authenticator;
+  Authenticator? _authenticator;
   late GraphQLClient _client;
 
   DataProvider({required this.config}) : super() {
@@ -68,9 +68,9 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     // ignore: unnecessary_null_comparison
     if (_authenticator == null) {
       _authenticator = createAuthenticator(config);
-      _authenticator.init();
+      _authenticator?.init();
     }
-    return _authenticator;
+    return _authenticator!;
   }
 
   String get sessionTokenKey;
