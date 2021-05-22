@@ -62,7 +62,7 @@ class PSubContent extends PContent {
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes) {
-      if (property == null) {
+      if (property == notSet) {
         messages.add(
           ValidationMessage(
             item: this,

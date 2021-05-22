@@ -23,7 +23,7 @@ part 'part.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PPart extends PSubContent {
   final bool readOnly;
-  final String? staticData;
+  final String staticData;
   final PHelp? help;
   final String? tooltip;
   final double? height;
@@ -38,7 +38,7 @@ class PPart extends PSubContent {
       required this.readTraitName,
       this.editTraitName,
       IsStatic isStatic = IsStatic.inherited,
-      this.staticData,
+      this.staticData=notSet,
       this.help,
       ControlEdit controlEdit = ControlEdit.inherited,
       String? id,
@@ -72,7 +72,7 @@ class PPart extends PSubContent {
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (isStatic != IsStatic.yes || readOnly) {
-      if (property?.isEmpty == null || (property?.isEmpty == true)) {
+      if (property.isEmpty == true) {
         messages.add(ValidationMessage(
             item: this,
             msg:

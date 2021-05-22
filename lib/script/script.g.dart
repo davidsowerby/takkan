@@ -86,7 +86,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
         json['content'] as List<Map<String, dynamic>>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String?,
-    property: json['property'] as String?,
+    property: json['property'] as String,
     title: json['title'] as String,
   )..version = json['version'] as int;
 }

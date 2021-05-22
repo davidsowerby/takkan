@@ -21,7 +21,7 @@ class PText extends PPart {
       String readTraitName=defaultReadTrait,
       String editTraitName=PTextBox.defaultTraitName,
       IsStatic isStatic = IsStatic.inherited,
-      String? staticData,
+      String staticData=notSet,
       PHelp? help,
       ControlEdit controlEdit = ControlEdit.inherited,
       String? id,

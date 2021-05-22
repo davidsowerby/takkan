@@ -27,7 +27,7 @@ abstract class PAbstractListView extends PPart {
     double? particleHeight,
     String? caption,
     PHelp? help,
-    String? staticData,
+    String staticData=notSet,
     String property=notSet,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,

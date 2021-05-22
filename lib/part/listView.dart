@@ -1,6 +1,7 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/abstractListView.dart';
 
@@ -31,7 +32,7 @@ class PListView extends PAbstractListView {
     double? particleHeight,
     String? caption,
     PHelp? help,
-    String? staticData,
+    String staticData=notSet,
     required String property,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
