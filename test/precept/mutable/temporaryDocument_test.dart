@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
 
 void main() {
-  MutableDocument tdoc;
-  ChangeListener listener;
+  late MutableDocument tdoc;
+  late ChangeListener listener;
 
   setUp(() {
     getIt.reset();
@@ -17,9 +18,6 @@ void main() {
   });
 
   group("data changes correctly and fires listeners", () {
-    test("resetFromSource assertions", () {
-      expect(() => tdoc.updateFromSource(source: null), throwsAssertionError);
-    });
     group("changes to first level keys", () {
       test(
           "add, change, remove, clear. Output, changes & changeList tracks changes, initial data unchanged",
@@ -92,7 +90,7 @@ void main() {
       };
 
       // when
-      tdoc.updateFromSource(source: originalSource);
+      tdoc.updateFromSource(source: originalSource, documentId: DocumentId(path: '',itemId: 'x'));
 
       // then
       expect(tdoc.initialData, originalSource);
@@ -114,7 +112,7 @@ void main() {
       };
 
       // when
-      tdoc.updateFromSource(source: updatedSource);
+      tdoc.updateFromSource(source: updatedSource,documentId: DocumentId(path:'',itemId: 'x'));
 
       // then
       expect(item1.read(), "localupdated1");

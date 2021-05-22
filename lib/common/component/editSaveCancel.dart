@@ -23,11 +23,11 @@ class EditSaveCancel extends StatelessWidget {
 
 
   const EditSaveCancel({
-    Key key,
+    Key? key,
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
-    this.dataBinding,
+    required this.dataBinding,
   }) : super(key: key);
 
 

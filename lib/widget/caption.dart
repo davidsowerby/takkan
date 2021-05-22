@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 class Caption extends StatelessWidget {
   final String text;
 
-  const Caption({Key key, this.text}) : super(key: key);
+  const Caption({Key? key,required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

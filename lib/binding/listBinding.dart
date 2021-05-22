@@ -1,18 +1,18 @@
-import 'package:flutter/foundation.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/binding/stringBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/constants.dart';
 
 /// [T] is the data type of the list items
 class ListBinding<T> extends CollectionBinding<List<T>> {
   const ListBinding.private(
-      {@required Binding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {CollectionBinding? parent,
+        String property=notSet,
+        int index=Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -22,109 +22,74 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
 
   @override
   List<T> emptyValue() {
-    return List<T>();
+    return List<T>.empty();
   }
 
-  BooleanBinding booleanBinding({@required int index}) {
-    assert(index != null);
+  BooleanBinding booleanBinding({required int index}) {
     return BooleanBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  DoubleBinding doubleBinding({@required int index}) {
-    assert(index != null);
+  DoubleBinding doubleBinding({required int index}) {
     return DoubleBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  // TimestampBinding timestampBinding({@required int index}) {
+  // TimestampBinding timestampBinding({required int index}) {
   //   assert(index != null);
   //   return TimestampBinding.private(
   //       parent: this, index: index, firstLevelKey: this.firstLevelKey ?? property, editHost: this.editHost);
   // }
 
-  IntBinding intBinding({@required int index}) {
-    assert(index != null);
+  IntBinding intBinding({required int index}) {
     return IntBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  StringBinding stringBinding({@required int index}) {
-    assert(index != null);
+  StringBinding stringBinding({required int index}) {
     return StringBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  TableBinding tableBinding({@required int index}) {
-    assert(index != null);
+  TableBinding tableBinding({required int index}) {
     return TableBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  ListBinding<T> listBinding<T>({@required int index}) {
-    assert(index != null);
+  ListBinding<T> listBinding<T>({required int index}) {
     return ListBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  ModelBinding modelBinding({@required int index}) {
+  ModelBinding modelBinding({required int index}) {
     assert(index != null);
     return ModelBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  MapBinding<K, V> mapBinding<K, V>({@required int index}) {
+  MapBinding<K, V> mapBinding<K, V>({required int index}) {
     assert(index != null);
     return MapBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
-  DynamicBinding dynamicBinding({@required int index}) {
-    assert(index != null);
+  DynamicBinding dynamicBinding({required int index}) {
     return DynamicBinding.private(
-        parent: this,
-        index: index,
-        firstLevelKey: this.firstLevelKey ?? property,
-        editHost: this.editHost);
+        parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
   /// Reading a list from Firebase can cause some casting issues.  Connecting individual bindings to it - for example,
   /// a StringBinding, works fine, but reading a whole list can be a problem
-  List<String> readStringList(
-      {List<String> defaultValue, bool allowNullReturn = false}) {
-    List readValue;
+  List<String>? readStringList({List<String>? defaultValue, bool allowNullReturn = false}) {
+    List? readValue;
     if (property != null) {
-      readValue = parent.read()[property];
+      readValue = parent?.read()[property];
     } else {
-      readValue = parent.read()[index];
+      readValue = parent?.read()[index];
     }
     if (readValue == null) {
       if (defaultValue == null) {
-        return (allowNullReturn) ? null : List<String>();
+        return (allowNullReturn) ? null : List<String>.empty(growable: true);
       } else {
         return defaultValue;
       }
@@ -134,46 +99,48 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   }
 
   void sortAscending() {
-    read().sort();
-    editHost.nestedChange(firstLevelKey);
+    read()?.sort();
+    editHost?.nestedChange(firstLevelKey);
   }
 
   int count() {
-    final List rows = read();
-    return rows.length;
+    final List? rows = read();
+    return (rows == null) ? 0 : rows.length;
   }
 
   void sortDescending() {
-    read().sort();
-    parent.read()[property] =
-        parent.read()[property].reversed.toList(growable: true);
-    editHost.nestedChange(firstLevelKey);
+    read()?.sort();
+    parent?.read()[property] = parent?.read()[property].reversed.toList(growable: true);
+    editHost?.nestedChange(firstLevelKey);
   }
 
   /// changes the index of an element from [oldIndex] to [newIndex]
   /// throws a [BindingException] if either index is out of bounds
   /// returns -1 if no change is made or [newIndex] if a change is made
-  int changeOrder({int oldIndex, int newIndex}) {
-    if (oldIndex < 0 || oldIndex >= read().length) {
+  int changeOrder({required int oldIndex, required int newIndex}) {
+    final readValue = read();
+    int readLength = (readValue == null) ? 0 : readValue.length;
+    if (oldIndex < 0 || oldIndex >= readLength) {
       logType(this.runtimeType).d("old index=$oldIndex");
       throw BindingException("oldIndex must be within range, it is $oldIndex");
     }
-    if (newIndex < 0 || newIndex >= read().length) {
-      logType(this.runtimeType)
-          .d("new index=$newIndex, list length: ${read().length}");
+    if (newIndex < 0 || newIndex >= readLength) {
+      logType(this.runtimeType).d("new index=$newIndex, list length: $readLength");
       throw BindingException("newIndex must be within range, it is $newIndex");
     }
     if (oldIndex == newIndex) {
       return -1;
     } else {
       _doChangeOrder(oldIndex, newIndex);
-      editHost.nestedChange(firstLevelKey);
+      editHost?.nestedChange(firstLevelKey);
       return newIndex;
     }
   }
 
   void _doChangeOrder(int oldIndex, int newIndex) {
-    final List rows = List.from(read(), growable: true);
+    final List<T>? readValue = read();
+    if (readValue == null) return;
+    final List<T> rows = List.from(readValue, growable: true);
     final element = rows.removeAt(oldIndex);
     rows.insert(newIndex, element);
     write(rows);
@@ -182,39 +149,38 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   /// behaves in the same way as the underlying [List.insertRow], and will throw the same errors
   /// A copy is made of the original list, because it is often not growable.
   void insertRow(int index, dynamic value) {
-    List<dynamic> rows = List();
-    rows.addAll(parent.read()[property]);
+    List<dynamic> rows = List.empty(growable: true);
+    rows.addAll(parent?.read()[property]);
     rows.insert(index, value);
-    logType(this.runtimeType)
-        .d("inserted new item at index $index in list $property");
-    parent.read()[property] = rows;
-    editHost.nestedChange(firstLevelKey);
+    logType(this.runtimeType).d("inserted new item at index $index in list $property");
+    parent?.read()[property] = rows;
+    editHost?.nestedChange(firstLevelKey);
   }
 
   /// behaves in the same way as the underlying [List.addRow], and will throw the same errors
   /// A copy is made of the original list, because it is often not growable.
   void addRow(dynamic value) {
-    List<dynamic> rows = List();
-    if ((parent.read()[property] != null)) {
-      rows.addAll(parent.read()[property]);
+    List<dynamic> rows = List.empty(growable: true);
+    if ((parent?.read()[property] != null)) {
+      rows.addAll(parent?.read()[property]);
     }
     rows.add(value);
     logType(this.runtimeType).d("added new item list $property");
-    parent.read()[property] = rows;
-    editHost.nestedChange(firstLevelKey);
+    parent?.read()[property] = rows;
+    editHost?.nestedChange(firstLevelKey);
   }
 
   /// New list needs to be created, because by default lists are not growable
   void deleteRow(int index) {
-    List<dynamic> rows = List();
-    rows.addAll(read());
+    List<dynamic> rows = List.empty(growable: true);
+    final List<dynamic>? readValue = read();
+    if (readValue != null) rows.addAll(readValue);
     if (index >= 0 && index < rows.length) {
       rows.removeAt(index);
-      parent.read()[property] = rows;
-      editHost.nestedChange(firstLevelKey);
+      parent?.read()[property] = rows;
+      editHost?.nestedChange(firstLevelKey);
     } else {
-      logType(this.runtimeType)
-          .d("Index $index is out of range, cannot be deleted");
+      logType(this.runtimeType).d("Index $index is out of range, cannot be deleted");
     }
   }
 
@@ -228,15 +194,12 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   /// if the index is out of bounds (high) a [BindingException] is thrown
 
   void demote(int index) {
-    List rows = read();
-    if (index == rows.length - 1) return;
-    changeOrder(oldIndex: index, newIndex: index + 1);
+    List? rows = read();
+    if (rows != null) {
+      if (index == rows.length - 1) return;
+      changeOrder(oldIndex: index, newIndex: index + 1);
+    }
   }
 }
 
-List<T> mergeLists<T>(List<T> list1, List<T> list2) {
-  if (list2 != null) {
-    list1.addAll(list2);
-  }
-  return list1;
-}
+

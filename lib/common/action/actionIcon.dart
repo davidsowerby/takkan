@@ -7,8 +7,8 @@ abstract class ActionIcon extends StatelessWidget with ActionInvocation {
   final List<Function(BuildContext)> onAfter;
 
   const ActionIcon({
-    Key key,
-    @required this.icon,
+    Key? key,
+    required this.icon,
     this.onBefore = const [],
     this.onAfter = const [],
   }) : super(key: key);

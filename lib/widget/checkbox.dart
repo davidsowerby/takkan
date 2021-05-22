@@ -4,9 +4,9 @@ import 'package:precept_client/binding/connector.dart';
 /// If specified, [onChange] is called after the widget state has been updated to the model
 class CheckboxStateful extends StatefulWidget {
   final ModelConnector connector;
-  final Function(bool) onChange;
+  final Function(bool?)? onChange;
 
-  const CheckboxStateful({Key key, this.connector, this.onChange})
+  const CheckboxStateful({Key? key,required this.connector, this.onChange})
       : super(key: key);
 
   @override
@@ -20,11 +20,11 @@ class _CheckboxStatefulState extends State<CheckboxStateful> {
         onChanged: _onChange, value: widget.connector.readFromModel());
   }
 
-  _onChange(bool value) {
+  _onChange(bool? value) {
     setState(() {
       widget.connector.writeToModel(value);
       if (widget.onChange != null) {
-        widget.onChange(value);
+        widget.onChange!(value);
       }
     });
   }

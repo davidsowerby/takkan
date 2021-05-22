@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:precept_client/binding/listBinding.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_script/common/script/constants.dart';
 
 /// [T] is model
 /// All the static constructors ensure that the [editHost] and [firstLevelKey] are propagated down the document tree.
@@ -10,28 +10,26 @@ import 'package:precept_client/data/temporaryDocument.dart';
 /// If this binding is looked up from a [ListBinding], [index] is used
 /// Either [property] or [index] may be null, but not both.  If both are specified, [property] takes precedence
 abstract class Binding<T> {
-  final MutableDocument editHost;
+    static const int noValue = -999;
+  final MutableDocument? editHost;
   final String firstLevelKey;
-  final CollectionBinding parent;
+  final CollectionBinding? parent;
   final String property;
   final int index;
 
   const Binding.private(
-      {@required this.parent,
-      this.property,
-      this.index,
-      @required this.firstLevelKey,
+      {required this.parent,
+      this.property = notSet,
+      this.index = noValue,
+      required this.firstLevelKey,
       this.editHost})
-      : assert((property != null) || (index != null),
+      : assert((property != notSet) || (index != noValue),
             "There must be either a property or an index");
 
-  T read(
-      {T defaultValue,
-      bool allowNullReturn = false,
-      bool createIfAbsent = true}) {
-    T readValue;
+  T? read({T? defaultValue, bool allowNullReturn = false, bool createIfAbsent = true}) {
+    T? readValue;
 
-    if (property != null) {
+    if (property != notSet) {
       readValue = rValue();
     } else {
       // if a row is missing create only if equivalent to add
@@ -40,7 +38,7 @@ abstract class Binding<T> {
         (parent as ListBinding).addRow(value);
         return value;
       }
-      readValue = parent.read()[index];
+      readValue = parent?.read()[index];
     }
     if (readValue == null) {
       if (allowNullReturn && defaultValue == null) return null;
@@ -61,8 +59,8 @@ abstract class Binding<T> {
     }
   }
 
-  T rValue() {
-    final Map<String, dynamic> parentValue = parent.read();
+  T? rValue() {
+    final Map<String, dynamic> parentValue = parent?.read();
     return parentValue[property];
   }
 
@@ -75,31 +73,36 @@ abstract class Binding<T> {
       throw ConfigurationException(
           "If Bindings are used to write data, the RootBinding must have a valid 'editHost'");
     } else {
-      if (parent.read(allowNullReturn: true) == null) {
-        parent.create();
+      if (parent?.read(allowNullReturn: true) == null) {
+        parent?.create();
       }
-      if (property != null) {
-        parent.read()[property] = value;
+      if (property != notSet) {
+        parent?.read()[property] = value;
       } else {
-        List<T> list = parent.read() as List<T>;
-        if (index >= list.length) {
-          list.insert(index, value);
+        List<T> list= List.empty(growable: true);
+        final data= parent?.read() as List<T>;
+        list.addAll(data);
+        int i = index ;
+        if (i >= list.length) {
+          list.insert(i, value);
         } else {
-          list[index] = value;
+          list[i] = value;
         }
       }
     }
-    editHost.nestedChange(firstLevelKey);
+    editHost?.nestedChange(firstLevelKey);
   }
 }
 
+/// [CollectionBinding] can have a null parent, while [Binding] implementations for 'primitive' values
+/// must have a parent
 abstract class CollectionBinding<T> extends Binding<T> {
   const CollectionBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {CollectionBinding? parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             firstLevelKey: firstLevelKey,
@@ -114,14 +117,13 @@ abstract class CollectionBinding<T> extends Binding<T> {
   }
 }
 
-
 class DynamicBinding extends Binding<dynamic> {
   const DynamicBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {required CollectionBinding parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -137,11 +139,11 @@ class DynamicBinding extends Binding<dynamic> {
 
 class BooleanBinding extends Binding<bool> {
   const BooleanBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {required CollectionBinding parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -157,11 +159,11 @@ class BooleanBinding extends Binding<bool> {
 
 class DoubleBinding extends Binding<double> {
   const DoubleBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {required CollectionBinding parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -176,7 +178,7 @@ class DoubleBinding extends Binding<double> {
 
   @override
   double rValue() {
-    final r = parent.read()[property];
+    final r = parent?.read()[property];
     if (r is int) {
       return r.toDouble();
     } else {
@@ -187,11 +189,11 @@ class DoubleBinding extends Binding<double> {
 
 class IntBinding extends Binding<int> {
   const IntBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {required CollectionBinding parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -208,11 +210,11 @@ class IntBinding extends Binding<int> {
 /// [T] is the data type of the map value
 class TableBinding<T> extends ListBinding<Map<String, T>> {
   const TableBinding.private(
-      {@required Binding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {required CollectionBinding parent,
+        String property=notSet,
+        int index=Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -222,7 +224,7 @@ class TableBinding<T> extends ListBinding<Map<String, T>> {
 
   @override
   List<Map<String, T>> emptyValue() {
-    return List<Map<String, T>>();
+    return List<Map<String, T>>.empty(growable: true);
   }
 }
 
@@ -250,8 +252,8 @@ class SingleSelectBindingWrapper {
 
 class BindingException implements Exception {
   final String msg;
-  final Exception exception;
-  final Error error;
+  final Exception? exception;
+  final Error? error;
 
   BindingException(this.msg, {this.exception, this.error});
 

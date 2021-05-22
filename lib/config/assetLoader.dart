@@ -13,15 +13,14 @@ class DefaultJsonAssetLoader implements JsonAssetLoader {
 
   DefaultJsonAssetLoader();
 
-  Future<Map<String, Map<String, dynamic>>> loadFile({@required String filePath}) async {
-    assert(filePath != null);
+  Future<Map<String, Map<String, dynamic>>> loadFile({required String filePath}) async {
     final String rawFile = await rootBundle.loadString(filePath);
     final map = jsonDecode(rawFile);
     final Map<String, Map<String, dynamic>> result = Map.castFrom(map);
     return result;
   }
 
-  Future<String> toQuotedJson({@required String filePath}) async {
+  Future<String> toQuotedJson({required String filePath}) async {
     final data = await loadFile(filePath: filePath);
     return jsonEncode(json.encode(data));
   }
@@ -33,7 +32,7 @@ class DefaultJsonAssetLoader implements JsonAssetLoader {
 abstract class JsonAssetLoader {
   bool get isLoaded;
 
-  Future<Map<String, dynamic>> loadFile({@required String filePath});
+  Future<Map<String, dynamic>> loadFile({required String filePath});
 
-  Future<String> toQuotedJson({@required String filePath});
+  Future<String> toQuotedJson({required String filePath});
 }

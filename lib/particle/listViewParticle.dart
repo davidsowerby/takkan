@@ -53,10 +53,10 @@ class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final bool readOnly;
 
   const ListViewParticle({
-    @required this.trait,
-    @required this.config,
-    @required this.connector,
-    @required this.readOnly,
+    required this.trait,
+    required this.config,
+    required this.connector,
+    required this.readOnly,
   });
 
   @override

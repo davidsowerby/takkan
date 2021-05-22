@@ -8,9 +8,9 @@ import '../../helper/catcher.dart';
 import 'binding_test.dart';
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
 
   setUp(() {
     data = generateData();
@@ -26,7 +26,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       List update = ["c", "d"];
       listBinding.write(update);
-      List result = listBinding.read();
+      List? result = listBinding.read();
       expect(result, update);
     });
 
@@ -34,7 +34,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["c", "d", "e"]);
       listBinding.sortDescending();
-      List result = listBinding.read();
+      List? result = listBinding.read();
       expect(result, ["e", "d", "c"]);
     });
 
@@ -42,7 +42,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.sortAscending();
-      List result = listBinding.read();
+      List? result = listBinding.read();
       expect(result, ["c", "d", "e"]);
     });
 
@@ -50,7 +50,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       int returnedOrder = listBinding.changeOrder(oldIndex: 0, newIndex: 2);
-      List result = listBinding.read();
+      List? result = listBinding.read();
       expect(result, ["e", "c", "d"]);
       expect(returnedOrder, 2);
     });
@@ -59,7 +59,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       int returnedOrder = listBinding.changeOrder(oldIndex: 1, newIndex: 1);
-      List result = listBinding.read();
+      List? result = listBinding.read();
       expect(result, ["d", "e", "c"]);
       expect(returnedOrder, -1);
     });
@@ -93,7 +93,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.insertRow(0, "a");
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["a", "d", "e", "c"]);
     });
 
@@ -115,7 +115,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.promote(1);
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["e", "d", "c"]);
     });
 
@@ -123,7 +123,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.promote(0);
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["d", "e", "c"]);
     });
 
@@ -131,7 +131,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.promote(-1);
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["d", "e", "c"]);
     });
 
@@ -145,7 +145,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.demote(1);
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["d", "c", "e"]);
     });
 
@@ -153,7 +153,7 @@ void main() {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
       listBinding.write(["d", "e", "c"]);
       listBinding.demote(2);
-      List actual = listBinding.read();
+      List? actual = listBinding.read();
       expect(actual, ["d", "e", "c"]);
     });
 

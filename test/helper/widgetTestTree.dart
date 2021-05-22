@@ -19,7 +19,7 @@ import './exception.dart';
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
   final List<Widget> widgets;
-  final List<String> elementDebugs = List();
+  final List<String?> elementDebugs = List.empty(growable: true);
   final int pages;
   final int panels;
   final int parts;
@@ -29,12 +29,12 @@ class WidgetTestTree {
     _scan();
   }
 
-  Map<String, int> _panelIndexes = Map();
-  Map<String, int> _partIndexes = Map();
-  Map<String, int> _pageIndexes = Map();
-  Map<String, int> _allIndexes = Map();
+  Map<String?, int> _panelIndexes = Map();
+  Map<String?, int> _partIndexes = Map();
+  Map<String?, int> _pageIndexes = Map();
+  Map<String?, int> _allIndexes = Map();
 
-  final List<String> debug = List();
+  final List<String> debug = List.empty(growable: true);
 
   _scan() {
     int index = 0;
@@ -59,11 +59,11 @@ class WidgetTestTree {
   Widget panelWidget({panelIndex=0}){
     final key=_panelIndexes.keys.toList()[panelIndex];
     final widgetIndex=_panelIndexes[key];
-    return widgets[widgetIndex];
+    return widgets[widgetIndex!];
   }
 
   int _upFromElement(String id, bool Function(Widget) typeTest) {
-    int index = _allIndexes[id] - 1;
+    int index = _allIndexes[id]! - 1;
     while (index >= 0) {
       if (typeTest(widgets[index])) {
         return index;
@@ -97,14 +97,14 @@ class WidgetTestTree {
   }
 
   bool elementHasDataBinding(String id, Type type, WidgetTester tester) {
-    final index = _allIndexes[id];
+    final index = _allIndexes[id]!;
     final Widget widget = widgets[index];
     final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
     return (state.dataBinding is FullDataBinding);
   }
 
   bool elementHasDataSource(String id, Type type, WidgetTester tester) {
-    final index = _allIndexes[id];
+    final index = _allIndexes[id]!;
     final Widget widget = widgets[index];
     final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
     return state.dataSource.temporaryDocument != null;
@@ -129,7 +129,7 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  PScript init({PScript script, bool useCaptionsAsIds = true}) {
+  PScript init({required PScript script, bool useCaptionsAsIds = true}) {
     preceptDefaultInjectionBindings();
     partLibrary.init();
     PMockDataProvider.register();

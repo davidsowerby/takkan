@@ -23,7 +23,7 @@ import 'package:provider/provider.dart';
 class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
-  final PHelp help;
+  final PHelp? help;
   final Widget Function(bool) expandedContent;
   final bool expandable;
   final bool openExpanded;
@@ -35,17 +35,17 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onAfterSave;
   final bool showEditSave;
   final PPanelHeading config;
-  final DataBinding dataBinding;
+  final DataBinding? dataBinding;
 
   const Heading({
-    Key key,
-    @required this.config,
-    this.headingText,
+    Key? key,
+    required this.config,
+    this.headingText='Heading',
     this.dataBinding,
     this.help,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
-    @required this.expandedContent,
+    required this.expandedContent,
     this.expandable = true,
     this.onAfterEdit = const [],
     this.onBeforeEdit = const [],
@@ -62,8 +62,8 @@ class Heading extends StatefulWidget {
 }
 
 class _HeadingState extends State<Heading> with Interpolator {
-  bool expanded;
-  ThemeLookup themeLookup;
+  late bool expanded;
+  late ThemeLookup themeLookup;
 
   @override
   void initState() {
@@ -120,11 +120,11 @@ class _HeadingState extends State<Heading> with Interpolator {
                   ),
                   if (widget.help != null)
                     HelpButton(
-                      help: widget.help,
+                      help: widget.help!,
                     ),
                   Spacer(),
                   if (editable)
-                    EditSaveCancel(key: keys(widget.key, ['esc']), dataBinding: widget.dataBinding),
+                    EditSaveCancel(key: keys(widget.key, ['esc']), dataBinding: widget.dataBinding!),
                   if (actionButtons.isNotEmpty)
                     Row(
                       children: actionButtons,
@@ -155,8 +155,8 @@ class HeadingExpandCloseAction extends ActionIcon {
   final bool expanded;
 
   const HeadingExpandCloseAction({
-    Key key,
-    this.expanded,
+    Key? key,
+    required this.expanded,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],
   }) : super(
@@ -176,8 +176,8 @@ class HelpButton extends ActionIcon with Interpolator {
   final PHelp help;
 
   const HelpButton({
-    Key key,
-    @required this.help,
+    Key? key,
+    required this.help,
     IconData icon = Icons.help,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],

@@ -12,10 +12,10 @@ const Map<String, dynamic> defValue = {"default": "value"};
 const Map<String, dynamic> updateValue = {"updated": "with new value"};
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -25,14 +25,14 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("MapBinding<String,dynamic>", () {
     group("Read", () {
       test("read with default settings, value exists", () {
         final Map<String, dynamic> actual =
-        rootBinding.modelBinding(property: property).read();
+        rootBinding.modelBinding(property: property).read()!;
         final Map<String, dynamic> expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -43,7 +43,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final Map<String, dynamic> actual =
-        rootBinding.modelBinding(property: "no item").read();
+        rootBinding.modelBinding(property: "no item").read()!;
         final Map<String, dynamic> expected = {};
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -57,7 +57,7 @@ void main() {
         final Map<String, dynamic> expected = loadedValue;
         final Map<String, dynamic> actual = rootBinding
             .modelBinding(property: property)
-            .read(defaultValue: defaultValue);
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating MapBinding<String,dynamic> adds property");
@@ -95,7 +95,7 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final Map<String, dynamic> expected = null;
+            final Map<String, dynamic>? expected = null;
             final actual = rootBinding
                 .modelBinding(property: "no item")
                 .read(allowNullReturn: true);
@@ -111,7 +111,7 @@ void main() {
         final itemBinding = rootBinding.modelBinding(property: property);
         Map<String, dynamic> expected = updateValue;
         itemBinding.write(expected);
-        Map<String, dynamic> result = itemBinding.read();
+        Map<String, dynamic> result = itemBinding.read()!;
         expect(result, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating MapBinding<String,dynamic> adds property");

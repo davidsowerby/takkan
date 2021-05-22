@@ -54,12 +54,12 @@ final PScript kitchenSink01 = PScript(
                 controlEdit: ControlEdit.thisOnly,
                 property: '',
                 content: [
-                  PPart(
+                  PPart(readTraitName: PText.defaultReadTrait,
                     property: 'firstName',
                     caption: 'Part 1-3-1',
                     staticData: 'Part 1-3-1',
                   ),
-                  PPart(
+                  PPart(readTraitName: PText.defaultReadTrait,
                     property: 'lastName',
                     caption: 'Part 1-3-2',
                     staticData: 'Part 1-3-2',
@@ -68,14 +68,14 @@ final PScript kitchenSink01 = PScript(
               ),
             ],
           ),
-          PPart(id: 'Part 2', staticData: 'Part 2', caption: 'Part 2'),
-          PPart(id: 'Part 3', staticData: 'Part 3', caption: 'Part 3'),
+          PPart(readTraitName: PText.defaultReadTrait,id: 'Part 2', staticData: 'Part 2', caption: 'Part 2'),
+          PPart(readTraitName: PText.defaultReadTrait,id: 'Part 3', staticData: 'Part 3', caption: 'Part 3'),
         ],
       ),
   },
 );
 
-final PSchema kitchenSinkSchema01 = PSchema(documents: {
+final PSchema kitchenSinkSchema01 = PSchema(name: 'schema01',documents: {
   'Account': PDocument(
     fields: {
       'firstName': PString(),
@@ -86,7 +86,7 @@ final PSchema kitchenSinkSchema01 = PSchema(documents: {
 
 void main() {
   group('Static Page with Overrides (kitchen-sink-01)', () {
-    WidgetTestTree testTree;
+    late WidgetTestTree testTree;
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -120,7 +120,7 @@ void main() {
       // when
       final widgetTree = MaterialApp(
           home: PreceptPage(
-        config: script.pages['test'],
+        config: script.pages['test']!,
       ));
       await tester.pumpWidget(widgetTree);
       await tester.pumpAndSettle(const Duration(seconds: 1));

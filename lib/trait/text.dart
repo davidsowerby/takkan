@@ -8,12 +8,11 @@ class TextTrait extends Trait {
   final TextTheme textTheme;
 
   const TextTrait(
-      {@required this.textStyle,
-        @required this.textAlign,
-        @required this.textTheme,
-        String caption,
+      {required this.textStyle,
+        required this.textAlign,
+        required this.textTheme,
         bool showCaption = true})
-      : super(showCaption: showCaption, caption:caption);
+      : super(showCaption: showCaption);
 
   @override
   Type get viewDataType => String;

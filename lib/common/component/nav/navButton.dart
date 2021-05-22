@@ -5,18 +5,18 @@ import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_script/part/navigation.dart';
 
-class NavigationButton extends StatelessWidget with ConnectorBuilder  {
+class NavigationButton extends StatelessWidget with ConnectorBuilder {
   final PNavButton partConfig;
   final ModelConnector connector;
   final NavigationButtonTrait trait;
   final Map<String, dynamic> pageArguments;
 
   NavigationButton({
-    Key key,
-    this.partConfig,
-    this.connector,
-    this.trait,
-    this.pageArguments=const {},
+    Key? key,
+    required this.partConfig,
+    required this.connector,
+    this.trait=const NavigationButtonTrait(),
+    this.pageArguments = const {},
   }) : super(key: key);
 
   @override
@@ -30,8 +30,4 @@ class NavigationButton extends StatelessWidget with ConnectorBuilder  {
   navigateTo(BuildContext context) {
     Navigator.pushNamed(context, partConfig.route, arguments: pageArguments);
   }
-
-
 }
-
-

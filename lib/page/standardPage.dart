@@ -26,7 +26,7 @@ class PreceptPage extends StatefulWidget {
   /// a Map<String,dynamic>
   ///
   /// Doing it this way keeps the structure consistent with [Panel] and [Part]
-  const PreceptPage({@required this.config, this.pageArguments = const {}})
+  const PreceptPage({required this.config, this.pageArguments = const {}})
       : parentBinding = const NoDataBinding();
 
   @override
@@ -47,7 +47,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
     final userAuthenticated = dataProvider.authenticator.isAuthenticated;
     _needsAuthentication = requiresAuth && !userAuthenticated;
     if (_needsAuthentication) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
         Navigator.pushNamed(context, 'signIn', arguments: {
           'returnRoute': (config as PPage).route,
           'signInConfig': dataProvider.config.signInOptions,
@@ -73,7 +73,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
             onPressed: () => _doSignOut(context),
           )
         ],
-        title: Text(widget.config.title),
+        title: Text(widget.config.title??''),
       ),
       body: doBuild(context, theme, dataSource, widget.config, widget.pageArguments),
     );
@@ -105,7 +105,7 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
   ///
   /// This needs to be expanded to support more sophisticated layout options
   /// See https://gitlab.com/precept1/precept_client/-/issues/37
-  Widget layout({List<Widget> children, Size screenSize, PPage config}) {
+  Widget layout({required List<Widget> children,required  Size screenSize,required  PPage config}) {
     final margins = config.layout.margins;
     return Padding(
       padding: EdgeInsets.only(
@@ -139,7 +139,7 @@ class PreceptRefreshButton extends ActionIcon {
   }
 
   const PreceptRefreshButton({
-    Key key,
+    Key? key,
     IconData icon = Icons.update,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],

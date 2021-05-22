@@ -7,7 +7,7 @@ class MockLocaleReader implements LocaleReader {
   const MockLocaleReader(this.locale);
 
   @override
-  Locale systemLocale({void Function() localeChangeListener}) {
+  Locale systemLocale({void Function()? localeChangeListener}) {
     return locale;
   }
 }

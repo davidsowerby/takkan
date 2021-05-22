@@ -1,5 +1,4 @@
 
-import 'package:flutter/foundation.dart';
 import 'package:precept_script/script/script.dart';
 
 /// Common interface to load a Precept instance from any source
@@ -16,7 +15,7 @@ class DirectPreceptLoader implements PreceptLoader {
   final PScript script;
   bool _loaded = false;
 
-  DirectPreceptLoader({@required this.script}) : assert(script != null);
+  DirectPreceptLoader({required this.script}) : assert(script != null);
 
   @override
   Future<PScript> load() async {

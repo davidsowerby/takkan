@@ -1,17 +1,16 @@
-import 'package:flutter/foundation.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/listBinding.dart';
 import 'package:precept_client/binding/stringBinding.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
-
+import 'package:precept_script/common/script/constants.dart';
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
   const MapBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {CollectionBinding? parent,
+      String property = notSet,
+      int index = Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -19,88 +18,79 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
             firstLevelKey: firstLevelKey,
             editHost: editHost);
 
-  BooleanBinding booleanBinding({@required String property}) {
-    assert(property != null);
+  BooleanBinding booleanBinding({required String property}) {
     return BooleanBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  DoubleBinding doubleBinding({@required String property}) {
-    assert(property != null);
+  DoubleBinding doubleBinding({required String property}) {
     return DoubleBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  IntBinding intBinding({@required String property}) {
-    assert(property != null);
+  IntBinding intBinding({required String property}) {
     return IntBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  StringBinding stringBinding({@required String property}) {
-    assert(property != null);
+  StringBinding stringBinding({required String property}) {
     return StringBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  TableBinding tableBinding({@required String property}) {
-    assert(property != null);
+  TableBinding tableBinding({required String property}) {
     return TableBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  ListBinding<T> listBinding<T>({@required String property}) {
-    assert(property != null);
+  ListBinding<T> listBinding<T>({required String property}) {
     return ListBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  ModelBinding modelBinding({@required String property}) {
-    assert(property != null);
+  ModelBinding modelBinding({required String property}) {
     return ModelBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  MapBinding<K, V> mapBinding<K, V>({@required String property}) {
-    assert(property != null);
+  MapBinding<K, V> mapBinding<K, V>({required String property}) {
     return MapBinding<K, V>.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  DynamicBinding dynamicBinding({@required String property}) {
-    assert(property != null);
+  DynamicBinding dynamicBinding({required String property}) {
     return DynamicBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: this.firstLevelKey ?? property,
+        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
         editHost: this.editHost);
   }
 
-  // TimestampBinding timestampBinding({@required String property}) {
+  // TimestampBinding timestampBinding({required String property}) {
   //   assert(property != null);
   //   return TimestampBinding.private(
   //       parent: this, property: property, firstLevelKey: this.firstLevelKey ?? property, editHost: this.editHost);
@@ -127,12 +117,12 @@ class RootBinding extends ModelBinding {
   final String id;
   final instance = DateTime.now();
 
-  RootBinding({@required this.data, MutableDocument editHost, @required this.id})
-      : super.private(editHost: editHost, property: "-root-", firstLevelKey: null, parent: null);
+  RootBinding({required this.data, MutableDocument? editHost, required this.id})
+      : super.private(editHost: editHost, property: "-root-", firstLevelKey: notSet, parent: null);
 
   @override
   Map<String, dynamic> read(
-      {Map<String, dynamic> defaultValue,
+      {Map<String, dynamic>? defaultValue,
       bool allowNullReturn = false,
       bool createIfAbsent = true}) {
     return data;
@@ -158,11 +148,11 @@ class RootBinding extends ModelBinding {
 
 class ModelBinding extends MapBinding<String, dynamic> {
   const ModelBinding.private(
-      {@required CollectionBinding parent,
-      String property,
-      int index,
-      @required String firstLevelKey,
-      MutableDocument editHost})
+      {CollectionBinding? parent,
+        String property=notSet,
+        int index=Binding.noValue,
+      required String firstLevelKey,
+      MutableDocument? editHost})
       : super.private(
             parent: parent,
             property: property,
@@ -179,10 +169,10 @@ class ModelBinding extends MapBinding<String, dynamic> {
 /// A specialised form of [RootBinding] used with the [MutableDocument.queryResults]
 class QueryRootBinding extends RootBinding {
   QueryRootBinding({
-    @required Map<String, dynamic> data,
-    MutableDocument editHost,
-    @required String id,
-    @required queryName,
+    required Map<String, dynamic> data,
+    MutableDocument? editHost,
+    required String id,
+    required queryName,
   }) : super(
           id: id,
           data: data,

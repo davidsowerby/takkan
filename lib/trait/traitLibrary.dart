@@ -17,42 +17,38 @@ import 'package:precept_script/trait/textTrait.dart';
 
 class TraitLibrary {
   Trait findParticleTrait(
-      {@required ThemeData theme,
-      @required String traitName,
-      @required PPart partConfig,
+      {required ThemeData theme,
+      required String traitName,
+      required PPart partConfig,
       PTextTheme textBackground = PTextTheme.cardCanvas}) {
     switch (traitName) {
       case PText.heading1:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
-          textStyle: textTheme.headline4,
+          textStyle: textTheme.headline4!,
           textAlign: TextAlign.center,
           textTheme: textTheme,
-          caption: partConfig.caption,
         );
       case PText.heading2:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
-          textStyle: textTheme.headline5,
+          textStyle: textTheme.headline5!,
           textAlign: TextAlign.center,
           textTheme: textTheme,
-          caption: partConfig.caption,
         );
       case PText.heading3:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
-          textStyle: textTheme.headline6,
+          textStyle: textTheme.headline6!,
           textAlign: TextAlign.center,
           textTheme: textTheme,
-          caption: partConfig.caption,
         );
       case PText.defaultReadTrait:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
-          textStyle: textTheme.bodyText1,
+          textStyle: textTheme.bodyText1!,
           textAlign: TextAlign.left,
           textTheme: textTheme,
-          caption: partConfig.caption,
         );
       case PNavButton.defaultReadTrait:
         return NavigationButtonTrait();
@@ -93,14 +89,12 @@ TextTheme _lookupTextTheme(ThemeData theme, PTextTheme background) {
     case PTextTheme.accent:
       return theme.accentTextTheme;
   }
-  return null; // unreachable
 }
 
 abstract class Trait {
   final bool showCaption;
-  final String caption;
 
-  const Trait({this.showCaption = true, this.caption});
+  const Trait({this.showCaption = true});
 
   Type get viewDataType;
 }

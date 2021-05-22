@@ -5,7 +5,7 @@ class TextBlock extends StatelessWidget {
   final String text;
   final TextStyle style;
 
-  const TextBlock({Key key, @required this.text, this.style}) : super(key: key);
+  const TextBlock({Key? key, required this.text, this.style=const TextStyle()}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

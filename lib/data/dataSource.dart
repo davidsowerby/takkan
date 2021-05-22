@@ -3,6 +3,7 @@ import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/data/provider/documentId.dart';
@@ -37,17 +38,21 @@ import 'package:precept_script/schema/schema.dart';
 /// to the [_temporaryDocument] prior to saving it.
 ///
 class DataSource {
-  MutableDocument _temporaryDocument;
-  PQuery _query;
-  List<GlobalKey<FormState>> _formKeys;
-  PDocument _documentSchema;
+  late MutableDocument _temporaryDocument;
+  late PQuery _query;
+  late List<GlobalKey<FormState>> _formKeys;
+  late PDocument _documentSchema;
   PContent config;
   final DataProvider dataProvider;
   final bool preloadedData;
-  final String preloadedTable;
+  final String dataTableName;
 
   /// [callback] is usually a setState from a StatefulWidget
-  DataSource(PContent config, this.dataProvider, this.preloadedData, this.preloadedTable) {
+  DataSource(
+      {required this.config,
+      required this.dataProvider,
+      required this.preloadedData,
+      required this.dataTableName}) {
     init(config);
   }
 
@@ -62,12 +67,14 @@ class DataSource {
     if (config.queryIsDeclared || preloadedData) {
       _temporaryDocument = inject<MutableDocument>();
       _formKeys = List.empty(growable: true);
+      final providerSchema = config.dataProvider?.schema;
+      if (providerSchema == null) throw PreceptException('Schema must be defined');
       if (preloadedData) {
-        /// _query is not set, but should we in case of the need to refresh?  Would have to construct query.
-        _documentSchema = config.dataProvider.schema.document(preloadedTable);
+        // TODO: _query is not set, but should we in case of the need to refresh?  Would have to construct query.
+        _documentSchema = providerSchema.document(dataTableName);
       } else {
-        _query = config.query;
-        _documentSchema = config.dataProvider.schema.document(_query.table);
+        _query = config.query!;
+        _documentSchema = providerSchema.document(_query.table);
       }
     }
   }
@@ -92,7 +99,7 @@ class DataSource {
     logType(this.runtimeType).d('Flushing forms data to Temporary Document');
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
-        key.currentState.save();
+        key.currentState!.save();
         logType(this.runtimeType).d("Form saved for $key");
       }
     }
@@ -104,7 +111,7 @@ class DataSource {
     bool isValid = true;
     for (GlobalKey<FormState> key in formKeys) {
       if (key.currentState != null) {
-        final validated = key.currentState.validate();
+        final bool validated = key.currentState!.validate();
         if (!validated) isValid = false;
       }
     }
@@ -114,7 +121,11 @@ class DataSource {
 
   Future<bool> persist() async {
     logType(this.runtimeType).d('Persisting data source');
-    final DataProvider dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+    final dataProviderConfig=config.dataProvider;
+    if (dataProviderConfig==null){
+      throw PreceptException('DataProvider config should not be null');
+    }
+    final DataProvider dataProvider = dataProviderLibrary.find(config: dataProviderConfig);
     return dataProvider.update(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
@@ -126,7 +137,7 @@ class DataSource {
   }
 
   MutableDocument updateDocument(
-      {Map<String, dynamic> source, DataProvider dataProvider, bool fireListeners}) {
+      {required Map<String, dynamic> source,required  DataProvider dataProvider,required  bool fireListeners}) {
     final DocumentId documentId = dataProvider.documentIdFromData(source);
     return _temporaryDocument.updateFromSource(
       source: source,
@@ -137,8 +148,8 @@ class DataSource {
 
   /// Delegate call to [MutableDocument.storeQueryResults]
   MutableDocument storeQueryResults({
-    @required String queryName,
-    @required List<Map<String, dynamic>> queryResults,
+    required String queryName,
+    required List<Map<String, dynamic>> queryResults,
     bool fireListeners = false,
   }) {
     return _temporaryDocument.storeQueryResults(

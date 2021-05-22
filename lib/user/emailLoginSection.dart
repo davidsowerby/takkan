@@ -10,7 +10,7 @@ import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';
-
+import 'package:precept_script/common/script/constants.dart';
 const String createPasswordText =
     "If this is a new account, create a password of at least 8 characters, containing at least one letter, one capital letter and one number";
 
@@ -21,11 +21,11 @@ class EmailLoginSection extends StatefulWidget {
   final DataProvider dataProvider;
 
   const EmailLoginSection({
-    Key key,
+    Key? key=const Key('EmailLoginSection'),
     this.passwordHint = "Enter your password",
-    @required this.successRoute,
-    @required this.failureRoute,
-    @required this.dataProvider,
+    required this.successRoute,
+    required this.failureRoute,
+    required this.dataProvider,
   }) : super(key: key);
 
   @override
@@ -33,8 +33,8 @@ class EmailLoginSection extends StatefulWidget {
 }
 
 class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColumns {
-  TextEditingController emailController;
-  TextEditingController passwordController;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
   bool showPasswordBox = false;
 
   @override
@@ -88,7 +88,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(dataProvider.user.email,
+                  child: Text(dataProvider.user.email??notSet,
                       style: theme.textTheme.headline6),
                 ),
                 Padding(
@@ -220,6 +220,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
   }
   
   bool _notSignInRoute(Route route){
-    return !route.settings.name.toLowerCase().contains('signin');
+    String? routePath=route.settings.name;
+    return (routePath==null) ? true : !routePath.toLowerCase().contains('signin');
   }
 }

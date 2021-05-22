@@ -11,7 +11,7 @@ class ChangeEntry {
   final ChangeType type;
   final String key;
 
-  ChangeEntry({@required this.type, @required this.key});
+  ChangeEntry({required this.type, required this.key});
 }
 
 /// Provides a copy of document data for isolation while editing).
@@ -79,16 +79,16 @@ abstract class MutableDocument with ChangeNotifier {
   /// - [initialData] reflects exactly what is received from the source
   /// - [output] reflects what has been received from the source, but with changes reapplied from the [changeList]
   MutableDocument updateFromSource(
-      {@required Map<String, dynamic> source,
-      @required DocumentId documentId,
+      {required Map<String, dynamic> source,
+      required DocumentId documentId,
       bool fireListeners = false});
 
   /// Stores the most recent results (list) of a query.  Standardises use of bindings to access the data
   /// Does not cache paged queries, just holds the most recent page.
   /// Does not attempt to update existing results, simply replaces them
   MutableDocument storeQueryResults({
-    @required String queryName,
-    @required List<Map<String, dynamic>> queryResults,
+    required String queryName,
+    required List<Map<String, dynamic>> queryResults,
     bool fireListeners = false,
   });
 
@@ -116,14 +116,14 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   final Map<String, dynamic> _initialData = Map<String, dynamic>();
   final Map<String, List> _queryResults = Map<String, List>();
   final instance = DateTime.now();
-  RootBinding _rootBinding;
-  QueryRootBinding _queryBinding;
+  late RootBinding _rootBinding;
+  late QueryRootBinding _queryBinding;
 
-  DocumentId _documentId;
+  late DocumentId _documentId;
 
   DefaultMutableDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
-    _queryBinding = QueryRootBinding(data: _queryResults, editHost: this, id: 'query root');
+    _queryBinding = QueryRootBinding(data: _queryResults, editHost: this, id: 'query root', queryName:'Unnamed');
   }
 
   DocumentId get documentId => _documentId;
@@ -142,7 +142,7 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   QueryRootBinding get queryRootBinding => _queryBinding;
 
   @override
-  Object remove(Object key) {
+  Object remove(Object? key) {
     final removed = _output.remove(key);
     _changeList.add(ChangeEntry(type: ChangeType.remove, key: key.toString()));
     _changes.remove(key);
@@ -162,7 +162,7 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   @override
   void clear() {
     reset();
-    _documentId = null;
+    _documentId = const DocumentId(path: '',itemId: '?');
     _initialData.clear();
   }
 
@@ -175,7 +175,7 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   }
 
   @override
-  dynamic operator [](Object key) {
+  dynamic operator [](Object? key) {
     return _output[key];
   }
 
@@ -187,10 +187,9 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   ///
   /// See also [createNew]
   MutableDocument updateFromSource(
-      {@required Map<String, dynamic> source,
-      @required DocumentId documentId,
+      {required Map<String, dynamic> source,
+      required DocumentId documentId,
       bool fireListeners = false}) {
-    assert(source != null);
     _initialData.clear();
     _initialData.addAll(source);
     _output.clear(); // we have to clear - keys may have been deleted
@@ -278,8 +277,8 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   ///
   @override
   MutableDocument storeQueryResults(
-      {@required String queryName,
-      @required List<Map<String, dynamic>> queryResults,
+      {required String queryName,
+      required List<Map<String, dynamic>> queryResults,
       bool fireListeners = false}) {
     _queryResults[queryName] = queryResults;
     return this;

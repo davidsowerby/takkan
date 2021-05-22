@@ -17,10 +17,10 @@ class EmailSignInPage extends StatelessWidget {
   final DataProvider dataProvider;
 
   const EmailSignInPage({
-    @required this.successRoute,
-    @required this.failureRoute,
-    @required this.pageArguments,
-    @required this.dataProvider,
+    required this.successRoute,
+    required this.failureRoute,
+    required this.pageArguments,
+    required this.dataProvider,
   });
 
   @override

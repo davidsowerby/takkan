@@ -22,7 +22,7 @@ abstract class Library<KEY, VALUE, CONFIG> {
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    return (func == null) ? null : func(config);
+    return func(config);
   }
 
   /// Loads library entries defined by the developer
@@ -31,7 +31,7 @@ abstract class Library<KEY, VALUE, CONFIG> {
   /// Defaults are loaded first, so to replace, define another with the key 'default'
   /// There should be no need to call this directly, init for all libraries is carried out in
   /// a call to [Precept.init] which should be before your runApp statement
-  init({Map<KEY, VALUE Function(CONFIG)> entries}) {
+  init({Map<KEY, VALUE Function(CONFIG)>? entries}) {
     setDefaults();
 
     if (entries != null) {

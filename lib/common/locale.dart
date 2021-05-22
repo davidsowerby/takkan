@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Allows Mocking the retrieval of system Locale
 abstract class LocaleReader {
-  Locale systemLocale({void Function() localeChangeListener});
+  Locale systemLocale({void Function()? localeChangeListener});
 }
 
 class DefaultLocaleReader implements LocaleReader {
   @override
-  Locale systemLocale({void Function() localeChangeListener}) {
-    final window = WidgetsBinding.instance.window;
+  Locale systemLocale({void Function()? localeChangeListener}) {
+    final WidgetsBinding inst=WidgetsBinding.instance!;
+    final window = inst.window;
     final locale = window.locale;
     if (localeChangeListener != null) {
       window.onLocaleChanged = localeChangeListener;
@@ -20,8 +21,7 @@ class DefaultLocaleReader implements LocaleReader {
 /// Populates placeholders with [params]
 mixin Interpolator {
   /// populates placeholders with [params]
-  String interpolate(String pattern,
-      {Map<String, dynamic> params, Locale locale}) {
+  String interpolate(String pattern, {Map<String, dynamic>? params, Locale? locale}) {
     String p = pattern;
     if (params != null) {
       params.forEach((key, value) {

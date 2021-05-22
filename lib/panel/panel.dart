@@ -14,12 +14,10 @@ class Panel extends StatefulWidget {
   final Map<String, dynamic> pageArguments;
 
   const Panel(
-      {Key key,
-      @required this.config,
-      this.pageArguments,
-      this.parentBinding = const NoDataBinding()})
-      : assert(config != null),
-        assert(parentBinding != null);
+      {Key? key,
+      required this.config,
+      required this.pageArguments,
+      this.parentBinding = const NoDataBinding()}): super(key: key);
 
   @override
   PanelState createState() => PanelState(config, parentBinding,pageArguments);
@@ -29,7 +27,7 @@ class PanelState extends ContentState<Panel, PPanel> {
   final formKey =GlobalKey<FormState>();
 
   PanelState(PContent config, DataBinding parentBinding,Map<String, dynamic> pageArguments) : super(config, parentBinding,pageArguments);
-  bool expanded;
+  late bool expanded;
 
   @override
   void initState() {
@@ -56,8 +54,8 @@ class PanelState extends ContentState<Panel, PPanel> {
   Widget assembleContent(ThemeData theme) {
     if (widget.config.heading != null) {
       return Heading(
-        config: widget.config.heading,
-        headingText: widget.config.caption,
+        config: widget.config.heading!,
+        headingText: widget.config.caption ?? '',
         expandedContent: (es) => _expandedContent(theme, es),
         dataBinding: dataBinding,
         openExpanded: true,
@@ -68,7 +66,7 @@ class PanelState extends ContentState<Panel, PPanel> {
   }
 
   @override
-  Widget layout({List<Widget> children, Size screenSize, PPanel config}) {
+  Widget layout({required List<Widget> children,required  Size screenSize,required  PPanel config}) {
     final Widget wrapped = (widget.config.scrollable)
         ? ListView(
             children: children,

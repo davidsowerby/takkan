@@ -11,7 +11,7 @@ class MessagePanel extends StatelessWidget {
   final double elevation;
 
   const MessagePanel(
-      {Key key, @required this.message, this.width = 300, this.height = 160, this.elevation = 20})
+      {Key? key, required this.message, this.width = 300, this.height = 160, this.elevation = 20})
       : super(key: key);
 
   @override

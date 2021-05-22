@@ -13,10 +13,10 @@ const double defValue = 23.8;
 const double updateValue = 199.8;
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late  Map<String, dynamic> data;
+  late   MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -26,14 +26,14 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("DoubleBinding", () {
     group("Read", () {
       test("read with default settings, value exists", () {
         final double actual =
-        rootBinding.doubleBinding(property: property).read();
+        rootBinding.doubleBinding(property: property).read()!;
         final double expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final double actual =
-        rootBinding.doubleBinding(property: "no item").read();
+        rootBinding.doubleBinding(property: "no item").read()!;
         final double expected = 0.0;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -58,7 +58,7 @@ void main() {
         final double expected = loadedValue;
         final double actual = rootBinding
             .doubleBinding(property: property)
-            .read(defaultValue: defaultValue);
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating DoubleBinding adds property");
@@ -96,7 +96,7 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final double expected = null;
+            final double? expected = null;
             final actual = rootBinding
                 .doubleBinding(property: "no item")
                 .read(allowNullReturn: true);
@@ -112,7 +112,7 @@ void main() {
         final itemBinding = rootBinding.doubleBinding(property: property);
         double expected = updateValue;
         itemBinding.write(expected);
-        double result = itemBinding.read();
+        double result = itemBinding.read()!;
         expect(result, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating DoubleBinding adds property");

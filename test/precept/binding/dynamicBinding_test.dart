@@ -13,10 +13,10 @@ const String defValue = "a default";
 const double updateValue = 23.7;
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late  Map<String, dynamic> data;
+  late  MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late  ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -26,7 +26,7 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("DynamicBinding", () {

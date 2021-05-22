@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class EditAction extends ActionIcon {
   const EditAction({
-    Key key,
+    Key? key,
     IconData icon = Icons.edit,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],
@@ -26,7 +26,7 @@ class EditAction extends ActionIcon {
 
 class CancelEditAction extends ActionIcon {
   const CancelEditAction({
-    Key key,
+    Key? key,
     IconData icon = Icons.cancel_outlined,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],
@@ -46,7 +46,7 @@ class CancelEditAction extends ActionIcon {
 
 class SaveAction extends ActionIcon {
   const SaveAction({
-    Key key,
+    Key? key,
     IconData icon = Icons.save,
     List<Function(BuildContext)> onBefore = const [],
     List<Function(BuildContext)> onAfter = const [],

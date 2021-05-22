@@ -13,10 +13,10 @@ const List<int> defValue = [1, 13];
 const List<int> updateValue = [12, 45];
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -26,14 +26,14 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("ListBinding<int>", () {
     group("Read", () {
       test("read with default settings, value exists", () {
         final List<int> actual =
-        rootBinding.listBinding<int>(property: property).read();
+        rootBinding.listBinding<int>(property: property).read()!;
         final List<int> expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -44,7 +44,7 @@ void main() {
 
       test("read with default settings, value does not exist", () {
         final List<int> actual =
-        rootBinding.listBinding<int>(property: "no item").read();
+        rootBinding.listBinding<int>(property: "no item").read()!;
         final List<int> expected = [];
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -58,7 +58,7 @@ void main() {
         final List<int> expected = loadedValue;
         final List<int> actual = rootBinding
             .listBinding<int>(property: property)
-            .read(defaultValue: defaultValue);
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating ListBinding<int> adds property");
@@ -96,7 +96,7 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final List<int> expected = null;
+            final List<int>? expected = null;
             final actual = rootBinding
                 .listBinding<int>(property: "no item")
                 .read(allowNullReturn: true);
@@ -112,7 +112,7 @@ void main() {
         final itemBinding = rootBinding.listBinding<int>(property: property);
         List<int> expected = updateValue;
         itemBinding.write(expected);
-        List<int> result = itemBinding.read();
+        List<int> result = itemBinding.read()!;
         expect(result, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating ListBinding<int> adds property");

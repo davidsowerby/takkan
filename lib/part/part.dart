@@ -4,6 +4,7 @@ import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
@@ -35,16 +36,16 @@ class Part extends StatefulWidget {
   final DataBinding parentBinding;
   final Map<String, dynamic> pageArguments;
   final Widget readParticle;
-  final Widget editParticle;
+  final Widget? editParticle;
   final bool singleParticle;
 
   const Part(
-      {Key key,
+      {Key? key,
       this.singleParticle = false,
-      @required this.config,
+      required this.config,
       this.editParticle,
-      this.readParticle,
-      this.pageArguments,
+      required this.readParticle,
+      required this.pageArguments,
       this.parentBinding = const NoDataBinding()})
       : super(key: key);
 
@@ -79,12 +80,13 @@ class PartState extends ContentState<Part, PPart> {
       return widget.readParticle;
     }
     final EditState editState = Provider.of<EditState>(context);
-    assert(widget.editParticle != null);
-    return (editState.readMode) ? widget.readParticle : widget.editParticle;
+    if (widget.editParticle != null) {
+      return (editState.readMode) ? widget.readParticle : widget.editParticle!;
+    } else {throw PreceptException('EditParticle must not be null at this point');}
   }
 
   @override
-  Widget layout({List<Widget> children, Size screenSize, PPart config}) {
+  Widget layout({required List<Widget> children,required  Size screenSize,required  PPart config}) {
     // TODO: implement layout
     throw UnimplementedError();
   }

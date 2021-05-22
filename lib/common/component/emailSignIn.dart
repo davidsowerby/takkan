@@ -13,7 +13,7 @@ class EmailSignIn extends StatelessWidget {
   final PEmailSignIn config;
   final ContentBindings contentBindings;
 
-  EmailSignIn({Key key, @required this.config, @required this.contentBindings}) : super(key: key);
+  EmailSignIn({Key? key, required this.config, required this.contentBindings}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

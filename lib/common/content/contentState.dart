@@ -12,6 +12,7 @@ import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/user/userState.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -37,8 +38,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     super.initState();
     contentBindings.init(_onPreceptReady);
   }
-
-
 
   /// Trigger a refresh once Precept fully loaded
   _onPreceptReady() {
@@ -71,6 +70,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
     final query = config.query;
 
+
     /// Make sure we don't start before Precept has finished init
     if (precept.isReady) {
       /// if data has been passed to the page during construction (usually as a result of navigating
@@ -85,7 +85,11 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         );
       }
 
-      switch (config.query.returnType) {
+      if (query == null) {
+        throw PreceptException('It should not be possible to get here without a defined query');
+      }
+
+      switch (query.returnType) {
         case QueryReturnType.futureSingle:
           return loadData(
               context,
@@ -93,6 +97,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
               dataProvider.query(
                 query: query,
                 pageArguments: pageArguments,
+                script: '',
               ));
         case QueryReturnType.futureList:
           return loadList(
@@ -101,6 +106,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
               dataProvider.queryList(
                 query: query,
                 pageArguments: pageArguments,
+                script:'',
               ));
         case QueryReturnType.streamSingle:
           // TODO: Handle this case.
@@ -128,13 +134,13 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       BuildContext context,
       ThemeData theme,
       Future<T> future,
-      MutableDocument Function({T source, DataProvider dataProvider, bool fireListeners})
+      MutableDocument Function({required T source,required DataProvider dataProvider,required bool fireListeners})
           storeData) {
     return FutureBuilder<T>(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
         if (snapshot.hasData) {
-          storeData(source: snapshot.data, dataProvider: dataProvider, fireListeners: false);
+          storeData(source: snapshot.data!, dataProvider: dataProvider, fireListeners: false);
           return buildContent(theme);
         } else if (snapshot.hasError) {
           return Text('Error in Future ${snapshot.error.runtimeType}');
@@ -153,7 +159,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           dataSource.storeQueryResults(
-              queryName: queryName, queryResults: snapshot.data, fireListeners: false);
+              queryName: queryName, queryResults: snapshot.data!, fireListeners: false);
           return buildContent(theme);
         } else if (snapshot.hasError) {
           final error = snapshot.error;
@@ -168,7 +174,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
           }
-          return null; // unreachable
         }
       },
     );
@@ -214,12 +219,11 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   /// Build any nested Panel or Part widgets. Not used by Part
   Widget buildSubContent({
-    ThemeData theme,
-    DataBinding parentBinding,
-    CONFIG config,
-    Map<String, dynamic> pageArguments,
+    required ThemeData theme,
+    required DataBinding parentBinding,
+    required CONFIG config,
+    required Map<String, dynamic> pageArguments,
   }) {
-    assert(parentBinding != null);
 
     /// There is no common interface for the 'content' property of PPage and PPanel.
     /// Perhaps there should be
@@ -228,7 +232,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         (config is PPanel) ? config.content : (config as PPage).content;
     final List<Widget> children = List.empty(growable: true);
     for (var element in content) {
-      Widget child;
+      late Widget child;
       if (element is PPanel) {
         child = Panel(
           parentBinding: parentBinding,
@@ -251,9 +255,9 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     return layout(children: children, screenSize: screenSize, config: config);
   }
 
-  Widget layout({List<Widget> children, Size screenSize, CONFIG config});
+  Widget layout({required List<Widget> children,required  Size screenSize,required  CONFIG config});
 
-  addUserState({@required Widget widget, @required PCommon config}) {
+  addUserState({required Widget widget, required PCommon config}) {
     if (config.dataProviderIsDeclared) {
       return ChangeNotifierProvider<UserState>(
           create: (_) => UserState(dataProvider.authenticator), child: widget);
@@ -265,7 +269,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
   /// see [_canEdit]
-  Widget addEditControl({@required Widget widget, @required PCommon config}) {
+  Widget addEditControl({required Widget widget, required PCommon config}) {
     if (config.isStatic == IsStatic.yes) {
       return widget;
     }
@@ -304,41 +308,46 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     return Form(key: formKey, child: content);
   }
 
-  DataBinding get dataBinding=>contentBindings.dataBinding;
-  DataProvider get dataProvider=>contentBindings.dataProvider;
-  bool get preloaded=> contentBindings.preloaded;
-  Map<String,dynamic> get pageArguments=>contentBindings.pageArguments;
+  DataBinding get dataBinding => contentBindings.dataBinding;
+
+  DataProvider get dataProvider => contentBindings.dataProvider;
+
+  bool get preloaded => contentBindings.preloaded;
+
+  Map<String, dynamic> get pageArguments => contentBindings.pageArguments;
+
   DataSource get dataSource => contentBindings.dataSource;
-  PContent get config=>contentBindings.config;
+
+  PContent get config => contentBindings.config;
 }
 
 /// A wrapper to hold all the data related bindings and configuration associated with [ContentState].
-///  This is passed to the [PartLibrary] so that widgets provided through the library can access 
+///  This is passed to the [PartLibrary] so that widgets provided through the library can access
 ///  these bindings.
 class ContentBindings {
-  DataSource dataSource;
-  DataBinding dataBinding;
-  DataProvider dataProvider;
+  late DataSource dataSource;
+  late DataBinding dataBinding;
+  late DataProvider dataProvider;
 
   final PContent config;
   final DataBinding parentBinding;
   final Map<String, dynamic> pageArguments;
-  final DateTime timestamp=DateTime.now();
+  final DateTime timestamp = DateTime.now();
 
   ContentBindings(this.config, this.parentBinding, this.pageArguments);
 
-  init(Function() _onPreceptReady){
+  init(Function() _onPreceptReady) {
     if (config.dataProvider != null) {
       /// Call is not actioned if Precept already in ready state
       precept.addReadyListener(_onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider);
+      dataProvider = dataProviderLibrary.find(config: config.dataProvider!);
     }
-    final String dataTable = (config.queryIsDeclared)
-        ? config.query.table
+    final String dataTableName = (config.queryIsDeclared)
+        ? config.query?.table
         : (preloaded)
-        ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
-        : null;
-    dataSource = DataSource(config, dataProvider, preloaded, dataTable);
+            ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
+            : 'unknown';
+    dataSource = DataSource(config:config, dataProvider:dataProvider, preloadedData:preloaded, dataTableName: dataTableName);
     if (config is PPart) {
       dataBinding = NoDataBinding();
     } else {
@@ -349,5 +358,7 @@ class ContentBindings {
   }
 
   /// Preloaded data is held at page level
-  bool get preloaded =>  ((config is PPage) && (pageArguments != null) && pageArguments[ContentState.preloadDataKey] != null);
+  bool get preloaded => ((config is PPage) &&
+      (pageArguments != null) &&
+      pageArguments[ContentState.preloadDataKey] != null);
 }

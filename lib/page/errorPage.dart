@@ -5,7 +5,7 @@ import 'package:precept_script/common/script/error.dart';
 class PreceptDefaultErrorPage extends StatelessWidget {
   final PError config;
 
-  const PreceptDefaultErrorPage({@required this.config, Key key}) :assert(config != null), super(key: key);
+  const PreceptDefaultErrorPage({required this.config, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

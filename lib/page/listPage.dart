@@ -6,7 +6,7 @@ import 'package:precept_script/script/script.dart';
 class DefaultListPage extends StatelessWidget {
   final PPage config;
 
-  const DefaultListPage({@required this.config, Key key}) :assert(config != null), super(key: key);
+  const DefaultListPage({required this.config, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

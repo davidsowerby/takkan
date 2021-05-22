@@ -12,7 +12,7 @@ mixin DisplayColumns {
   /// issue #258 to warn user when their screen is narrower than [preferredColumnWidth]
   ///
   Row distributeWidgets(
-      {@required Size screenSize, @required double preferredColumnWidth, @required List<Widget> widgets}) {
+      {required Size screenSize, required double preferredColumnWidth, required List<Widget> widgets}) {
     final dim = dimensions(screenSize: screenSize, preferredColumnWidth: preferredColumnWidth);
     final List<List<Widget>> columnChildren = List.empty(growable: true);
     for (int i = 0; i < dim.numberOfColumns; i++) {
@@ -34,7 +34,7 @@ mixin DisplayColumns {
     return Row(children: views);
   }
 
-  singleColumn({@required Size screenSize, @required double preferredColumnWidth, @required List<Widget> widgets}) {
+  singleColumn({required Size screenSize, required double preferredColumnWidth, required List<Widget> widgets}) {
     final dim = dimensions(screenSize: screenSize, preferredColumnWidth: preferredColumnWidth);
     return Container(
       width: dim.columnWidth,
@@ -47,7 +47,7 @@ mixin DisplayColumns {
   /// Returns calculated [DisplayColumnDimensions] from [screenSize] and [preferredColumnWidth].  If [ screenSize.width]
   /// is less than [preferredColumnWidth], the [DisplayColumnDimensions.screenLessThanPreferredWidth] flag is set.
   /// (see issue #258)
-  DisplayColumnDimensions dimensions({@required Size screenSize, double preferredColumnWidth = 360}) {
+  DisplayColumnDimensions dimensions({required Size screenSize, double preferredColumnWidth = 360}) {
     if (screenSize.width < preferredColumnWidth) {
       return DisplayColumnDimensions(
           numberOfColumns: 1, columnWidth: screenSize.width, screenLessThanPreferredWidth: true);
@@ -63,5 +63,5 @@ class DisplayColumnDimensions {
   final bool screenLessThanPreferredWidth;
 
   const DisplayColumnDimensions(
-      {@required this.numberOfColumns, @required this.columnWidth, this.screenLessThanPreferredWidth = false});
+      {required this.numberOfColumns, required this.columnWidth, this.screenLessThanPreferredWidth = false});
 }

@@ -1,14 +1,14 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/page/layout.dart';
-import 'package:test/test.dart';
 
 import '../../helper/mock.dart';
 
 
 void main() {
   group('DisplayColumns mixin', () {
-    DisplayColumnsTest dct;
+    late DisplayColumnsTest dct;
 
     setUpAll(() {});
 
@@ -32,8 +32,8 @@ void main() {
       expect(dim.columnWidth, 360);
       expect(rowOfColumns.children.length, 1, reason: "number of columns, each will be a ListView in a Container");
       expect(((rowOfColumns.children[0]) as Container).child, isA<ListView>());
-      final ListView view = ((rowOfColumns.children[0]) as Container).child;
-      expect((view.childrenDelegate as SliverChildListDelegate).children.length, 2,
+      final ListView? view = ((rowOfColumns.children[0]) as Container).child as ListView;
+      expect((view?.childrenDelegate as SliverChildListDelegate).children.length, 2,
           reason: "All widgets in one column");
       expect(dim.screenLessThanPreferredWidth, isFalse);
     });
@@ -56,11 +56,11 @@ void main() {
       expect(dim.columnWidth, 360);
       expect(rowOfColumns.children.length, 2, reason: "number of columns, each will be a ListView in a Container");
       expect(((rowOfColumns.children[0]) as Container).child, isA<ListView>());
-      final ListView view1 = ((rowOfColumns.children[0]) as Container).child;
-      final ListView view2 = ((rowOfColumns.children[1]) as Container).child;
-      expect((view1.childrenDelegate as SliverChildListDelegate).children.length, 3,
+      final ListView? view1 = ((rowOfColumns.children[0]) as Container).child as ListView;
+      final ListView? view2 = ((rowOfColumns.children[1]) as Container).child as ListView;
+      expect((view1?.childrenDelegate as SliverChildListDelegate).children.length, 3,
           reason: "3 widgets in first column");
-      expect((view2.childrenDelegate as SliverChildListDelegate).children.length, 2,
+      expect((view2?.childrenDelegate as SliverChildListDelegate).children.length, 2,
           reason: "2 widgets in second column");
       expect(dim.screenLessThanPreferredWidth, isFalse);
     });
@@ -83,11 +83,11 @@ void main() {
       expect(dim.columnWidth, 380);
       expect(rowOfColumns.children.length, 2, reason: "number of columns, each will be a ListView in a Container");
       expect(((rowOfColumns.children[0]) as Container).child, isA<ListView>());
-      final ListView view1 = ((rowOfColumns.children[0]) as Container).child;
-      final ListView view2 = ((rowOfColumns.children[1]) as Container).child;
-      expect((view1.childrenDelegate as SliverChildListDelegate).children.length, 3,
+      final ListView? view1 = ((rowOfColumns.children[0]) as Container).child as ListView;
+      final ListView? view2 = ((rowOfColumns.children[1]) as Container).child as ListView;
+      expect((view1?.childrenDelegate as SliverChildListDelegate).children.length, 3,
           reason: "3 widgets in first column");
-      expect((view2.childrenDelegate as SliverChildListDelegate).children.length, 2,
+      expect((view2?.childrenDelegate as SliverChildListDelegate).children.length, 2,
           reason: "2 widgets in second column");
       expect(dim.screenLessThanPreferredWidth, isFalse);
     });
@@ -104,8 +104,8 @@ void main() {
       expect(dim.columnWidth, 320);
       expect(rowOfColumns.children.length, 1, reason: "number of columns, each will be a ListView in a Container");
       expect(((rowOfColumns.children[0]) as Container).child, isA<ListView>());
-      final ListView view = ((rowOfColumns.children[0]) as Container).child;
-      expect((view.childrenDelegate as SliverChildListDelegate).children.length, 2,
+      final ListView? view = ((rowOfColumns.children[0]) as Container).child as ListView;
+      expect((view?.childrenDelegate as SliverChildListDelegate).children.length, 2,
           reason: "All widgets in one column");
       expect(dim.screenLessThanPreferredWidth, isTrue);
     });

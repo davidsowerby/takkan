@@ -5,7 +5,7 @@ import 'package:precept_client/app/router.dart';
 class PreceptApp extends StatelessWidget {
   final ThemeData theme;
 
-  const PreceptApp({Key key, this.theme}) : super(key: key);
+  const PreceptApp({Key? key,required this.theme}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {

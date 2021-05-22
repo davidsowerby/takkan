@@ -11,7 +11,7 @@ class FullDataBinding extends DataBinding {
   final PDocument schema;
   final DataBinding parent;
 
-  const FullDataBinding({@required this.parent, @required this.binding, @required this.schema})
+  const FullDataBinding({required this.parent, required this.binding, required this.schema})
       : assert(parent != null),
         assert(binding != null),
         assert(schema != null),
@@ -24,7 +24,7 @@ class RootDataBinding extends FullDataBinding {
   final DataSource activeDataSource;
 
   const RootDataBinding(
-      {@required RootBinding binding, @required PDocument schema, @required this.activeDataSource})
+      {required RootBinding binding, required PDocument schema, required this.activeDataSource})
       : assert(binding != null),
         assert(schema != null),
         super(parent: const NoDataBinding(), schema: schema, binding: binding);
@@ -69,7 +69,7 @@ abstract class DataBinding {
           : FullDataBinding(
               parent: this,
               binding: binding.modelBinding(property: config.property),
-              schema: schema.fields[config.property],
+              schema: schema.fields[config.property] as PDocument,
             );
     }
   }
@@ -97,7 +97,7 @@ abstract class DataBinding {
   DataBinding child(PContent config, DataBinding parentBinding, DataSource dataSource) {
     return (config.queryIsDeclared)
         ? parentBinding.rootFromDataSource(
-            config.query, dataSource.rootBinding, dataSource.documentSchema, dataSource)
+            config.query!, dataSource.rootBinding, dataSource.documentSchema, dataSource)
         : parentBinding.childFromConfig(config);
   }
 }

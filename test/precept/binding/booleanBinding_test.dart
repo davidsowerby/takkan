@@ -13,10 +13,10 @@ const bool defValue = false;
 const bool updateValue = false;
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late   Map<String, dynamic> data;
+  late   MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late  ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -26,29 +26,25 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("BooleanBinding", () {
     group("Read", () {
       test("read with default settings, value exists", () {
-        final bool actual =
+        final bool? actual =
         rootBinding.booleanBinding(property: property).read();
         final bool expected = loadedValue;
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
         expect(temporaryDocument.changeList.length, 0,
             reason: "successful read, no changes made");
       });
 
       test("read with default settings, value does not exist", () {
         final bool actual =
-        rootBinding.booleanBinding(property: "no item").read();
+        rootBinding.booleanBinding(property: "no item").read()!;
         final bool expected = false;
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
         expect(temporaryDocument.changeList.length, 1,
             reason: "default is createIfAbsent=true");
       });
@@ -58,10 +54,8 @@ void main() {
         final bool expected = loadedValue;
         final bool actual = rootBinding
             .booleanBinding(property: property)
-            .read(defaultValue: defaultValue);
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
         expect(temporaryDocument.changeList.length, 0,
             reason: "successful read, no changes made");
       });
@@ -73,8 +67,6 @@ void main() {
             .booleanBinding(property: "no item")
             .read(defaultValue: defaultValue);
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
         expect(temporaryDocument.changeList.length, 1,
             reason: "default is createIfAbsent=true");
       });
@@ -87,8 +79,7 @@ void main() {
                 .booleanBinding(property: "no item")
                 .read(allowNullReturn: false);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating BooleanBinding adds property");
+
             expect(temporaryDocument.changeList.length, 1,
                 reason: "default is createIfAbsent=true");
           });
@@ -96,13 +87,12 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final bool expected = null;
+            final bool? expected = null;
             final actual = rootBinding
                 .booleanBinding(property: "no item")
                 .read(allowNullReturn: true);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating BooleanBinding adds property");
+
             expect(temporaryDocument.changeList.length, 0,
                 reason: "successful read, no changes made");
           });
@@ -112,10 +102,9 @@ void main() {
         final itemBinding = rootBinding.booleanBinding(property: property);
         bool expected = updateValue;
         itemBinding.write(expected);
-        bool result = itemBinding.read();
+        bool result = itemBinding.read()!;
         expect(result, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
+
         expect(temporaryDocument.changeList.length, 1, reason: "value updated");
       });
 
@@ -127,8 +116,7 @@ void main() {
         final BooleanBinding sb = map.booleanBinding(property: "mapEntry");
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
+
         expect(temporaryDocument.changeList.length, 2,
             reason: "value updated, parent created");
       });
@@ -140,10 +128,10 @@ void main() {
         final BooleanBinding sb = list.booleanBinding(index: 0);
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating BooleanBinding adds property");
-        expect(temporaryDocument.changeList.length, 2,
+
+        expect(temporaryDocument.changeList.length, 3,
             reason: "value updated, parent created");
+        expect(temporaryDocument.changes['theList'],[false]);
       });
     });
   });

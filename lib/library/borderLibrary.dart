@@ -9,10 +9,10 @@ import 'package:precept_script/trait/style.dart';
 class BorderLibrary {
   final List<BorderLibraryModule> modules;
 
-  const BorderLibrary({@required this.modules});
+  const BorderLibrary({required this.modules});
 
   /// Iterates through [modules] to find the [border], throws exception if none found
-  ShapeBorder find({@required ThemeData theme, @required PBorder border}) {
+  ShapeBorder find({required ThemeData theme, required PBorder border}) {
     for (var module in modules) {
       final result = module.find(theme: theme, border: border);
       if (result != null) {
@@ -27,14 +27,14 @@ abstract class BorderLibraryModule {
   const BorderLibraryModule();
 
   /// Returns the border for [borderName] or null if not found
-  ShapeBorder find({@required ThemeData theme, @required PBorder border});
+  ShapeBorder? find({required ThemeData theme, required PBorder border});
 }
 
 class PreceptBorderLibraryModule extends BorderLibraryModule {
   PreceptBorderLibraryModule() : super();
 
   @override
-  ShapeBorder find({@required ThemeData theme, @required PBorder border}) {
+  ShapeBorder? find({required ThemeData theme, required PBorder border}) {
     switch (border.borderName) {
       case PBorder.roundedRectangleThinPrimary:
         return _roundedRectangle(theme:theme, lineThickness: 1.0);
@@ -47,7 +47,7 @@ class PreceptBorderLibraryModule extends BorderLibraryModule {
     }
   }
 
-  RoundedRectangleBorder _roundedRectangle({@required ThemeData theme, @required double lineThickness}){
+  RoundedRectangleBorder _roundedRectangle({required ThemeData theme, required double lineThickness}){
     return RoundedRectangleBorder(
         side: BorderSide(style: BorderStyle.solid, width: lineThickness, color: theme.primaryColor),
         borderRadius: BorderRadius.all(

@@ -12,7 +12,7 @@ class TextParticle extends StatelessWidget with ConnectorBuilder {
 
   final ModelConnector connector;
 
-  const TextParticle({Key key, @required this.trait, @required this.connector, @required this.partConfig}) : super(key: key);
+  const TextParticle({Key? key, required this.trait, required this.connector, required this.partConfig}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class TextParticle extends StatelessWidget with ConnectorBuilder {
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Caption(
-                text: trait.caption,
+                text: partConfig.caption!,
               ),
             ),
             text,

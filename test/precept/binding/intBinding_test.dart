@@ -13,10 +13,10 @@ const int defValue = 99;
 const int updateValue = 437;
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late   RootBinding rootBinding;
+  late   ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -26,13 +26,13 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("IntBinding", () {
     group("Read", () {
       test("read with default settings, value exists", () {
-        final int actual = rootBinding.intBinding(property: property).read();
+        final int actual = rootBinding.intBinding(property: property).read()!;
         final int expected = loadedValue;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -42,7 +42,7 @@ void main() {
       });
 
       test("read with default settings, value does not exist", () {
-        final int actual = rootBinding.intBinding(property: "no item").read();
+        final int actual = rootBinding.intBinding(property: "no item").read()!;
         final int expected = 0;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
@@ -56,7 +56,7 @@ void main() {
         final int expected = loadedValue;
         final int actual = rootBinding
             .intBinding(property: property)
-            .read(defaultValue: defaultValue);
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating IntBinding adds property");
@@ -94,7 +94,7 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final int expected = null;
+            final int? expected = null;
             final actual = rootBinding
                 .intBinding(property: "no item")
                 .read(allowNullReturn: true);
@@ -110,7 +110,7 @@ void main() {
         final itemBinding = rootBinding.intBinding(property: property);
         int expected = updateValue;
         itemBinding.write(expected);
-        int result = itemBinding.read();
+        int result = itemBinding.read()!;
         expect(result, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating IntBinding adds property");

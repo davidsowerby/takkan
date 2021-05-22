@@ -19,10 +19,10 @@ const List<Map<String, dynamic>> updateValue = [
 ];
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late RootBinding rootBinding;
+  late ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -32,13 +32,13 @@ void main() {
     rootBinding =
         RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group("TableBinding", () {
     group("Read", () {
       test("read with default settings, value exists", () {
-        final List<Map<String, dynamic>> actual =
+        final List<Map<String, dynamic>>? actual =
         rootBinding.tableBinding(property: property).read();
         final List<Map<String, dynamic>> expected = loadedValue;
         expect(actual, expected);
@@ -49,7 +49,7 @@ void main() {
       });
 
       test("read with default settings, value does not exist", () {
-        final List<Map<String, dynamic>> actual =
+        final List<Map<String, dynamic>>? actual =
         rootBinding.tableBinding(property: "no item").read();
         final List<Map<String, dynamic>> expected = [];
         expect(actual, expected);
@@ -62,7 +62,7 @@ void main() {
       test("read with default value, value exists", () {
         List<Map<String, dynamic>> defaultValue = defValue;
         final List<Map<String, dynamic>> expected = loadedValue;
-        final List<Map<String, dynamic>> actual = rootBinding
+        final List<Map<String, dynamic>>? actual = rootBinding
             .tableBinding(property: property)
             .read(defaultValue: defaultValue);
         expect(actual, expected);
@@ -102,7 +102,7 @@ void main() {
       test(
           "read with no default value, value does not exist, allowNull is false",
               () {
-            final List<Map<String, dynamic>> expected = null;
+            final List<Map<String, dynamic>>? expected = null;
             final actual = rootBinding
                 .tableBinding(property: "no item")
                 .read(allowNullReturn: true);
@@ -118,7 +118,7 @@ void main() {
         final itemBinding = rootBinding.tableBinding(property: property);
         List<Map<String, dynamic>> expected = updateValue;
         itemBinding.write(expected);
-        List<Map<String, dynamic>> result = itemBinding.read();
+        List<Map<String, dynamic>>? result = itemBinding.read();
         expect(result, expected);
         expect(changeListener.changeCount, 1,
             reason: "creating TableBinding adds property");

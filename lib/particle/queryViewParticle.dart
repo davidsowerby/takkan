@@ -14,7 +14,7 @@ class QueryViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final ModelConnector connector;
   final bool readOnly;
 
-  const QueryViewParticle({@required this.trait,@required this.config,@required this.connector, @required this.readOnly});
+  const QueryViewParticle({required this.trait,required this.config,required this.connector, required this.readOnly});
 
   @override
   Widget build(BuildContext context) {

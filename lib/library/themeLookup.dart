@@ -11,16 +11,16 @@ import 'package:precept_script/trait/textTrait.dart';
 abstract class ThemeLookup {
   /// Returns a Flutter [Color] from a Precept [PColor].  A [PColor] is used as a
   /// proxy to 'serialize' a [Color] within a [PScript]
-  Color color({@required ThemeData theme, @required PColor pColor});
+  Color color({required ThemeData theme, required PColor pColor});
 
   /// Returns a Flutter [TextStyle] from a Precept [PTextStyle].  A [PTextStyle] is used as a
   /// proxy to 'serialize' a [TextStyle] within a [PScript]
-  TextStyle textStyle({@required ThemeData theme, @required PTextStyle style});
+  TextStyle textStyle({required ThemeData theme, required PTextStyle style});
 }
 
 class DefaultThemeLookup implements ThemeLookup {
   @override
-  Color color({@required ThemeData theme, @required PColor pColor}) {
+  Color color({required ThemeData theme, required PColor pColor}) {
     switch (pColor) {
       case PColor.primary:
         return theme.primaryColor;
@@ -40,44 +40,59 @@ class DefaultThemeLookup implements ThemeLookup {
   }
 
   @override
-  TextStyle textStyle({@required ThemeData theme, @required PTextStyle style}) {
+  TextStyle textStyle({required ThemeData theme, required PTextStyle style}) {
+    TextStyle? ts;
     switch (style) {
       case PTextStyle.headline1:
-        return theme.textTheme.headline1;
+        ts = theme.textTheme.headline1;
+        break;
       case PTextStyle.headline2:
-        return theme.textTheme.headline2;
+        ts = theme.textTheme.headline2;
+        break;
       case PTextStyle.headline3:
-        return theme.textTheme.headline3;
+        ts = theme.textTheme.headline3;
+        break;
       case PTextStyle.headline4:
-        return theme.textTheme.headline4;
+        ts = theme.textTheme.headline4;
+        break;
       case PTextStyle.headline5:
-        return theme.textTheme.headline5;
+        ts = theme.textTheme.headline5;
+        break;
       case PTextStyle.headline6:
-        return theme.textTheme.headline6;
+        ts = theme.textTheme.headline6;
+        break;
       case PTextStyle.subtitle1:
-        return theme.textTheme.subtitle1;
+        ts = theme.textTheme.subtitle1;
+        break;
       case PTextStyle.subtitle2:
-        return theme.textTheme.subtitle2;
+        ts = theme.textTheme.subtitle2;
+        break;
       case PTextStyle.bodyText1:
-        return theme.textTheme.bodyText1;
+        ts = theme.textTheme.bodyText1;
+        break;
       case PTextStyle.bodyText2:
-        return theme.textTheme.bodyText2;
+        ts = theme.textTheme.bodyText2;
+        break;
       case PTextStyle.caption:
-        return theme.textTheme.caption;
+        ts = theme.textTheme.caption;
+        break;
       case PTextStyle.button:
-        return theme.textTheme.button;
+        ts = theme.textTheme.button;
+        break;
       case PTextStyle.overline:
-        return theme.textTheme.overline;
+        ts = theme.textTheme.overline;
+        break;
     }
-    return null; // unreachable
+    if (ts != null) return ts;
+    throw PreceptException('Theme TextStyle cannot be null');
   }
 
-  ShapeBorder border({@required ThemeData theme, @required PBorder border}) {
+  ShapeBorder border({required ThemeData theme, required PBorder border}) {
     final library = inject<BorderLibrary>();
-    return library.find(border: border);
+    return library.find(theme:theme, border: border);
   }
 
-  ShapeBorder borderDetailed({@required ThemeData theme, @required PBorderDetailed border}) {
+  ShapeBorder borderDetailed({required ThemeData theme, required PBorderDetailed border}) {
     switch (border.shape) {
       case PBorderShape.roundedRectangle:
         return RoundedRectangleBorder(
@@ -109,21 +124,20 @@ class DefaultThemeLookup implements ThemeLookup {
             side: _borderSide(theme: theme, border: border),
             borderRadius: _borderRadius(border: border));
     }
-    return null; // unreachable
   }
 
-  BorderSide _borderSide({@required ThemeData theme, @required PBorderDetailed border}) {
+  BorderSide _borderSide({required ThemeData theme, required PBorderDetailed border}) {
     return BorderSide(
         color: color(theme: theme, pColor: border.side.color),
         width: border.side.width,
         style: _borderStyle(pStyle: border.side.style));
   }
 
-  BorderStyle _borderStyle({@required PBorderStyle pStyle}) {
+  BorderStyle _borderStyle({required PBorderStyle pStyle}) {
     return (pStyle == PBorderStyle.solid) ? BorderStyle.solid : BorderStyle.none;
   }
 
-  BorderRadiusGeometry _borderRadius({@required PBorderDetailed border}) {
+  BorderRadius _borderRadius({required PBorderDetailed border}) {
     logType(this.runtimeType).w(
         "_borderRadius not implemented, just returns a default value"); // TODO  https://gitlab.com/precept1/precept-client/-/issues/6
     return BorderRadius.all(Radius.circular(5));

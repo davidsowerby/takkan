@@ -11,10 +11,10 @@ class NavigationButtonSet extends StatelessWidget {
   final Map<String, dynamic> pageArguments;
 
   const NavigationButtonSet(
-      {Key key,
-      @required this.config,
-      @required this.buttonTrait,
-      @required this.trait,
+      {Key? key,
+      required this.config,
+      this.buttonTrait=const NavigationButtonTrait(),
+      required this.trait,
       this.pageArguments = const {}})
       : super(key: key);
 
@@ -28,6 +28,7 @@ class NavigationButtonSet extends StatelessWidget {
         pageArguments: pageArguments,
         connector: connector,
         partConfig: config,
+        trait: buttonTrait,
       );
       children.add(child);
     });

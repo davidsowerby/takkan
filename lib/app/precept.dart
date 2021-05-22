@@ -1,14 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/partLibrary.dart';
-import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
@@ -31,25 +28,23 @@ import 'package:precept_script/script/script.dart';
 ///
 /// [init] must be called before the app is run
 class Precept {
-  PScript _rootModel;
-  Map<String, dynamic> _jsonConfig;
+  late PScript _rootModel;
+  late Map<String, dynamic> _jsonConfig;
   bool _isReady = false;
   final List<Function()> _readyListeners = List.empty(growable: true);
-  List<PreceptLoader> _loaders;
-  Map<Type, Widget Function(PPart, ModelConnector)> _particleLibraryEntries;
+  late List<PreceptLoader> _loaders;
+  late Map<Type, Widget Function(PPart, ModelConnector)> _particleLibraryEntries;
 
   Precept();
 
   init({
-    List<Function()> injectionBindings,
-    Map<String, Trait> Function(ThemeData theme) traits,
     bool includePreceptDefaults = true,
-    Map<String, Widget Function(PPage)> pageLibraryEntries,
-    Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries,
-    Widget Function(PError) errorPage,
+    Map<String, Widget Function(PPage)> pageLibraryEntries = const {},
+    Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries = const {},
     List<PreceptLoader> loaders = const [],
+    List<void Function()> injectionBindings = const [],
   }) async {
-    if (includePreceptDefaults || injectionBindings == null || injectionBindings.isEmpty) {
+    if (includePreceptDefaults || injectionBindings.isEmpty) {
       preceptDefaultInjectionBindings();
     }
     WidgetsFlutterBinding.ensureInitialized();
@@ -95,6 +90,7 @@ class Precept {
         RestPreceptLoader loader = RestPreceptLoader();
       }
     }
+    return true;
   }
 
   /// Call is not actioned if Precept already in ready state
@@ -117,7 +113,7 @@ class Precept {
   }
 
   /// Loads all requested [PScript], and merges them into a single [_rootModel]
-  loadScripts({@required List<PreceptLoader> loaders}) async {
+  loadScripts({required List<PreceptLoader> loaders}) async {
     logType(this.runtimeType).d("Loading models");
     List<Future<PScript>> modelFutures = List.empty(growable: true);
     for (PreceptLoader loader in loaders) {
@@ -142,25 +138,26 @@ class Precept {
   ///
   /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
   _mergeModels(List<PScript> models) {
-    String name = models[0].name;
-    String id = models[0].id;
+    final PScript firstModel = models[0];
+    String name = firstModel.name;
+    String id = firstModel.id ?? name;
     Map<String, PPage> pages = Map();
-    final ConversionErrorMessages conversionErrorMessages = ConversionErrorMessages(patterns: Map());
-    final ValidationErrorMessages validationErrorMessages = ValidationErrorMessages(typePatterns: Map());
+    final ConversionErrorMessages conversionErrorMessages =
+        ConversionErrorMessages(patterns: Map());
+    final ValidationErrorMessages validationErrorMessages =
+        ValidationErrorMessages(typePatterns: Map());
     IsStatic isStatic = IsStatic.inherited;
-    PDataProvider dataProvider;
-    PQuery query;
+    PDataProvider? dataProvider;
+    PQuery? query;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      if (s.pages != null) pages.addAll(s.pages);
-      if (s.conversionErrorMessages != null)
-        conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
-      if (s.validationErrorMessages != null)
-        validationErrorMessages.typePatterns.addAll(s.validationErrorMessages.typePatterns);
-      if (s.isStatic != null) isStatic = s.isStatic;
+      pages.addAll(s.pages);
+      conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
+      validationErrorMessages.typePatterns.addAll(s.validationErrorMessages.typePatterns);
+      isStatic = s.isStatic;
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
       if (s.queryIsDeclared) query = s.query;
-      if (s.controlEdit != null) controlEdit = s.controlEdit;
+      controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
         pages: pages,

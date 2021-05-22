@@ -22,6 +22,8 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/converter/converter.dart';
+import 'package:precept_script/part/listView.dart';
+import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/schema/field/field.dart';
@@ -44,9 +46,9 @@ class PartLibrary {
   /// and configured according to the [theme].  This allows the [Part] to be configured once on construction,
   /// rather than repeatedly as it would be if configuration were during the [Part.build] method.
   Part partBuilder({
-    @required PPart partConfig,
-    @required ThemeData theme,
-    @required ContentBindings contentBindings,
+    required PPart partConfig,
+    required ThemeData theme,
+    required ContentBindings contentBindings,
     final Map<String, dynamic> pageArguments = const {},
   }) {
     final readTrait = traitLibrary.findParticleTrait(
@@ -55,8 +57,8 @@ class PartLibrary {
       partConfig: partConfig,
     );
     final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
-        ? findStaticParticle(theme, readTrait, partConfig, pageArguments ?? const {})
-        : findParticle(theme, contentBindings.dataBinding, readTrait, partConfig, pageArguments ?? const {});
+        ? findStaticParticle(theme, readTrait, partConfig, pageArguments )
+        : findParticle(theme, contentBindings.dataBinding, readTrait, partConfig, pageArguments );
 
     /// Either of these conditions mean we do not need an edit particle
     if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
@@ -68,13 +70,14 @@ class PartLibrary {
       );
     }
 
+    /// TODO: editTraitName must be checked in config validation
     final editTrait = traitLibrary.findParticleTrait(
       theme: theme,
-      traitName: partConfig.editTraitName,
+      traitName: partConfig.editTraitName!,
       partConfig: partConfig,
     );
     final editParticle =
-    findParticle(theme, contentBindings.dataBinding, editTrait, partConfig, pageArguments ?? const {});
+    findParticle(theme, contentBindings.dataBinding, editTrait, partConfig, pageArguments );
 
     return Part(
       readParticle: readParticle,
@@ -91,7 +94,7 @@ class PartLibrary {
   /// Defaults are loaded first, so to replace, define another with the key 'default'
   /// There should be no need to call this directly, init for all libraries is carried out in
   /// a call to [Precept.init] which should be before your runApp statement
-  init({Map<Type, Widget Function(PPart, ModelConnector)> entries}) {
+  init({Map<Type, Widget Function(PPart, ModelConnector)>? entries}) {
     // TODO
   }
 
@@ -104,20 +107,20 @@ class PartLibrary {
     switch (particleType) {
       case TextTrait:
         return TextParticle(
-          trait: trait,
+          trait: trait as TextTrait,
           connector: connector,
           partConfig: partConfig,
         );
       case TextBoxTrait:
         return TextBoxParticle(
-          trait: trait,
+          trait: trait as TextBoxTrait,
           connector: connector,
           partConfig: partConfig,
         );
       case NavigationButtonTrait:
         return NavigationButton(
-          trait: trait,
-          partConfig: partConfig,
+          trait: trait as NavigationButtonTrait,
+          partConfig: partConfig as PNavButton,
           connector: connector,
         );
       case NavigationButtonSetTrait:
@@ -125,18 +128,18 @@ class PartLibrary {
         final Trait buttonTrait = traitLibrary.findParticleTrait(
             theme: theme, traitName: buttonTraitName, partConfig: partConfig);
         return NavigationButtonSet(
-            config: partConfig,
-            buttonTrait: buttonTrait,
+            config: partConfig as PNavButtonSet,
+            buttonTrait: buttonTrait as NavigationButtonTrait,
             trait: trait,
-            pageArguments: pageArguments ?? const {});
+            pageArguments: pageArguments );
       case QueryViewReadTrait:
-        return QueryViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: true);
+        return QueryViewParticle(trait: trait as QueryViewTrait, config: partConfig as PQueryView, connector: connector, readOnly: true);
       case QueryViewEditTrait:
-        return QueryViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: false);
+        return QueryViewParticle(trait: trait as QueryViewTrait, config: partConfig as PQueryView, connector: connector, readOnly: false);
       case ListViewReadTrait:
-        return ListViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: true);
+        return ListViewParticle(trait: trait as ListViewTrait, config: partConfig as PListView, connector: connector, readOnly: true);
       case ListViewEditTrait:
-        return ListViewParticle(trait: trait, config: partConfig, connector: connector, readOnly: false);
+        return ListViewParticle(trait: trait as ListViewTrait, config: partConfig as PListView, connector: connector, readOnly: false);
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
@@ -148,13 +151,13 @@ class PartLibrary {
     Type viewDataType = trait.viewDataType;
     final connector = ConnectorFactory()
         .buildConnector(viewDataType: viewDataType, config: partConfig, dataBinding: dataBinding);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
+    return _createParticle(theme, trait, connector, partConfig, pageArguments );
   }
 
   Widget findStaticParticle(ThemeData theme, Trait trait, PPart partConfig,
       final Map<String, dynamic> pageArguments) {
     final connector = StaticConnector(partConfig.staticData);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments ?? const {});
+    return _createParticle(theme, trait, connector, partConfig, pageArguments );
   }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
@@ -177,11 +180,11 @@ class PartLibrary {
 
 class ConnectorFactory {
   ModelConnector buildConnector(
-      {@required DataBinding dataBinding, @required PPart config, @required Type viewDataType}) {
+      {required DataBinding dataBinding, required PPart config, required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
 
-    final PSchemaElement fieldSchema = (config is PQueryView)
-        ? dataBinding.activeDataSource.dataProvider.config.schema.queries[config.property]
+    final PSchemaElement? fieldSchema = (config is PQueryView)
+        ? dataBinding.activeDataSource.dataProvider.config.schema?.queries[config.property]
         : dataBinding.schema.fields[config.property];
     if (fieldSchema == null) {
       String msg =
@@ -193,7 +196,7 @@ class ConnectorFactory {
     final binding =
     _binding(dataBinding: dataBinding,
       parentBinding: parentBinding,
-      schema: fieldSchema,
+      schema: fieldSchema as PField,
       property: config.property,);
     final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
     final connector =
@@ -203,7 +206,7 @@ class ConnectorFactory {
 }
 
 Binding _binding(
-    {DataBinding dataBinding, ModelBinding parentBinding, PField schema, String property}) {
+    {required DataBinding dataBinding,required  ModelBinding parentBinding, required PField schema,required  String property}) {
   switch (schema.runtimeType) {
     case PString:
       return parentBinding.stringBinding(property: property);
@@ -217,7 +220,7 @@ Binding _binding(
   }
 }
 
-ModelViewConverter _converter({PField schema, Type viewDataType}) {
+ModelViewConverter _converter({required PField schema, required Type viewDataType}) {
   if (schema.modelType == viewDataType) {
     return PassThroughConverter();
   }

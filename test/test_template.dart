@@ -24,6 +24,7 @@ import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
+import 'helper/mock.dart';
 import 'helper/widgetTestTree.dart';
 
 initialData(String instanceName) {
@@ -155,7 +156,7 @@ void main() {
       // when
       final app = MaterialApp(
           home: PreceptPage(
-        config: kitchenSinkValidation.pages['/test'],
+        config: kitchenSinkValidation.pages['/test']!,
       ));
 
       await tester.pumpWidget(app);
@@ -165,9 +166,11 @@ void main() {
       testTree.verify();
       // then
 
-      final EditAction editAction = testTree.widgets[191];
-      editAction.doAction(null);
+      final EditAction editAction = testTree.widgets[191] as EditAction;
+      editAction.doAction(MockBuildContext());
       expect(1, 1);
     });
   });
 }
+
+

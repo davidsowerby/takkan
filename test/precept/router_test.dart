@@ -18,10 +18,11 @@ void main() {
       buildInjector();
       // when
       final script = PScript(
-        pages: {'/home': PPage()},
+        name: 'script',
+        pages: {'/home': PPage(title: 'title')},
       );
       // then
-      expect(0,1);
+      expect(0, 1);
       // expect(router.hasSection(CorePart.address), isTrue);
     });
   });

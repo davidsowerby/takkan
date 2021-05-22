@@ -9,7 +9,7 @@ import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/user/signInFactory.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/signin/signIn.dart';
-
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 
 void preceptDefaultInjectionBindings() {
   commonInjectionBindings();
@@ -39,7 +39,7 @@ documentInjectionBindings(){
 
 routerInjectionBindings(){
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
-  getIt.registerFactoryParam<SignInPage, PSignInOptions,int>((param1, param2) => DefaultSignInPage(signInOptions: param1));
+  getIt.registerFactoryParam<SignInPage, PSignInOptions,int>((param1, param2) => DefaultSignInPage(dataProvider: param1 as DataProvider, pageArguments: param2 as Map<String,dynamic>,));
   getIt.registerSingleton<PreceptRouter>(PreceptRouter());
 }
 

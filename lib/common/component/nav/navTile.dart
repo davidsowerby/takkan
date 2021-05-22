@@ -4,12 +4,12 @@ import 'package:flutter/widgets.dart';
 class NavigationTile extends StatelessWidget {
   final String route;
   final Map<String, dynamic> arguments;
-  final Text title;
-  final Text subtitle;
+  final Text? title;
+  final Text? subtitle;
 
   const NavigationTile({
-    Key key,
-    @required this.route,
+    Key? key,
+    required this.route,
     this.arguments = const {},
     this.title,
     this.subtitle,

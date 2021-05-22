@@ -4,6 +4,7 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_client/trait/text.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -32,18 +33,18 @@ final PScript kitchenSink00 = PScript(
                 caption: 'Panel 2-1',
                 heading: PPanelHeading(),
                 content: [
-                  PPart(caption: 'Part 2-1-1', staticData: 'Part 2-1-1'),
+                  PPart(readTraitName: PText.defaultReadTrait,caption: 'Part 2-1-1', staticData: 'Part 2-1-1'),
                   PText(
                     id: 'Part 2-1-2',
                     staticData: 'Part 2-1-2',
                   ),
                 ],
               ),
-              PPart(caption: 'Part 2-2', staticData: 'Part 2-2'),
+              PPart(readTraitName: PText.defaultReadTrait,caption: 'Part 2-2', staticData: 'Part 2-2'),
               PText( id: 'Part 2-3', staticData: 'Part 2-3'),
             ],
           ),
-          PPart(caption: 'Part 3', staticData: 'Part 3'),
+          PPart(readTraitName: PText.defaultReadTrait,caption: 'Part 3', staticData: 'Part 3'),
         ],
       ),
   },
@@ -51,7 +52,7 @@ final PScript kitchenSink00 = PScript(
 
 void main() {
   group('Static Page (kitchen-sink-00)', () {
-    WidgetTestTree testTree;
+    late WidgetTestTree testTree;
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -70,7 +71,7 @@ void main() {
       // when
       final widgetTree = MaterialApp(
           home: PreceptPage(
-        config: script.pages['/test'],
+        config: script.pages['/test']!,
       ));
       await tester.pumpWidget(widgetTree);
       testTree = WidgetTestTree(script, tester.allWidgets.toList());

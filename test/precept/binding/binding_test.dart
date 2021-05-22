@@ -10,10 +10,10 @@ import '../../helper/catcher.dart';
 import '../../helper/listener.dart';
 
 void main() {
-  Map<String, dynamic> data;
-  MutableDocument temporaryDocument;
-  RootBinding rootBinding;
-  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late RootBinding rootBinding;
+  late ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
@@ -23,7 +23,7 @@ void main() {
     rootBinding =
         RootBinding(id: "-root-", data: data, editHost: temporaryDocument);
     changeListener = ChangeListener();
-    temporaryDocument.addListener(changeListener.listenToChange());
+    temporaryDocument.addListener(changeListener.listenToChange);
   });
 
   group('Root Binding', () {
@@ -35,7 +35,6 @@ void main() {
         "attempting to write with WriteableRootBinding throws BindingException",
         () {
       expect(() => rootBinding.write({}), throwsBindingException);
-      // expect(() => rootBinding.write({}), throwsBindingException);
     });
 
     test("editHost returns non null", () {
@@ -50,14 +49,14 @@ void main() {
 
     test("listBinding returns correct values", () {
       ListBinding listBinding = rootBinding.listBinding(property: "list");
-      List result = listBinding.read();
+      List result = listBinding.read()!;
       expect(result[0], 7);
       expect(result[1], 93);
     });
 
     test("tableBinding returns correct value", () {
       TableBinding tableBinding = rootBinding.tableBinding(property: "table");
-      List result = tableBinding.read();
+      List result = tableBinding.read()!;
       expect(result[0]["column0"], "cell00");
     });
   });
@@ -137,7 +136,7 @@ class StateChangeRecorder {
 generateData() {
   Map<String, dynamic> data = Map();
   List<int> list = [7, 93];
-  List<Map<String, dynamic>> table = List();
+  List<Map<String, dynamic>> table = List.empty(growable: true);
   Map<String, dynamic> row0 = {"column0": "cell00"};
   table.add(row0);
   data["item"] = "item a";
