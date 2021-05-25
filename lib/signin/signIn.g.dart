@@ -31,31 +31,46 @@ Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
 
 PSignIn _$PSignInFromJson(Map<String, dynamic> json) {
   return PSignIn(
-    email: PEmailSignIn.fromJson(json['email'] as Map<String, dynamic>),
     successRoute: json['successRoute'] as String,
     failureRoute: json['failureRoute'] as String,
   );
 }
 
 Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
-      'email': instance.email.toJson(),
       'successRoute': instance.successRoute,
       'failureRoute': instance.failureRoute,
     };
 
 PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) {
   return PEmailSignIn(
-    emailLabel: json['emailLabel'] as String,
-    usernameLabel: json['usernameLabel'] as String,
-    passwordLabel: json['passwordLabel'] as String,
-    submitLabel: json['submitLabel'] as String,
-  );
+    caption: json['caption'] as String,
+    checkingCredentialsMessage: json['checkingCredentialsMessage'] as String,
+    emailCaption: json['emailCaption'] as String,
+    usernameCaption: json['usernameCaption'] as String,
+    passwordCaption: json['passwordCaption'] as String,
+    submitCaption: json['submitCaption'] as String,
+    successRoute: json['successRoute'] as String,
+    failureRoute: json['failureRoute'] as String,
+    readTraitName: json['readTraitName'] as String,
+    id: json['id'] as String?,
+    help: json['help'] == null
+        ? null
+        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+  )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
     <String, dynamic>{
-      'emailLabel': instance.emailLabel,
-      'usernameLabel': instance.usernameLabel,
-      'passwordLabel': instance.passwordLabel,
-      'submitLabel': instance.submitLabel,
+      'version': instance.version,
+      'id': instance.id,
+      'caption': instance.caption,
+      'help': instance.help?.toJson(),
+      'readTraitName': instance.readTraitName,
+      'emailCaption': instance.emailCaption,
+      'usernameCaption': instance.usernameCaption,
+      'passwordCaption': instance.passwordCaption,
+      'checkingCredentialsMessage': instance.checkingCredentialsMessage,
+      'submitCaption': instance.submitCaption,
+      'successRoute': instance.successRoute,
+      'failureRoute': instance.failureRoute,
     };

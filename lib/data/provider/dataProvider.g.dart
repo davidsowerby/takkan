@@ -42,6 +42,7 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
+    signIn: PSignIn.fromJson(json['signIn'] as Map<String, dynamic>),
     id: json['id'] as String?,
   )..version = json['version'] as int;
 }
@@ -51,6 +52,7 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'version': instance.version,
       'id': instance.id,
       'signInOptions': instance.signInOptions.toJson(),
+      'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource?.toJson(),
       'schemaSource': instance.schemaSource?.toJson(),
       'checkHealthOnConnect': instance.checkHealthOnConnect,

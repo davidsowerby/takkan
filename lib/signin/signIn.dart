@@ -1,9 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/content.dart';
+import 'package:precept_script/common/script/help.dart';
+import 'package:precept_script/part/part.dart';
 
 part 'signIn.g.dart';
 
 /// Determines which sign-in options are presented to a user
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PSignInOptions {
   final String pageTitle;
   final bool email;
@@ -28,14 +32,12 @@ class PSignInOptions {
   Map<String, dynamic> toJson() => _$PSignInOptionsToJson(this);
 }
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PSignIn {
-  final PEmailSignIn email;
   final String successRoute;
   final String failureRoute;
 
   const PSignIn({
-    this.email = const PEmailSignIn(),
     this.successRoute = '',
     this.failureRoute = 'signInFail',
   });
@@ -47,20 +49,42 @@ class PSignIn {
 
 /// An empty String in [successRoute] (the default) will navigate to the user to the page they were
 /// on before signing in.
-@JsonSerializable( explicitToJson: true)
-class PEmailSignIn {
-  final String emailLabel;
-  final String usernameLabel;
-  final String passwordLabel;
+/// [failureRoute] is for when authentication fails completely (after maximum retries).  A failed
+/// attempt is handled by a change of [Authenticator.status], and managed within the sign in page
+@JsonSerializable(explicitToJson: true)
+class PEmailSignIn extends PPart {
+  static const String defaultTrait = 'EmailSignIn-default';
+  final String emailCaption;
+  final String usernameCaption;
+  final String passwordCaption;
+  final String checkingCredentialsMessage;
 
-  final String submitLabel;
+  final String submitCaption;
+  final String successRoute;
+  final String failureRoute;
 
-  const PEmailSignIn({
-    this.emailLabel = 'email',
-    this.usernameLabel = 'username',
-    this.passwordLabel = 'password',
-    this.submitLabel = 'Submit',
-  });
+  PEmailSignIn({
+    String caption = 'Sign in with Email',
+    this.checkingCredentialsMessage='Checking Credentials',
+    this.emailCaption = 'email',
+    this.usernameCaption = 'username',
+    this.passwordCaption = 'password',
+    this.submitCaption = 'Submit',
+    this.successRoute = '',
+    this.failureRoute = 'signInFail',
+    String readTraitName = defaultTrait,
+    String? id,
+    PHelp? help,
+  }) : super(
+          help: help,
+          readOnly: true,
+          staticData: '',
+          readTraitName: readTraitName,
+          isStatic: IsStatic.yes,
+          controlEdit: ControlEdit.noEdit,
+          caption: caption,
+          id: id,
+        );
 
   factory PEmailSignIn.fromJson(Map<String, dynamic> json) => _$PEmailSignInFromJson(json);
 

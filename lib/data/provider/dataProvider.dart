@@ -56,6 +56,7 @@ class PRestDataProvider extends PDataProvider {
 @JsonSerializable( explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
+  final PSignIn signIn;
   final PConfigSource? configSource;
   @JsonKey(ignore: true)
   Map<String, dynamic>? _appConfig;
@@ -80,6 +81,7 @@ class PDataProvider extends PreceptItem {
     this.signInOptions = const PSignInOptions(),
     PSchema? schema,
     this.schemaSource,
+    this.signIn=const PSignIn(),
     String? id,
   })  : _schema = schema,
         super(id: id);
