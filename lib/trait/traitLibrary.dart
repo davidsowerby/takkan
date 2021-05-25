@@ -10,7 +10,6 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/part/listView.dart';
 import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/part.dart';
 import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/textBox.dart';
@@ -21,7 +20,6 @@ class TraitLibrary {
   Trait findParticleTrait(
       {required ThemeData theme,
       required String traitName,
-      required PPart partConfig,
       PTextTheme textBackground = PTextTheme.cardCanvas}) {
     switch (traitName) {
       case PEmailSignIn.defaultTrait:
@@ -54,6 +52,14 @@ class TraitLibrary {
           textAlign: TextAlign.left,
           textTheme: textTheme,
         );
+      case PText.errorText:
+        final textTheme = theme.textTheme;
+        return TextTrait(
+          textStyle: textTheme.bodyText1!.copyWith(color: Colors.red),
+          textAlign: TextAlign.center,
+          textTheme: textTheme,
+        );
+
       case PNavButton.defaultReadTrait:
         return NavigationButtonTrait();
       case PNavButtonSet.defaultReadTrait:

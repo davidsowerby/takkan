@@ -5,9 +5,12 @@ import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/common/component/messagePanel.dart';
 import 'package:precept_client/common/content/contentState.dart';
+import 'package:precept_client/trait/text.dart';
+import 'package:precept_client/trait/traitLibrary.dart';
 import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:precept_script/signin/signIn.dart';
 import 'package:provider/provider.dart';
 
@@ -24,7 +27,8 @@ class EmailSignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final UserState userState = Provider.of<UserState>(context);
-    switch (contentBindings.dataProvider.authenticator.status) {
+    final status = contentBindings.dataProvider.authenticator.status;
+    switch (status) {
       case SignInStatus.Authenticating:
         return Center(child: MessagePanel(message: config.checkingCredentialsMessage));
       case SignInStatus.Uninitialized:
@@ -33,36 +37,50 @@ class EmailSignIn extends StatelessWidget {
         return Container(
           child: Column(
             children: [
-              TextFormField(
-                key: keys(key, ['emailField']),
-                controller: emailController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email),
-                  labelText: config.emailCaption,
-                  border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  key: keys(key, ['emailField']),
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email),
+                    labelText: config.emailCaption,
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-              TextFormField(
-                key: keys(key, ['usernameField']),
-                controller: usernameController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.supervised_user_circle),
-                  labelText: config.usernameCaption,
-                  border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  key: keys(key, ['usernameField']),
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.supervised_user_circle),
+                    labelText: config.usernameCaption,
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-              TextFormField(
-                key: keys(key, ['passwordField']),
-                controller: passwordController,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.security),
-                  labelText: config.passwordCaption,
-                  border: OutlineInputBorder(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  key: keys(key, ['passwordField']),
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.security),
+                    labelText: config.passwordCaption,
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
-              ElevatedButton(
-                  child: Text(config.submitCaption),
-                  onPressed: () => submitCredentials(context, contentBindings))
+              if (status == SignInStatus.Authentication_Failed) failureMessage(theme),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                    child: Text(config.submitCaption),
+                    onPressed: () => submitCredentials(context, contentBindings)),
+              )
             ],
           ),
         );
@@ -111,5 +129,19 @@ class EmailSignIn extends StatelessWidget {
   bool _notSignInRoute(Route route) {
     String? routePath = route.settings.name;
     return (routePath == null) ? true : !routePath.toLowerCase().contains('signin');
+  }
+
+  Widget failureMessage(ThemeData theme ){
+
+    final TextTrait trait=traitLibrary.findParticleTrait(
+        theme: theme, traitName: PText.errorText) as TextTrait;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        config.signInFailureMessage,
+        style: trait.textStyle,
+        textAlign: trait.textAlign,
+      ),
+    );
   }
 }

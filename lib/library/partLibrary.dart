@@ -57,7 +57,6 @@ class PartLibrary {
     final readTrait = traitLibrary.findParticleTrait(
       theme: theme,
       traitName: partConfig.readTraitName,
-      partConfig: partConfig,
     );
     final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
         ? findStaticParticle(
@@ -90,7 +89,6 @@ class PartLibrary {
     final editTrait = traitLibrary.findParticleTrait(
       theme: theme,
       traitName: partConfig.editTraitName!,
-      partConfig: partConfig,
     );
     final editParticle = findParticle(
       theme,
@@ -151,7 +149,9 @@ class PartLibrary {
       case NavigationButtonSetTrait:
         final String buttonTraitName = (trait as NavigationButtonSetTrait).buttonTraitName;
         final Trait buttonTrait = traitLibrary.findParticleTrait(
-            theme: theme, traitName: buttonTraitName, partConfig: partConfig);
+          theme: theme,
+          traitName: buttonTraitName,
+        );
         return NavigationButtonSet(
             config: partConfig as PNavButtonSet,
             buttonTrait: buttonTrait as NavigationButtonTrait,
