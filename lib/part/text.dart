@@ -13,6 +13,7 @@ class PText extends PPart {
   static const String heading1='text-heading-1';
   static const String heading2='text-heading-2';
   static const String heading3='text-heading-3';
+  static const String errorText='text-error';
   PText(
       {String? caption,
       bool readOnly = false,

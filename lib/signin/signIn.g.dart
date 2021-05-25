@@ -43,6 +43,7 @@ Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
 
 PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) {
   return PEmailSignIn(
+    signInFailureMessage: json['signInFailureMessage'] as String,
     caption: json['caption'] as String,
     checkingCredentialsMessage: json['checkingCredentialsMessage'] as String,
     emailCaption: json['emailCaption'] as String,
@@ -73,4 +74,5 @@ Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
       'submitCaption': instance.submitCaption,
       'successRoute': instance.successRoute,
       'failureRoute': instance.failureRoute,
+      'signInFailureMessage': instance.signInFailureMessage,
     };

@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
+import 'package:precept_script/part/text.dart';
 
 part 'signIn.g.dart';
 
@@ -62,8 +62,10 @@ class PEmailSignIn extends PPart {
   final String submitCaption;
   final String successRoute;
   final String failureRoute;
+  final String signInFailureMessage;
 
   PEmailSignIn({
+    this.signInFailureMessage='Username or password incorrect',
     String caption = 'Sign in with Email',
     this.checkingCredentialsMessage='Checking Credentials',
     this.emailCaption = 'email',
