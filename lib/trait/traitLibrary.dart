@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:precept_client/trait/emailSignIn.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_client/trait/query.dart';
@@ -13,6 +14,7 @@ import 'package:precept_script/part/part.dart';
 import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/textBox.dart';
+import 'package:precept_script/signin/signIn.dart';
 import 'package:precept_script/trait/textTrait.dart';
 
 class TraitLibrary {
@@ -22,6 +24,8 @@ class TraitLibrary {
       required PPart partConfig,
       PTextTheme textBackground = PTextTheme.cardCanvas}) {
     switch (traitName) {
+      case PEmailSignIn.defaultTrait:
+        return EmailSignInTrait();
       case PText.heading1:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(

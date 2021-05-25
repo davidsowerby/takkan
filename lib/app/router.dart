@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/page/standardPage.dart';
-import 'package:precept_client/user/signInFactory.dart';
-import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -33,46 +30,17 @@ import 'package:precept_script/script/script.dart';
 class PreceptRouter {
   String? _preSignInRoute;
 
+  String? get preSignInRoute=> _preSignInRoute;
+
   PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings, BuildContext context) {
     logType(this.runtimeType)
         .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
+
     final Map<String, dynamic> pageArguments = (settings.arguments==null) ? {} : settings.arguments as Map<String, dynamic>;
     if (settings.name == 'signIn') {
-      _preSignInRoute = pageArguments['returnRoute'];
-      final DataProvider dataProvider = pageArguments['dataProvider'];
-      final SignInFactory pageFactory = inject<SignInFactory>();
-      final pageWidget = pageFactory.signInPage(
-        pageArguments: pageArguments,
-        dataProvider: dataProvider,
-      );
-      return MaterialPageRoute(
-          settings: RouteSettings(
-            name: settings.name,
-            arguments: settings.arguments,
-          ),
-          builder: (_) => pageWidget);
-    }
-    if (settings.name == 'emailSignIn') {
-      final factory = inject<EmailSignInFactory>();
-      final DataProvider dataProvider = pageArguments['dataProvider'];
-      if (_preSignInRoute==null){
-        throw PreceptException ('At this point, _preSignInRoute must be set');
-      }
-      final pageWidget = factory.emailSignInPage(
-        successRoute: _preSignInRoute!,
-        failureRoute: 'tbd',
-        pageArguments: pageArguments,
-        dataProvider: dataProvider,
-      );
-      return MaterialPageRoute(
-          settings: RouteSettings(
-            name: settings.name,
-            arguments: settings.arguments,
-          ),
-          builder: (_) => pageWidget);
-    }
+      _preSignInRoute = pageArguments['returnRoute'];}
     final PPage? preceptPage = script.pages[settings.name];
     if (preceptPage == null) {
       return _routeNotRecognised(settings);

@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/common/component/emailSignIn.dart';
 import 'package:precept_client/common/component/nav/navButton.dart';
 import 'package:precept_client/common/component/nav/navButtonSet.dart';
 import 'package:precept_client/common/content/contentState.dart';
@@ -12,6 +13,7 @@ import 'package:precept_client/particle/listViewParticle.dart';
 import 'package:precept_client/particle/queryViewParticle.dart';
 import 'package:precept_client/particle/textBoxParticle.dart';
 import 'package:precept_client/particle/textParticle.dart';
+import 'package:precept_client/trait/emailSignIn.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_client/trait/query.dart';
@@ -32,6 +34,7 @@ import 'package:precept_script/schema/field/list.dart';
 import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 PartLibrary _partLibrary = PartLibrary();
 
@@ -57,8 +60,21 @@ class PartLibrary {
       partConfig: partConfig,
     );
     final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
-        ? findStaticParticle(theme, readTrait, partConfig, pageArguments )
-        : findParticle(theme, contentBindings.dataBinding, readTrait, partConfig, pageArguments );
+        ? findStaticParticle(
+            theme,
+            readTrait,
+            partConfig,
+            pageArguments,
+            contentBindings,
+          )
+        : findParticle(
+            theme,
+            contentBindings.dataBinding,
+            readTrait,
+            partConfig,
+            pageArguments,
+            contentBindings,
+          );
 
     /// Either of these conditions mean we do not need an edit particle
     if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
@@ -76,8 +92,14 @@ class PartLibrary {
       traitName: partConfig.editTraitName!,
       partConfig: partConfig,
     );
-    final editParticle =
-    findParticle(theme, contentBindings.dataBinding, editTrait, partConfig, pageArguments );
+    final editParticle = findParticle(
+      theme,
+      contentBindings.dataBinding,
+      editTrait,
+      partConfig,
+      pageArguments,
+      contentBindings,
+    );
 
     return Part(
       readParticle: readParticle,
@@ -98,11 +120,14 @@ class PartLibrary {
     // TODO
   }
 
-  Widget _createParticle(ThemeData theme,
-      Trait trait,
-      ModelConnector connector,
-      PPart partConfig,
-      final Map<String, dynamic> pageArguments,) {
+  Widget _createParticle(
+    ThemeData theme,
+    Trait trait,
+    ModelConnector connector,
+    PPart partConfig,
+    final Map<String, dynamic> pageArguments,
+    ContentBindings contentBindings,
+  ) {
     final particleType = trait.runtimeType;
     switch (particleType) {
       case TextTrait:
@@ -131,33 +156,62 @@ class PartLibrary {
             config: partConfig as PNavButtonSet,
             buttonTrait: buttonTrait as NavigationButtonTrait,
             trait: trait,
-            pageArguments: pageArguments );
+            pageArguments: pageArguments);
+      case EmailSignInTrait:
+        return EmailSignIn(config: partConfig as PEmailSignIn, contentBindings: contentBindings);
       case QueryViewReadTrait:
-        return QueryViewParticle(trait: trait as QueryViewTrait, config: partConfig as PQueryView, connector: connector, readOnly: true);
+        return QueryViewParticle(
+            trait: trait as QueryViewTrait,
+            config: partConfig as PQueryView,
+            connector: connector,
+            readOnly: true);
       case QueryViewEditTrait:
-        return QueryViewParticle(trait: trait as QueryViewTrait, config: partConfig as PQueryView, connector: connector, readOnly: false);
+        return QueryViewParticle(
+            trait: trait as QueryViewTrait,
+            config: partConfig as PQueryView,
+            connector: connector,
+            readOnly: false);
       case ListViewReadTrait:
-        return ListViewParticle(trait: trait as ListViewTrait, config: partConfig as PListView, connector: connector, readOnly: true);
+        return ListViewParticle(
+            trait: trait as ListViewTrait,
+            config: partConfig as PListView,
+            connector: connector,
+            readOnly: true);
       case ListViewEditTrait:
-        return ListViewParticle(trait: trait as ListViewTrait, config: partConfig as PListView, connector: connector, readOnly: false);
+        return ListViewParticle(
+            trait: trait as ListViewTrait,
+            config: partConfig as PListView,
+            connector: connector,
+            readOnly: false);
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
 
-  Widget findParticle(ThemeData theme, DataBinding dataBinding, Trait trait, PPart partConfig,
-      final Map<String, dynamic> pageArguments) {
+  Widget findParticle(
+    ThemeData theme,
+    DataBinding dataBinding,
+    Trait trait,
+    PPart partConfig,
+    final Map<String, dynamic> pageArguments,
+    ContentBindings contentBindings,
+  ) {
     Type viewDataType = trait.viewDataType;
     final connector = ConnectorFactory()
         .buildConnector(viewDataType: viewDataType, config: partConfig, dataBinding: dataBinding);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments );
+    return _createParticle(theme, trait, connector, partConfig, pageArguments, contentBindings);
   }
 
-  Widget findStaticParticle(ThemeData theme, Trait trait, PPart partConfig,
-      final Map<String, dynamic> pageArguments) {
+  Widget findStaticParticle(
+    ThemeData theme,
+    Trait trait,
+    PPart partConfig,
+    final Map<String, dynamic> pageArguments,
+    ContentBindings contentBindings,
+  ) {
     final connector = StaticConnector(partConfig.staticData);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments );
+    return _createParticle(theme, trait, connector, partConfig, pageArguments, contentBindings);
   }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
@@ -188,32 +242,36 @@ class ConnectorFactory {
         : dataBinding.schema.fields[config.property];
     if (fieldSchema == null) {
       String msg =
-          'No schema found for property ${config
-          .property}, have you forgotten to add it to PSchema?';
+          'No schema found for property ${config.property}, have you forgotten to add it to PSchema?';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    final binding =
-    _binding(dataBinding: dataBinding,
+    final binding = _binding(
+      dataBinding: dataBinding,
       parentBinding: parentBinding,
       schema: fieldSchema as PField,
-      property: config.property,);
+      property: config.property,
+    );
     final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
     final connector =
-    ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
+        ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
 }
 
 Binding _binding(
-    {required DataBinding dataBinding,required  ModelBinding parentBinding, required PField schema,required  String property}) {
+    {required DataBinding dataBinding,
+    required ModelBinding parentBinding,
+    required PField schema,
+    required String property}) {
   switch (schema.runtimeType) {
     case PString:
       return parentBinding.stringBinding(property: property);
     case PList:
       return parentBinding.listBinding(property: property);
     case PQueryResult:
-      return dataBinding.activeDataSource.temporaryDocument.queryRootBinding.listBinding(property: property);
+      return dataBinding.activeDataSource.temporaryDocument.queryRootBinding
+          .listBinding(property: property);
     default:
       throw UnimplementedError(
           "No defined binding for field data type ${schema.runtimeType.toString()}");
