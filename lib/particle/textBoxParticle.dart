@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/binding/connector.dart';
+import 'package:precept_client/common/component/heading.dart';
 import 'package:precept_client/trait/textBox.dart';
 import 'package:precept_script/part/part.dart';
 
@@ -10,7 +10,8 @@ class TextBoxParticle extends StatelessWidget {
   final PPart partConfig;
   final ModelConnector connector;
 
-  const TextBoxParticle({Key? key, required this.partConfig, required this.connector,required this.trait});
+  const TextBoxParticle(
+      {Key? key, required this.partConfig, required this.connector, required this.trait});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,11 @@ class TextBoxParticle extends StatelessWidget {
       validator: (inputData) => connector.validate(inputData),
       onSaved: (inputData) => connector.writeToModel(inputData),
       decoration: InputDecoration(
+        suffixIcon: (partConfig.help == null)
+            ? null
+            : HelpButton(
+                help: partConfig.help!,
+              ),
         isDense: true,
         labelStyle: theme.textTheme.overline?.apply(color: theme.primaryColor),
         labelText: partConfig.caption,

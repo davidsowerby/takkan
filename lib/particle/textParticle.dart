@@ -31,6 +31,7 @@ class TextParticle extends StatelessWidget with ConnectorBuilder {
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Caption(
                 text: partConfig.caption!,
+                help: partConfig.help,
               ),
             ),
             text,
