@@ -11,7 +11,7 @@ import 'package:precept_script/signin/signIn.dart';
 class PElementListConverter {
   static const elementKeyName = "-element-";
 
-  static List<PSubContent> fromJson(List<Map<String, dynamic>> json) {
+  static List<PSubContent> fromJson(List<dynamic> json) {
     List<PSubContent> list = List.empty(growable: true);
     for (var entry in json) {
       final elementType = entry[elementKeyName];

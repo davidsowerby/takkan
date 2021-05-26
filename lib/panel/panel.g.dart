@@ -10,8 +10,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
   return PPanel(
     openExpanded: json['openExpanded'] as bool,
     property: json['property'] as String,
-    content: PElementListConverter.fromJson(
-        json['content'] as List<Map<String, dynamic>>),
+    content: PElementListConverter.fromJson(json['content'] as List),
     pageArguments: json['pageArguments'] as Map<String, dynamic>,
     layout: PPanelLayout.fromJson(json['layout'] as Map<String, dynamic>),
     heading: json['heading'] == null
@@ -19,9 +18,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
         : PPanelHeading.fromJson(json['heading'] as Map<String, dynamic>),
     caption: json['caption'] as String?,
     scrollable: json['scrollable'] as bool,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+    help: json['help'] == null ? null : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),

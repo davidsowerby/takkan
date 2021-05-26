@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/example/kitchenSink.dart';
@@ -16,7 +17,7 @@ void main() {
     });
 
     tearDown(() {});
-    test('Full script', () {
+    test('script to JSON map and back', () {
       // given
       PScript script = kitchenSinkScript;
 
@@ -37,5 +38,19 @@ void main() {
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });
 
+    test('script to file and back', () async {
+      // given
+      Directory tempDir = Directory.systemTemp;
+      File f = File('${tempDir.path}/scriptOut.json');
+      PScript script = kitchenSinkScript;
+
+      // when
+      script.init();
+      await script.writeToFile(f);
+      final script2 = await PScript.readFromFile(f);
+      // then
+
+      expect(json.encode(script.toJson()), json.encode(script2.toJson()));
+    });
   });
 }

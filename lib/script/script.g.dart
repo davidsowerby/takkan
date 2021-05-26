@@ -82,8 +82,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) {
     pageType: json['pageType'] as String,
     scrollable: json['scrollable'] as bool,
     layout: PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
-    content: PElementListConverter.fromJson(
-        json['content'] as List<Map<String, dynamic>>),
+    content: PElementListConverter.fromJson(json['content'] as List),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String?,
     property: json['property'] as String,

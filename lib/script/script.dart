@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/exception.dart';
@@ -37,9 +40,9 @@ class PScript extends PCommon {
 
   PScript({
     this.conversionErrorMessages =
-        const ConversionErrorMessages(patterns: defaultConversionPatterns),
+    const ConversionErrorMessages(patterns: defaultConversionPatterns),
     this.validationErrorMessages =
-        const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
+    const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
     required this.name,
     IsStatic isStatic = IsStatic.inherited,
@@ -48,12 +51,12 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
   }) : super(
-          id: id,
-          isStatic: isStatic,
-          dataProvider: dataProvider ?? PNoDataProvider(),
-          query: query,
-          controlEdit: controlEdit,
-        );
+    id: id,
+    isStatic: isStatic,
+    dataProvider: dataProvider ?? PNoDataProvider(),
+    query: query,
+    controlEdit: controlEdit,
+  );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
@@ -66,6 +69,12 @@ class PScript extends PCommon {
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
   IsStatic get isStatic => getIsStatic();
+
+  static Future<PScript> readFromFile(File f) async {
+    final encoded = await f.readAsString();
+    final jsonMap = json.decode(encoded);
+    return PScript.fromJson(jsonMap);
+  }
 
   /// Validates the structure and content of the model
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
@@ -160,6 +169,12 @@ class PScript extends PCommon {
 
   DebugNode get debugNode =>
       DebugNode(this, List.from(pages.entries.toList().map((e) => (e as PPage).debugNode)));
+
+  writeToFile(File f) async {
+    final jsonMap = this.toJson();
+    final encoded = json.encode(jsonMap);
+    await f.writeAsString(encoded);
+  }
 }
 
 /// [pageType] is used to look up from [PageLibrary]
@@ -186,17 +201,17 @@ class PPage extends PContent {
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
-    String property=notSet,
+    String property = notSet,
     required String title,
   }) : super(
-          isStatic: isStatic,
-          dataProvider: dataProvider,
-          query: query,
-          controlEdit: controlEdit,
-          id: id,
-          property: property,
-          caption: title,
-        );
+    isStatic: isStatic,
+    dataProvider: dataProvider,
+    query: query,
+    controlEdit: controlEdit,
+    id: id,
+    property: property,
+    caption: title,
+  );
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 
