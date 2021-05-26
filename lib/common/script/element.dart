@@ -2,8 +2,11 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/part.dart';
+import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/part/text.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 class PElementListConverter {
   static const elementKeyName = "-element-";
@@ -23,6 +26,18 @@ class PElementListConverter {
           break;
         case "PText":
           list.add(PText.fromJson(entryCopy));
+          break;
+        case "PNavButton":
+          list.add(PNavButton.fromJson(entryCopy));
+          break;
+        case "PNavButtonSet":
+          list.add(PNavButtonSet.fromJson(entryCopy));
+          break;
+        case "PEmailSignIn":
+          list.add(PEmailSignIn.fromJson(entryCopy));
+          break;
+        case "PQueryView":
+          list.add(PQueryView.fromJson(entryCopy));
           break;
 
         default:
