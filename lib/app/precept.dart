@@ -32,6 +32,7 @@ class Precept {
   late Map<String, dynamic> _jsonConfig;
   bool _isReady = false;
   final List<Function()> _readyListeners = List.empty(growable: true);
+  final List<Function()> _scriptReloadListeners = List.empty(growable: true);
   late List<PreceptLoader> _loaders;
   late Map<Type, Widget Function(PPart, ModelConnector)> _particleLibraryEntries;
 
@@ -60,6 +61,7 @@ class Precept {
     partLibrary.init(entries: _particleLibraryEntries);
     _isReady = true;
     notifyReadyListeners();
+    notifyScriptReloadListeners();
   }
 
   reload() async {
@@ -67,6 +69,10 @@ class Precept {
     notifyReadyListeners();
     await loadScripts(loaders: _loaders);
     await _doAfterLoad();
+  }
+
+  addScriptReloadListener(Function () listener){
+    _scriptReloadListeners.add(listener);
   }
 
   /// Walks the PScript to find any declared [PSchemaSource] instances, and calls them to be loaded,
@@ -102,6 +108,12 @@ class Precept {
 
   notifyReadyListeners() {
     for (Function() listener in _readyListeners) {
+      listener();
+    }
+  }
+
+  notifyScriptReloadListeners() {
+    for (Function() listener in _scriptReloadListeners) {
       listener();
     }
   }

@@ -1,4 +1,3 @@
-
 import 'package:precept_script/script/script.dart';
 
 /// Common interface to load a Precept instance from any source
@@ -10,12 +9,14 @@ abstract class PreceptLoader {
 }
 
 /// Generally only used during development, this implementation of [PreceptLoader] just
-/// takes an 'in code' [PScript] model
+/// takes an 'in code' [PScript] model.  The script 'refresh' button will not work with a script
+/// loaded this way, as the value of the script is already compiled in.  The refresh option
+/// only works when the file is loaded from outside the app, for example, from [RestPreceptLoader] .
 class DirectPreceptLoader implements PreceptLoader {
   final PScript script;
   bool _loaded = false;
 
-  DirectPreceptLoader({required this.script}) : assert(script != null);
+  DirectPreceptLoader({required this.script});
 
   @override
   Future<PScript> load() async {
@@ -26,7 +27,7 @@ class DirectPreceptLoader implements PreceptLoader {
   bool get isLoaded => _loaded;
 }
 
-class RestPreceptLoader implements PreceptLoader{
+class RestPreceptLoader implements PreceptLoader {
   @override
   // TODO: implement isLoaded
   bool get isLoaded => throw UnimplementedError();
@@ -36,5 +37,4 @@ class RestPreceptLoader implements PreceptLoader{
     // TODO: implement load
     throw UnimplementedError();
   }
-
 }
