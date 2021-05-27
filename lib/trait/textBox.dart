@@ -4,6 +4,5 @@ class TextBoxTrait extends Trait{
 
   TextBoxTrait({bool showCaption=true, String? caption}): super(showCaption: showCaption);
 
-  @override
-  Type get viewDataType => String;
+
 }

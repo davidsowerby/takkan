@@ -3,8 +3,6 @@ import 'package:precept_script/part/navigation.dart';
 
 class NavigationButtonTrait extends Trait {
   const NavigationButtonTrait();
-  @override
-  Type get viewDataType => String;
 
 
 }
@@ -20,6 +18,4 @@ class NavigationButtonSetTrait extends Trait {
     this.height,
   });
 
-  @override
-  Type get viewDataType => String;
 }

@@ -103,7 +103,6 @@ abstract class Trait {
 
   const Trait({this.showCaption = true});
 
-  Type get viewDataType;
 }
 
 TraitLibrary _traitLibrary = TraitLibrary();

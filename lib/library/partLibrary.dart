@@ -121,12 +121,14 @@ class PartLibrary {
   Widget _createParticle(
     ThemeData theme,
     Trait trait,
-    ModelConnector connector,
+ModelConnector connector,
     PPart partConfig,
     final Map<String, dynamic> pageArguments,
     ContentBindings contentBindings,
   ) {
+    final ConnectorFactory connectorFactory = ConnectorFactory();
     final particleType = trait.runtimeType;
+
     switch (particleType) {
       case TextTrait:
         return TextParticle(
@@ -189,6 +191,26 @@ class PartLibrary {
     throw PreceptException(msg);
   }
 
+  Type viewDataTypeFor(Type particleType) {
+    switch (particleType) {
+      case TextTrait:
+      case TextBoxTrait:
+      case NavigationButtonTrait:
+      case NavigationButtonSetTrait:
+        return String;
+      case EmailSignInTrait:
+        return Object;
+      case QueryViewReadTrait:
+      case QueryViewEditTrait:
+      case ListViewReadTrait:
+      case ListViewEditTrait:
+        return List;
+    }
+    String msg = "No entry is defined for $particleType in $runtimeType";
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
+  }
+
   Widget findParticle(
     ThemeData theme,
     DataBinding dataBinding,
@@ -197,10 +219,13 @@ class PartLibrary {
     final Map<String, dynamic> pageArguments,
     ContentBindings contentBindings,
   ) {
-    Type viewDataType = trait.viewDataType;
-    final connector = ConnectorFactory()
-        .buildConnector(viewDataType: viewDataType, config: partConfig, dataBinding: dataBinding);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments, contentBindings);
+    Type particleType = trait.runtimeType;
+    ConnectorFactory connectorFactory=ConnectorFactory();
+    final connector = connectorFactory.buildConnector(
+        viewDataType: viewDataTypeFor(particleType),
+        config: partConfig,
+        dataBinding: contentBindings.dataBinding);
+    return _createParticle(theme, trait,connector, partConfig, pageArguments, contentBindings);
   }
 
   Widget findStaticParticle(

@@ -3,8 +3,6 @@ import 'package:precept_client/trait/traitLibrary.dart';
 class ListViewTrait extends Trait {
   const ListViewTrait();
 
-  @override
-  Type get viewDataType => List;
 }
 
 class ListViewReadTrait extends ListViewTrait {
@@ -20,13 +18,9 @@ class ListViewEditTrait extends ListViewTrait {
 class ListItemReadTrait extends Trait {
   const ListItemReadTrait();
 
-  @override
-  Type get viewDataType => Object;
 }
 
 class ListItemEditTrait extends Trait {
   const ListItemEditTrait();
 
-  @override
-  Type get viewDataType => Object;
 }

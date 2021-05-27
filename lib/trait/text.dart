@@ -14,6 +14,5 @@ class TextTrait extends Trait {
         bool showCaption = true})
       : super(showCaption: showCaption);
 
-  @override
-  Type get viewDataType => String;
+
 }
