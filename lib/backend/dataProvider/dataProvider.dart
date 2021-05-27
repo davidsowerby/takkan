@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
@@ -6,6 +7,7 @@ import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_backend/backend/user/noAuthenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
@@ -13,8 +15,8 @@ import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/script/script.dart';
 
-import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
 
 /// The layer between the client and server.
 ///
@@ -155,6 +157,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     }
   }
 
+  /// returns the latest script of the given [name] and [locale].  [fromVersion] helps to reduce
+  /// the amount of data returned, but can otherwise always be 0.
+  ///
+  /// If somehow there are 2 or more instances with the same version, the most recently
+  /// updated entry is returned
+  Future<PScript> latestScript(
+      {required Locale locale, required int fromVersion, required String name});
+
   Future<Map<String, dynamic>> pQuery(
       {required PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
     final Map<String, dynamic> variables = _combineVariables(query, pageArguments);
@@ -223,6 +233,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     return {};
   }
 
+  /// Creates a database row containing [script] and it associated fields.  Set [incrementVersion]
+  /// to increment the version before saving
+  Future<QueryResult> uploadPreceptScript({
+    required PScript script,
+    required Locale locale,
+    bool incrementVersion = false,
+  });
+
   Future<bool> update({
     required DocumentId documentId,
     required Map<String, dynamic> changedData,
@@ -248,61 +266,3 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   DocumentId documentIdFromData(Map<String, dynamic> data);
 }
 
-class NoAuthenticator extends Authenticator {
-  final String msg =
-      'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
-
-  @override
-  Future<bool> doDeRegister(PreceptUser user) {
-    throw UnimplementedError(msg);
-  }
-
-  @override
-  Future<AuthenticationResult> doRegisterWithEmail(
-      {required String username, required String password}) {
-    throw UnimplementedError(msg);
-  }
-
-  @override
-  Future<bool> doRequestPasswordReset(PreceptUser user) {
-    throw UnimplementedError(msg);
-  }
-
-  @override
-  Future<AuthenticationResult> doSignInByEmail(
-      {required String username, required String password}) {
-    throw UnimplementedError(msg);
-  }
-
-  @override
-  Future<bool> doUpdateUser(PreceptUser user) {
-    throw UnimplementedError(msg);
-  }
-
-  @override
-  init() {
-    logType(this.runtimeType).i("Authenticator not set");
-  }
-
-  @override
-  PreceptUser preceptUserFromNative(nativeUser) {
-    throw UnimplementedError();
-  }
-
-  @override
-  preceptUserToNative(PreceptUser preceptUser) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<String>> loadUserRoles() {
-    // TODO: implement userRoles
-    throw UnimplementedError();
-  }
-
-  @override
-  doSignOut() {
-    // TODO: implement doSignOut
-    throw UnimplementedError();
-  }
-}
