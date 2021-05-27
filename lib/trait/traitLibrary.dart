@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_client/trait/emailSignIn.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_client/trait/query.dart';
 import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/textBox.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/part/listView.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/queryView.dart';
@@ -83,9 +82,7 @@ class TraitLibrary {
       case PQueryView.defaultItemEditTrait:
         return QueryItemEditTrait();
       default:
-        String msg = "Trait name: '$traitName' has not be registered in the Trait Library";
-        logType(this.runtimeType).e(msg);
-        throw PreceptException(msg);
+        return NoTrait(viewDataType: String, traitName: traitName);
     }
   }
 }
@@ -112,3 +109,13 @@ abstract class Trait {
 TraitLibrary _traitLibrary = TraitLibrary();
 
 TraitLibrary get traitLibrary => _traitLibrary;
+
+/// Used when a Particle does not use a Trait.  Also useful to speed things up during early stage
+/// development.  [viewDataType] describes the data type used by the Particle.  [traitName] is used
+/// as a qualifier so that the [PartLibrary] can construct the correct widget.
+class NoTrait extends Trait {
+  final Type viewDataType;
+  final String traitName;
+
+  const NoTrait({required this.viewDataType, required this.traitName}) : super(showCaption: false);
+}

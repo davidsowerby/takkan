@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/data/connectorBuilder.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_script/part/navigation.dart';
 
-class NavigationButton extends StatelessWidget with ConnectorBuilder {
+class NavigationButton extends StatelessWidget  {
   final PNavButton partConfig;
   final ModelConnector connector;
   final NavigationButtonTrait trait;
