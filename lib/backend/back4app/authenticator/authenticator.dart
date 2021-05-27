@@ -94,6 +94,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
     if (nativeUser == null) {
       return PreceptUser.unknownUser();
     }
+    // ignore: invalid_use_of_protected_member
     final Map<String, dynamic> json = nativeUser.toJson();
     return PreceptUser(
       firstName: json['firstName'] ?? 'unknown',
@@ -127,6 +128,8 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
     return roles;
   }
 }
+
+
 
 final userRolesScript = r'''query GetRoles  ($id: ID!) {
   roles (where: {users: {have: {id:{equalTo: $id}}}}){

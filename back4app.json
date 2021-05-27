@@ -1,27 +1,29 @@
 {
-  "dev": {
-    "applicationId": "test",
-    "clientId": "test",
-    "restId": "test",
-    "serverUrl": "http://localhost:1337/parse/"
-  },
-  "test": {
-    "applicationId": "test",
-    "clientId": "test",
-    "restId": "test",
-    "serverUrl": "http://localhost:1337/parse/"
-  },
-  "qa": {
-    "applicationId": "test",
-    "clientId": "test",
-    "restId": "test",
-    "serverUrl": "http://localhost:1337/parse/"
-  },
-  "prod": {
-    "applicationId": "test",
-    "clientId": "test",
-    "restId": "test",
-    "serverUrl": "http://localhost:1337/parse/"
-  },
-  "testValue" : "only used to test access to this file"
+  "back4app": {
+    "dev": {
+      "X-Parse-Application-Id": "xLWKrOqVNy3O1u3z9ovoalO2XFuKQn0NlHPksJV6",
+      "X-Parse-Client-Key": "Ib1NDOh4ph4fkCci0IIxWF01flSxhpJf6FO1gAkQ",
+      "serverUrl": "https://parseapi.back4app.com/",
+      "graphqlEndpoint": "https://parseapi.back4app.com/graphql",
+      "documentEndpoint": "https://parseapi.back4app.com/classes"
+    },
+    "test": {
+      "applicationId": "test",
+      "clientId": "test",
+      "restId": "test",
+      "serverUrl": "http://localhost:1337/parse/"
+    },
+    "qa": {
+      "applicationId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "clientId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "restId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "serverUrl": "https://parseapi.back4app.com/"
+    },
+    "prod": {
+      "applicationId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "clientId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "restId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+      "serverUrl": "https://parseapi.back4app.com/"
+    }
+  }
 }
