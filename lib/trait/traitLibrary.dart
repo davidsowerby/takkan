@@ -23,25 +23,55 @@ class TraitLibrary {
     switch (traitName) {
       case PEmailSignIn.defaultTrait:
         return EmailSignInTrait();
+
+      case PText.title:
+        final textTheme = _lookupTextTheme(theme, textBackground);
+
+        return TextTrait(alignment: AlignmentDirectional.center,
+          textStyle: textTheme.headline3!,
+          textAlign: TextAlign.center,
+          textTheme: textTheme,
+        );
+      case PText.subtitle:
+        final textTheme = _lookupTextTheme(theme, textBackground);
+        return TextTrait(alignment: AlignmentDirectional.center,
+          textStyle: textTheme.headline5!,
+          textAlign: TextAlign.center,
+          textTheme: textTheme,
+        );
+      case PText.strapText:
+        final textTheme = _lookupTextTheme(theme, textBackground);
+        return TextTrait(alignment: AlignmentDirectional.center,
+          textStyle: textTheme.bodyText1!.copyWith(fontStyle: FontStyle.italic),
+          textAlign: TextAlign.center,
+          textTheme: textTheme,
+        );
       case PText.heading1:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline4!,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           textTheme: textTheme,
         );
       case PText.heading2:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline5!,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
           textTheme: textTheme,
         );
       case PText.heading3:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline6!,
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
+          textTheme: textTheme,
+        );
+      case PText.body:
+        final textTheme = _lookupTextTheme(theme, textBackground);
+        return TextTrait(
+          textStyle: textTheme.bodyText1!,
+          textAlign: TextAlign.left,
           textTheme: textTheme,
         );
       case PText.defaultReadTrait:
@@ -60,9 +90,9 @@ class TraitLibrary {
         );
 
       case PNavButton.defaultReadTrait:
-        return NavigationButtonTrait();
+        return NavButtonTrait();
       case PNavButtonSet.defaultReadTrait:
-        return NavigationButtonSetTrait();
+        return NavButtonSetTrait();
       case PTextBox.defaultTraitName:
         return TextBoxTrait();
       case PListView.defaultReadTrait:
@@ -100,9 +130,9 @@ TextTheme _lookupTextTheme(ThemeData theme, PTextTheme background) {
 
 abstract class Trait {
   final bool showCaption;
+  final AlignmentGeometry alignment;
 
-  const Trait({this.showCaption = true});
-
+  const Trait({this.showCaption = true, required this.alignment});
 }
 
 TraitLibrary _traitLibrary = TraitLibrary();
@@ -116,5 +146,12 @@ class NoTrait extends Trait {
   final Type viewDataType;
   final String traitName;
 
-  const NoTrait({required this.viewDataType, required this.traitName}) : super(showCaption: false);
+  const NoTrait({
+    required this.viewDataType,
+    required this.traitName,
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }) : super(
+          showCaption: false,
+          alignment: alignment,
+        );
 }

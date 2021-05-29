@@ -9,10 +9,12 @@ class TextTrait extends Trait {
 
   const TextTrait(
       {required this.textStyle,
-        required this.textAlign,
-        required this.textTheme,
-        bool showCaption = true})
-      : super(showCaption: showCaption);
-
-
+      required this.textAlign,
+      required this.textTheme,
+      AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+      bool showCaption = true})
+      : super(
+          showCaption: showCaption,
+          alignment: alignment,
+        );
 }

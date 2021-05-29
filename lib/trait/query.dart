@@ -1,29 +1,40 @@
+import 'package:flutter/widgets.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
 
 class QueryViewTrait extends Trait {
-  const QueryViewTrait();
+  const QueryViewTrait({
+   required AlignmentGeometry alignment,
+  }):super(alignment: alignment);
 
 
 }
 
 class QueryViewReadTrait extends QueryViewTrait {
-  const QueryViewReadTrait();
+  const QueryViewReadTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }):super(alignment: alignment);
 }
 
 class QueryViewEditTrait extends QueryViewTrait {
-  const QueryViewEditTrait();
+  const QueryViewEditTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }):super(alignment: alignment);
 
 
 }
 
 class QueryItemReadTrait extends Trait {
-  const QueryItemReadTrait();
+  const QueryItemReadTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }):super(alignment: alignment);
 
 
 }
 
 class QueryItemEditTrait extends Trait {
-  const QueryItemEditTrait();
+  const QueryItemEditTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }):super(alignment: alignment);
 
 
 }

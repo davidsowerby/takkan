@@ -31,6 +31,7 @@ class QueryViewParticle extends StatelessWidget with ListViewParticleBuilder {
     // return Container(color: Colors.amberAccent, height: 500, child: ListView.builder());
 
     return Container(
+      alignment: trait.alignment,
       height: 500,
       color: Colors.amberAccent,
       child: listView,

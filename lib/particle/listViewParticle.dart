@@ -74,6 +74,7 @@ class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
     // return Container(color: Colors.amberAccent, height: 500, child: ListView.builder());
 
     return Container(
+      alignment: trait.alignment,
       width: 250,
       height: 250,
       color: Colors.amberAccent,

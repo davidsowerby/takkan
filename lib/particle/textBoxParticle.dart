@@ -16,20 +16,23 @@ class TextBoxParticle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return TextFormField(
-      initialValue: connector.readFromModel(),
-      validator: (inputData) => connector.validate(inputData),
-      onSaved: (inputData) => connector.writeToModel(inputData),
-      decoration: InputDecoration(
-        suffixIcon: (partConfig.help == null)
-            ? null
-            : HelpButton(
-                help: partConfig.help!,
-              ),
-        isDense: true,
-        labelStyle: theme.textTheme.overline?.apply(color: theme.primaryColor),
-        labelText: partConfig.caption,
-        border: OutlineInputBorder(gapPadding: 0),
+    return Align(
+      alignment: trait.alignment,
+      child: TextFormField(
+        initialValue: connector.readFromModel(),
+        validator: (inputData) => connector.validate(inputData),
+        onSaved: (inputData) => connector.writeToModel(inputData),
+        decoration: InputDecoration(
+          suffixIcon: (partConfig.help == null)
+              ? null
+              : HelpButton(
+                  help: partConfig.help!,
+                ),
+          isDense: true,
+          labelStyle: theme.textTheme.overline?.apply(color: theme.primaryColor),
+          labelText: partConfig.caption,
+          border: OutlineInputBorder(gapPadding: 0),
+        ),
       ),
     );
   }

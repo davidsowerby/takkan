@@ -38,7 +38,8 @@ class TextParticle extends StatelessWidget  {
         ),
       );
     }
-    return Container(height: partConfig.height, child: text);
+
+    return Container(alignment: trait.alignment,height: partConfig.height, child: text);
   }
 
 

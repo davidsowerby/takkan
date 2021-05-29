@@ -142,21 +142,21 @@ ModelConnector connector,
           connector: connector,
           partConfig: partConfig,
         );
-      case NavigationButtonTrait:
-        return NavigationButton(
-          trait: trait as NavigationButtonTrait,
+      case NavButtonTrait:
+        return NavButton(
+          trait: trait as NavButtonTrait,
           partConfig: partConfig as PNavButton,
           connector: connector,
         );
-      case NavigationButtonSetTrait:
-        final String buttonTraitName = (trait as NavigationButtonSetTrait).buttonTraitName;
+      case NavButtonSetTrait:
+        final String buttonTraitName = (trait as NavButtonSetTrait).buttonTraitName;
         final Trait buttonTrait = traitLibrary.findParticleTrait(
           theme: theme,
           traitName: buttonTraitName,
         );
-        return NavigationButtonSet(
+        return NavButtonSet(
             config: partConfig as PNavButtonSet,
-            buttonTrait: buttonTrait as NavigationButtonTrait,
+            buttonTrait: buttonTrait as NavButtonTrait,
             trait: trait,
             pageArguments: pageArguments);
       case EmailSignInTrait:
@@ -195,8 +195,8 @@ ModelConnector connector,
     switch (particleType) {
       case TextTrait:
       case TextBoxTrait:
-      case NavigationButtonTrait:
-      case NavigationButtonSetTrait:
+      case NavButtonTrait:
+      case NavButtonSetTrait:
         return String;
       case EmailSignInTrait:
         return Object;

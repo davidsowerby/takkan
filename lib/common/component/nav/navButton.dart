@@ -4,26 +4,29 @@ import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_script/part/navigation.dart';
 
-class NavigationButton extends StatelessWidget  {
+class NavButton extends StatelessWidget  {
   final PNavButton partConfig;
   final ModelConnector connector;
-  final NavigationButtonTrait trait;
+  final NavButtonTrait trait;
   final Map<String, dynamic> pageArguments;
-
-  NavigationButton({
+final bool containedInSet;
+  NavButton({
     Key? key,
+    this.containedInSet=false,
     required this.partConfig,
     required this.connector,
-    this.trait=const NavigationButtonTrait(),
+    this.trait=const NavButtonTrait(),
     this.pageArguments = const {},
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () => navigateTo(context),
-      child: Text(connector.readFromModel()),
-    );
+    final button=
+     ElevatedButton(
+       onPressed: () => navigateTo(context),
+       child: Text(connector.readFromModel()),
+     );
+    return (containedInSet) ? button : Container(alignment: trait.alignment,child: button);
   }
 
   navigateTo(BuildContext context) {

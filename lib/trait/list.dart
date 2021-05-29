@@ -1,26 +1,32 @@
+import 'package:flutter/widgets.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
 
 class ListViewTrait extends Trait {
-  const ListViewTrait();
-
+  const ListViewTrait({
+    required AlignmentGeometry alignment,
+  }) : super(alignment: alignment);
 }
 
 class ListViewReadTrait extends ListViewTrait {
-  const ListViewReadTrait();
+  const ListViewReadTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }) : super(alignment: alignment);
 }
 
 class ListViewEditTrait extends ListViewTrait {
-  const ListViewEditTrait();
-
-
+  const ListViewEditTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }) : super(alignment: alignment);
 }
 
 class ListItemReadTrait extends Trait {
-  const ListItemReadTrait();
-
+  const ListItemReadTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }) : super(alignment: alignment);
 }
 
 class ListItemEditTrait extends Trait {
-  const ListItemEditTrait();
-
+  const ListItemEditTrait({
+    AlignmentGeometry alignment = AlignmentDirectional.centerStart,
+  }) : super(alignment: alignment);
 }
