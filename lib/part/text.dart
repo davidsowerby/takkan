@@ -9,20 +9,25 @@ part 'text.g.dart';
 
 @JsonSerializable( explicitToJson: true)
 class PText extends PPart {
-  static  const String defaultReadTrait ='text-read-default';
-  static const String heading1='text-heading-1';
-  static const String heading2='text-heading-2';
-  static const String heading3='text-heading-3';
-  static const String errorText='text-error';
+  static const String defaultReadTrait = 'text-read-default';
+  static const String heading1 = 'text-heading-1';
+  static const String heading2 = 'text-heading-2';
+  static const String heading3 = 'text-heading-3';
+  static const String title = 'text-title';
+  static const String subtitle = 'text-subtitle';
+  static const String strapText = 'text-strapText';
+  static const String body = 'text-body';
+  static const String errorText = 'text-error';
+
   PText(
       {String? caption,
       bool readOnly = false,
       double height = 60,
-      String property=notSet,
-      String readTraitName=defaultReadTrait,
-      String editTraitName=PTextBox.defaultTraitName,
+      String property = notSet,
+      String readTraitName = defaultReadTrait,
+      String editTraitName = PTextBox.defaultTraitName,
       IsStatic isStatic = IsStatic.inherited,
-      String staticData=notSet,
+      String staticData = notSet,
       PHelp? help,
       ControlEdit controlEdit = ControlEdit.inherited,
       String? id,

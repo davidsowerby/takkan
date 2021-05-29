@@ -19,8 +19,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     caption: json['caption'] as String?,
     scrollable: json['scrollable'] as bool,
     help: json['help'] == null ? null : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+    panelStyle: PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String?,
   )..version = json['version'] as int;
