@@ -17,7 +17,7 @@ void main() {
 
     test('round trip, PDocumentGet', () {
       // given
-      PGet g = PGet(
+      PGetDocument g = PGetDocument(
         documentId: DocumentId(
           path: "user/prefs",
           itemId: "23",

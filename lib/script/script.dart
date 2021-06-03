@@ -13,7 +13,7 @@ import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -40,13 +40,13 @@ class PScript extends PCommon {
 
   PScript({
     this.conversionErrorMessages =
-    const ConversionErrorMessages(patterns: defaultConversionPatterns),
+        const ConversionErrorMessages(patterns: defaultConversionPatterns),
     this.validationErrorMessages =
-    const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
+        const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
     required this.name,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider? dataProvider,
+    PDataProviderBase? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
@@ -197,7 +197,7 @@ class PPage extends PContent {
     this.layout = const PPageLayout(),
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
-    PDataProvider? dataProvider,
+    PDataProviderBase? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,

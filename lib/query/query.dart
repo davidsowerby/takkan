@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
@@ -40,9 +39,6 @@ part 'query.g.dart';
 /// Both [propertyReferences] and [variables] may be specified, but if any keys match, then [propertyReferences]
 /// will take precedence
 ///
-/// [script] is the GraphQL script, and typically needs to be expressed as a Dart 'raw String', see:
-/// https://dart.dev/guides/language/language-tour (search for 'raw').  This makes sure none of the
-/// GraphQL syntax gets lost during interpolation by Dart.
 ///
 ///
 ///
@@ -78,6 +74,10 @@ abstract class PQuery extends PreceptItem {
 /// 1. [PQuery.variables]
 /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
 /// 1. Values passed as [pageArguments]
+///
+/// [script] is the GraphQL script, and typically needs to be expressed as a Dart 'raw String', see:
+/// https://dart.dev/guides/language/language-tour (search for 'raw').  This makes sure none of the
+/// GraphQL syntax gets lost during interpolation by Dart.
 ///
 /// [table]and [name] have to be specified, but it is intended that it will be automatically derived
 /// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
@@ -125,7 +125,7 @@ class PGQuery extends PQuery {
 ///
 /// [fields] and [types] must contain 'id' if data is going to be edited, so that data can be updated
 @JsonSerializable(explicitToJson: true)
-class PPQuery extends PQuery {
+class PPQuery extends PGQuery {
   final String fields;
   final String table;
   final Map<String, String> types;
@@ -139,6 +139,8 @@ class PPQuery extends PQuery {
     List<String> propertyReferences = const [],
     QueryReturnType returnType = QueryReturnType.futureSingle,
   }) : super(
+          script: '',
+          table: table,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
@@ -152,10 +154,10 @@ class PPQuery extends PQuery {
 
 /// Retrieves a single document using a [DocumentId]
 @JsonSerializable(explicitToJson: true)
-class PGet extends PQuery {
+class PGetDocument extends PQuery {
   final DocumentId documentId;
 
-  PGet({
+  PGetDocument({
     required this.documentId,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
@@ -166,16 +168,14 @@ class PGet extends PQuery {
           name: 'get',
         );
 
-  factory PGet.fromJson(Map<String, dynamic> json) => _$PGetFromJson(json);
+  factory PGetDocument.fromJson(Map<String, dynamic> json) => _$PGetDocumentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGetToJson(this);
+  Map<String, dynamic> toJson() => _$PGetDocumentToJson(this);
 
   String get table => documentId.path;
 
   @override
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {
-
-  }
+  void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
 
 @JsonSerializable(explicitToJson: true)

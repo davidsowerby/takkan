@@ -10,7 +10,7 @@ class PQueryConverter {
     json.remove(elementKey);
     switch (typeName) {
       case 'PGet':
-        return PGet.fromJson(json);
+        return PGetDocument.fromJson(json);
       case 'PGetStream':
         return PGetStream.fromJson(json);
       default:
@@ -24,9 +24,9 @@ class PQueryConverter {
     Map<String, dynamic> jsonMap = Map();
     jsonMap[elementKey] = type.toString();
     switch (type) {
-      case PGet:
+      case PGetDocument:
         {
-          final PGet obj = object as PGet;
+          final PGetDocument obj = object as PGetDocument;
           jsonMap.addAll(obj.toJson());
           return jsonMap;
         }

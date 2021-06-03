@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/data/provider/restDataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -20,30 +21,35 @@ void main() {
 
     tearDown(() {});
 
-    test('correct inherit / overrule', ()
-    {
+    test('correct inherit / overrule', () {
       // given
       final script = PScript(
         name: 'test',
-        dataProvider: PRestDataProvider(),
+        dataProvider: PRestDataProvider(
+          sessionTokenKey: '',
+          headerKeys: const [],
+          configSource: const PConfigSource(segment: '', instance: ''),
+        ),
         isStatic: IsStatic.yes,
-        query: PGet(documentId: DocumentId(path:'',itemId: 'x')),
+        query: PGetDocument(documentId: DocumentId(path: '', itemId: 'x')),
         pages: {
-          '': PPage(title: 'A Page',
-              controlEdit: ControlEdit.thisAndBelow,
-              content: [
-                PPanel(property: '',
-                  controlEdit: ControlEdit.noEdit,
-                  content: [
-                    PPart(readTraitName: 'default'),
-                  ],
-                ),
-              ],
-            ),
+          '': PPage(
+            title: 'A Page',
+            controlEdit: ControlEdit.thisAndBelow,
+            content: [
+              PPanel(
+                property: '',
+                controlEdit: ControlEdit.noEdit,
+                content: [
+                  PPart(readTraitName: 'default'),
+                ],
+              ),
+            ],
+          ),
         },
       );
       // when
-       script.init();
+      script.init();
       // then
       final page = script.pages[''];
       final panel = page?.content[0] as PPanel;
@@ -73,17 +79,21 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script = PScript(name: 'test',
-          pages: {
-            '/test': PPage(title: 'A Page',
-                content: [
-                  PPanel(property: '',
-                    content: [
-                  PPart(readTraitName:'default',property:'',),
-                ],
-                  ),
-                ],
-              ),
+      final script = PScript(name: 'test', pages: {
+        '/test': PPage(
+          title: 'A Page',
+          content: [
+            PPanel(
+              property: '',
+              content: [
+                PPart(
+                  readTraitName: 'default',
+                  property: '',
+                ),
+              ],
+            ),
+          ],
+        ),
       });
       // when
 
@@ -92,8 +102,6 @@ void main() {
       final page = script.pages['/test'];
       final panel = page?.content[0] as PPanel;
       final part = panel.content[0] as PPart;
-
-
 
       expect(page?.isStatic, IsStatic.inherited);
       expect(page?.dataProvider, isInstanceOf<PNoDataProvider>());

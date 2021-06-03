@@ -8,7 +8,7 @@ import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/panel/panelStyle.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
@@ -37,7 +37,7 @@ class PPanel extends PSubContent {
 
   PPanel({
     this.openExpanded = true,
-    String property=notSet,
+    String property = notSet,
     this.content = const [],
     this.pageArguments = const {},
     this.layout = const PPanelLayout(),
@@ -47,7 +47,7 @@ class PPanel extends PSubContent {
     this.help,
     this.panelStyle = const PPanelStyle(),
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider? dataProvider,
+    PDataProviderBase? dataProvider,
     PQuery? query,
     PTextTrait textTrait = const PTextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,

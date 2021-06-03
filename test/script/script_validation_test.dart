@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/data/provider/restDataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/query/query.dart';
@@ -76,13 +77,19 @@ void main() {
       final component = PScript(
         name: 'a script',
         dataProvider: PRestDataProvider(
+          configSource: const PConfigSource(
+            segment: '',
+            instance: '',
+          ),
+          sessionTokenKey: '',
+          headerKeys: const [],
           schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
         pages: {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",
-            query: PGet(
+            query: PGetDocument(
               documentId: DocumentId(path: '', itemId: 'x'),
             ),
           ),
@@ -102,6 +109,8 @@ void main() {
       final component = PScript(
           name: 'A Script',
           dataProvider: PRestDataProvider(
+            sessionTokenKey: '',
+            headerKeys: const [],
             configSource: PConfigSource(
               segment: 'back4app',
               instance: 'dev',
@@ -115,7 +124,7 @@ void main() {
             "/home": PPage(
               pageType: "mine",
               title: "Wiggly",
-              query: PGet(
+              query: PGetDocument(
                 documentId: DocumentId(path: '', itemId: 'x'),
               ),
               content: [
@@ -146,6 +155,8 @@ void main() {
       final withoutQuery = PScript(
         name: 'A Script',
         dataProvider: PRestDataProvider(
+          sessionTokenKey: '',
+          headerKeys: const [],
           configSource: PConfigSource(
             segment: 'back4app',
             instance: 'dev',
@@ -167,6 +178,8 @@ void main() {
       final withQueryAndProvider = PScript(
         name: 'A Script',
         dataProvider: PRestDataProvider(
+          sessionTokenKey: '',
+          headerKeys: const [],
           configSource: PConfigSource(
             segment: 'back4app',
             instance: 'dev',
@@ -180,7 +193,7 @@ void main() {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",
-            query: PGet(
+            query: PGetDocument(
               documentId: DocumentId(itemId: 'xx', path: ''),
             ),
             content: [PPanel(caption: 'panel1')],

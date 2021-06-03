@@ -2,7 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/part/text.dart';
 
 part 'signIn.g.dart';
 

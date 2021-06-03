@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/dataProviderConverter.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -81,24 +81,18 @@ class PCommon extends PreceptItem {
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @JsonKey(
-
       includeIfNull: false,
       fromJson: PDataProviderConverter.fromJson,
       toJson: PDataProviderConverter.toJson)
-  PDataProvider? _dataProvider;
+  PDataProviderBase? _dataProvider;
   @JsonKey(ignore: true)
   PScript? _script;
-  @JsonKey(
-      fromJson: PQueryConverter.fromJson,
-      toJson: PQueryConverter.toJson,
-
-      includeIfNull: false)
+  @JsonKey(fromJson: PQueryConverter.fromJson, toJson: PQueryConverter.toJson, includeIfNull: false)
   PQuery? _query;
-
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
-    PDataProvider? dataProvider,
+    PDataProviderBase? dataProvider,
     PQuery? query,
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
@@ -132,7 +126,7 @@ class PCommon extends PreceptItem {
   }
 
   @JsonKey(ignore: true)
-  PDataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
+  PDataProviderBase? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
