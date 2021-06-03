@@ -10,11 +10,13 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
     Map<String, dynamic> json) {
   return PBack4AppDataProvider(
     debug: json['debug'] as bool,
-    configSource: json['configSource'] == null
-        ? null
-        : PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
+    serverUrl: json['serverUrl'] as String,
+    configSource:
+        PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
     id: json['id'] as String?,
     checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
+    signInOptions:
+        PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
   )..version = json['version'] as int;
 }
 
@@ -23,7 +25,9 @@ Map<String, dynamic> _$PBack4AppDataProviderToJson(
     <String, dynamic>{
       'version': instance.version,
       'id': instance.id,
-      'configSource': instance.configSource?.toJson(),
+      'signInOptions': instance.signInOptions.toJson(),
+      'configSource': instance.configSource.toJson(),
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'debug': instance.debug,
+      'serverUrl': instance.serverUrl,
     };

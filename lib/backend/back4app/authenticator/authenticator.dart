@@ -15,10 +15,11 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
 
   init() async {
     parse = await Parse().initialize(
-      config.applicationId,
+      parent.applicationId,
       config.serverUrl,
-      clientKey: config.clientKey,
+      clientKey: parent.clientKey,
     );
+    status=SignInStatus.Initialised;
   }
 
 // TODO: should not allow call if already logged in (_parseUser would be overwritten)
@@ -120,7 +121,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
         script: userRolesScript,
         returnType: QueryReturnType.futureList,
         variables: {'id': user.objectId});
-    final List<Map<String, dynamic>> result = await parent.gQueryList(query: query);
+    final List<Map<String, dynamic>> result = await parent.queryList(queryConfig: query, pageArguments: const{});
     final List<String> roles = List.empty(growable: true);
     result.forEach((element) {
       roles.add(element['name']);

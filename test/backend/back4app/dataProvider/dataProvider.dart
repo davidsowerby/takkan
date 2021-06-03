@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:graphql/client.dart';
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
@@ -29,7 +29,6 @@ void main() {
       final PBack4AppDataProvider config = PBack4AppDataProvider(
         configSource: PConfigSource(segment: 'back4app', instance: 'dev'),
       );
-      config.appConfig = jsonConfig;
 
       provider = Back4AppDataProvider(config: config);
     });

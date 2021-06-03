@@ -5,27 +5,40 @@ import 'package:precept_back4app_backend/backend/back4app/authenticator/authenti
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_backend/backend/dataProvider/graphqlDataProvider.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_script/app/appConfig.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
 
-class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
+class Back4AppDataProvider extends GraphQLDataProvider<PBack4AppDataProvider> {
+  static const applicationIdKey = 'X-Parse-Application-Id';
+  static const clientIdKey = 'X-Parse-Client-Key';
+  late Map<String, String> _instanceConfig;
+
   Back4AppDataProvider({required PBack4AppDataProvider config}) : super(config: config);
 
   @override
-  Authenticator<PBack4AppDataProvider, ParseUser> createAuthenticator(
-          PBack4AppDataProvider config) =>
-      Back4AppAuthenticator(parent: this, config: config);
+  Authenticator doCreateAuthenticator() {
+    return Back4AppAuthenticator(parent: this, config: config);
+  }
 
   @override
   DocumentId documentIdFromData(Map<String, dynamic> data) {
     return DocumentId(path: data['__typename'], itemId: data['objectId']);
   }
 
-  @override
-  String get sessionTokenKey => 'X-Parse-Session-Token';
+  init(AppConfig appConfig) {
+    super.init(appConfig);
+    _instanceConfig = appConfig.instanceConfig(config.configSource);
+  }
+
+  String get applicationId => _instanceConfig[applicationIdKey] ?? notSet;
+
+  String get clientKey => _instanceConfig[clientIdKey] ?? notSet;
 
   /// Creates a database row containing [script] and it associated fields.  Set [incrementVersion]
   /// to increment the version before saving
@@ -40,7 +53,7 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
       version++;
       scriptJson['version'] = version;
     }
-    final String nameLocale= '${script.name}:${locale.toString()}';
+    final String nameLocale = '${script.name}:${locale.toString()}';
 
     final Map<String, dynamic> value = {
       'input': {
@@ -48,7 +61,7 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
         'locale': locale.toString(),
         'script': scriptJson,
         'version': version,
-        'nameLocale':nameLocale,
+        'nameLocale': nameLocale,
       },
     };
     QueryResult queryResult = await client.query(
@@ -70,13 +83,14 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
       'target': fromVersion,
       'nameLocale': '$name:${locale.toString()}'
     };
-    List<Map<String, dynamic>> result = await gQueryList(
-        query: PGQuery(
-      name: 'laterScripts',
-      table: 'PreceptScript',
-      script: laterScripts,
-      variables: variables,
-    ));
+    List<Map<String, dynamic>> result = await queryList(
+        pageArguments: const {},
+        queryConfig: PGQuery(
+          name: 'laterScripts',
+          table: 'PreceptScript',
+          script: laterScripts,
+          variables: variables,
+        ));
 
     if (result.isEmpty) {
       throw APIException(message: "Expected at least one Script", statusCode: -1);
@@ -93,11 +107,12 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
         } else {
           if ((element['version'] > candidate?['version']) &&
               (element['updatedAt'] > candidate?['updatedAt'])) {
-            candidate=element;
+            candidate = element;
           }
         }
       }
-    count++;});
+      count++;
+    });
 
     return PScript.fromJson(candidate!['script']);
   }
@@ -106,7 +121,7 @@ class Back4AppDataProvider extends DataProvider<PBack4AppDataProvider> {
 class Back4App {
   static register() {
     dataProviderLibrary.register(
-        config: PBack4AppDataProvider,
+        configType: PBack4AppDataProvider,
         builder: (config) => Back4AppDataProvider(config: config as PBack4AppDataProvider));
   }
 }
