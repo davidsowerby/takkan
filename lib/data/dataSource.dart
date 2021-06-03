@@ -125,8 +125,8 @@ class DataSource {
     if (dataProviderConfig==null){
       throw PreceptException('DataProvider config should not be null');
     }
-    final DataProvider dataProvider = dataProviderLibrary.find(config: dataProviderConfig);
-    return dataProvider.update(
+    final DataProvider dataProvider = await dataProviderLibrary.find(config: dataProviderConfig);
+    return dataProvider.updateDocument(
       documentId: temporaryDocument.documentId,
       changedData: temporaryDocument.changes,
     );

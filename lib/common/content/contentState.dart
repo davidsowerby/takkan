@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
@@ -13,6 +14,7 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -23,7 +25,7 @@ import 'package:provider/provider.dart';
 
 abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
   static const String preloadDataKey = 'preload-data';
-
+  bool needsAuthentication = false;
   final ContentBindings contentBindings;
 
   ContentState(PContent config,
@@ -37,6 +39,23 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     super.initState();
     contentBindings.init(_onPreceptReady);
     precept.addScriptReloadListener(_onScriptReload);
+    final requiresAuth =
+    (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
+    if (requiresAuth) {
+      dataProvider.createAuthenticator();
+      final userAuthenticated = dataProvider.authenticator.isAuthenticated;
+      needsAuthentication = requiresAuth && !userAuthenticated;
+      if (needsAuthentication) {
+        SchedulerBinding.instance?.addPostFrameCallback((_) {
+          Navigator.pushNamed(context, 'signIn', arguments: {
+            'returnRoute': (config as PPage).route,
+            'signInConfig': dataProvider.config.signInOptions,
+            'dataProvider': dataProvider,
+          });
+        });
+      }
+      logType(this.runtimeType).d("needs authentication: $needsAuthentication");
+    }
   }
 
   /// Trigger a refresh once Precept fully loaded
@@ -99,18 +118,16 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
               context,
               theme,
               dataProvider.query(
-                query: query,
+                queryConfig: query,
                 pageArguments: pageArguments,
-                script: '',
               ));
         case QueryReturnType.futureList:
           return loadList(
               theme,
               query.name,
               dataProvider.queryList(
-                query: query,
+                queryConfig: query,
                 pageArguments: pageArguments,
-                script: '',
               ));
         case QueryReturnType.streamSingle:
         // TODO: Handle this case.
@@ -341,7 +358,7 @@ class ContentBindings {
 
   ContentBindings(this.config, this.parentBinding, this.pageArguments);
 
-  init(Function() _onPreceptReady) {
+  init(Function() _onPreceptReady)  async {
     if (config.dataProvider != null) {
       /// Call is not actioned if Precept already in ready state
       precept.addReadyListener(_onPreceptReady);

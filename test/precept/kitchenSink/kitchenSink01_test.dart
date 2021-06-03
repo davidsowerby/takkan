@@ -48,7 +48,7 @@ final PScript kitchenSink01 = PScript(
                   schema: kitchenSinkSchema01,
                   instanceName: 'mock',
                 ),
-                query: PGet(
+                query: PGetDocument(
                   documentId: DocumentId(path: 'Account', itemId: 'objectId1'),
                 ),
                 controlEdit: ControlEdit.thisOnly,

@@ -32,6 +32,7 @@ class EmailSignIn extends StatelessWidget {
       case SignInStatus.Authenticating:
         return Center(child: MessagePanel(message: config.checkingCredentialsMessage));
       case SignInStatus.Uninitialized:
+      case SignInStatus.Initialised:
       case SignInStatus.Unauthenticated:
       case SignInStatus.Authentication_Failed:
         return Container(

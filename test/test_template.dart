@@ -113,7 +113,7 @@ final PScript kitchenSinkValidation = PScript(
         content: [
           PText(caption: 'Part 1', staticData: 'Part 1',  isStatic: IsStatic.yes),
           PPanel(
-            query: PGet(
+            query: PGetDocument(
               documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
             ),
             caption: 'Panel 2',
