@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 
 import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
 
-abstract class Authenticator<T extends PDataProvider, USER> {
+abstract class Authenticator<T extends PDataProviderBase, USER> {
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners = List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
@@ -58,6 +58,9 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   // TODO: this needs to handle other failures (lost connections etc)
   Future<AuthenticationResult> signInByEmail(
       {required String username, required String password}) async {
+    if (status == SignInStatus.Uninitialized) {
+      await init();
+    }
     status = SignInStatus.Authenticating;
     final AuthenticationResult result =
         await doSignInByEmail(username: username, password: password);
@@ -109,8 +112,10 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   /// Not sure what this is need for :-)
   registrationAcknowledged() {}
 
-  /// Implementation specific, may not be needed
-  init();
+  /// Implementation specific, may not be needed, but must always change status to [SignInStatus.Initialised]
+  init(){
+    status=SignInStatus.Initialised;
+  }
 
   SignInStatus get status => _status;
 
@@ -130,6 +135,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
 
 enum SignInStatus {
   Uninitialized,
+  Initialised,
   Authenticated,
   Authenticating,
   Unauthenticated,
