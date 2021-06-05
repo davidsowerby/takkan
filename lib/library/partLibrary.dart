@@ -294,7 +294,7 @@ Binding _binding(
       return parentBinding.stringBinding(property: property);
     case PList:
       return parentBinding.listBinding(property: property);
-    case PQueryResult:
+    case PQuerySchema:
       return dataBinding.activeDataSource.temporaryDocument.queryRootBinding
           .listBinding(property: property);
     default:

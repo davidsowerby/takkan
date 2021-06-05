@@ -89,7 +89,7 @@ abstract class DataBinding {
   DataBinding rootFromPreloadedData(DataSource activeDataSource) {
     return RootDataBinding(
       binding: activeDataSource.rootBinding,
-      schema: activeDataSource.documentSchema,
+      schema: activeDataSource.documentSchema!,
       activeDataSource: activeDataSource,
     );
   }
@@ -97,7 +97,7 @@ abstract class DataBinding {
   DataBinding child(PContent config, DataBinding parentBinding, DataSource dataSource) {
     return (config.queryIsDeclared)
         ? parentBinding.rootFromDataSource(
-            config.query!, dataSource.rootBinding, dataSource.documentSchema, dataSource)
+            config.query!, dataSource.rootBinding, dataSource.documentSchema!, dataSource)
         : parentBinding.childFromConfig(config);
   }
 }

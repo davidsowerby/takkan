@@ -16,10 +16,13 @@ import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
@@ -124,7 +127,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         case QueryReturnType.futureList:
           return loadList(
               theme,
-              query.name,
+              query.querySchema,
               dataProvider.queryList(
                 queryConfig: query,
                 pageArguments: pageArguments,
@@ -364,15 +367,16 @@ class ContentBindings {
       precept.addReadyListener(_onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider!);
     }
-    final String dataTableName = (config.queryIsDeclared)
-        ? config.query?.table
+    final String documentSchemaName = (config.queryIsDeclared)
+        ? lookupDocumentSchemaName()
         : (preloaded)
         ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
-        : 'unknown';
+        :  notSet;
+
     dataSource = DataSource(config: config,
         dataProvider: dataProvider,
         preloadedData: preloaded,
-        dataTableName: dataTableName);
+        documentSchema: lookupDocumentSchema(documentSchemaName));
     if (config is PPart) {
       dataBinding = NoDataBinding();
     } else {
@@ -380,6 +384,26 @@ class ContentBindings {
           ? parentBinding.rootFromPreloadedData(dataSource)
           : parentBinding.child(config, parentBinding, dataSource);
     }
+  }
+
+  PDocument? lookupDocumentSchema(String documentSchemaName){
+    if (documentSchemaName==notSet){
+      return null;
+    }
+    final PSchema schema=dataProvider.config.schema!;
+    return schema.document(documentSchemaName);
+  }
+
+  String lookupDocumentSchemaName(){
+    final PSchema? schema=dataProvider.config.schema;
+    if(schema==null){
+      throw PreceptException('Schema cannot be null when looking up document schema');
+    }
+    final PQuerySchema? querySchema = schema.queries[config.query?.querySchema];
+    if (querySchema == null){
+      throw PreceptException("querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema.name}");
+    }
+    return querySchema.documentSchema;
   }
 
   /// Preloaded data is held at page level

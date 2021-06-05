@@ -5,6 +5,7 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -14,7 +15,8 @@ import 'package:precept_script/schema/schema.dart';
 /// The intersection point between application and data.
 ///
 /// Retrieval of data, where required, is specified by a [query] defined within [config].  This query
-/// relates to a specific [DataProvider].  A fully static page does not of course require data at all.
+/// relates to a specific [DataProvider].  A fully static page does not of course require data at all,
+/// and [documentSchemaName] name should be set to [notSet]
 ///
 /// A copy of the retrieved data is held in [_temporaryDocument], and notifies listeners
 /// as the retrieval state changes.  The retrieval state mirrors that used by [FutureBuilder] and [StreamBuilder]
@@ -41,24 +43,22 @@ class DataSource {
   late MutableDocument _temporaryDocument;
   late PQuery _query;
   late List<GlobalKey<FormState>> _formKeys;
-  late PDocument _documentSchema;
+  final PDocument? documentSchema;
   PContent config;
   final DataProvider dataProvider;
   final bool preloadedData;
-  final String dataTableName;
 
   /// [callback] is usually a setState from a StatefulWidget
-  DataSource(
-      {required this.config,
-      required this.dataProvider,
-      required this.preloadedData,
-      required this.dataTableName}) {
+  DataSource({
+    required this.config,
+    required this.dataProvider,
+    required this.preloadedData,
+    required this.documentSchema,
+  }) {
     init(config);
   }
 
   RootBinding get rootBinding => _temporaryDocument.rootBinding;
-
-  PDocument get documentSchema => _documentSchema;
 
   List<GlobalKey<FormState>> get formKeys => _formKeys;
 
@@ -67,15 +67,6 @@ class DataSource {
     if (config.queryIsDeclared || preloadedData) {
       _temporaryDocument = inject<MutableDocument>();
       _formKeys = List.empty(growable: true);
-      final providerSchema = config.dataProvider?.schema;
-      if (providerSchema == null) throw PreceptException('Schema must be defined');
-      if (preloadedData) {
-        // TODO: _query is not set, but should we in case of the need to refresh?  Would have to construct query.
-        _documentSchema = providerSchema.document(dataTableName);
-      } else {
-        _query = config.query!;
-        _documentSchema = providerSchema.document(_query.table);
-      }
     }
   }
 
@@ -121,8 +112,8 @@ class DataSource {
 
   Future<bool> persist() async {
     logType(this.runtimeType).d('Persisting data source');
-    final dataProviderConfig=config.dataProvider;
-    if (dataProviderConfig==null){
+    final dataProviderConfig = config.dataProvider;
+    if (dataProviderConfig == null) {
       throw PreceptException('DataProvider config should not be null');
     }
     final DataProvider dataProvider = await dataProviderLibrary.find(config: dataProviderConfig);
@@ -137,7 +128,9 @@ class DataSource {
   }
 
   MutableDocument updateDocument(
-      {required Map<String, dynamic> source,required  DataProvider dataProvider,required  bool fireListeners}) {
+      {required Map<String, dynamic> source,
+      required DataProvider dataProvider,
+      required bool fireListeners}) {
     final DocumentId documentId = dataProvider.documentIdFromData(source);
     return _temporaryDocument.updateFromSource(
       source: source,
