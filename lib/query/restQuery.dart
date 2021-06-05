@@ -4,9 +4,6 @@ class PRestQuery extends PQuery {
   final bool paramsAsPath;
   final Map<String, String> params;
 
-  PRestQuery({this.paramsAsPath = true, required String name, this.params = const {}})
-      : super(name: name, returnType: QueryReturnType.futureList);
-
-  @override
-  String get table => name;
+  PRestQuery({this.paramsAsPath = true, required String querySchema, this.params = const {}})
+      : super(querySchema: querySchema, returnType: QueryReturnType.futureList);
 }

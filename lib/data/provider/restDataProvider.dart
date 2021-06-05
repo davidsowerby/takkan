@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/signin/signIn.dart';
@@ -7,7 +6,7 @@ import 'package:precept_script/signin/signIn.dart';
 part 'restDataProvider.g.dart';
 
 /// Sensitive keys - such as API Keys - are held in **precept.json** in the project root directory.
-/// [headerKeys], in conjeunction with [configSource], are used to look these keys from **precept.json**.
+/// [headerKeys], in conjunction with [configSource], are used to look these keys from **precept.json**.
 ///
 /// Key names may be different for each backend implementation.
 ///
@@ -18,10 +17,9 @@ part 'restDataProvider.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PRestDataProvider extends PDataProviderBase {
   final bool checkHealthOnConnect;
-  final String? _serverUrl;
 
   PRestDataProvider({
-    String? serverUrl,
+    required String documentEndpoint,
     PSignInOptions signInOptions = const PSignInOptions(),
     PSchemaSource? schemaSource,
     PSchema? schema,
@@ -31,9 +29,8 @@ class PRestDataProvider extends PDataProviderBase {
     PSignIn signIn = const PSignIn(),
     required String sessionTokenKey,
     required List<String> headerKeys,
-  })   : _serverUrl = serverUrl,
-        super(
-          documentEndpoint: notSet,
+  }) : super(
+          documentEndpoint: documentEndpoint,
           headerKeys: headerKeys,
           checkHealthOnConnect: checkHealthOnConnect,
           sessionTokenKey: sessionTokenKey,

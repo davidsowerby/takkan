@@ -6,20 +6,25 @@ import 'package:precept_script/schema/schema.dart';
 
 part 'queryResult.g.dart';
 
-/// A [QueryResult] is very similar to a [PList], but it is not appropriate to run validation
+/// A [PQuerySchema] is very similar to a [PList], but it is not appropriate to run validation
 /// against a query result.
+///
+/// [documentSchema] is used to lookup the schema for the document(s) returned, from [PSchema.documents]
 ///
 /// [permissions] can be defined but usually permissions are set by the schema of the result
 /// 'documents'
-@JsonSerializable( explicitToJson: true)
-class PQueryResult extends PField<ListValidation, List> {
-  PQueryResult({
+@JsonSerializable(explicitToJson: true)
+class PQuerySchema extends PField<ListValidation, List> {
+  final String documentSchema;
+
+  PQuerySchema({
+    required this.documentSchema,
     PPermissions permissions = const PPermissions(),
   }) : super(permissions: permissions);
 
-  factory PQueryResult.fromJson(Map<String, dynamic> json) => _$PQueryResultFromJson(json);
+  factory PQuerySchema.fromJson(Map<String, dynamic> json) => _$PQuerySchemaFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PQueryResultToJson(this);
+  Map<String, dynamic> toJson() => _$PQuerySchemaToJson(this);
 
   @override
   bool doValidation(validation, List<dynamic> value) {

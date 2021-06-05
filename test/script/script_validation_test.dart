@@ -77,6 +77,7 @@ void main() {
       final component = PScript(
         name: 'a script',
         dataProvider: PRestDataProvider(
+          documentEndpoint: '',
           configSource: const PConfigSource(
             segment: '',
             instance: '',
@@ -109,6 +110,7 @@ void main() {
       final component = PScript(
           name: 'A Script',
           dataProvider: PRestDataProvider(
+            documentEndpoint: '',
             sessionTokenKey: '',
             headerKeys: const [],
             configSource: PConfigSource(
@@ -155,6 +157,7 @@ void main() {
       final withoutQuery = PScript(
         name: 'A Script',
         dataProvider: PRestDataProvider(
+          documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
           configSource: PConfigSource(
@@ -178,6 +181,7 @@ void main() {
       final withQueryAndProvider = PScript(
         name: 'A Script',
         dataProvider: PRestDataProvider(
+          documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
           configSource: PConfigSource(

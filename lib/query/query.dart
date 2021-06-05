@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
@@ -17,8 +18,9 @@ part 'query.g.dart';
 /// - 'select first'
 /// - 'select last'
 ///
-/// [table] is the equivalent of something like a table name, (class in Back4App, collection path for Firestore)
-/// It does not always need to be specified explicitly - it may be derived from whatever is used to select the required data.
+/// [querySchema] is used to look up the schema for the query, held in [PSchema.queries] and defined by
+/// an instance of [PQuerySchema]. The [PQuerySchema.documentSchema] contains a reference to the s
+/// chema for the document(s) returned by the query
 ///
 /// [fields] is a comma separated list of field names you want values to be returned for.  There is an outstanding
 /// issue to automatically generate this. https://gitlab.com/precept1/precept_script/-/issues/2
@@ -46,22 +48,20 @@ abstract class PQuery extends PreceptItem {
   final Map<String, dynamic> variables;
   final List<String> propertyReferences;
   final QueryReturnType returnType;
-  final String name;
+  final String querySchema;
 
   PQuery({
     this.variables = const {},
     this.propertyReferences = const [],
     this.returnType = QueryReturnType.futureSingle,
-    required this.name,
+    required this.querySchema,
   });
 
   @JsonKey(ignore: true)
-  PDocument? get schema => (parent as PCommon).dataProvider?.schema?.document(table);
-
-  String get table;
+  PQuerySchema? get schema => (parent as PCommon).dataProvider?.schema?.queries[querySchema];
 
   /// For queries, the name is used as a property to lookup its data (query results) in local storage
-  String get property => name;
+  String get property => querySchema;
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
@@ -79,34 +79,28 @@ abstract class PQuery extends PreceptItem {
 /// https://dart.dev/guides/language/language-tour (search for 'raw').  This makes sure none of the
 /// GraphQL syntax gets lost during interpolation by Dart.
 ///
-/// [table]and [name] have to be specified, but it is intended that it will be automatically derived
+/// [table]and [documentSchema] have to be specified, but it is intended that it will be automatically derived
 /// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
 @JsonSerializable(explicitToJson: true)
 class PGQuery extends PQuery {
   final String script;
-  final String _table;
 
   PGQuery({
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
-    required String table,
     required this.script,
-    required String name,
+    required String querySchema,
     QueryReturnType returnType = QueryReturnType.futureSingle,
-  })  : _table = table,
-        super(
+  }) : super(
+          querySchema: querySchema,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
-          name: name,
         );
 
   factory PGQuery.fromJson(Map<String, dynamic> json) => _$PGQueryFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGQueryToJson(this);
-
-  @override
-  String get table => _table;
 }
 
 /// **EXPERIMENTAL** A currently very limited attempt to simplify the specification of a GraphQL query.
@@ -127,24 +121,21 @@ class PGQuery extends PQuery {
 @JsonSerializable(explicitToJson: true)
 class PPQuery extends PGQuery {
   final String fields;
-  final String table;
   final Map<String, String> types;
 
   PPQuery({
     this.fields = '',
     this.types = const {},
-    required this.table,
-    required String name,
+    required String querySchema,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     QueryReturnType returnType = QueryReturnType.futureSingle,
   }) : super(
+    querySchema: querySchema,
           script: '',
-          table: table,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
-          name: name,
         );
 
   factory PPQuery.fromJson(Map<String, dynamic> json) => _$PPQueryFromJson(json);
@@ -163,9 +154,9 @@ class PGetDocument extends PQuery {
     List<String> propertyReferences = const [],
     Map<String, dynamic> params = const {},
   }) : super(
+    querySchema: '',
           propertyReferences: propertyReferences,
           variables: variables,
-          name: 'get',
         );
 
   factory PGetDocument.fromJson(Map<String, dynamic> json) => _$PGetDocumentFromJson(json);
@@ -183,15 +174,15 @@ class PGetStream extends PQuery {
   final DocumentId documentId;
 
   PGetStream({
-    required String name,
+    required String querySchema,
     Map<String, dynamic> arguments = const {},
     List<String> propertyReferences = const [],
     required this.documentId,
     Map<String, dynamic> params = const {},
   }) : super(
-          propertyReferences: propertyReferences,
+    propertyReferences: propertyReferences,
           variables: arguments,
-          name: name,
+          querySchema: querySchema,
         );
 
   String get table => documentId.path;

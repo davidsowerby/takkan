@@ -40,10 +40,10 @@ part 'schema.g.dart';
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
-  final Map<String, PQueryResult> queries;
+  final Map<String, PQuerySchema> queries;
 
   PSchema(
-      {Map<String, PDocument> documents=const{}, required this.name, this.queries = const {}})
+      {Map<String, PDocument> documents = const {}, required this.name, this.queries = const {}})
       : _documents = documents;
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);

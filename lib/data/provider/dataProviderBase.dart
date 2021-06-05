@@ -21,7 +21,7 @@ abstract class PDataProviderBase extends PreceptItem {
   final PConfigSource configSource;
 
   @JsonKey(ignore: true)
-  PSchema? _schema;
+  PSchema _schema;
   final PSchemaSource? schemaSource;
   final bool checkHealthOnConnect;
   final String sessionTokenKey;
@@ -44,7 +44,7 @@ abstract class PDataProviderBase extends PreceptItem {
     this.schemaSource,
     required this.signIn,
     String? id,
-  })  : _schema = schema,
+  })  : _schema = schema!,
         super(id: id);
 
   void doValidate(List<ValidationMessage> messages) {

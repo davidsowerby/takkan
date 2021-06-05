@@ -13,7 +13,7 @@ PSchema _$PSchemaFromJson(Map<String, dynamic> json) {
     ),
     name: json['name'] as String,
     queries: (json['queries'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(k, PQueryResult.fromJson(e as Map<String, dynamic>)),
+      (k, e) => MapEntry(k, PQuerySchema.fromJson(e as Map<String, dynamic>)),
     ),
   );
 }

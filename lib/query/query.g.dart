@@ -12,9 +12,8 @@ PGQuery _$PGQueryFromJson(Map<String, dynamic> json) {
     propertyReferences: (json['propertyReferences'] as List<dynamic>)
         .map((e) => e as String)
         .toList(),
-    table: json['table'] as String,
     script: json['script'] as String,
-    name: json['name'] as String,
+    querySchema: json['querySchema'] as String,
     returnType: _$enumDecode(_$QueryReturnTypeEnumMap, json['returnType']),
   )..version = json['version'] as int;
 }
@@ -24,9 +23,8 @@ Map<String, dynamic> _$PGQueryToJson(PGQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
-      'name': instance.name,
+      'querySchema': instance.querySchema,
       'script': instance.script,
-      'table': instance.table,
     };
 
 K _$enumDecode<K, V>(
@@ -66,8 +64,7 @@ PPQuery _$PPQueryFromJson(Map<String, dynamic> json) {
   return PPQuery(
     fields: json['fields'] as String,
     types: Map<String, String>.from(json['types'] as Map),
-    table: json['table'] as String,
-    name: json['name'] as String,
+    querySchema: json['querySchema'] as String,
     variables: json['variables'] as Map<String, dynamic>,
     propertyReferences: (json['propertyReferences'] as List<dynamic>)
         .map((e) => e as String)
@@ -81,9 +78,8 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
-      'name': instance.name,
+      'querySchema': instance.querySchema,
       'fields': instance.fields,
-      'table': instance.table,
       'types': instance.types,
     };
 
@@ -91,12 +87,14 @@ PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) {
   return PGetDocument(
     documentId: DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
     variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences:
-        (json['propertyReferences'] as List<dynamic>).map((e) => e as String).toList(),
+    propertyReferences: (json['propertyReferences'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList(),
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) => <String, dynamic>{
+Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
+    <String, dynamic>{
       'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
@@ -105,7 +103,7 @@ Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) => <String, dyn
 
 PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) {
   return PGetStream(
-    name: json['name'] as String,
+    querySchema: json['querySchema'] as String,
     propertyReferences: (json['propertyReferences'] as List<dynamic>)
         .map((e) => e as String)
         .toList(),
@@ -117,6 +115,6 @@ Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
     <String, dynamic>{
       'version': instance.version,
       'propertyReferences': instance.propertyReferences,
-      'name': instance.name,
+      'querySchema': instance.querySchema,
       'documentId': instance.documentId.toJson(),
     };

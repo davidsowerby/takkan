@@ -26,6 +26,7 @@ void main() {
       final script = PScript(
         name: 'test',
         dataProvider: PRestDataProvider(
+          documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
           configSource: const PConfigSource(segment: '', instance: ''),
