@@ -60,5 +60,5 @@ final back4appSchema = PSchema(
       },
     ),
   },
-  queries: {'openIssues': PQueryResult()},
+  queries: {'openIssues': PQuerySchema(documentSchema: 'Issue')},
 );

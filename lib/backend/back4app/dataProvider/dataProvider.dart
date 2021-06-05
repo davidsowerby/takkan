@@ -86,8 +86,7 @@ class Back4AppDataProvider extends GraphQLDataProvider<PBack4AppDataProvider> {
     List<Map<String, dynamic>> result = await queryList(
         pageArguments: const {},
         queryConfig: PGQuery(
-          name: 'laterScripts',
-          table: 'PreceptScript',
+          querySchema: 'laterScripts',
           script: laterScripts,
           variables: variables,
         ));

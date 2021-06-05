@@ -80,10 +80,10 @@ final myScript = PScript(
       controlEdit: ControlEdit.panelsOnly,
       title: 'Open Issues',
       query: PGQuery(
-          name: 'openIssues',
-          script: openIssuesScript,
-          returnType: QueryReturnType.futureList,
-          table: 'Issue'),
+        querySchema: 'openIssues',
+        script: openIssuesScript,
+        returnType: QueryReturnType.futureList,
+      ),
       content: [
         PPanel(
           property: '',
@@ -105,8 +105,7 @@ final myScript = PScript(
           heading: PPanelHeading(canEdit: true, expandable: true),
           property: '',
           query: PPQuery(
-            name: 'Get Account',
-            table: 'Account',
+            querySchema: 'Get Account',
             fields: 'id,objectId, category,accountNumber,createdAt,updatedAt',
             variables: {'id': 'wVdGK8TDXR'},
             types: {
