@@ -9,7 +9,6 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/graphqlDataProvider.dart';
@@ -64,21 +63,29 @@ class GraphQLDataProvider<CONFIG extends PGraphQLDataProvider>
   }
 
   @override
-  Future<Map<String, dynamic>> executeQuery(String script,Map<String, dynamic> variables) {
+  Future<Map<String, dynamic>> executeQuery( String script,Map<String, dynamic> variables) {
     // TODO: implement executeQuery
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Map<String, dynamic>>> executeQueryList(String table, String script, Map<String, dynamic> variables) async {
+  Future<List<Map<String, dynamic>>> executeQueryList(String script, Map<String, dynamic> variables) async {
     addSessionToken();
 
     final queryOptions = QueryOptions(document: gql(script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
 
-    /// GraphQL uses the plural form for the method name when retrieving a list
-    final String method = "${decapitalize(table)}s";
-    final rawData = response.data![method];
+    // TODO: is 'typename' Back4App specific?
+    Map? rawData;
+    for(var entry in response.data!.entries){
+      if (entry.key != '__typename'){
+        rawData=entry.value;
+      }
+    }
+
+    if (rawData==null){
+      throw PreceptException('data is missing');
+    }
     final List edges = rawData['edges'];
     final List<Map<String, dynamic>> results = List.empty(growable: true);
     for (var e in edges) {

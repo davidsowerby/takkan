@@ -1,8 +1,9 @@
-
+import 'package:dio/dio.dart' as dio;
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/restDataProvider.dart';
@@ -25,8 +26,18 @@ class RestDataProvider<CONFIG extends PRestDataProvider> extends DataProvider<CO
 
   @override
   String assembleScript(PRestQuery queryConfig, Map<String, dynamic> pageArguments) {
-    // TODO: implement assembleScript
-    throw UnimplementedError();
+    final StringBuffer buf = StringBuffer(config.documentEndpoint);
+    if (queryConfig.paramsAsPath) {
+      for (var entry in queryConfig.params.entries) {
+        buf.write(entry.key);
+        buf.write('/');
+        buf.write(entry.value);
+      }
+      logType(this.runtimeType).d("REST URL is: ${buf.toString()}");
+      return buf.toString();
+    } else {
+      throw UnimplementedError();
+    }
   }
 
   @override
@@ -36,16 +47,25 @@ class RestDataProvider<CONFIG extends PRestDataProvider> extends DataProvider<CO
   }
 
   @override
-  Future<Map<String, dynamic>> executeQuery(String script, Map<String, dynamic> variables) {
-    // TODO: implement executeQuery
-    throw UnimplementedError();
+  Future<Map<String, dynamic>> executeQuery(
+      String script, Map<String, dynamic> variables) async {
+    final results = await executeQueryList( script, variables);
+    if (results.isNotEmpty) {return results[0];}
+    return Map();
   }
 
+  /// Default content type is JSON
   @override
   Future<List<Map<String, dynamic>>> executeQueryList(
-      String table, String script, Map<String, dynamic> variables) {
-    // TODO: implement executeQueryList
-    throw UnimplementedError();
+    String script, Map<String, dynamic> variables) async {
+    final dio.Response response =
+        await dio.Dio(dio.BaseOptions(headers: appConfig.headers(config))).get(script);
+    final data = response.data;
+    List<Map<String, dynamic>> output = List.empty(growable: true);
+    for (var entry in data) {
+      output.add(entry as Map<String, dynamic>);
+    }
+    return output;
   }
 
   @override

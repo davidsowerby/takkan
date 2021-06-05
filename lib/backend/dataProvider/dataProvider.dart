@@ -49,7 +49,7 @@ abstract class DataProvider<CONFIG extends PDataProviderBase, QUERY extends PQue
 
   /// If overriding this make sure you call super()
   init(AppConfig appConfig) {
-    appConfig = appConfig;
+    this.appConfig = appConfig;
   }
 
   createAuthenticator() {
@@ -81,7 +81,7 @@ abstract class DataProvider<CONFIG extends PDataProviderBase, QUERY extends PQue
   }) async {
     final String script = assembleScript(queryConfig, pageArguments);
     final Map<String, dynamic> variables = combineVariables(queryConfig, pageArguments);
-    return executeQueryList(queryConfig.table, script,variables);
+    return executeQueryList(script,variables);
   }
 
   /// Combines variable values from 3 possible sources. Order of precedence is:
@@ -108,11 +108,11 @@ abstract class DataProvider<CONFIG extends PDataProviderBase, QUERY extends PQue
 
   /// Overridden by sub-classes to execute the query [script] in the appropriate way for the
   /// implementation, for example REST or GraphQL
-  Future<Map<String, dynamic>> executeQuery(String script,Map<String, dynamic> variables);
+  Future<Map<String, dynamic>> executeQuery( String script,Map<String, dynamic> variables);
 
   /// Overridden by sub-classes to execute the query [script] in the appropriate way for the
   /// implementation, for example REST or GraphQL
-  Future<List<Map<String, dynamic>>> executeQueryList(String table, String script,Map<String, dynamic> variables);
+  Future<List<Map<String, dynamic>>> executeQueryList( String script,Map<String, dynamic> variables);
 
   /// When operating within a session, the addition of a session token is implementation specific
   addSessionToken();
