@@ -42,24 +42,24 @@ class RestDataProvider<CONFIG extends PRestDataProvider> extends DataProvider<CO
 
   @override
   DocumentId documentIdFromData(Map<String, dynamic> data) {
-    // TODO: implement documentIdFromData
-    throw UnimplementedError();
+    return DocumentId(path: 'unknown', itemId: 'unknown');
   }
 
   @override
-  Future<Map<String, dynamic>> executeQuery(
-      String script, Map<String, dynamic> variables) async {
-    final results = await executeQueryList( script, variables);
-    if (results.isNotEmpty) {return results[0];}
+  Future<Map<String, dynamic>> executeQuery(String script, Map<String, dynamic> variables) async {
+    final results = await executeQueryList(script, variables);
+    if (results.isNotEmpty) {
+      return results[0];
+    }
     return Map();
   }
 
   /// Default content type is JSON
   @override
-  Future<List<Map<String, dynamic>>> executeQueryList(
-    String script, Map<String, dynamic> variables) async {
+  Future<List<Map<String, dynamic>>> executeQueryList(String script,
+      Map<String, dynamic> variables) async {
     final dio.Response response =
-        await dio.Dio(dio.BaseOptions(headers: appConfig.headers(config))).get(script);
+    await dio.Dio(dio.BaseOptions(headers: appConfig.headers(config))).get(script);
     final data = response.data;
     List<Map<String, dynamic>> output = List.empty(growable: true);
     for (var entry in data) {
@@ -69,21 +69,18 @@ class RestDataProvider<CONFIG extends PRestDataProvider> extends DataProvider<CO
   }
 
   @override
-  executeUpdate(
-    String script,
-    DocumentId documentId,
-    Map<String, dynamic> changedData,
-    DocumentType documentType,
-  ) {
+  executeUpdate(String script,
+      DocumentId documentId,
+      Map<String, dynamic> changedData,
+      DocumentType documentType,) {
     // TODO: implement executeUpdate
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> updateDocument(
-      {required DocumentId documentId,
-      required Map<String, dynamic> changedData,
-      DocumentType documentType = DocumentType.standard}) {
+  Future<bool> updateDocument({required DocumentId documentId,
+    required Map<String, dynamic> changedData,
+    DocumentType documentType = DocumentType.standard}) {
     // TODO: implement updateDocument
     throw UnimplementedError();
   }
