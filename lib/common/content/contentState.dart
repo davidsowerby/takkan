@@ -41,6 +41,12 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   void initState() {
     super.initState();
     contentBindings.init(_onPreceptReady);
+    if (!(contentBindings.dataBinding is NoDataBinding)) {
+      if (contentBindings.dataBinding.schema.readOnly) {
+        final editState = Provider.of<EditState>(context, listen: false);
+        editState.disableCanEdit();
+      }
+    }
     precept.addScriptReloadListener(_onScriptReload);
     final requiresAuth =
     (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
@@ -95,7 +101,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     /// TemporaryDocument and RootBinding
 
     final query = config.query;
-
 
     /// Make sure we don't start before Precept has finished init
     if (precept.isReady) {
@@ -157,7 +162,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   Widget _loadData<T>(BuildContext context,
       ThemeData theme,
       Future<T> future,
-      MutableDocument Function({required T source, required DataProvider dataProvider, required bool fireListeners})
+      MutableDocument Function(
+          {required T source, required DataProvider dataProvider, required bool fireListeners})
       storeData) {
     return FutureBuilder<T>(
       future: future,
@@ -247,7 +253,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     required CONFIG config,
     required Map<String, dynamic> pageArguments,
   }) {
-
     /// There is no common interface for the 'content' property of PPage and PPanel.
     /// Perhaps there should be
 
@@ -361,7 +366,7 @@ class ContentBindings {
 
   ContentBindings(this.config, this.parentBinding, this.pageArguments);
 
-  init(Function() _onPreceptReady)  async {
+  init(Function() _onPreceptReady) async {
     if (config.dataProvider != null) {
       /// Call is not actioned if Precept already in ready state
       precept.addReadyListener(_onPreceptReady);
@@ -371,9 +376,10 @@ class ContentBindings {
         ? lookupDocumentSchemaName()
         : (preloaded)
         ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
-        :  notSet;
+        : notSet;
 
-    dataSource = DataSource(config: config,
+    dataSource = DataSource(
+        config: config,
         dataProvider: dataProvider,
         preloadedData: preloaded,
         documentSchema: lookupDocumentSchema(documentSchemaName));
@@ -386,22 +392,24 @@ class ContentBindings {
     }
   }
 
-  PDocument? lookupDocumentSchema(String documentSchemaName){
-    if (documentSchemaName==notSet){
+  PDocument? lookupDocumentSchema(String documentSchemaName) {
+    if (documentSchemaName == notSet) {
       return null;
     }
-    final PSchema schema=dataProvider.config.schema!;
+    final PSchema schema = dataProvider.config.schema!;
     return schema.document(documentSchemaName);
   }
 
-  String lookupDocumentSchemaName(){
-    final PSchema? schema=dataProvider.config.schema;
-    if(schema==null){
+  String lookupDocumentSchemaName() {
+    final PSchema? schema = dataProvider.config.schema;
+    if (schema == null) {
       throw PreceptException('Schema cannot be null when looking up document schema');
     }
     final PQuerySchema? querySchema = schema.queries[config.query?.querySchema];
-    if (querySchema == null){
-      throw PreceptException("querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema.name}");
+    if (querySchema == null) {
+      throw PreceptException(
+          "querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema
+              .name}");
     }
     return querySchema.documentSchema;
   }

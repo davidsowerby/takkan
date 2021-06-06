@@ -38,4 +38,8 @@ class EditState with ChangeNotifier {
     _canEdit = value;
     notifyListeners();
   }
+
+  disableCanEdit(){
+    _canEdit=false;
+  }
 }
