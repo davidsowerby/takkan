@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -46,6 +47,11 @@ abstract class PDataProviderBase extends PreceptItem {
     String? id,
   })  : _schema = schema!,
         super(id: id);
+
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    schema?.init();
+  }
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);

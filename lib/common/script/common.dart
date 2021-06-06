@@ -17,6 +17,7 @@ import 'package:precept_script/validation/message.dart';
 part 'common.g.dart';
 
 enum IsStatic { yes, no, inherited }
+enum IsReadOnly { yes, no, inherited }
 
 /// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
 /// [partsOnly] edit only at [Part] level (can be set higher up the hierarchy, even at [PScript])

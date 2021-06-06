@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/schema/field/queryResult.dart';
@@ -36,15 +37,19 @@ part 'schema.g.dart';
 /// - [queries] are instances of [ListSchema], but held separately, indexed by query name
 ///
 ///
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
   final Map<String, PQuerySchema> queries;
 
   PSchema(
-      {Map<String, PDocument> documents = const {}, required this.name, this.queries = const {}})
-      : _documents = documents;
+      {Map<String, PDocument> documents = const {},
+      bool readOnly = false,
+      required this.name,
+      this.queries = const {}})
+      : _documents = documents,
+        super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
 
   factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
 
@@ -52,14 +57,18 @@ class PSchema extends PSchemaElement {
 
   @JsonKey(ignore: true)
   PSchemaElement? get parent => null;
-  Map<String, PDocument> get documents=> _documents;
+
+  Map<String, PDocument> get documents => _documents;
+
+  @JsonKey(ignore: true)
+  IsReadOnly get isReadOnly => _isReadOnly;
 
   init() {
     doInit(parent: this, name: name);
   }
 
   @override
-  doInit({required PSchemaElement parent,required String name}) {
+  doInit({required PSchemaElement parent, required String name}) {
     _name = name;
     for (var entry in _documents.entries) {
       final document = entry.value;
@@ -81,22 +90,39 @@ class PSchema extends PSchemaElement {
   int get documentCount => _documents.length;
 }
 
+/// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
+///
 abstract class PSchemaElement {
   @JsonKey(ignore: true)
   PSchemaElement? _parent;
   @JsonKey(ignore: true)
   String? _name;
 
-  PSchemaElement();
+  final IsReadOnly _isReadOnly;
+
+  PSchemaElement({IsReadOnly readOnly = IsReadOnly.inherited}) : _isReadOnly = readOnly;
 
   Map<String, dynamic> toJson();
 
-  doInit({required PSchemaElement parent,required String name}) {
+  doInit({required PSchemaElement parent, required String name}) {
     _parent = parent;
     _name = name;
   }
 
+  @JsonKey(ignore: true)
+  bool get readOnly => _readOnlyState() == IsReadOnly.yes;
+
   PSchemaElement? get parent => _parent;
+
+  IsReadOnly _readOnlyState() {
+    if (parent == null) {
+      String msg = "'parent' must be set before invoking";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    } else {
+      return (_isReadOnly == IsReadOnly.inherited) ? parent!._isReadOnly : _isReadOnly;
+    }
+  }
 }
 
 /// If a CRUD action only requires that the user is authenticated, specify it in [requiresAuthentication].
@@ -106,7 +132,7 @@ abstract class PSchemaElement {
 ///
 /// If a role is specified - for example in [readRoles] - there is no need to also specify 'read' in
 /// [requiresAuthentication], provided you use [requiresReadAuthentication]
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PPermissions {
   final List<RequiresAuth> _requiresAuthentication;
   final List<String> readRoles;
@@ -150,7 +176,7 @@ class PPermissions {
 enum RequiresAuth { all, create, read, update, delete }
 
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
   final PPermissions permissions;
@@ -171,7 +197,7 @@ class PDocument extends PSchemaElement {
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 
   @override
-  doInit({required PSchemaElement parent,required String name}) {
+  doInit({required PSchemaElement parent, required String name}) {
     _parent = parent;
     _name = name;
   }
@@ -190,7 +216,7 @@ class PDocument extends PSchemaElement {
 ///
 /// [segment] relates to the first level within *precept.json*
 /// [instance] relates to the second level within *precept.json*
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PSchemaSource extends PreceptItem {
   final String segment;
   final String instance;
