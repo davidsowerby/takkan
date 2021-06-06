@@ -92,6 +92,13 @@ abstract class MutableDocument with ChangeNotifier {
     bool fireListeners = false,
   });
 
+  /// Stores a single result query
+  MutableDocument storeQueryResult(
+      {required String queryName,
+        required Map<String, dynamic> queryResults,
+        bool fireListeners = false});
+
+
   /// Creates a "new" document from [initialData], clearing any existing data
   MutableDocument createNew({Map<String, dynamic> initialData = const {}});
 
@@ -123,7 +130,8 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
 
   DefaultMutableDocument() : timestamp = DateTime.now() {
     _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
-    _queryBinding = QueryRootBinding(data: _queryResults, editHost: this, id: 'query root', queryName:'Unnamed');
+    _queryBinding = QueryRootBinding(
+        data: _queryResults, editHost: this, id: 'query root', queryName: 'Unnamed');
   }
 
   DocumentId get documentId => _documentId;
@@ -162,7 +170,7 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
   @override
   void clear() {
     reset();
-    _documentId = const DocumentId(path: '',itemId: '?');
+    _documentId = const DocumentId(path: '', itemId: '?');
     _initialData.clear();
   }
 
@@ -267,7 +275,8 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
     _changeList.clear();
   }
 
-  /// Stores query results in [queryResults] with a key of [queryName]
+  /// Stores query results in [queryResults] with a key of [queryName], where a query may contain
+  /// 0..n results
   ///
   /// The [QueryRootBinding] (derived from [RootBinding] points [queryResults], and every query result can then be accessed
   /// using a [ListBinding] with a property of 'queryName'
@@ -282,5 +291,13 @@ class DefaultMutableDocument extends MapBase<String, dynamic>
       bool fireListeners = false}) {
     _queryResults[queryName] = queryResults;
     return this;
+  }
+
+  @override
+  MutableDocument storeQueryResult(
+      {required String queryName,
+      required Map<String, dynamic> queryResults,
+      bool fireListeners = false}) {
+    return createNew(initialData: queryResults);
   }
 }

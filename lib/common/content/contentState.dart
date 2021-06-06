@@ -305,14 +305,14 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         : widget;
   }
 
-  /// Returns false if there is no [dataProvider], as it does not make sense to edit something that
-  /// cannot be saved.
+  /// Returns false if there is no [dataProvider], or the [dataProvider.schema] is read only,
+  /// as it does not make sense to edit something that cannot be saved.
   /// If the user has not authenticated, and the schema requires authentication for update,
   /// false is returned
   /// True is then returned if the user has any of the roles specified in the schema
   _canEdit() {
-    if (dataProvider == null) return false;
     if (dataBinding is NoDataBinding) return false;
+    if (dataBinding.schema.readOnly) return false;
 
     if (!dataProvider.authenticator.isAuthenticated) {
       if (dataBinding.schema.permissions.requiresUpdateAuthentication) {
