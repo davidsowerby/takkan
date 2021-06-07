@@ -14,7 +14,7 @@ class NavButtonSet extends StatelessWidget {
   const NavButtonSet(
       {Key? key,
       required this.config,
-      this.buttonTrait=const NavButtonTrait(),
+      this.buttonTrait = const NavButtonTrait(),
       required this.trait,
       this.pageArguments = const {}})
       : super(key: key);
@@ -30,17 +30,24 @@ class NavButtonSet extends StatelessWidget {
         connector: connector,
         partConfig: config,
         trait: buttonTrait,
-        containedInSet:true,
+        containedInSet: true,
       );
       children.add(child);
     });
-    return Container(
-        width: trait.width,
-        height: trait.height,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: children,
-        ));
+    return Row(
+      children: [
+        Spacer(),
+        Container(
+          width: config.width ?? trait.width,
+          height: trait.height,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: children,
+          ),
+        ),
+        Spacer(),
+      ],
+    );
   }
 }
