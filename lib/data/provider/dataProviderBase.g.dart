@@ -13,7 +13,8 @@ PConfigSource _$PConfigSourceFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PConfigSourceToJson(PConfigSource instance) => <String, dynamic>{
+Map<String, dynamic> _$PConfigSourceToJson(PConfigSource instance) =>
+    <String, dynamic>{
       'segment': instance.segment,
       'instance': instance.instance,
     };
@@ -22,6 +23,7 @@ PNoDataProvider _$PNoDataProviderFromJson(Map<String, dynamic> json) {
   return PNoDataProvider()..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PNoDataProviderToJson(PNoDataProvider instance) => <String, dynamic>{
+Map<String, dynamic> _$PNoDataProviderToJson(PNoDataProvider instance) =>
+    <String, dynamic>{
       'version': instance.version,
     };

@@ -35,6 +35,7 @@ Map<String, dynamic> _$PNavButtonToJson(PNavButton instance) =>
 PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) {
   return PNavButtonSet(
     buttons: Map<String, String>.from(json['buttons'] as Map),
+    width: (json['width'] as num?)?.toDouble(),
     height: (json['height'] as num?)?.toDouble(),
     readTraitName: json['readTraitName'] as String,
     buttonTraitName: json['buttonTraitName'] as String,
@@ -48,4 +49,5 @@ Map<String, dynamic> _$PNavButtonSetToJson(PNavButtonSet instance) =>
       'readTraitName': instance.readTraitName,
       'buttons': instance.buttons,
       'buttonTraitName': instance.buttonTraitName,
+      'width': instance.width,
     };

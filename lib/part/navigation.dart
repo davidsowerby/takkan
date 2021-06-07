@@ -43,15 +43,16 @@ class PNavButton extends PPart {
 /// [buttons] should be specified as a map, for example {'button text':'route'}
 @JsonSerializable( explicitToJson: true)
 class PNavButtonSet extends PPart {
-  static const defaultReadTrait='PNavButtonSet-default';
+  static const defaultReadTrait = 'PNavButtonSet-default';
   final Map<String, String> buttons;
   final String buttonTraitName;
+  final double? width;
 
   PNavButtonSet({
     required this.buttons,
-    double width = 150,
+    this.width,
     double? height,
-    String readTraitName=defaultReadTrait,
+    String readTraitName = defaultReadTrait,
     this.buttonTraitName = PNavButton.defaultReadTrait,
   }) : super(
           readOnly: true,
