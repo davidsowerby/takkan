@@ -1,5 +1,5 @@
-import 'package:precept_script/common/interpolate.dart';
 import 'package:precept_script/common/log.dart';
+import 'package:precept_script/common/util/interpolate.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -29,7 +29,7 @@ abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement
           errorMsg = 'error message not defined for ${validation.method}';
           logType(this.runtimeType).e(errorMsg);
         }
-        errors.add(interpolate(errorMsg, [validation.param]));
+        errors.add(expandErrorMessage(errorMsg, [validation.param]));
       }
     }
     return errors;
