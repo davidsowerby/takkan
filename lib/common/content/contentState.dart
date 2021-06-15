@@ -18,6 +18,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -86,7 +87,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   doBuild(BuildContext context, ThemeData theme, DataSource dataSource, PContent config,
       Map<String, dynamic> pageArguments) {
-    assert(pageArguments != null);
 
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
@@ -367,7 +367,7 @@ class ContentBindings {
   ContentBindings(this.config, this.parentBinding, this.pageArguments);
 
   init(Function() _onPreceptReady) async {
-    if (config.dataProvider != null) {
+    if (config.dataProvider != null && !(config.dataProvider is PNoDataProvider)) {
       /// Call is not actioned if Precept already in ready state
       precept.addReadyListener(_onPreceptReady);
       dataProvider = dataProviderLibrary.find(config: config.dataProvider!);
@@ -417,6 +417,5 @@ class ContentBindings {
   /// Preloaded data is held at page level
   bool get preloaded =>
       ((config is PPage) &&
-          (pageArguments != null) &&
           pageArguments[ContentState.preloadDataKey] != null);
 }

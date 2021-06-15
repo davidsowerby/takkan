@@ -123,7 +123,7 @@ class DataSource {
     );
   }
 
-  reset() {
+   reset() {
     temporaryDocument.reset();
   }
 

@@ -80,11 +80,11 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   /// a StringBinding, works fine, but reading a whole list can be a problem
   List<String>? readStringList({List<String>? defaultValue, bool allowNullReturn = false}) {
     List? readValue;
-    if (property != null) {
-      readValue = parent?.read()[property];
-    } else {
-      readValue = parent?.read()[index];
-    }
+    // if (property != null) {
+    readValue = parent?.read()[property];
+    // } else {
+    //   readValue = parent?.read()[index];
+    // }
     if (readValue == null) {
       if (defaultValue == null) {
         return (allowNullReturn) ? null : List<String>.empty(growable: true);

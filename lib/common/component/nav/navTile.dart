@@ -25,8 +25,6 @@ class NavigationTile extends StatelessWidget {
   }
 
   navigate(BuildContext context) {
-    if (route != null) {
       Navigator.of(context).pushNamed(route, arguments: arguments);
-    }
   }
 }

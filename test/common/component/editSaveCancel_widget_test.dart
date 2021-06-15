@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:precept_client/common/component/editSaveCancel.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/page/editState.dart';
@@ -23,10 +23,10 @@ void main() {
       // given
       MockDataSource dataSource = MockDataSource();
       MockDataBinding dataBinding = MockDataBinding();
-      when(dataBinding.activeDataSource).thenReturn(dataSource);
+      when(() => dataBinding.activeDataSource).thenReturn(dataSource);
       final escKey = 'esc';
       final esc = EditSaveCancel(
-        key: keys(null,[escKey]),
+        key: keys(null, [escKey]),
         dataBinding: dataBinding,
       );
       final EditState editState = EditState(readMode: true);
@@ -42,49 +42,48 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
 
       // then we are in read mode
-      row(esc.rowKey).contains([esc.blankKey,esc.editKey]);
+      row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
 
       // when
       await tester.tap(find.byKey(esc.editKey));
       await tester.pumpWidget(widgetTree);
 
       // then
-      row(esc.rowKey).contains([esc.saveKey,esc.cancelKey]);
+      row(esc.rowKey).contains([esc.saveKey, esc.cancelKey]);
 
       // when we cancel
       await tester.tap(find.byKey(esc.cancelKey));
       await tester.pumpWidget(widgetTree);
 
       // then we are in read mode
-      verify(dataSource.reset());
-      row(esc.rowKey).contains([esc.blankKey,esc.editKey]);
+      verify(() => dataSource.reset());
+      row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
 
       // go back into edit mode
       await tester.tap(find.byKey(esc.editKey));
       await tester.pumpWidget(widgetTree);
 
       // when we save, with invalid data
-      when(dataSource.validate()).thenReturn(false);
+      when(() => dataSource.validate()).thenReturn(false);
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
       // then stay in edit mode
-      row(esc.rowKey).contains([esc.saveKey,esc.cancelKey]);
+      row(esc.rowKey).contains([esc.saveKey, esc.cancelKey]);
 
       // when we save, with valid data
-      when(dataSource.validate()).thenReturn(true);
+      when(() => dataSource.validate()).thenReturn(true);
+      when(() => dataSource.persist()).thenAnswer((_) async => true);
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
       // then we are back in read mode
-      row(esc.rowKey).contains([esc.blankKey,esc.editKey]);
-      verifyInOrder([dataSource.validate(), dataSource.flushFormsToModel(), dataSource.persist()]);
-
+      // row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
+      verifyInOrder([
+        () => dataSource.validate(),
+        () => dataSource.flushFormsToModel(),
+        () => dataSource.persist(),
+      ]);
     });
   });
 }
-
-
-
-
-

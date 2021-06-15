@@ -12,10 +12,7 @@ class FullDataBinding extends DataBinding {
   final DataBinding parent;
 
   const FullDataBinding({required this.parent, required this.binding, required this.schema})
-      : assert(parent != null),
-        assert(binding != null),
-        assert(schema != null),
-        super();
+      : super();
 
   DataSource get activeDataSource => parent.activeDataSource;
 }
@@ -25,9 +22,7 @@ class RootDataBinding extends FullDataBinding {
 
   const RootDataBinding(
       {required RootBinding binding, required PDocument schema, required this.activeDataSource})
-      : assert(binding != null),
-        assert(schema != null),
-        super(parent: const NoDataBinding(), schema: schema, binding: binding);
+      : super(parent: const NoDataBinding(), schema: schema, binding: binding);
 }
 
 class NoDataBinding extends DataBinding {

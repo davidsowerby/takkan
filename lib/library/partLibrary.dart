@@ -263,7 +263,7 @@ class ConnectorFactory {
     final ModelBinding parentBinding = dataBinding.binding;
 
     final PSchemaElement? fieldSchema = (config is PQueryView)
-        ? dataBinding.activeDataSource.dataProvider.config.schema?.queries[config.property]
+        ? dataBinding.activeDataSource.dataProvider.config.schema.queries[config.property]
         : dataBinding.schema.fields[config.property];
     if (fieldSchema == null) {
       String msg =

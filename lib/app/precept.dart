@@ -92,9 +92,7 @@ class Precept {
 
     /// select those which have no schema, for loading
     for (PDataProviderBase provider in visitor.dataProviders) {
-      if (provider.schema == null) {
         requireLoading.add(provider);
-      }
     }
 
     if (requireLoading.length > 0) {

@@ -62,11 +62,9 @@ class PreceptPageState extends ContentState<PreceptPage, PPage> with DisplayColu
   }
 
   _doSignOut(BuildContext context) async {
-    if (dataProvider != null) {
       if (dataProvider.authenticator.isAuthenticated) {
         await dataProvider.authenticator.signOut();
         Navigator.of(context).pushNamed("/");
-      }
     }
   }
 
