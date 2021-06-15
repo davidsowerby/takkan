@@ -58,7 +58,7 @@ abstract class PQuery extends PreceptItem {
   });
 
   @JsonKey(ignore: true)
-  PQuerySchema? get schema => (parent as PCommon).dataProvider?.schema?.queries[querySchema];
+  PQuerySchema? get schema => (parent as PCommon).dataProvider?.schema.queries[querySchema];
 
   /// For queries, the name is used as a property to lookup its data (query results) in local storage
   String get property => querySchema;

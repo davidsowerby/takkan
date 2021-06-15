@@ -9,6 +9,8 @@ import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
+import '../fixtures.dart';
+
 void main() {
   group('PScript all level validation', () {
     setUpAll(() {});
@@ -17,6 +19,7 @@ void main() {
 
     setUp(() {
       getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(() => FakePreceptSchemaLoader());
     });
 
     tearDown(() {});
@@ -35,7 +38,7 @@ void main() {
     });
   });
 
-  group('PPage validation', () {
+  group('PPage validation 1', () {
     test('Must have non-empty route', () {
       // given
       final script = PScript(
@@ -53,7 +56,7 @@ void main() {
     });
   });
 
-  group('PPage validation', () {
+  group('PPage validation 2', () {
     test('Must have non-empty pageType', () {
       // given
       final component = PScript(
@@ -63,7 +66,7 @@ void main() {
           "/home": PPage(title: 'a Page title', pageType: ''),
         },
       );
-
+      getIt.registerFactory<PreceptSchemaLoader>(() => FakePreceptSchemaLoader());
       // when
       final messages = component.validate();
       // then

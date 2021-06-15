@@ -16,12 +16,48 @@ void main() {
     test('output', () {
       // given
       final script = kitchenSinkScript;
-      final log=WalkLog();
+      final log = WalkLog();
       // when
       script.walk([log]);
       // then
 
-      expect(log.calls,['PScript','PRestDataProvider','PPage','PText','PPanel', 'PPanelHeading','PPart']);
+      // StringBuffer buf=StringBuffer();
+      // log.calls.forEach((element) {
+      //   buf.write('\'$element\',');
+      // });
+      // print(buf.toString());
+      expect(log.calls, [
+        'PScript',
+        'PNoDataProvider',
+        'PSchemaSource',
+        'PPage',
+        'PPanel',
+        'PText',
+        'PText',
+        'PNavButton',
+        'PPage',
+        'PNavButtonSet',
+        'PPage',
+        'PEmailSignIn',
+        'PPage',
+        'PNavButtonSet',
+        'PPage',
+        'PGQuery',
+        'PPanel',
+        'PQueryView',
+        'PPage',
+        'PPanel',
+        'PPQuery',
+        'PPanelHeading',
+        'PText',
+        'PText',
+        'PPage',
+        'PPage',
+        'PPanel',
+        'PPanelHeading',
+        'PText',
+        'PText'
+      ]);
     });
   });
 }

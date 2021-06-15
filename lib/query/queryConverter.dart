@@ -1,4 +1,5 @@
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/query/query.dart';
 
 /// JSON converter for [PQuery] sub-classes
@@ -9,12 +10,14 @@ class PQueryConverter {
     if (typeName==null) return null;
     json.remove(elementKey);
     switch (typeName) {
-      case 'PGet':
+      case 'PGetDocument':
         return PGetDocument.fromJson(json);
       case 'PGetStream':
         return PGetStream.fromJson(json);
       default:
-        throw PreceptException("Conversion required for $typeName");
+        String msg = 'Conversion required for $typeName';
+        logName('PQueryConverter').e(msg);
+        throw PreceptException(msg);
     }
   }
 

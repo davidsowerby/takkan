@@ -1,6 +1,7 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/queryView.dart';
@@ -11,6 +12,7 @@ import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
 
 final kitchenSinkScript = PScript(
+  dataProvider: PNoDataProvider(),
   name: 'Kitchen Sink',
   pages: {
     '/': PPage(

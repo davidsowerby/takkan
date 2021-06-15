@@ -1,6 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
@@ -22,7 +24,7 @@ abstract class PDataProviderBase extends PreceptItem {
   final PConfigSource configSource;
 
   @JsonKey(ignore: true)
-  PSchema _schema;
+  PSchema? _schema;
   final PSchemaSource? schemaSource;
   final bool checkHealthOnConnect;
   final String sessionTokenKey;
@@ -30,7 +32,12 @@ abstract class PDataProviderBase extends PreceptItem {
   final String documentEndpoint;
 
   @JsonKey(ignore: true)
-  PSchema? get schema => _schema;
+  PSchema get schema {
+    if (_schema == null) {
+      throw PreceptException('Schema must not be null now - has init() been called?');
+    }
+    return _schema!;
+  }
 
   set schema(value) => _schema = value;
 
@@ -45,17 +52,24 @@ abstract class PDataProviderBase extends PreceptItem {
     this.schemaSource,
     required this.signIn,
     String? id,
-  })  : _schema = schema!,
+  })  : _schema = schema,
         super(id: id);
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) async {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    schema?.init();
+    if (_schema == null) {
+      if (schemaSource == null) {
+        throw PreceptException('If a Schema is not defined, a schema source must be');
+      }
+      final schemaLoader = inject<PreceptSchemaLoader>();
+      _schema = await schemaLoader.load(schemaSource!);
+    }
+    schema.init();
   }
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (schema == null && schemaSource == null) {
+    if (_schema == null && schemaSource == null) {
       messages.add(ValidationMessage(
           item: this, msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
@@ -105,4 +119,12 @@ class PNoDataProvider extends PDataProviderBase {
   factory PNoDataProvider.fromJson(Map<String, dynamic> json) => _$PNoDataProviderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
+
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    _schema = PSchema(name: 'unnamed');
+  }
+}
+
+abstract class PreceptSchemaLoader {
+  Future<PSchema> load(PSchemaSource source);
 }

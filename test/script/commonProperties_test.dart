@@ -7,6 +7,7 @@ import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
 void main() {
@@ -26,6 +27,7 @@ void main() {
       final script = PScript(
         name: 'test',
         dataProvider: PRestDataProvider(
+          schema: PSchema(name: 'unnamed'),
           documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
@@ -80,7 +82,7 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script = PScript(name: 'test', pages: {
+      final script = PScript(name: 'test', dataProvider: PNoDataProvider(), pages: {
         '/test': PPage(
           title: 'A Page',
           content: [
