@@ -9,12 +9,12 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_mock_backend/pMockBackend.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 import './exception.dart';
+import 'mock.dart';
 
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {

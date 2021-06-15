@@ -4,8 +4,6 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_mock_backend/pMockBackend.dart';
-import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -16,6 +14,7 @@ import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
+import '../../helper/mock.dart';
 import '../../helper/widgetTestTree.dart';
 
 /// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchenSink.html#static-page-with-overrides)
@@ -91,22 +90,7 @@ void main() {
 
     tearDownAll(() {});
 
-    setUp(() {
-      mockBackend.initialData(
-        instanceName: 'mock',
-        tables: [
-          MockTable(
-            name: 'Account',
-            rows: [
-              MockRow(
-                objectId: 'objectId1',
-                columns: {'firstName': 'David', 'lastName': 'Sowerby'},
-              ),
-            ],
-          ),
-        ],
-      );
-    });
+    setUp(() {});
 
     tearDown(() {
       testTree.debug.forEach((element) {
