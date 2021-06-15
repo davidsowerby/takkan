@@ -5,7 +5,6 @@ import 'package:precept_script/schema/schema.dart';
 
 class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
   Future<PSchema> load(PSchemaSource source) async {
-    print('xxxxxxxxxxxxxxx');
     return PSchema(name: 'test');
   }
 }
