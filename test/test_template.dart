@@ -6,8 +6,6 @@ import 'package:precept_client/library/borderLibrary.dart';
 import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/standardPage.dart';
-import 'package:precept_mock_backend/pMockBackend.dart';
-import 'package:precept_mock_backend/precept_mock_backend.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -24,43 +22,11 @@ import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
+import 'helper/fake.dart';
 import 'helper/mock.dart';
 import 'helper/widgetTestTree.dart';
 
-initialData(String instanceName) {
-  mockBackend.initialData(
-    instanceName: instanceName,
-    tables: [
-      MockTable(
-        name: 'Account',
-        rows: [
-          MockRow(
-            objectId: 'wVdGK8TDXR',
-            columns: {
-              'accountNumber': '1',
-              'category': 'permanent',
-              'customer': {
-                'firstName': 'David',
-                'lastName': 'Sowerby',
-              }
-            },
-          ),
-          MockRow(
-            objectId: 'objectId2',
-            columns: {
-              'accountNumber': '2',
-              'category': 'temporary',
-              'customer': {
-                'firstName': 'Monty',
-                'lastName': 'Python',
-              },
-            },
-          ),
-        ],
-      ),
-    ],
-  );
-}
+initialData(String instanceName) {}
 
 final validationSchema = PSchema(
   name: 'kitchenSink',
@@ -102,7 +68,7 @@ final validationSchema = PSchema(
 
 final PScript kitchenSinkValidation = PScript(
   name: 'data validation test',
-  dataProvider: PMockDataProvider(
+  dataProvider: PFakeDataProvider(
     instanceName: 'mock1',
     schema: validationSchema,
   ),
@@ -135,7 +101,7 @@ final PScript kitchenSinkValidation = PScript(
 void main() {
   group('Validation process', () {
     setUpAll(() {
-      PMockDataProvider.register();
+      PFakeDataProvider.register();
       getIt.reset();
       getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());

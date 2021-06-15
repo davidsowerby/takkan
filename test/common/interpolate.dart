@@ -1,9 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/interpolate.dart';
+import 'package:precept_script/schema/schema.dart';
 
 import '../helper/catcher.dart';
+import '../helper/fake.dart';
 
 void main() {
+  Map<String, dynamic> data = Map();
+  FakeContentBindings mockContentBindings = FakeContentBindings(
+    FakeDataBindingWithData(data),
+    FakeDataSource(),
+    FakeDataProvider(config: PFakeDataProvider(instanceName: 'a', schema: PSchema(name: '?'))),
+  );
   group(
     'interpolate',
     () {
@@ -11,7 +19,14 @@ void main() {
 
       tearDownAll(() {});
 
-      setUp(() {});
+      setUp(() {
+        mockContentBindings = FakeContentBindings(
+          FakeDataBindingWithData(data),
+          FakeDataSource(),
+          FakeDataProvider(
+              config: PFakeDataProvider(instanceName: 'a', schema: PSchema(name: '?'))),
+        );
+      });
 
       tearDown(() {});
 
@@ -21,7 +36,7 @@ void main() {
           // given
           final String value = 'There is nothing to see here';
           // when
-          final actual = interpolate(value, {});
+          final actual = interpolate(value, mockContentBindings, {});
           // then
 
           expect(actual, value);
@@ -30,13 +45,12 @@ void main() {
 
       test(
         'single simple variable',
-        () {
+            () {
           // given
           final String value = 'There is @something to see here';
-          // final String value = r'''There is $something to see here''';
 
           // when
-          final actual = interpolate(value, {'something': 'a duck'});
+          final actual = interpolate(value, mockContentBindings, {'something': 'a duck'});
           // then
 
           expect(actual, 'There is a duck to see here');
@@ -45,7 +59,7 @@ void main() {
 
       test(
         'single simple variable with comma',
-        () {
+            () {
           // given
           final String value = 'There is @something, to see here';
           // final String value = r'''There is $something to see here''';
@@ -54,7 +68,7 @@ void main() {
           // final q2=s.runes;
 
           // when
-          final actual = interpolate(value, {'something': 'a duck'});
+          final actual = interpolate(value, mockContentBindings, {'something': 'a duck'});
           // then
 
           expect(actual, 'There is a duck, to see here');
@@ -63,12 +77,12 @@ void main() {
 
       test(
         'escaped @',
-        () {
+            () {
           final String value = 'There is \\@something to see here';
           // final String value = r'''There is $something to see here''';
 
           // when
-          final actual = interpolate(value, {'something': 'a duck'});
+          final actual = interpolate(value, mockContentBindings, {'something': 'a duck'});
           // then
 
           expect(actual, 'There is @something to see here');
@@ -77,12 +91,12 @@ void main() {
 
       test(
         'single extended variable',
-        () {
+            () {
           // given
           final String value = 'There is @{always.something} to see here';
 
           // when
-          final actual = interpolate(value, {
+          final actual = interpolate(value, mockContentBindings, {
             'always': {'something': 'a bat'}
           });
           // then
@@ -93,13 +107,13 @@ void main() {
 
       test(
         'unnecessary braces',
-        () {
+            () {
           // given
           final String value = 'There is @{something} to see here';
           // final String value = r'''There is $something to see here''';
 
           // when
-          final actual = interpolate(value, {'something': 'a duck'});
+          final actual = interpolate(value, mockContentBindings, {'something': 'a duck'});
           // then
 
           expect(actual, 'There is a duck to see here');
@@ -113,7 +127,8 @@ void main() {
         // when
         // then
 
-        expect(() => interpolate(value, {'something': 'a duck'}), throwsPreceptException);
+        expect(() => interpolate(value, mockContentBindings, {'something': 'a duck'}),
+            throwsPreceptException);
       });
 
       test('all sorts', () {
@@ -123,6 +138,7 @@ void main() {
         // when
         final actual = interpolate(
           value,
+          mockContentBindings,
           {
             'this': 'this',
             'other': {'also': 'also'}
@@ -131,6 +147,17 @@ void main() {
         // then
 
         expect(actual, 'This can be @ignored, while we need to process this and also');
+      });
+
+      test('user', () {
+        // given
+        final String value = 'Hello @{user.name}';
+        // when
+        final actual = interpolate(value, mockContentBindings, {});
+
+        // then
+
+        expect(actual, 'Hello Benny');
       });
     },
   );

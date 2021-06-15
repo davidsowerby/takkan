@@ -54,8 +54,7 @@ class Heading extends StatefulWidget {
     this.onBeforeSave = const [],
     this.onAfterSave = const [],
     this.showEditSave = true,
-  })  : assert(expandedContent != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _HeadingState createState() => _HeadingState();

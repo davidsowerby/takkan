@@ -37,6 +37,8 @@ dependencies:
   auto_size_text: ^3.0.0-nullsafety.0
   precept_script:
     path: ../precept_script
+  precept_backend:
+    path: ../precept_backend
 
 
 dev_dependencies:
@@ -45,8 +47,7 @@ dev_dependencies:
   mockito: ^5.0.7
   build_runner: ^2.0.2
   json_serializable: ^4.1.1
-  precept_mock_backend:
-    path: ../precept_mock_backend
+
 
 
 

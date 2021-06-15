@@ -10,7 +10,6 @@ import 'package:precept_client/common/page/layout.dart';
 import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';
-import 'package:precept_script/common/script/constants.dart';
 const String createPasswordText =
     "If this is a new account, create a password of at least 8 characters, containing at least one letter, one capital letter and one number";
 
@@ -88,8 +87,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(dataProvider.user.email??notSet,
-                      style: theme.textTheme.headline6),
+                  child: Text(dataProvider.user.email, style: theme.textTheme.headline6),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),

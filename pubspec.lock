@@ -323,7 +323,7 @@ packages:
       name: graphql
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0-nullsafety.5"
+    version: "5.0.0"
   graphs:
     dependency: transitive
     description:
@@ -470,7 +470,7 @@ packages:
       name: normalize
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.1"
+    version: "0.5.4"
   package_config:
     dependency: transitive
     description:
@@ -507,16 +507,9 @@ packages:
     source: hosted
     version: "1.5.0"
   precept_backend:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "../precept_backend"
-      relative: true
-    source: path
-    version: "0.0.1"
-  precept_mock_backend:
-    dependency: "direct dev"
-    description:
-      path: "../precept_mock_backend"
       relative: true
     source: path
     version: "0.0.1"

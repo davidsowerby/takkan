@@ -22,7 +22,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
 
   @override
   List<T> emptyValue() {
-    return List<T>.empty();
+    return List<T>.empty(growable: true);
   }
 
   BooleanBinding booleanBinding({required int index}) {
@@ -62,13 +62,11 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
   }
 
   ModelBinding modelBinding({required int index}) {
-    assert(index != null);
     return ModelBinding.private(
         parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }
 
   MapBinding<K, V> mapBinding<K, V>({required int index}) {
-    assert(index != null);
     return MapBinding.private(
         parent: this, index: index, firstLevelKey: this.firstLevelKey, editHost: this.editHost);
   }

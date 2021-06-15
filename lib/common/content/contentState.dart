@@ -396,7 +396,7 @@ class ContentBindings {
     if (documentSchemaName == notSet) {
       return null;
     }
-    final PSchema schema = dataProvider.config.schema!;
+    final PSchema schema = dataProvider.config.schema;
     return schema.document(documentSchemaName);
   }
 

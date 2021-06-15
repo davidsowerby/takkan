@@ -36,10 +36,6 @@ void main() {
         rootBinding.dynamicBinding(property: property).read();
         final dynamic expected = loadedValue;
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
       });
 
       test("read with default settings, value does not exist", () {
@@ -47,10 +43,6 @@ void main() {
         rootBinding.dynamicBinding(property: "no item").read();
         final dynamic expected = "";
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
       });
 
       test("read with default value, value exists", () {
@@ -60,10 +52,6 @@ void main() {
             .dynamicBinding(property: property)
             .read(defaultValue: defaultValue);
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 0,
-            reason: "successful read, no changes made");
       });
 
       test("read with default value, value does not exist", () {
@@ -73,10 +61,6 @@ void main() {
             .dynamicBinding(property: "no item")
             .read(defaultValue: defaultValue);
         expect(actual, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 1,
-            reason: "default is createIfAbsent=true");
       });
 
       test(
@@ -87,11 +71,7 @@ void main() {
                 .dynamicBinding(property: "no item")
                 .read(allowNullReturn: false);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating DynamicBinding adds property");
-            expect(temporaryDocument.changeList.length, 1,
-                reason: "default is createIfAbsent=true");
-          });
+      });
 
       test(
           "read with no default value, value does not exist, allowNull is true",
@@ -101,11 +81,7 @@ void main() {
                 .dynamicBinding(property: "no item")
                 .read(allowNullReturn: true);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating DynamicBinding adds property");
-            expect(temporaryDocument.changeList.length, 0,
-                reason: "no change is made, just returns null");
-          });
+      });
 
       test(
           "read with default value, value does not exist, allowNull is true, createIfAbsent is false",
@@ -114,11 +90,7 @@ void main() {
             final actual = rootBinding.dynamicBinding(property: "no item").read(
                 defaultValue: 23, allowNullReturn: true, createIfAbsent: false);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating DynamicBinding adds property");
-            expect(temporaryDocument.changeList.length, 0,
-                reason: "if defaultValue is set, allowNull is ignored");
-          });
+      });
 
       test(
           "read with no default value, value does not exist, allowNull is true, createIfAbsent is false",
@@ -128,11 +100,7 @@ void main() {
                 .dynamicBinding(property: "no item")
                 .read(allowNullReturn: true, createIfAbsent: false);
             expect(actual, expected);
-            expect(changeListener.changeCount, 1,
-                reason: "creating DynamicBinding adds property");
-            expect(temporaryDocument.changeList.length, 0,
-                reason: "no change is made, just returns null");
-          });
+      });
     });
     group("Write", () {
       test("updates value correctly", () {
@@ -141,9 +109,6 @@ void main() {
         itemBinding.write(expected);
         dynamic result = itemBinding.read();
         expect(result, expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 1, reason: "value updated");
       });
 
       /// Example: property added to map, but map was previously non-existent
@@ -154,10 +119,6 @@ void main() {
         final DynamicBinding sb = map.dynamicBinding(property: "mapEntry");
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 2,
-            reason: "value updated, parent created");
       });
 
       test("parent list created when needed", () {
@@ -167,10 +128,6 @@ void main() {
         final DynamicBinding sb = list.dynamicBinding(index: 0);
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-        expect(changeListener.changeCount, 1,
-            reason: "creating DynamicBinding adds property");
-        expect(temporaryDocument.changeList.length, 2,
-            reason: "value updated, parent created");
       });
     });
   });

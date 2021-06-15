@@ -1,10 +1,11 @@
+import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:validators/validators.dart';
 
 final int backlash = '\\'.codeUnits.single;
 const k = '@';
 
-String interpolate(String source, Map<String, dynamic> variables) {
+String interpolate(String source, ContentBindings contentBindings, Map<String, dynamic> variables) {
   final int q = source.indexOf(k);
   if (q == -1) return source;
   int completedTo = 0;
@@ -30,7 +31,7 @@ String interpolate(String source, Map<String, dynamic> variables) {
       if (braced && !(source[end] == '}')) {
         throw PreceptException("Closing '}' missing");
       }
-      final expanded = _expandFrom(source, start, end, variables);
+      final expanded = _expandFrom(source, start, end, contentBindings, variables);
       buf.write(expanded);
       completedTo = (source[end] == '}') ? end + 1 : end;
     }
@@ -63,11 +64,24 @@ bool isClosingChar(bool braced, String s) {
   return (braced) ? !(s == '.') : true;
 }
 
-String _expandFrom(String source, int start, int end, Map<String, dynamic> variables) {
+String _expandFrom(
+  String source,
+  int start,
+  int end,
+  ContentBindings contentBindings,
+  Map<String, dynamic> variables,
+) {
   final int s = start;
   final String variablePath = source.substring(s, end);
   final List<String> segments = variablePath.split('.');
-  Map<String, dynamic> lastLevel = variables;
+  Map<String, dynamic> lookupData = (segments[0] == 'user')
+      ? {
+          'user': Map<String, dynamic>.from(contentBindings.dataProvider.user.data),
+        }
+      : Map.from(
+          contentBindings.dataBinding.binding.modelBinding(property: segments[0]).read() ?? {});
+  lookupData.addAll(variables);
+  Map<String, dynamic> lastLevel = lookupData;
   for (int i = 0; i < segments.length - 1; i++) {
     if (!lastLevel.keys.contains(segments[i])) {
       return '$variablePath??';

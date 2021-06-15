@@ -61,7 +61,9 @@ abstract class Binding<T> {
 
   T? rValue() {
     final Map<String, dynamic> parentValue = parent?.read();
-    return parentValue[property];
+    final value = parentValue[property];
+    final T? vt = value as T?;
+    return vt;
   }
 
   T emptyValue();
@@ -79,10 +81,8 @@ abstract class Binding<T> {
       if (property != notSet) {
         parent?.read()[property] = value;
       } else {
-        List<T> list= List.empty(growable: true);
-        final data= parent?.read() as List<T>;
-        list.addAll(data);
-        int i = index ;
+        List<T> list = parent?.read();
+        int i = index;
         if (i >= list.length) {
           list.insert(i, value);
         } else {
@@ -177,7 +177,7 @@ class DoubleBinding extends Binding<double> {
   }
 
   @override
-  double rValue() {
+  double? rValue() {
     final r = parent?.read()[property];
     if (r is int) {
       return r.toDouble();
