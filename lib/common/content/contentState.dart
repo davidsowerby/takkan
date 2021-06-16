@@ -32,10 +32,11 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   bool needsAuthentication = false;
   final ContentBindings contentBindings;
 
-  ContentState(PContent config,
-      DataBinding parentBinding,
-      Map<String, dynamic> pageArguments,)
-      : contentBindings = ContentBindings(config, parentBinding, pageArguments),
+  ContentState(
+    PContent config,
+    DataBinding parentBinding,
+    Map<String, dynamic> pageArguments,
+  )   : contentBindings = ContentBindings(config, parentBinding, pageArguments),
         super();
 
   @override
@@ -50,7 +51,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     }
     precept.addScriptReloadListener(_onScriptReload);
     final requiresAuth =
-    (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
+        (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
     if (requiresAuth) {
       dataProvider.createAuthenticator();
       final userAuthenticated = dataProvider.authenticator.isAuthenticated;
@@ -87,7 +88,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   doBuild(BuildContext context, ThemeData theme, DataSource dataSource, PContent config,
       Map<String, dynamic> pageArguments) {
-
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
       return buildContent(theme);
@@ -159,12 +159,13 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// Loads data into [dataSource], using a Future, and returns a Widget produced by [buildContent]
-  Widget _loadData<T>(BuildContext context,
+  Widget _loadData<T>(
+      BuildContext context,
       ThemeData theme,
       Future<T> future,
       MutableDocument Function(
-          {required T source, required DataProvider dataProvider, required bool fireListeners})
-      storeData) {
+              {required T source, required DataProvider dataProvider, required bool fireListeners})
+          storeData) {
     return FutureBuilder<T>(
       future: future,
       builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
@@ -257,7 +258,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     /// Perhaps there should be
 
     final List<PSubContent> content =
-    (config is PPanel) ? config.content : (config as PPage).content;
+        (config is PPanel) ? config.content : (config as PPage).content;
     final List<Widget> children = List.empty(growable: true);
     for (var element in content) {
       late Widget child;
@@ -279,9 +280,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       child = addEditControl(widget: child, config: element);
       children.add(child);
     }
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
+    final screenSize = MediaQuery.of(context).size;
     return layout(children: children, screenSize: screenSize, config: config);
   }
 
@@ -306,7 +305,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
     return (config.hasEditControl)
         ? ChangeNotifierProvider<EditState>(
-        create: (_) => EditState(canEdit: _canEdit()), child: widget)
+            create: (_) => EditState(canEdit: _canEdit()), child: widget)
         : widget;
   }
 
@@ -332,8 +331,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// [formKey] must be provided from outside the [build] method
-  Widget wrapInForm(BuildContext context, Widget content, DataBinding dataBinding,
-      GlobalKey<FormState> formKey) {
+  Widget wrapInForm(
+      BuildContext context, Widget content, DataBinding dataBinding, GlobalKey<FormState> formKey) {
     dataBinding.addForm(formKey);
     return Form(key: formKey, child: content);
   }
@@ -356,7 +355,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 ///  these bindings.
 class ContentBindings {
   late DataSource dataSource;
-  late DataBinding dataBinding;
+  DataBinding dataBinding = NoDataBinding();
   late DataProvider dataProvider;
 
   final PContent config;
@@ -375,8 +374,8 @@ class ContentBindings {
     final String documentSchemaName = (config.queryIsDeclared)
         ? lookupDocumentSchemaName()
         : (preloaded)
-        ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
-        : notSet;
+            ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
+            : notSet;
 
     dataSource = DataSource(
         config: config,
@@ -408,14 +407,11 @@ class ContentBindings {
     final PQuerySchema? querySchema = schema.queries[config.query?.querySchema];
     if (querySchema == null) {
       throw PreceptException(
-          "querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema
-              .name}");
+          "querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema.name}");
     }
     return querySchema.documentSchema;
   }
 
   /// Preloaded data is held at page level
-  bool get preloaded =>
-      ((config is PPage) &&
-          pageArguments[ContentState.preloadDataKey] != null);
+  bool get preloaded => ((config is PPage) && pageArguments[ContentState.preloadDataKey] != null);
 }
