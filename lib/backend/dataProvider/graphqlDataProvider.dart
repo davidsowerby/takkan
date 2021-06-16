@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderBase.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
@@ -17,7 +17,7 @@ import 'package:precept_script/query/query.dart';
 /// GraphQL implementations can vary considerably, and need provider-specific implementations
 /// See the 'precept-back4app' package for an example
 class GraphQLDataProvider<CONFIG extends PGraphQLDataProvider>
-    extends DataProvider<CONFIG, PGQuery> {
+    extends DataProviderBase<CONFIG, PGQuery> {
   late GraphQLClient _client;
 
   GraphQLDataProvider({required CONFIG config}) : super(config: config);

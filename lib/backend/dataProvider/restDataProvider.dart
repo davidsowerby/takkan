@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderBase.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/document.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
@@ -9,7 +9,8 @@ import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/restDataProvider.dart';
 import 'package:precept_script/query/restQuery.dart';
 
-class RestDataProvider<CONFIG extends PRestDataProvider> extends DataProvider<CONFIG, PRestQuery> {
+class RestDataProvider<CONFIG extends PRestDataProvider>
+    extends DataProviderBase<CONFIG, PRestQuery> {
   RestDataProvider({required CONFIG config}) : super(config: config);
 
   static register() {

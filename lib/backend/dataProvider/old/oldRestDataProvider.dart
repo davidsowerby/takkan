@@ -1,7 +1,7 @@
 // import 'dart:ui';
 //
 // import 'package:graphql/client.dart';
-// import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+// import 'package:precept_backend/backend/dataProvider/dataProviderBase.dart';
 // import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 // import 'package:precept_script/data/provider/documentId.dart';
 // import 'package:precept_script/data/provider/restDataProvider.dart';
