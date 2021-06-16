@@ -8,14 +8,6 @@ import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4App
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:graphql/client.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
-import 'package:precept_back4app_backend/backend/back4app/authenticator/authenticator.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/script/script.dart';
 
 import '../../script.dart';
 

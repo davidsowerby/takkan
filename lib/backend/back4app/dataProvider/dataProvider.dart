@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
 import 'package:precept_back4app_backend/backend/back4app/authenticator/authenticator.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/dataProvider/graphqlDataProvider.dart';
 import 'package:precept_backend/backend/exception.dart';
@@ -14,6 +12,11 @@ import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
 
+/// Generally uses GraphQL for queries, and REST for updates
+/// This is purely for pragmatic (or possibly lazy) reasons.  Using
+/// GraphQL for queries makes it easier to spcify queries.
+///
+/// Using REST for some updates is pragmatic - if it is easier, do it that way!
 class Back4AppDataProvider extends GraphQLDataProvider<PBack4AppDataProvider> {
   static const applicationIdKey = 'X-Parse-Application-Id';
   static const clientIdKey = 'X-Parse-Client-Key';

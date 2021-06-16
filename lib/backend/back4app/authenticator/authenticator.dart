@@ -97,15 +97,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
     }
     // ignore: invalid_use_of_protected_member
     final Map<String, dynamic> json = nativeUser.toJson();
-    return PreceptUser(
-      firstName: json['firstName'] ?? 'unknown',
-      lastName: json['lastName'] ?? 'unknown',
-      knownAs: json['name'] ?? json['knownAs'] ?? json['firstName'] ?? 'unknown',
-      userName: json['username'] ?? 'unknown',
-      email: json['email'] ?? 'unknown',
-      objectId: json['objectId'],
-      sessionToken: json['sessionToken'],
-    );
+    return PreceptUser.fromJson(json);
   }
 
   @override
