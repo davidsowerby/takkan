@@ -95,6 +95,7 @@ void main() {
             title: "Wiggly",
             query: PGetDocument(
               documentId: DocumentId(path: '', itemId: 'x'),
+              documentSchema: 'Document',
             ),
           ),
         },
@@ -131,6 +132,7 @@ void main() {
               title: "Wiggly",
               query: PGetDocument(
                 documentId: DocumentId(path: '', itemId: 'x'),
+                documentSchema: 'Document',
               ),
               content: [
                 PPanel(property: ''),
@@ -202,6 +204,7 @@ void main() {
             title: "Wiggly",
             query: PGetDocument(
               documentId: DocumentId(itemId: 'xx', path: ''),
+              documentSchema: 'Document',
             ),
             content: [PPanel(caption: 'panel1')],
           ),

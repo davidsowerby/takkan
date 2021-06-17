@@ -20,19 +20,19 @@ class PContent extends PCommon {
     this.property = notSet,
     this.listEntryConfig,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProvider,
+    PDataProviderBase? dataProviderConfig,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema? schema,
     String? id,
   }) : super(
     query: query,
-    schema: schema,
-    id: id,
-    controlEdit: controlEdit,
-    dataProvider: dataProvider,
-    isStatic: isStatic,
-  );
+          schema: schema,
+          id: id,
+          controlEdit: controlEdit,
+          dataProviderConfig: dataProviderConfig,
+          isStatic: isStatic,
+        );
 }
 
 /// Common abstraction for [PPanel] and [PPart] so both can be held in any order for display
@@ -51,13 +51,13 @@ class PSubContent extends PContent {
     String? id,
   }) : super(
     caption: caption,
-    property: property,
-    isStatic: isStatic,
-    dataProvider: dataProvider,
-    query: query,
-    controlEdit: controlEdit,
-    id: id,
-  );
+          property: property,
+          isStatic: isStatic,
+          dataProviderConfig: dataProvider,
+          query: query,
+          controlEdit: controlEdit,
+          id: id,
+        );
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);

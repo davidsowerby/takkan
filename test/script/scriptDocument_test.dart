@@ -29,6 +29,7 @@ void main() {
           path: "user/prefs",
           itemId: "23",
         ),
+        documentSchema: 'Document',
       );
       // when
       final Map<String, dynamic> j = PQueryConverter.toJson(g);

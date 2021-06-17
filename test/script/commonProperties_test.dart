@@ -34,7 +34,10 @@ void main() {
           configSource: const PConfigSource(segment: '', instance: ''),
         ),
         isStatic: IsStatic.yes,
-        query: PGetDocument(documentId: DocumentId(path: '', itemId: 'x')),
+        query: PGetDocument(
+          documentId: DocumentId(path: '', itemId: 'x'),
+          documentSchema: 'Document',
+        ),
         pages: {
           '': PPage(
             title: 'A Page',

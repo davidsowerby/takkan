@@ -144,17 +144,20 @@ class PPQuery extends PGQuery {
 }
 
 /// Retrieves a single document using a [DocumentId]
+///
 @JsonSerializable(explicitToJson: true)
 class PGetDocument extends PQuery {
   final DocumentId documentId;
+  final String documentSchema;
 
   PGetDocument({
     required this.documentId,
+    required this.documentSchema,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     Map<String, dynamic> params = const {},
   }) : super(
-    querySchema: '',
+          querySchema: '',
           propertyReferences: propertyReferences,
           variables: variables,
         );

@@ -52,11 +52,11 @@ class PScript extends PCommon {
     String? id,
   }) : super(
     id: id,
-    isStatic: isStatic,
-    dataProvider: dataProvider ?? PNoDataProvider(),
-    query: query,
-    controlEdit: controlEdit,
-  );
+          isStatic: isStatic,
+          dataProviderConfig: dataProvider ?? PNoDataProvider(),
+          query: query,
+          controlEdit: controlEdit,
+        );
 
   factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
 
@@ -205,13 +205,13 @@ class PPage extends PContent {
     required String title,
   }) : super(
     isStatic: isStatic,
-    dataProvider: dataProvider,
-    query: query,
-    controlEdit: controlEdit,
-    id: id,
-    property: property,
-    caption: title,
-  );
+          dataProviderConfig: dataProvider,
+          query: query,
+          controlEdit: controlEdit,
+          id: id,
+          property: property,
+          caption: title,
+        );
 
   factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
 

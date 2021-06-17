@@ -93,14 +93,15 @@ class PCommon extends PreceptItem {
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProvider,
+    PDataProviderBase? dataProviderConfig,
     PQuery? query,
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema? schema,
     String? id,
-  })  : _isStatic = isStatic,
-        _dataProvider = dataProvider,
+  })
+      : _isStatic = isStatic,
+        _dataProvider = dataProviderConfig,
         _query = query,
         super(id: id);
 

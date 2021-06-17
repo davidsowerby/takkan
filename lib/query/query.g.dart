@@ -86,10 +86,10 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
 PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) {
   return PGetDocument(
     documentId: DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
+    documentSchema: json['documentSchema'] as String,
     variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences: (json['propertyReferences'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
+    propertyReferences:
+        (json['propertyReferences'] as List<dynamic>).map((e) => e as String).toList(),
   )..version = json['version'] as int;
 }
 
@@ -99,6 +99,7 @@ Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'documentId': instance.documentId.toJson(),
+      'documentSchema': instance.documentSchema,
     };
 
 PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) {
