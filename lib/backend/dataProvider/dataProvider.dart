@@ -4,6 +4,7 @@ import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/app/appConfig.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
@@ -34,8 +35,6 @@ import 'package:precept_script/query/query.dart';
 
 abstract class DataProvider<CONFIG extends PDataProviderBase, QUERY extends PQuery> {
   CONFIG get config;
-
-  Authenticator? _authenticator;
 
   AppConfig get appConfig;
 
@@ -72,4 +71,65 @@ abstract class DataProvider<CONFIG extends PDataProviderBase, QUERY extends PQue
   /// Once a document has been created, it should be possible to create a unique id for it
   /// from its data, but the manner of doing so is implementation specific.
   DocumentId documentIdFromData(Map<String, dynamic> data);
+}
+
+/// Equivalent to a holding a null value, but more helpful
+class NoDataProvider implements DataProvider {
+  static const String msg =
+      'A NoDataProvider represents a condition where no data provider is available, and invoking this method is an error condition';
+
+  const NoDataProvider();
+
+  @override
+  AppConfig get appConfig => throw PreceptException(msg);
+
+  @override
+  SignInStatus get authStatus => throw PreceptException(msg);
+
+  @override
+  Authenticator<PDataProviderBase, dynamic> get authenticator => throw PreceptException(msg);
+
+  @override
+  PDataProviderBase get config => throw PreceptException(msg);
+
+  @override
+  createAuthenticator() {
+    throw PreceptException(msg);
+  }
+
+  @override
+  DocumentId documentIdFromData(Map<String, dynamic> data) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  init(AppConfig appConfig) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<Map<String, dynamic>> query(
+      {required PQuery queryConfig, required Map<String, dynamic> pageArguments}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> queryList(
+      {required PQuery queryConfig, required Map<String, dynamic> pageArguments}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<bool> updateDocument(
+      {required DocumentId documentId,
+      required Map<String, dynamic> changedData,
+      DocumentType documentType = DocumentType.standard}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  PreceptUser get user => throw PreceptException(msg);
+
+  @override
+  List<String> get userRoles => throw PreceptException(msg);
 }

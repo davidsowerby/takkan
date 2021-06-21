@@ -35,8 +35,16 @@ class DataProviderLibrary {
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
   DataProvider find({required PDataProviderBase config}) {
+    if (config is PNoDataProvider) {
+      logType(this.runtimeType).d("Returning a NoDataProvider");
+      return NoDataProvider();
+    }
     final String key = config.configSource.toString();
     logType(this.runtimeType).d("Finding DataProvider for ConfigSource: $key");
+
+    if (config is PNoDataProvider) {
+      return NoDataProvider();
+    }
 
     /// Use existing instance if there is one
     final instance = instances[key];
