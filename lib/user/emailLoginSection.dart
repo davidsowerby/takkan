@@ -97,7 +97,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                     textScaleFactor: 1.1,
                   ),
                 ),
-                RaisedButton(
+                ElevatedButton(
                     child: Text('OK'), onPressed: () => registrationAcknowledged(dataProvider))
               ],
             ),
@@ -129,7 +129,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: RaisedButton(
+          child: ElevatedButton(
             key: keys(widget.key, ['okButton']),
             child: Text('OK'),
             onPressed: () => checkUsername(userState),
@@ -181,12 +181,12 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
             ),
           ),
         ),
-        RaisedButton(
+        ElevatedButton(
           key: keys(widget.key, ['submitButton']),
           child: Text('Submit'),
           onPressed: () => submitCredentials(context, dataProvider),
         ),
-        RaisedButton(
+        ElevatedButton(
           child: Text("I've forgotten my password"),
           onPressed: () => forgottenPassword(dataProvider),
         ),

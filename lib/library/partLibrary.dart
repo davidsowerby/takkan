@@ -78,6 +78,7 @@ class PartLibrary {
     /// Either of these conditions mean we do not need an edit particle
     if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
       return Part(
+        parentDataProvider: contentBindings.dataProvider,
         readParticle: readParticle,
         config: partConfig,
         pageArguments: pageArguments,
@@ -100,6 +101,7 @@ class PartLibrary {
     );
 
     return Part(
+      parentDataProvider: contentBindings.dataProvider,
       readParticle: readParticle,
       editParticle: editParticle,
       config: partConfig,

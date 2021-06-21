@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/query/query.dart';
@@ -81,7 +82,10 @@ abstract class DataBinding {
         binding: rootBinding, schema: documentSchema, activeDataSource: activeDataSource);
   }
 
-  DataBinding rootFromPreloadedData(DataSource activeDataSource) {
+  DataBinding rootFromPreloadedData(DataSource? activeDataSource) {
+    if (activeDataSource == null) {
+      throw PreceptException('DataSource is required');
+    }
     return RootDataBinding(
       binding: activeDataSource.rootBinding,
       schema: activeDataSource.documentSchema!,
@@ -89,10 +93,13 @@ abstract class DataBinding {
     );
   }
 
-  DataBinding child(PContent config, DataBinding parentBinding, DataSource dataSource) {
-    return (config.queryIsDeclared)
-        ? parentBinding.rootFromDataSource(
-            config.query!, dataSource.rootBinding, dataSource.documentSchema!, dataSource)
-        : parentBinding.childFromConfig(config);
+  DataBinding child(PContent config, DataBinding parentBinding, DataSource? dataSource) {
+    if (config.queryIsDeclared) {
+      /// Safe because already set in ContentState.init
+      final DataSource source = dataSource!;
+      return parentBinding.rootFromDataSource(
+          config.query!, source.rootBinding, source.documentSchema!, source);
+    }
+    return parentBinding.childFromConfig(config);
   }
 }

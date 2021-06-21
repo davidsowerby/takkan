@@ -53,7 +53,7 @@ class DefaultSignInPage extends StatelessWidget implements SignInPage {
   }
 
   Widget _button(String label, Function() onPressed) {
-    return RaisedButton(
+    return ElevatedButton(
       child: Text(label),
       onPressed: onPressed,
     );

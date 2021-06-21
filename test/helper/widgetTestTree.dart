@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/inject/modules.dart';
@@ -9,12 +10,13 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 import './exception.dart';
-import 'mock.dart';
+import 'fake.dart';
 
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
@@ -104,11 +106,10 @@ class WidgetTestTree {
   }
 
   bool elementHasDataSource(String id, Type type, WidgetTester tester) {
-    return true;
-    // final index = _allIndexes[id]!;
-    // final Widget widget = widgets[index];
-    // final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
-    // return state.dataSource.temporaryDocument != null;
+    final index = _allIndexes[id]!;
+    final Widget widget = widgets[index];
+    final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
+    return state.dataSource != null;
   }
 
   verify() {
@@ -130,10 +131,12 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  PScript init({required PScript script, bool useCaptionsAsIds = true}) {
+  PScript init(
+      {required PScript script, bool useCaptionsAsIds = true, required AppConfig appConfig}) {
     preceptDefaultInjectionBindings();
     partLibrary.init();
-    PMockDataProvider.register();
+    PFakeDataProvider.register();
+    dataProviderLibrary.init(appConfig);
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();

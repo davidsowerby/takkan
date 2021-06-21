@@ -35,8 +35,9 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   ContentState(
     PContent config,
     DataBinding parentBinding,
+    DataProvider parentDataProvider,
     Map<String, dynamic> pageArguments,
-  )   : contentBindings = ContentBindings(config, parentBinding, pageArguments),
+  )   : contentBindings = ContentBindings(config, parentBinding, parentDataProvider, pageArguments),
         super();
 
   @override
@@ -86,7 +87,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   Widget assembleContent(ThemeData theme);
 
-  doBuild(BuildContext context, ThemeData theme, DataSource dataSource, PContent config,
+  doBuild(BuildContext context, ThemeData theme, DataSource? dataSource, PContent config,
       Map<String, dynamic> pageArguments) {
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
@@ -155,7 +156,10 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   /// Loads data with an expected single result
   Widget loadData(BuildContext context, ThemeData theme, Future<Map<String, dynamic>> future) {
-    return _loadData<Map<String, dynamic>>(context, theme, future, dataSource.updateDocument);
+    if (dataSource != null) {
+      return _loadData<Map<String, dynamic>>(context, theme, future, dataSource!.updateDocument);
+    }
+    throw PreceptException('Data cannot be loaded without a DataSource');
   }
 
   /// Loads data into [dataSource], using a Future, and returns a Widget produced by [buildContent]
@@ -188,7 +192,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          dataSource.storeQueryResults(
+          dataSource!.storeQueryResults(
               queryName: queryName, queryResults: snapshot.data!, fireListeners: false);
           return buildContent(theme);
         } else if (snapshot.hasError) {
@@ -251,6 +255,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   Widget buildSubContent({
     required ThemeData theme,
     required DataBinding parentBinding,
+    required DataProvider parentDataProvider,
     required CONFIG config,
     required Map<String, dynamic> pageArguments,
   }) {
@@ -264,6 +269,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       late Widget child;
       if (element is PPanel) {
         child = Panel(
+          parentDataProvider: parentDataProvider,
           parentBinding: parentBinding,
           config: element,
           pageArguments: pageArguments,
@@ -345,7 +351,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   Map<String, dynamic> get pageArguments => contentBindings.pageArguments;
 
-  DataSource get dataSource => contentBindings.dataSource;
+  DataSource? get dataSource => contentBindings.dataSource;
 
   PContent get config => contentBindings.config;
 }
@@ -354,34 +360,34 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 ///  This is passed to the [PartLibrary] so that widgets provided through the library can access
 ///  these bindings.
 class ContentBindings {
-  late DataSource dataSource;
+  DataSource? dataSource;
   DataBinding dataBinding = NoDataBinding();
-  late DataProvider dataProvider;
+  DataProvider dataProvider = NoDataProvider();
 
   final PContent config;
   final DataBinding parentBinding;
+  final DataProvider parentDataProvider;
   final Map<String, dynamic> pageArguments;
   final DateTime timestamp = DateTime.now();
 
-  ContentBindings(this.config, this.parentBinding, this.pageArguments);
+  ContentBindings(this.config, this.parentBinding, this.parentDataProvider, this.pageArguments);
 
   init(Function() _onPreceptReady) async {
-    if (config.dataProvider != null && !(config.dataProvider is PNoDataProvider)) {
-      /// Call is not actioned if Precept already in ready state
-      precept.addReadyListener(_onPreceptReady);
-      dataProvider = dataProviderLibrary.find(config: config.dataProvider!);
-    }
+    /// Call is not actioned if Precept already in ready state
+    precept.addReadyListener(_onPreceptReady);
+    dataProvider = dataProviderLibrary.find(config: config.dataProvider ?? PNoDataProvider());
     final String documentSchemaName = (config.queryIsDeclared)
         ? lookupDocumentSchemaName()
         : (preloaded)
             ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
             : notSet;
-
-    dataSource = DataSource(
-        config: config,
-        dataProvider: dataProvider,
-        preloadedData: preloaded,
-        documentSchema: lookupDocumentSchema(documentSchemaName));
+    if (config.queryIsDeclared || preloaded) {
+      dataSource = DataSource(
+          config: config,
+          dataProvider: dataProvider,
+          preloadedData: preloaded,
+          documentSchema: lookupDocumentSchema(documentSchemaName));
+    }
     if (config is PPart) {
       dataBinding = NoDataBinding();
     } else {
@@ -400,14 +406,25 @@ class ContentBindings {
   }
 
   String lookupDocumentSchemaName() {
+    if (config.query is PGetDocument) {
+      return (config.query as PGetDocument).documentSchema;
+    }
     final PSchema? schema = dataProvider.config.schema;
     if (schema == null) {
       throw PreceptException('Schema cannot be null when looking up document schema');
     }
+    final String? querySchemaName = config.query?.querySchema;
+    if (querySchemaName == null) {
+      String msg = 'querySchema is required in PSchema ${schema.name}';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
     final PQuerySchema? querySchema = schema.queries[config.query?.querySchema];
     if (querySchema == null) {
-      throw PreceptException(
-          "querySchema for '${config.query?.querySchema}' must be defined for PSchema ${schema.name}");
+      String msg =
+          "No querySchema defined for $querySchemaName in PSchema ${schema.name}.  Have you forgotten to add it to ";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
     }
     return querySchema.documentSchema;
   }

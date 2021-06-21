@@ -7,12 +7,10 @@ import 'package:precept_client/common/component/messagePanel.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/traitLibrary.dart';
-import 'package:precept_client/user/userState.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/signin/signIn.dart';
-import 'package:provider/provider.dart';
 
 class EmailSignIn extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -26,7 +24,6 @@ class EmailSignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final UserState userState = Provider.of<UserState>(context);
     final status = contentBindings.dataProvider.authenticator.status;
     switch (status) {
       case SignInStatus.Authenticating:

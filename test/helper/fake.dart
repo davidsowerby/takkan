@@ -6,6 +6,7 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
+import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -53,15 +54,20 @@ class FakeDataProvider extends Fake implements DataProvider {
   PreceptUser user = PreceptUser.fromJson({'name': 'Benny'});
 
   FakeDataProvider({required this.config});
+
+  init(AppConfig appConfig) {}
 }
 
 class PFakeDataProvider extends Fake implements PDataProviderBase {
   final String instanceName;
   final PSchema schema;
+  final PConfigSource configSource;
 
-  PFakeDataProvider({required this.instanceName, required this.schema});
+  PFakeDataProvider({required this.instanceName, required this.schema, required this.configSource});
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {}
+  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+    schema.init();
+  }
 
   void doValidate(List<ValidationMessage> messages) {}
 

@@ -4,7 +4,9 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
+import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -14,6 +16,7 @@ import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
+import '../../helper/fake.dart';
 import '../../helper/mock.dart';
 import '../../helper/widgetTestTree.dart';
 
@@ -25,67 +28,87 @@ final PScript kitchenSink01 = PScript(
   isStatic: IsStatic.yes,
   pages: {
     'test': PPage(
-        pageType: Library.simpleKey,
-        title: 'Page 1',
-        content: [
-          PPanel(
-            caption: 'Panel 1',
-            heading: PPanelHeading(),
-            content: [
-              PText(
-                id: 'Part 1-1',
-                staticData: 'Part 1-1',
+      pageType: Library.simpleKey,
+      title: 'Page 1',
+      content: [
+        PPanel(
+          caption: 'Panel 1',
+          heading: PPanelHeading(),
+          content: [
+            PText(
+              id: 'Part 1-1',
+              staticData: 'Part 1-1',
+            ),
+            PText(
+              id: 'Part 1-2',
+              staticData: 'Part 1-2',
+            ),
+            PPanel(
+              caption: 'Panel 1-3',
+              isStatic: IsStatic.no,
+              dataProvider: PFakeDataProvider(
+                schema: kitchenSinkSchema01,
+                instanceName: 'mock',
+                configSource: PConfigSource(segment: 'fake', instance: 'fake'),
               ),
-              PText(
-                id: 'Part 1-2',
-                staticData: 'Part 1-2',
-              ),
-              PPanel(
-                caption: 'Panel 1-3',
-                isStatic: IsStatic.no,
-                dataProvider: PMockDataProvider(
-                  schema: kitchenSinkSchema01,
-                  instanceName: 'mock',
+              query: PGetDocument(
+                documentId: DocumentId(
+                  path: 'Account',
+                  itemId: 'objectId1',
                 ),
-                query: PGetDocument(
-                  documentId: DocumentId(path: 'Account', itemId: 'objectId1'),
-                ),
-                controlEdit: ControlEdit.thisOnly,
-                property: '',
-                content: [
-                  PPart(readTraitName: PText.defaultReadTrait,
-                    property: 'firstName',
-                    caption: 'Part 1-3-1',
-                    staticData: 'Part 1-3-1',
-                  ),
-                  PPart(readTraitName: PText.defaultReadTrait,
-                    property: 'lastName',
-                    caption: 'Part 1-3-2',
-                    staticData: 'Part 1-3-2',
-                  ),
-                ],
+                documentSchema: 'Account',
               ),
-            ],
-          ),
-          PPart(readTraitName: PText.defaultReadTrait,id: 'Part 2', staticData: 'Part 2', caption: 'Part 2'),
-          PPart(readTraitName: PText.defaultReadTrait,id: 'Part 3', staticData: 'Part 3', caption: 'Part 3'),
-        ],
-      ),
+              controlEdit: ControlEdit.thisOnly,
+              property: '',
+              content: [
+                PPart(
+                  readTraitName: PText.defaultReadTrait,
+                  property: 'firstName',
+                  caption: 'Part 1-3-1',
+                  staticData: 'Part 1-3-1',
+                ),
+                PPart(
+                  readTraitName: PText.defaultReadTrait,
+                  property: 'lastName',
+                  caption: 'Part 1-3-2',
+                  staticData: 'Part 1-3-2',
+                ),
+              ],
+            ),
+          ],
+        ),
+        PPart(
+            readTraitName: PText.defaultReadTrait,
+            id: 'Part 2',
+            staticData: 'Part 2',
+            caption: 'Part 2'),
+        PPart(
+            readTraitName: PText.defaultReadTrait,
+            id: 'Part 3',
+            staticData: 'Part 3',
+            caption: 'Part 3'),
+      ],
+    ),
   },
 );
 
-final PSchema kitchenSinkSchema01 = PSchema(name: 'schema01',documents: {
-  'Account': PDocument(
-    fields: {
-      'firstName': PString(),
-      'lastName': PString(),
-    },
-  ),
-});
+final PSchema kitchenSinkSchema01 = PSchema(
+  name: 'schema01',
+  documents: {
+    'Account': PDocument(
+      fields: {
+        'firstName': PString(),
+        'lastName': PString(),
+      },
+    ),
+  },
+);
 
 void main() {
   group('Static Page with Overrides (kitchen-sink-01)', () {
     late WidgetTestTree testTree;
+    final AppConfig appConfig = MockAppConfig();
+
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -100,60 +123,66 @@ void main() {
 
     testWidgets('All ', (WidgetTester tester) async {
       // given
-      final PScript script = KitchenSinkTest().init(script: kitchenSink01, useCaptionsAsIds: true);
+      final PScript script = KitchenSinkTest().init(
+        script: kitchenSink01,
+        useCaptionsAsIds: true,
+        appConfig: MockAppConfig(),
+      );
+
       // when
       final widgetTree = MaterialApp(
           home: PreceptPage(
         config: script.pages['test']!,
       ));
       await tester.pumpWidget(widgetTree);
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      final pumps = await tester.pumpAndSettle();
+      print('pumps: $pumps');
 
       testTree = WidgetTestTree(script, tester.allWidgets.toList(), pages: 1, panels: 2, parts: 6);
       // then
       testTree.verify();
 
-      final pageId = 'script01.test.Page 1';
+      final pageId = 'script01.test';
       expect(testTree.elementHasEditState(pageId), isFalse);
       expect(testTree.elementHasDataBinding(pageId, PreceptPage, tester), isFalse);
       expect(testTree.elementHasDataSource(pageId, PreceptPage, tester), isFalse);
 
-      final panel1Id = 'script01.test.Page 1.Panel 1';
+      final panel1Id = 'script01.test.Panel 1';
       expect(testTree.elementHasEditState(panel1Id), isFalse);
       expect(testTree.elementHasDataBinding(panel1Id, Panel, tester), isFalse);
       expect(testTree.elementHasDataSource(panel1Id, Panel, tester), isFalse);
 
-      final panel13Id = 'script01.test.Page 1.Panel 1.Panel 1-3';
+      final panel13Id = 'script01.test.Panel 1.Panel 1-3';
       expect(testTree.elementHasEditState(panel13Id), isTrue);
       expect(testTree.elementHasDataBinding(panel13Id, Panel, tester), isTrue);
       expect(testTree.elementHasDataSource(panel13Id, Panel, tester), isTrue);
 
-      final part2Id = 'script01.test.Page 1.Part 2';
+      final part2Id = 'script01.test.Part 2';
       expect(testTree.elementHasEditState(part2Id), isFalse);
       expect(testTree.elementHasDataBinding(part2Id, PreceptPage, tester), isFalse);
       expect(testTree.elementHasDataSource(part2Id, PreceptPage, tester), isFalse);
 
-      final part3Id = 'script01.test.Page 1.Part 3';
+      final part3Id = 'script01.test.Part 3';
       expect(testTree.elementHasEditState(part3Id), isFalse);
       expect(testTree.elementHasDataBinding(part3Id, Part, tester), isFalse);
       expect(testTree.elementHasDataSource(part3Id, Part, tester), isFalse);
 
-      final part11Id = 'script01.test.Page 1.Panel 1.Part 1-1';
+      final part11Id = 'script01.test.Panel 1.Part 1-1';
       expect(testTree.elementHasEditState(part11Id), isFalse);
       expect(testTree.elementHasDataBinding(part11Id, Part, tester), isFalse);
       expect(testTree.elementHasDataSource(part11Id, Part, tester), isFalse);
 
-      final part12Id = 'script01.test.Page 1.Panel 1.Part 1-2';
+      final part12Id = 'script01.test.Panel 1.Part 1-2';
       expect(testTree.elementHasEditState(part12Id), isFalse);
       expect(testTree.elementHasDataBinding(part12Id, Part, tester), isFalse);
       expect(testTree.elementHasDataSource(part12Id, Part, tester), isFalse);
 
-      final part131Id = 'script01.test.Page 1.Panel 1.Panel 1-3.Part 1-3-1';
+      final part131Id = 'script01.test.Panel 1.Panel 1-3.Part 1-3-1';
       expect(testTree.elementHasEditState(part131Id), isFalse);
       expect(testTree.elementHasDataBinding(part131Id, Part, tester), isFalse);
       expect(testTree.elementHasDataSource(part131Id, Part, tester), isFalse);
 
-      final part132Id = 'script01.test.Page 1.Panel 1.Panel 1-3.Part 1-3-2';
+      final part132Id = 'script01.test.Panel 1.Panel 1-3.Part 1-3-2';
       expect(testTree.elementHasEditState(part132Id), isFalse);
       expect(testTree.elementHasDataBinding(part132Id, Part, tester), isFalse);
       expect(testTree.elementHasDataSource(part132Id, Part, tester), isFalse);

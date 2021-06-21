@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/interpolate.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/schema/schema.dart';
 
 import '../helper/catcher.dart';
@@ -10,7 +11,13 @@ void main() {
   FakeContentBindings mockContentBindings = FakeContentBindings(
     FakeDataBindingWithData(data),
     FakeDataSource(),
-    FakeDataProvider(config: PFakeDataProvider(instanceName: 'a', schema: PSchema(name: '?'))),
+    FakeDataProvider(
+      config: PFakeDataProvider(
+        instanceName: 'a',
+        schema: PSchema(name: '?'),
+        configSource: PConfigSource(segment: 'fake', instance: 'fake'),
+      ),
+    ),
   );
   group(
     'interpolate',
@@ -24,7 +31,12 @@ void main() {
           FakeDataBindingWithData(data),
           FakeDataSource(),
           FakeDataProvider(
-              config: PFakeDataProvider(instanceName: 'a', schema: PSchema(name: '?'))),
+            config: PFakeDataProvider(
+              instanceName: 'a',
+              schema: PSchema(name: '?'),
+              configSource: PConfigSource(segment: 'fake', instance: 'fake'),
+            ),
+          ),
         );
       });
 

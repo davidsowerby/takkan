@@ -7,6 +7,7 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/data/provider/dataProviderBase.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -71,29 +72,31 @@ final PScript kitchenSinkValidation = PScript(
   dataProvider: PFakeDataProvider(
     instanceName: 'mock1',
     schema: validationSchema,
+    configSource: PConfigSource(segment: 'fake', instance: 'fake'),
   ),
   pages: {
     '/test': PPage(
-        pageType: Library.simpleKey,
-        title: 'Page 1',
-        content: [
-          PText(caption: 'Part 1', staticData: 'Part 1',  isStatic: IsStatic.yes),
-          PPanel(
-            query: PGetDocument(
-              documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
-            ),
-            caption: 'Panel 2',
-            property: '',
-            heading: PPanelHeading(),
-            content: [
-              PText(
-                property: 'category',
-                id: 'Part 2-1-2',
-              ),
-            ],
+      pageType: Library.simpleKey,
+      title: 'Page 1',
+      content: [
+        PText(caption: 'Part 1', staticData: 'Part 1', isStatic: IsStatic.yes),
+        PPanel(
+          query: PGetDocument(
+            documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
+            documentSchema: 'Account',
           ),
-        ],
-      ),
+          caption: 'Panel 2',
+          property: '',
+          heading: PPanelHeading(),
+          content: [
+            PText(
+              property: 'category',
+              id: 'Part 2-1-2',
+            ),
+          ],
+        ),
+      ],
+    ),
   },
 );
 
@@ -138,5 +141,3 @@ void main() {
     });
   });
 }
-
-

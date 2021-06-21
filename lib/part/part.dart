@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/library/partLibrary.dart';
@@ -31,6 +32,9 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// [config] is a [PPart] instance, which is contained within a [PScript].
 /// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [Part]
 /// [parentBinding] is used to maintain a chain back to the data source.
+/// [parentDataProvider] provides access to the [PreceptUser] object for the provider this part is
+/// associated with
+///
 class Part extends StatefulWidget {
   final PPart config;
   final DataBinding parentBinding;
@@ -38,9 +42,11 @@ class Part extends StatefulWidget {
   final Widget readParticle;
   final Widget? editParticle;
   final bool singleParticle;
+  final DataProvider parentDataProvider;
 
   const Part(
       {Key? key,
+      required this.parentDataProvider,
       this.singleParticle = false,
       required this.config,
       this.editParticle,
@@ -50,14 +56,16 @@ class Part extends StatefulWidget {
       : super(key: key);
 
   @override
-  PartState createState() => PartState(config, parentBinding, pageArguments);
+  PartState createState() => PartState(config, parentBinding, parentDataProvider, pageArguments);
 }
 
 class PartState extends ContentState<Part, PPart> {
-  PartState(PPart config, DataBinding parentBinding, Map<String, dynamic> pageArguments)
+  PartState(PPart config, DataBinding parentBinding, DataProvider parentDataProvider,
+      Map<String, dynamic> pageArguments)
       : super(
           config,
           parentBinding,
+          parentDataProvider,
           pageArguments,
         );
 
@@ -82,11 +90,13 @@ class PartState extends ContentState<Part, PPart> {
     final EditState editState = Provider.of<EditState>(context);
     if (widget.editParticle != null) {
       return (editState.readMode) ? widget.readParticle : widget.editParticle!;
-    } else {throw PreceptException('EditParticle must not be null at this point');}
+    } else {
+      throw PreceptException('EditParticle must not be null at this point');
+    }
   }
 
   @override
-  Widget layout({required List<Widget> children,required  Size screenSize,required  PPart config}) {
+  Widget layout({required List<Widget> children, required Size screenSize, required PPart config}) {
     // TODO: implement layout
     throw UnimplementedError();
   }
