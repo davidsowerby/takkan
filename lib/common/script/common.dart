@@ -3,8 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
-import 'package:precept_script/data/provider/dataProviderConverter.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -81,32 +80,32 @@ class PCommon extends PreceptItem {
   IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
-  @JsonKey(
-      includeIfNull: false,
-      fromJson: PDataProviderConverter.fromJson,
-      toJson: PDataProviderConverter.toJson)
-  PDataProviderBase? _dataProvider;
+  @protected
+  PDataProvider? _dataProvider;
   @JsonKey(ignore: true)
   PScript? _script;
-  @JsonKey(fromJson: PQueryConverter.fromJson, toJson: PQueryConverter.toJson, includeIfNull: false)
+  @JsonKey(
+      fromJson: PQueryConverter.fromJson,
+      toJson: PQueryConverter.toJson,
+      includeIfNull: false)
   PQuery? _query;
 
   PCommon({
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProviderConfig,
+    PDataProvider? dataProviderConfig,
     PQuery? query,
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema? schema,
     String? id,
-  })
-      : _isStatic = isStatic,
+  })  : _isStatic = isStatic,
         _dataProvider = dataProviderConfig,
         _query = query,
         super(id: id);
 
   @JsonKey(ignore: true)
-  IsStatic get isStatic => (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
+  IsStatic get isStatic =>
+      (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
 
   /// To give descendant access to private field without messing up property cascading
   IsStatic getIsStatic() {
@@ -114,7 +113,6 @@ class PCommon extends PreceptItem {
   }
 
   bool get hasEditControl => _hasEditControl;
-
 
   bool get inheritedEditControl {
     PCommon p = parent;
@@ -128,7 +126,7 @@ class PCommon extends PreceptItem {
   }
 
   @JsonKey(ignore: true)
-  PDataProviderBase? get dataProvider => _dataProvider ?? parent.dataProvider;
+  PDataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
@@ -153,14 +151,15 @@ class PCommon extends PreceptItem {
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     _script = script;
     PreceptItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
     while (!(p is NullPreceptItem)) {
-      final PCommon p1=p as PCommon;
+      final PCommon p1 = p as PCommon;
       if (p1.controlEdit != ControlEdit.inherited) {
         inherited = p1.controlEdit;
         break;
@@ -168,15 +167,18 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     setupControlEdit(inherited);
-    if (_dataProvider != null)
-      _dataProvider?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (_query != null) _query?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (_dataProvider != null) {
+      _dataProvider?.doInit(script, this, index,
+          useCaptionsAsIds: useCaptionsAsIds);
+    }
+    if (_query != null)
+      _query?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
 
   /// [ControlEdit.noEdit] overrides everything
   setupControlEdit(ControlEdit inherited) {
     // top levels are not visual elements
-    if (this is PScript ) {
+    if (this is PScript) {
       _hasEditControl = false;
       return;
     }
@@ -186,7 +188,8 @@ class PCommon extends PreceptItem {
       return;
     }
 
-    if ((controlEdit == ControlEdit.thisOnly) || (controlEdit == ControlEdit.thisAndBelow)) {
+    if ((controlEdit == ControlEdit.thisOnly) ||
+        (controlEdit == ControlEdit.thisAndBelow)) {
       _hasEditControl = true;
       return;
     }
@@ -197,27 +200,31 @@ class PCommon extends PreceptItem {
     }
 
     if (this is PPart) {
-      if (controlEdit == ControlEdit.partsOnly || inherited == ControlEdit.partsOnly) {
+      if (controlEdit == ControlEdit.partsOnly ||
+          inherited == ControlEdit.partsOnly) {
         _hasEditControl = true;
         return;
       }
     }
 
     if (this is PPanel) {
-      if (controlEdit == ControlEdit.panelsOnly || inherited == ControlEdit.panelsOnly) {
+      if (controlEdit == ControlEdit.panelsOnly ||
+          inherited == ControlEdit.panelsOnly) {
         _hasEditControl = true;
         return;
       }
     }
 
     if (this is PPage) {
-      if (controlEdit == ControlEdit.pagesOnly || inherited == ControlEdit.pagesOnly) {
+      if (controlEdit == ControlEdit.pagesOnly ||
+          inherited == ControlEdit.pagesOnly) {
         _hasEditControl = true;
         return;
       }
     }
 
-    if (controlEdit == ControlEdit.firstLevelPanels || inherited == ControlEdit.firstLevelPanels) {
+    if (controlEdit == ControlEdit.firstLevelPanels ||
+        inherited == ControlEdit.firstLevelPanels) {
       if (this is PPanel && parent is PPage) {
         _hasEditControl = true;
         return;
@@ -242,14 +249,12 @@ class PCommon extends PreceptItem {
   }
 }
 
-
-class NullPreceptItem extends PCommon{
-
+class NullPreceptItem extends PCommon {
   NullPreceptItem() : super();
 
   @override
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     super.doInit(script, NullPreceptItem(), index);
   }
-
 }

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/schema.dart';
 
 class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {

@@ -1,8 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/data/provider/restDataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/query/query.dart';
@@ -19,26 +18,38 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<PreceptSchemaLoader>(() => FakePreceptSchemaLoader());
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
     });
 
     tearDown(() {});
+  });
 
-    group('PScript validation', () {
-      test('Insufficient components', () {
-        // given
-        final script1 = PScript(name: 'A Script');
-        // when
-        final result = script1.validate();
-        // then
+  group('PScript validation', () {
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
+    });
+    test('Insufficient components', () {
+      // given
+      final script1 = PScript(name: 'A Script');
+      // when
+      final result = script1.validate();
+      // then
 
-        expect(result.length, 1);
-        expect(result[0].toString(), 'PScript : A Script : must contain at least one page');
-      });
+      expect(result.length, 1);
+      expect(result[0].toString(),
+          'PScript : A Script : must contain at least one page');
     });
   });
 
   group('PPage validation 1', () {
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
+    });
     test('Must have non-empty route', () {
       // given
       final script = PScript(
@@ -52,7 +63,8 @@ void main() {
       // then
 
       expect(messages.length, 1);
-      expect(messages[0].toString(), 'PScript : test : PPage route cannot be an empty String');
+      expect(messages[0].toString(),
+          'PScript : test : PPage route cannot be an empty String');
     });
   });
 
@@ -66,20 +78,22 @@ void main() {
           "/home": PPage(title: 'a Page title', pageType: ''),
         },
       );
-      getIt.registerFactory<PreceptSchemaLoader>(() => FakePreceptSchemaLoader());
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
       // when
       final messages = component.validate();
       // then
 
       expect(messages.length, 1);
-      expect(messages[0].toString(), 'PPage : A script./home : must define a non-empty pageType');
+      expect(messages[0].toString(),
+          'PPage : A script./home : must define a non-empty pageType');
     });
 
     test('No errors', () {
       // given
       final component = PScript(
         name: 'a script',
-        dataProvider: PRestDataProvider(
+        dataProvider: PDataProvider(
           documentEndpoint: '',
           configSource: const PConfigSource(
             segment: '',
@@ -113,7 +127,7 @@ void main() {
       // given
       final component = PScript(
           name: 'A Script',
-          dataProvider: PRestDataProvider(
+          dataProvider: PDataProvider(
             documentEndpoint: '',
             sessionTokenKey: '',
             headerKeys: const [],
@@ -161,7 +175,7 @@ void main() {
 
       final withoutQuery = PScript(
         name: 'A Script',
-        dataProvider: PRestDataProvider(
+        dataProvider: PDataProvider(
           documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
@@ -185,7 +199,7 @@ void main() {
 
       final withQueryAndProvider = PScript(
         name: 'A Script',
-        dataProvider: PRestDataProvider(
+        dataProvider: PDataProvider(
           documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
@@ -214,8 +228,10 @@ void main() {
       // when
       final withoutQueryOrProviderResults =
           withoutQueryOrDataProvider.validate().map((e) => e.toString());
-      final withoutQueryResults = withoutQuery.validate().map((e) => e.toString());
-      final withQueryAndProviderResults = withQueryAndProvider.validate().map((e) => e.toString());
+      final withoutQueryResults =
+          withoutQuery.validate().map((e) => e.toString());
+      final withQueryAndProviderResults =
+          withQueryAndProvider.validate().map((e) => e.toString());
       // then
 
       expect(withoutQueryOrProviderResults, [

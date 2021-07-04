@@ -8,7 +8,7 @@ import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
 import 'package:precept_script/validation/message.dart';
 
-part 'dataProviderBase.g.dart';
+part 'dataProvider.g.dart';
 
 /// Either [schema] or [schemaSource] can be set.
 ///
@@ -17,8 +17,8 @@ part 'dataProviderBase.g.dart';
 /// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
 /// The presence of [schema] should therefore be tested before using it.
 ///
-
-abstract class PDataProviderBase extends PreceptItem {
+@JsonSerializable(explicitToJson: true)
+class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
   final PSignIn signIn;
   final PConfigSource configSource;
@@ -30,27 +30,36 @@ abstract class PDataProviderBase extends PreceptItem {
   final String sessionTokenKey;
   final List<String> headerKeys;
   final String documentEndpoint;
+  final CloudInterface defaultDelegate;
+  final CloudInterface authenticatorDelegate;
+  final bool useGraphQLDelegate;
+  final bool useRestDelegate;
 
   @JsonKey(ignore: true)
   PSchema get schema {
     if (_schema == null) {
-      throw PreceptException('Schema must not be null now - has init() been called?');
+      throw PreceptException(
+          'Schema must not be null now - has init() been called?');
     }
     return _schema!;
   }
 
   set schema(value) => _schema = value;
 
-  PDataProviderBase({
+  PDataProvider({
     required this.headerKeys,
     required this.documentEndpoint,
     required this.sessionTokenKey,
     required this.configSource,
+    this.useGraphQLDelegate = true,
+    this.useRestDelegate = true,
+    this.defaultDelegate = CloudInterface.graphQL,
+    this.authenticatorDelegate = CloudInterface.graphQL,
     this.checkHealthOnConnect = false,
-    required this.signInOptions,
+    this.signInOptions = const PSignInOptions(),
     PSchema? schema,
     this.schemaSource,
-    required this.signIn,
+    this.signIn = const PSignIn(),
     String? id,
   })  : _schema = schema,
         super(id: id);
@@ -59,8 +68,10 @@ abstract class PDataProviderBase extends PreceptItem {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     if (_schema == null) {
       if (schemaSource == null) {
-        throw PreceptException('If a Schema is not defined, a schema source must be');
+        throw PreceptException(
+            'If a Schema is not defined, a schema source must be');
       }
+      schemaSource!.doInit(script, parent, index);
       final schemaLoader = inject<PreceptSchemaLoader>();
       _schema = await schemaLoader.load(schemaSource!);
     }
@@ -82,6 +93,11 @@ abstract class PDataProviderBase extends PreceptItem {
 
   /// This can be overridden, because Back4App for example, uses the objectId field value
   String get idPropertyName => 'id';
+
+  factory PDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$PDataProviderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PDataProviderToJson(this);
 }
 
 /// [segment] and [instance] together define which part **precept.json** is used to
@@ -104,7 +120,7 @@ class PConfigSource {
 }
 
 @JsonSerializable(explicitToJson: true)
-class PNoDataProvider extends PDataProviderBase {
+class PNoDataProvider extends PDataProvider {
   PNoDataProvider()
       : super(
           documentEndpoint: '',
@@ -120,7 +136,9 @@ class PNoDataProvider extends PDataProviderBase {
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
+    super.doInit(script, parent, index);
     _schema = PSchema(name: 'unnamed');
   }
 }
@@ -128,3 +146,5 @@ class PNoDataProvider extends PDataProviderBase {
 abstract class PreceptSchemaLoader {
   Future<PSchema> load(PSchemaSource source);
 }
+
+enum CloudInterface { rest, graphQL }

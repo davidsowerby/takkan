@@ -1,14 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/data/provider/restDataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('Common properties', () {
@@ -18,6 +19,8 @@ void main() {
 
     setUp(() {
       getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
     });
 
     tearDown(() {});
@@ -26,7 +29,7 @@ void main() {
       // given
       final script = PScript(
         name: 'test',
-        dataProvider: PRestDataProvider(
+        dataProvider: PDataProvider(
           schema: PSchema(name: 'unnamed'),
           documentEndpoint: '',
           sessionTokenKey: '',

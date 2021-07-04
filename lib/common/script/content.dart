@@ -1,6 +1,6 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -20,7 +20,7 @@ class PContent extends PCommon {
     this.property = notSet,
     this.listEntryConfig,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProviderConfig,
+    PDataProvider? dataProviderConfig,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema? schema,
@@ -45,7 +45,7 @@ class PSubContent extends PContent {
     String? caption,
     String property = notSet,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProvider,
+    PDataProvider? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,

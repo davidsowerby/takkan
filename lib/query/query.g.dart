@@ -6,8 +6,8 @@ part of 'query.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGQuery _$PGQueryFromJson(Map<String, dynamic> json) {
-  return PGQuery(
+PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) {
+  return PGraphQLQuery(
     variables: json['variables'] as Map<String, dynamic>,
     propertyReferences: (json['propertyReferences'] as List<dynamic>)
         .map((e) => e as String)
@@ -18,7 +18,8 @@ PGQuery _$PGQueryFromJson(Map<String, dynamic> json) {
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PGQueryToJson(PGQuery instance) => <String, dynamic>{
+Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
+    <String, dynamic>{
       'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
@@ -88,8 +89,9 @@ PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) {
     documentId: DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
     documentSchema: json['documentSchema'] as String,
     variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences:
-        (json['propertyReferences'] as List<dynamic>).map((e) => e as String).toList(),
+    propertyReferences: (json['propertyReferences'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList(),
   )..version = json['version'] as int;
 }
 

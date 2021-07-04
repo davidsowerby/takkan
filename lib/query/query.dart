@@ -82,10 +82,10 @@ abstract class PQuery extends PreceptItem {
 /// [table]and [documentSchema] have to be specified, but it is intended that it will be automatically derived
 /// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
 @JsonSerializable(explicitToJson: true)
-class PGQuery extends PQuery {
+class PGraphQLQuery extends PQuery {
   final String script;
 
-  PGQuery({
+  PGraphQLQuery({
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     required this.script,
@@ -98,9 +98,10 @@ class PGQuery extends PQuery {
           returnType: returnType,
         );
 
-  factory PGQuery.fromJson(Map<String, dynamic> json) => _$PGQueryFromJson(json);
+  factory PGraphQLQuery.fromJson(Map<String, dynamic> json) =>
+      _$PGraphQLQueryFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGQueryToJson(this);
+  Map<String, dynamic> toJson() => _$PGraphQLQueryToJson(this);
 }
 
 /// **EXPERIMENTAL** A currently very limited attempt to simplify the specification of a GraphQL query.
@@ -119,7 +120,7 @@ class PGQuery extends PQuery {
 ///
 /// [fields] and [types] must contain 'id' if data is going to be edited, so that data can be updated
 @JsonSerializable(explicitToJson: true)
-class PPQuery extends PGQuery {
+class PPQuery extends PGraphQLQuery {
   final String fields;
   final Map<String, String> types;
 

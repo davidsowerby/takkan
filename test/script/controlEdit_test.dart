@@ -1,8 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('ControlEdit settings', () {
@@ -10,18 +14,24 @@ void main() {
 
     tearDownAll(() {});
 
-    setUp(() {});
+    setUp(() {
+      getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
+    });
 
     tearDown(() {});
 
     test('defaults', () {
       // given
-      final script = PScript(name: 'A Script',
+      final script = PScript(
+        name: 'A Script',
         pages: {
-          '/home': PPage(title: 'A page',
-              // ignore: missing_required_param
-              content: [
-                PPanel(property: '',
+          '/home': PPage(
+            title: 'A page',
+            // ignore: missing_required_param
+            content: [
+              PPanel(property: '',
                   caption: 'panel1',
                   content: [
                     PPart(readTraitName: 'part',caption: 'panel1-part1'),

@@ -13,7 +13,7 @@ import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -41,12 +41,12 @@ class PScript extends PCommon {
   PScript({
     this.conversionErrorMessages =
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
-    this.validationErrorMessages =
-        const ValidationErrorMessages(typePatterns: defaultValidationErrorMessages),
+    this.validationErrorMessages = const ValidationErrorMessages(
+        typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
     required this.name,
     IsStatic isStatic = IsStatic.inherited,
-    PDataProviderBase? dataProvider,
+    PDataProvider? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
@@ -58,13 +58,19 @@ class PScript extends PCommon {
           controlEdit: controlEdit,
         );
 
-  factory PScript.fromJson(Map<String, dynamic> json) => _$PScriptFromJson(json);
+  factory PScript.fromJson(Map<String, dynamic> json) =>
+      _$PScriptFromJson(json);
 
   Map<String, dynamic> toJson() => _$PScriptToJson(this);
 
+  String get debugId => name;
+
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(fromJson: PQueryConverter.fromJson, toJson: PQueryConverter.toJson, includeIfNull: false)
+  @JsonKey(
+      fromJson: PQueryConverter.fromJson,
+      toJson: PQueryConverter.toJson,
+      includeIfNull: false)
   PQuery? get query => getQuery();
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
@@ -197,7 +203,7 @@ class PPage extends PContent {
     this.layout = const PPageLayout(),
     IsStatic isStatic = IsStatic.inherited,
     this.content = const [],
-    PDataProviderBase? dataProvider,
+    PDataProvider? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,

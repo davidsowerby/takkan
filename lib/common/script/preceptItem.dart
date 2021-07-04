@@ -14,13 +14,13 @@ part 'preceptItem.g.dart';
 /// There are three levels of id, used primarily for testing.
 /// - [_id] just records manually set ids, and this is stored with th rest of the script. Some sub-classes
 /// may set this to something like a caption, if no id is explicitly provided
-/// - [_uid] is populated by the [PScript.init] process, using the [_id] if one has been set. If not, one is
+/// - [uid] is populated by the [PScript.init] process, using the [_id] if one has been set. If not, one is
 /// auto-generated to ensure a [_uid] unique within its sibling group.
 /// - [_debugId] is constructed by the [PScript.init] process to provide a hierarchical 'path', so the
 /// location of any particular [PreceptItem] can be identified via its parent chain. This also
 /// becomes the Widget key of the item's associated Widget. This is not stored as JSON.
 ///
-/// These are also generated during the [PScript.init] process, and also used within the construction
+/// The following are also generated during the [PScript.init] process, and also used within the construction
 /// of ids.
 ///
 /// - [_parent] is the parent PreceptItem within this script

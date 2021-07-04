@@ -1,19 +1,25 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/query/restQuery.dart';
 
 /// JSON converter for [PQuery] sub-classes
 class PQueryConverter {
   static final elementKey = '-type-';
+
   static PQuery? fromJson(Map<String, dynamic> json) {
     final String? typeName = json[elementKey];
-    if (typeName==null) return null;
+    if (typeName == null) return null;
     json.remove(elementKey);
     switch (typeName) {
       case 'PGetDocument':
         return PGetDocument.fromJson(json);
       case 'PGetStream':
         return PGetStream.fromJson(json);
+      case 'PGraphQLQuery':
+        return PGraphQLQuery.fromJson(json);
+      case 'PRestQuery':
+        return PRestQuery.fromJson(json);
       default:
         String msg = 'Conversion required for $typeName';
         logName('PQueryConverter').e(msg);
@@ -22,7 +28,7 @@ class PQueryConverter {
   }
 
   static Map<String, dynamic> toJson(PQuery? object) {
-    if (object==null) return Map();
+    if (object == null) return Map();
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
     jsonMap[elementKey] = type.toString();

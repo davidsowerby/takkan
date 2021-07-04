@@ -3,7 +3,7 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 
@@ -12,7 +12,7 @@ part 'schema.g.dart';
 /// The root for a backend-agnostic definition of a data structure, including data types, validation, permissions
 /// and relationships.
 ///
-/// A [PSchema] is associated with a [PDataProviderBase] instance.  The [name] must be unique
+/// A [PSchema] is associated with a [PDataProvider] instance.  The [name] must be unique
 /// within a [PSchema] instance, but has no other constraint.
 ///
 /// [PSchema] provides a definition for use by Precept, but could also be used to create a backend schema.

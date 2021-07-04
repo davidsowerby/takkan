@@ -1,5 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/query/query.dart';
 
+part 'restQuery.g.dart';
+
+@JsonSerializable(explicitToJson: true)
 class PRestQuery extends PQuery {
   final bool paramsAsPath;
   final Map<String, String> params;
@@ -13,4 +17,9 @@ class PRestQuery extends PQuery {
           querySchema: querySchema,
           returnType: returnType,
         );
+
+  factory PRestQuery.fromJson(Map<String, dynamic> json) =>
+      _$PRestQueryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PRestQueryToJson(this);
 }

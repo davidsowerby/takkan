@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/example/kitchenSink.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';
+
+import '../fixtures.dart';
 
 void main() {
   group('PScript JSON Round trip', () {
@@ -14,6 +17,8 @@ void main() {
 
     setUp(() {
       getIt.reset();
+      getIt.registerFactory<PreceptSchemaLoader>(
+          () => FakePreceptSchemaLoader());
     });
 
     tearDown(() {});

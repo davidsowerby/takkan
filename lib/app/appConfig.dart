@@ -1,4 +1,4 @@
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 
 class AppConfig {
   final Map<String, dynamic> data;
@@ -13,7 +13,7 @@ class AppConfig {
   /// [config] defines the keys used to look up header values from **precept.json**
   /// These are typically API Keys, Client Keys etc, and required for HTTP/GraphQL client
   /// initialisation.
-  Map<String, String> headers(PDataProviderBase config) {
+  Map<String, String> headers(PDataProvider config) {
     final Map<String, String> headers = Map();
     final Map<String, String> instance = instanceConfig(config.configSource);
     for (String keyName in config.headerKeys) {
