@@ -35,7 +35,7 @@ class PreceptUser {
 
   set sessionToken(value) => data['sessionToken'] = value;
 
-  String get sessionToken => data['sessionToken'] ?? '';
+  String? get sessionToken => data['sessionToken'];
 
   set unknown(bool value) => data['unknown'] = value;
 

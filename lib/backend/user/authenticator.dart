@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 
 import 'file:///home/david/git/precept/precept_client/lib/user/userState.dart';
 
-abstract class Authenticator<T extends PDataProviderBase, USER> {
+abstract class Authenticator<T extends PDataProvider, USER> {
   final List<String> _userRoles = List.empty(growable: true);
-  final List<Function(SignInStatus)> _signInStatusListeners = List.empty(growable: true);
+  final List<Function(SignInStatus)> _signInStatusListeners =
+      List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
   USER? nativeUser;
 

@@ -1,6 +1,6 @@
 // import 'package:graphql/client.dart';
-// import 'package:precept_backend/backend/dataProvider/dataProviderBase.dart';
-// import 'package:precept_script/data/provider/graphqlDataProvider.dart';
+// import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+// import 'package:precept_script/data/provider/graphqlDelegate.dart';
 // import 'dart:io';
 // import 'dart:ui';
 //
@@ -14,7 +14,7 @@
 // import 'package:precept_script/common/exception.dart';
 // import 'package:precept_script/common/log.dart';
 // import 'package:precept_script/common/util/string.dart';
-// import 'package:precept_script/data/provider/dataProviderBase.dart';
+// import 'package:precept_script/data/provider/dataProvider.dart';
 // import 'package:precept_script/data/provider/documentId.dart';
 // import 'package:precept_script/query/query.dart';
 // import 'package:precept_script/script/script.dart';

@@ -12,7 +12,7 @@
 // import 'package:precept_backend/backend/user/preceptUser.dart';
 // import 'package:precept_script/common/log.dart';
 // import 'package:precept_script/common/util/string.dart';
-// import 'package:precept_script/data/provider/dataProviderBase.dart';
+// import 'package:precept_script/data/provider/dataProvider.dart';
 // import 'package:precept_script/data/provider/documentId.dart';
 // import 'package:precept_script/query/query.dart';
 // import 'package:precept_script/script/script.dart';

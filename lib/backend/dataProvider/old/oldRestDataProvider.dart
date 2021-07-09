@@ -1,10 +1,10 @@
 // import 'dart:ui';
 //
 // import 'package:graphql/client.dart';
-// import 'package:precept_backend/backend/dataProvider/dataProviderBase.dart';
+// import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 // import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 // import 'package:precept_script/data/provider/documentId.dart';
-// import 'package:precept_script/data/provider/restDataProvider.dart';
+// import 'package:precept_script/data/provider/restDelegate.dart';
 // import 'package:precept_script/query/restQuery.dart';
 // import 'package:precept_script/script/script.dart';
 //
