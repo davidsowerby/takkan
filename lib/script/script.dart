@@ -43,6 +43,7 @@ class PScript extends PCommon {
     'script': PString(),
   });
   final String name;
+  final String locale;
   final Map<String, PPage> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
@@ -58,6 +59,7 @@ class PScript extends PCommon {
         typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
     required this.name,
+    this.locale = 'en_GB',
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
     PQuery? query,
