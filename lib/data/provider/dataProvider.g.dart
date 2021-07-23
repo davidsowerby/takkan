@@ -8,19 +8,21 @@ part of 'dataProvider.dart';
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
   return PDataProvider(
+    graphQLDelegate: json['graphQLDelegate'] == null
+        ? null
+        : PGraphQL.fromJson(json['graphQLDelegate'] as Map<String, dynamic>),
+    restDelegate: json['restDelegate'] == null
+        ? null
+        : PRest.fromJson(json['restDelegate'] as Map<String, dynamic>),
     headerKeys:
         (json['headerKeys'] as List<dynamic>).map((e) => e as String).toList(),
-    documentEndpoint: json['documentEndpoint'] as String,
     sessionTokenKey: json['sessionTokenKey'] as String,
     configSource:
         PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
-    useGraphQLDelegate: json['useGraphQLDelegate'] as bool,
-    useRestDelegate: json['useRestDelegate'] as bool,
-    defaultDelegate:
-        _$enumDecode(_$CloudInterfaceEnumMap, json['defaultDelegate']),
+    scriptDelegate:
+        _$enumDecode(_$CloudInterfaceEnumMap, json['scriptDelegate']),
     authenticatorDelegate:
         _$enumDecode(_$CloudInterfaceEnumMap, json['authenticatorDelegate']),
-    checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
     signInOptions:
         PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
     schemaSource: json['schemaSource'] == null
@@ -39,15 +41,13 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource.toJson(),
       'schemaSource': instance.schemaSource?.toJson(),
-      'checkHealthOnConnect': instance.checkHealthOnConnect,
       'sessionTokenKey': instance.sessionTokenKey,
       'headerKeys': instance.headerKeys,
-      'documentEndpoint': instance.documentEndpoint,
-      'defaultDelegate': _$CloudInterfaceEnumMap[instance.defaultDelegate],
       'authenticatorDelegate':
           _$CloudInterfaceEnumMap[instance.authenticatorDelegate],
-      'useGraphQLDelegate': instance.useGraphQLDelegate,
-      'useRestDelegate': instance.useRestDelegate,
+      'scriptDelegate': _$CloudInterfaceEnumMap[instance.scriptDelegate],
+      'graphQLDelegate': instance.graphQLDelegate?.toJson(),
+      'restDelegate': instance.restDelegate?.toJson(),
     };
 
 K _$enumDecode<K, V>(

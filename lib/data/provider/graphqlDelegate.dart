@@ -1,38 +1,39 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
 
 part 'graphqlDelegate.g.dart';
 
-/// A GraphQL implementation of [PDataProvider].  This is the preferred implementation, simply
-/// because it allows the developer to specify any valid GraphQL script
+/// Config for a GraphQLDataProviderDelegate used in [PDataProvider].
 ///
-/// The alternative, [PRestDelegate], is more limited in its scope
+/// See also [PRest]
 ///
-/// Either [schema] or [schemaSource] can be set.
+/// [graphqlEndpoint] is appended to the server url
+/// [sessionTokenKey] is the name of the key with which to retrieve a session token
+/// When [checkHealthOnConnect] is true, the first time a connection is made, an API
+/// health check is made (where supported by the DataProvider implementation)
 ///
-///[schema] can be set directly during development, [schemaSource] is required for production use.
-///
-///If [schema] is not set, it is loaded on demand from the source specified by [schemaSource]
-///The presence of [schema] should therefore be tested before using it.
-///
-///[_appConfig] is set during app initialisation (see [Precept.init] in the client package), and
-///represents the contents of **precept.json**
-
+/// [headerKeys] usually only need to be specified in [PDataProvider], but can
+/// also be specified here if one delegate requires different keys to the other.
+/// Delegate and Provider header keys are merged before use
 @JsonSerializable(explicitToJson: true)
-class PGraphQLDelegate {
+class PGraphQL extends PDataProviderDelegate {
   final String graphqlEndpoint;
-  final String sessionTokenKey;
-  final bool checkHealthOnConnect;
 
-  const PGraphQLDelegate({
-    required this.sessionTokenKey,
-    required this.graphqlEndpoint,
-    required this.checkHealthOnConnect,
-  });
+  const PGraphQL({
+    required String sessionTokenKey,
+    this.graphqlEndpoint = '/graphql',
+    bool checkHealthOnConnect = false,
+    List<String> headerKeys = const [],
+  }) : super(
+          sessionTokenKey: sessionTokenKey,
+          headerKeys: headerKeys,
+          checkHealthOnConnect: checkHealthOnConnect,
+        );
 
-  factory PGraphQLDelegate.fromJson(Map<String, dynamic> json) =>
-      _$PGraphQLDelegateFromJson(json);
+  factory PGraphQL.fromJson(Map<String, dynamic> json) =>
+      _$PGraphQLFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGraphQLDelegateToJson(this);
+  Map<String, dynamic> toJson() => _$PGraphQLToJson(this);
 }

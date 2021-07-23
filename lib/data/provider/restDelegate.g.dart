@@ -6,20 +6,19 @@ part of 'restDelegate.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRestDelegate _$PRestDelegateFromJson(Map<String, dynamic> json) {
-  return PRestDelegate(
+PRest _$PRestFromJson(Map<String, dynamic> json) {
+  return PRest(
     documentEndpoint: json['documentEndpoint'] as String,
-    checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
     sessionTokenKey: json['sessionTokenKey'] as String,
+    checkHealthOnConnect: json['checkHealthOnConnect'] as bool,
     headerKeys:
         (json['headerKeys'] as List<dynamic>).map((e) => e as String).toList(),
   );
 }
 
-Map<String, dynamic> _$PRestDelegateToJson(PRestDelegate instance) =>
-    <String, dynamic>{
-      'checkHealthOnConnect': instance.checkHealthOnConnect,
-      'documentEndpoint': instance.documentEndpoint,
+Map<String, dynamic> _$PRestToJson(PRest instance) => <String, dynamic>{
       'sessionTokenKey': instance.sessionTokenKey,
+      'checkHealthOnConnect': instance.checkHealthOnConnect,
       'headerKeys': instance.headerKeys,
+      'documentEndpoint': instance.documentEndpoint,
     };

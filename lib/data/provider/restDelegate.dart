@@ -1,32 +1,38 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/data/provider/delegate.dart';
+import 'package:precept_script/data/provider/graphqlDelegate.dart';
 
 part 'restDelegate.g.dart';
 
-/// Sensitive keys - such as API Keys - are held in **precept.json** in the project root directory.
-/// [headerKeys], in conjunction with [configSource], are used to look these keys from **precept.json**.
+/// Config for a RestDataProviderDelegate used in [PDataProvider].
 ///
-/// Key names may be different for each backend implementation.
+/// See also [PGraphQL]
 ///
-/// Even if there is no requirement for an API key (usually true only for open public APIs),
-/// [configSource] must still be specified
+/// [documentEndpoint] is appended to the server url to point to the base url for documents.
+/// In Back4App, for example, this is '/classes'
+/// [sessionTokenKey] is the name of the key with which to retrieve a session token
+/// When [checkHealthOnConnect] is true, the first time a connection is made, an API
+/// health check is made (where supported by the DataProvider implementation)
 ///
-/// [serverUrl]
+/// [headerKeys] usually only need to be specified in [PDataProvider], but can
+/// also be specified here if one delegate requires different keys to the other.
+/// Delegate and Provider header keys are merged before use
 @JsonSerializable(explicitToJson: true)
-class PRestDelegate {
-  final bool checkHealthOnConnect;
+class PRest extends PDataProviderDelegate {
   final String documentEndpoint;
-  final String sessionTokenKey;
-  final List<String> headerKeys;
 
-  PRestDelegate({
-    required this.documentEndpoint,
-    this.checkHealthOnConnect = false,
-    required this.sessionTokenKey,
-    required this.headerKeys,
-  });
+  PRest({
+    this.documentEndpoint = '/classes',
+    required String sessionTokenKey,
+    bool checkHealthOnConnect = false,
+    List<String> headerKeys = const [],
+  }) : super(
+          sessionTokenKey: sessionTokenKey,
+          headerKeys: headerKeys,
+          checkHealthOnConnect: checkHealthOnConnect,
+        );
 
-  factory PRestDelegate.fromJson(Map<String, dynamic> json) =>
-      _$PRestDelegateFromJson(json);
+  factory PRest.fromJson(Map<String, dynamic> json) => _$PRestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PRestDelegateToJson(this);
+  Map<String, dynamic> toJson() => _$PRestToJson(this);
 }

@@ -175,15 +175,25 @@ class PPermissions {
 
 enum RequiresAuth { all, create, read, update, delete }
 
+/// A [standard] document has no special attributes.
+/// A [versioned] document has a simple integer version number, incremented each time
+/// it is saved by the user.  This is separate from any auto-save functionality that may be added
+/// later
+///
+/// Implementation of these rules is managed by [DataProvider]
+enum PDocumentType { standard, versioned }
+
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
 @JsonSerializable(explicitToJson: true)
 @PSchemaElementMapConverter()
 class PDocument extends PSchemaElement {
   final PPermissions permissions;
+  final PDocumentType documentType;
   final Map<String, PSchemaElement> fields;
 
   PDocument({
     required this.fields,
+    this.documentType = PDocumentType.standard,
     this.permissions = const PPermissions(),
   }) : super();
 

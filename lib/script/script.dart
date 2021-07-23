@@ -18,6 +18,9 @@ import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/queryConverter.dart';
+import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/string.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -27,16 +30,26 @@ part 'script.g.dart';
 ///
 /// For more see the [overview](https://www.preceptblog.co.uk/user-guide/#overview) of the User Guide,
 /// and the [detailed description](https://www.preceptblog.co.uk/user-guide/precept-script.html#introduction) of PScript
+///
+/// [scriptSchema] is the schema for [PScript] itself
 /// - [_scriptValidationMessages] are collected during the [validate] process
 @JsonSerializable(explicitToJson: true)
 class PScript extends PCommon {
+  final PDocument scriptSchema = PDocument(fields: {
+    'nameLocale': PString(),
+    'name': PString(),
+    'version': PInteger(),
+    'locale': PString(),
+    'script': PString(),
+  });
   final String name;
   final Map<String, PPage> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
   @JsonKey(ignore: true)
-  List<ValidationMessage> _scriptValidationMessages = List.empty(growable: true);
+  List<ValidationMessage> _scriptValidationMessages =
+      List.empty(growable: true);
 
   PScript({
     this.conversionErrorMessages =
@@ -86,19 +99,21 @@ class PScript extends PCommon {
   /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
   List<ValidationMessage> validate(
-      {bool throwOnFail = false, bool useCaptionsAsIds = true, bool logFailures = true}) {
+      {bool throwOnFail = false,
+      bool useCaptionsAsIds = true,
+      bool logFailures = true}) {
     init(useCaptionsAsIds: useCaptionsAsIds);
     _scriptValidationMessages = List.empty(growable: true);
     doValidate(_scriptValidationMessages);
 
     if (pages.length == 0) {
-      _scriptValidationMessages
-          .add(ValidationMessage(item: this, msg: "must contain at least one page"));
+      _scriptValidationMessages.add(
+          ValidationMessage(item: this, msg: "must contain at least one page"));
     } else {
       for (var entry in pages.entries) {
         if (entry.key.isEmpty) {
-          _scriptValidationMessages
-              .add(ValidationMessage(item: this, msg: "PPage route cannot be an empty String"));
+          _scriptValidationMessages.add(ValidationMessage(
+              item: this, msg: "PPage route cannot be an empty String"));
         }
         entry.value.doValidate(_scriptValidationMessages);
       }
@@ -133,7 +148,8 @@ class PScript extends PCommon {
 
   /// Passes call to all components, and sets the [PPage.route] the keys in [pages]
   @override
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     super.doInit(script, NullPreceptItem(), 0);
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
@@ -163,18 +179,22 @@ class PScript extends PCommon {
 
   validationOutput() {
     StringBuffer buf = StringBuffer();
-    buf.writeln('============================================================================');
-    buf.writeln('=                        PScript Validation Failed                         =');
-    buf.writeln('============================================================================');
+    buf.writeln(
+        '============================================================================');
+    buf.writeln(
+        '=                        PScript Validation Failed                         =');
+    buf.writeln(
+        '============================================================================');
     buf.writeAll(_scriptValidationMessages.map((e) => e.toString()), '\n');
     buf.writeln();
-    buf.writeln('============================================================================');
+    buf.writeln(
+        '============================================================================');
     buf.writeln();
     print(buf.toString());
   }
 
-  DebugNode get debugNode =>
-      DebugNode(this, List.from(pages.entries.toList().map((e) => (e as PPage).debugNode)));
+  DebugNode get debugNode => DebugNode(this,
+      List.from(pages.entries.toList().map((e) => (e as PPage).debugNode)));
 
   writeToFile(File f) async {
     final jsonMap = this.toJson();
@@ -190,7 +210,9 @@ class PScript extends PCommon {
 class PPage extends PContent {
   final String pageType;
   final bool scrollable;
-  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
+  @JsonKey(
+      fromJson: PElementListConverter.fromJson,
+      toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
   final PPageLayout layout;
   @JsonKey(ignore: true)
@@ -254,7 +276,8 @@ class PPage extends PContent {
   }
 
   @override
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
     int i = 0;
     for (var element in content) {
@@ -283,7 +306,8 @@ class PPage extends PContent {
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataProviderIsDeclared => (dataProvider != null && !(dataProvider is PNoDataProvider));
+  bool get dataProviderIsDeclared =>
+      (dataProvider != null && !(dataProvider is PNoDataProvider));
 
   /// [query] is always
   /// considered 'declared' by the page, if any level above it actually declares it.

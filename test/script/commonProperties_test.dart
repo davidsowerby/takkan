@@ -31,7 +31,6 @@ void main() {
         name: 'test',
         dataProvider: PDataProvider(
           schema: PSchema(name: 'unnamed'),
-          documentEndpoint: '',
           sessionTokenKey: '',
           headerKeys: const [],
           configSource: const PConfigSource(segment: '', instance: ''),

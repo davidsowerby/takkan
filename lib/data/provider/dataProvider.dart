@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
+import 'package:precept_script/data/provider/graphqlDelegate.dart';
+import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -17,6 +19,12 @@ part 'dataProvider.g.dart';
 /// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
 /// The presence of [schema] should therefore be tested before using it.
 ///
+/// [scriptDelegate] is the delegate to use for saving / loading Precept Scripts (PScript)
+/// [authenticatorDelegate] is the delegate which provides authentication
+///
+/// [headerKeys] for HTTP clients can be specified here or in [restDelegate]
+/// or [graphQLDelegate] as required. These are merged by the delegate implementation.
+///
 @JsonSerializable(explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
@@ -26,14 +34,12 @@ class PDataProvider extends PreceptItem {
   @JsonKey(ignore: true)
   PSchema? _schema;
   final PSchemaSource? schemaSource;
-  final bool checkHealthOnConnect;
   final String sessionTokenKey;
   final List<String> headerKeys;
-  final String documentEndpoint;
-  final CloudInterface defaultDelegate;
   final CloudInterface authenticatorDelegate;
-  final bool useGraphQLDelegate;
-  final bool useRestDelegate;
+  final CloudInterface scriptDelegate;
+  final PGraphQL? graphQLDelegate;
+  final PRest? restDelegate;
 
   @JsonKey(ignore: true)
   PSchema get schema {
@@ -47,15 +53,13 @@ class PDataProvider extends PreceptItem {
   set schema(value) => _schema = value;
 
   PDataProvider({
+    this.graphQLDelegate,
+    this.restDelegate,
     required this.headerKeys,
-    required this.documentEndpoint,
     required this.sessionTokenKey,
     required this.configSource,
-    this.useGraphQLDelegate = true,
-    this.useRestDelegate = true,
-    this.defaultDelegate = CloudInterface.graphQL,
+    this.scriptDelegate = CloudInterface.graphQL,
     this.authenticatorDelegate = CloudInterface.graphQL,
-    this.checkHealthOnConnect = false,
     this.signInOptions = const PSignInOptions(),
     PSchema? schema,
     this.schemaSource,
@@ -78,11 +82,16 @@ class PDataProvider extends PreceptItem {
     schema.init();
   }
 
+  bool get useGraphQLDelegate => graphQLDelegate != null;
+
+  bool get useRestDelegate => restDelegate != null;
+
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (_schema == null && schemaSource == null) {
       messages.add(ValidationMessage(
-          item: this, msg: "Either 'schema' or 'schemaSource' must be specified"));
+          item: this,
+          msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
   }
 
@@ -123,7 +132,6 @@ class PConfigSource {
 class PNoDataProvider extends PDataProvider {
   PNoDataProvider()
       : super(
-          documentEndpoint: '',
           signInOptions: const PSignInOptions(),
           signIn: const PSignIn(),
           headerKeys: const [],
