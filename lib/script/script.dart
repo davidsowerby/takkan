@@ -35,13 +35,6 @@ part 'script.g.dart';
 /// - [_scriptValidationMessages] are collected during the [validate] process
 @JsonSerializable(explicitToJson: true)
 class PScript extends PCommon {
-  final PDocument scriptSchema = PDocument(fields: {
-    'nameLocale': PString(),
-    'name': PString(),
-    'version': PInteger(),
-    'locale': PString(),
-    'script': PString(),
-  });
   final String name;
   final String locale;
   final Map<String, PPage> pages;
@@ -66,7 +59,7 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
   }) : super(
-    id: id,
+          id: id,
           isStatic: isStatic,
           dataProviderConfig: dataProvider ?? PNoDataProvider(),
           query: query,
@@ -234,7 +227,7 @@ class PPage extends PContent {
     String property = notSet,
     required String title,
   }) : super(
-    isStatic: isStatic,
+          isStatic: isStatic,
           dataProviderConfig: dataProvider,
           query: query,
           controlEdit: controlEdit,
@@ -316,6 +309,17 @@ class PPage extends PContent {
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get queryIsDeclared => query != null;
 }
+
+final PDocument pScriptSchema0 = PDocument(
+  documentType: PDocumentType.versioned,
+  fields: {
+    'nameLocale': PString(),
+    'name': PString(),
+    'version': PInteger(),
+    'locale': PString(),
+    'script': PString(),
+  },
+);
 
 enum PageType { standard }
 
