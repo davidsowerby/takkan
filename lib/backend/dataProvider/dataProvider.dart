@@ -1,17 +1,22 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/document.dart';
+import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
+import 'package:precept_backend/backend/dataProvider/graphqlDelegate.dart';
+import 'package:precept_backend/backend/dataProvider/restDelegate.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
+import 'package:precept_script/script/script.dart';
 
 /// The layer between the client and server.
 ///
@@ -34,11 +39,114 @@ import 'package:precept_script/query/restQuery.dart';
 /// class are identified by the [PConfigSource], but each such instance is effectively cached to ensure
 /// consistency of state.
 ///
-/// This means in theory, (as yet untested) that a client app could actually log in as a different
-/// user for each [DataProvider] it uses.
-
+/// This means that a client app can log in as a different user for each [DataProvider]
+/// it uses.
 abstract class DataProvider<CONFIG extends PDataProvider> {
   init(AppConfig appConfig);
+
+  Future<UpdateResult> uploadPreceptScript({
+    required PScript script,
+    required Locale locale,
+    bool incrementVersion = false,
+  });
+
+  CONFIG get config;
+
+  Authenticator get authenticator;
+
+  /// Fetch exactly one item (document) from the database. Throws an [APIException]
+  /// if the item is not available, or there are multiple items matching the
+  /// [queryConfig]
+  Future<Map<String, dynamic>> fetchItem({
+    required PQuery queryConfig,
+    required Map<String, dynamic> pageArguments,
+  });
+
+  /// Fetch 0..n items from the database, matching the [queryConfig]
+  ///
+  /// Throws an [APIException] if the query fails to execute
+  Future<List<Map<String, dynamic>>> fetchList({
+    required PQuery queryConfig,
+    required Map<String, dynamic> pageArguments,
+  });
+
+  /// Updates a document according the document type declared in its [schema].
+  ///
+  /// A [DocumentType.versioned] document is actually saved as a complete copy,
+  /// with its version number incremented.  [data] must therefore contain
+  /// the entire document
+  ///
+  /// A [DocumentType.standard] simply updates the existing document
+  ///
+  Future<UpdateResult> updateDocument({
+    required DocumentId documentId,
+    required Map<String, dynamic> data,
+  });
+
+  ///  Deletes the document identified by [documentId], according to the
+  ///  document type declared in its [schema].
+  ///
+  /// A [DocumentType.versioned] has its 'status' field set to 'deleted'
+  ///
+  /// A [DocumentType.standard] simply deletes the existing document
+  ///
+  /// No exceptions are thrown if the document does not exist
+  Future<DeleteResult> deleteDocument({
+    required DocumentId documentId,
+  });
+
+  /// Reads the document identified by [documentId]
+  ///
+  /// [fieldSelector] is used only by the [GraphQLDataProviderDelegate], to limit the
+  /// fields returned, rather than return the whole document
+  ///
+  /// throws an [APIException] if the document is not found
+  Future<ReadResult> readDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+  });
+
+  /// Used only to create a completely new document.  The document is create
+  /// in a way that is consistent with the document type declared in its [schema].
+  ///
+  /// Subsequent updates, whether [DocumentType.standard] or [DocumentType.versioned],
+  /// should be amended via a call to [updateDocument]
+  ///
+  /// [path] is the equivalent of [DocumentId.path], so will be something like
+  //  the class / table name used by the [DataProvider]
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  });
+
+  /// A specific variation of [createDocument] for PScript instances.  This is needed
+  /// to make some adjustments to the script before saving.
+  Future<CreateResult> createPScriptDocument({
+    required PScript script,
+  });
+
+  /// Returns the latest [PScript] from this provider.
+  ///
+  /// A [PScript] is identified by [name] and [locale]
+  ///
+  /// [fromVersion] is used to limit the number of scripts returned.  If there are
+  /// multiple scripts with the same version (which should not actually happen),
+  /// the one with the most recent 'updatedAt' field is returned
+  Future<PScript> latestScript(
+      {required Locale locale, required int fromVersion, required String name});
+
+  /// Returns a [DocumentId] from a document's data.  This is likely to be backend
+  /// specific
+  DocumentId documentIdFromData(Map<String, dynamic> data);
+
+  /// The roles held by the user currently logged in to this provider.
+  ///
+  /// This will currently fail if no user logged in see https://gitlab.com/precept1/precept_backend/-/issues/9
+  List<String> get userRoles;
+
+  /// The currently identified user of this provider.  If no user is signed in,
+  /// returns a user instance created with [PreceptUser.unknownUser]
+  PreceptUser get user;
 }
 
 class DefaultDataProvider<CONFIG extends PDataProvider>
@@ -49,12 +157,13 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   late RestDataProviderDelegate restDelegate;
   late GraphQLDataProviderDelegate graphQLDelegate;
   late DataProviderDelegate authenticatorDelegate;
+  late DataProviderDelegate scriptDelegate;
 
   DefaultDataProvider({required this.config});
 
   List<String> get userRoles => authenticator.userRoles;
 
-  Authenticator get authenticator => _authenticator!;
+  Authenticator get authenticator => authenticatorDelegate.authenticator;
 
   AppConfig get appConfig => _appConfig;
 
@@ -62,10 +171,12 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   init(AppConfig appConfig) {
     this._appConfig = appConfig;
     if (config.useRestDelegate) {
-      restDelegate = inject<RestDataProviderDelegate>();
+      restDelegate = createRestDelegate();
+      restDelegate.init(appConfig);
     }
     if (config.useGraphQLDelegate) {
-      graphQLDelegate = inject<GraphQLDataProviderDelegate>();
+      graphQLDelegate = createGraphQLDelegate();
+      graphQLDelegate.init(appConfig);
     }
 
     // TODO: report DART bug. ternary operator fails, but works if both branches are set to the same delegate
@@ -75,11 +186,36 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     } else {
       authenticatorDelegate = restDelegate;
     }
+
+    if (config.scriptDelegate == CloudInterface.graphQL) {
+      scriptDelegate = graphQLDelegate;
+    } else {
+      scriptDelegate = restDelegate;
+    }
   }
 
-  createAuthenticator() {
+  @protected
+  GraphQLDataProviderDelegate createGraphQLDelegate() {
+    return DefaultGraphQLDataProviderDelegate(this);
+  }
+
+  @protected
+  RestDataProviderDelegate createRestDelegate() {
+    return DefaultRestDataProviderDelegate(this);
+  }
+
+  Future<UpdateResult> uploadPreceptScript({
+    required PScript script,
+    required Locale locale,
+    bool incrementVersion = false,
+  }) {
+    return scriptDelegate.uploadPreceptScript(
+        script: script, locale: locale, incrementVersion: incrementVersion);
+  }
+
+  Future<void> createAuthenticator() async {
     if (_authenticator == null) {
-      _authenticator = authenticatorDelegate.createAuthenticator();
+      _authenticator = await authenticatorDelegate.createAuthenticator();
     }
   }
 
@@ -93,7 +229,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
-        combineVariables(queryConfig, pageArguments);
+    combineVariables(queryConfig, pageArguments);
     if (queryConfig is PGraphQLQuery) {
       return graphQLDelegate.fetchItem(queryConfig, variables);
     } else {
@@ -107,7 +243,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
-        combineVariables(queryConfig, pageArguments);
+    combineVariables(queryConfig, pageArguments);
     if (queryConfig is PGraphQLQuery) {
       return graphQLDelegate.fetchList(queryConfig, variables);
     } else {
@@ -125,15 +261,40 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     throw UnimplementedError();
   }
 
-  Future<bool> updateDocument({
+  /// See [DataProvider.createDocument]
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  }) {
+    return restDelegate.createDocument(
+      path: path,
+      data: data,
+    );
+  }
+
+  /// See [DataProvider.createPScriptDocument]
+  /// Adds the 'nameLocale' and 'script' field to the data
+  Future<CreateResult> createPScriptDocument({
+    required PScript script,
+  }) {
+    final data2 = script.toJson();
+    data2['locale'] = script.locale;
+    data2['nameLocale'] = '${script.name}:${script.locale}';
+    data2['script'] = script.toJson();
+    return restDelegate.createDocument(
+      data: data2,
+      path: 'PreceptScript',
+    );
+  }
+
+  /// See [DataProvider.updateDocument]
+  Future<UpdateResult> updateDocument({
     required DocumentId documentId,
-    required Map<String, dynamic> changedData,
-    DocumentType documentType = DocumentType.standard,
+    required Map<String, dynamic> data,
   }) {
     return restDelegate.updateDocument(
       documentId: documentId,
-      changedData: changedData,
-      documentType: documentType,
+      data: data,
     );
   }
 
@@ -149,8 +310,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
   /// 1. Values passed as [pageArguments]
   @protected
-  Map<String, dynamic> combineVariables(
-      PQuery query, Map<String, dynamic> pageArguments) {
+  Map<String, dynamic> combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
     final variables = Map<String, dynamic>();
     final propertyVariables = _buildPropertyVariables(query.propertyReferences);
     variables.addAll(pageArguments);
@@ -163,6 +323,42 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   Map<String, dynamic> _buildPropertyVariables(
       List<String> propertyReferences) {
     return {};
+  }
+
+  @override
+  Future<PScript> latestScript(
+      {required Locale locale,
+      required int fromVersion,
+      required String name}) async {
+    final ReadResult result = await scriptDelegate.latestScript(
+        locale: locale, fromVersion: fromVersion, name: name);
+    return PScript.fromJson(result.data);
+  }
+
+  /// If the [restDelegate] available, calls it to delete the document,
+  /// otherwise call the [graphQLDelegate] to execute the delete.
+  ///
+  /// see [DataProvider.deleteDocument]
+  @override
+  Future<DeleteResult> deleteDocument({
+    required DocumentId documentId,
+  }) {
+    if (config.useRestDelegate) {
+      return restDelegate.deleteDocument(documentId: documentId);
+    } else {
+      return graphQLDelegate.deleteDocument(documentId: documentId);
+    }
+  }
+
+  ///
+  /// /// see [DataProvider.readDocument]
+  @override
+  Future<ReadResult> readDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+  }) {
+    return graphQLDelegate.readDocument(
+        documentId: documentId, fieldSelector: fieldSelector);
   }
 
   /// ============ Provided by sub-class implementations ==========================================
@@ -182,7 +378,7 @@ class NoDataProvider implements DataProvider {
   static const String msg =
       'A NoDataProvider represents a condition where no data provider is available, and invoking this method is an error condition';
 
-  NoDataProvider();
+  const NoDataProvider();
 
   AppConfig get appConfig => throw PreceptException(msg);
 
@@ -217,15 +413,13 @@ class NoDataProvider implements DataProvider {
     throw PreceptException(msg);
   }
 
-  Future<Map<String, dynamic>> fetchItem(
-      {required PQuery queryConfig,
-      required Map<String, dynamic> pageArguments}) {
+  Future<Map<String, dynamic>> fetchItem({required PQuery queryConfig,
+    required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
   }
 
-  Future<List<Map<String, dynamic>>> fetchList(
-      {required PQuery queryConfig,
-      required Map<String, dynamic> pageArguments}) {
+  Future<List<Map<String, dynamic>>> fetchList({required PQuery queryConfig,
+    required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
   }
 
@@ -233,14 +427,59 @@ class NoDataProvider implements DataProvider {
     throw PreceptException(msg);
   }
 
-  Future<bool> updateDocument(
-      {required DocumentId documentId,
-      required Map<String, dynamic> changedData,
-      DocumentType documentType = DocumentType.standard}) {
-    throw PreceptException(msg);
-  }
-
   PreceptUser get user => throw PreceptException(msg);
 
   List<String> get userRoles => throw PreceptException(msg);
+
+  @override
+  Future<UpdateResult> uploadPreceptScript(
+      {required PScript script,
+      required Locale locale,
+      bool incrementVersion = false}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<PScript> latestScript(
+      {required Locale locale,
+      required int fromVersion,
+      required String name}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  }) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<DeleteResult> deleteDocument({
+    required DocumentId documentId,
+  }) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<UpdateResult> updateDocument({
+    required DocumentId documentId,
+    required Map<String, dynamic> data,
+  }) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<CreateResult> createPScriptDocument({required PScript script}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  Future<ReadResult> readDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+  }) {
+    throw PreceptException(msg);
+  }
 }

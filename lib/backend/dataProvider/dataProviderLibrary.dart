@@ -1,5 +1,5 @@
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
@@ -64,9 +64,8 @@ class DataProviderLibrary {
   }
 
   /// Is there a way to check that [config] is a [PDataProvider] ?
-  register(
-      {required Type configType,
-      required DataProvider Function(PDataProvider) builder}) {
+  register({required Type configType,
+    required DataProvider Function(PDataProvider) builder}) {
     builders[configType] = builder;
   }
 

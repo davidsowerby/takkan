@@ -1,38 +1,45 @@
+import 'dart:ui';
 
 import 'package:graphql/client.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/document.dart';
+import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/script.dart';
 
-/// GraphQL implementations can vary considerably, and need provider-specific implementations
+/// GraphQL implementations can vary considerably, and may need provider-specific implementations
 /// See the 'precept-back4app' package for an example
 class DefaultGraphQLDataProviderDelegate
     implements GraphQLDataProviderDelegate {
   late GraphQLClient _client;
-  final PGraphQLDelegate config;
-  final PDataProvider providerConfig;
-  final PreceptUser user;
-  final Authenticator authenticator;
+  late Authenticator _authenticator;
+  final DataProvider parent;
 
-  DefaultGraphQLDataProviderDelegate({
-    required this.config,
-    required this.providerConfig,
-    required this.user,
-    required this.authenticator,
-  });
+  DefaultGraphQLDataProviderDelegate(this.parent);
 
   @override
-  init(AppConfig appConfig) {
+  init(AppConfig appConfig) async {
+    if (parent.config.graphQLDelegate == null) {
+      throw PreceptException(
+          'GraphQLDelegate cannot be used without configuration');
+    }
+
+    if (parent.config.authenticatorDelegate == CloudInterface.graphQL) {
+      _authenticator = await createAuthenticator();
+    }
+
     HttpLink _httpLink = HttpLink(
-      config.graphqlEndpoint,
-      defaultHeaders: appConfig.headers(providerConfig),
+      '${appConfig.serverUrl(parent.config)}${config.graphqlEndpoint}',
+      defaultHeaders: appConfig.headers(parent.config, config),
     );
 
     _client = GraphQLClient(
@@ -43,6 +50,13 @@ class DefaultGraphQLDataProviderDelegate
   }
 
   GraphQLClient get client => _client;
+
+  PreceptUser get user => _authenticator.user;
+
+  Authenticator get authenticator => _authenticator;
+
+  PGraphQL get config =>
+      parent.config.graphQLDelegate as PGraphQL; // safe after init called
 
   @override
   setSessionToken(String token) {
@@ -58,23 +72,36 @@ class DefaultGraphQLDataProviderDelegate
   }
 
   @override
-  String assembleScript(
-      PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
+  String assembleScript(PGraphQLQuery queryConfig,
+      Map<String, dynamic> pageArguments) {
     return queryConfig.script;
   }
 
+  Future<UpdateResult> uploadPreceptScript({
+    required PScript script,
+    required Locale locale,
+    bool incrementVersion = false,
+  }) {
+    throw UnimplementedError();
+  }
+
+  Future<ReadResult> latestScript({required Locale locale,
+    required int fromVersion,
+    required String name}) {
+    throw UnimplementedError();
+  }
+
   @override
-  Future<Map<String, dynamic>> fetchItem(
-      PGraphQLQuery queryConfig, Map<String, dynamic> variables) {
+  Future<Map<String, dynamic>> fetchItem(PGraphQLQuery queryConfig,
+      Map<String, dynamic> variables) {
     // TODO: implement executeQuery
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Map<String, dynamic>>> fetchList(
-      PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
+  Future<List<Map<String, dynamic>>> fetchList(PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
     final queryOptions =
-        QueryOptions(document: gql(queryConfig.script), variables: variables);
+    QueryOptions(document: gql(queryConfig.script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
 
     // TODO: is 'typename' Back4App specific?
@@ -96,18 +123,39 @@ class DefaultGraphQLDataProviderDelegate
     return results;
   }
 
-  /// Uses REST API because it is easier than constructing a GraphQL mutation
-  Future<bool> updateDocument({
+  /// See [PDocument.updateDocument]
+  Future<UpdateResult> updateDocument({
     required DocumentId documentId,
-    required Map<String, dynamic> changedData,
-    DocumentType documentType = DocumentType.standard,
+    required Map<String, dynamic> data,
   }) {
     throw UnsupportedError('UpdateDocument not supported');
   }
 
   @override
-  Authenticator createAuthenticator() {
+  Future<Authenticator> createAuthenticator() {
     throw UnsupportedError(
         "An implementation specific dedicated 'createAuthenticator' method is required for a GraphQLDataProviderDelegate to support authentication");
+  }
+
+  @override
+  Future<DeleteResult> deleteDocument({required DocumentId documentId}) {
+    throw UnimplementedError();
+  }
+
+  /// See [PDocument.createDocument]
+  @override
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ReadResult> readDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+  }) {
+    throw UnimplementedError();
   }
 }

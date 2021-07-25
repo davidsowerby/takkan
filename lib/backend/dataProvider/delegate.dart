@@ -1,11 +1,18 @@
-import 'package:precept_backend/backend/document.dart';
+import 'dart:ui';
+
+import 'package:precept_backend/backend/app/appConfig.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
+import 'package:precept_script/script/script.dart';
 
 abstract class DataProviderDelegate<QUERY extends PQuery> {
+  DataProvider get parent;
+
   init(AppConfig appConfig);
 
   /// Executes a query expecting a single result
@@ -16,18 +23,42 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   Future<List<Map<String, dynamic>>> fetchList(
       QUERY queryConfig, Map<String, dynamic> variables);
 
-  /// Executes an update to a document
-  Future<bool> updateDocument({
+  /// See [DataProvider.updateDocument]
+  Future<UpdateResult> updateDocument({
     required DocumentId documentId,
-    required Map<String, dynamic> changedData,
-    DocumentType documentType = DocumentType.standard,
+    required Map<String, dynamic> data,
   });
 
   setSessionToken(String token);
 
   assembleScript(QUERY queryConfig, Map<String, dynamic> pageArguments);
 
-  Authenticator createAuthenticator();
+  Future<Authenticator> createAuthenticator();
+
+  Future<UpdateResult> uploadPreceptScript({
+    required PScript script,
+    required Locale locale,
+    bool incrementVersion = false,
+  });
+
+  Future<ReadResult> latestScript(
+      {required Locale locale, required int fromVersion, required String name});
+
+  /// See [DataProvider.deleteDocument]
+  Future<DeleteResult> deleteDocument({required DocumentId documentId});
+
+  /// See [DataProvider.createDocument]
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+  });
+
+  Future<ReadResult> readDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+  });
+
+  Authenticator get authenticator;
 }
 
 /// Defined as an interface to enable injection of alternative implementations
