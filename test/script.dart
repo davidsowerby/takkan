@@ -1,11 +1,11 @@
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/queryView.dart';
-import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/query/query.dart';
@@ -79,7 +79,7 @@ final myScript = PScript(
     'openIssues': PPage(
       controlEdit: ControlEdit.panelsOnly,
       title: 'Open Issues',
-      query: PGQuery(
+      query: PGraphQLQuery(
         querySchema: 'openIssues',
         script: openIssuesScript,
         returnType: QueryReturnType.futureList,

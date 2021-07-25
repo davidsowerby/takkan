@@ -8,15 +8,14 @@ import 'package:precept_script/query/query.dart';
 
 class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUser> {
   late Parse parse;
-  final PBack4AppDataProvider config;
   final Back4AppDataProvider parent;
 
-  Back4AppAuthenticator({required this.config, required this.parent});
+  Back4AppAuthenticator({required this.parent});
 
   init() async {
     parse = await Parse().initialize(
       parent.applicationId,
-      config.serverUrl,
+      parent.appConfig.serverUrl(parent.config),
       clientKey: parent.clientKey,
     );
     status=SignInStatus.Initialised;
@@ -107,12 +106,13 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUs
 
   @override
   Future<List<String>> loadUserRoles() async {
-    PGQuery query = PGQuery(
+    PGraphQLQuery query = PGraphQLQuery(
         querySchema: 'userRoles',
         script: userRolesScript,
         returnType: QueryReturnType.futureList,
         variables: {'id': user.objectId});
-    final List<Map<String, dynamic>> result = await parent.queryList(queryConfig: query, pageArguments: const{});
+    final List<Map<String, dynamic>> result =
+        await parent.fetchList(queryConfig: query, pageArguments: const {});
     final List<String> roles = List.empty(growable: true);
     result.forEach((element) {
       roles.add(element['name']);
