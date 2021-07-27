@@ -39,13 +39,15 @@ class PreceptItem {
   @JsonKey(ignore: true)
   int? _index;
 
-  PreceptItem({String? id, int version=0,})
-      : _id = id,
-        version = version ;
+  PreceptItem({
+    String? id,
+    this.version = 0,
+  }) : _id = id;
 
   int version = 0;
 
-  factory PreceptItem.fromJson(Map<String, dynamic> json) => _$PreceptItemFromJson(json);
+  factory PreceptItem.fromJson(Map<String, dynamic> json) =>
+      _$PreceptItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$PreceptItemToJson(this);
 
