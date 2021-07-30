@@ -49,6 +49,7 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
   return PDocument(
     fields: const PSchemaElementMapConverter()
         .fromJson(json['fields'] as Map<String, dynamic>),
+    documentType: _$enumDecode(_$PDocumentTypeEnumMap, json['documentType']),
     permissions:
         PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
   );
@@ -56,8 +57,40 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$PDocumentToJson(PDocument instance) => <String, dynamic>{
       'permissions': instance.permissions.toJson(),
+      'documentType': _$PDocumentTypeEnumMap[instance.documentType],
       'fields': const PSchemaElementMapConverter().toJson(instance.fields),
     };
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
+  }
+
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
+
+const _$PDocumentTypeEnumMap = {
+  PDocumentType.standard: 'standard',
+  PDocumentType.versioned: 'versioned',
+};
 
 PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) {
   return PSchemaSource(

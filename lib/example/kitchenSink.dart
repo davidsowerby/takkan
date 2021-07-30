@@ -14,6 +14,7 @@ import 'package:precept_script/signin/signIn.dart';
 final kitchenSinkScript = PScript(
   dataProvider: PNoDataProvider(),
   name: 'Kitchen Sink',
+  locale: 'en_GB',
   pages: {
     '/': PPage(
       layout: PPageLayout(margins: PMargins(top: 50)),

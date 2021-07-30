@@ -14,10 +14,13 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
       (k, e) => MapEntry(k, PPage.fromJson(e as Map<String, dynamic>)),
     ),
     name: json['name'] as String,
+    locale: json['locale'] as String,
     query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
     id: json['id'] as String?,
-  )..version = json['version'] as int;
+  )
+    ..version = json['version'] as int
+    ..nameLocale = json['nameLocale'] as String?;
 }
 
 Map<String, dynamic> _$PScriptToJson(PScript instance) {
@@ -26,6 +29,8 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'id': instance.id,
     'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     'name': instance.name,
+    'locale': instance.locale,
+    'nameLocale': instance.nameLocale,
     'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
   };

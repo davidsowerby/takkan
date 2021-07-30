@@ -19,11 +19,11 @@ part 'dataProvider.g.dart';
 /// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
 /// The presence of [schema] should therefore be tested before using it.
 ///
-/// [scriptDelegate] is the delegate to use for saving / loading Precept Scripts (PScript)
-/// [authenticatorDelegate] is the delegate which provides authentication
-///
 /// [headerKeys] for HTTP clients can be specified here or in [restDelegate]
 /// or [graphQLDelegate] as required. These are merged by the delegate implementation.
+///
+/// If users need to be authenticated for this Data Provider,  [useAuthenticator]
+/// should be true (the default)
 ///
 @JsonSerializable(explicitToJson: true)
 class PDataProvider extends PreceptItem {
@@ -36,10 +36,9 @@ class PDataProvider extends PreceptItem {
   final PSchemaSource? schemaSource;
   final String sessionTokenKey;
   final List<String> headerKeys;
-  final CloudInterface authenticatorDelegate;
-  final CloudInterface scriptDelegate;
   final PGraphQL? graphQLDelegate;
   final PRest? restDelegate;
+  final bool useAuthenticator;
 
   @JsonKey(ignore: true)
   PSchema get schema {
@@ -53,13 +52,12 @@ class PDataProvider extends PreceptItem {
   set schema(value) => _schema = value;
 
   PDataProvider({
+    this.useAuthenticator = true,
     this.graphQLDelegate,
     this.restDelegate,
     required this.headerKeys,
     required this.sessionTokenKey,
     required this.configSource,
-    this.scriptDelegate = CloudInterface.graphQL,
-    this.authenticatorDelegate = CloudInterface.graphQL,
     this.signInOptions = const PSignInOptions(),
     PSchema? schema,
     this.schemaSource,

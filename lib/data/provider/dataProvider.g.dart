@@ -8,6 +8,7 @@ part of 'dataProvider.dart';
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
   return PDataProvider(
+    useAuthenticator: json['useAuthenticator'] as bool,
     graphQLDelegate: json['graphQLDelegate'] == null
         ? null
         : PGraphQL.fromJson(json['graphQLDelegate'] as Map<String, dynamic>),
@@ -19,12 +20,8 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
     sessionTokenKey: json['sessionTokenKey'] as String,
     configSource:
         PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
-    scriptDelegate:
-        _$enumDecode(_$CloudInterfaceEnumMap, json['scriptDelegate']),
-    authenticatorDelegate:
-        _$enumDecode(_$CloudInterfaceEnumMap, json['authenticatorDelegate']),
     signInOptions:
-        PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
+    PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
@@ -43,43 +40,10 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'schemaSource': instance.schemaSource?.toJson(),
       'sessionTokenKey': instance.sessionTokenKey,
       'headerKeys': instance.headerKeys,
-      'authenticatorDelegate':
-          _$CloudInterfaceEnumMap[instance.authenticatorDelegate],
-      'scriptDelegate': _$CloudInterfaceEnumMap[instance.scriptDelegate],
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),
       'restDelegate': instance.restDelegate?.toJson(),
+      'useAuthenticator': instance.useAuthenticator,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-const _$CloudInterfaceEnumMap = {
-  CloudInterface.rest: 'rest',
-  CloudInterface.graphQL: 'graphQL',
-};
 
 PConfigSource _$PConfigSourceFromJson(Map<String, dynamic> json) {
   return PConfigSource(

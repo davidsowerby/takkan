@@ -35,9 +35,9 @@ part 'script.g.dart';
 /// - [_scriptValidationMessages] are collected during the [validate] process
 @JsonSerializable(explicitToJson: true)
 class PScript extends PCommon {
-  final String _name;
-  final String _locale;
-  final String _nameLocale;
+  final String name;
+  final String locale;
+  String? nameLocale;
   final Map<String, PPage> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
@@ -52,17 +52,14 @@ class PScript extends PCommon {
     this.validationErrorMessages = const ValidationErrorMessages(
         typePatterns: defaultValidationErrorMessages),
     this.pages = const {},
-    required String name,
-    String locale = 'en_GB',
+    required this.name,
+    this.locale = 'en_GB',
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
-  })  : _locale = locale,
-        _name = name,
-        _nameLocale = '$name:$locale',
-        super(
+  }) : super(
           id: id,
           isStatic: isStatic,
           dataProviderConfig: dataProvider ?? PNoDataProvider(),
@@ -77,11 +74,7 @@ class PScript extends PCommon {
 
   String get debugId => name;
 
-  String get name => _name;
-
-  String get locale => _locale;
-
-  String get nameLocale => _nameLocale;
+  // String get nameLocale => '$name:$locale';
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
@@ -156,6 +149,7 @@ class PScript extends PCommon {
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
     super.doInit(script, NullPreceptItem(), 0);
+    nameLocale = '$name:$locale';
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
     for (var entry in pages.entries) {

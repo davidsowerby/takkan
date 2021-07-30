@@ -32,6 +32,7 @@ void main() {
       Map<String, dynamic> jsonMap = script.toJson();
       PScript script2 = PScript.fromJson(jsonMap);
 
+      expect(jsonMap['nameLocale'], 'Kitchen Sink:en_GB');
       expect(script2.pages.length, 8);
       script2.init();
       final c0 = script2.pages['/'];
