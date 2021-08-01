@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_client/library/library.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';

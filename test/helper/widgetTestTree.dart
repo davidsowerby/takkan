@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
@@ -10,7 +11,6 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/part/part.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';

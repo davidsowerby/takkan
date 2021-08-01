@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/data/temporaryDocument.dart';
 import 'package:precept_script/common/exception.dart';
@@ -110,16 +111,17 @@ class DataSource {
     return isValid;
   }
 
-  Future<bool> persist() async {
+  Future<UpdateResult> persist() async {
     logType(this.runtimeType).d('Persisting data source');
     final dataProviderConfig = config.dataProvider;
     if (dataProviderConfig == null) {
       throw PreceptException('DataProvider config should not be null');
     }
-    final DataProvider dataProvider = dataProviderLibrary.find(config: dataProviderConfig);
+    final DataProvider dataProvider =
+        dataProviderLibrary.find(config: dataProviderConfig);
     return dataProvider.updateDocument(
       documentId: temporaryDocument.documentId,
-      changedData: temporaryDocument.changes,
+      data: temporaryDocument.changes,
     );
   }
 

@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_client/common/toast.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
 import 'package:precept_client/panel/panel.dart';
-import 'package:precept_script/app/appConfig.dart';
 
 class MockBuildContext extends Mock implements BuildContext {
   @override

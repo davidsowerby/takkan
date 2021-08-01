@@ -18,7 +18,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -54,7 +54,6 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     final requiresAuth =
         (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
     if (requiresAuth) {
-      dataProvider.createAuthenticator();
       final userAuthenticated = dataProvider.authenticator.isAuthenticated;
       needsAuthentication = requiresAuth && !userAuthenticated;
       if (needsAuthentication) {
@@ -126,7 +125,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
           return loadData(
               context,
               theme,
-              dataProvider.query(
+              dataProvider.fetchItem(
                 queryConfig: query,
                 pageArguments: pageArguments,
               ));
@@ -134,7 +133,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
           return loadList(
               theme,
               query.querySchema,
-              dataProvider.queryList(
+              dataProvider.fetchList(
                 queryConfig: query,
                 pageArguments: pageArguments,
               ));

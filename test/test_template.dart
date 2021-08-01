@@ -7,7 +7,7 @@ import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';

@@ -1,4 +1,5 @@
 import 'package:mockito/mockito.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
@@ -6,9 +7,8 @@ import 'package:precept_client/binding/mapBinding.dart';
 import 'package:precept_client/common/content/contentState.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
@@ -58,14 +58,18 @@ class FakeDataProvider extends Fake implements DataProvider {
   init(AppConfig appConfig) {}
 }
 
-class PFakeDataProvider extends Fake implements PDataProviderBase {
+class PFakeDataProvider extends Fake implements PDataProvider {
   final String instanceName;
   final PSchema schema;
   final PConfigSource configSource;
 
-  PFakeDataProvider({required this.instanceName, required this.schema, required this.configSource});
+  PFakeDataProvider(
+      {required this.instanceName,
+      required this.schema,
+      required this.configSource});
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     schema.init();
   }
 
@@ -74,7 +78,8 @@ class PFakeDataProvider extends Fake implements PDataProviderBase {
   static register() {
     dataProviderLibrary.register(
         configType: PFakeDataProvider,
-        builder: (config) => FakeDataProvider(config: config as PFakeDataProvider));
+        builder: (config) =>
+            FakeDataProvider(config: config as PFakeDataProvider));
   }
 }
 

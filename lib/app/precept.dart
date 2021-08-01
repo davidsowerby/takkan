@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_backend/backend/dataProvider/restDataProvider.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/partLibrary.dart';
-import 'package:precept_script/app/appConfig.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
-import 'package:precept_script/data/provider/dataProviderBase.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
@@ -58,9 +57,6 @@ class Precept {
     _particleLibraryEntries = particleLibraryEntries;
     await loadScripts(loaders: _loaders);
     await _doAfterLoad();
-    if (useRestDataProvider) {
-      RestDataProvider.register();
-    }
   }
 
   _doAfterLoad() async {
@@ -88,15 +84,15 @@ class Precept {
   Future<bool> _loadSchemas() async {
     final visitor = DataProviderVisitor();
     _rootModel.walk([visitor]);
-    final List<PDataProviderBase> requireLoading = List.empty(growable: true);
+    final List<PDataProvider> requireLoading = List.empty(growable: true);
 
     /// select those which have no schema, for loading
-    for (PDataProviderBase provider in visitor.dataProviders) {
-        requireLoading.add(provider);
+    for (PDataProvider provider in visitor.dataProviders) {
+      requireLoading.add(provider);
     }
 
     if (requireLoading.length > 0) {
-      for (PDataProviderBase provider in requireLoading) {
+      for (PDataProvider provider in requireLoading) {
         RestPreceptLoader loader = RestPreceptLoader();
       }
     }
@@ -163,13 +159,15 @@ class Precept {
     final ValidationErrorMessages validationErrorMessages =
         ValidationErrorMessages(typePatterns: Map());
     IsStatic isStatic = IsStatic.inherited;
-    PDataProviderBase? dataProvider;
+    PDataProvider? dataProvider;
     PQuery? query;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
       pages.addAll(s.pages);
-      conversionErrorMessages.patterns.addAll(s.conversionErrorMessages.patterns);
-      validationErrorMessages.typePatterns.addAll(s.validationErrorMessages.typePatterns);
+      conversionErrorMessages.patterns
+          .addAll(s.conversionErrorMessages.patterns);
+      validationErrorMessages.typePatterns
+          .addAll(s.validationErrorMessages.typePatterns);
       isStatic = s.isStatic;
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
       if (s.queryIsDeclared) query = s.query;
@@ -197,11 +195,11 @@ PScript script = _precept._rootModel;
 
 /// When used with [script.walk] returns all [PDataProvider] instances
 class DataProviderVisitor implements ScriptVisitor {
-  List<PDataProviderBase> dataProviders = List.empty(growable: true);
+  List<PDataProvider> dataProviders = List.empty(growable: true);
 
   @override
   step(PreceptItem entry) {
-    if (entry is PDataProviderBase) {
+    if (entry is PDataProvider) {
       dataProviders.add(entry);
     }
   }

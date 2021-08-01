@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_client/common/component/editSaveCancel.dart';
 import 'package:precept_client/common/component/keyAssist.dart';
 import 'package:precept_client/page/editState.dart';
@@ -73,7 +74,8 @@ void main() {
 
       // when we save, with valid data
       when(() => dataSource.validate()).thenReturn(true);
-      when(() => dataSource.persist()).thenAnswer((_) async => true);
+      when(() => dataSource.persist()).thenAnswer((_) async => UpdateResult(
+          success: true, path: 'Wiggly', itemId: 'beast', data: {}));
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
