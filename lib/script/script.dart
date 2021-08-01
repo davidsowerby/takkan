@@ -314,6 +314,7 @@ class PPage extends PContent {
   bool get queryIsDeclared => query != null;
 }
 
+// TODO add pages (PObject), query & conversionErrorMessages
 final PDocument pScriptSchema0 = PDocument(
   documentType: PDocumentType.versioned,
   fields: {
@@ -321,7 +322,7 @@ final PDocument pScriptSchema0 = PDocument(
     'name': PString(),
     'version': PInteger(),
     'locale': PString(),
-    'script': PString(),
+    'controlEdit': PString(),
   },
 );
 

@@ -21,7 +21,7 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
     configSource:
         PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
     signInOptions:
-    PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
+        PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
