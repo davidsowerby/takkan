@@ -1,25 +1,20 @@
-import 'package:flutter/foundation.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:precept_back4app_backend/backend/back4app/authenticator/authenticator.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/graphqlDelegate.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/restDelegate.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_backend/backend/dataProvider/delegate.dart';
+import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 
 class Back4AppDataProvider extends DefaultDataProvider<PBack4AppDataProvider> {
   Back4AppDataProvider({required PBack4AppDataProvider config})
-      : super(config: config);
-
-  @protected
-  Back4AppGraphQLDelegate createGraphQLDelegate() {
-    return Back4AppGraphQLDelegate(this);
-  }
-
-  @protected
-  Back4AppRestDelegate createRestDelegate() {
-    return Back4AppRestDelegate(this);
-  }
+      : super(
+          config: config,
+        );
 
   String get applicationId {
     final String? appId =
@@ -44,6 +39,14 @@ class Back4AppDataProvider extends DefaultDataProvider<PBack4AppDataProvider> {
   DocumentId documentIdFromData(Map<String, dynamic> data) {
     return DocumentId(path: data['__typename'], itemId: data['objectId']);
   }
+
+  Future<Authenticator> createAuthenticator() async {
+    return Back4AppAuthenticator();
+  }
+
+  GraphQLDataProviderDelegate createGraphQLDelegate() {
+    return Back4AppGraphQLDelegate();
+  }
 }
 
 class Back4App {
@@ -53,4 +56,13 @@ class Back4App {
         builder: (config) =>
             Back4AppDataProvider(config: config as PBack4AppDataProvider));
   }
+}
+
+Back4AppGraphQLDelegate constructGraphQLDelegate() {
+  return Back4AppGraphQLDelegate();
+}
+
+Future<Authenticator<PDataProvider, ParseUser, Back4AppDataProvider>>
+    constructAuthenticator() async {
+  return Back4AppAuthenticator();
 }

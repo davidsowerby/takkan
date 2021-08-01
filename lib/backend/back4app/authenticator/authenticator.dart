@@ -6,19 +6,21 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/query/query.dart';
 
-class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider, ParseUser> {
+class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
+    ParseUser, Back4AppDataProvider> {
   late Parse parse;
-  final Back4AppDataProvider parent;
+  late Back4AppDataProvider parent;
 
-  Back4AppAuthenticator({required this.parent});
+  Back4AppAuthenticator();
 
-  init() async {
+  init(Back4AppDataProvider parent) async {
+    this.parent = parent;
     parse = await Parse().initialize(
       parent.applicationId,
       parent.appConfig.serverUrl(parent.config),
       clientKey: parent.clientKey,
     );
-    status=SignInStatus.Initialised;
+    status = SignInStatus.Initialised;
   }
 
 // TODO: should not allow call if already logged in (_parseUser would be overwritten)

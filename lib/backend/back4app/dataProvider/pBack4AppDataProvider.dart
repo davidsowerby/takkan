@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
-import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/signin/signIn.dart';
 
@@ -24,8 +23,6 @@ class PBack4AppDataProvider extends PDataProvider {
     required PConfigSource configSource,
     PSchemaSource? schemaSource,
     bool checkHealthOnConnect = false,
-    CloudInterface authenticatorDelegate = CloudInterface.graphQL,
-    CloudInterface scriptDelegate = CloudInterface.graphQL,
     PSchema? schema,
   }) : super(
           schema: schema,
@@ -33,8 +30,6 @@ class PBack4AppDataProvider extends PDataProvider {
           signInOptions: signInOptions,
           configSource: configSource,
           graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
-          restDelegate: PRest(sessionTokenKey: 'sessionToken'),
-          authenticatorDelegate: authenticatorDelegate,
           headerKeys: const ['X-Parse-Application-Id', 'X-Parse-Client-Key'],
           sessionTokenKey: 'sessionToken',
         );

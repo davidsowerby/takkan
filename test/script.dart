@@ -16,6 +16,7 @@ import 'schema.dart';
 
 final myScript = PScript(
   name: 'Kitchen Sink',
+  locale: 'en_GB',
   dataProvider: PBack4AppDataProvider(
     configSource: PConfigSource(
       segment: 'back4app',

@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
-import 'package:precept_back4app_backend/backend/back4app/authenticator/authenticator.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/graphqlDelegate.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/util/string.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
 class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
-  Back4AppGraphQLDelegate(DataProvider parent) : super(parent);
+  Back4AppGraphQLDelegate() : super();
 
   /// Creates a database row containing [script] and it associated fields.  Set [incrementVersion]
   /// to increment the version before saving
@@ -57,6 +51,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       data: queryResult.data ?? {},
       success: true,
       path: 'PreceptScript',
+      itemId: '??',
     );
   }
 
@@ -108,41 +103,150 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       data: candidate!['script'],
       success: true,
       path: 'PreceptScript',
+      itemId: candidate!['objectId'],
     );
-  }
-
-  @override
-  Future<Authenticator<PDataProvider, ParseUser>> createAuthenticator() async {
-    final auth = Back4AppAuthenticator(
-      parent: parent as Back4AppDataProvider,
-    );
-    await auth.init();
-    return auth;
   }
 
   @override
   Future<ReadResult> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
+    FetchPolicy? fetchPolicy,
   }) async {
-    final PDocument? schema = parent.config.schema.documents[documentId.path];
-    if (schema == null) {
-      throw PreceptException(
-          'No schema has been defined for document: ${documentId.path}');
-    }
+    final PDocument schema = _locateSchema(documentId.path);
+    final builder = GraphQLScriptBuilder();
+    final script = builder.buildReadGQL(documentId, fieldSelector, schema);
     final queryOptions = QueryOptions(
-        document: gql(_buildReadGQL(documentId, fieldSelector, schema)),
-        variables: const {});
+      document: gql(script),
+      variables: {'id': documentId.itemId},
+      fetchPolicy: fetchPolicy,
+    );
     final QueryResult response = await client.query(queryOptions);
-    final String method = decapitalize(documentId.path);
-    final Map<String, dynamic> data = response.data![method];
+    final Map<String, dynamic> data = response.data?[builder.selectionSet];
     data.remove('__typename');
     return ReadResult(
       success: false,
       data: data,
       path: documentId.path,
+      itemId: documentId.itemId,
     );
   }
+
+  @override
+  assembleScript(
+      PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
+    // TODO: implement assembleScript
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<CreateResult> createDocument({
+    required String path,
+    required Map<String, dynamic> data,
+    FieldSelector fieldSelector = const FieldSelector(),
+  }) async {
+    final PDocument schema = _locateSchema(path);
+    final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
+    final script = builder.buildCreateGQL(path, fieldSelector, schema);
+    final strippedData = Map<String, dynamic>.from(data);
+    strippedData.remove('id');
+    strippedData.remove('objectId');
+    final Map<String, dynamic> input = {'input': strippedData};
+
+    QueryResult queryResult = await _executeQuery(script, input);
+    if (queryResult.hasException) {
+      throw APIException(
+          message: queryResult.exception.toString(), statusCode: -1);
+    }
+    final Map<String, dynamic> returnedData =
+        queryResult.data![builder.methodName][builder.selectionSet];
+    return CreateResult(
+      data: returnedData,
+      success: true,
+      path: path,
+      itemId: returnedData['objectId'],
+    );
+  }
+
+  @override
+  Future<UpdateResult> updateDocument({
+    required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
+    required Map<String, dynamic> data,
+  }) async {
+    final PDocument schema = _locateSchema(documentId.path);
+    final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
+    final script = builder.buildUpdateGQL(documentId, fieldSelector, schema);
+
+    data.remove('objectId');
+    final Map<String, dynamic> input = {
+      'input': {'id': documentId.itemId, 'fields': data}
+    };
+    QueryResult queryResult = await _executeQuery(script, input);
+    final Map<String, dynamic> returnedData =
+        queryResult.data![builder.methodName][builder.selectionSet];
+    returnedData.remove('__typename');
+    return UpdateResult(
+      success: true,
+      path: documentId.path,
+      data: returnedData,
+      itemId: documentId.itemId,
+    );
+  }
+
+  Future<QueryResult> _executeQuery(
+      String script, Map<String, dynamic> variables,
+      [FetchPolicy? fetchPolicy]) async {
+    QueryResult queryResult = await client.query(
+      QueryOptions(
+          document: gql(script),
+          variables: variables,
+          fetchPolicy: fetchPolicy),
+    );
+    if (queryResult.hasException) {
+      throw APIException(
+          message: queryResult.exception.toString(), statusCode: -1);
+    }
+    return queryResult;
+  }
+
+  PDocument _locateSchema(String path) {
+    final PDocument? schema = parent.config.schema.documents[path];
+    if (schema == null) {
+      throw PreceptException(
+          'No schema has been defined for document type: $path');
+    }
+    return schema;
+  }
+
+// @override
+// Future<DeleteResult> deleteDocument({required DocumentId documentId}) {
+//   // TODO: implement deleteDocument
+//   throw UnimplementedError();
+// }
+//
+// @override
+// Future<Map<String, dynamic>> fetchItem(
+//     PGraphQLQuery queryConfig, Map<String, dynamic> variables) {
+//   // TODO: implement fetchItem
+//   throw UnimplementedError();
+// }
+//
+// @override
+// Future<List<Map<String, dynamic>>> fetchList(
+//     PGraphQLQuery queryConfig, Map<String, dynamic> variables) {
+//   // TODO: implement fetchList
+//   throw UnimplementedError();
+// }
+//
+//
+// @override
+// setSessionToken(String token) {
+//   // TODO: implement setSessionToken
+//   throw UnimplementedError();
+// }
+//
+
 }
 
 String createPreceptScriptMutation = '''
@@ -178,23 +282,6 @@ String laterScripts =
   }
 }''';
 
-String _buildReadGQL(
-    DocumentId documentId, FieldSelector fieldSelector, PDocument schema) {
-  StringBuffer buf = StringBuffer('query Get${documentId.path} {');
-  final decapPath = decapitalize(documentId.path);
-  buf.writeln('$decapPath(id: \"${documentId.itemId}\") {');
-  final fields = fieldSelector.selection(schema);
-  if (!fields.contains('objectId')) {
-    fields.add('objectId');
-  }
-  for (String field in fields) {
-    buf.writeln('  $field');
-  }
-  buf.writeln('}');
-  buf.writeln('}');
-  return buf.toString();
-}
-
 //   Future<Map<String, dynamic>> pQuery(
 //       {required PPQuery query, Map<String, dynamic> pageArguments = const {}}) async {
 //     final Map<String, dynamic> variables = combineVariables(query, pageArguments);
@@ -228,3 +315,74 @@ String _buildReadGQL(
 //     buf.write('}}');
 //     return _query(query: query, script: buf.toString(), pageArguments: pageArguments);
 //   }
+
+class GraphQLScriptBuilder {
+  String? methodName;
+  String? selectionSet;
+
+  String buildCreateGQL(
+    String path,
+    FieldSelector fieldSelector,
+    PDocument schema,
+  ) {
+    StringBuffer buf = StringBuffer();
+    buf.writeln('mutation Create$path(\$input: Create${path}FieldsInput){');
+    methodName = 'create$path';
+    buf.writeln('  $methodName(input: {fields: \$input}){');
+    selectionSet = decapitalize(path);
+    buf.writeln('    $selectionSet{');
+    addFields(buf, fieldSelector, schema, 'objectId');
+    buf.writeln('}');
+    buf.writeln('}');
+    buf.write('}');
+    return buf.toString();
+  }
+
+  String buildReadGQL(
+    DocumentId documentId,
+    FieldSelector fieldSelector,
+    PDocument schema,
+  ) {
+    StringBuffer buf = StringBuffer();
+    buf.writeln('query Get${documentId.path}(\$id:ID!) {');
+    selectionSet = decapitalize(documentId.path);
+    methodName = selectionSet;
+    buf.writeln('$selectionSet(id: \$id) {');
+    addFields(buf, fieldSelector, schema, '');
+    buf.writeln('}');
+    buf.write('}');
+    return buf.toString();
+  }
+
+  String buildUpdateGQL(
+    DocumentId documentId,
+    FieldSelector fieldSelector,
+    PDocument schema,
+  ) {
+    StringBuffer buf = StringBuffer();
+    buf.writeln(
+        'mutation Update${documentId.path} (\$input: Update${documentId.path}Input!){');
+    selectionSet = decapitalize(documentId.path);
+    methodName = 'update${documentId.path}';
+    buf.writeln('$methodName(input: \$input){');
+    buf.writeln('$selectionSet{');
+    addFields(buf, fieldSelector, schema, 'updatedAt');
+    buf.writeln('}');
+    buf.writeln('}');
+    buf.write('}');
+    return buf.toString();
+  }
+
+  addFields(StringBuffer buf, FieldSelector fieldSelector, PDocument schema,
+      String defaultSelection) {
+    final fields = fieldSelector.selection(schema);
+    if (defaultSelection.isNotEmpty) {
+      if (!fields.contains(defaultSelection)) {
+        fields.insert(0, defaultSelection);
+      }
+    }
+    for (String field in fields) {
+      buf.writeln('      $field');
+    }
+  }
+}

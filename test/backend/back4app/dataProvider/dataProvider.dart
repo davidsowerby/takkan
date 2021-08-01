@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:graphql/client.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
@@ -28,7 +29,6 @@ void main() {
     setUpAll(() async {
       final PBack4AppDataProvider providerConfig = PBack4AppDataProvider(
         configSource: PConfigSource(segment: 'back4app', instance: 'dev'),
-        scriptDelegate: CloudInterface.graphQL,
         schema:
             PSchema(name: 'test', documents: {'PreceptScript': pScriptSchema0}),
       );
@@ -51,8 +51,11 @@ void main() {
         myScript.init();
 
         // when
-        final CreateResult createResult =
-            await provider!.createPScriptDocument(script: myScript);
+        final CreateResult createResult = await provider!.createDocument(
+          data: myScript.toJson(),
+          path: 'PreceptScript',
+          fieldSelector: FieldSelector(fields: ['createdAt']),
+        );
         // then
 
         expect(createResult.success, isTrue);
@@ -77,7 +80,7 @@ void main() {
           fieldSelector: FieldSelector(allFields: true),
         );
         final updatedData = Map<String, dynamic>.from(readResult2.data);
-        updatedData['script']['controlEdit'] =
+        updatedData['controlEdit'] =
             ControlEdit.panelsOnly.toString().replaceFirst('ControlEdit.', '');
         // when update
         final updateResult = await provider!.updateDocument(
@@ -87,9 +90,10 @@ void main() {
 
         final ReadResult readResult3 = await provider!.readDocument(
           documentId: createResult.documentId,
-          fieldSelector: FieldSelector(fields: ['version', 'script']),
+          fieldSelector: FieldSelector(fields: ['version', 'controlEdit']),
+          fetchPolicy: FetchPolicy.networkOnly,
         );
-        expect(readResult3.data['script']['controlEdit'], 'panelsOnly');
+        expect(readResult3.data['controlEdit'], 'panelsOnly');
         expect(readResult3.data['version'], 1);
       });
     });
