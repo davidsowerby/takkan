@@ -152,7 +152,7 @@ class Precept {
   _mergeModels(List<PScript> models) {
     final PScript firstModel = models[0];
     String name = firstModel.name;
-    String id = firstModel.id ?? name;
+    String id = firstModel.pid ?? name;
     Map<String, PPage> pages = Map();
     final ConversionErrorMessages conversionErrorMessages =
         ConversionErrorMessages(patterns: Map());
