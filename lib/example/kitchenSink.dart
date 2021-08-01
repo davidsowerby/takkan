@@ -25,6 +25,7 @@ final kitchenSinkScript = PScript(
           layout: PPanelLayout(width: 350),
           content: [
             PText(
+              pid: 'id1',
               readTraitName: PText.heading1,
               isStatic: IsStatic.yes,
               staticData: 'Welcome to Precept',

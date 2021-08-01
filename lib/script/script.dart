@@ -60,7 +60,7 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
   }) : super(
-          id: id,
+          pid: id,
           isStatic: isStatic,
           dataProviderConfig: dataProvider ?? PNoDataProvider(),
           query: query,
@@ -231,11 +231,11 @@ class PPage extends PContent {
     String property = notSet,
     required String title,
   }) : super(
-          isStatic: isStatic,
+    isStatic: isStatic,
           dataProviderConfig: dataProvider,
           query: query,
           controlEdit: controlEdit,
-          id: id,
+          pid: id,
           property: property,
           caption: title,
         );

@@ -64,9 +64,9 @@ class PEmailSignIn extends PPart {
   final String signInFailureMessage;
 
   PEmailSignIn({
-    this.signInFailureMessage='Username or password incorrect',
+    this.signInFailureMessage = 'Username or password incorrect',
     String caption = 'Sign in with Email',
-    this.checkingCredentialsMessage='Checking Credentials',
+    this.checkingCredentialsMessage = 'Checking Credentials',
     this.emailCaption = 'email',
     this.usernameCaption = 'username',
     this.passwordCaption = 'password',
@@ -74,17 +74,17 @@ class PEmailSignIn extends PPart {
     this.successRoute = '',
     this.failureRoute = 'signInFail',
     String readTraitName = defaultTrait,
-    String? id,
+    String? pid,
     PHelp? help,
   }) : super(
-          help: help,
+    help: help,
           readOnly: true,
           staticData: '',
           readTraitName: readTraitName,
           isStatic: IsStatic.yes,
           controlEdit: ControlEdit.noEdit,
           caption: caption,
-          id: id,
+          pid: pid,
         );
 
   factory PEmailSignIn.fromJson(Map<String, dynamic> json) => _$PEmailSignInFromJson(json);

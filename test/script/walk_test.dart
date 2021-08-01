@@ -47,7 +47,7 @@ void main() {
         'Kitchen Sink.SchemaSource:0',
         'Kitchen Sink./',
         'Kitchen Sink./.Panel:0',
-        'Kitchen Sink./.Panel:0.Text:0',
+        'Kitchen Sink./.Panel:0.id1',
         'Kitchen Sink./.Panel:0.Text:1',
         'Kitchen Sink./.Panel:0.NavButton:2',
         'Kitchen Sink.signIn',

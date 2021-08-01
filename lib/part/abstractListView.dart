@@ -1,9 +1,7 @@
-
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
-
 
 /// [titleProperty] and [subtitleProperty] are passed to the items in the list.  A [ListTile] for example,
 /// will use these to get and display the data for an item
@@ -19,20 +17,21 @@ abstract class PAbstractListView extends PPart {
   final PListViewItemType itemType;
 
   PAbstractListView({
-    this.titleProperty='title',
-    this.itemType=PListViewItemType.tile,
-    this.subtitleProperty='subtitle',
+    this.titleProperty = 'title',
+    this.itemType = PListViewItemType.tile,
+    this.subtitleProperty = 'subtitle',
     bool readOnly = false,
     IsStatic isStatic = IsStatic.inherited,
     double? particleHeight,
     String? caption,
     PHelp? help,
-    String staticData=notSet,
-    String property=notSet,
+    String staticData = notSet,
+    String property = notSet,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
     String? tooltip,
     ControlEdit controlEdit = ControlEdit.inherited,
+    String? pid,
   }) : super(
           caption: caption,
           controlEdit: controlEdit,
@@ -45,9 +44,8 @@ abstract class PAbstractListView extends PPart {
           isStatic: isStatic,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
+          pid: pid,
         );
-
-
 }
 
-enum PListViewItemType {tile, navTile, panel}
+enum PListViewItemType { tile, navTile, panel }

@@ -30,10 +30,10 @@ class PText extends PPart {
       String staticData = notSet,
       PHelp? help,
       ControlEdit controlEdit = ControlEdit.inherited,
-      String? id,
+      String? pid,
       String? tooltip})
       : super(
-          readOnly: readOnly,
+    readOnly: readOnly,
           readTraitName: readTraitName,
           height: height,
           property: property,
@@ -43,7 +43,7 @@ class PText extends PPart {
           caption: caption,
           isStatic: isStatic,
           help: help,
-          id: id,
+          pid: pid,
           tooltip: tooltip,
         );
 

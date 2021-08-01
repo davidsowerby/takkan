@@ -24,11 +24,11 @@ class PContent extends PCommon {
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
     PSchema? schema,
-    String? id,
+    String? pid,
   }) : super(
     query: query,
           schema: schema,
-          id: id,
+          pid: pid,
           controlEdit: controlEdit,
           dataProviderConfig: dataProviderConfig,
           isStatic: isStatic,
@@ -48,7 +48,7 @@ class PSubContent extends PContent {
     PDataProvider? dataProvider,
     PQuery? query,
     ControlEdit controlEdit = ControlEdit.inherited,
-    String? id,
+    String? pid,
   }) : super(
     caption: caption,
           property: property,
@@ -56,7 +56,7 @@ class PSubContent extends PContent {
           dataProviderConfig: dataProvider,
           query: query,
           controlEdit: controlEdit,
-          id: id,
+          pid: pid,
         );
 
   void doValidate(List<ValidationMessage> messages) {

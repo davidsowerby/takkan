@@ -6,15 +6,15 @@ import 'package:precept_script/validation/message.dart';
 
 part 'preceptItem.g.dart';
 
-/// Most of these values are generated during the [PScript.init] process, and are consequently not
+/// With one exception, these values are generated during the [PScript.init] process, and are consequently not
 /// stored as part of the JSON output of the script.
 ///
-/// The only one included in the JSON output is [_id]
+/// The only one included in the JSON output is [_pid]
 ///
 /// There are three levels of id, used primarily for testing.
-/// - [_id] just records manually set ids, and this is stored with th rest of the script. Some sub-classes
+/// - [_pid] just records manually set ids, and this is stored with th rest of the script. Some sub-classes
 /// may set this to something like a caption, if no id is explicitly provided
-/// - [uid] is populated by the [PScript.init] process, using the [_id] if one has been set. If not, one is
+/// - [uid] is populated by the [PScript.init] process, using the [_pid] if one has been set. If not, one is
 /// auto-generated to ensure a [_uid] unique within its sibling group.
 /// - [_debugId] is constructed by the [PScript.init] process to provide a hierarchical 'path', so the
 /// location of any particular [PreceptItem] can be identified via its parent chain. This also
@@ -29,7 +29,7 @@ part 'preceptItem.g.dart';
 //
 @JsonSerializable( explicitToJson: true)
 class PreceptItem {
-  final String? _id;
+  final String? _pid;
   @JsonKey(ignore: true)
   String? uid;
   @JsonKey(ignore: true)
@@ -42,7 +42,7 @@ class PreceptItem {
   PreceptItem({
     String? id,
     this.version = 0,
-  }) : _id = id;
+  }) : _pid = id;
 
   int version = 0;
 
@@ -57,7 +57,7 @@ class PreceptItem {
 
   PreceptItem get parent => _parent;
 
-  String? get id => _id;
+  String? get pid => _pid;
 
   doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
     _parent = parent;
@@ -68,18 +68,19 @@ class PreceptItem {
       uid = idAlternative;
     }
 
-    if (this is PPage){
-      uid=(this as PPage).route;
+    if (this is PPage) {
+      uid = (this as PPage).route;
     }
+
     /// if we still don't have a uid, generate one
-    if (uid?.isEmpty==null || uid?.isEmpty==true) {
+    if (uid?.isEmpty == null || uid?.isEmpty == true) {
       final type = _widgetTypeFromPreceptType();
       uid = "$type:$index";
     }
 
     /// Explicitly set [_id] overrides other settings
-    if (_id != null && _id?.isNotEmpty==true) {
-      uid = _id;
+    if (_pid != null && _pid?.isNotEmpty == true) {
+      uid = _pid;
     }
 
     /// construct hierarchical debugId

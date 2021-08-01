@@ -54,7 +54,7 @@ class PPanel extends PSubContent {
     String? id,
   })  : _heading = heading,
         super(
-          id: id,
+          pid: id,
           isStatic: isStatic,
           dataProvider: dataProvider,
           query: query,

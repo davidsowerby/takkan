@@ -5,15 +5,23 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'integer.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PInteger extends PField<IntegerValidation, int> {
   final int? defaultValue;
 
   Type get modelType => int;
 
-  PInteger({this.defaultValue, List<IntegerValidation> validations=const[], PPermissions? permissions,}) : super(validations: validations,permissions: permissions,);
+  PInteger({
+    this.defaultValue,
+    List<IntegerValidation> validations = const [],
+    PPermissions? permissions,
+  }) : super(
+          validations: validations,
+          permissions: permissions,
+        );
 
-  factory PInteger.fromJson(Map<String, dynamic> json) => _$PIntegerFromJson(json);
+  factory PInteger.fromJson(Map<String, dynamic> json) =>
+      _$PIntegerFromJson(json);
 
   Map<String, dynamic> toJson() => _$PIntegerToJson(this);
 
@@ -23,12 +31,12 @@ class PInteger extends PField<IntegerValidation, int> {
   }
 }
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class IntegerValidation implements ModelValidation<ValidateInteger, int> {
   final ValidateInteger method;
   final int param;
 
-  const IntegerValidation({required this.method, this.param=0});
+  const IntegerValidation({required this.method, this.param = 0});
 
   factory IntegerValidation.fromJson(Map<String, dynamic> json) =>
       _$IntegerValidationFromJson(json);

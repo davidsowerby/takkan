@@ -38,13 +38,13 @@ class PPart extends PSubContent {
       required this.readTraitName,
       this.editTraitName,
       IsStatic isStatic = IsStatic.inherited,
-      this.staticData=notSet,
+      this.staticData = notSet,
       this.help,
       ControlEdit controlEdit = ControlEdit.inherited,
-      String? id,
+      String? pid,
       this.tooltip})
       : super(
-          id: id,
+    pid: pid,
           isStatic: isStatic,
           controlEdit: controlEdit,
           caption: caption,

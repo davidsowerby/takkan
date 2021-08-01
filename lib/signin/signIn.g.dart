@@ -53,7 +53,7 @@ PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) {
     successRoute: json['successRoute'] as String,
     failureRoute: json['failureRoute'] as String,
     readTraitName: json['readTraitName'] as String,
-    id: json['id'] as String?,
+    pid: json['pid'] as String?,
     help: json['help'] == null
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
@@ -63,7 +63,7 @@ PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
     <String, dynamic>{
       'version': instance.version,
-      'id': instance.id,
+      'pid': instance.pid,
       'caption': instance.caption,
       'help': instance.help?.toJson(),
       'readTraitName': instance.readTraitName,

@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
@@ -11,7 +10,7 @@ part 'listView.g.dart';
 /// will use these to get and display the data for an item
 ///
 /// [isQuery] should be set to true if the data displayed is directly from a query
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PListView extends PAbstractListView {
   static const String defaultReadTrait = 'list-read-default';
   static const String defaultEditTrait = 'list-edit-default';
@@ -32,12 +31,13 @@ class PListView extends PAbstractListView {
     double? particleHeight,
     String? caption,
     PHelp? help,
-    String staticData=notSet,
+    String staticData = notSet,
     required String property,
     String readTraitName = defaultReadTrait,
     String editTraitName = defaultEditTrait,
     String? tooltip,
     ControlEdit controlEdit = ControlEdit.inherited,
+    String? pid,
   }) : super(
           caption: caption,
           controlEdit: controlEdit,
@@ -50,9 +50,11 @@ class PListView extends PAbstractListView {
           isStatic: isStatic,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
+          pid: pid,
         );
 
-  factory PListView.fromJson(Map<String, dynamic> json) => _$PListViewFromJson(json);
+  factory PListView.fromJson(Map<String, dynamic> json) =>
+      _$PListViewFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListViewToJson(this);
 }

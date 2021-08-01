@@ -97,11 +97,11 @@ class PCommon extends PreceptItem {
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema? schema,
-    String? id,
+    String? pid,
   })  : _isStatic = isStatic,
         _dataProvider = dataProviderConfig,
         _query = query,
-        super(id: id);
+        super(id: pid);
 
   @JsonKey(ignore: true)
   IsStatic get isStatic =>

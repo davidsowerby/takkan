@@ -24,13 +24,11 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) {
     panelStyle:
         PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
     controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    id: json['id'] as String?,
   )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
       'version': instance.version,
-      'id': instance.id,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,
@@ -89,14 +87,12 @@ PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
         ? null
         : PHelp.fromJson(json['help'] as Map<String, dynamic>),
     style: PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
-    id: json['id'] as String?,
   )..version = json['version'] as int;
 }
 
 Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
     <String, dynamic>{
       'version': instance.version,
-      'id': instance.id,
       'expandable': instance.expandable,
       'canEdit': instance.canEdit,
       'help': instance.help?.toJson(),

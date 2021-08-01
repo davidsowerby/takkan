@@ -15,7 +15,7 @@ class PQueryView extends PAbstractListView {
   static const String defaultItemEditTrait = 'queryView-item-edit-default';
 
   PQueryView({
-    String queryName=notSet,
+    String queryName = notSet,
     String titleProperty = 'title',
     String subtitleProperty = 'subtitle',
     PListViewItemType itemType = PListViewItemType.navTile,
@@ -23,6 +23,7 @@ class PQueryView extends PAbstractListView {
     String? tooltip,
     String? caption,
     PHelp? help,
+    String? pid,
     bool readOnly = false,
     ControlEdit controlEdit = ControlEdit.inherited,
     String readTraitName = defaultReadTrait,
@@ -41,6 +42,7 @@ class PQueryView extends PAbstractListView {
           controlEdit: controlEdit,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
+          pid: pid,
         );
 
   factory PQueryView.fromJson(Map<String, dynamic> json) => _$PQueryViewFromJson(json);

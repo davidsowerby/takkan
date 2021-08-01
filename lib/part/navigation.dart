@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
@@ -6,9 +5,9 @@ import 'package:precept_script/part/part.dart';
 
 part 'navigation.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PNavButton extends PPart {
-  static const defaultReadTrait='PNavButton-default';
+  static const defaultReadTrait = 'PNavButton-default';
   final String route;
 
   PNavButton({
@@ -17,14 +16,15 @@ class PNavButton extends PPart {
     String? caption,
     bool showCaption = false,
     IsStatic isStatic = IsStatic.yes,
-    String readTraitName=defaultReadTrait,
+    String readTraitName = defaultReadTrait,
     String? editTraitName,
     double height = 100,
-    String property=notSet,
+    String property = notSet,
     String staticData = '',
     final Map<String, dynamic> args = const {},
+    String? pid,
   }) : super(
-          readOnly: readOnly,
+    readOnly: readOnly,
           caption: caption,
           isStatic: isStatic,
           staticData: staticData,
@@ -32,16 +32,18 @@ class PNavButton extends PPart {
           height: height,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
+          pid: pid,
         );
 
-  factory PNavButton.fromJson(Map<String, dynamic> json) => _$PNavButtonFromJson(json);
+  factory PNavButton.fromJson(Map<String, dynamic> json) =>
+      _$PNavButtonFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNavButtonToJson(this);
 }
 
 /// A simple way to specify a list of buttons which only route to another page
 /// [buttons] should be specified as a map, for example {'button text':'route'}
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PNavButtonSet extends PPart {
   static const defaultReadTrait = 'PNavButtonSet-default';
   final Map<String, String> buttons;
@@ -52,6 +54,7 @@ class PNavButtonSet extends PPart {
     required this.buttons,
     this.width,
     double? height,
+    String? pid,
     String readTraitName = defaultReadTrait,
     this.buttonTraitName = PNavButton.defaultReadTrait,
   }) : super(
@@ -59,9 +62,11 @@ class PNavButtonSet extends PPart {
           height: height,
           isStatic: IsStatic.yes,
           readTraitName: readTraitName,
+          pid: pid,
         );
 
-  factory PNavButtonSet.fromJson(Map<String, dynamic> json) => _$PNavButtonSetFromJson(json);
+  factory PNavButtonSet.fromJson(Map<String, dynamic> json) =>
+      _$PNavButtonSetFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNavButtonSetToJson(this);
 }
