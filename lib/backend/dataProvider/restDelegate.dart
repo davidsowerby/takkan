@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dio/dio.dart' as dio;
+import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
@@ -16,22 +17,18 @@ import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/query/restQuery.dart';
-import 'package:precept_script/script/script.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late AppConfig appConfig;
-  late Authenticator _authenticator;
-  final DataProvider parent;
+  late DataProvider parent;
 
   DefaultRestDataProviderDelegate(
     this.parent,
   );
 
   @override
-  init(AppConfig appConfig) async {
-    if (parent.config.authenticatorDelegate == CloudInterface.rest) {
-      _authenticator = await createAuthenticator();
-    }
+  init(AppConfig appConfig, DataProvider parent) async {
+    this.parent = parent;
     this.appConfig = appConfig;
     if (parent.config.restDelegate == null) {
       throw PreceptException(
@@ -45,12 +42,12 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     throw UnimplementedError();
   }
 
-  PreceptUser get user => _authenticator.user;
-
-  Authenticator get authenticator => _authenticator;
+  PreceptUser get user => parent.user; // safe only after init called
+  Authenticator get authenticator =>
+      parent.authenticator; // safe only after init called
 
   PRest get config =>
-      parent.config.restDelegate as PRest; // safe after init called
+      parent.config.restDelegate as PRest; // safe only after init called
 
   @override
   String assembleScript(
@@ -99,6 +96,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     required Map<String, dynamic> data,
+    FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Updating data provider');
     final dio.Response response = await dio.Dio(
@@ -113,6 +111,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         data: response.data,
         success: true,
         path: documentId.path,
+        itemId: documentId.itemId,
       );
     }
     throw APIException(
@@ -141,14 +140,6 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   @override
-  Future<UpdateResult> uploadPreceptScript(
-      {required PScript script,
-      required Locale locale,
-      bool incrementVersion = false}) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<DeleteResult> deleteDocument({required DocumentId documentId}) {
     // TODO: implement deleteDocument
     throw UnimplementedError();
@@ -159,6 +150,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Creating new document');
     final dio.Response response = await dio.Dio(
@@ -173,6 +165,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         path: path,
         data: response.data,
         success: true,
+        itemId: response.data['objectId'],
       );
     }
     throw APIException(
@@ -184,6 +177,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   Future<ReadResult> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
+    FetchPolicy? fetchPolicy,
   }) async {
     logType(this.runtimeType).d('Reading document');
     // GET \
@@ -205,6 +199,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         data: response.data,
         success: true,
         path: documentId.path,
+        itemId: documentId.itemId,
       );
     }
     throw APIException(

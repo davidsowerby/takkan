@@ -20,7 +20,7 @@ class FieldSelector {
   final List<String> excludeFields;
 
   const FieldSelector({
-    this.fields = const ['objectId'],
+    this.fields = const [],
     this.allFields = false,
     this.includeMetaFields = false,
     this.metaFields = const ['createdAt', 'updatedAt'],

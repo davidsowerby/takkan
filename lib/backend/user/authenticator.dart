@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 
 
-abstract class Authenticator<T extends PDataProvider, USER> {
+abstract class Authenticator<T extends PDataProvider, USER, D extends DataProvider> {
+  late D parent;
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners =
       List.empty(growable: true);
@@ -59,7 +61,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   Future<AuthenticationResult> signInByEmail(
       {required String username, required String password}) async {
     if (status == SignInStatus.Uninitialized) {
-      await init();
+      await init(parent);
     }
     status = SignInStatus.Authenticating;
     final AuthenticationResult result =
@@ -113,7 +115,7 @@ abstract class Authenticator<T extends PDataProvider, USER> {
   registrationAcknowledged() {}
 
   /// Implementation specific, may not be needed, but must always change status to [SignInStatus.Initialised]
-  init(){
+  init(D parent){
     status=SignInStatus.Initialised;
   }
 

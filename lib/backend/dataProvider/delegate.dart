@@ -1,19 +1,18 @@
 import 'dart:ui';
 
+import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
-import 'package:precept_script/script/script.dart';
 
 abstract class DataProviderDelegate<QUERY extends PQuery> {
   DataProvider get parent;
 
-  init(AppConfig appConfig);
+  init(AppConfig appConfig, DataProvider parent);
 
   /// Executes a query expecting a single result
   Future<Map<String, dynamic>> fetchItem(
@@ -27,19 +26,12 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     required Map<String, dynamic> data,
+    FieldSelector fieldSelector = const FieldSelector(),
   });
 
   setSessionToken(String token);
 
   assembleScript(QUERY queryConfig, Map<String, dynamic> pageArguments);
-
-  Future<Authenticator> createAuthenticator();
-
-  Future<UpdateResult> uploadPreceptScript({
-    required PScript script,
-    required Locale locale,
-    bool incrementVersion = false,
-  });
 
   Future<ReadResult> latestScript(
       {required Locale locale, required int fromVersion, required String name});
@@ -51,14 +43,15 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    FieldSelector fieldSelector = const FieldSelector(),
   });
 
   Future<ReadResult> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
+    FetchPolicy? fetchPolicy,
   });
 
-  Authenticator get authenticator;
 }
 
 /// Defined as an interface to enable injection of alternative implementations
