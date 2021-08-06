@@ -10,11 +10,11 @@ class PRestQuery extends PQuery {
 
   PRestQuery({
     this.paramsAsPath = true,
-    required String querySchema,
+    required String querySchemaName,
     this.params = const {},
     QueryReturnType returnType = QueryReturnType.futureList,
   }) : super(
-          querySchema: querySchema,
+    querySchemaName: querySchemaName,
           returnType: returnType,
         );
 

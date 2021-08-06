@@ -73,7 +73,7 @@ final kitchenSinkScript = PScript(
       controlEdit: ControlEdit.panelsOnly,
       title: 'Open Issues',
       query: PGraphQLQuery(
-        querySchema: 'openIssues',
+        querySchemaName: 'openIssues',
         script: openIssuesScript,
         returnType: QueryReturnType.futureList,
       ),
@@ -98,7 +98,7 @@ final kitchenSinkScript = PScript(
           heading: PPanelHeading(canEdit: true, expandable: true),
           property: '',
           query: PPQuery(
-            querySchema: 'Get Account',
+            querySchemaName: 'Get Account',
             fields: 'id,objectId, category,accountNumber,createdAt,updatedAt',
             variables: {'id': 'wVdGK8TDXR'},
             types: {

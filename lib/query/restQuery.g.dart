@@ -9,7 +9,7 @@ part of 'restQuery.dart';
 PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) {
   return PRestQuery(
     paramsAsPath: json['paramsAsPath'] as bool,
-    querySchema: json['querySchema'] as String,
+    querySchemaName: json['querySchemaName'] as String,
     params: Map<String, String>.from(json['params'] as Map),
     returnType: _$enumDecode(_$QueryReturnTypeEnumMap, json['returnType']),
   )..version = json['version'] as int;
@@ -19,7 +19,7 @@ Map<String, dynamic> _$PRestQueryToJson(PRestQuery instance) =>
     <String, dynamic>{
       'version': instance.version,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
-      'querySchema': instance.querySchema,
+      'querySchemaName': instance.querySchemaName,
       'paramsAsPath': instance.paramsAsPath,
       'params': instance.params,
     };
@@ -51,8 +51,10 @@ K _$enumDecode<K, V>(
 }
 
 const _$QueryReturnTypeEnumMap = {
-  QueryReturnType.futureSingle: 'futureSingle',
+  QueryReturnType.futureItem: 'futureItem',
   QueryReturnType.futureList: 'futureList',
-  QueryReturnType.streamSingle: 'streamSingle',
+  QueryReturnType.streamItem: 'streamItem',
   QueryReturnType.streamList: 'streamList',
+  QueryReturnType.futureDocument: 'futureDocument',
+  QueryReturnType.streamDocument: 'streamDocument',
 };

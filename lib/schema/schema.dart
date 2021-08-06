@@ -96,11 +96,12 @@ abstract class PSchemaElement {
   @JsonKey(ignore: true)
   PSchemaElement? _parent;
   @JsonKey(ignore: true)
-  String? _name;
+  late String _name;
 
   final IsReadOnly _isReadOnly;
 
-  PSchemaElement({IsReadOnly readOnly = IsReadOnly.inherited}) : _isReadOnly = readOnly;
+  PSchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
+      : _isReadOnly = readOnly;
 
   Map<String, dynamic> toJson();
 
@@ -197,7 +198,7 @@ class PDocument extends PSchemaElement {
     this.permissions = const PPermissions(),
   }) : super();
 
-  String? get name => _name;
+  String get name => _name;
 
   @JsonKey(ignore: true)
   PSchemaElement? get parent => _parent;

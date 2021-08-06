@@ -23,7 +23,8 @@ part 'dataProvider.g.dart';
 /// or [graphQLDelegate] as required. These are merged by the delegate implementation.
 ///
 /// If users need to be authenticated for this Data Provider,  [useAuthenticator]
-/// should be true (the default)
+/// should be true.  The default is false, because the DefaultDataProvider (which
+/// which collaborates with this configuration) does not provide authentication
 ///
 @JsonSerializable(explicitToJson: true)
 class PDataProvider extends PreceptItem {
@@ -52,7 +53,7 @@ class PDataProvider extends PreceptItem {
   set schema(value) => _schema = value;
 
   PDataProvider({
-    this.useAuthenticator = true,
+    this.useAuthenticator = false,
     this.graphQLDelegate,
     this.restDelegate,
     required this.headerKeys,
@@ -98,7 +99,8 @@ class PDataProvider extends PreceptItem {
     if (schemaSource != null) schemaSource?.walk(visitors);
   }
 
-  /// This can be overridden, because Back4App for example, uses the objectId field value
+  /// referring to the id of a document, this can be overridden, by specific implementations.
+  /// Back4App for example, uses 'objectId'
   String get idPropertyName => 'id';
 
   factory PDataProvider.fromJson(Map<String, dynamic> json) =>
