@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
@@ -35,16 +36,18 @@ class Precept {
   bool _isReady = false;
   final List<Function()> _readyListeners = List.empty(growable: true);
   final List<Function()> _scriptReloadListeners = List.empty(growable: true);
+  final bool useDefaultDataProvider;
   late List<PreceptLoader> _loaders;
-  late Map<Type, Widget Function(PPart, ModelConnector)> _particleLibraryEntries;
+  late Map<Type, Widget Function(PPart, ModelConnector)>
+      _particleLibraryEntries;
 
-  Precept();
+  Precept({this.useDefaultDataProvider = true});
 
   init({
     bool includePreceptDefaults = true,
-    bool useRestDataProvider = true,
     Map<String, Widget Function(PPage)> pageLibraryEntries = const {},
-    Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries = const {},
+    Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries =
+        const {},
     List<PreceptLoader> loaders = const [],
     List<void Function()> injectionBindings = const [],
   }) async {
@@ -52,7 +55,8 @@ class Precept {
       preceptDefaultInjectionBindings();
     }
     WidgetsFlutterBinding.ensureInitialized();
-    _jsonConfig = await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
+    _jsonConfig =
+        await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
     _loaders = loaders;
     _particleLibraryEntries = particleLibraryEntries;
     await loadScripts(loaders: _loaders);
@@ -63,6 +67,13 @@ class Precept {
     await _loadSchemas();
     partLibrary.init(entries: _particleLibraryEntries);
     dataProviderLibrary.init(AppConfig(_jsonConfig));
+
+    /// register the default data provider
+    if (useDefaultDataProvider) {
+      dataProviderLibrary.register(
+          configType: PDataProvider,
+          builder: (config) => DefaultDataProvider(config: config));
+    }
     _isReady = true;
     notifyReadyListeners();
     notifyScriptReloadListeners();

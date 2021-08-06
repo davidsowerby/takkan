@@ -125,17 +125,17 @@ class DataSource {
     );
   }
 
-   reset() {
+  reset() {
     temporaryDocument.reset();
   }
 
-  MutableDocument updateDocument(
-      {required Map<String, dynamic> source,
+  MutableDocument updateMutableDocument(
+      {required ReadResultItem source,
       required DataProvider dataProvider,
       required bool fireListeners}) {
-    final DocumentId documentId = dataProvider.documentIdFromData(source);
+    final DocumentId documentId = source.documentId;
     return _temporaryDocument.updateFromSource(
-      source: source,
+      source: source.data,
       documentId: documentId,
       fireListeners: fireListeners,
     );

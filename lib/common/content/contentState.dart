@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/data/dataBinding.dart';
 import 'package:precept_client/data/dataProviderState.dart';
@@ -27,7 +28,8 @@ import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
-abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> extends State<T> {
+abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent>
+    extends State<T> {
   static const String preloadDataKey = 'preload-data';
   bool needsAuthentication = false;
   final ContentBindings contentBindings;
@@ -37,7 +39,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     DataBinding parentBinding,
     DataProvider parentDataProvider,
     Map<String, dynamic> pageArguments,
-  )   : contentBindings = ContentBindings(config, parentBinding, parentDataProvider, pageArguments),
+  )   : contentBindings = ContentBindings(
+            config, parentBinding, parentDataProvider, pageArguments),
         super();
 
   @override
@@ -51,8 +54,9 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       }
     }
     precept.addScriptReloadListener(_onScriptReload);
-    final requiresAuth =
-        (dataBinding is NoDataBinding) ? false : dataBinding.schema.requiresReadAuthentication;
+    final requiresAuth = (dataBinding is NoDataBinding)
+        ? false
+        : dataBinding.schema.requiresReadAuthentication;
     if (requiresAuth) {
       final userAuthenticated = dataProvider.authenticator.isAuthenticated;
       needsAuthentication = requiresAuth && !userAuthenticated;
@@ -81,18 +85,20 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   /// First checks whether this page requires the user to have permissions, as defined in
   Widget buildContent(ThemeData theme) {
     return ChangeNotifierProvider<DataProviderState>(
-        create: (_) => DataProviderState(dataProvider), child: assembleContent(theme));
+        create: (_) => DataProviderState(dataProvider),
+        child: assembleContent(theme));
   }
 
   Widget assembleContent(ThemeData theme);
 
-  doBuild(BuildContext context, ThemeData theme, DataSource? dataSource, PContent config,
-      Map<String, dynamic> pageArguments) {
+  doBuild(BuildContext context, ThemeData theme, DataSource? dataSource,
+      PContent config, Map<String, dynamic> pageArguments) {
     /// If using only static data, we don't care about any data sources
     if (config.isStatic == IsStatic.yes) {
       return buildContent(theme);
     }
 
+    //TODO: not sure why this is needed- unless it is a page without data or static
     if (!config.queryIsDeclared && !preloaded) {
       return buildContent(theme);
     }
@@ -117,11 +123,12 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
       }
 
       if (query == null) {
-        throw PreceptException('It should not be possible to get here without a defined query');
+        throw PreceptException(
+            'It should not be possible to get here without a defined query');
       }
 
       switch (query.returnType) {
-        case QueryReturnType.futureSingle:
+        case QueryReturnType.futureItem:
           return loadData(
               context,
               theme,
@@ -132,16 +139,29 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
         case QueryReturnType.futureList:
           return loadList(
               theme,
-              query.querySchema,
+              query.querySchemaName,
               dataProvider.fetchList(
                 queryConfig: query,
                 pageArguments: pageArguments,
               ));
-        case QueryReturnType.streamSingle:
-        // TODO: Handle this case.
+        case QueryReturnType.streamItem:
+          // TODO: Handle this case.
           break;
         case QueryReturnType.streamList:
-        // TODO: Handle this case.
+          // TODO: Handle this case.
+          break;
+        case QueryReturnType.futureDocument:
+          final q = query as PGetDocument;
+          return loadData(
+            context,
+            theme,
+            dataProvider.readDocument(
+              documentId: q.documentId,
+              fieldSelector: q.fieldSelector,
+            ),
+          );
+        case QueryReturnType.streamDocument:
+          // TODO: Handle this case.
           break;
       }
     } else {
@@ -149,34 +169,50 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     }
   }
 
-  Future<Map<String, dynamic>> _preloadData() async {
-    return pageArguments[ContentState.preloadDataKey];
+  Future<ReadResultItem> _preloadData() async {
+    final data = pageArguments[ContentState.preloadDataKey];
+
+    /// TODO: This is a fudge - should we keep the path somehow or read it from the data?, maybe store a ReadResult with the preloadData
+    return ReadResultItem(
+        data: data,
+        success: true,
+        queryReturnType: QueryReturnType.futureItem,
+        path: '?');
   }
 
   /// Loads data with an expected single result
-  Widget loadData(BuildContext context, ThemeData theme, Future<Map<String, dynamic>> future) {
+  Widget loadData(BuildContext context, ThemeData theme,
+      Future<ReadResultItem> futureData) {
     if (dataSource != null) {
-      return _loadData<Map<String, dynamic>>(context, theme, future, dataSource!.updateDocument);
+      return _loadData(
+          context, theme, futureData, dataSource!.updateMutableDocument);
     }
     throw PreceptException('Data cannot be loaded without a DataSource');
   }
 
   /// Loads data into [dataSource], using a Future, and returns a Widget produced by [buildContent]
-  Widget _loadData<T>(
+  Widget _loadData(
       BuildContext context,
       ThemeData theme,
-      Future<T> future,
+      Future<ReadResultItem> future,
       MutableDocument Function(
-              {required T source, required DataProvider dataProvider, required bool fireListeners})
+              {required ReadResultItem source,
+              required DataProvider dataProvider,
+              required bool fireListeners})
           storeData) {
-    return FutureBuilder<T>(
+    return FutureBuilder<ReadResultItem>(
       future: future,
-      builder: (BuildContext context, AsyncSnapshot<T> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<ReadResultItem> snapshot) {
         if (snapshot.hasData) {
-          storeData(source: snapshot.data!, dataProvider: dataProvider, fireListeners: false);
+          storeData(
+              source: snapshot.data!,
+              dataProvider: dataProvider,
+              fireListeners: false);
           return buildContent(theme);
         } else if (snapshot.hasError) {
-          return Text('Error in Future ${snapshot.error.runtimeType}');
+          String msg = 'Error in Future ${snapshot.error.runtimeType}';
+          logType(this.runtimeType).e(msg);
+          return Text(msg);
         } else {
           return Center(child: CircularProgressIndicator());
         }
@@ -186,24 +222,31 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
 
   /// retrieves results of a query and stores them in the [dataSource]
   /// Once the connection is made, calls [buildContent]
-  Widget loadList(ThemeData theme, String queryName, Future<List<Map<String, dynamic>>> future) {
-    return FutureBuilder<List<Map<String, dynamic>>>(
+  Widget loadList(
+      ThemeData theme, String queryName, Future<ReadResultList> future) {
+    return FutureBuilder<ReadResultList>(
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           dataSource!.storeQueryResults(
-              queryName: queryName, queryResults: snapshot.data!, fireListeners: false);
+              queryName: queryName,
+              queryResults: snapshot.data!.data,
+              fireListeners: false);
           return buildContent(theme);
         } else if (snapshot.hasError) {
           final error = snapshot.error;
-          return Text('Error in Future ${error.runtimeType}');
+          String msg = 'Error in Future ${error.runtimeType}';
+          logType(this.runtimeType).e(msg);
+          return Text(msg);
         } else {
           switch (snapshot.connectionState) {
             case ConnectionState.active:
             case ConnectionState.done:
               return buildContent(theme);
             case ConnectionState.none:
-              return Text('Error in Future, it may have returned null');
+              String msg = 'Error in Future, it may have returned null';
+              logType(this.runtimeType).e(msg);
+              return Text(msg);
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
           }
@@ -212,7 +255,8 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     );
   }
 
-  Widget streamBuilder(DataProvider backend, MutableDocument temporaryDocument) {
+  Widget streamBuilder(
+      DataProvider backend, MutableDocument temporaryDocument) {
     // return StreamBuilder<Data>(
     //     stream: backend.getStream(documentId: null),
     //     initialData: Data(data: {}),
@@ -244,9 +288,12 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
   }
 
   /// Updates data and rebuilds using [buildContent]
-  Widget activeBuilder(ThemeData theme, MutableDocument temporaryDocument, Data update) {
+  Widget activeBuilder(
+      ThemeData theme, MutableDocument temporaryDocument, Data update) {
     temporaryDocument.updateFromSource(
-        source: update.data, documentId: update.documentId, fireListeners: false);
+        source: update.data,
+        documentId: update.documentId,
+        fireListeners: false);
     return buildContent(theme);
   }
 
@@ -289,7 +336,10 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     return layout(children: children, screenSize: screenSize, config: config);
   }
 
-  Widget layout({required List<Widget> children, required Size screenSize, required CONFIG config});
+  Widget layout(
+      {required List<Widget> children,
+      required Size screenSize,
+      required CONFIG config});
 
   addUserState({required Widget widget, required PCommon config}) {
     if (config.dataProviderIsDeclared) {
@@ -331,13 +381,14 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent> e
     final userRoles = dataProvider.userRoles;
     final requiredRoles = dataBinding.schema.permissions.updateRoles;
     if (requiredRoles.isEmpty) return true;
-    final bool userHasPermissions = userRoles.any((role) => requiredRoles.contains(role));
+    final bool userHasPermissions =
+        userRoles.any((role) => requiredRoles.contains(role));
     return userHasPermissions;
   }
 
   /// [formKey] must be provided from outside the [build] method
-  Widget wrapInForm(
-      BuildContext context, Widget content, DataBinding dataBinding, GlobalKey<FormState> formKey) {
+  Widget wrapInForm(BuildContext context, Widget content,
+      DataBinding dataBinding, GlobalKey<FormState> formKey) {
     dataBinding.addForm(formKey);
     return Form(key: formKey, child: content);
   }
@@ -369,16 +420,19 @@ class ContentBindings {
   final Map<String, dynamic> pageArguments;
   final DateTime timestamp = DateTime.now();
 
-  ContentBindings(this.config, this.parentBinding, this.parentDataProvider, this.pageArguments);
+  ContentBindings(this.config, this.parentBinding, this.parentDataProvider,
+      this.pageArguments);
 
   init(Function() _onPreceptReady) async {
     /// Call is not actioned if Precept already in ready state
     precept.addReadyListener(_onPreceptReady);
-    dataProvider = dataProviderLibrary.find(config: config.dataProvider ?? PNoDataProvider());
+    dataProvider = dataProviderLibrary.find(
+        config: config.dataProvider ?? PNoDataProvider());
     final String documentSchemaName = (config.queryIsDeclared)
         ? lookupDocumentSchemaName()
         : (preloaded)
-            ? pageArguments[ContentState.preloadDataKey]['__typename'] // TODO: back4app specific
+            ? pageArguments[ContentState.preloadDataKey]
+                ['__typename'] // TODO: back4app specific
             : notSet;
     if (config.queryIsDeclared || preloaded) {
       dataSource = DataSource(
@@ -410,15 +464,17 @@ class ContentBindings {
     }
     final PSchema? schema = dataProvider.config.schema;
     if (schema == null) {
-      throw PreceptException('Schema cannot be null when looking up document schema');
+      throw PreceptException(
+          'Schema cannot be null when looking up document schema');
     }
-    final String? querySchemaName = config.query?.querySchema;
+    final String? querySchemaName = config.query?.querySchemaName;
     if (querySchemaName == null) {
       String msg = 'querySchema is required in PSchema ${schema.name}';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    final PQuerySchema? querySchema = schema.queries[config.query?.querySchema];
+    final PQuerySchema? querySchema =
+        schema.queries[config.query?.querySchemaName];
     if (querySchema == null) {
       String msg =
           "No querySchema defined for $querySchemaName in PSchema ${schema.name}.  Have you forgotten to add it to ";
@@ -429,5 +485,6 @@ class ContentBindings {
   }
 
   /// Preloaded data is held at page level
-  bool get preloaded => ((config is PPage) && pageArguments[ContentState.preloadDataKey] != null);
+  bool get preloaded =>
+      ((config is PPage) && pageArguments[ContentState.preloadDataKey] != null);
 }
