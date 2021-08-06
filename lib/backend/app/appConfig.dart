@@ -19,9 +19,21 @@ class AppConfig {
   const AppConfig(this.data);
 
   Map<String, String> instanceConfig(PDataProvider config) {
-    final instance = data[config.configSource.segment]
-        [config.configSource.instance] as Map<String, dynamic>;
-    return instance.cast();
+    final segment = data[config.configSource.segment];
+    if (segment == null) {
+      String msg =
+          'File precept.json in project root must define a segment for \'${config.configSource.segment}\'';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    final instance = segment[config.configSource.instance];
+    if (instance == null) {
+      String msg =
+          'File precept.json in project root must define an instance \'${config.configSource.instance}\' in segment \'${config.configSource.segment}\'';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return Map<String, String>.from(instance);
   }
 
   /// [providerConfig] and [delegateConfig] are merged to define the keys used

@@ -5,16 +5,20 @@ import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
+import 'package:precept_backend/backend/dataProvider/restDelegate.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
 /// The layer between the client and server.
@@ -51,18 +55,18 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Authenticator get authenticator;
 
-  /// Fetch exactly one item (document) from the database. Throws an [APIException]
-  /// if the item is not available, or there are multiple items matching the
-  /// [queryConfig]
-  Future<Map<String, dynamic>> fetchItem({
+  /// Fetch exactly one item (document) from the database.
+  ///
+  /// [ReadResult.success] is false if there is not exactly one result
+  Future<ReadResultItem> fetchItem({
     required PQuery queryConfig,
     required Map<String, dynamic> pageArguments,
   });
 
   /// Fetch 0..n items from the database, matching the [queryConfig]
   ///
-  /// Throws an [APIException] if the query fails to execute
-  Future<List<Map<String, dynamic>>> fetchList({
+  /// [ReadResult.success] is false the query fails
+  Future<ReadResultList> fetchList({
     required PQuery queryConfig,
     required Map<String, dynamic> pageArguments,
   });
@@ -98,7 +102,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// fields returned, rather than return the whole document
   ///
   /// throws an [APIException] if the document is not found
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
@@ -140,6 +144,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// The currently identified user of this provider.  If no user is signed in,
   /// returns a user instance created with [PreceptUser.unknownUser]
   PreceptUser get user;
+
+  /// Returns the document schema identified within [querySchemaName],
+  /// by doing a lookup from [config]
+  ///
+  /// throws a [PreceptException] if not found
+  PDocument documentSchemaFromQuery({required String querySchemaName});
+
+  PDocument documentSchema({required String documentSchemaName});
 }
 
 /// Routes all calls to the [graphQLDelegate]
@@ -198,6 +210,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
     if (config.useAuthenticator) {
       _authenticator = await createAuthenticator();
+      authenticator.init(this);
     }
   }
 
@@ -205,35 +218,65 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   SignInStatus get authStatus => authenticator.status;
 
-  /// Returns a Future of a single instance of a document
-  Future<Map<String, dynamic>> fetchItem({
+  DataProviderDelegate get defaultDelegate {
+    if (_graphQLDelegate != null) {
+      return _graphQLDelegate!;
+    }
+    if (_restDelegate != null) {
+      return _restDelegate!;
+    }
+    String msg = 'At least one delegate must be defined';
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
+  }
+
+  /// see [DataProvider.fetchItem]
+  Future<ReadResultItem> fetchItem({
     required PQuery queryConfig,
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
         combineVariables(queryConfig, pageArguments);
-    if (queryConfig is PGraphQLQuery) {
-      if (config.useGraphQLDelegate) {
-        return graphQLDelegate.fetchItem(queryConfig, variables);
-      } else {
-        throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
-      }
+
+    switch (queryConfig.runtimeType) {
+      case PGraphQLQuery:
+        {
+          if (config.useGraphQLDelegate) {
+            return graphQLDelegate.fetchItem(
+                queryConfig as PGraphQLQuery, variables);
+          } else {
+            String msg =
+                'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider';
+            logType(this.runtimeType).e(msg);
+            throw PreceptException(msg);
+          }
+        }
+      case PRestQuery:
+        {
+          if (config.useRestDelegate) {
+            return restDelegate.fetchItem(queryConfig as PRestQuery, variables);
+          } else {
+            String msg =
+                'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider';
+            logType(this.runtimeType).e(msg);
+            throw PreceptException(msg);
+          }
+        }
+      // case PGetDocument :
+      //   {
+      //     return defaultDelegate.readDocument(
+      //         documentId: (queryConfig as PGetDocument).documentId)
+      //   }
+      default:
+        String msg =
+            'No delegate available to support a ${queryConfig.runtimeType.toString()}';
+        logType(this.runtimeType).e(msg);
+        throw PreceptException(msg);
     }
-    if (queryConfig is PRestQuery) {
-      if (config.useRestDelegate) {
-        return restDelegate.fetchItem(queryConfig, variables);
-      } else {
-        throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
-      }
-    }
-    throw PreceptException(
-        'No delegate available to support a ${queryConfig.runtimeType.toString()}');
   }
 
   /// Returns a Future of a list of one or more document instances
-  Future<List<Map<String, dynamic>>> fetchList({
+  Future<ReadResultList> fetchList({
     required PQuery queryConfig,
     required Map<String, dynamic> pageArguments,
   }) async {
@@ -366,26 +409,38 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
   ///
-  /// /// see [DataProvider.readDocument]
+  /// see [DataProvider.readDocument]
   @override
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
   }) {
-    if (config.useGraphQLDelegate) {
-      return graphQLDelegate.readDocument(
-        documentId: documentId,
-        fieldSelector: fieldSelector,
-        fetchPolicy: fetchPolicy,
-      );
-    } else {
-      return restDelegate.readDocument(
-        documentId: documentId,
-        fieldSelector: fieldSelector,
-        fetchPolicy: fetchPolicy,
-      );
+    final DataProviderDelegate delegate = (config.useGraphQLDelegate)
+        ? graphQLDelegate as DataProviderDelegate
+        : restDelegate;
+    return delegate.readDocument(
+      documentId: documentId,
+      fieldSelector: fieldSelector,
+      fetchPolicy: fetchPolicy,
+    );
+  }
+
+  PDocument documentSchemaFromQuery({required String querySchemaName}) {
+    final PQuerySchema? querySchema = config.schema.queries[querySchemaName];
+    if (querySchema == null) {
+      throw PreceptException("query schema '$querySchemaName' not found");
     }
+    return documentSchema(documentSchemaName: querySchema.documentSchema);
+  }
+
+  PDocument documentSchema({required String documentSchemaName}) {
+    final PDocument? documentSchema =
+        config.schema.documents[documentSchemaName];
+    if (documentSchema == null) {
+      throw PreceptException("document schema '$documentSchemaName' not found");
+    }
+    return documentSchema;
   }
 
   /// ============ Provided by sub-class implementations ==========================================
@@ -401,8 +456,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
   RestDataProviderDelegate createRestDelegate() {
-    throw PreceptException(
-        'Config specifies the use of RestDelegate, but createRestDelegate has not been implemented');
+    return DefaultRestDataProviderDelegate(this);
   }
 }
 
@@ -454,13 +508,15 @@ class NoDataProvider implements DataProvider {
     throw PreceptException(msg);
   }
 
-  Future<Map<String, dynamic>> fetchItem(
+  /// See [DataProvider.fetchItem]
+  Future<ReadResultItem> fetchItem(
       {required PQuery queryConfig,
       required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
   }
 
-  Future<List<Map<String, dynamic>>> fetchList(
+  /// See [DataProvider.fetchList]
+  Future<ReadResultList> fetchList(
       {required PQuery queryConfig,
       required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
@@ -507,11 +563,20 @@ class NoDataProvider implements DataProvider {
   }
 
   @override
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
   }) {
+    throw PreceptException(msg);
+  }
+
+  PDocument documentSchemaFromQuery({required String querySchemaName}) {
+    throw PreceptException(msg);
+  }
+
+  @override
+  PDocument documentSchema({required String documentSchemaName}) {
     throw PreceptException(msg);
   }
 }

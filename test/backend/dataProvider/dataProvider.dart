@@ -58,6 +58,7 @@ void main() {
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
         restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        useAuthenticator: true,
       );
       TestDataProvider2 dp = TestDataProvider2(
         config: config,
@@ -117,6 +118,7 @@ void main() {
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(
         config: config,
@@ -138,6 +140,7 @@ void main() {
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
+        useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(config: config);
 

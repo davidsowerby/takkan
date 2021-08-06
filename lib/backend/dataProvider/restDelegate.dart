@@ -6,7 +6,6 @@ import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
@@ -16,6 +15,8 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
+import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
@@ -31,8 +32,9 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     this.parent = parent;
     this.appConfig = appConfig;
     if (parent.config.restDelegate == null) {
-      throw PreceptException(
-          'RestDelegate cannot be used with no configuration');
+      String msg = 'RestDelegate cannot be used with no configuration';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
     }
   }
 
@@ -51,7 +53,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
 
   @override
   String assembleScript(
-      PRestQuery queryConfig, Map<String, dynamic> pageArguments) {
+      PRestQuery queryConfig, Map<String, dynamic> variables) {
     final StringBuffer buf = StringBuffer(documentEndpoint);
     if (queryConfig.paramsAsPath) {
       for (var entry in queryConfig.params.entries) {
@@ -67,28 +69,42 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   @override
-  Future<Map<String, dynamic>> fetchItem(
+  Future<ReadResultItem> fetchItem(
       PRestQuery queryConfig, Map<String, dynamic> variables) async {
     final results = await fetchList(queryConfig, variables);
-    if (results.isNotEmpty) {
-      return results[0];
-    }
-    return Map();
+    final firstResult =
+        (results.isNotEmpty) ? results.data[0] : <String, dynamic>{};
+    final success = results.isNotEmpty;
+    return ReadResultItem(
+      data: firstResult,
+      success: success,
+      queryReturnType: QueryReturnType.futureItem,
+      path: parent
+          .documentSchemaFromQuery(querySchemaName: queryConfig.querySchemaName)
+          .name,
+    );
   }
 
   /// Default content type is JSON
   @override
-  Future<List<Map<String, dynamic>>> fetchList(
+  Future<ReadResultList> fetchList(
       PRestQuery queryConfig, Map<String, dynamic> variables) async {
     final dio.Response response = await dio.Dio(
             dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
-        .get("This needs to be replaced");
+        .get(assembleScript(queryConfig, variables));
     final data = response.data;
     List<Map<String, dynamic>> output = List.empty(growable: true);
     for (var entry in data) {
       output.add(entry as Map<String, dynamic>);
     }
-    return output;
+    return ReadResultList(
+      data: output,
+      path: parent
+          .documentSchemaFromQuery(querySchemaName: queryConfig.querySchemaName)
+          .name,
+      queryReturnType: QueryReturnType.futureList,
+      success: true,
+    );
   }
 
   /// See [PDataProvider.updateDocument]
@@ -120,8 +136,10 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   Future<Authenticator> createAuthenticator() {
-    throw UnsupportedError(
-        "An implementation specific dedicated 'createAuthenticator' method is required for a RestDataProviderDelegate to support authentication");
+    String msg =
+        "An implementation specific dedicated 'createAuthenticator' method is required for a RestDataProviderDelegate to support authentication";
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
   }
 
   String documentUrl(DocumentId documentId) {
@@ -132,7 +150,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
       '${appConfig.serverUrl(parent.config)}${config.documentEndpoint}';
 
   @override
-  Future<ReadResult> latestScript(
+  Future<ReadResultItem> latestScript(
       {required Locale locale,
       required int fromVersion,
       required String name}) {
@@ -174,7 +192,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   @override
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
@@ -195,11 +213,11 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     );
     if (response.statusCode == HttpStatus.ok) {
       logType(this.runtimeType).d('Document created');
-      return ReadResult(
+      return ReadResultItem(
         data: response.data,
         success: true,
         path: documentId.path,
-        itemId: documentId.itemId,
+        queryReturnType: QueryReturnType.futureItem,
       );
     }
     throw APIException(

@@ -4,13 +4,13 @@ import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
+import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 
@@ -67,29 +67,30 @@ class DefaultGraphQLDataProviderDelegate
   }
 
   @override
-  String assembleScript(PGraphQLQuery queryConfig,
-      Map<String, dynamic> pageArguments) {
+  String assembleScript(
+      PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
     return queryConfig.script;
   }
 
-
-  Future<ReadResult> latestScript({required Locale locale,
-    required int fromVersion,
-    required String name}) {
+  Future<ReadResultItem> latestScript(
+      {required Locale locale,
+      required int fromVersion,
+      required String name}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, dynamic>> fetchItem(PGraphQLQuery queryConfig,
-      Map<String, dynamic> variables) {
+  Future<ReadResultItem> fetchItem(
+      PGraphQLQuery queryConfig, Map<String, dynamic> variables) {
     // TODO: implement executeQuery
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Map<String, dynamic>>> fetchList(PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
+  Future<ReadResultList> fetchList(
+      PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
     final queryOptions =
-    QueryOptions(document: gql(queryConfig.script), variables: variables);
+        QueryOptions(document: gql(queryConfig.script), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
 
     // TODO: is 'typename' Back4App specific?
@@ -108,7 +109,14 @@ class DefaultGraphQLDataProviderDelegate
     for (var e in edges) {
       results.add(e['node']);
     }
-    return results;
+    final documentSchema = parent.documentSchemaFromQuery(
+        querySchemaName: queryConfig.querySchemaName);
+    return ReadResultList(
+      success: true,
+      path: documentSchema.name,
+      queryReturnType: QueryReturnType.futureList,
+      data: results,
+    );
   }
 
   /// See [PDocument.updateDocument]
@@ -136,7 +144,7 @@ class DefaultGraphQLDataProviderDelegate
   }
 
   @override
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,

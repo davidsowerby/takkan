@@ -24,12 +24,16 @@ class DataProviderLibrary {
   AppConfig get appConfig => _appConfig;
 
   init(AppConfig appConfig) {
-    this._appConfig=appConfig;
+    this._appConfig = appConfig;
   }
 
-  /// Finds an entry in the library matching [key], and returns an instance of it with [config].
+  /// Finds an entry in the library matching [config.configSource], and returns
+  /// an instance of the appropriate [DataProvider] implementation, with its
+  /// config property set to [config].
+  ///
   /// [config] must be of the type appropriate to the [DataProvider] implementation required.
-  /// [config.instanceName] is only needed if you require two instances of the same [DataProvider] type.
+  ///
+  /// [config.instanceName] is only needed if you require two instances of the same [DataProvider] type. // TODO: remove config.instanceName, not needed now configSource is the key
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
   DataProvider find({required PDataProvider config}) {
