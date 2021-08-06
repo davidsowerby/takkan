@@ -109,12 +109,13 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
   @override
   Future<List<String>> loadUserRoles() async {
     PGraphQLQuery query = PGraphQLQuery(
-        querySchema: 'userRoles',
+        querySchemaName: 'userRoles',
         script: userRolesScript,
         returnType: QueryReturnType.futureList,
         variables: {'id': user.objectId});
-    final List<Map<String, dynamic>> result =
+    final loadResult =
         await parent.fetchList(queryConfig: query, pageArguments: const {});
+    final List<Map<String, dynamic>> result = loadResult.data;
     final List<String> roles = List.empty(growable: true);
     result.forEach((element) {
       roles.add(element['name']);

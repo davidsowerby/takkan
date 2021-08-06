@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/graphqlDelegate.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -61,7 +60,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   /// If somehow there are 2 or more instances with the same version, the most recently
   /// updated entry (using the 'updatedAt' field) is returned
   @override
-  Future<ReadResult> latestScript(
+  Future<ReadResultItem> latestScript(
       {required Locale locale,
       required int fromVersion,
       required String name}) async {
@@ -70,8 +69,8 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       'target': fromVersion,
       'nameLocale': '$name:${locale.toString()}'
     };
-    List<Map<String, dynamic>> result = await fetchList(
-      PGraphQLQuery(querySchema: 'laterScripts', script: laterScripts),
+    ReadResultList result = await fetchList(
+      PGraphQLQuery(querySchemaName: 'laterScripts', script: laterScripts),
       variables,
     );
 
@@ -83,7 +82,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     Map<String, dynamic>? candidate;
     int count = 0;
 
-    result.forEach((element) {
+    result.data.forEach((element) {
       if (count == 0) {
         candidate = element;
       } else {
@@ -99,21 +98,22 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       count++;
     });
 
-    return ReadResult(
+    return ReadResultItem(
       data: candidate!['script'],
       success: true,
       path: 'PreceptScript',
-      itemId: candidate!['objectId'],
+      queryReturnType: QueryReturnType.futureItem,
     );
   }
 
   @override
-  Future<ReadResult> readDocument({
+  Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
   }) async {
-    final PDocument schema = _locateSchema(documentId.path);
+    final PDocument schema =
+        parent.documentSchema(documentSchemaName: documentId.path);
     final builder = GraphQLScriptBuilder();
     final script = builder.buildReadGQL(documentId, fieldSelector, schema);
     final queryOptions = QueryOptions(
@@ -124,11 +124,11 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     final QueryResult response = await client.query(queryOptions);
     final Map<String, dynamic> data = response.data?[builder.selectionSet];
     data.remove('__typename');
-    return ReadResult(
+    return ReadResultItem(
       success: false,
       data: data,
       path: documentId.path,
-      itemId: documentId.itemId,
+      queryReturnType: QueryReturnType.futureItem,
     );
   }
 
@@ -145,7 +145,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     required Map<String, dynamic> data,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
-    final PDocument schema = _locateSchema(path);
+    final PDocument schema = parent.documentSchema(documentSchemaName: path);
     final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
     final script = builder.buildCreateGQL(path, fieldSelector, schema);
     final strippedData = Map<String, dynamic>.from(data);
@@ -174,7 +174,8 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) async {
-    final PDocument schema = _locateSchema(documentId.path);
+    final PDocument schema =
+        parent.documentSchema(documentSchemaName: documentId.path);
     final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
     final script = builder.buildUpdateGQL(documentId, fieldSelector, schema);
 
@@ -208,15 +209,6 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
           message: queryResult.exception.toString(), statusCode: -1);
     }
     return queryResult;
-  }
-
-  PDocument _locateSchema(String path) {
-    final PDocument? schema = parent.config.schema.documents[path];
-    if (schema == null) {
-      throw PreceptException(
-          'No schema has been defined for document type: $path');
-    }
-    return schema;
   }
 
 // @override

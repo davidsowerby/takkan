@@ -24,14 +24,16 @@ class PBack4AppDataProvider extends PDataProvider {
     PSchemaSource? schemaSource,
     bool checkHealthOnConnect = false,
     PSchema? schema,
+    bool useAuthenticator = true,
   }) : super(
-          schema: schema,
+    schema: schema,
           signIn: signIn,
           signInOptions: signInOptions,
           configSource: configSource,
           graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
           headerKeys: const ['X-Parse-Application-Id', 'X-Parse-Client-Key'],
           sessionTokenKey: 'sessionToken',
+          useAuthenticator: useAuthenticator,
         );
 
   String get idPropertyName => 'objectId';

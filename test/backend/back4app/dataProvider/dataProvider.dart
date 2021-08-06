@@ -4,10 +4,10 @@ import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvi
 import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/fieldSelector.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -63,7 +63,7 @@ void main() {
         expect(createResult.createdAt, isNotNull);
 
         // when read
-        final ReadResult readResult = await provider!.readDocument(
+        final ReadResultItem readResult = await provider!.readDocument(
             documentId: createResult.documentId,
             fieldSelector: FieldSelector(fields: ['objectId', 'name']));
 
@@ -75,7 +75,7 @@ void main() {
         expect(readResult.data.length, 2);
 
         // given
-        final ReadResult readResult2 = await provider!.readDocument(
+        final ReadResultItem readResult2 = await provider!.readDocument(
           documentId: createResult.documentId,
           fieldSelector: FieldSelector(allFields: true),
         );
@@ -169,9 +169,10 @@ const String fetchAllScripts = r'''query GetPreceptScripts {
 }''';
 
 deleteAllScripts(DataProvider? provider, PDocument scriptSchema) async {
-  final List<Map<String, dynamic>> currentEntries = await provider!.fetchList(
-      queryConfig: PGraphQLQuery(querySchema: '', script: fetchAllScripts),
+  final ReadResultList result = await provider!.fetchList(
+      queryConfig: PGraphQLQuery(querySchemaName: '', script: fetchAllScripts),
       pageArguments: {});
+  final List<Map<String, dynamic>> currentEntries = result.data;
 
   for (Map<String, dynamic> e in currentEntries) {
     await provider.deleteDocument(
