@@ -33,9 +33,9 @@ void main() {
       PScript script2 = PScript.fromJson(jsonMap);
 
       expect(jsonMap['nameLocale'], 'Kitchen Sink:en_GB');
-      expect(script2.pages.length, 8);
+      expect(script2.routes.length, 8);
       script2.init();
-      final c0 = script2.pages['/'];
+      final c0 = script2.routes['/'];
       expect(c0?.route, '/');
 
       expect(c0?.title, "Home Page");

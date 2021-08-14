@@ -10,7 +10,7 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) {
   return PScript(
     conversionErrorMessages: ConversionErrorMessages.fromJson(
         json['conversionErrorMessages'] as Map<String, dynamic>),
-    pages: (json['pages'] as Map<String, dynamic>).map(
+    routes: (json['pages'] as Map<String, dynamic>).map(
       (k, e) => MapEntry(k, PPage.fromJson(e as Map<String, dynamic>)),
     ),
     name: json['name'] as String,
@@ -29,7 +29,7 @@ Map<String, dynamic> _$PScriptToJson(PScript instance) {
     'name': instance.name,
     'locale': instance.locale,
     'nameLocale': instance.nameLocale,
-    'pages': instance.pages.map((k, e) => MapEntry(k, e.toJson())),
+    'pages': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
     'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
   };
 

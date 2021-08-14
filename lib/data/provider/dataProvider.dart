@@ -67,14 +67,18 @@ class PDataProvider extends PreceptItem {
   })  : _schema = schema,
         super(id: id);
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) async {
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) async {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
+    if (schemaSource != null) {
+      schemaSource!.doInit(script, parent, index);
+    }
     if (_schema == null) {
       if (schemaSource == null) {
         throw PreceptException(
             'If a Schema is not defined, a schema source must be');
       }
-      schemaSource!.doInit(script, parent, index);
+
       final schemaLoader = inject<PreceptSchemaLoader>();
       _schema = await schemaLoader.load(schemaSource!);
     }
@@ -123,7 +127,8 @@ class PConfigSource {
     return '$segment:$instance';
   }
 
-  factory PConfigSource.fromJson(Map<String, dynamic> json) => _$PConfigSourceFromJson(json);
+  factory PConfigSource.fromJson(Map<String, dynamic> json) =>
+      _$PConfigSourceFromJson(json);
 
   Map<String, dynamic> toJson() => _$PConfigSourceToJson(this);
 }
@@ -140,14 +145,16 @@ class PNoDataProvider extends PDataProvider {
           sessionTokenKey: 'No Data Provider',
         );
 
-  factory PNoDataProvider.fromJson(Map<String, dynamic> json) => _$PNoDataProviderFromJson(json);
+  factory PNoDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$PNoDataProviderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
 
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index);
+    /// Set this first so super does not try to laod it
     _schema = PSchema(name: 'unnamed');
+    super.doInit(script, parent, index);
   }
 }
 

@@ -40,7 +40,7 @@ void main() {
           documentId: DocumentId(path: '', itemId: 'x'),
           documentSchema: 'Document',
         ),
-        pages: {
+        routes: {
           '': PPage(
             title: 'A Page',
             controlEdit: ControlEdit.thisAndBelow,
@@ -59,7 +59,7 @@ void main() {
       // when
       script.init();
       // then
-      final page = script.pages[''];
+      final page = script.routes[''];
       final panel = page?.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 
@@ -87,7 +87,8 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script = PScript(name: 'test', dataProvider: PNoDataProvider(), pages: {
+      final script =
+          PScript(name: 'test', dataProvider: PNoDataProvider(), routes: {
         '/test': PPage(
           title: 'A Page',
           content: [
@@ -107,7 +108,7 @@ void main() {
 
       script.init();
       // then
-      final page = script.pages['/test'];
+      final page = script.routes['/test'];
       final panel = page?.content[0] as PPanel;
       final part = panel.content[0] as PPart;
 

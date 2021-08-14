@@ -15,7 +15,7 @@ final kitchenSinkScript = PScript(
   dataProvider: PNoDataProvider(),
   name: 'Kitchen Sink',
   locale: 'en_GB',
-  pages: {
+  routes: {
     '/': PPage(
       layout: PPageLayout(margins: PMargins(top: 50)),
       controlEdit: ControlEdit.panelsOnly,

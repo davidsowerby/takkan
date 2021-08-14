@@ -38,7 +38,7 @@ class PScript extends PCommon {
   final String name;
   final String locale;
   String? nameLocale;
-  final Map<String, PPage> pages;
+  final Map<String, PPage> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
@@ -51,7 +51,7 @@ class PScript extends PCommon {
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(
         typePatterns: defaultValidationErrorMessages),
-    this.pages = const {},
+    this.routes = const {},
     required this.name,
     this.locale = 'en_GB',
     IsStatic isStatic = IsStatic.inherited,
@@ -104,11 +104,11 @@ class PScript extends PCommon {
     _scriptValidationMessages = List.empty(growable: true);
     doValidate(_scriptValidationMessages);
 
-    if (pages.length == 0) {
+    if (routes.length == 0) {
       _scriptValidationMessages.add(
           ValidationMessage(item: this, msg: "must contain at least one page"));
     } else {
-      for (var entry in pages.entries) {
+      for (var entry in routes.entries) {
         if (entry.key.isEmpty) {
           _scriptValidationMessages.add(ValidationMessage(
               item: this, msg: "PPage route cannot be an empty String"));
@@ -144,7 +144,7 @@ class PScript extends PCommon {
     doInit(this, NullPreceptItem(), 0, useCaptionsAsIds: useCaptionsAsIds);
   }
 
-  /// Passes call to all components, and sets the [PPage.route] the keys in [pages]
+  /// Passes call to all components, and sets the [PPage.route] the keys in [routes]
   @override
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
@@ -152,7 +152,7 @@ class PScript extends PCommon {
     nameLocale = '$name:$locale';
     setupControlEdit(ControlEdit.inherited);
     int i = 0;
-    for (var entry in pages.entries) {
+    for (var entry in routes.entries) {
       entry.value.route = entry.key;
 
       /// This must be done first or validation messages get wrong debugId
@@ -165,7 +165,7 @@ class PScript extends PCommon {
   /// At each instance, the [ScriptVisitor.step] is invoked
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    for (PPage entry in pages.values) {
+    for (PPage entry in routes.values) {
       entry.walk(visitors);
     }
   }
@@ -193,7 +193,7 @@ class PScript extends PCommon {
   }
 
   DebugNode get debugNode => DebugNode(this,
-      List.from(pages.entries.toList().map((e) => (e as PPage).debugNode)));
+      List.from(routes.entries.toList().map((e) => (e as PPage).debugNode)));
 
   writeToFile(File f) async {
     final jsonMap = this.toJson();

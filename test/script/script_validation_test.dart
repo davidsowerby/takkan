@@ -54,7 +54,7 @@ void main() {
       // given
       final script = PScript(
         name: 'test',
-        pages: {
+        routes: {
           '': PPage(title: 'A page'),
         },
       ); // ignore: missing_required_param
@@ -74,7 +74,7 @@ void main() {
       final component = PScript(
         name: 'A script',
         isStatic: IsStatic.yes,
-        pages: {
+        routes: {
           "/home": PPage(title: 'a Page title', pageType: ''),
         },
       );
@@ -102,7 +102,7 @@ void main() {
           headerKeys: const [],
           schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
-        pages: {
+        routes: {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",
@@ -138,7 +138,7 @@ void main() {
               instance: 'dev',
             ),
           ),
-          pages: {
+          routes: {
             "/home": PPage(
               pageType: "mine",
               title: "Wiggly",
@@ -162,7 +162,7 @@ void main() {
       // given
       final withoutQueryOrDataProvider = PScript(
         name: 'A Script',
-        pages: {
+        routes: {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",
@@ -185,7 +185,7 @@ void main() {
             instance: 'dev',
           ),
         ),
-        pages: {
+        routes: {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",
@@ -208,7 +208,7 @@ void main() {
             instance: 'dev',
           ),
         ),
-        pages: {
+        routes: {
           "/home": PPage(
             pageType: "mine",
             title: "Wiggly",

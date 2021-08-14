@@ -76,8 +76,7 @@ PPQuery _$PPQueryFromJson(Map<String, dynamic> json) {
   )..version = json['version'] as int;
 }
 
-Map<String, dynamic> _$PPQueryToJson(PPQuery instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,

@@ -133,6 +133,8 @@ abstract class PSchemaElement {
 ///
 /// If a role is specified - for example in [readRoles] - there is no need to also specify 'read' in
 /// [requiresAuthentication], provided you use [requiresReadAuthentication]
+///
+/// If no authentication is required, simply leave all properties empty
 @JsonSerializable(explicitToJson: true)
 class PPermissions {
   final List<RequiresAuth> _requiresAuthentication;

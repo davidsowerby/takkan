@@ -26,28 +26,35 @@ void main() {
       // given
       final script = PScript(
         name: 'A Script',
-        pages: {
+        routes: {
           '/home': PPage(
             title: 'A page',
             // ignore: missing_required_param
             content: [
-              PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
-                    PPanel(property: '',
-                      caption: 'panel11',
-                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName:'default',property:'',caption: 'page-part1'),
-              ],
-            ),
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    caption: 'panel11',
+                    content: [
+                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(
+                  readTraitName: 'default',
+                  property: '',
+                  caption: 'page-part1'),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -78,27 +85,35 @@ void main() {
       // given
       final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.panelsOnly,
-        pages: {
-          '/home': PPage(title: 'A page',
-              // ignore: missing_required_param
-              content: [
-                PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
-                    PPanel(property: '',
-                      caption: 'panel11',
-                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-              ],
-            ),
+        routes: {
+          '/home': PPage(
+            title: 'A page',
+            // ignore: missing_required_param
+            content: [
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    caption: 'panel11',
+                    content: [
+                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(
+                  readTraitName: 'part',
+                  caption: 'page-part1',
+                  controlEdit: ControlEdit.thisOnly),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -121,28 +136,35 @@ void main() {
     test('firstLevelPanels with Part override', () {
       // given
       final script = PScript(name: 'A Script',
-        pages: {
+        routes: {
           '/home': PPage(
-              title: 'title',
-              controlEdit: ControlEdit.firstLevelPanels,
-              content: [
-                PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
-                    PPanel(property: '',
-                      caption: 'panel11',
-                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-              ],
-            ),
+            title: 'title',
+            controlEdit: ControlEdit.firstLevelPanels,
+            content: [
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    caption: 'panel11',
+                    content: [
+                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(
+                  readTraitName: 'part',
+                  caption: 'page-part1',
+                  controlEdit: ControlEdit.thisOnly),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -165,26 +187,31 @@ void main() {
     test('thisOnly does nothing if too high', () {
       // given
       final script = PScript(name:'A script',
-        pages: {
-          '/home': PPage(title: 'A page',
-              content: [
-                PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
-                    PPanel(property:'',
-                      caption: 'panel11',
-                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName: 'part',caption: 'page-part1'),
-              ],
-            ),
+        routes: {
+          '/home': PPage(
+            title: 'A page',
+            content: [
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    caption: 'panel11',
+                    content: [
+                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(readTraitName: 'part', caption: 'page-part1'),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -208,27 +235,35 @@ void main() {
       // given
       final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
-        pages: {
-          '/home': PPage(title: 'A page',
-              content: [
-                PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName: 'part',caption: 'panel1-part1'),
-                    PPanel(property: '',
-                      controlEdit: ControlEdit.noEdit,
-                      caption: 'panel11',
-                      content: [PPart(readTraitName: 'part',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName: 'part',caption: 'page-part1', controlEdit: ControlEdit.thisOnly),
-              ],
-            ),
+        routes: {
+          '/home': PPage(
+            title: 'A page',
+            content: [
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    controlEdit: ControlEdit.noEdit,
+                    caption: 'panel11',
+                    content: [
+                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(
+                  readTraitName: 'part',
+                  caption: 'page-part1',
+                  controlEdit: ControlEdit.thisOnly),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
@@ -252,27 +287,41 @@ void main() {
       // given
       final script = PScript(name: 'A Script',
         controlEdit: ControlEdit.inherited,
-        pages: {
-          '/home': PPage(title: 'A page',
-              content: [
-                PPanel(property: '',
-                  caption: 'panel1',
-                  content: [
-                    PPart(readTraitName:'default',property:'',caption: 'panel1-part1'),
-                    PPanel(property: '',
-                      controlEdit: ControlEdit.partsOnly,
-                      caption: 'panel11',
-                      content: [PPart(readTraitName:'default',property:'',caption: 'panel11-part1')],
-                    ),
-                  ],
-                ),
-                PPart(readTraitName:'default',property:'',caption: 'page-part1'),
-              ],
-            ),
+        routes: {
+          '/home': PPage(
+            title: 'A page',
+            content: [
+              PPanel(
+                property: '',
+                caption: 'panel1',
+                content: [
+                  PPart(
+                      readTraitName: 'default',
+                      property: '',
+                      caption: 'panel1-part1'),
+                  PPanel(
+                    property: '',
+                    controlEdit: ControlEdit.partsOnly,
+                    caption: 'panel11',
+                    content: [
+                      PPart(
+                          readTraitName: 'default',
+                          property: '',
+                          caption: 'panel11-part1')
+                    ],
+                  ),
+                ],
+              ),
+              PPart(
+                  readTraitName: 'default',
+                  property: '',
+                  caption: 'page-part1'),
+            ],
+          ),
         },
       );
 
-      final page = script.pages['/home'];
+      final page = script.routes['/home'];
       final panel1 = page?.content[0] as PPanel;
       final panel11 = panel1.content[1] as PPanel;
       final panel1Part1 = panel1.content[0] as PPart;
