@@ -17,7 +17,6 @@ import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -427,20 +426,11 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
   PDocument documentSchemaFromQuery({required String querySchemaName}) {
-    final PQuerySchema? querySchema = config.schema.queries[querySchemaName];
-    if (querySchema == null) {
-      throw PreceptException("query schema '$querySchemaName' not found");
-    }
-    return documentSchema(documentSchemaName: querySchema.documentSchema);
+    return config.documentSchemaFromQuery(querySchemaName: querySchemaName);
   }
 
   PDocument documentSchema({required String documentSchemaName}) {
-    final PDocument? documentSchema =
-        config.schema.documents[documentSchemaName];
-    if (documentSchema == null) {
-      throw PreceptException("document schema '$documentSchemaName' not found");
-    }
-    return documentSchema;
+    return config.documentSchema(documentSchemaName: documentSchemaName);
   }
 
   /// ============ Provided by sub-class implementations ==========================================

@@ -78,7 +78,9 @@ class ReadResultItem extends ReadResult<Map<String, dynamic>> {
   /// This relies on 'objectId' being included in all queries that return this result type.
   /// This is enforced in the DataProviderDelegate, to avoid a lot of
   /// repetitive checking.  Check for success before invoking
-  String get objectId => data['objectId'];
+  ///
+  /// TODO: This will fail with non-back4app entities, especially public REST APIs
+  String get objectId => data['objectId'] ?? '?';
 }
 
 class ReadResultList extends ReadResult<List<Map<String, dynamic>>> {
