@@ -1,3 +1,4 @@
+import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/locale.dart';
 import 'package:precept_client/common/page/signInPage.dart';
@@ -9,7 +10,6 @@ import 'package:precept_client/library/themeLookup.dart';
 import 'package:precept_client/user/signInFactory.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/signin/signIn.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 
 void preceptDefaultInjectionBindings() {
   commonInjectionBindings();
@@ -26,7 +26,6 @@ commonInjectionBindings() {
   getIt.registerFactory<JsonAssetLoader>(() => DefaultJsonAssetLoader());
   getIt.registerFactory<SignInFactory>(() => DefaultSignInFactory());
   getIt.registerFactory<EmailSignInFactory>(() => DefaultEmailSignInFactory());
-
 }
 
 libraryInjectionBindings() {
@@ -40,7 +39,7 @@ documentInjectionBindings(){
 routerInjectionBindings(){
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
   getIt.registerFactoryParam<SignInPage, PSignInOptions,int>((param1, param2) => DefaultSignInPage(dataProvider: param1 as DataProvider, pageArguments: param2 as Map<String,dynamic>,));
-  getIt.registerSingleton<PreceptRouter>(PreceptRouter());
+  // getIt.registerSingleton<PreceptRouter>(PreceptRouter());
 }
 
 themeInjectionBindings() {

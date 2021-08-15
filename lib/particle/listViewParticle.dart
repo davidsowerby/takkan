@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/common/component/nav/navTile.dart';
 import 'package:precept_client/common/content/contentState.dart';
@@ -7,16 +8,19 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_script/part/abstractListView.dart';
 import 'package:precept_script/part/listView.dart';
+import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:provider/provider.dart';
 
 mixin ListViewParticleBuilder {
-  Widget modelBuilder(
-      BuildContext context, PAbstractListView config, int index, List<Map<String, dynamic>> data) {
+  Widget modelBuilder(BuildContext context, PAbstractListView config, int index,
+      List<Map<String, dynamic>> data) {
     final dataItem = data[index];
     return _navTileBuilder(dataItem, config);
   }
 
-  Widget _listTileBuilder(Map<String, dynamic> entry, PAbstractListView config) {
+  Widget _listTileBuilder(
+      Map<String, dynamic> entry, PAbstractListView config) {
     return ListTile(
       title: Text(entry[config.titleProperty]),
       subtitle: Text(
@@ -26,11 +30,21 @@ mixin ListViewParticleBuilder {
   }
 
   Widget _navTileBuilder(Map<String, dynamic> entry, PAbstractListView config) {
-
-
+// TODO: this Back4App specific
+    final documentSchemaName = config.query!.schema!.documentSchema;
+    final PDocument documentSchema = config.dataProvider!
+        .documentSchema(documentSchemaName: documentSchemaName);
+    final String path = documentSchema.name;
     return NavigationTile(
-      route: "${entry['__typename']}",// TODO: this Back4App specific
-      arguments: {ContentState.preloadDataKey:entry},
+      route: path,
+      arguments: {
+        ContentState.preloadDataKey: ReadResultItem(
+          data: entry,
+          success: true,
+          path: path,
+          queryReturnType: QueryReturnType.futureItem,
+        )
+      },
       title: Text(entry[config.titleProperty]),
       subtitle: Text(
         entry[config.subtitleProperty] ?? '',
@@ -61,11 +75,13 @@ class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
 
   @override
   Widget build(BuildContext context) {
-    final bool readMode = (readOnly) ? true : Provider.of<EditState>(context).readMode;
+    final bool readMode =
+        (readOnly) ? true : Provider.of<EditState>(context).readMode;
     final List<Map<String, dynamic>> data = connector.readFromModel();
     final ListView listView = ListView.builder(
         itemCount: data.length,
-        itemBuilder: (context, index) => modelBuilder(context, config, index, data));
+        itemBuilder: (context, index) =>
+            modelBuilder(context, config, index, data));
     if (readMode) {
       final ListViewReadTrait modeTrait = trait as ListViewReadTrait;
     } else {

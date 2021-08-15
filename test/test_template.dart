@@ -74,7 +74,7 @@ final PScript kitchenSinkValidation = PScript(
     schema: validationSchema,
     configSource: PConfigSource(segment: 'fake', instance: 'fake'),
   ),
-  pages: {
+  routes: {
     '/test': PPage(
       pageType: Library.simpleKey,
       title: 'Page 1',
@@ -125,7 +125,7 @@ void main() {
       // when
       final app = MaterialApp(
           home: PreceptPage(
-        config: kitchenSinkValidation.pages['/test']!,
+            config: kitchenSinkValidation.routes['/test']!,
       ));
 
       await tester.pumpWidget(app);

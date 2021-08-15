@@ -164,7 +164,7 @@ class Precept {
     final PScript firstModel = models[0];
     String name = firstModel.name;
     String id = firstModel.pid ?? name;
-    Map<String, PPage> pages = Map();
+    Map<String, PPage> routes = Map();
     final ConversionErrorMessages conversionErrorMessages =
         ConversionErrorMessages(patterns: Map());
     final ValidationErrorMessages validationErrorMessages =
@@ -174,7 +174,7 @@ class Precept {
     PQuery? query;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      pages.addAll(s.pages);
+      routes.addAll(s.routes);
       conversionErrorMessages.patterns
           .addAll(s.conversionErrorMessages.patterns);
       validationErrorMessages.typePatterns
@@ -185,7 +185,7 @@ class Precept {
       controlEdit = s.controlEdit;
       _rootModel = PScript(
         name: name,
-        pages: pages,
+        routes: routes,
         id: id,
         conversionErrorMessages: conversionErrorMessages,
         validationErrorMessages: validationErrorMessages,

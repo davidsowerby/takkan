@@ -5,7 +5,6 @@ import 'package:precept_client/page/errorPage.dart';
 import 'package:precept_client/page/standardPage.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/error.dart';
-import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';
 
 /// Router for Precept.
@@ -35,13 +34,16 @@ class PreceptRouter {
   PreceptRouter();
 
   Route<dynamic> generateRoute(RouteSettings settings, BuildContext context) {
-    logType(this.runtimeType)
-        .d("Requested route is: ${settings.name} with arguments ${settings.arguments}.");
+    logType(this.runtimeType).d(
+        "Requested route is: ${settings.name} with arguments ${settings.arguments}.");
 
-    final Map<String, dynamic> pageArguments = (settings.arguments==null) ? {} : settings.arguments as Map<String, dynamic>;
+    final Map<String, dynamic> pageArguments = (settings.arguments == null)
+        ? {}
+        : settings.arguments as Map<String, dynamic>;
     if (settings.name == 'signIn') {
-      _preSignInRoute = pageArguments['returnRoute'];}
-    final PPage? preceptPage = script.pages[settings.name];
+      _preSignInRoute = pageArguments['returnRoute'];
+    }
+    final PPage? preceptPage = script.routes[settings.name];
     if (preceptPage == null) {
       return _routeNotRecognised(settings);
     }
@@ -81,7 +83,7 @@ class PreceptRouter {
   }
 
   hasRoute(String path) {
-    return script.pages.containsKey(path);
+    return script.routes.containsKey(path);
   }
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
@@ -103,4 +105,6 @@ class PreceptRouterConfig {
   const PreceptRouterConfig({this.preceptFirst = true, this.alternateRouter});
 }
 
-PreceptRouter get router => inject<PreceptRouter>();
+final PreceptRouter _router = PreceptRouter();
+
+PreceptRouter get router => _router;

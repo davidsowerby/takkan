@@ -26,7 +26,7 @@ import '../../helper/widgetTestTree.dart';
 final PScript kitchenSink01 = PScript(
   name: 'script01',
   isStatic: IsStatic.yes,
-  pages: {
+  routes: {
     'test': PPage(
       pageType: Library.simpleKey,
       title: 'Page 1',
@@ -132,7 +132,7 @@ void main() {
       // when
       final widgetTree = MaterialApp(
           home: PreceptPage(
-        config: script.pages['test']!,
+            config: script.routes['test']!,
       ));
       await tester.pumpWidget(widgetTree);
       final pumps = await tester.pumpAndSettle();

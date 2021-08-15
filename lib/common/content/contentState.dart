@@ -170,14 +170,13 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent>
   }
 
   Future<ReadResultItem> _preloadData() async {
-    final data = pageArguments[ContentState.preloadDataKey];
+    final ReadResult readResult = pageArguments[ContentState.preloadDataKey];
 
-    /// TODO: This is a fudge - should we keep the path somehow or read it from the data?, maybe store a ReadResult with the preloadData
     return ReadResultItem(
-        data: data,
+        data: readResult.data,
         success: true,
         queryReturnType: QueryReturnType.futureItem,
-        path: '?');
+        path: readResult.path);
   }
 
   /// Loads data with an expected single result
@@ -431,8 +430,7 @@ class ContentBindings {
     final String documentSchemaName = (config.queryIsDeclared)
         ? lookupDocumentSchemaName()
         : (preloaded)
-            ? pageArguments[ContentState.preloadDataKey]
-                ['__typename'] // TODO: back4app specific
+            ? pageArguments[ContentState.preloadDataKey].path
             : notSet;
     if (config.queryIsDeclared || preloaded) {
       dataSource = DataSource(
