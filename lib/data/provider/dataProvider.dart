@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
@@ -96,6 +98,26 @@ class PDataProvider extends PreceptItem {
           item: this,
           msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
+  }
+
+  PDocument documentSchemaFromQuery({required String querySchemaName}) {
+    final PQuerySchema? querySchema = schema.queries[querySchemaName];
+    if (querySchema == null) {
+      String msg = "query schema '$querySchemaName' not found";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return documentSchema(documentSchemaName: querySchema.documentSchema);
+  }
+
+  PDocument documentSchema({required String documentSchemaName}) {
+    final PDocument? documentSchema = schema.documents[documentSchemaName];
+    if (documentSchema == null) {
+      String msg = "document schema '$documentSchemaName' not found";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return documentSchema;
   }
 
   walk(List<ScriptVisitor> visitors) {
