@@ -4,6 +4,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 
@@ -197,11 +198,11 @@ enum PDocumentType { standard, versioned }
 
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
 @JsonSerializable(explicitToJson: true)
-@PSchemaElementMapConverter()
+@PSchemaFieldMapConverter()
 class PDocument extends PSchemaElement {
   final PPermissions permissions;
   final PDocumentType documentType;
-  final Map<String, PSchemaElement> fields;
+  final Map<String, PField> fields;
 
   PDocument({
     required this.fields,

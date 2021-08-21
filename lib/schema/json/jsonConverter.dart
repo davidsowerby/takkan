@@ -4,48 +4,46 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/schema/field/boolean.dart';
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
+import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/geoPosition.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/pGeoLocation.dart';
 import 'package:precept_script/schema/field/pointer.dart';
 import 'package:precept_script/schema/field/postCode.dart';
 import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
 
-class PSchemaElementMapConverter
-    implements JsonConverter<Map<String, PSchemaElement>, Map<String, dynamic>> {
-  const PSchemaElementMapConverter();
+class PSchemaFieldMapConverter
+    implements JsonConverter<Map<String, PField>, Map<String, dynamic>> {
+  const PSchemaFieldMapConverter();
 
   @override
-  Map<String, PSchemaElement> fromJson(Map<String, dynamic> json) {
-    Map<String, PSchemaElement> outputMap = Map();
+  Map<String, PField> fromJson(Map<String, dynamic> json) {
+    Map<String, PField> outputMap = Map();
     for (var entry in json.entries) {
       if (entry.key != "-part-") {
-        outputMap[entry.key] = PSchemaElementConverter().fromJson(entry.value);
+        outputMap[entry.key] = PFieldConverter().fromJson(entry.value);
       }
     }
     return outputMap;
   }
 
   @override
-  Map<String, dynamic> toJson(Map<String, PSchemaElement> partMap) {
+  Map<String, dynamic> toJson(Map<String, PField> partMap) {
     final outputMap = Map<String, dynamic>();
     for (var entry in partMap.entries) {
-      outputMap[entry.key] = PSchemaElementConverter().toJson(entry.value);
+      outputMap[entry.key] = PFieldConverter().toJson(entry.value);
     }
     return outputMap;
   }
 }
 
-class PSchemaElementConverter implements JsonConverter<PSchemaElement, Map<String, dynamic>> {
-  const PSchemaElementConverter();
+class PFieldConverter implements JsonConverter<PField, Map<String, dynamic>> {
+  const PFieldConverter();
 
   @override
-  PSchemaElement fromJson(Map<String, dynamic> json) {
+  PField fromJson(Map<String, dynamic> json) {
     final elementType = json["-element-"];
     switch (elementType) {
-      case 'PDocument':
-        return PDocument.fromJson(json);
       case 'PBoolean':
         return PBoolean.fromJson(json);
       case 'PInteger':
@@ -85,7 +83,7 @@ class PSchemaElementConverter implements JsonConverter<PSchemaElement, Map<Strin
   }
 
   @override
-  Map<String, dynamic> toJson(PSchemaElement object) {
+  Map<String, dynamic> toJson(PField object) {
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = object.toJson();
     jsonMap["-element-"] = type.toString();
