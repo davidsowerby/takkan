@@ -92,6 +92,14 @@ class PSchema extends PSchemaElement {
 
 /// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
 ///
+/// [_name] is not set directly, but through [init].  This is to simplify the declaration of schema elements, by allowing a map key to become the name of the schema element.
+///
+/// The declaration of elements then becomes something like:
+///
+/// PDocument(fields: {'title':PString()}), rather than:
+/// PDocument(fields: [PString(name: 'title')])
+///
+/// which for longer declarations is a bit more readable
 abstract class PSchemaElement {
   @JsonKey(ignore: true)
   PSchemaElement? _parent;
@@ -105,6 +113,7 @@ abstract class PSchemaElement {
 
   Map<String, dynamic> toJson();
 
+  /// see [PSchemaElement] for explanation of why name is set here
   doInit({required PSchemaElement parent, required String name}) {
     _parent = parent;
     _name = name;
