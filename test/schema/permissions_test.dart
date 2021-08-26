@@ -26,7 +26,8 @@ void main() {
 
     test('RequiresAuth.all returns correctly', () {
       // given
-      final PPermissions permissions = PPermissions(requiresAuthentication: [RequiresAuth.all]);
+      final PPermissions permissions =
+          PPermissions(requiresAuthentication: [RequiresAuth.all]);
       // when
 
       // then
@@ -34,7 +35,6 @@ void main() {
       expect(permissions.requiresReadAuthentication, true);
       expect(permissions.requiresUpdateAuthentication, true);
       expect(permissions.requiresDeleteAuthentication, true);
-
     });
 
     test('role set, requiresAuthentication returns true', () {
@@ -67,8 +67,40 @@ void main() {
       expect(document.requiresDeleteAuthentication, false);
     });
 
+    test('readRoles added to get, find, count', () {
+      // given
+      final PDocument document = PDocument(
+          permissions: PPermissions(
+            readRoles: ['reader'],
+            getRoles: ['getter'],
+            findRoles: ['finder'],
+            countRoles: ['counter'],
+          ),
+          fields: {});
+      // when
 
+      // then
+      expect(document.permissions.getRoles, ['getter', 'reader']);
+      expect(document.permissions.findRoles, ['finder', 'reader']);
+      expect(document.permissions.countRoles, ['counter', 'reader']);
+    });
 
+    test('writeRoles added to create, update, delete', () {
+      // given
+      final PDocument document = PDocument(
+          permissions: PPermissions(
+              writeRoles: ['writer'],
+              createRoles: ['creator'],
+              updateRoles: ['updater'],
+              deleteRoles: ['destroyer']),
+          fields: {});
+      // when
 
+      // then
+
+      expect(document.permissions.createRoles, ['creator', 'writer']);
+      expect(document.permissions.updateRoles, ['updater', 'writer']);
+      expect(document.permissions.deleteRoles, ['destroyer', 'writer']);
+    });
   });
 }

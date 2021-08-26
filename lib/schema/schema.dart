@@ -52,7 +52,8 @@ class PSchema extends PSchemaElement {
       : _documents = documents,
         super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
 
-  factory PSchema.fromJson(Map<String, dynamic> json) => _$PSchemaFromJson(json);
+  factory PSchema.fromJson(Map<String, dynamic> json) =>
+      _$PSchemaFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSchemaToJson(this);
 
@@ -131,44 +132,114 @@ abstract class PSchemaElement {
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     } else {
-      return (_isReadOnly == IsReadOnly.inherited) ? parent!._isReadOnly : _isReadOnly;
+      return (_isReadOnly == IsReadOnly.inherited)
+          ? parent!._isReadOnly
+          : _isReadOnly;
     }
   }
 }
 
+/// Permissions were designed very much with Back4App in mind, so there is a
+/// direct mapping between this class and Back4App Class Level Permissions.
+///
 /// If a CRUD action only requires that the user is authenticated, specify it in [requiresAuthentication].
 ///
 /// If a CRUD action requires that the user has a specific role, specify that role in the appropriate
-/// role list,  [readRoles], [updateRoles], [createRoles], [deleteRoles]
+/// role list, for example [updateRoles], [createRoles], [deleteRoles].  A user with any of the specified roles
+/// will have appropriate access.
 ///
-/// If a role is specified - for example in [readRoles] - there is no need to also specify 'read' in
-/// [requiresAuthentication], provided you use [requiresReadAuthentication]
+/// If a role is specified - for example in [updateRoles] - there is no need to
+/// also specify 'update' in [requiresAuthentication], provided you use
+/// [requiresReadAuthentication]
+///
+/// Roles specified in [readRoles] are added to [getRoles], [findRoles] and [countRoles]
+/// Roles specified in [writeRoles] are added to [createRoles],[updateRoles] and [deleteRoles]
 ///
 /// If no authentication is required, simply leave all properties empty
+///
+///
 @JsonSerializable(explicitToJson: true)
 class PPermissions {
   final List<RequiresAuth> _requiresAuthentication;
+
   final List<String> readRoles;
-  final List<String> updateRoles;
-  final List<String> createRoles;
-  final List<String> deleteRoles;
+  final List<String> writeRoles;
+
+  final List<String> _getRoles;
+  final List<String> _findRoles;
+  final List<String> _countRoles;
+
+  final List<String> _createRoles;
+  final List<String> _updateRoles;
+  final List<String> _deleteRoles;
+
+  final List<String> addFieldRoles;
 
   const PPermissions({
     List<RequiresAuth> requiresAuthentication = const [],
     this.readRoles = const [],
-    this.updateRoles = const [],
-    this.createRoles = const [],
-    this.deleteRoles = const [],
-  }) : _requiresAuthentication = requiresAuthentication;
+    this.writeRoles = const [],
+    List<String> updateRoles = const [],
+    List<String> createRoles = const [],
+    List<String> deleteRoles = const [],
+    this.addFieldRoles = const [],
+    List<String> getRoles = const [],
+    List<String> findRoles = const [],
+    List<String> countRoles = const [],
+  })
+      : _requiresAuthentication = requiresAuthentication,
+        _updateRoles = updateRoles,
+        _createRoles = createRoles,
+        _deleteRoles = deleteRoles,
+        _getRoles = getRoles,
+        _findRoles = findRoles,
+        _countRoles = countRoles;
 
-  factory PPermissions.fromJson(Map<String, dynamic> json) => _$PPermissionsFromJson(json);
+  List<String> get updateRoles {
+    final list = List<String>.from(_updateRoles, growable: true);
+    list.addAll(writeRoles);
+    return list;
+  }
+
+  List<String> get createRoles {
+    final list = List<String>.from(_createRoles, growable: true);
+    list.addAll(writeRoles);
+    return list;
+  }
+
+  List<String> get deleteRoles {
+    final list = List<String>.from(_deleteRoles, growable: true);
+    list.addAll(writeRoles);
+    return list;
+  }
+
+  List<String> get getRoles {
+    final list = List<String>.from(_getRoles, growable: true);
+    list.addAll(readRoles);
+    return list;
+  }
+
+  List<String> get findRoles {
+    final list = List<String>.from(_findRoles, growable: true);
+    list.addAll(readRoles);
+    return list;
+  }
+
+  List<String> get countRoles {
+    final list = List<String>.from(_countRoles, growable: true);
+    list.addAll(readRoles);
+    return list;
+  }
+
+  factory PPermissions.fromJson(Map<String, dynamic> json) =>
+      _$PPermissionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
 
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.create) ||
-      createRoles.isNotEmpty;
+          _requiresAuthentication.contains(RequiresAuth.create) ||
+          createRoles.isNotEmpty;
 
   bool get requiresReadAuthentication =>
       _requiresAuthentication.contains(RequiresAuth.all) ||
@@ -215,7 +286,8 @@ class PDocument extends PSchemaElement {
   @JsonKey(ignore: true)
   PSchemaElement? get parent => _parent;
 
-  factory PDocument.fromJson(Map<String, dynamic> json) => _$PDocumentFromJson(json);
+  factory PDocument.fromJson(Map<String, dynamic> json) =>
+      _$PDocumentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 
@@ -225,13 +297,16 @@ class PDocument extends PSchemaElement {
     _name = name;
   }
 
-  bool get requiresCreateAuthentication => permissions.requiresCreateAuthentication;
+  bool get requiresCreateAuthentication =>
+      permissions.requiresCreateAuthentication;
 
   bool get requiresReadAuthentication => permissions.requiresReadAuthentication;
 
-  bool get requiresUpdateAuthentication => permissions.requiresUpdateAuthentication;
+  bool get requiresUpdateAuthentication =>
+      permissions.requiresUpdateAuthentication;
 
-  bool get requiresDeleteAuthentication => permissions.requiresDeleteAuthentication;
+  bool get requiresDeleteAuthentication =>
+      permissions.requiresDeleteAuthentication;
 }
 
 /// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure
@@ -251,7 +326,8 @@ class PSchemaSource extends PreceptItem {
     int version = 0,
   }) : super(id: id, version: version);
 
-  factory PSchemaSource.fromJson(Map<String, dynamic> json) => _$PSchemaSourceFromJson(json);
+  factory PSchemaSource.fromJson(Map<String, dynamic> json) =>
+      _$PSchemaSourceFromJson(json);
 
   Map<String, dynamic> toJson() => _$PSchemaSourceToJson(this);
 }
