@@ -7,17 +7,18 @@ part 'date.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PDate extends PField<DateValidation, DateTime> {
-  final DateTime? defaultValue;
-
   Type get modelType => DateTime;
 
   PDate({
-    this.defaultValue,
+    DateTime? defaultValue,
     List<DateValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+    defaultValue: defaultValue,
           validations: validations,
           permissions: permissions,
+          required: required,
         );
 
   factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
@@ -37,7 +38,8 @@ class DateValidation implements ModelValidation<ValidateDate, DateTime> {
 
   const DateValidation({required this.method, required this.param});
 
-  factory DateValidation.fromJson(Map<String, dynamic> json) => _$DateValidationFromJson(json);
+  factory DateValidation.fromJson(Map<String, dynamic> json) =>
+      _$DateValidationFromJson(json);
 
   Map<String, dynamic> toJson() => _$DateValidationToJson(this);
 }

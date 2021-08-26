@@ -7,13 +7,21 @@ import 'package:precept_script/script/script.dart';
 
 /// [VAL] is the validator type for example, [IntegerValidation]
 /// [MODEL] is the data type of the model attribute represented
-abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement {
+abstract class PField<VAL extends ModelValidation, MODEL>
+    extends PSchemaElement {
   final List<VAL> validations;
   final PPermissions? permissions;
+  final bool required;
+  final MODEL? defaultValue;
 
   Type get modelType;
 
-  PField({this.validations = const [], this.permissions}) : super();
+  PField({
+    this.validations = const [],
+    this.permissions,
+    required this.required,
+    this.defaultValue,
+  }) : super();
 
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> validate(MODEL value, PScript pScript) {

@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -6,12 +5,16 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'list.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PList extends PField<ListValidation, List> {
   PList({
-    List<ListValidation> validations=const [],
-    PPermissions permissions=const PPermissions(),
+    List<ListValidation> validations = const [],
+    PPermissions permissions = const PPermissions(),
+    bool required = false,
+    List? defaultValue,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           permissions: permissions,
           validations: validations,
         );
@@ -32,14 +35,15 @@ class PList extends PField<ListValidation, List> {
 
 enum ValidateList { containsLessThan, containsMoreThan }
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class ListValidation implements ModelValidation<ValidateList, List> {
   final ValidateList method;
   final int param;
 
-  const ListValidation({required this.method, this.param=0});
+  const ListValidation({required this.method, this.param = 0});
 
-  factory ListValidation.fromJson(Map<String, dynamic> json) => _$ListValidationFromJson(json);
+  factory ListValidation.fromJson(Map<String, dynamic> json) =>
+      _$ListValidationFromJson(json);
 
   Map<String, dynamic> toJson() => _$ListValidationToJson(this);
 }

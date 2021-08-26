@@ -1,27 +1,29 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
+import 'package:precept_script/schema/field/list.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/select.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'string.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PString extends PField<StringValidation, String> {
-  final String? defaultValue;
-
   PString({
-    this.defaultValue,
-    List<StringValidation> validations=const[],
+    String? defaultValue,
+    List<StringValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           validations: validations,
           permissions: permissions,
         );
 
   Type get modelType => String;
 
-  factory PString.fromJson(Map<String, dynamic> json) => _$PStringFromJson(json);
+  factory PString.fromJson(Map<String, dynamic> json) =>
+      _$PStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PStringToJson(this);
 
@@ -31,13 +33,20 @@ class PString extends PField<StringValidation, String> {
   }
 }
 
-@JsonSerializable( explicitToJson: true)
-class PListString extends PListField {
-  final List<String> defaultValue;
+@JsonSerializable(explicitToJson: true)
+class PListString extends PList {
+  PListString(
+      {List<String> defaultValue = const [],
+      bool required = false,
+      PPermissions permissions = const PPermissions()})
+      : super(
+          defaultValue: defaultValue,
+          required: required,
+          permissions: permissions,
+        );
 
-  PListString({this.defaultValue = const []});
-
-  factory PListString.fromJson(Map<String, dynamic> json) => _$PListStringFromJson(json);
+  factory PListString.fromJson(Map<String, dynamic> json) =>
+      _$PListStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListStringToJson(this);
 
@@ -51,14 +60,15 @@ class PListString extends PListField {
   }
 }
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class StringValidation implements ModelValidation<ValidateString, String> {
   final ValidateString method;
   final dynamic param;
 
   const StringValidation({required this.method, this.param});
 
-  factory StringValidation.fromJson(Map<String, dynamic> json) => _$StringValidationFromJson(json);
+  factory StringValidation.fromJson(Map<String, dynamic> json) =>
+      _$StringValidationFromJson(json);
 
   Map<String, dynamic> toJson() => _$StringValidationToJson(this);
 }

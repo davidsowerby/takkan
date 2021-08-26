@@ -15,12 +15,15 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
     permissions: json['permissions'] == null
         ? null
         : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
+    required: json['required'] as bool,
   );
 }
 
-Map<String, dynamic> _$PStringToJson(PString instance) => <String, dynamic>{
+Map<String, dynamic> _$PStringToJson(PString instance) =>
+    <String, dynamic>{
       'validations': instance.validations.map((e) => e.toJson()).toList(),
       'permissions': instance.permissions?.toJson(),
+      'required': instance.required,
       'defaultValue': instance.defaultValue,
     };
 
@@ -29,11 +32,16 @@ PListString _$PListStringFromJson(Map<String, dynamic> json) {
     defaultValue: (json['defaultValue'] as List<dynamic>)
         .map((e) => e as String)
         .toList(),
+    required: json['required'] as bool,
+    permissions:
+        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$PListStringToJson(PListString instance) =>
     <String, dynamic>{
+      'permissions': instance.permissions?.toJson(),
+      'required': instance.required,
       'defaultValue': instance.defaultValue,
     };
 

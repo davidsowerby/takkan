@@ -15,12 +15,15 @@ PInteger _$PIntegerFromJson(Map<String, dynamic> json) {
     permissions: json['permissions'] == null
         ? null
         : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
+    required: json['required'] as bool,
   );
 }
 
-Map<String, dynamic> _$PIntegerToJson(PInteger instance) => <String, dynamic>{
+Map<String, dynamic> _$PIntegerToJson(PInteger instance) =>
+    <String, dynamic>{
       'validations': instance.validations.map((e) => e.toJson()).toList(),
       'permissions': instance.permissions?.toJson(),
+      'required': instance.required,
       'defaultValue': instance.defaultValue,
     };
 

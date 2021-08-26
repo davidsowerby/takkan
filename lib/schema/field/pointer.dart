@@ -8,20 +8,22 @@ part 'pointer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PPointer extends PField<PointerValidation, Pointer> {
-  final Pointer? defaultValue;
-
   Type get modelType => Pointer;
 
   PPointer({
-    this.defaultValue,
+    Pointer? defaultValue,
     List<PointerValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           validations: validations,
           permissions: permissions,
         );
 
-  factory PPointer.fromJson(Map<String, dynamic> json) => _$PPointerFromJson(json);
+  factory PPointer.fromJson(Map<String, dynamic> json) =>
+      _$PPointerFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPointerToJson(this);
 

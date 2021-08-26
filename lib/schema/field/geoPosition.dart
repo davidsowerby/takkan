@@ -6,22 +6,24 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'geoPosition.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
-  final GeoPosition? defaultValue;
-
   Type get modelType => GeoPosition;
 
   PGeoPosition({
-    this.defaultValue,
-    List<GeoPositionValidation> validations=const[],
+    GeoPosition? defaultValue,
+    List<GeoPositionValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           validations: validations,
           permissions: permissions,
         );
 
-  factory PGeoPosition.fromJson(Map<String, dynamic> json) => _$PGeoPositionFromJson(json);
+  factory PGeoPosition.fromJson(Map<String, dynamic> json) =>
+      _$PGeoPositionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGeoPositionToJson(this);
 
@@ -31,8 +33,9 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
   }
 }
 
-@JsonSerializable( explicitToJson: true)
-class GeoPositionValidation implements ModelValidation<ValidateGeoPosition, GeoPosition> {
+@JsonSerializable(explicitToJson: true)
+class GeoPositionValidation
+    implements ModelValidation<ValidateGeoPosition, GeoPosition> {
   final ValidateGeoPosition method;
   final GeoPosition? param;
 

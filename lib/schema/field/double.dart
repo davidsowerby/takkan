@@ -5,22 +5,24 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'double.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PDouble extends PField<DoubleValidation, double> {
-  final double? defaultValue;
-
   Type get modelType => double;
 
   PDouble({
-    this.defaultValue,
-    List<DoubleValidation> validations=const[],
+    double? defaultValue,
+    List<DoubleValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           validations: validations,
           permissions: permissions,
         );
 
-  factory PDouble.fromJson(Map<String, dynamic> json) => _$PDoubleFromJson(json);
+  factory PDouble.fromJson(Map<String, dynamic> json) =>
+      _$PDoubleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDoubleToJson(this);
 
@@ -30,14 +32,15 @@ class PDouble extends PField<DoubleValidation, double> {
   }
 }
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class DoubleValidation implements ModelValidation<ValidateDouble, double> {
   final ValidateDouble method;
   final double param;
 
-  const DoubleValidation({required this.method,required this.param});
+  const DoubleValidation({required this.method, required this.param});
 
-  factory DoubleValidation.fromJson(Map<String, dynamic> json) => _$DoubleValidationFromJson(json);
+  factory DoubleValidation.fromJson(Map<String, dynamic> json) =>
+      _$DoubleValidationFromJson(json);
 
   Map<String, dynamic> toJson() => _$DoubleValidationToJson(this);
 }

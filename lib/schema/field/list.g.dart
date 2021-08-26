@@ -13,12 +13,15 @@ PList _$PListFromJson(Map<String, dynamic> json) {
         .toList(),
     permissions:
         PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
+    required: json['required'] as bool,
   );
 }
 
-Map<String, dynamic> _$PListToJson(PList instance) => <String, dynamic>{
+Map<String, dynamic> _$PListToJson(PList instance) =>
+    <String, dynamic>{
       'validations': instance.validations.map((e) => e.toJson()).toList(),
       'permissions': instance.permissions?.toJson(),
+      'required': instance.required,
     };
 
 ListValidation _$ListValidationFromJson(Map<String, dynamic> json) {

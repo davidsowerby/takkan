@@ -6,13 +6,12 @@ import 'package:precept_script/schema/schema.dart';
 
 part 'queryResult.g.dart';
 
-/// A [PQuerySchema] is very similar to a [PList], but it is not appropriate to run validation
-/// against a query result.
+/// A [PQuerySchema] is very similar to a [PList], except there is no facility to specify
+/// validations (as it is not appropriate to run validation on the results of a query)
 ///
 /// [documentSchema] is used to lookup the schema for the document(s) returned, from [PSchema.documents]
 ///
-/// [permissions] can be defined but usually permissions are set by the schema of the result
-/// 'documents'
+/// [permissions] can be defined but usually permissions are set by the [documentSchema]
 @JsonSerializable(explicitToJson: true)
 class PQuerySchema extends PField<ListValidation, List> {
   final String documentSchema;
@@ -20,7 +19,7 @@ class PQuerySchema extends PField<ListValidation, List> {
   PQuerySchema({
     required this.documentSchema,
     PPermissions permissions = const PPermissions(),
-  }) : super(permissions: permissions);
+  }) : super(permissions: permissions, required: false);
 
   factory PQuerySchema.fromJson(Map<String, dynamic> json) => _$PQuerySchemaFromJson(json);
 

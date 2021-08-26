@@ -11,20 +11,22 @@ part 'postCode.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PPostCode extends PField<PostCodeValidation, PostCode> {
-  final PostCode? defaultValue;
-
   Type get modelType => PostCode;
 
   PPostCode({
-    this.defaultValue,
+    PostCode? defaultValue,
     List<PostCodeValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+          defaultValue: defaultValue,
+          required: required,
           validations: validations,
           permissions: permissions,
         );
 
-  factory PPostCode.fromJson(Map<String, dynamic> json) => _$PPostCodeFromJson(json);
+  factory PPostCode.fromJson(Map<String, dynamic> json) =>
+      _$PPostCodeFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPostCodeToJson(this);
 
@@ -35,7 +37,8 @@ class PPostCode extends PField<PostCodeValidation, PostCode> {
 }
 
 @JsonSerializable(explicitToJson: true)
-class PostCodeValidation implements ModelValidation<ValidatePostCode, PostCode> {
+class PostCodeValidation
+    implements ModelValidation<ValidatePostCode, PostCode> {
   final ValidatePostCode method;
   final PostCode? param;
 
@@ -57,5 +60,5 @@ validatePostCode(PostCodeValidation validation, PostCode value) {
 }
 
 bool isValidFor(PostCode value, Locale locale) {
-  return isPostalCode(value.postCode, locale.countryCode?? 'en_GB');
+  return isPostalCode(value.postCode, locale.countryCode ?? 'en_GB');
 }

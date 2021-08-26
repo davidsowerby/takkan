@@ -12,7 +12,7 @@ final kitchenSinkSchema = PSchema(
     'Account': PDocument(
       fields: {
         'objectId': PString(),
-        'accountNumber': PString(),
+        'accountNumber': PString(defaultValue: 'unknown'),
         'category': PString(
           validations: [
             StringValidation(method: ValidateString.isLongerThan, param: 2),
@@ -33,7 +33,7 @@ final kitchenSinkSchema = PSchema(
         // 'notifications': PSelectBoolean(),
         'linkedAccounts': PPointer(),
         'joinDate': PDate(),
-        'average': PDouble(),
+        'average': PDouble(defaultValue: 23.8),
         // 'colourChoices': PSelectString(),
         'successRate': PDouble(),
       },

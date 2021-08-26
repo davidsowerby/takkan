@@ -7,17 +7,18 @@ part 'integer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PInteger extends PField<IntegerValidation, int> {
-  final int? defaultValue;
-
   Type get modelType => int;
 
   PInteger({
-    this.defaultValue,
+    int? defaultValue,
     List<IntegerValidation> validations = const [],
     PPermissions? permissions,
+    bool required = false,
   }) : super(
+    required: required,
           validations: validations,
           permissions: permissions,
+          defaultValue: defaultValue,
         );
 
   factory PInteger.fromJson(Map<String, dynamic> json) =>

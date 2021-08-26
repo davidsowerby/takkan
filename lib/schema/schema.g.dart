@@ -55,8 +55,7 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PDocumentToJson(PDocument instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PDocumentToJson(PDocument instance) => <String, dynamic>{
       'permissions': instance.permissions.toJson(),
       'documentType': _$PDocumentTypeEnumMap[instance.documentType],
       'fields': const PSchemaFieldMapConverter().toJson(instance.fields),
