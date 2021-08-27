@@ -19,9 +19,13 @@ void main() {
       // then
 
       expect(permissions.requiresCreateAuthentication, false);
-      expect(permissions.requiresReadAuthentication, false);
+      expect(permissions.requiresFindAuthentication, false);
       expect(permissions.requiresUpdateAuthentication, false);
       expect(permissions.requiresDeleteAuthentication, false);
+      expect(permissions.requiresFindAuthentication, false);
+      expect(permissions.requiresGetAuthentication, false);
+      expect(permissions.requiresCountAuthentication, false);
+      expect(permissions.requiresAddFieldAuthentication, false);
     });
 
     test('RequiresAuth.all returns correctly', () {
@@ -32,9 +36,13 @@ void main() {
 
       // then
       expect(permissions.requiresCreateAuthentication, true);
-      expect(permissions.requiresReadAuthentication, true);
+      expect(permissions.requiresFindAuthentication, true);
       expect(permissions.requiresUpdateAuthentication, true);
       expect(permissions.requiresDeleteAuthentication, true);
+      expect(permissions.requiresFindAuthentication, true);
+      expect(permissions.requiresGetAuthentication, true);
+      expect(permissions.requiresCountAuthentication, true);
+      expect(permissions.requiresAddFieldAuthentication, true);
     });
 
     test('role set, requiresAuthentication returns true', () {
@@ -50,9 +58,13 @@ void main() {
       // then
 
       expect(permissions.requiresCreateAuthentication, true);
-      expect(permissions.requiresReadAuthentication, true);
+      expect(permissions.requiresFindAuthentication, true);
       expect(permissions.requiresUpdateAuthentication, true);
       expect(permissions.requiresDeleteAuthentication, true);
+      expect(permissions.requiresFindAuthentication, true);
+      expect(permissions.requiresGetAuthentication, true);
+      expect(permissions.requiresCountAuthentication, true);
+      expect(permissions.requiresAddFieldAuthentication, false);
     });
 
     test('PDocument has default permissions', () {

@@ -150,7 +150,7 @@ abstract class PSchemaElement {
 ///
 /// If a role is specified - for example in [updateRoles] - there is no need to
 /// also specify 'update' in [requiresAuthentication], provided you use
-/// [requiresReadAuthentication]
+/// [requiresFindAuthentication]
 ///
 /// Roles specified in [readRoles] are added to [getRoles], [findRoles] and [countRoles]
 /// Roles specified in [writeRoles] are added to [createRoles],[updateRoles] and [deleteRoles]
@@ -236,15 +236,25 @@ class PPermissions {
 
   Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
 
+  bool get requiresGetAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.get) ||
+      getRoles.isNotEmpty;
+
+  bool get requiresFindAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.find) ||
+      findRoles.isNotEmpty;
+
+  bool get requiresCountAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.count) ||
+      countRoles.isNotEmpty;
+
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(RequiresAuth.all) ||
-          _requiresAuthentication.contains(RequiresAuth.create) ||
-          createRoles.isNotEmpty;
-
-  bool get requiresReadAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.read) ||
-      readRoles.isNotEmpty;
+      _requiresAuthentication.contains(RequiresAuth.create) ||
+      createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
       _requiresAuthentication.contains(RequiresAuth.all) ||
@@ -255,9 +265,25 @@ class PPermissions {
       _requiresAuthentication.contains(RequiresAuth.all) ||
       _requiresAuthentication.contains(RequiresAuth.delete) ||
       deleteRoles.isNotEmpty;
+
+  bool get requiresAddFieldAuthentication =>
+      _requiresAuthentication.contains(RequiresAuth.all) ||
+      _requiresAuthentication.contains(RequiresAuth.addField) ||
+      addFieldRoles.isNotEmpty;
 }
 
-enum RequiresAuth { all, create, read, update, delete }
+enum RequiresAuth {
+  all,
+  read,
+  get,
+  find,
+  count,
+  write,
+  create,
+  update,
+  delete,
+  addField
+}
 
 /// A [standard] document has no special attributes.
 /// A [versioned] document has a simple integer version number, incremented each time
@@ -300,7 +326,7 @@ class PDocument extends PSchemaElement {
   bool get requiresCreateAuthentication =>
       permissions.requiresCreateAuthentication;
 
-  bool get requiresReadAuthentication => permissions.requiresReadAuthentication;
+  bool get requiresReadAuthentication => permissions.requiresFindAuthentication;
 
   bool get requiresUpdateAuthentication =>
       permissions.requiresUpdateAuthentication;
