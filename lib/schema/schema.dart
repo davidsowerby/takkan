@@ -186,8 +186,7 @@ class PPermissions {
     List<String> getRoles = const [],
     List<String> findRoles = const [],
     List<String> countRoles = const [],
-  })
-      : _requiresAuthentication = requiresAuthentication,
+  })  : _requiresAuthentication = requiresAuthentication,
         _updateRoles = updateRoles,
         _createRoles = createRoles,
         _deleteRoles = deleteRoles,
@@ -326,13 +325,21 @@ class PDocument extends PSchemaElement {
   bool get requiresCreateAuthentication =>
       permissions.requiresCreateAuthentication;
 
-  bool get requiresReadAuthentication => permissions.requiresFindAuthentication;
+  bool get requiresFindAuthentication => permissions.requiresFindAuthentication;
+
+  bool get requiresGetAuthentication => permissions.requiresGetAuthentication;
+
+  bool get requiresCountAuthentication =>
+      permissions.requiresCountAuthentication;
 
   bool get requiresUpdateAuthentication =>
       permissions.requiresUpdateAuthentication;
 
   bool get requiresDeleteAuthentication =>
       permissions.requiresDeleteAuthentication;
+
+  bool get requiresAddFieldAuthentication =>
+      permissions.requiresAddFieldAuthentication;
 }
 
 /// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure

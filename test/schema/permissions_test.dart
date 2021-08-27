@@ -74,7 +74,7 @@ void main() {
 
       // then
       expect(document.requiresCreateAuthentication, false);
-      expect(document.requiresReadAuthentication, false);
+      expect(document.requiresFindAuthentication, false);
       expect(document.requiresUpdateAuthentication, false);
       expect(document.requiresDeleteAuthentication, false);
     });
