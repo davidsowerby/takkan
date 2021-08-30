@@ -7,9 +7,9 @@ import 'package:precept_script/schema/field/double.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/geoPosition.dart';
 import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/pGeoLocation.dart';
 import 'package:precept_script/schema/field/pointer.dart';
 import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 
 class PSchemaFieldMapConverter
@@ -59,10 +59,12 @@ class PFieldConverter implements JsonConverter<PField, Map<String, dynamic>> {
       // case 'PGeoRegion':
       //   return PGeoRegion.fromJson(json);
       case 'PGeoRegion':
-        return PGeoLocation.fromJson(json);
-        case 'PPointer':
+        return PGeoPosition.fromJson(json);
+      case 'PPointer':
         return PPointer.fromJson(json);
-        case 'PPostCode':
+      case 'PRelation':
+        return PRelation.fromJson(json);
+      case 'PPostCode':
         return PPostCode.fromJson(json);
 
       // case 'PListBoolean':

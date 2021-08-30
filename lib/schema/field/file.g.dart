@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'string.dart';
+part of 'file.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PString _$PStringFromJson(Map<String, dynamic> json) {
-  return PString(
+PFile _$PFileFromJson(Map<String, dynamic> json) {
+  return PFile(
     defaultValue: json['defaultValue'] as String?,
     validations: (json['validations'] as List<dynamic>)
-        .map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
+        .map((e) => FileValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
     permissions: json['permissions'] == null
         ? null
@@ -19,36 +19,9 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PStringToJson(PString instance) {
+Map<String, dynamic> _$PFileToJson(PFile instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('permissions', instance.permissions?.toJson());
-  val['required'] = instance.required;
-  writeNotNull('defaultValue', instance.defaultValue);
-  return val;
-}
-
-PListString _$PListStringFromJson(Map<String, dynamic> json) {
-  return PListString(
-    defaultValue: (json['defaultValue'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    required: json['required'] as bool,
-    permissions:
-        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$PListStringToJson(PListString instance) {
-  final val = <String, dynamic>{
     'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
@@ -63,16 +36,16 @@ Map<String, dynamic> _$PListStringToJson(PListString instance) {
   return val;
 }
 
-StringValidation _$StringValidationFromJson(Map<String, dynamic> json) {
-  return StringValidation(
-    method: _$enumDecode(_$ValidateStringEnumMap, json['method']),
-    param: json['param'],
+FileValidation _$FileValidationFromJson(Map<String, dynamic> json) {
+  return FileValidation(
+    method: _$enumDecode(_$ValidateFileEnumMap, json['method']),
+    param: json['param'] as bool?,
   );
 }
 
-Map<String, dynamic> _$StringValidationToJson(StringValidation instance) =>
+Map<String, dynamic> _$FileValidationToJson(FileValidation instance) =>
     <String, dynamic>{
-      'method': _$ValidateStringEnumMap[instance.method],
+      'method': _$ValidateFileEnumMap[instance.method],
       'param': instance.param,
     };
 
@@ -102,7 +75,6 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
-const _$ValidateStringEnumMap = {
-  ValidateString.isLongerThan: 'isLongerThan',
-  ValidateString.isShorterThan: 'isShorterThan',
+const _$ValidateFileEnumMap = {
+  ValidateFile.exists: 'exists',
 };

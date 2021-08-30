@@ -31,7 +31,7 @@ void main() {
     test('RequiresAuth.all returns correctly', () {
       // given
       final PPermissions permissions =
-          PPermissions(requiresAuthentication: [RequiresAuth.all]);
+          PPermissions(requiresAuthentication: [AccessMethod.all]);
       // when
 
       // then

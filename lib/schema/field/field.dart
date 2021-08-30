@@ -1,17 +1,18 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/util/interpolate.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 import 'package:precept_script/script/script.dart';
-
 /// [VAL] is the validator type for example, [IntegerValidation]
 /// [MODEL] is the data type of the model attribute represented
-abstract class PField<VAL extends ModelValidation, MODEL>
-    extends PSchemaElement {
+///
+abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement {
   final List<VAL> validations;
   final PPermissions? permissions;
   final bool required;
+  @JsonKey(includeIfNull: false)
   final MODEL? defaultValue;
 
   Type get modelType;

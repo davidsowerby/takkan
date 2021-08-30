@@ -6,7 +6,7 @@ import 'package:precept_script/schema/validation/validator.dart';
 
 part 'string.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class PString extends PField<StringValidation, String> {
   PString({
     String? defaultValue,

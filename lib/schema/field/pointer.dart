@@ -9,9 +9,11 @@ part 'pointer.g.dart';
 @JsonSerializable(explicitToJson: true)
 class PPointer extends PField<PointerValidation, Pointer> {
   Type get modelType => Pointer;
+  final String targetClass;
 
   PPointer({
     Pointer? defaultValue,
+    required this.targetClass,
     List<PointerValidation> validations = const [],
     PPermissions? permissions,
     bool required = false,
@@ -46,7 +48,6 @@ class PointerValidation implements ModelValidation<ValidatePointer, Pointer> {
   Map<String, dynamic> toJson() => _$PointerValidationToJson(this);
 }
 
-// TODO: Not sure that validation is ever actually appropriate?
 enum ValidatePointer {
   isValid,
 }

@@ -21,13 +21,22 @@ PDate _$PDateFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PDateToJson(PDate instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue?.toIso8601String(),
-    };
+Map<String, dynamic> _$PDateToJson(PDate instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue?.toIso8601String());
+  return val;
+}
 
 DateValidation _$DateValidationFromJson(Map<String, dynamic> json) {
   return DateValidation(

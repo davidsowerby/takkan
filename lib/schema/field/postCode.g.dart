@@ -21,13 +21,22 @@ PPostCode _$PPostCodeFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPostCodeToJson(PPostCode instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue?.toJson(),
-    };
+Map<String, dynamic> _$PPostCodeToJson(PPostCode instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue?.toJson());
+  return val;
+}
 
 PostCodeValidation _$PostCodeValidationFromJson(Map<String, dynamic> json) {
   return PostCodeValidation(

@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'string.dart';
+part of 'object.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PString _$PStringFromJson(Map<String, dynamic> json) {
-  return PString(
-    defaultValue: json['defaultValue'] as String?,
+PJsonObject _$PJsonObjectFromJson(Map<String, dynamic> json) {
+  return PJsonObject(
+    defaultValue: json['defaultValue'] as Map<String, dynamic>?,
     validations: (json['validations'] as List<dynamic>)
-        .map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
+        .map((e) => ObjectValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
     permissions: json['permissions'] == null
         ? null
@@ -19,36 +19,9 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PStringToJson(PString instance) {
+Map<String, dynamic> _$PJsonObjectToJson(PJsonObject instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('permissions', instance.permissions?.toJson());
-  val['required'] = instance.required;
-  writeNotNull('defaultValue', instance.defaultValue);
-  return val;
-}
-
-PListString _$PListStringFromJson(Map<String, dynamic> json) {
-  return PListString(
-    defaultValue: (json['defaultValue'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    required: json['required'] as bool,
-    permissions:
-        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
-  );
-}
-
-Map<String, dynamic> _$PListStringToJson(PListString instance) {
-  final val = <String, dynamic>{
     'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
@@ -63,16 +36,16 @@ Map<String, dynamic> _$PListStringToJson(PListString instance) {
   return val;
 }
 
-StringValidation _$StringValidationFromJson(Map<String, dynamic> json) {
-  return StringValidation(
-    method: _$enumDecode(_$ValidateStringEnumMap, json['method']),
+ObjectValidation _$ObjectValidationFromJson(Map<String, dynamic> json) {
+  return ObjectValidation(
+    method: _$enumDecode(_$ValidateObjectEnumMap, json['method']),
     param: json['param'],
   );
 }
 
-Map<String, dynamic> _$StringValidationToJson(StringValidation instance) =>
+Map<String, dynamic> _$ObjectValidationToJson(ObjectValidation instance) =>
     <String, dynamic>{
-      'method': _$ValidateStringEnumMap[instance.method],
+      'method': _$ValidateObjectEnumMap[instance.method],
       'param': instance.param,
     };
 
@@ -102,7 +75,6 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
-const _$ValidateStringEnumMap = {
-  ValidateString.isLongerThan: 'isLongerThan',
-  ValidateString.isShorterThan: 'isShorterThan',
+const _$ValidateObjectEnumMap = {
+  ValidateObject.isNotEmpty: 'isNotEmpty',
 };

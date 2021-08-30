@@ -4,16 +4,16 @@ import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
-part 'geoPosition.g.dart';
+part 'geoPolygon.g.dart';
 
-/// see [GeoPosition]
+/// see [GeoPolygon]
 @JsonSerializable(explicitToJson: true)
-class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
-  Type get modelType => GeoPoint;
+class PGeoPolygon extends PField<GeoPolygonValidation, GeoPolygon> {
+  Type get modelType => GeoPolygon;
 
-  PGeoPosition({
-    GeoPosition? defaultValue,
-    List<GeoPositionValidation> validations = const [],
+  PGeoPolygon({
+    GeoPolygon? defaultValue,
+    List<GeoPolygonValidation> validations = const [],
     PPermissions? permissions,
     bool required = false,
   }) : super(
@@ -23,35 +23,35 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
           permissions: permissions,
         );
 
-  factory PGeoPosition.fromJson(Map<String, dynamic> json) =>
-      _$PGeoPositionFromJson(json);
+  factory PGeoPolygon.fromJson(Map<String, dynamic> json) =>
+      _$PGeoPolygonFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGeoPositionToJson(this);
+  Map<String, dynamic> toJson() => _$PGeoPolygonToJson(this);
 
   @override
-  bool doValidation(GeoPositionValidation validation, GeoPosition value) {
-    return validateGeoPosition(validation, value);
+  bool doValidation(GeoPolygonValidation validation, GeoPolygon value) {
+    return validateGeoPolygon(validation, value);
   }
 }
 
 @JsonSerializable(explicitToJson: true)
-class GeoPositionValidation
+class GeoPolygonValidation
     implements ModelValidation<ValidateGeoPoint, GeoPoint> {
   final ValidateGeoPoint method;
   final GeoPoint? param;
 
-  const GeoPositionValidation({required this.method, this.param});
+  const GeoPolygonValidation({required this.method, this.param});
 
-  factory GeoPositionValidation.fromJson(Map<String, dynamic> json) =>
-      _$GeoPositionValidationFromJson(json);
+  factory GeoPolygonValidation.fromJson(Map<String, dynamic> json) =>
+      _$GeoPolygonValidationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$GeoPositionValidationToJson(this);
+  Map<String, dynamic> toJson() => _$GeoPolygonValidationToJson(this);
 }
 
 // TODO: needs things like 'isLessThan X distanceUnits from Y', or isInLocale??
 enum ValidateGeoPoint { isValid }
 
-validateGeoPosition(GeoPositionValidation validation, GeoPosition value) {
+validateGeoPolygon(GeoPolygonValidation validation, GeoPolygon value) {
   switch (validation.method) {
     case ValidateGeoPoint.isValid:
       return true;

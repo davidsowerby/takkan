@@ -3,6 +3,7 @@ import 'package:precept_script/schema/field/double.dart';
 import 'package:precept_script/schema/field/geoPosition.dart';
 import 'package:precept_script/schema/field/pointer.dart';
 import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 
@@ -29,9 +30,9 @@ final kitchenSinkSchema = PSchema(
         //     'age': PInteger(),
         //   },
         // ),
-        'address': PPointer(),
+        'address': PPointer(targetClass: '_User'),
         // 'notifications': PSelectBoolean(),
-        'linkedAccounts': PPointer(),
+        'linkedAccounts': PRelation(targetClass: '_User'),
         'joinDate': PDate(),
         'average': PDouble(defaultValue: 23.8),
         // 'colourChoices': PSelectString(),

@@ -19,13 +19,22 @@ PInteger _$PIntegerFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PIntegerToJson(PInteger instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue,
-    };
+Map<String, dynamic> _$PIntegerToJson(PInteger instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue);
+  return val;
+}
 
 IntegerValidation _$IntegerValidationFromJson(Map<String, dynamic> json) {
   return IntegerValidation(

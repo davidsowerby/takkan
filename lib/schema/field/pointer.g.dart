@@ -11,6 +11,7 @@ PPointer _$PPointerFromJson(Map<String, dynamic> json) {
     defaultValue: json['defaultValue'] == null
         ? null
         : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
+    targetClass: json['targetClass'] as String,
     validations: (json['validations'] as List<dynamic>)
         .map((e) => PointerValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
@@ -21,13 +22,23 @@ PPointer _$PPointerFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PPointerToJson(PPointer instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue?.toJson(),
-    };
+Map<String, dynamic> _$PPointerToJson(PPointer instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue?.toJson());
+  val['targetClass'] = instance.targetClass;
+  return val;
+}
 
 PointerValidation _$PointerValidationFromJson(Map<String, dynamic> json) {
   return PointerValidation(

@@ -1,18 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'geoPosition.dart';
+part of 'relation.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
-  return PGeoPosition(
+PRelation _$PRelationFromJson(Map<String, dynamic> json) {
+  return PRelation(
     defaultValue: json['defaultValue'] == null
         ? null
-        : GeoPosition.fromJson(json['defaultValue'] as Map<String, dynamic>),
+        : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
+    targetClass: json['targetClass'] as String,
     validations: (json['validations'] as List<dynamic>)
-        .map((e) => GeoPositionValidation.fromJson(e as Map<String, dynamic>))
+        .map((e) => RelationValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
     permissions: json['permissions'] == null
         ? null
@@ -21,7 +22,7 @@ PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) {
+Map<String, dynamic> _$PRelationToJson(PRelation instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'permissions': instance.permissions?.toJson(),
@@ -35,23 +36,22 @@ Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) {
   }
 
   writeNotNull('defaultValue', instance.defaultValue?.toJson());
+  val['targetClass'] = instance.targetClass;
   return val;
 }
 
-GeoPositionValidation _$GeoPositionValidationFromJson(
-    Map<String, dynamic> json) {
-  return GeoPositionValidation(
-    method: _$enumDecode(_$ValidateGeoPointEnumMap, json['method']),
+RelationValidation _$RelationValidationFromJson(Map<String, dynamic> json) {
+  return RelationValidation(
+    method: _$enumDecode(_$ValidateRelationEnumMap, json['method']),
     param: json['param'] == null
         ? null
-        : GeoPoint.fromJson(json['param'] as Map<String, dynamic>),
+        : Relation.fromJson(json['param'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$GeoPositionValidationToJson(
-        GeoPositionValidation instance) =>
+Map<String, dynamic> _$RelationValidationToJson(RelationValidation instance) =>
     <String, dynamic>{
-      'method': _$ValidateGeoPointEnumMap[instance.method],
+      'method': _$ValidateRelationEnumMap[instance.method],
       'param': instance.param?.toJson(),
     };
 
@@ -81,6 +81,6 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
-const _$ValidateGeoPointEnumMap = {
-  ValidateGeoPoint.isValid: 'isValid',
+const _$ValidateRelationEnumMap = {
+  ValidateRelation.isValid: 'isValid',
 };

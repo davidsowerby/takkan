@@ -1,18 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pGeoLocation.dart';
+part of 'geoPolygon.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGeoLocation _$PGeoLocationFromJson(Map<String, dynamic> json) {
-  return PGeoLocation(
+PGeoPolygon _$PGeoPolygonFromJson(Map<String, dynamic> json) {
+  return PGeoPolygon(
     defaultValue: json['defaultValue'] == null
         ? null
-        : GeoLocation.fromJson(json['defaultValue'] as Map<String, dynamic>),
+        : GeoPolygon.fromJson(json['defaultValue'] as Map<String, dynamic>),
     validations: (json['validations'] as List<dynamic>)
-        .map((e) => GeoLocationValidation.fromJson(e as Map<String, dynamic>))
+        .map((e) => GeoPolygonValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
     permissions: json['permissions'] == null
         ? null
@@ -21,28 +21,36 @@ PGeoLocation _$PGeoLocationFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PGeoLocationToJson(PGeoLocation instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue?.toJson(),
-    };
+Map<String, dynamic> _$PGeoPolygonToJson(PGeoPolygon instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
 
-GeoLocationValidation _$GeoLocationValidationFromJson(
-    Map<String, dynamic> json) {
-  return GeoLocationValidation(
-    method: _$enumDecode(_$ValidateGeoLocationEnumMap, json['method']),
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue?.toJson());
+  return val;
+}
+
+GeoPolygonValidation _$GeoPolygonValidationFromJson(Map<String, dynamic> json) {
+  return GeoPolygonValidation(
+    method: _$enumDecode(_$ValidateGeoPointEnumMap, json['method']),
     param: json['param'] == null
         ? null
-        : GeoLocation.fromJson(json['param'] as Map<String, dynamic>),
+        : GeoPoint.fromJson(json['param'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$GeoLocationValidationToJson(
-        GeoLocationValidation instance) =>
+Map<String, dynamic> _$GeoPolygonValidationToJson(
+        GeoPolygonValidation instance) =>
     <String, dynamic>{
-      'method': _$ValidateGeoLocationEnumMap[instance.method],
+      'method': _$ValidateGeoPointEnumMap[instance.method],
       'param': instance.param?.toJson(),
     };
 
@@ -72,6 +80,6 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
-const _$ValidateGeoLocationEnumMap = {
-  ValidateGeoLocation.isValid: 'isValid',
+const _$ValidateGeoPointEnumMap = {
+  ValidateGeoPoint.isValid: 'isValid',
 };

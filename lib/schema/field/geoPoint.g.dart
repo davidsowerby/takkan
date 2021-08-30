@@ -1,18 +1,18 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'geoPosition.dart';
+part of 'geoPoint.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
-  return PGeoPosition(
+PGeoPoint _$PGeoPointFromJson(Map<String, dynamic> json) {
+  return PGeoPoint(
     defaultValue: json['defaultValue'] == null
         ? null
-        : GeoPosition.fromJson(json['defaultValue'] as Map<String, dynamic>),
+        : GeoPoint.fromJson(json['defaultValue'] as Map<String, dynamic>),
     validations: (json['validations'] as List<dynamic>)
-        .map((e) => GeoPositionValidation.fromJson(e as Map<String, dynamic>))
+        .map((e) => GeoPointValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
     permissions: json['permissions'] == null
         ? null
@@ -21,7 +21,7 @@ PGeoPosition _$PGeoPositionFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) {
+Map<String, dynamic> _$PGeoPointToJson(PGeoPoint instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'permissions': instance.permissions?.toJson(),
@@ -38,9 +38,8 @@ Map<String, dynamic> _$PGeoPositionToJson(PGeoPosition instance) {
   return val;
 }
 
-GeoPositionValidation _$GeoPositionValidationFromJson(
-    Map<String, dynamic> json) {
-  return GeoPositionValidation(
+GeoPointValidation _$GeoPointValidationFromJson(Map<String, dynamic> json) {
+  return GeoPointValidation(
     method: _$enumDecode(_$ValidateGeoPointEnumMap, json['method']),
     param: json['param'] == null
         ? null
@@ -48,8 +47,7 @@ GeoPositionValidation _$GeoPositionValidationFromJson(
   );
 }
 
-Map<String, dynamic> _$GeoPositionValidationToJson(
-        GeoPositionValidation instance) =>
+Map<String, dynamic> _$GeoPointValidationToJson(GeoPointValidation instance) =>
     <String, dynamic>{
       'method': _$ValidateGeoPointEnumMap[instance.method],
       'param': instance.param?.toJson(),

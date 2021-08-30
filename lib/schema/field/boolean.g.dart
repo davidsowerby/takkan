@@ -19,13 +19,22 @@ PBoolean _$PBooleanFromJson(Map<String, dynamic> json) {
   );
 }
 
-Map<String, dynamic> _$PBooleanToJson(PBoolean instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-      'defaultValue': instance.defaultValue,
-    };
+Map<String, dynamic> _$PBooleanToJson(PBoolean instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue);
+  return val;
+}
 
 BooleanValidation _$BooleanValidationFromJson(Map<String, dynamic> json) {
   return BooleanValidation(

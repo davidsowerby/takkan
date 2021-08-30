@@ -14,15 +14,26 @@ PList _$PListFromJson(Map<String, dynamic> json) {
     permissions:
         PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     required: json['required'] as bool,
+    defaultValue: json['defaultValue'] as List<dynamic>?,
   );
 }
 
-Map<String, dynamic> _$PListToJson(PList instance) =>
-    <String, dynamic>{
-      'validations': instance.validations.map((e) => e.toJson()).toList(),
-      'permissions': instance.permissions?.toJson(),
-      'required': instance.required,
-    };
+Map<String, dynamic> _$PListToJson(PList instance) {
+  final val = <String, dynamic>{
+    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'permissions': instance.permissions?.toJson(),
+    'required': instance.required,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('defaultValue', instance.defaultValue);
+  return val;
+}
 
 ListValidation _$ListValidationFromJson(Map<String, dynamic> json) {
   return ListValidation(

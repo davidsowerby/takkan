@@ -38,7 +38,7 @@ part 'schema.g.dart';
 /// - [queries] are instances of [ListSchema], but held separately, indexed by query name
 ///
 ///
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
@@ -155,12 +155,15 @@ abstract class PSchemaElement {
 /// Roles specified in [readRoles] are added to [getRoles], [findRoles] and [countRoles]
 /// Roles specified in [writeRoles] are added to [createRoles],[updateRoles] and [deleteRoles]
 ///
-/// If no authentication is required, simply leave all properties empty
+/// If no authentication is required, simply leave all properties empty.
+///
+/// A method can be explicitly defined as public by adding it to [isPublic], and this will overrule any other settings
 ///
 ///
 @JsonSerializable(explicitToJson: true)
 class PPermissions {
-  final List<RequiresAuth> _requiresAuthentication;
+  final List<AccessMethod> _requiresAuthentication;
+  final List<AccessMethod> isPublic;
 
   final List<String> readRoles;
   final List<String> writeRoles;
@@ -176,7 +179,8 @@ class PPermissions {
   final List<String> addFieldRoles;
 
   const PPermissions({
-    List<RequiresAuth> requiresAuthentication = const [],
+    this.isPublic = const [],
+    List<AccessMethod> requiresAuthentication = const [],
     this.readRoles = const [],
     this.writeRoles = const [],
     List<String> updateRoles = const [],
@@ -236,42 +240,46 @@ class PPermissions {
   Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
 
   bool get requiresGetAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.get) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.get) ||
       getRoles.isNotEmpty;
 
   bool get requiresFindAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.find) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.find) ||
       findRoles.isNotEmpty;
 
   bool get requiresCountAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.count) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.count) ||
       countRoles.isNotEmpty;
 
   bool get requiresCreateAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.create) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.create) ||
       createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.update) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.update) ||
       updateRoles.isNotEmpty;
 
   bool get requiresDeleteAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.delete) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.delete) ||
       deleteRoles.isNotEmpty;
 
   bool get requiresAddFieldAuthentication =>
-      _requiresAuthentication.contains(RequiresAuth.all) ||
-      _requiresAuthentication.contains(RequiresAuth.addField) ||
+      _requiresAuthentication.contains(AccessMethod.all) ||
+      _requiresAuthentication.contains(AccessMethod.addField) ||
       addFieldRoles.isNotEmpty;
+
+  bool methodIsPublic(AccessMethod method) {
+    return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
+  }
 }
 
-enum RequiresAuth {
+enum AccessMethod {
   all,
   read,
   get,
@@ -293,7 +301,7 @@ enum RequiresAuth {
 enum PDocumentType { standard, versioned }
 
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 @PSchemaFieldMapConverter()
 class PDocument extends PSchemaElement {
   final PPermissions permissions;
@@ -340,6 +348,9 @@ class PDocument extends PSchemaElement {
 
   bool get requiresAddFieldAuthentication =>
       permissions.requiresAddFieldAuthentication;
+
+  bool methodIsPublic(AccessMethod method) =>
+      permissions.methodIsPublic(method);
 }
 
 /// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure
