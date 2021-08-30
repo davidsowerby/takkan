@@ -17,6 +17,9 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
+    useAuthenticator: json['useAuthenticator'] as bool,
+    headerKeys:
+        (json['headerKeys'] as List<dynamic>).map((e) => e as String).toList(),
   )..version = json['version'] as int;
 }
 
@@ -28,4 +31,6 @@ Map<String, dynamic> _$PBack4AppDataProviderToJson(
       'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource.toJson(),
       'schemaSource': instance.schemaSource?.toJson(),
+      'headerKeys': instance.headerKeys,
+      'useAuthenticator': instance.useAuthenticator,
     };

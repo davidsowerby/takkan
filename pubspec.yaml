@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   parse_server_sdk_flutter: ^3.0.0
+  dio: ^4.0.0
   precept_script:
     path: ../precept_script
   precept_backend:

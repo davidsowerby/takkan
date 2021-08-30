@@ -24,7 +24,7 @@ final myScript = PScript(
     ),
     schema: back4appSchema,
   ),
-  pages: {
+  routes: {
     '/': PPage(
       layout: PPageLayout(margins: PMargins(top: 50)),
       controlEdit: ControlEdit.panelsOnly,

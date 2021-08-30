@@ -5,6 +5,7 @@ import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/pointer.dart';
 import 'package:precept_script/schema/field/postCode.dart';
 import 'package:precept_script/schema/field/queryResult.dart';
+import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 
@@ -22,16 +23,16 @@ final back4appSchema = PSchema(
           ],
         ),
         'recordDate': PDate(),
-        'customer': PDocument(
-          fields: {
-            'firstName': PString(),
-            'lastName': PString(),
-            'age': PInteger(),
-          },
-        ),
-        'address': PPointer(),
+        // 'customer': PDocument(
+        //   fields: {
+        //     'firstName': PString(),
+        //     'lastName': PString(),
+        //     'age': PInteger(),
+        //   },
+        // ),
+        'address': PPointer(targetClass: '_User'),
         // 'notifications': PSelectBoolean(),
-        'linkedAccounts': PPointer(),
+        'linkedAccounts': PRelation(targetClass: '_User'),
         'joinDate': PDate(),
         'average': PDouble(),
         // 'colourChoices': PSelectString(),
@@ -49,8 +50,8 @@ final back4appSchema = PSchema(
       },
     ),
     'Issue': PDocument(
-      permissions:
-      PPermissions(requiresAuthentication: [RequiresAuth.all], updateRoles: ['editor']),
+      permissions: PPermissions(
+          requiresAuthentication: [AccessMethod.all], updateRoles: ['editor']),
       fields: {
         'title': PString(),
         'description': PString(),
