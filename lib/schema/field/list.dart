@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'list.g.dart';
@@ -9,13 +8,11 @@ part 'list.g.dart';
 class PList extends PField<ListValidation, List> {
   PList({
     List<ListValidation> validations = const [],
-    PPermissions permissions = const PPermissions(),
     bool required = false,
     List? defaultValue,
   }) : super(
           defaultValue: defaultValue,
           required: required,
-          permissions: permissions,
           validations: validations,
         );
 

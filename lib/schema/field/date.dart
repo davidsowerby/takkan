@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'date.g.dart';
@@ -12,12 +11,10 @@ class PDate extends PField<DateValidation, DateTime> {
   PDate({
     DateTime? defaultValue,
     List<DateValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
     defaultValue: defaultValue,
           validations: validations,
-          permissions: permissions,
           required: required,
         );
 

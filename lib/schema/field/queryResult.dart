@@ -18,8 +18,7 @@ class PQuerySchema extends PField<ListValidation, List> {
 
   PQuerySchema({
     required this.documentSchema,
-    PPermissions permissions = const PPermissions(),
-  }) : super(permissions: permissions, required: false);
+  }) : super(required: false);
 
   factory PQuerySchema.fromJson(Map<String, dynamic> json) => _$PQuerySchemaFromJson(json);
 

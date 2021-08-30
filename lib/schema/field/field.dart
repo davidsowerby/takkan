@@ -10,7 +10,6 @@ import 'package:precept_script/script/script.dart';
 ///
 abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement {
   final List<VAL> validations;
-  final PPermissions? permissions;
   final bool required;
   @JsonKey(includeIfNull: false)
   final MODEL? defaultValue;
@@ -19,7 +18,6 @@ abstract class PField<VAL extends ModelValidation, MODEL> extends PSchemaElement
 
   PField({
     this.validations = const [],
-    this.permissions,
     required this.required,
     this.defaultValue,
   }) : super();

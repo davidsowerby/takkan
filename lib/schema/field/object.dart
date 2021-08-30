@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/jsonObject.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'object.g.dart';
@@ -14,12 +13,10 @@ class PJsonObject extends PField<ObjectValidation, Map<String, dynamic>> {
   PJsonObject({
     Map<String, dynamic>? defaultValue,
     List<ObjectValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           validations: validations,
-          permissions: permissions,
           required: required,
         );
 

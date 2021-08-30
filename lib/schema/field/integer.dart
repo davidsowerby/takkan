@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'integer.g.dart';
@@ -12,12 +11,10 @@ class PInteger extends PField<IntegerValidation, int> {
   PInteger({
     int? defaultValue,
     List<IntegerValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
     required: required,
           validations: validations,
-          permissions: permissions,
           defaultValue: defaultValue,
         );
 

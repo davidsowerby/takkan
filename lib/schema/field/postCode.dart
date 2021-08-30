@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/postCode.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 import 'package:validators/validators.dart';
 
@@ -16,13 +15,11 @@ class PPostCode extends PField<PostCodeValidation, PostCode> {
   PPostCode({
     PostCode? defaultValue,
     List<PostCodeValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   factory PPostCode.fromJson(Map<String, dynamic> json) =>

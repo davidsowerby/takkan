@@ -14,9 +14,6 @@ PDate _$PDateFromJson(Map<String, dynamic> json) {
     validations: (json['validations'] as List<dynamic>)
         .map((e) => DateValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
-    permissions: json['permissions'] == null
-        ? null
-        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     required: json['required'] as bool,
   );
 }
@@ -24,7 +21,6 @@ PDate _$PDateFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PDateToJson(PDate instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
-    'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
 

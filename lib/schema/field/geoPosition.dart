@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/geo.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'geoPosition.g.dart';
@@ -14,13 +13,11 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
   PGeoPosition({
     GeoPosition? defaultValue,
     List<GeoPositionValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   factory PGeoPosition.fromJson(Map<String, dynamic> json) =>

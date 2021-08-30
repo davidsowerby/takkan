@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/list.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'string.g.dart';
@@ -11,13 +10,11 @@ class PString extends PField<StringValidation, String> {
   PString({
     String? defaultValue,
     List<StringValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   Type get modelType => String;
@@ -35,14 +32,12 @@ class PString extends PField<StringValidation, String> {
 
 @JsonSerializable(explicitToJson: true)
 class PListString extends PList {
-  PListString(
-      {List<String> defaultValue = const [],
-      bool required = false,
-      PPermissions permissions = const PPermissions()})
-      : super(
+  PListString({
+    List<String> defaultValue = const [],
+    bool required = false,
+  }) : super(
           defaultValue: defaultValue,
           required: required,
-          permissions: permissions,
         );
 
   factory PListString.fromJson(Map<String, dynamic> json) =>

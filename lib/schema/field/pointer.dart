@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/pointer.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'pointer.g.dart';
@@ -15,13 +14,11 @@ class PPointer extends PField<PointerValidation, Pointer> {
     Pointer? defaultValue,
     required this.targetClass,
     List<PointerValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   factory PPointer.fromJson(Map<String, dynamic> json) =>

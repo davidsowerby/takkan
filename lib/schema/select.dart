@@ -1,13 +1,12 @@
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 
 // part 'select.g.dart';
 
 abstract class PSelectField extends PField {
-  PSelectField({required bool required, required PPermissions permissions})
-      : super(
+  PSelectField({
+    required bool required,
+  }) : super(
           required: required,
-          permissions: permissions,
         );
 }
 

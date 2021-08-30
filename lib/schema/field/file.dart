@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'file.g.dart';
@@ -12,12 +11,10 @@ class PFile extends PField<FileValidation, String> {
   PFile({
     String? defaultValue,
     List<FileValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           validations: validations,
-          permissions: permissions,
           required: required,
         );
 

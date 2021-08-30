@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/relation.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'relation.g.dart';
@@ -15,13 +14,11 @@ class PRelation extends PField<RelationValidation, Relation> {
     Relation? defaultValue,
     required this.targetClass,
     List<RelationValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   factory PRelation.fromJson(Map<String, dynamic> json) =>

@@ -14,9 +14,6 @@ PGeoPoint _$PGeoPointFromJson(Map<String, dynamic> json) {
     validations: (json['validations'] as List<dynamic>)
         .map((e) => GeoPointValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
-    permissions: json['permissions'] == null
-        ? null
-        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     required: json['required'] as bool,
   );
 }
@@ -24,7 +21,6 @@ PGeoPoint _$PGeoPointFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PGeoPointToJson(PGeoPoint instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
-    'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
 

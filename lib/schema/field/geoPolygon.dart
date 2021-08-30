@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/data/object/geo.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
 part 'geoPolygon.g.dart';
@@ -14,13 +13,11 @@ class PGeoPolygon extends PField<GeoPolygonValidation, GeoPolygon> {
   PGeoPolygon({
     GeoPolygon? defaultValue,
     List<GeoPolygonValidation> validations = const [],
-    PPermissions? permissions,
     bool required = false,
   }) : super(
           defaultValue: defaultValue,
           required: required,
           validations: validations,
-          permissions: permissions,
         );
 
   factory PGeoPolygon.fromJson(Map<String, dynamic> json) =>

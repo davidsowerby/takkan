@@ -12,9 +12,6 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
     validations: (json['validations'] as List<dynamic>)
         .map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
-    permissions: json['permissions'] == null
-        ? null
-        : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     required: json['required'] as bool,
   );
 }
@@ -22,6 +19,7 @@ PString _$PStringFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PStringToJson(PString instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'required': instance.required,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -30,8 +28,6 @@ Map<String, dynamic> _$PStringToJson(PString instance) {
     }
   }
 
-  writeNotNull('permissions', instance.permissions?.toJson());
-  val['required'] = instance.required;
   writeNotNull('defaultValue', instance.defaultValue);
   return val;
 }
@@ -42,14 +38,11 @@ PListString _$PListStringFromJson(Map<String, dynamic> json) {
         .map((e) => e as String)
         .toList(),
     required: json['required'] as bool,
-    permissions:
-        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$PListStringToJson(PListString instance) {
   final val = <String, dynamic>{
-    'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
 

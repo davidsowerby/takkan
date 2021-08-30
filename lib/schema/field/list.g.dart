@@ -11,8 +11,6 @@ PList _$PListFromJson(Map<String, dynamic> json) {
     validations: (json['validations'] as List<dynamic>)
         .map((e) => ListValidation.fromJson(e as Map<String, dynamic>))
         .toList(),
-    permissions:
-        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
     required: json['required'] as bool,
     defaultValue: json['defaultValue'] as List<dynamic>?,
   );
@@ -21,7 +19,6 @@ PList _$PListFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$PListToJson(PList instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
-    'permissions': instance.permissions?.toJson(),
     'required': instance.required,
   };
 
