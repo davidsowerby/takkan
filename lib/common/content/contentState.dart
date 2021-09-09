@@ -56,7 +56,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent>
     precept.addScriptReloadListener(_onScriptReload);
     final requiresAuth = (dataBinding is NoDataBinding)
         ? false
-        : dataBinding.schema.requiresReadAuthentication;
+        : dataBinding.schema.requiresGetAuthentication;
     if (requiresAuth) {
       final userAuthenticated = dataProvider.authenticator.isAuthenticated;
       needsAuthentication = requiresAuth && !userAuthenticated;

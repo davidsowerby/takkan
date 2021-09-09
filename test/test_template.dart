@@ -16,9 +16,9 @@ import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
 import 'package:precept_script/schema/field/geoPosition.dart';
-import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/pointer.dart';
 import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -38,16 +38,16 @@ final validationSchema = PSchema(
         'accountNumber': PString(),
         'category': PString(),
         'recordDate': PDate(),
-        'customer': PDocument(
-          fields: {
-            'firstName': PString(),
-            'lastName': PString(),
-            'age': PInteger(),
-          },
-        ),
-        'address': PPointer(),
+        // 'customer': PDocument(
+        //   fields: {
+        //     'firstName': PString(),
+        //     'lastName': PString(),
+        //     'age': PInteger(),
+        //   },
+        // ),
+        'address': PPointer(targetClass: '_User'),
         // 'notifications': PSelectBoolean(),
-        'linkedAccounts': PPointer(),
+        'linkedAccounts': PRelation(targetClass: '_User'),
         'joinDate': PDate(),
         'average': PDouble(),
         // 'colourChoices': PSelectString(),
