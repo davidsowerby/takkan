@@ -29,6 +29,7 @@ void main() {
     test('init, no authenticator', () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
@@ -53,6 +54,7 @@ void main() {
     test('init, with authenticator', () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
@@ -75,6 +77,7 @@ void main() {
     test('call RestDelegate without specifying it', () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
@@ -94,6 +97,7 @@ void main() {
     test('call GraphQLDelegate without specifying it', () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
@@ -114,6 +118,7 @@ void main() {
         () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
@@ -136,6 +141,7 @@ void main() {
         () async {
       // given
       PDataProvider config = PDataProvider(
+        providerName: 'Test',
         headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',

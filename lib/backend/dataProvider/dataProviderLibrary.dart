@@ -62,7 +62,8 @@ class DataProviderLibrary {
     }
 
     /// Failed
-    String msg = "No entry is defined for ${config.runtimeType.toString()} in $runtimeType";
+    String msg =
+        "No entry is defined for ${config.runtimeType.toString()} in $runtimeType.\n  Have you forgotten to call ${config.providerName}.register() in your 'main.dart'?";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
