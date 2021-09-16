@@ -30,6 +30,7 @@ void main() {
       final script = PScript(
         name: 'test',
         dataProvider: PDataProvider(
+          providerName: 'Test',
           schema: PSchema(name: 'unnamed'),
           sessionTokenKey: '',
           headerKeys: const [],

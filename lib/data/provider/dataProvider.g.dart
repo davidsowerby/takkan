@@ -8,6 +8,7 @@ part of 'dataProvider.dart';
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
   return PDataProvider(
+    providerName: json['providerName'] as String,
     useAuthenticator: json['useAuthenticator'] as bool,
     graphQLDelegate: json['graphQLDelegate'] == null
         ? null
@@ -19,9 +20,9 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) {
         (json['headerKeys'] as List<dynamic>).map((e) => e as String).toList(),
     sessionTokenKey: json['sessionTokenKey'] as String,
     configSource:
-        PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
+    PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
     signInOptions:
-        PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
+    PSignInOptions.fromJson(json['signInOptions'] as Map<String, dynamic>),
     schemaSource: json['schemaSource'] == null
         ? null
         : PSchemaSource.fromJson(json['schemaSource'] as Map<String, dynamic>),
@@ -35,6 +36,7 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'signInOptions': instance.signInOptions.toJson(),
       'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource.toJson(),
+      'providerName': instance.providerName,
       'schemaSource': instance.schemaSource?.toJson(),
       'sessionTokenKey': instance.sessionTokenKey,
       'headerKeys': instance.headerKeys,
