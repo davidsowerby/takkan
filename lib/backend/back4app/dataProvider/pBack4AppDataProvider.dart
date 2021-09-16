@@ -30,7 +30,8 @@ class PBack4AppDataProvider extends PDataProvider {
       'X-Parse-Client-Key'
     ],
   }) : super(
-    schema: schema,
+          providerName: 'Back4App',
+          schema: schema,
           signIn: signIn,
           signInOptions: signInOptions,
           configSource: configSource,
