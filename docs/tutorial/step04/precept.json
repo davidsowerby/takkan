@@ -1,0 +1,9 @@
+{
+  "back4app": {
+    "dev": {
+      "X-Parse-Application-Id": "enter your key",
+      "X-Parse-Client-Key": "enter your key",
+      "serverUrl": "https://parseapi.back4app.com/"
+    }
+  }
+}

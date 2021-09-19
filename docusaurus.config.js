@@ -107,6 +107,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
+        additionalLanguages: ['dart'],
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
