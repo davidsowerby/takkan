@@ -2,34 +2,26 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+## Key Features
 
-Let's discover **Docusaurus in less than 5 minutes**.
+- Configuration of Widget selection and layout by declarative JSON file.  
 
-## Getting Started
+- Configuration of schema by declarative JSON file, ensuring data and presentation stay in sync
 
-Get started by **creating a new site**.
+- Load configuration from server and ensure that clients are updated without any action from users
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+- Automatic data binding from the above declarations, making Forms really simple
 
-## Generate a new site
+- Built in edit / save / cancel functionality for Forms, with validation and permissions provided by the schema
 
-Generate a new Docusaurus site using the **classic template**:
+- Could be used with any backend
 
-```shell
-npx @docusaurus/init@latest init my-website classic
-```
+:::caution
 
-## Start your site
+Please be aware that although this documentation is written as though functionality already exists, that may not always be the case.
 
-Run the development server:
+Sometimes the documentation is ahead of development.
 
-```shell
-cd my-website
-
-npx docusaurus start
-```
-
-Your site starts at `http://localhost:3000`.
-
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and display your changes.
+That will no longer be the case once the package is published.
+:::
+----

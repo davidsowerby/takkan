@@ -40,7 +40,27 @@ File | New | New Flutter Project
 
 - Completely replace the contents of *main.dart* with:
 
-<<< docs/tutorial/step01/main.dart
+```dart
+import 'package:flutter/material.dart';
+import 'package:precept_client/app/app.dart';
+import 'package:precept_client/app/loader.dart';
+import 'package:precept_client/app/precept.dart';
+import 'package:precept_tutorial/app/config/precept.dart';
+
+void main() async {
+  await precept.init(
+    loaders: [
+      DirectPreceptLoader(script: myScript),
+    ],
+  );
+  final ThemeData theme = ThemeData(
+    primarySwatch: Colors.green,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+  runApp(PreceptApp(theme: theme));
+}
+
+```
 
 - delete the test file *widget_test.dart*
 - create folder *lib/app/config*
@@ -66,35 +86,29 @@ with:
     - precept.json
 ```
 
-<details>
-  <summary>Explanation</summary>
-  <div>
-    <div>These are the details</div>
-  </div>
-</details>
-
 - paste the following into *lib/app/config/precept.dart*:
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:precept_client/app/app.dart';
-import 'package:precept_client/app/loader.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_tutorial/app/config/precept.dart';
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/script/script.dart';
+import 'package:precept_script/part/text.dart';
 
-void main() async {
-  await precept.init(
-    loaders: [
-      DirectPreceptLoader(script: myScript),
-    ],
-  );
-  final ThemeData theme = ThemeData(
-    primarySwatch: Colors.green,
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-  );
-  runApp(PreceptApp(theme: theme));
-}
 
+final myScript = PScript(
+  name: 'Tutorial',
+  routes: {
+    '/': PPage(
+      title: 'Home Page',
+      content: [
+        PText(
+          readTraitName: PText.title,
+          isStatic: IsStatic.yes,
+          staticData: 'Precept',
+        ),
+      ],
+    ),
+  },
+);
 ```
 
 :arrow_forward:
@@ -102,6 +116,13 @@ void main() async {
 :white_check_mark:  It should look like this:
 
 ![start](../tutorial/step01/step01.png)
+
+<details>
+  <summary>Explanation</summary>
+  <div>
+    <div>These are the details</div>
+  </div>
+</details>
 
 [detail](detailed.md#step-01---hello-world)
 
