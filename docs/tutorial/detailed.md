@@ -99,7 +99,7 @@ final myScript = PScript(
 
 :arrow_forward: Run the app and it should look like this:
 
-![start](../tutorial/step01/step01.png)
+![start](images/step01.png)
 
 ### Explanation
 

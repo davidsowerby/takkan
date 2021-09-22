@@ -1,3 +1,6 @@
+---
+sidebar_position: 1
+---
 # Introduction to Precept
 
 [Flutter](https://flutter.dev/) is a great tool for building User Interfaces, and is incredibly flexible.
@@ -33,7 +36,7 @@ Precept aims to achieve the following
 
 ## Status
 
-A dedicated [status page](../status.md) describes the current progress of the project.
+The [blog](../../blog) describes the current progress of the project, among other things.
 
 ## Overview
 

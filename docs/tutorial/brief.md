@@ -21,6 +21,7 @@ It would be helpful but not essential to have some knowledge of:
 
 - Flutter
 - GraphQL
+- Back4App 
 
 ## Create a Flutter App
 
@@ -115,7 +116,7 @@ final myScript = PScript(
 
 :white_check_mark:  It should look like this:
 
-![start](../tutorial/step01/step01.png)
+![start](images/step01.png)
 
 <details>
   <summary>Explanation</summary>
@@ -130,13 +131,50 @@ final myScript = PScript(
 
 - Update *precept.dart* to show text element with different traits, and add a `PNavButton`
 
-<<< docs/tutorial/step02/precept.dart
+```dart {18-32}
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/script/script.dart';
+import 'package:precept_script/part/text.dart';
+import 'package:precept_script/part/navigation.dart';
+
+
+final myScript = PScript(
+  name: 'Tutorial',
+  routes: {
+    '/': PPage(
+      title: 'Home Page',
+      content: [
+        PText(
+          readTraitName: PText.title,
+          isStatic: IsStatic.yes,
+          staticData: 'Precept',
+        ),
+        PText(
+          readTraitName: PText.subtitle,
+          isStatic: IsStatic.yes,
+          staticData: 'Proof of Concept',
+        ),
+        PText(
+          readTraitName: PText.strapText,
+          isStatic: IsStatic.yes,
+          staticData: 'A brief introduction to faster Flutter development',
+        ),
+        PNavButton(
+          isStatic: IsStatic.yes,
+          staticData: 'OK',
+          route: 'chooseList',
+        ),
+      ],
+    ),
+  },
+);
+```
 
 :arrow_forward:
 
 :white_check_mark:  It should look like this:
 
-![start](../tutorial/step02/step02.png)
+![start](images/step02.png)
 
 :white_check_mark: Tapping the 'OK' button will go to error page, as the 'chooseList' route is not
 yet defined.
@@ -149,7 +187,58 @@ Route 'chooseList' added, with `PNavButtonSet` providing list of routes for user
 
 - Update *precept.dart* to:
 
-<<< docs/tutorial/step03/precept.dart{35-48}
+```dart {35-48}
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/common/script/layout.dart';
+import 'package:precept_script/part/navigation.dart';
+import 'package:precept_script/part/text.dart';
+import 'package:precept_script/script/script.dart';
+
+final myScript = PScript(
+  name: 'Tutorial',
+  routes: {
+    '/': PPage(
+      title: 'Home Page',
+      content: [
+        PText(
+          readTraitName: PText.title,
+          isStatic: IsStatic.yes,
+          staticData: 'Precept',
+        ),
+        PText(
+          readTraitName: PText.subtitle,
+          isStatic: IsStatic.yes,
+          staticData: 'Proof of Concept',
+        ),
+        PText(
+          readTraitName: PText.strapText,
+          isStatic: IsStatic.yes,
+          staticData: 'A brief introduction to faster Flutter development',
+        ),
+        PNavButton(
+          isStatic: IsStatic.yes,
+          staticData: 'OK',
+          route: 'chooseList',
+        ),
+      ],
+    ),
+    'chooseList': PPage(
+      layout: PPageLayout(margins: PMargins(top: 50)),
+      title: 'Select List to View',
+      content: [
+        PNavButtonSet(
+          buttons: {
+            'Open Issues': 'openIssues',
+            'Closed Issues': 'closedIssues',
+            'Search Issues': 'search',
+            'Account': 'account',
+          },
+        ),
+      ],
+    ),
+  },
+);
+```
 
 :arrow_forward:
 
@@ -157,7 +246,7 @@ Route 'chooseList' added, with `PNavButtonSet` providing list of routes for user
 
 :white_check_mark: It should look like this:
 
-![start](../tutorial/step03/step03.png)
+![start](images/step03.png)
 
 - tap 'Open Issues'. It will fail because the 'openIssues' route is not defined. All the buttons
   will fail for this reason.
@@ -219,7 +308,4 @@ route, which we have not yet defined.
 
 - Update *precept.dart* to:
 
-<<< docs/tutorial/step04/precept.dart{35-48}
-
-
-
+[![Boo](images/notes.svg)](detailed.md#step-04---page-with-query)

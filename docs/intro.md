@@ -2,6 +2,14 @@
 sidebar_position: 1
 ---
 
+# Introduction to Precept
+
+[Flutter](https://flutter.dev/) is a great tool for building User Interfaces, and is incredibly flexible.
+
+The downside of that flexibility is the amount of repetitive coding it can entail.  
+
+Precept aims to reduce that effort for common use cases, while taking nothing away.
+
 ## Key Features
 
 - Configuration of Widget selection and layout by declarative JSON file.  

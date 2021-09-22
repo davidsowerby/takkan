@@ -1,6 +1,6 @@
 # Kitchen Sink
 
-This is a Precept model which attempts cover every permutation of build options available through [PScript](../../user-guide/precept-script.md) and [PSchema](../../../user-guide/precept-schema.md).
+This is a Precept model which attempts cover every permutation of build options available through [PScript](../user-guide/precept-script.md) and [PSchema](../user-guide/precept-schema.md).
 
 All widget tests and functional tests are run against the 'kitchen sink', defined by a  `PScript` and `PSchema`.
 
