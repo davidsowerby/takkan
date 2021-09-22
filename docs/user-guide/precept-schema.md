@@ -84,7 +84,7 @@ Each `PDocument` is loaded by an implementation of `PreceptLoader`, typically fr
 
 This is the equivalent of, and represented by a nestable JSON document, regardless of how simple or complex it is.  
 
-From a Precept point of view, it is something which would be retrieved from a data source to display as a [Page](./precept-script.md#page), [Panel](./precept-script.md#panel) or [Part]((./precept-script.md#part)).
+From a Precept point of view, it is something which would be retrieved from a data source to display as a [Page](./precept-script.md#page), [Panel](./precept-script.md#panel) or [Part](./precept-script.md#part).
 
 
 ## PField
