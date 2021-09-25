@@ -80,6 +80,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   });
 
@@ -336,6 +337,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// See [DataProvider.updateDocument]
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) {
     if (config.useGraphQLDelegate) {
@@ -547,6 +549,7 @@ class NoDataProvider implements DataProvider {
   @override
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
+    FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) {
     throw PreceptException(msg);
