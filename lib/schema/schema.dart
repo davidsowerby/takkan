@@ -30,10 +30,8 @@ part 'schema.g.dart';
 /// Each level will contain [Hints], which can be used to guide a [SchemaInterpreter} implementation.
 ///
 ///
-/// - In [documents], the map key is the document property / name.  For a top level document,
-/// this may be interpreted as something like a Parse Server Class or a Firestore collection,
-/// as determined by the backend implementation. For a nested, sub-document, it is treated
-/// as a property name within the parent document.
+/// - In [documents], the map key is the document name.  This is Back4App Class
+/// or a Firestore collection, as determined by the backend implementation.
 ///
 /// - [queries] are instances of [ListSchema], but held separately, indexed by query name
 ///
