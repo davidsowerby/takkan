@@ -1,82 +1,49 @@
 ---
 sidebar_position: 1
 ---
-# Introduction to Precept
+# Overview
 
-[Flutter](https://flutter.dev/) is a great tool for building User Interfaces, and is incredibly flexible.
-
-The downside of that flexibility is the amount of repetitive coding it can entail.  
-
-Precept aims to reduce that effort for common use cases, while taking nothing away.
-
-:::tip
-
-In some places, this documentation is written as though certain functionality already exists.  
-
-That's just because it is often easier to capture ideas, document them, and then produce the functionality.
-
-Where that is the case, a :thinking: is shown, linked to an open issue
-
-A :point_right: just means "see details" but looks prettier :smiley_cat:
-
-:::
-
-## Precept Objectives
-
-Precept aims to achieve the following
-
-1. Provide a framework to make Flutter development even faster
-1. Combine presentation, data, validation and permissions in a consistent structure[:point_right:](#view-and-model)
-1. Provide remote (server based) update to reduce the need for App updates [:point_right:](#reduce-app-updates)
-1. Support multiple backends (one authenticator but multiple data providers) [:point_right:](#backend-providers)
-1. Support sharing of parts of a Precept definition between Precept apps [:point_right:](#sharing-definitions)
-1. Allow developers to override elements of Precept where required [:point_right:](#overriding-precept)
-1. Allow developers full access to Flutter functionality, while using Precept for any or all of the app [:point_right:](#access-to-flutter)
-1. Be Open Source forever [:point_right:](#open-source)
-
-## Status
-
-The [blog](../../blog) describes the current progress of the project, among other things.
-
-## Overview
-
-Precept functionality is centred around a script for presentation, (`PScript`), and a script to define an associated schema (`PSchema`).
-
-The schema includes validation and permissions rules.
-
-These both produce JSON files, which can be loaded from a server.
-
-These script files can be combined, allowing different parts of an app to be specified separately.
-  
-Within the client, the JSON files are converted to objects, and combined into a singleton `Precept` object.
-
-Access to your Cloud Provider - (Back4App or Firebase for example) - is managed by a combination of an `Authenticator` class, with a `AuthenticatorDelegate` specific to the given Cloud Provider.
-
-Your app will probably use the same Cloud Provider for much of its data, but may of course use other sources of data.  These are all represented by `DataProvider` instances, each with their own schema.
-
-It is hoped that the Schema definition will also be used to generate / maintain the server side schema.  :crossed_fingers:
-
-The [Precept Script](./precept-script.md) and [Precept Schema](./precept-schema.md) sections provide more detail on script structure.
+If you have not already, is is worth looking at the [Precept Overview](../intro.md)
 
 ## View and Model
 
-Precept provides full Forms support, but is actually about any app which requires the presentation and editing of data, regardless of how the data is actually presented.
+### Scripts
 
-As a Framework, Precept simplifies the setting up of user login, and provides a simple structure for viewing and editing data.  
+Precept is useful for any app which requires the presentation and editing of data, regardless of how the data is actually presented.
 
-A `PScript` and `PSchema` provide a definition of the View and Model layers respectively.  
+A `PScript` and `PSchema` provide a definition of the View and Model layers respectively. 
 
-These are combined with by the Precept build logic to produce forms and data presentation - and importantly for speed of development - bind automatically to the relevant data and provide validation defined by the schema.
+A `PSchema` is always contained within a `PScript`, and ultimately there is a single `PScript` per app - although that single `PScript` may be created by merging multiple `PScript` instances to support modularity.
 
-Creation of the JSON definition files is done in a way any Flutter developer would recognise.
+Simplistically, Precept acts as an interpreter of the `PScript` in order to provide the app.
 
-Field [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/13) and object level [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/14) validation are supported, and defined by the `Schema` .  
+The Precept build logic produces pages mapped to routes - and importantly for speed of development - bind automatically to the relevant data and execute the validation defined by the schema.
 
-The Schema could also be used to define the server side schema and validation, to ensure consistency.:crossed_fingers:
+A `PScript` can be exported / imported as a JSON file via HTTP or any other transport mechanism.
+
+## View
+
+The part of the Widget tree produced by Precept follows the structure of `PScript`.
+  
+`PPage`, `PPanel`, `PPart` and `PParticle` become instances of `PreceptPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
+
+`PreceptPage`, `Panel`, `Part` and `Particle` are known as 'Content' widgets.
+
+The page is built using the `PreceptRouter`, responding to the route mapped to the `PPage`.
+
+The page content is built as Panels or Parts as defined by the `PScript`, with Panels being nestable.
+
+The rest of the build just occurs through the normal Flutter Widget **build** method.
+
+A `ContentBuilder` mixin is used because many of the build methods required are the same across all the 'Content' widgets.
+
+Note that with the exception of `Particle`, all the 'Content' widgets are stateful - the reason for this is covered in the [Data](#data) section.
+
+There is currently only one type of Page, Panel and Part, although that may change.
+
+Particle types are looked up from the `ParticleLibrary`, which also allows you to [register](./libraries.md#registering-with-a-library) your own Particle implementations.
 
 Precept also provides forms with edit / save/ cancel functionality, and different ways to present the data.  For example, an integer might be presented in a TextField, or a spinner.
-
-
 ## Reduce App updates
 
 Both `PScript` and `PSchema` provide a JSON representation, and can be loaded from a remote source to the client, thus enabling updates without the user actually updating the app.

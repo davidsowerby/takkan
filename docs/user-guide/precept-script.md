@@ -2,7 +2,9 @@
 
 ## Introduction
 
-The Precept Script describes the Widgets to use and their layout.  It combines with the [Precept Schema](precept-schema.md) to connect presentation to data.
+The Precept Script, `PScript`, defines the presentation of any pages supplied by Precept - Precept can be used for just part of an app if required.
+ 
+It combines with the [Precept Schema](precept-schema.md) to connect presentation to data.
 
 It also uses the [Precept Schema](precept-schema.md) to define validation, and user permissions. During the build process, Precept uses these permissions to decide whether or not to enable editing / viewing of data.
 
@@ -13,6 +15,8 @@ This is not about security, but usability.  It does not make sense to present em
 The Precept client does not provide security.  It is designed with the simple premise that nothing from a client can be trusted.
 
 If you want proper security, validation and access control must be provided by the server - but that's true for any client.
+
+For a Back4App data provider, the server-side schema can be generated from `PSchema`, thus ensuring there are no differences between client and server side.
 
 :::
 
