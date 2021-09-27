@@ -6,17 +6,16 @@ The Precept Script, `PScript`, defines the presentation of any pages supplied by
  
 It combines with the [Precept Schema](precept-schema.md) to connect presentation to data.
 
-It also uses the [Precept Schema](precept-schema.md) to define validation, and user permissions. During the build process, Precept uses these permissions to decide whether or not to enable editing / viewing of data.
+It also uses the [Precept Schema](precept-schema.md) to define validation, and user permissions. Precept uses these permissions to decide whether or not to enable editing / viewing of data.
 
-This is not about security, but usability.  It does not make sense to present empty pages, or allow users to edit something only to have the server reject it.
 
 :::caution
 
-The Precept client does not provide security.  It is designed with the simple premise that nothing from a client can be trusted.
+Although `PSchema` is used to limit access to data in the client, this is mainly for usability.  It should not be seen as security (although it helps a bit).
+ 
+It is better to work on the simple premise that nothing from a client can be trusted, and therefore, validation and access control must be provided by the server - but that's true for any client.
 
-If you want proper security, validation and access control must be provided by the server - but that's true for any client.
-
-For a Back4App data provider, the server-side schema can be generated from `PSchema`, thus ensuring there are no differences between client and server side.
+To help with this, a Back4App server-side schema can be generated from `PSchema`.
 
 :::
 
@@ -32,10 +31,9 @@ The  "Widget" column shows the associated Widget provided by Precept, where ther
 | Widget   | Definition                                | Description                                                                                                            |  Widget |
 |----------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---|
 |          | Precept  [:point_right:](#precept)                             | A singleton holding a merged collection of `PScript`, potentially using multiple data sources and backends    | n/a  |
-|          | PScript [:point_right:](#pscript) | A collection of PRoutes                                                               | n/a  |
-|          | PRoute [:point_right:](#proute)                               | A path to a `PPage`                                                                                | n/a  |
-| Page     | PPage [:point_right:](#page)                                | The outer layout of what the user perceives as a page.                     | PreceptPage     |
-| Panel    | PPanel [:point_right:](#panel)                              | An nestable, arbitrary area of a Page,                               | Panel  |
+|          | PScript [:point_right:](#pscript) | A collection of PPages, identified by route                                                               | n/a  |
+| Page     | PPage [:point_right:](#page)                                | The outer layout of what the user perceives as a page, identified by route                     | PreceptPage     |
+| Panel    | PPanel [:point_right:](#panel)                              | A nestable, arbitrary area of a Page,                               | Panel  |
 | Part     | PPart [:point_right:](#part)                                 | Relates to a database field but may declare multiple read / edit Particles | Part  |
 | Particle | PParticle [:point_right:](#particle)                         | Defines the attributes of a single read or edit Widget                                              | Particle  |
 
@@ -43,8 +41,8 @@ The  "Widget" column shows the associated Widget provided by Precept, where ther
 Combined with the [Schema](./precept-schema.md), the overall structure is depicted below.  
 
 
-::: tip Note
-This does not show all Widgets, just those immediately relevant to the script and the schema.
+:::tip Note
+The diagram does not show all Widgets, just those immediately relevant to the script and the schema.
 
 For more on Widgets, see the [Widget Tree](./widget-tree.md)
 
@@ -107,22 +105,16 @@ Multiple scripts may be combined into one `Precept` instance, but there must be 
 
 Each `PScript` is loaded by an implementation of `PreceptLoader`, typically from the app's primary backend, but it can be from anywhere.
 
-A `PScript` must contain at least one `PRoute`.
+A `PScript` must contain at least one `PPage`.
 
 A call to `PScript.init()` must be made before using it. 
 
 A call to `PScript.validate()` will check the script for inconsistencies. This automatically calls `init()`.
 
 
-## PRoute
-
-A `PRoute` links a path to one `PPage`.  
-
-Examples generally show a path as something like */user/home*, but that structure is entirely optional - a path is just a String, with no expectations of structure, so it can be anything you want.
-
-It is simple to use another router alongside `PreceptRouter`. `PreceptRouter` accepts a reference to your Router, and you can then select which Router is queried for the route first.
-
 ## Page
+
+A 'route' is a map key for a specific `PPage`.  A route is generally shown as something like */user/home*, but that structure is entirely optional - a path is just a String, with no expectations of structure, so it can be anything you want.
 
 A `PreceptPage` is a representation of what the end user might perceive as a page.  It is typically represented by a Widget containing a Flutter `Scaffold`.
 
@@ -130,9 +122,13 @@ A page displays the elements such as header bars, FAB, footers etc, plus its **c
 
 You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
 
+:::tip
+Where you do not want to use Precept to construct a page, simply use your router alongside `PreceptRouter`. `PreceptRouter` accepts a reference to your Router, and you can then select which Router is queried for the route first.
+:::
+
 `PPage` or one of its descendants defines the configuration of the page.
 
-The process of building from a PScript configuration is described in the [Widget Tree](./widget-tree.md) section. 
+The process of building from a `PScript` configuration is described in the [Widget Tree](./widget-tree.md) section. 
 
 A `PPage` will often define a [Data Source](#data-source), simply because a page to the user will often be about one 'document'.
 
@@ -187,7 +183,7 @@ You can just use pre-defined Particles or define your own and register them with
 Configured by `PDataProvider` this defines the backend system to use - there may be more than one in a Precept system.  
 For example, most of the data may come from, say, Back4App, but the app may also use one or more public REST APIs for supplementary data. 
 
-It declares the [schema](./precept-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the Particle).
+`PDataProvider` declares the [schema](./precept-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the [Particle](#particle)).
 
 ### Configuration File
 
@@ -202,35 +198,31 @@ The example below shows the keys and URLs for 4 instances of Back4App (not real 
 
 The instance name (test, dev etc) can be set using the 'env' property, or your own naming convention using the 'instanceName' property.
 
-**Note**: the restId shown here is probably not needed
+The keys must be exactly those used in headers.
+
 
 ``` json
 {
   "dev": {
-    "applicationId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "clientId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "restId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
     "serverUrl": "https://parseapi.back4app.com/"
   },
   "test": {
-    "applicationId": "test",
-    "clientId": "test",
-    "restId": "test",
+    "X-Parse-Application-Id": "test",
+    "X-Parse-Client-Key": "test",
     "serverUrl": "http://localhost:1337/parse/"
   },
   "qa": {
-    "applicationId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "clientId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "restId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
     "serverUrl": "https://parseapi.back4app.com/"
   },
   "prod": {
-    "applicationId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "clientId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "restId": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
+    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
     "serverUrl": "https://parseapi.back4app.com/"
   },
-  "testValue" : "only used to test access to this file"
 }
 
 

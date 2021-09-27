@@ -1,6 +1,0 @@
-# Data
-
-## Temporary Document
-
-## Binding
-
