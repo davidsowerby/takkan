@@ -52,6 +52,6 @@ Sources:
 
 - [status page](./status.md)
 - [blog](../../blog)
-- [issues](https://gitlab.com/precept1/precept_client),
+- [issues](https://gitlab.com/precept1/precept_client)
 
 

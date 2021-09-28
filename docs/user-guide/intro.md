@@ -3,7 +3,13 @@ sidebar_position: 1
 ---
 # Overview
 
-If you have not already, is is worth looking at the [Precept Overview](../intro.md)
+If you have not already, is is worth looking at the [Precept Overview](../intro.md), which provides a summary of Precept's features.
+
+## Purpose
+
+Precept aims to make development quicker, by automating a substantial amount of the work currently needed to bind Widgets to data. 
+
+- layouts, traits 
 
 ## View and Model
 
