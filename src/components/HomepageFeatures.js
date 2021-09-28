@@ -5,7 +5,7 @@ import styles from './HomepageFeatures.module.css';
 const FeatureList = [
   {
     title: 'Reduce your development time',
-    Svg: require('../../static/img/reduceTime.svg').default,
+    Svg: require('../../static/img/reduce-development-time.svg').default,
     description: (
       <>
         Bind your data to widgets quickly and easily, complete with validation.
@@ -14,7 +14,7 @@ const FeatureList = [
   },
   {
     title: 'Focus on What Matters',
-    Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
+    Svg: require('../../static/img/focus.svg').default,
     description: (
       <>
         Generate your Bck4App backend schema automatically from the client schema - no mis-matches!
