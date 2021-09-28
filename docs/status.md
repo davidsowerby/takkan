@@ -12,7 +12,7 @@ The main features of Precept are listed in the [Overview](intro.md#key-features)
 
 ## Overview
 
-Documentation has been moved from [VuePress to Docusaurus](../blog/2021-09-22-move-to-docusaurus.md).
+Documentation has been moved from [VuePress to Docusaurus](../blog/move-to-docusaurus).
 
 Documentation structure has been tidied up a bit.
 
@@ -111,7 +111,7 @@ Work started on generating a schema, but was hindered by discovering that the ne
 
 Back4App have this as an issue, but [work can continue](https://gitlab.com/precept1/precept_back4app_backend/-/issues/4) by generating explicit validation code.
 
-## Data Provider support
+## Data Providers
 :::tip Feature
 Support for Back4App and generic REST APIs are included, others can be added
 

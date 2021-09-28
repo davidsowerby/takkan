@@ -7,11 +7,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 (module.exports = {
   title: 'Precept',
   tagline: 'Application Framework for Flutter',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://preceptblog.co.uk',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/precept-logo-small.png',
   organizationName: 'precept1', // Usually your GitHub org/user name.
   projectName: 'precept_client', // Usually your repo name.
 
@@ -23,13 +23,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://gitlab.com/precept1/precept_docs/-/edit/master/docs/',
+          editUrl: 'https://gitlab.com/precept1/precept_docs/-/edit/master/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://gitlab.com/precept1/precept_docs/-/edit/master/blog/',
+            'https://gitlab.com/precept1/precept_docs/-/edit/master/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -44,17 +44,22 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
       navbar: {
         title: 'Precept',
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          alt: 'Precept Logo',
+          src: 'img/precept-logo-small.png',
         },
         items: [
+          {
+              type: 'doc',
+              docId: 'intro',
+              position: 'left',
+              label: 'Overview',
+          },
           {
             type: 'doc',
             docId: 'tutorial/brief',
             position: 'left',
             label: 'Tutorial',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
               type: 'doc',
               docId: 'user-guide/intro',
@@ -67,6 +72,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               position: 'left',
               label: 'Developer Guide',
           },
+          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://gitlab.com/precept1/precept_docs/',
             label: 'GitLab',
@@ -81,8 +87,20 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             title: 'Docs',
             items: [
               {
+                  label: 'Overview',
+                  to: '/intro',
+              },
+              {
                 label: 'Tutorial',
                 to: '/docs/tutorial/brief',
+              },
+              {
+                  label: 'User Guide',
+                  to: '/docs/user-guide/intro',
+              },
+              {
+                  label: 'Developer Guide',
+                  to: '/docs/developer-guide/intro',
               },
             ],
           },

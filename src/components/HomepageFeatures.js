@@ -5,7 +5,7 @@ import styles from './HomepageFeatures.module.css';
 const FeatureList = [
   {
     title: 'Reduce your development time',
-    Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
+    Svg: require('../../static/img/reduceTime.svg').default,
     description: (
       <>
         Bind your data to widgets quickly and easily, complete with validation.

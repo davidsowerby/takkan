@@ -3,19 +3,19 @@ sidebar_position: 1
 ---
 # Overview
 
-When I started using [Flutter](https://flutter.dev/) I found it to be an incredibly flexible and powerful framework for creating compelling user interfaces.
+[Flutter](https://flutter.dev/) is an incredibly flexible and powerful framework for creating compelling user interfaces.
 
-On the other hand, I found connecting to data repetitive - so I decided to try and improve on that.
+However, I found connecting to data repetitive - so I decided to try and improve on that.
 
 The result is something (currently at Proof of Concept stage) which I believe substantially reduces development time for any Flutter project which connects Widgets to data.
 
 :::caution Status
 
-This documentation is written as though certain functionality already exists, even though that it may still be in development.
+This documentation is written as though functionality already exists, even though it may still be in development.
 
-That's just because it is often easier to capture ideas, document them, and then produce the functionality:
+That's just because it is often easier to capture ideas, document them, and then produce the functionality.
 
-- Tap ![status](images/status.svg) to see the current status, or :point_right: to get more detail about the feature.
+Tap ![status](images/status.svg) to see the current status, or :point_right: to get more detail about the feature.
 
 
 :::
@@ -33,9 +33,9 @@ For each feature, tap the ![status](images/status.svg) icon for the latest statu
 1. Roles defined by the `PSchema` are used to hide / show widgets / pages as appropriate. [![status](images/status.svg)](status.md#roles-control-display) [:point_right:](./user-guide/roles-control-display.md)
 1. Validation is defined by the schema and executed by the Widgets assembled by the `PScript`. [![status](images/status.svg)](status.md#validation) [:point_right:](./user-guide/validation.md)
 1. A backend schema for Back4App can be generated from `PSchema`, complete with roles and validation.[![status](images/status.svg)](status.md#server-side-schema-generation) [:point_right:](./user-guide/server-side-schema-generation.md)
-1. Support for Back4App and generic REST APIs are included, others can be added![progress](images/wip.svg)  
-1. An app may be updated remotely by revising `PScript`![progress](images/wip.svg) 
-1. Precept can be used for just part of an app if required
+1. Support for Back4App and generic REST APIs are included, others can be added. [![status](images/status.svg)](status.md#data-providers) [:point_right:](./user-guide/data-providers.md)
+1. An app may be updated remotely by revising `PScript`.[![status](images/status.svg)](status.md#remote-update) [:point_right:](./user-guide/script-management.md#remote-update)
+1. Precept can be used for just part of an app if required.[![status](images/status.svg)](status.md#partial-use) [:point_right:](./user-guide/partial-use.md)
 
 
 
