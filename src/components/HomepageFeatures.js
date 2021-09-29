@@ -23,7 +23,7 @@ const FeatureList = [
   },
   {
     title: 'Free to Flutter',
-    Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
+    Svg: require('../../static/img/free-to-flutter.svg').default,
     description: (
       <>
          Remain free to use all the power of Flutter as you wish.
