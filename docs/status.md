@@ -1,3 +1,6 @@
+---
+sidebar_position: 2
+---
 # Status
 
 The main features of Precept are listed in the [Overview](intro.md#key-features), and repeated here with a brief summary of their current status.
@@ -27,9 +30,10 @@ Documentation structure has been tidied up a bit.
 
 The structure of both `PScript` and `PSchema` are now fairly mature, although there may be some additions to come.
 
-Both can be loaded either directly from code, or via http.
+Both can be loaded either directly from code.  It is intended that it can also be loaded via REST.  [![task](../docs/images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/78).
 
-Multiple `PScript` instances (inclduing contained `PSchema` instances ) can be combined into a single script, making modular construction possible.
+
+Multiple `PScript` instances (including contained `PSchema` instances ) can be combined into a single script, making modular construction possible.
 
 Pages containing Panels and Parts are defined by `PScript` and assembled automatically.
 
@@ -39,7 +43,7 @@ Pages containing Panels and Parts are defined by `PScript` and assembled automat
 *Various layout schemes are provided*
 :::
  
-This has not moved from the idea stage.  There is currently only one, simplistic layout available.  [Open issue](https://gitlab.com/precept1/precept_client/-/issues/62).
+This has not moved from the idea stage.  There is currently only one, simplistic layout available. [![task](../docs/images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/62).
 
 
 ## Traits
@@ -64,9 +68,9 @@ A schema (`PSchema`) defines data structure, roles and permissions.
 *Data Bindings are created automatically, converting data type between model and presentation as needed.*
 :::
 
-This is almost complete.  A current document (ab instance of `MutableDocument`) is maintained for editing, with data bindings linking from that document to a Widget for display.
+This is almost complete.  A current document (an instance of `MutableDocument`) is maintained for editing, with data bindings linking from that document to a Widget for display.
 
-Where required the data type is automatically converted - for example to display an integer in a `Text`.
+Where required the data type is automatically converted - for example to display an integer in a `Text` Widget.
 
 Bindings for some Geo data types [outstanding](https://gitlab.com/precept1/precept_client/-/issues/45).
 
@@ -94,22 +98,21 @@ Some elements of this are working, but this really needs thorough [testing](http
 Validation is defined by the schema and executed by the Widgets assembled by the `PScript`.
 :::
 
-The process for field validation works, but there are very few validation methods provided, and they are limited to String and integer types.
+The process for field validation works, but there are very few validation methods provided, and they are limited to [String and integer](https://gitlab.com/precept1/precept_client/-/issues/72) types.
 
-Custom validation support is required.
+[Custom validation](https://gitlab.com/precept1/precept_client/-/issues/72)  support is required.
 
-There is currently no process for object validation.
+There is currently no process for [object validation](https://gitlab.com/precept1/precept_client/-/issues/14). 
 
-There is an [open issue](https://gitlab.com/precept1/precept_client/-/issues/72) for these.
 
 ## Server side schema generation 
 :::tip Feature
 A backend schema for Back4App can be generated from `PSchema`, complete with roles and validation.
 ::: 
 
-Work started on generating a schema, but was hindered by discovering that the new Parse Server 4.4.0 validation does not work with Save Triggers.
+Work started on generating a schema, but was hindered by discovering that the new Parse Server 4.4.0 validation did not work with Save Triggers.
 
-Back4App have this as an issue, but [work can continue](https://gitlab.com/precept1/precept_back4app_backend/-/issues/4) by generating explicit validation code.
+This has been resolved; and [work can continue](https://gitlab.com/precept1/precept_back4app_backend/-/issues/4).
 
 ## Data Providers
 :::tip Feature
@@ -126,17 +129,17 @@ An app may be updated remotely by revising `PScript`
 
 It is possible to load one or more `PScript` instances from remote sources via HTTP.  These are then merged into a single `PScript`.
 
-A version controlled method is required, to ensure that the desire version is in use. [Issue](https://gitlab.com/precept1/precept_client/-/issues/74)
+A version controlled method is required, to ensure that the desire version is in use. [![task](images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/74)
 
-As there is an instance per Locale, we also need to support locale selection / change. [Issue](https://gitlab.com/precept1/precept_client/-/issues/75)
+As there is an instance per Locale, we also need to support locale selection / change. [![task](images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/75)
 
-Local caching is required, otherwise no offline working can be supported [Issue](https://gitlab.com/precept1/precept_client/-/issues/76)
+Local caching is required, otherwise no offline working can be supported [![task](images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/76)
 
 ## Partial Use
 :::tip Feature
 Precept can be used for just part of an app if required
 :::
 
-Any pages associated with routes not supported by Precept pages can be provided via a developer supplied alternative router.
+Any pages associated with routes not supported by Precept pages can be provided via a developer supplied [alternative router](user-guide/partial-use.md#alternate-router) [![task](images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/80).
 
-This could be further improved by allowing Precept Panels to be embedded in a non-Precept page.  This seems possible, but needs looking at properly. [Issue](https://gitlab.com/precept1/precept_client/-/issues/77)
+This could be further improved by allowing Precept Panels to be embedded in a non-Precept page.  This seems possible, but needs looking at properly.  [![task](images/task.png)](https://gitlab.com/precept1/precept_client/-/issues/77).

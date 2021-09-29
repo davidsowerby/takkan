@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The Precept Script, `PScript`, defines the presentation of any pages supplied by Precept - Precept can be used for just part of an app if required.
+The Precept Script, `PScript`, defines the presentation of any pages supplied by Precept.
  
-It combines with the [Precept Schema](precept-schema.md) to connect presentation to data.
+It contains one or more [PDataProvider](data-providers.md) instance, which  in turn contain [PSchema](precept-schema.md) instances, to connect presentation to data.
 
-It also uses the [Precept Schema](precept-schema.md) to define validation, and user permissions. Precept uses these permissions to decide whether or not to enable editing / viewing of data.
+It also uses the [PSchema](precept-schema.md) to define validation, and user permissions. Precept uses these permissions to decide whether or not to enable editing / viewing of data.
 
 
 :::caution
@@ -15,7 +15,7 @@ Although `PSchema` is used to limit access to data in the client, this is mainly
  
 It is better to work on the simple premise that nothing from a client can be trusted, and therefore, validation and access control must be provided by the server - but that's true for any client.
 
-To help with this, a Back4App server-side schema can be generated from `PSchema`.
+To help with this, a Back4App server-side schema can be generated from `PSchema`.  [![task](../images/idea.svg)](https://gitlab.com/precept1/precept_back4app_backend/-/issues/4) 
 
 :::
 
@@ -56,7 +56,7 @@ Using Precept is mostly about configuration.
 
 The upper part of the structure is really just to support routing, multiple scripts and code management.
 
-From [Page](#page) onwards it is about producing Widgets, and that process is discussed in more detail in the [Widget Tree](./widget-tree.md) section.
+From [Page](#page) downwards it is about producing Widgets, and that process is discussed in more detail in the [Widget Tree](./widget-tree.md) section.
 
 ## Version Control
 
@@ -68,10 +68,10 @@ A version is a simple incrementing integer.
 
 To be clear, in this context we mean:
 
-- **dynamic** data is data that is taken from a `Query`, and if the user has permissions, may be changed.
-- **static** data is defined as part of the build. Strictly speaking, captions and tooltips are static data, but are handled in their own specific way.  Here we are talking about things like descriptive text, notices and images that do not change as a result of a change to data.
+- **dynamic** data is data that is taken from a `Query`, and subject to  permissions, may be changed.
+- **static** data is defined as part of the `PScript`. Here we are talking about things like descriptive text, notices and images that do not change as a result of a change to data.
 
-Precept defines static data within a `PPart` , and can therefore be changed remotely.
+Precept defines static data within a `PPart` , and can therefore be changed remotely by [updating](script-management.md) `PScript`.
 
 ## Precept
 
@@ -99,7 +99,7 @@ Some `PCommon` properties are not actually used at all levels.
 
 `PScript` and its lower levels are located in the *precept_script* package, as shown in the [dependencies diagram](./installation.md#dependencies).
 
-A `PScript` instance is used to provide a reasonably type-safe declaration of the user interface of an app, and if appropriate authentication options.
+A `PScript` instance is used to provide a reasonably type-safe declaration of the user interface of an app.
 
 Multiple scripts may be combined into one `Precept` instance, but there must be at least one.
 
@@ -123,16 +123,12 @@ A page displays the elements such as header bars, FAB, footers etc, plus its **c
 You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
 
 :::tip
-Where you do not want to use Precept to construct a page, simply use your router alongside `PreceptRouter`. `PreceptRouter` accepts a reference to your Router, and you can then select which Router is queried for the route first.
+Where you do not want to use Precept to construct a page, simply [use your router](partial-use.md#alternate-router) alongside `PreceptRouter`. 
 :::
 
 `PPage` or one of its descendants defines the configuration of the page.
 
 The process of building from a `PScript` configuration is described in the [Widget Tree](./widget-tree.md) section. 
-
-A `PPage` will often define a [Data Source](#data-source), simply because a page to the user will often be about one 'document'.
-
-However, **query** is a property in `PCommon`, and therefore an [inherited property](#inherited-properties), so it can actually be declared at any level except `PParticle`.
 
 The **content** of a `PPage` is defined by a collection of `PPanel` and / or `PPart`. [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
 
@@ -161,12 +157,12 @@ The `EditState` controls the current edit mode, and may also further inhibit edi
 
 The `Part` references its nearest [Query](#query), which in turn contains a reference to the [schema](./precept-schema.md)
 
-The schema is used to support model-to-view type conversion and edit Particle validation.
+The schema is used to support model-to-view type conversion and validation.
 
 
 ## Particle
 
-A `Particle` is a sub-element of a `Part`.  It represents a data field, but specifically a Widget that is for read only or edit mode.
+A `Particle` is a sub-element of a `Part`.  It represents a data field, but specifically a Widget that is for read mode or edit mode.
 
 There are a number of implementations of `Particle`, which are named according to the Widget that is used for presentation.
 
@@ -190,39 +186,47 @@ For example, most of the data may come from, say, Back4App, but the app may also
 A Data Provider will almost certainly require keys of some sort - client key, app key or similar.  These can be declared within the `PScript`,
 but we believe it is better to define them in a JSON configuration file held as a Flutter asset, but NOT committed to your VCS.
 
-Although the keys could still be decompiled from the app, this approach is better than declaring openly. 
+Although the keys could still be decompiled from the app, this approach is better than declaring them openly. 
 
-#### Back4App Configuration Example
+#### precept.json
 
-The example below shows the keys and URLs for 4 instances of Back4App (not real keys of course!).  
+The example below shows the keys and URLs for 4 instances of Back4App (not real keys of course!) and a REST data provider.  
 
 The instance name (test, dev etc) can be set using the 'env' property, or your own naming convention using the 'instanceName' property.
 
 The keys must be exactly those used in headers.
 
+There must always be 2 levels of definition.
+
 
 ``` json
 {
-  "dev": {
-    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "serverUrl": "https://parseapi.back4app.com/"
+  "back4app": {
+    "dev": {
+      "X-Parse-Application-Id": "xLWKrOqcvber9ovoalO2XFuKQn0NlHPksJV6",
+      "X-Parse-Client-Key": "Iqwexbxsnsn0IIxWF01flSxhpJf6FO1gAkQ",
+      "serverUrl": "https://parseapi.back4app.com/"
+    },
+    "test": {
+      "applicationId": "test",
+      "clientId": "test",
+      "serverUrl": "http://localhost:1337/parse/"
+    },
+    "qa": {
+      "applicationId": "RXKWt1tuVRxxaaadsdaaaaaaa39Hc16Qxl2X",
+      "clientId": "utsdfdffxxxxxvv6FSwwlTjvxA15Y4Qs",
+      "serverUrl": "https://parseapi.back4app.com/"
+    },
+    "prod": {
+      "applicationId": "TfjrHUxxmmiwiwiwwiPFdqGoIdoDDhbSq",
+      "clientId": "5kVaamammsmmsmmsmmgtOTb1zcWjE1voJCg",
+      "serverUrl": "https://parseapi.back4app.com/"
+    }
   },
-  "test": {
-    "X-Parse-Application-Id": "test",
-    "X-Parse-Client-Key": "test",
-    "serverUrl": "http://localhost:1337/parse/"
-  },
-  "qa": {
-    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "serverUrl": "https://parseapi.back4app.com/"
-  },
-  "prod": {
-    "X-Parse-Application-Id": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "X-Parse-Client-Key": "at4dM5dNxxrYuyJp7VtTccIKZY9l3GtfHre0Hoow",
-    "serverUrl": "https://parseapi.back4app.com/"
-  },
+  "restcountries": {
+    "public": {"serverUrl": "https://restcountries.eu/"}
+  }
+}
 }
 
 
@@ -248,16 +252,5 @@ See the code documentation for `PQuery` for a detailed list of calls available.
 A good example of the script structure is the [Kitchen Sink](../developer-guide/kitchenSink.md) we use for testing.
 
 
-## Localisation
-
-The conventional approach to localisation is to translate on the client, which is not very efficient - most users only ever use a single Locale setting.
-
-Precept takes a different approach, and expects the translation to be done server-side although [interpolation](#interpolation) still has to be carried out on the client.
-
-This is particularly relevant to any [static](#dynamic-vs-static-data) data defined by a `PScript`.
 
 
-## Interpolation
-
- 
-TBW
