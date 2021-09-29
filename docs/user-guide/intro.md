@@ -7,15 +7,21 @@ If you have not already, is is worth looking at the [Precept Overview](../intro.
 
 ## Purpose
 
-Precept aims to make development quicker, by automating a substantial amount of the work currently needed to bind Widgets to data. 
+Precept aims to reduce development time, in three broad areas:
 
-- layouts, traits 
+1. by automating a substantial amount of the work currently needed to bind Widgets to data,
+1. by providing device aware layouts that simplify the construction of pages in a consistent way across an application
+1. by providing Traits (basically styles, but with some behavioural attributes), which enable consistent appearance and behaviour across an application.
+
+Equally important, none of these features actually prevent a developer from direct access to Flutter's immense range of features.
+
+Precept is useful for any app which requires the presentation and editing of data, regardless of how the data is actually presented - whether a standard, boring form, or the slickest, most magical way of presenting data..
 
 ## View and Model
 
-### Scripts
+Both the view, or presentation layer, and the model, or data, layer are defined by scripts.
 
-Precept is useful for any app which requires the presentation and editing of data, regardless of how the data is actually presented.
+### Scripts
 
 A `PScript` and `PSchema` provide a definition of the View and Model layers respectively. 
 
