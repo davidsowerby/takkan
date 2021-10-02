@@ -6,8 +6,6 @@ part of 'relation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Relation _$RelationFromJson(Map<String, dynamic> json) {
-  return Relation();
-}
+Relation _$RelationFromJson(Map<String, dynamic> json) => Relation();
 
 Map<String, dynamic> _$RelationToJson(Relation instance) => <String, dynamic>{};

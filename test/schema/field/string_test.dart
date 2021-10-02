@@ -12,15 +12,15 @@ void main() {
 
     tearDown(() {});
 
-    test('length', () {
+    test('validate', () {
       // given
-      PScript script=PScript(name: 'A script');
+      PScript script = PScript(name: 'A script');
       // script.init();
 
       final PString field = PString(
         validations: [
-          StringValidation(method: ValidateString.lengthGreaterThan, param: 3),
-          StringValidation(method: ValidateString.lengthLessThan, param: 6),
+          VString.longerThan(3),
+          VString.shorterThan(6),
         ],
       );
 
@@ -28,10 +28,50 @@ void main() {
 
       // then
 
-      expect(field.validate('ab',script), ['must be more than 3 characters']);
-      expect(field.validate('abcdedfg',script), ['must be less than 6 characters']);
-      expect(field.validate('abcd',script), []);
+      expect(
+          field.doValidate('ab', script), ['must be more than 3 characters']);
+      expect(field.doValidate('abcdedfg', script),
+          ['must be less than 6 characters']);
+      expect(field.doValidate('abcd', script), []);
+    });
 
+    test('shorterThan', () {
+      // given
+      final val1 = VString.shorterThan(5);
+      // when
+
+      // then
+
+      expect(VString.ref(val1).messageKey, StringValidation.shorterThan);
+      expect(VString.ref(val1).javaScript, 'value.length < threshold');
+      expect(VString.ref(val1).params, {'threshold': 5});
+    });
+
+    test('longerThan', () {
+      // given
+      final val1 = VString.longerThan(5);
+      // when
+
+      // then
+
+      expect(VString.ref(val1).messageKey, StringValidation.longerThan);
+      expect(VString.ref(val1).javaScript, 'value.length > threshold');
+      expect(VString.ref(val1).params, {'threshold': 5});
+    });
+
+    /// The set is used to detect duplicates declared in refs
+    test('refs', () {
+      // given
+      Set s = Set();
+
+      // when
+      VString.refs().forEach((element) {
+        s.add(element.name);
+      });
+      // then
+
+      expect(VString.refs().length, StringValidation.values.length);
+      expect(s.length, VString.refs().length);
     });
   });
 }

@@ -3,7 +3,6 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/fieldSelector.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
@@ -11,20 +10,16 @@ import 'package:precept_script/validation/message.dart';
 part 'query.g.dart';
 
 /// This abstract base class is common for queries with an expected result of one document, or a List of documents.
-/// Results may be returned as either a Future or a Stream. Implementations are in broad categories of 'get',
-/// Specifies how to retrieve a single document or a list of documents in a backend-neutral way
-/// Supports various ways of identifying the document:
-/// - 'get' with a document id
-/// - 'select distinct' with criteria expressed in parameters
-/// - 'select first'
-/// - 'select last'
 ///
-/// [querySchemaName] is used to look up the schema for the query, held in [PSchema.queries] and defined by
-/// an instance of [PQuerySchema]. The [PQuerySchema.documentSchema] contains a reference to the
-/// schema for the document(s) returned by the query
+/// Will eventually have the option to just return a Future or connect a Stream.
 ///
-/// [fields] is a comma separated list of field names you want values to be returned for.  There is an outstanding
-/// issue to automatically generate this. https://gitlab.com/precept1/precept_script/-/issues/2
+/// [queryName] is used to identify query results held in local storage, and also
+/// as a lookup key if used as a named query in [PSchema.namedQueries].
+///
+/// [fields] is a comma separated list of field names you want values to be returned
+/// for, and applies only to GraphQL queries.  REST queries always return all fields.
+/// There is an outstanding issue to automatically generate this list for GraphQL
+/// queries. https://gitlab.com/precept1/precept_script/-/issues/2
 ///
 /// [propertyReferences] allow linking the query variables dynamically to other data accessible to the query.
 /// The reference is relative to the [parentBinding] of the [PreceptPage], [Panel] or [Part] holding the query.
@@ -43,27 +38,26 @@ part 'query.g.dart';
 /// will take precedence
 ///
 ///
-///
-///
 abstract class PQuery extends PreceptItem {
   final Map<String, dynamic> variables;
   final List<String> propertyReferences;
   final QueryReturnType returnType;
-  final String querySchemaName;
+  final String queryName;
+  final String documentSchema;
 
   PQuery({
     this.variables = const {},
+    required this.documentSchema,
     this.propertyReferences = const [],
     this.returnType = QueryReturnType.futureItem,
-    required this.querySchemaName,
+    required this.queryName,
   });
 
   @JsonKey(ignore: true)
-  PQuerySchema? get schema =>
-      (parent as PCommon).dataProvider?.schema.queries[querySchemaName];
+  PDocument? get schema =>
+      (parent as PCommon).dataProvider?.schema.documents[documentSchema];
 
-  /// For queries, the name is used as a property to lookup its data (query results) in local storage
-  String get property => querySchemaName;
+  /// For queries, property property to lookup its data (query results) in local storage
 
   void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
 }
@@ -90,14 +84,16 @@ class PGraphQLQuery extends PQuery {
   PGraphQLQuery({
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
+    required String documentSchema,
     required this.script,
-    required String querySchemaName,
+    required String queryName,
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-    querySchemaName: querySchemaName,
+    queryName: queryName,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
+          documentSchema: documentSchema,
         );
 
   factory PGraphQLQuery.fromJson(Map<String, dynamic> json) =>
@@ -129,12 +125,14 @@ class PPQuery extends PGraphQLQuery {
   PPQuery({
     this.fields = '',
     this.types = const {},
-    required String querySchemaName,
+    required String queryName,
+    required String documentSchema,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-          querySchemaName: querySchemaName,
+          queryName: queryName,
+          documentSchema: documentSchema,
           script: '',
           propertyReferences: propertyReferences,
           variables: variables,
@@ -149,7 +147,6 @@ class PPQuery extends PGraphQLQuery {
 
 /// Retrieves a single document using a [DocumentId]
 ///
-/// Uses the [documentSchema] rather than the inherited [querySchemaName]
 ///
 @JsonSerializable(explicitToJson: true)
 class PGetDocument extends PQuery {
@@ -161,11 +158,13 @@ class PGetDocument extends PQuery {
     this.fieldSelector = const FieldSelector(),
     required this.documentId,
     required this.documentSchema,
+    String? queryName,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     Map<String, dynamic> params = const {},
   }) : super(
-          querySchemaName: '',
+          queryName: queryName ?? 'get${documentId.toKey}',
+          documentSchema: documentId.path,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: QueryReturnType.futureDocument,
@@ -187,15 +186,16 @@ class PGetStream extends PQuery {
   final DocumentId documentId;
 
   PGetStream({
-    required String querySchemaName,
+    String? queryName,
     Map<String, dynamic> arguments = const {},
     List<String> propertyReferences = const [],
     required this.documentId,
     Map<String, dynamic> params = const {},
   }) : super(
-          propertyReferences: propertyReferences,
+    propertyReferences: propertyReferences,
+          documentSchema: documentId.path,
           variables: arguments,
-          querySchemaName: querySchemaName,
+          queryName: queryName ?? 'get${documentId.toKey}',
         );
 
   String get table => documentId.path;

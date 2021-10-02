@@ -13,16 +13,17 @@ PSchema _$PSchemaFromJson(Map<String, dynamic> json) => PSchema(
           ) ??
           const {},
       name: json['name'] as String,
-      queries: (json['queries'] as Map<String, dynamic>?)?.map(
-            (k, e) =>
-                MapEntry(k, PQuerySchema.fromJson(e as Map<String, dynamic>)),
+      namedQueries: (json['namedQueries'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(
+                k, const PQueryConverter().fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
     );
 
 Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'name': instance.name,
-      'queries': instance.queries.map((k, e) => MapEntry(k, e.toJson())),
+      'namedQueries': instance.namedQueries
+          .map((k, e) => MapEntry(k, const PQueryConverter().toJson(e))),
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };
 

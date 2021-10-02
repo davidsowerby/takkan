@@ -22,6 +22,9 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
       sessionTokenKey: json['sessionTokenKey'] as String,
       configSource:
           PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
+      defaultDelegate:
+          _$enumDecodeNullable(_$DelegateEnumMap, json['defaultDelegate']) ??
+              Delegate.graphQl,
       signInOptions: json['signInOptions'] == null
           ? const PSignInOptions()
           : PSignInOptions.fromJson(
@@ -45,10 +48,53 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'schemaSource': instance.schemaSource?.toJson(),
       'sessionTokenKey': instance.sessionTokenKey,
       'headerKeys': instance.headerKeys,
+      'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate],
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),
       'restDelegate': instance.restDelegate?.toJson(),
       'useAuthenticator': instance.useAuthenticator,
     };
+
+K _$enumDecode<K, V>(
+  Map<K, V> enumValues,
+  Object? source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    throw ArgumentError(
+      'A value must be provided. Supported values: '
+      '${enumValues.values.join(', ')}',
+    );
+  }
+
+  return enumValues.entries.singleWhere(
+    (e) => e.value == source,
+    orElse: () {
+      if (unknownValue == null) {
+        throw ArgumentError(
+          '`$source` is not one of the supported values: '
+          '${enumValues.values.join(', ')}',
+        );
+      }
+      return MapEntry(unknownValue, enumValues.values.first);
+    },
+  ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
+const _$DelegateEnumMap = {
+  Delegate.graphQl: 'graphQl',
+  Delegate.rest: 'rest',
+};
 
 PConfigSource _$PConfigSourceFromJson(Map<String, dynamic> json) =>
     PConfigSource(

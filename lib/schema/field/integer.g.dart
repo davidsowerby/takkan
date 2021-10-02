@@ -9,8 +9,7 @@ part of 'integer.dart';
 PInteger _$PIntegerFromJson(Map<String, dynamic> json) => PInteger(
       defaultValue: json['defaultValue'] as int?,
       validations: (json['validations'] as List<dynamic>?)
-              ?.map(
-                  (e) => IntegerValidation.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => VInteger.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       required: json['required'] as bool? ?? false,
@@ -32,45 +31,24 @@ Map<String, dynamic> _$PIntegerToJson(PInteger instance) {
   return val;
 }
 
-IntegerValidation _$IntegerValidationFromJson(Map<String, dynamic> json) =>
-    IntegerValidation(
-      method: _$enumDecode(_$ValidateIntegerEnumMap, json['method']),
-      param: json['param'] as int? ?? 0,
+_$_$IntegerGreaterThan _$$_$IntegerGreaterThanFromJson(
+        Map<String, dynamic> json) =>
+    _$_$IntegerGreaterThan(
+      json['threshold'] as int,
     );
 
-Map<String, dynamic> _$IntegerValidationToJson(IntegerValidation instance) =>
+Map<String, dynamic> _$$_$IntegerGreaterThanToJson(
+        _$_$IntegerGreaterThan instance) =>
     <String, dynamic>{
-      'method': _$ValidateIntegerEnumMap[instance.method],
-      'param': instance.param,
+      'threshold': instance.threshold,
     };
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
+_$_$IntegerLessThan _$$_$IntegerLessThanFromJson(Map<String, dynamic> json) =>
+    _$_$IntegerLessThan(
+      json['threshold'] as int,
     );
-  }
 
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-const _$ValidateIntegerEnumMap = {
-  ValidateInteger.greaterThan: 'greaterThan',
-  ValidateInteger.lessThan: 'lessThan',
-};
+Map<String, dynamic> _$$_$IntegerLessThanToJson(_$_$IntegerLessThan instance) =>
+    <String, dynamic>{
+      'threshold': instance.threshold,
+    };

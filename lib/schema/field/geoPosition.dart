@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/geo.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -14,7 +15,9 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
     GeoPosition? defaultValue,
     List<GeoPositionValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -24,11 +27,6 @@ class PGeoPosition extends PField<GeoPositionValidation, GeoPosition> {
       _$PGeoPositionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGeoPositionToJson(this);
-
-  @override
-  bool doValidation(GeoPositionValidation validation, GeoPosition value) {
-    return validateGeoPosition(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

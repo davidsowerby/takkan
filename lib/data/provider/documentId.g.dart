@@ -6,12 +6,10 @@ part of 'documentId.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-DocumentId _$DocumentIdFromJson(Map<String, dynamic> json) {
-  return DocumentId(
-    path: json['path'] as String,
-    itemId: json['itemId'] as String,
-  );
-}
+DocumentId _$DocumentIdFromJson(Map<String, dynamic> json) => DocumentId(
+      path: json['path'] as String,
+      itemId: json['itemId'] as String,
+    );
 
 Map<String, dynamic> _$DocumentIdToJson(DocumentId instance) =>
     <String, dynamic>{

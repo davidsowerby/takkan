@@ -1,94 +1,79 @@
+import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/list.dart';
-import 'package:precept_script/schema/validation/validator.dart';
-import 'package:validators/validators.dart';
+import 'package:precept_script/validation/result.dart';
+import 'package:precept_script/validation/validate.dart';
 
+part 'string.freezed.dart';
 part 'string.g.dart';
 
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
-class PString extends PField<StringValidation, String> {
+@JsonSerializable(explicitToJson: true)
+class PString extends PField<VString, String> {
+  Type get modelType => String;
+
   PString({
     String? defaultValue,
-    List<StringValidation> validations = const [],
+    List<VString> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    readOnly: readOnly,
           required: required,
           validations: validations,
+          defaultValue: defaultValue,
         );
-
-  Type get modelType => String;
 
   factory PString.fromJson(Map<String, dynamic> json) =>
       _$PStringFromJson(json);
 
   Map<String, dynamic> toJson() => _$PStringToJson(this);
+}
 
-  @override
-  bool doValidation(StringValidation validation, String value) {
-    return validateString(validation, value);
+@freezed
+class VString with _$VString implements V {
+  const factory VString.longerThan(int threshold) = _$StringGreaterThan;
+
+  const factory VString.shorterThan(int threshold) = _$StringLessThan;
+
+  factory VString.fromJson(Map<String, dynamic> json) =>
+      _$VStringFromJson(json);
+
+  static VResult validate(VString validation, String value) {
+    final bool passed = validation.map(
+        longerThan: (v) => value.length > v.threshold,
+        shorterThan: (v) => value.length < v.threshold);
+    return VResult(passed: passed, ref: ref(validation));
+  }
+
+  static VResultRef ref(VString validation) {
+    return validation.map(
+      longerThan: (v) => VResultRef(
+        messageKey: StringValidation.longerThan,
+        javaScript: 'value.length > threshold',
+        toJson: v.toJson(),
+      ),
+      shorterThan: (v) => VResultRef(
+        messageKey: StringValidation.shorterThan,
+        javaScript: 'value.length < threshold',
+        toJson: v.toJson(),
+      ),
+    );
+  }
+
+  static List<VString> values() {
+    return [VString.longerThan(1), VString.shorterThan(1)];
+  }
+
+  static List<VResultRef> refs() {
+    List<VResultRef> refsList = List.empty(growable: true);
+    final values = VString.values();
+    values.forEach((element) {
+      refsList.add(VString.ref(element));
+    });
+    return refsList;
   }
 }
 
-@JsonSerializable(explicitToJson: true)
-class PListString extends PList {
-  PListString({
-    List<String> defaultValue = const [],
-    bool required = false,
-  }) : super(
-          defaultValue: defaultValue,
-          required: required,
-        );
-
-  factory PListString.fromJson(Map<String, dynamic> json) =>
-      _$PListStringFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PListStringToJson(this);
-
-  @override
-  Type get modelType => String;
-
-  @override
-  bool doValidation(ModelValidation validation, value) {
-    // TODO: implement doValidation
-    throw UnimplementedError();
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
-class StringValidation implements ModelValidation<ValidateString, String> {
-  final ValidateString method;
-  final dynamic param;
-
-  const StringValidation({required this.method, this.param});
-
-  factory StringValidation.fromJson(Map<String, dynamic> json) =>
-      _$StringValidationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StringValidationToJson(this);
-}
-
-enum ValidateString {
-  alpha,
-  contains,
-  lengthEquals,
-  lengthGreaterThan,
-  lengthLessThan
-}
-
-bool validateString(StringValidation validation, String value) {
-  switch (validation.method) {
-    case ValidateString.alpha:
-      return isAlpha(value);
-    case ValidateString.contains:
-      return contains(value, validation.param);
-    case ValidateString.lengthEquals:
-      return value.length == validation.param;
-
-    case ValidateString.lengthGreaterThan:
-      return value.length > validation.param;
-    case ValidateString.lengthLessThan:
-      return value.length < validation.param;
-  }
-}
+enum StringValidation { longerThan, shorterThan }

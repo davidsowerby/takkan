@@ -7,16 +7,14 @@ part of 'navigation.dart';
 // **************************************************************************
 
 PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) => PNavButton(
-      readOnly: json['readOnly'] as bool? ?? false,
+      readOnly: json['readOnly'] as bool? ?? true,
       route: json['route'] as String,
       caption: json['caption'] as String?,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
-      editTraitName:
-          json['editTraitName'] as String? ?? 'queryView-edit-default',
-      height: (json['height'] as num).toDouble(),
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
+      height: (json['height'] as num?)?.toDouble() ?? 100,
       property: json['property'] as String? ?? notSet,
-      staticData: json['staticData'] as String,
+      staticData: json['staticData'] as String? ?? '',
       pid: json['pid'] as String?,
     )..version = json['version'] as int;
 
@@ -38,10 +36,9 @@ PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) =>
     PNavButtonSet(
       buttons: Map<String, String>.from(json['buttons'] as Map),
       width: (json['width'] as num?)?.toDouble(),
-      height: (json['height'] as num?)?.toDouble(),
+      height: (json['height'] as num?)?.toDouble() ?? 100,
       pid: json['pid'] as String?,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
       buttonTraitName:
           json['buttonTraitName'] as String? ?? 'PNavButton-default',
     )..version = json['version'] as int;

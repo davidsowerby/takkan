@@ -5,7 +5,16 @@ import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/example/kitchenSink.dart';
+import 'package:precept_script/example/kitchenSinkSchema.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/part/navigation.dart';
+import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/part/text.dart';
+import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/script.dart';
+import 'package:precept_script/signin/signIn.dart';
 
 import '../fixtures.dart';
 
@@ -23,28 +32,48 @@ void main() {
 
     tearDown(() {});
 
-    test('output', () {
+    test('debugId and classes', () {
       // given
       final script = kitchenSinkScript;
       script.init();
+      print(kitchenSinkSchema.name);
+      print(script.dataProvider?.schema.name);
       final log = WalkLog();
+      final classes = WalkClasses();
       // when
       script.walk([
         WalkDebugId(),
+        classes,
         log,
       ]);
       // then
 
-      // StringBuffer buf=StringBuffer();
-      // log.calls.forEach((element) {
-      //   buf.write('\'$element\',');
-      // });
-      // print(buf.toString());
-      expect(log.calls.length, 30);
+      StringBuffer buf = StringBuffer();
+      log.calls.forEach((element) {
+        buf.write('\'$element\',');
+      });
+      print(buf.toString());
+      expect(log.calls.length, 29);
+      expect(classes.calls, [
+        PScript,
+        PDataProvider,
+        PSchema,
+        PDocument,
+        PPermissions,
+        PPage,
+        PPanel,
+        PText,
+        PNavButton,
+        PNavButtonSet,
+        PEmailSignIn,
+        PGraphQLQuery,
+        PQueryView,
+        PPQuery,
+        PPanelHeading
+      ]);
       expect(log.calls, [
         'Kitchen Sink',
-        'Kitchen Sink.NoDataProvider:0',
-        'Kitchen Sink.SchemaSource:0',
+        'Kitchen Sink.DataProvider:0',
         'Kitchen Sink./',
         'Kitchen Sink./.Panel:0',
         'Kitchen Sink./.Panel:0.id1',
@@ -83,19 +112,35 @@ class WalkLog implements ScriptVisitor {
   WalkLog();
 
   @override
-  step(PreceptItem entry) {
-    calls.add(entry.debugId!);
+  step(Object entry) {
+    if (entry is PreceptItem) {
+      calls.add(
+          entry.debugId ?? 'Null debugId in ${entry.runtimeType.toString()}');
+    }
+  }
+}
+
+class WalkClasses implements ScriptVisitor {
+  final Set<Type> calls = Set();
+
+  WalkClasses();
+
+  @override
+  step(Object entry) {
+    calls.add(entry.runtimeType);
   }
 }
 
 class WalkDebugId implements ScriptVisitor {
   @override
-  step(PreceptItem entry) {
-    if (entry.debugId == null) {
-      String msg =
-          'entry must have debugId - has the init call been cascaded? (${entry.runtimeType.toString()})';
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+  step(Object entry) {
+    if (entry is PreceptItem) {
+      if (entry.debugId == null) {
+        String msg =
+            'entry must have debugId - has the init call been cascaded? (${entry.runtimeType.toString()})';
+        logType(this.runtimeType).e(msg);
+        throw PreceptException(msg);
+      }
     }
   }
 }

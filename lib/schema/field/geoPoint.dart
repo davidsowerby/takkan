@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/geo.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -14,21 +15,18 @@ class PGeoPoint extends PField<GeoPointValidation, GeoPoint> {
     GeoPoint? defaultValue,
     List<GeoPointValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    defaultValue: defaultValue,
           validations: validations,
           required: required,
+          readOnly: readOnly,
         );
 
   factory PGeoPoint.fromJson(Map<String, dynamic> json) =>
       _$PGeoPointFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGeoPointToJson(this);
-
-  @override
-  bool doValidation(GeoPointValidation validation, GeoPoint value) {
-    return validateGeoPoint(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

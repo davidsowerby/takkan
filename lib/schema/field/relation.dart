@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/relation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -15,7 +16,9 @@ class PRelation extends PField<RelationValidation, Relation> {
     required this.targetClass,
     List<RelationValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -25,11 +28,6 @@ class PRelation extends PField<RelationValidation, Relation> {
       _$PRelationFromJson(json);
 
   Map<String, dynamic> toJson() => _$PRelationToJson(this);
-
-  @override
-  bool doValidation(RelationValidation validation, Relation value) {
-    return validateRelation(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

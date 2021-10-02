@@ -9,7 +9,7 @@ part of 'common.dart';
 PCommon _$PCommonFromJson(Map<String, dynamic> json) => PCommon(
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
       pid: json['pid'] as String?,
     )..version = json['version'] as int;
 

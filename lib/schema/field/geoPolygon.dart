@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/geo.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -14,7 +15,9 @@ class PGeoPolygon extends PField<GeoPolygonValidation, GeoPolygon> {
     GeoPolygon? defaultValue,
     List<GeoPolygonValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -24,11 +27,6 @@ class PGeoPolygon extends PField<GeoPolygonValidation, GeoPolygon> {
       _$PGeoPolygonFromJson(json);
 
   Map<String, dynamic> toJson() => _$PGeoPolygonToJson(this);
-
-  @override
-  bool doValidation(GeoPolygonValidation validation, GeoPolygon value) {
-    return validateGeoPolygon(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

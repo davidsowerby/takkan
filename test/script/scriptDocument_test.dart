@@ -32,8 +32,8 @@ void main() {
         documentSchema: 'Document',
       );
       // when
-      final Map<String, dynamic> j = PQueryConverter.toJson(g);
-      final mirror =PQueryConverter.fromJson(j);
+      final Map<String, dynamic> j = PQueryConverter().toJson(g);
+      final mirror = PQueryConverter().fromJson(j);
       // then
 
       expect(json.encode(g), json.encode(mirror));

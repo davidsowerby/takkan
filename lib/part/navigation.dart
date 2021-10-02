@@ -17,7 +17,7 @@ class PNavButton extends PPart {
     bool showCaption = false,
     IsStatic isStatic = IsStatic.yes,
     String readTraitName = 'PNavButton-default',
-    String? editTraitName,
+    String editTraitName = 'PNavButton-default',
     double height = 100,
     String property = notSet,
     String staticData = '',
@@ -53,7 +53,7 @@ class PNavButtonSet extends PPart {
   PNavButtonSet({
     required this.buttons,
     this.width,
-    double? height,
+    double height = 60,
     String? pid,
     String readTraitName = 'PNavButtonSet-default',
     this.buttonTraitName = 'PNavButton-default',

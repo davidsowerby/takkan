@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -12,21 +13,18 @@ class PDouble extends PField<DoubleValidation, double> {
     double? defaultValue,
     List<DoubleValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    defaultValue: defaultValue,
           required: required,
           validations: validations,
+          readOnly: readOnly,
         );
 
   factory PDouble.fromJson(Map<String, dynamic> json) =>
       _$PDoubleFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDoubleToJson(this);
-
-  @override
-  bool doValidation(DoubleValidation validation, double value) {
-    return validateDouble(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

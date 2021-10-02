@@ -27,8 +27,8 @@ part 'preceptItem.g.dart';
 /// - [_index] is child index within a [_parent] where relevant.  Set to 0 if the parent only has one
 /// child
 //
-@JsonSerializable( explicitToJson: true)
-class PreceptItem {
+@JsonSerializable(explicitToJson: true)
+class PreceptItem with WalkTarget {
   final String? _pid;
   @JsonKey(ignore: true)
   String? uid;
@@ -104,12 +104,12 @@ class PreceptItem {
   int? get index => _index;
 
   DebugNode get debugNode => DebugNode(this, const []);
-  
-  walk(List<ScriptVisitor> visitors){
-    for (ScriptVisitor visitor in visitors){
+}
+
+abstract class WalkTarget {
+  walk(List<ScriptVisitor> visitors) {
+    for (ScriptVisitor visitor in visitors) {
       visitor.step(this);
     }
   }
 }
-
-

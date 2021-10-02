@@ -43,6 +43,8 @@ void main() {
       expect(permissions.requiresGetAuthentication, true);
       expect(permissions.requiresCountAuthentication, true);
       expect(permissions.requiresAddFieldAuthentication, true);
+
+      expect(permissions.allRoles, []);
     });
 
     test('role set, requiresAuthentication returns true', () {
@@ -65,6 +67,8 @@ void main() {
       expect(permissions.requiresGetAuthentication, true);
       expect(permissions.requiresCountAuthentication, true);
       expect(permissions.requiresAddFieldAuthentication, false);
+
+      expect(permissions.allRoles, ['boss']);
     });
 
     test('PDocument has default permissions', () {
@@ -95,6 +99,9 @@ void main() {
       expect(document.permissions.getRoles, ['getter', 'reader']);
       expect(document.permissions.findRoles, ['finder', 'reader']);
       expect(document.permissions.countRoles, ['counter', 'reader']);
+
+      expect(document.permissions.allRoles,
+          containsAll(['reader', 'getter', 'finder', 'counter']));
     });
 
     test('writeRoles added to create, update, delete', () {
@@ -114,5 +121,7 @@ void main() {
       expect(document.permissions.updateRoles, ['updater', 'writer']);
       expect(document.permissions.deleteRoles, ['destroyer', 'writer']);
     });
+
+
   });
 }

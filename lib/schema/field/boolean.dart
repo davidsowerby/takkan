@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -10,10 +11,12 @@ class PBoolean extends PField<BooleanValidation, bool> {
     bool? defaultValue,
     List<BooleanValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    defaultValue: defaultValue,
           validations: validations,
           required: required,
+          readOnly: readOnly,
         );
 
   Type get modelType => bool;
@@ -22,11 +25,6 @@ class PBoolean extends PField<BooleanValidation, bool> {
       _$PBooleanFromJson(json);
 
   Map<String, dynamic> toJson() => _$PBooleanToJson(this);
-
-  @override
-  bool doValidation(BooleanValidation validation, bool value) {
-    return validateBoolean(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

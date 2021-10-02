@@ -8,20 +8,18 @@ part of 'text.dart';
 
 PText _$PTextFromJson(Map<String, dynamic> json) => PText(
       caption: json['caption'] as String?,
-      readOnly: json['readOnly'] as bool? ?? false,
-      height: (json['height'] as num).toDouble(),
+      readOnly: json['readOnly'] as bool? ?? true,
+      height: (json['height'] as num?)?.toDouble() ?? 100,
       property: json['property'] as String? ?? notSet,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
-      editTraitName:
-          json['editTraitName'] as String? ?? 'queryView-edit-default',
-      staticData: json['staticData'] as String,
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
+      staticData: json['staticData'] as String? ?? '',
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
       pid: json['pid'] as String?,
       tooltip: json['tooltip'] as String?,
     )..version = json['version'] as int;

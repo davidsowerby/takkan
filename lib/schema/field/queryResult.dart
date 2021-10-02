@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/list.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -18,16 +18,15 @@ class PQuerySchema extends PField<ListValidation, List> {
 
   PQuerySchema({
     required this.documentSchema,
-  }) : super(required: false);
+  }) : super(
+          required: false,
+          readOnly: IsReadOnly.yes,
+        );
 
-  factory PQuerySchema.fromJson(Map<String, dynamic> json) => _$PQuerySchemaFromJson(json);
+  factory PQuerySchema.fromJson(Map<String, dynamic> json) =>
+      _$PQuerySchemaFromJson(json);
 
   Map<String, dynamic> toJson() => _$PQuerySchemaToJson(this);
-
-  @override
-  bool doValidation(validation, List<dynamic> value) {
-    throw PreceptException('A query cannot be validated');
-  }
 
   @override
   Type get modelType => List;

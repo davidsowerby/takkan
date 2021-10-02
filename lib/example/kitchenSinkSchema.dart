@@ -16,14 +16,13 @@ final kitchenSinkSchema = PSchema(
         'accountNumber': PString(defaultValue: 'unknown'),
         'category': PString(
           validations: [
-            StringValidation(
-                method: ValidateString.lengthGreaterThan, param: 2),
-            StringValidation(method: ValidateString.lengthLessThan, param: 5),
+            VString.longerThan(2),
+            VString.shorterThan(5),
           ],
         ),
         'recordDate': PDate(),
 
-        /// This should be a PPointer or a POBject (probably the former in this case
+        /// This should be a PPointer or a PObject (probably the former in this case
         // 'customer': PDocument(
         //   fields: {
         //     'firstName': PString(),

@@ -3,10 +3,10 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
+import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
@@ -42,6 +42,7 @@ class PDataProvider extends PreceptItem {
   final PSchemaSource? schemaSource;
   final String sessionTokenKey;
   final List<String> headerKeys;
+  final Delegate defaultDelegate;
   final PGraphQL? graphQLDelegate;
   final PRest? restDelegate;
   final bool useAuthenticator;
@@ -50,7 +51,7 @@ class PDataProvider extends PreceptItem {
   PSchema get schema {
     if (_schema == null) {
       throw PreceptException(
-          'Schema must not be null now - has init() been called?');
+          'Schema must not be null now - has PDataProvider.init() been called?');
     }
     return _schema!;
   }
@@ -65,6 +66,7 @@ class PDataProvider extends PreceptItem {
     required this.headerKeys,
     required this.sessionTokenKey,
     required this.configSource,
+    this.defaultDelegate = Delegate.graphQl,
     this.signInOptions = const PSignInOptions(),
     PSchema? schema,
     this.schemaSource,
@@ -91,10 +93,6 @@ class PDataProvider extends PreceptItem {
     schema.init();
   }
 
-  bool get useGraphQLDelegate => graphQLDelegate != null;
-
-  bool get useRestDelegate => restDelegate != null;
-
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
     if (_schema == null && schemaSource == null) {
@@ -102,16 +100,6 @@ class PDataProvider extends PreceptItem {
           item: this,
           msg: "Either 'schema' or 'schemaSource' must be specified"));
     }
-  }
-
-  PDocument documentSchemaFromQuery({required String querySchemaName}) {
-    final PQuerySchema? querySchema = schema.queries[querySchemaName];
-    if (querySchema == null) {
-      String msg = "query schema '$querySchemaName' not found";
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    return documentSchema(documentSchemaName: querySchema.documentSchema);
   }
 
   PDocument documentSchema({required String documentSchemaName}) {
@@ -127,6 +115,9 @@ class PDataProvider extends PreceptItem {
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (schemaSource != null) schemaSource?.walk(visitors);
+    if (_schema != null) _schema?.walk(visitors);
+    graphQLDelegate?.walk(visitors);
+    this.restDelegate?.walk(visitors);
   }
 
   /// referring to the id of a document, this can be overridden, by specific implementations.
@@ -161,12 +152,14 @@ class PConfigSource {
 
 @JsonSerializable(explicitToJson: true)
 class PNoDataProvider extends PDataProvider {
-  PNoDataProvider()
-      : super(
+  PNoDataProvider({
+    PSchema? schema,
+  }) : super(
           providerName: 'NoDataProvider',
           signInOptions: const PSignInOptions(),
           signIn: const PSignIn(),
           headerKeys: const [],
+          schema: schema,
           configSource: PConfigSource(segment: 'none', instance: 'none'),
           schemaSource: PSchemaSource(segment: 'none', instance: 'none'),
           sessionTokenKey: 'No Data Provider',
@@ -188,5 +181,3 @@ class PNoDataProvider extends PDataProvider {
 abstract class PreceptSchemaLoader {
   Future<PSchema> load(PSchemaSource source);
 }
-
-enum CloudInterface { rest, graphQL }
