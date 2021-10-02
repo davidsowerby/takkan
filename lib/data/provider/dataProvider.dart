@@ -28,11 +28,14 @@ part 'dataProvider.g.dart';
 /// should be true.  The default is false, because the DefaultDataProvider (which
 /// which collaborates with this configuration) does not provide authentication
 ///
+/// [providerName] is fixed by the implementation, primarily to help with debugging
+///
 @JsonSerializable(explicitToJson: true)
 class PDataProvider extends PreceptItem {
   final PSignInOptions signInOptions;
   final PSignIn signIn;
   final PConfigSource configSource;
+  final String providerName;
 
   @JsonKey(ignore: true)
   PSchema? _schema;
@@ -55,6 +58,7 @@ class PDataProvider extends PreceptItem {
   set schema(value) => _schema = value;
 
   PDataProvider({
+    required this.providerName,
     this.useAuthenticator = false,
     this.graphQLDelegate,
     this.restDelegate,
@@ -159,6 +163,7 @@ class PConfigSource {
 class PNoDataProvider extends PDataProvider {
   PNoDataProvider()
       : super(
+          providerName: 'NoDataProvider',
           signInOptions: const PSignInOptions(),
           signIn: const PSignIn(),
           headerKeys: const [],
