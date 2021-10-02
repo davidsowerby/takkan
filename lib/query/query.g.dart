@@ -102,7 +102,7 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
     };
 
 PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) => PGetDocument(
-  fieldSelector: json['fieldSelector'] == null
+      fieldSelector: json['fieldSelector'] == null
           ? const FieldSelector()
           : FieldSelector.fromJson(
               json['fieldSelector'] as Map<String, dynamic>),

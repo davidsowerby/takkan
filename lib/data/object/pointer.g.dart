@@ -6,8 +6,6 @@ part of 'pointer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Pointer _$PointerFromJson(Map<String, dynamic> json) {
-  return Pointer();
-}
+Pointer _$PointerFromJson(Map<String, dynamic> json) => Pointer();
 
 Map<String, dynamic> _$PointerToJson(Pointer instance) => <String, dynamic>{};

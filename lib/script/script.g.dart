@@ -95,7 +95,7 @@ const _$ControlEditEnumMap = {
 };
 
 PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
-  pageType: json['pageType'] as String? ?? 'defaultPage',
+      pageType: json['pageType'] as String? ?? 'defaultPage',
       scrollable: json['scrollable'] as bool? ?? true,
       layout: json['layout'] == null
           ? const PPageLayout()
