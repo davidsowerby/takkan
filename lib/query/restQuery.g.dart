@@ -6,14 +6,17 @@ part of 'restQuery.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) {
-  return PRestQuery(
-    paramsAsPath: json['paramsAsPath'] as bool,
-    querySchemaName: json['querySchemaName'] as String,
-    params: Map<String, String>.from(json['params'] as Map),
-    returnType: _$enumDecode(_$QueryReturnTypeEnumMap, json['returnType']),
-  )..version = json['version'] as int;
-}
+PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) => PRestQuery(
+      paramsAsPath: json['paramsAsPath'] as bool? ?? true,
+      querySchemaName: json['querySchemaName'] as String,
+      params: (json['params'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const {},
+      returnType:
+          _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
+              QueryReturnType.futureList,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PRestQueryToJson(PRestQuery instance) =>
     <String, dynamic>{
@@ -48,6 +51,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$QueryReturnTypeEnumMap = {

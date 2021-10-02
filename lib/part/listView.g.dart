@@ -6,26 +6,30 @@ part of 'listView.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PListView _$PListViewFromJson(Map<String, dynamic> json) {
-  return PListView(
-    isQuery: json['isQuery'] as bool,
-    titleProperty: json['titleProperty'] as String,
-    itemType: _$enumDecode(_$PListViewItemTypeEnumMap, json['itemType']),
-    subtitleProperty: json['subtitleProperty'] as String,
-    readOnly: json['readOnly'] as bool,
-    caption: json['caption'] as String?,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    staticData: json['staticData'] as String,
-    property: json['property'] as String,
-    readTraitName: json['readTraitName'] as String,
-    editTraitName: json['editTraitName'] as String,
-    tooltip: json['tooltip'] as String?,
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    pid: json['pid'] as String?,
-  )..version = json['version'] as int;
-}
+PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
+      isQuery: json['isQuery'] as bool? ?? false,
+      titleProperty: json['titleProperty'] as String? ?? 'title',
+      itemType:
+          _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
+              PListViewItemType.tile,
+      subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
+      readOnly: json['readOnly'] as bool? ?? false,
+      caption: json['caption'] as String?,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+      staticData: json['staticData'] as String,
+      property: json['property'] as String? ?? notSet,
+      readTraitName:
+          json['readTraitName'] as String? ?? 'queryView-read-default',
+      editTraitName:
+          json['editTraitName'] as String? ?? 'queryView-edit-default',
+      tooltip: json['tooltip'] as String?,
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+      pid: json['pid'] as String?,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PListViewToJson(PListView instance) => <String, dynamic>{
       'version': instance.version,
@@ -69,6 +73,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$PListViewItemTypeEnumMap = {

@@ -6,17 +6,18 @@ part of 'query.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) {
-  return PGraphQLQuery(
-    variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences: (json['propertyReferences'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    script: json['script'] as String,
-    querySchemaName: json['querySchemaName'] as String,
-    returnType: _$enumDecode(_$QueryReturnTypeEnumMap, json['returnType']),
-  )..version = json['version'] as int;
-}
+PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) =>
+    PGraphQLQuery(
+      variables: json['variables'] as Map<String, dynamic>,
+      propertyReferences: (json['propertyReferences'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      script: json['script'] as String,
+      querySchemaName: json['querySchemaName'] as String,
+      returnType:
+          _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
+              QueryReturnType.futureList,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
     <String, dynamic>{
@@ -54,6 +55,17 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$QueryReturnTypeEnumMap = {
   QueryReturnType.futureItem: 'futureItem',
   QueryReturnType.futureList: 'futureList',
@@ -63,18 +75,21 @@ const _$QueryReturnTypeEnumMap = {
   QueryReturnType.streamDocument: 'streamDocument',
 };
 
-PPQuery _$PPQueryFromJson(Map<String, dynamic> json) {
-  return PPQuery(
-    fields: json['fields'] as String,
-    types: Map<String, String>.from(json['types'] as Map),
-    querySchemaName: json['querySchemaName'] as String,
-    variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences: (json['propertyReferences'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    returnType: _$enumDecode(_$QueryReturnTypeEnumMap, json['returnType']),
-  )..version = json['version'] as int;
-}
+PPQuery _$PPQueryFromJson(Map<String, dynamic> json) => PPQuery(
+      fields: json['fields'] as String? ?? '',
+      types: (json['types'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const {},
+      querySchemaName: json['querySchemaName'] as String,
+      variables: json['variables'] as Map<String, dynamic>,
+      propertyReferences: (json['propertyReferences'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      returnType:
+          _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
+              QueryReturnType.futureList,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'version': instance.version,
@@ -86,18 +101,19 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'types': instance.types,
     };
 
-PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) {
-  return PGetDocument(
-    fieldSelector:
-        FieldSelector.fromJson(json['fieldSelector'] as Map<String, dynamic>),
-    documentId: DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
-    documentSchema: json['documentSchema'] as String,
-    variables: json['variables'] as Map<String, dynamic>,
-    propertyReferences: (json['propertyReferences'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-  )..version = json['version'] as int;
-}
+PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) => PGetDocument(
+  fieldSelector: json['fieldSelector'] == null
+          ? const FieldSelector()
+          : FieldSelector.fromJson(
+              json['fieldSelector'] as Map<String, dynamic>),
+      documentId:
+          DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
+      documentSchema: json['documentSchema'] as String,
+      variables: json['variables'] as Map<String, dynamic>,
+      propertyReferences: (json['propertyReferences'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
     <String, dynamic>{
@@ -109,15 +125,14 @@ Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
       'fieldSelector': instance.fieldSelector.toJson(),
     };
 
-PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) {
-  return PGetStream(
-    querySchemaName: json['querySchemaName'] as String,
-    propertyReferences: (json['propertyReferences'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    documentId: DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
-  )..version = json['version'] as int;
-}
+PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) => PGetStream(
+      querySchemaName: json['querySchemaName'] as String,
+      propertyReferences: (json['propertyReferences'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      documentId:
+          DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
     <String, dynamic>{

@@ -6,23 +6,25 @@ part of 'part.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPart _$PPartFromJson(Map<String, dynamic> json) {
-  return PPart(
-    caption: json['caption'] as String?,
-    readOnly: json['readOnly'] as bool,
-    height: (json['height'] as num?)?.toDouble(),
-    property: json['property'] as String,
-    readTraitName: json['readTraitName'] as String,
-    editTraitName: json['editTraitName'] as String?,
-    staticData: json['staticData'] as String,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    pid: json['pid'] as String?,
-    tooltip: json['tooltip'] as String?,
-  )..version = json['version'] as int;
-}
+PPart _$PPartFromJson(Map<String, dynamic> json) => PPart(
+      caption: json['caption'] as String?,
+      readOnly: json['readOnly'] as bool? ?? false,
+      height: (json['height'] as num?)?.toDouble(),
+      property: json['property'] as String? ?? notSet,
+      readTraitName:
+          json['readTraitName'] as String? ?? 'queryView-read-default',
+      editTraitName:
+          json['editTraitName'] as String? ?? 'queryView-edit-default',
+      staticData: json['staticData'] as String,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+      pid: json['pid'] as String?,
+      tooltip: json['tooltip'] as String?,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
       'version': instance.version,
@@ -63,6 +65,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$ControlEditEnumMap = {

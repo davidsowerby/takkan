@@ -6,24 +6,28 @@ part of 'queryView.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) {
-  return PQueryView(
-    titleProperty: json['titleProperty'] as String,
-    subtitleProperty: json['subtitleProperty'] as String,
-    itemType: _$enumDecode(_$PListViewItemTypeEnumMap, json['itemType']),
-    height: (json['height'] as num?)?.toDouble(),
-    tooltip: json['tooltip'] as String?,
-    caption: json['caption'] as String?,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    pid: json['pid'] as String?,
-    readOnly: json['readOnly'] as bool,
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    readTraitName: json['readTraitName'] as String,
-    editTraitName: json['editTraitName'] as String,
-  )..version = json['version'] as int;
-}
+PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
+      titleProperty: json['titleProperty'] as String? ?? 'title',
+      subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
+      itemType:
+          _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
+              PListViewItemType.navTile,
+      height: (json['height'] as num?)?.toDouble(),
+      tooltip: json['tooltip'] as String?,
+      caption: json['caption'] as String?,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+      pid: json['pid'] as String?,
+      readOnly: json['readOnly'] as bool? ?? false,
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+      readTraitName:
+          json['readTraitName'] as String? ?? 'queryView-read-default',
+      editTraitName:
+          json['editTraitName'] as String? ?? 'queryView-edit-default',
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
     <String, dynamic>{
@@ -66,6 +70,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$PListViewItemTypeEnumMap = {

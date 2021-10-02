@@ -6,18 +6,18 @@ part of 'relation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRelation _$PRelationFromJson(Map<String, dynamic> json) {
-  return PRelation(
-    defaultValue: json['defaultValue'] == null
-        ? null
-        : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
-    targetClass: json['targetClass'] as String,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => RelationValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PRelation _$PRelationFromJson(Map<String, dynamic> json) => PRelation(
+      defaultValue: json['defaultValue'] == null
+          ? null
+          : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
+      targetClass: json['targetClass'] as String,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map(
+                  (e) => RelationValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PRelationToJson(PRelation instance) {
   final val = <String, dynamic>{
@@ -36,14 +36,13 @@ Map<String, dynamic> _$PRelationToJson(PRelation instance) {
   return val;
 }
 
-RelationValidation _$RelationValidationFromJson(Map<String, dynamic> json) {
-  return RelationValidation(
-    method: _$enumDecode(_$ValidateRelationEnumMap, json['method']),
-    param: json['param'] == null
-        ? null
-        : Relation.fromJson(json['param'] as Map<String, dynamic>),
-  );
-}
+RelationValidation _$RelationValidationFromJson(Map<String, dynamic> json) =>
+    RelationValidation(
+      method: _$enumDecode(_$ValidateRelationEnumMap, json['method']),
+      param: json['param'] == null
+          ? null
+          : Relation.fromJson(json['param'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$RelationValidationToJson(RelationValidation instance) =>
     <String, dynamic>{

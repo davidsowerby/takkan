@@ -6,12 +6,12 @@ part of 'common.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PCommon _$PCommonFromJson(Map<String, dynamic> json) {
-  return PCommon(
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    pid: json['pid'] as String?,
-  )..version = json['version'] as int;
-}
+PCommon _$PCommonFromJson(Map<String, dynamic> json) => PCommon(
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+      pid: json['pid'] as String?,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
       'version': instance.version,
@@ -43,6 +43,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$ControlEditEnumMap = {

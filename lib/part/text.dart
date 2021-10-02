@@ -3,7 +3,6 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/particle/textBox.dart';
 
 part 'text.g.dart';
 
@@ -24,8 +23,8 @@ class PText extends PPart {
       bool readOnly = false,
       double height = 60,
       String property = notSet,
-      String readTraitName = defaultReadTrait,
-      String editTraitName = PTextBox.defaultTraitName,
+      String readTraitName = 'text-read-default',
+      String editTraitName = 'PTextBox-default',
       IsStatic isStatic = IsStatic.inherited,
       String staticData = notSet,
       PHelp? help,

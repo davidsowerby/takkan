@@ -6,18 +6,18 @@ part of 'pointer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPointer _$PPointerFromJson(Map<String, dynamic> json) {
-  return PPointer(
-    defaultValue: json['defaultValue'] == null
-        ? null
-        : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
-    targetClass: json['targetClass'] as String,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => PointerValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PPointer _$PPointerFromJson(Map<String, dynamic> json) => PPointer(
+      defaultValue: json['defaultValue'] == null
+          ? null
+          : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
+      targetClass: json['targetClass'] as String,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map(
+                  (e) => PointerValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PPointerToJson(PPointer instance) {
   final val = <String, dynamic>{
@@ -36,14 +36,13 @@ Map<String, dynamic> _$PPointerToJson(PPointer instance) {
   return val;
 }
 
-PointerValidation _$PointerValidationFromJson(Map<String, dynamic> json) {
-  return PointerValidation(
-    method: _$enumDecode(_$ValidatePointerEnumMap, json['method']),
-    param: json['param'] == null
-        ? null
-        : Pointer.fromJson(json['param'] as Map<String, dynamic>),
-  );
-}
+PointerValidation _$PointerValidationFromJson(Map<String, dynamic> json) =>
+    PointerValidation(
+      method: _$enumDecode(_$ValidatePointerEnumMap, json['method']),
+      param: json['param'] == null
+          ? null
+          : Pointer.fromJson(json['param'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PointerValidationToJson(PointerValidation instance) =>
     <String, dynamic>{

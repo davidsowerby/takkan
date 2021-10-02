@@ -6,17 +6,16 @@ part of 'signIn.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PSignInOptions _$PSignInOptionsFromJson(Map<String, dynamic> json) {
-  return PSignInOptions(
-    pageTitle: json['pageTitle'] as String,
-    google: json['google'] as bool,
-    facebook: json['facebook'] as bool,
-    gitLab: json['gitLab'] as bool,
-    amazon: json['amazon'] as bool,
-    gitHub: json['gitHub'] as bool,
-    email: json['email'] as bool,
-  );
-}
+PSignInOptions _$PSignInOptionsFromJson(Map<String, dynamic> json) =>
+    PSignInOptions(
+      pageTitle: json['pageTitle'] as String? ?? 'SignIn / Register',
+      google: json['google'] as bool? ?? false,
+      facebook: json['facebook'] as bool? ?? false,
+      gitLab: json['gitLab'] as bool? ?? false,
+      amazon: json['amazon'] as bool? ?? false,
+      gitHub: json['gitHub'] as bool? ?? false,
+      email: json['email'] as bool? ?? true,
+    );
 
 Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
     <String, dynamic>{
@@ -29,36 +28,36 @@ Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
       'gitHub': instance.gitHub,
     };
 
-PSignIn _$PSignInFromJson(Map<String, dynamic> json) {
-  return PSignIn(
-    successRoute: json['successRoute'] as String,
-    failureRoute: json['failureRoute'] as String,
-  );
-}
+PSignIn _$PSignInFromJson(Map<String, dynamic> json) => PSignIn(
+      successRoute: json['successRoute'] as String? ?? '',
+      failureRoute: json['failureRoute'] as String? ?? 'signInFail',
+    );
 
 Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
       'successRoute': instance.successRoute,
       'failureRoute': instance.failureRoute,
     };
 
-PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) {
-  return PEmailSignIn(
-    signInFailureMessage: json['signInFailureMessage'] as String,
-    caption: json['caption'] as String,
-    checkingCredentialsMessage: json['checkingCredentialsMessage'] as String,
-    emailCaption: json['emailCaption'] as String,
-    usernameCaption: json['usernameCaption'] as String,
-    passwordCaption: json['passwordCaption'] as String,
-    submitCaption: json['submitCaption'] as String,
-    successRoute: json['successRoute'] as String,
-    failureRoute: json['failureRoute'] as String,
-    readTraitName: json['readTraitName'] as String,
-    pid: json['pid'] as String?,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-  )..version = json['version'] as int;
-}
+PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
+      signInFailureMessage: json['signInFailureMessage'] as String? ??
+          'Username or password incorrect',
+      caption: json['caption'] as String,
+      checkingCredentialsMessage:
+          json['checkingCredentialsMessage'] as String? ??
+              'Checking Credentials',
+      emailCaption: json['emailCaption'] as String? ?? 'email',
+      usernameCaption: json['usernameCaption'] as String? ?? 'username',
+      passwordCaption: json['passwordCaption'] as String? ?? 'password',
+      submitCaption: json['submitCaption'] as String? ?? 'Submit',
+      successRoute: json['successRoute'] as String? ?? '',
+      failureRoute: json['failureRoute'] as String? ?? 'signInFail',
+      readTraitName:
+          json['readTraitName'] as String? ?? 'queryView-read-default',
+      pid: json['pid'] as String?,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
     <String, dynamic>{

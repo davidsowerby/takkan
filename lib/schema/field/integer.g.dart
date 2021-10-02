@@ -6,15 +6,15 @@ part of 'integer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PInteger _$PIntegerFromJson(Map<String, dynamic> json) {
-  return PInteger(
-    defaultValue: json['defaultValue'] as int?,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => IntegerValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PInteger _$PIntegerFromJson(Map<String, dynamic> json) => PInteger(
+      defaultValue: json['defaultValue'] as int?,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map(
+                  (e) => IntegerValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PIntegerToJson(PInteger instance) {
   final val = <String, dynamic>{
@@ -32,12 +32,11 @@ Map<String, dynamic> _$PIntegerToJson(PInteger instance) {
   return val;
 }
 
-IntegerValidation _$IntegerValidationFromJson(Map<String, dynamic> json) {
-  return IntegerValidation(
-    method: _$enumDecode(_$ValidateIntegerEnumMap, json['method']),
-    param: json['param'] as int,
-  );
-}
+IntegerValidation _$IntegerValidationFromJson(Map<String, dynamic> json) =>
+    IntegerValidation(
+      method: _$enumDecode(_$ValidateIntegerEnumMap, json['method']),
+      param: json['param'] as int? ?? 0,
+    );
 
 Map<String, dynamic> _$IntegerValidationToJson(IntegerValidation instance) =>
     <String, dynamic>{

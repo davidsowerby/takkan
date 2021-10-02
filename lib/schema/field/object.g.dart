@@ -6,15 +6,14 @@ part of 'object.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PJsonObject _$PJsonObjectFromJson(Map<String, dynamic> json) {
-  return PJsonObject(
-    defaultValue: json['defaultValue'] as Map<String, dynamic>?,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => ObjectValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PJsonObject _$PJsonObjectFromJson(Map<String, dynamic> json) => PJsonObject(
+      defaultValue: json['defaultValue'] as Map<String, dynamic>?,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => ObjectValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PJsonObjectToJson(PJsonObject instance) {
   final val = <String, dynamic>{
@@ -32,12 +31,11 @@ Map<String, dynamic> _$PJsonObjectToJson(PJsonObject instance) {
   return val;
 }
 
-ObjectValidation _$ObjectValidationFromJson(Map<String, dynamic> json) {
-  return ObjectValidation(
-    method: _$enumDecode(_$ValidateObjectEnumMap, json['method']),
-    param: json['param'],
-  );
-}
+ObjectValidation _$ObjectValidationFromJson(Map<String, dynamic> json) =>
+    ObjectValidation(
+      method: _$enumDecode(_$ValidateObjectEnumMap, json['method']),
+      param: json['param'],
+    );
 
 Map<String, dynamic> _$ObjectValidationToJson(ObjectValidation instance) =>
     <String, dynamic>{

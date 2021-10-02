@@ -6,15 +6,14 @@ part of 'list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PList _$PListFromJson(Map<String, dynamic> json) {
-  return PList(
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => ListValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-    defaultValue: json['defaultValue'] as List<dynamic>?,
-  );
-}
+PList _$PListFromJson(Map<String, dynamic> json) => PList(
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => ListValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+      defaultValue: json['defaultValue'] as List<dynamic>?,
+    );
 
 Map<String, dynamic> _$PListToJson(PList instance) {
   final val = <String, dynamic>{
@@ -32,12 +31,11 @@ Map<String, dynamic> _$PListToJson(PList instance) {
   return val;
 }
 
-ListValidation _$ListValidationFromJson(Map<String, dynamic> json) {
-  return ListValidation(
-    method: _$enumDecode(_$ValidateListEnumMap, json['method']),
-    param: json['param'] as int,
-  );
-}
+ListValidation _$ListValidationFromJson(Map<String, dynamic> json) =>
+    ListValidation(
+      method: _$enumDecode(_$ValidateListEnumMap, json['method']),
+      param: json['param'] as int? ?? 0,
+    );
 
 Map<String, dynamic> _$ListValidationToJson(ListValidation instance) =>
     <String, dynamic>{

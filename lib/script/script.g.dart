@@ -6,21 +6,24 @@ part of 'script.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PScript _$PScriptFromJson(Map<String, dynamic> json) {
-  return PScript(
-    conversionErrorMessages: ConversionErrorMessages.fromJson(
-        json['conversionErrorMessages'] as Map<String, dynamic>),
-    routes: (json['routes'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(k, PPage.fromJson(e as Map<String, dynamic>)),
-    ),
-    name: json['name'] as String,
-    locale: json['locale'] as String,
-    query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-  )
-    ..version = json['version'] as int
-    ..nameLocale = json['nameLocale'] as String?;
-}
+PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
+      conversionErrorMessages: json['conversionErrorMessages'] == null
+          ? const ConversionErrorMessages(patterns: defaultConversionPatterns)
+          : ConversionErrorMessages.fromJson(
+              json['conversionErrorMessages'] as Map<String, dynamic>),
+      routes: (json['routes'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, PPage.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+      name: json['name'] as String,
+      locale: json['locale'] as String? ?? 'en_GB',
+      query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+    )
+      ..version = json['version'] as int
+      ..nameLocale = json['nameLocale'] as String?;
 
 Map<String, dynamic> _$PScriptToJson(PScript instance) {
   final val = <String, dynamic>{
@@ -69,6 +72,17 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
@@ -80,17 +94,21 @@ const _$ControlEditEnumMap = {
   ControlEdit.noEdit: 'noEdit',
 };
 
-PPage _$PPageFromJson(Map<String, dynamic> json) {
-  return PPage(
-    pageType: json['pageType'] as String,
-    scrollable: json['scrollable'] as bool,
-    layout: PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
-    content: PElementListConverter.fromJson(json['content'] as List),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-    property: json['property'] as String,
-    title: json['title'] as String,
-  )..version = json['version'] as int;
-}
+PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
+  pageType: json['pageType'] as String? ?? 'defaultPage',
+      scrollable: json['scrollable'] as bool? ?? true,
+      layout: json['layout'] == null
+          ? const PPageLayout()
+          : PPageLayout.fromJson(json['layout'] as Map<String, dynamic>),
+      content: json['content'] == null
+          ? const []
+          : PElementListConverter.fromJson(json['content'] as List),
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+      property: json['property'] as String? ?? notSet,
+      title: json['title'] as String,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
       'version': instance.version,

@@ -6,17 +6,16 @@ part of 'date.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PDate _$PDateFromJson(Map<String, dynamic> json) {
-  return PDate(
-    defaultValue: json['defaultValue'] == null
-        ? null
-        : DateTime.parse(json['defaultValue'] as String),
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => DateValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PDate _$PDateFromJson(Map<String, dynamic> json) => PDate(
+      defaultValue: json['defaultValue'] == null
+          ? null
+          : DateTime.parse(json['defaultValue'] as String),
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => DateValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PDateToJson(PDate instance) {
   final val = <String, dynamic>{
@@ -34,12 +33,11 @@ Map<String, dynamic> _$PDateToJson(PDate instance) {
   return val;
 }
 
-DateValidation _$DateValidationFromJson(Map<String, dynamic> json) {
-  return DateValidation(
-    method: _$enumDecode(_$ValidateDateEnumMap, json['method']),
-    param: DateTime.parse(json['param'] as String),
-  );
-}
+DateValidation _$DateValidationFromJson(Map<String, dynamic> json) =>
+    DateValidation(
+      method: _$enumDecode(_$ValidateDateEnumMap, json['method']),
+      param: DateTime.parse(json['param'] as String),
+    );
 
 Map<String, dynamic> _$DateValidationToJson(DateValidation instance) =>
     <String, dynamic>{

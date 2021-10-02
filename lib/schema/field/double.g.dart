@@ -6,15 +6,14 @@ part of 'double.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PDouble _$PDoubleFromJson(Map<String, dynamic> json) {
-  return PDouble(
-    defaultValue: (json['defaultValue'] as num?)?.toDouble(),
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => DoubleValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PDouble _$PDoubleFromJson(Map<String, dynamic> json) => PDouble(
+      defaultValue: (json['defaultValue'] as num?)?.toDouble(),
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => DoubleValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PDoubleToJson(PDouble instance) {
   final val = <String, dynamic>{
@@ -32,12 +31,11 @@ Map<String, dynamic> _$PDoubleToJson(PDouble instance) {
   return val;
 }
 
-DoubleValidation _$DoubleValidationFromJson(Map<String, dynamic> json) {
-  return DoubleValidation(
-    method: _$enumDecode(_$ValidateDoubleEnumMap, json['method']),
-    param: (json['param'] as num).toDouble(),
-  );
-}
+DoubleValidation _$DoubleValidationFromJson(Map<String, dynamic> json) =>
+    DoubleValidation(
+      method: _$enumDecode(_$ValidateDoubleEnumMap, json['method']),
+      param: (json['param'] as num).toDouble(),
+    );
 
 Map<String, dynamic> _$DoubleValidationToJson(DoubleValidation instance) =>
     <String, dynamic>{

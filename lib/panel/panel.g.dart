@@ -6,26 +6,31 @@ part of 'panel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPanel _$PPanelFromJson(Map<String, dynamic> json) {
-  return PPanel(
-    openExpanded: json['openExpanded'] as bool,
-    property: json['property'] as String,
-    content: PElementListConverter.fromJson(json['content'] as List),
-    pageArguments: json['pageArguments'] as Map<String, dynamic>,
-    layout: PPanelLayout.fromJson(json['layout'] as Map<String, dynamic>),
-    heading: json['heading'] == null
-        ? null
-        : PPanelHeading.fromJson(json['heading'] as Map<String, dynamic>),
-    caption: json['caption'] as String?,
-    scrollable: json['scrollable'] as bool,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    panelStyle:
-        PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
-    controlEdit: _$enumDecode(_$ControlEditEnumMap, json['controlEdit']),
-  )..version = json['version'] as int;
-}
+PPanel _$PPanelFromJson(Map<String, dynamic> json) => PPanel(
+      openExpanded: json['openExpanded'] as bool? ?? true,
+      property: json['property'] as String? ?? notSet,
+      content: json['content'] == null
+          ? const []
+          : PElementListConverter.fromJson(json['content'] as List),
+      pageArguments: json['pageArguments'] as Map<String, dynamic>? ?? const {},
+      layout: json['layout'] == null
+          ? const PPanelLayout()
+          : PPanelLayout.fromJson(json['layout'] as Map<String, dynamic>),
+      heading: json['heading'] == null
+          ? null
+          : PPanelHeading.fromJson(json['heading'] as Map<String, dynamic>),
+      caption: json['caption'] as String?,
+      scrollable: json['scrollable'] as bool? ?? false,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+      panelStyle: json['panelStyle'] == null
+          ? const PPanelStyle()
+          : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
+      controlEdit:
+          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
       'version': instance.version,
@@ -68,6 +73,17 @@ K _$enumDecode<K, V>(
   ).key;
 }
 
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
   ControlEdit.thisOnly: 'thisOnly',
@@ -79,16 +95,17 @@ const _$ControlEditEnumMap = {
   ControlEdit.noEdit: 'noEdit',
 };
 
-PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) {
-  return PPanelHeading(
-    expandable: json['expandable'] as bool,
-    canEdit: json['canEdit'] as bool,
-    help: json['help'] == null
-        ? null
-        : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    style: PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
-  )..version = json['version'] as int;
-}
+PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) =>
+    PPanelHeading(
+      expandable: json['expandable'] as bool? ?? true,
+      canEdit: json['canEdit'] as bool? ?? false,
+      help: json['help'] == null
+          ? null
+          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+      style: json['style'] == null
+          ? const PHeadingStyle()
+          : PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
+    )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
     <String, dynamic>{
@@ -99,12 +116,12 @@ Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
       'style': instance.style.toJson(),
     };
 
-PPanelLayout _$PPanelLayoutFromJson(Map<String, dynamic> json) {
-  return PPanelLayout(
-    padding: PPadding.fromJson(json['padding'] as Map<String, dynamic>),
-    width: (json['width'] as num?)?.toDouble(),
-  );
-}
+PPanelLayout _$PPanelLayoutFromJson(Map<String, dynamic> json) => PPanelLayout(
+      padding: json['padding'] == null
+          ? const PPadding()
+          : PPadding.fromJson(json['padding'] as Map<String, dynamic>),
+      width: (json['width'] as num?)?.toDouble(),
+    );
 
 Map<String, dynamic> _$PPanelLayoutToJson(PPanelLayout instance) =>
     <String, dynamic>{

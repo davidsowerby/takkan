@@ -7,11 +7,13 @@ part of 'conversionErrorMessages.dart';
 // **************************************************************************
 
 ConversionErrorMessages _$ConversionErrorMessagesFromJson(
-    Map<String, dynamic> json) {
-  return ConversionErrorMessages(
-    patterns: Map<String, String>.from(json['patterns'] as Map),
-  );
-}
+        Map<String, dynamic> json) =>
+    ConversionErrorMessages(
+      patterns: (json['patterns'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const {},
+    );
 
 Map<String, dynamic> _$ConversionErrorMessagesToJson(
         ConversionErrorMessages instance) =>

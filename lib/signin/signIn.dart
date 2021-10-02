@@ -73,7 +73,7 @@ class PEmailSignIn extends PPart {
     this.submitCaption = 'Submit',
     this.successRoute = '',
     this.failureRoute = 'signInFail',
-    String readTraitName = defaultTrait,
+    String readTraitName = 'EmailSignIn-default',
     String? pid,
     PHelp? help,
   }) : super(

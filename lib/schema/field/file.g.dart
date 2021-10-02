@@ -6,15 +6,14 @@ part of 'file.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PFile _$PFileFromJson(Map<String, dynamic> json) {
-  return PFile(
-    defaultValue: json['defaultValue'] as String?,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => FileValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PFile _$PFileFromJson(Map<String, dynamic> json) => PFile(
+      defaultValue: json['defaultValue'] as String?,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => FileValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PFileToJson(PFile instance) {
   final val = <String, dynamic>{
@@ -32,12 +31,11 @@ Map<String, dynamic> _$PFileToJson(PFile instance) {
   return val;
 }
 
-FileValidation _$FileValidationFromJson(Map<String, dynamic> json) {
-  return FileValidation(
-    method: _$enumDecode(_$ValidateFileEnumMap, json['method']),
-    param: json['param'] as bool?,
-  );
-}
+FileValidation _$FileValidationFromJson(Map<String, dynamic> json) =>
+    FileValidation(
+      method: _$enumDecode(_$ValidateFileEnumMap, json['method']),
+      param: json['param'] as bool?,
+    );
 
 Map<String, dynamic> _$FileValidationToJson(FileValidation instance) =>
     <String, dynamic>{

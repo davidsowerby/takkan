@@ -6,8 +6,6 @@ part of 'textBox.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PTextBox _$PTextBoxFromJson(Map<String, dynamic> json) {
-  return PTextBox();
-}
+PTextBox _$PTextBoxFromJson(Map<String, dynamic> json) => PTextBox();
 
 Map<String, dynamic> _$PTextBoxToJson(PTextBox instance) => <String, dynamic>{};

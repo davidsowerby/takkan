@@ -6,14 +6,15 @@ part of 'textTrait.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PTextTrait _$PTextTraitFromJson(Map<String, dynamic> json) {
-  return PTextTrait(
-    textStyle: _$enumDecode(_$PTextStyleEnumMap, json['textStyle']),
-    textTheme: _$enumDecode(_$PTextThemeEnumMap, json['textTheme']),
-    textAlign: _$enumDecode(_$PTextAlignEnumMap, json['textAlign']),
-    caption: json['caption'] as String?,
-  );
-}
+PTextTrait _$PTextTraitFromJson(Map<String, dynamic> json) => PTextTrait(
+      textStyle: _$enumDecodeNullable(_$PTextStyleEnumMap, json['textStyle']) ??
+          PTextStyle.bodyText1,
+      textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']) ??
+          PTextTheme.cardCanvas,
+      textAlign: _$enumDecodeNullable(_$PTextAlignEnumMap, json['textAlign']) ??
+          PTextAlign.start,
+      caption: json['caption'] as String?,
+    );
 
 Map<String, dynamic> _$PTextTraitToJson(PTextTrait instance) =>
     <String, dynamic>{
@@ -47,6 +48,17 @@ K _$enumDecode<K, V>(
       return MapEntry(unknownValue, enumValues.values.first);
     },
   ).key;
+}
+
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
 }
 
 const _$PTextStyleEnumMap = {

@@ -26,8 +26,8 @@ class PQueryView extends PAbstractListView {
     String? pid,
     bool readOnly = false,
     ControlEdit controlEdit = ControlEdit.inherited,
-    String readTraitName = defaultReadTrait,
-    String editTraitName = defaultEditTrait,
+    String readTraitName = 'queryView-read-default',
+    String editTraitName = 'queryView-edit-default',
   }) : super(
           property: queryName,
           titleProperty: titleProperty,

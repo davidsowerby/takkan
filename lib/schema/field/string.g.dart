@@ -6,15 +6,14 @@ part of 'string.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PString _$PStringFromJson(Map<String, dynamic> json) {
-  return PString(
-    defaultValue: json['defaultValue'] as String?,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PString _$PStringFromJson(Map<String, dynamic> json) => PString(
+      defaultValue: json['defaultValue'] as String?,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PStringToJson(PString instance) {
   final val = <String, dynamic>{
@@ -32,14 +31,13 @@ Map<String, dynamic> _$PStringToJson(PString instance) {
   return val;
 }
 
-PListString _$PListStringFromJson(Map<String, dynamic> json) {
-  return PListString(
-    defaultValue: (json['defaultValue'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PListString _$PListStringFromJson(Map<String, dynamic> json) => PListString(
+      defaultValue: (json['defaultValue'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PListStringToJson(PListString instance) {
   final val = <String, dynamic>{
@@ -56,12 +54,11 @@ Map<String, dynamic> _$PListStringToJson(PListString instance) {
   return val;
 }
 
-StringValidation _$StringValidationFromJson(Map<String, dynamic> json) {
-  return StringValidation(
-    method: _$enumDecode(_$ValidateStringEnumMap, json['method']),
-    param: json['param'],
-  );
-}
+StringValidation _$StringValidationFromJson(Map<String, dynamic> json) =>
+    StringValidation(
+      method: _$enumDecode(_$ValidateStringEnumMap, json['method']),
+      param: json['param'],
+    );
 
 Map<String, dynamic> _$StringValidationToJson(StringValidation instance) =>
     <String, dynamic>{

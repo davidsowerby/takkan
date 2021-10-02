@@ -6,17 +6,19 @@ part of 'schema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PSchema _$PSchemaFromJson(Map<String, dynamic> json) {
-  return PSchema(
-    documents: (json['documents'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(k, PDocument.fromJson(e as Map<String, dynamic>)),
-    ),
-    name: json['name'] as String,
-    queries: (json['queries'] as Map<String, dynamic>).map(
-      (k, e) => MapEntry(k, PQuerySchema.fromJson(e as Map<String, dynamic>)),
-    ),
-  );
-}
+PSchema _$PSchemaFromJson(Map<String, dynamic> json) => PSchema(
+      documents: (json['documents'] as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, PDocument.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+      name: json['name'] as String,
+      queries: (json['queries'] as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, PQuerySchema.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+    );
 
 Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'name': instance.name,
@@ -24,32 +26,48 @@ Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };
 
-PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) {
-  return PPermissions(
-    isPublic: (json['isPublic'] as List<dynamic>)
-        .map((e) => _$enumDecode(_$AccessMethodEnumMap, e))
-        .toList(),
-    readRoles:
-        (json['readRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    writeRoles:
-        (json['writeRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    updateRoles:
-        (json['updateRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    createRoles:
-        (json['createRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    deleteRoles:
-        (json['deleteRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    addFieldRoles: (json['addFieldRoles'] as List<dynamic>)
-        .map((e) => e as String)
-        .toList(),
-    getRoles:
-        (json['getRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    findRoles:
-        (json['findRoles'] as List<dynamic>).map((e) => e as String).toList(),
-    countRoles:
-        (json['countRoles'] as List<dynamic>).map((e) => e as String).toList(),
-  );
-}
+PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) => PPermissions(
+      isPublic: (json['isPublic'] as List<dynamic>?)
+              ?.map((e) => _$enumDecode(_$AccessMethodEnumMap, e))
+              .toList() ??
+          const [],
+      readRoles: (json['readRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      writeRoles: (json['writeRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      updateRoles: (json['updateRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      createRoles: (json['createRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      deleteRoles: (json['deleteRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      addFieldRoles: (json['addFieldRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      getRoles: (json['getRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      findRoles: (json['findRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      countRoles: (json['countRoles'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+    );
 
 Map<String, dynamic> _$PPermissionsToJson(PPermissions instance) =>
     <String, dynamic>{
@@ -105,15 +123,16 @@ const _$AccessMethodEnumMap = {
   AccessMethod.addField: 'addField',
 };
 
-PDocument _$PDocumentFromJson(Map<String, dynamic> json) {
-  return PDocument(
-    fields: const PSchemaFieldMapConverter()
-        .fromJson(json['fields'] as Map<String, dynamic>),
-    documentType: _$enumDecode(_$PDocumentTypeEnumMap, json['documentType']),
-    permissions:
-        PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
-  );
-}
+PDocument _$PDocumentFromJson(Map<String, dynamic> json) => PDocument(
+      fields: const PSchemaFieldMapConverter()
+          .fromJson(json['fields'] as Map<String, dynamic>),
+      documentType:
+          _$enumDecodeNullable(_$PDocumentTypeEnumMap, json['documentType']) ??
+              PDocumentType.standard,
+      permissions: json['permissions'] == null
+          ? const PPermissions()
+          : PPermissions.fromJson(json['permissions'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$PDocumentToJson(PDocument instance) {
   final val = <String, dynamic>{
@@ -132,18 +151,28 @@ Map<String, dynamic> _$PDocumentToJson(PDocument instance) {
   return val;
 }
 
+K? _$enumDecodeNullable<K, V>(
+  Map<K, V> enumValues,
+  dynamic source, {
+  K? unknownValue,
+}) {
+  if (source == null) {
+    return null;
+  }
+  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
+}
+
 const _$PDocumentTypeEnumMap = {
   PDocumentType.standard: 'standard',
   PDocumentType.versioned: 'versioned',
 };
 
-PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) {
-  return PSchemaSource(
-    segment: json['segment'] as String,
-    instance: json['instance'] as String,
-    version: json['version'] as int,
-  );
-}
+PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) =>
+    PSchemaSource(
+      segment: json['segment'] as String,
+      instance: json['instance'] as String,
+      version: json['version'] as int,
+    );
 
 Map<String, dynamic> _$PSchemaSourceToJson(PSchemaSource instance) =>
     <String, dynamic>{

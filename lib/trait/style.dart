@@ -67,7 +67,7 @@ class PBorder {
   static const String roundedRectangleThickPrimary="roundedRectangleThickPrimary";
   final String borderName;
 
-  const PBorder({this.borderName=roundedRectangleMediumPrimary});
+  const PBorder({this.borderName = 'roundedRectangleMediumPrimary'});
 
   factory PBorder.fromJson(Map<String, dynamic> json) => _$PBorderFromJson(json);
 

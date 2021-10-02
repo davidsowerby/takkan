@@ -6,15 +6,15 @@ part of 'boolean.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PBoolean _$PBooleanFromJson(Map<String, dynamic> json) {
-  return PBoolean(
-    defaultValue: json['defaultValue'] as bool?,
-    validations: (json['validations'] as List<dynamic>)
-        .map((e) => BooleanValidation.fromJson(e as Map<String, dynamic>))
-        .toList(),
-    required: json['required'] as bool,
-  );
-}
+PBoolean _$PBooleanFromJson(Map<String, dynamic> json) => PBoolean(
+      defaultValue: json['defaultValue'] as bool?,
+      validations: (json['validations'] as List<dynamic>?)
+              ?.map(
+                  (e) => BooleanValidation.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      required: json['required'] as bool? ?? false,
+    );
 
 Map<String, dynamic> _$PBooleanToJson(PBoolean instance) {
   final val = <String, dynamic>{
@@ -32,12 +32,11 @@ Map<String, dynamic> _$PBooleanToJson(PBoolean instance) {
   return val;
 }
 
-BooleanValidation _$BooleanValidationFromJson(Map<String, dynamic> json) {
-  return BooleanValidation(
-    method: _$enumDecode(_$ValidateBooleanEnumMap, json['method']),
-    param: json['param'] as bool?,
-  );
-}
+BooleanValidation _$BooleanValidationFromJson(Map<String, dynamic> json) =>
+    BooleanValidation(
+      method: _$enumDecode(_$ValidateBooleanEnumMap, json['method']),
+      param: json['param'] as bool?,
+    );
 
 Map<String, dynamic> _$BooleanValidationToJson(BooleanValidation instance) =>
     <String, dynamic>{
