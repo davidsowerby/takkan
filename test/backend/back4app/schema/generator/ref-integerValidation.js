@@ -1,10 +1,10 @@
-function isGreaterThan(request, field, param){
+function greaterThan(request, field, param){
   let value=integerValue(request,field);
   if (value > param) return;
   throw 'validation';
 }
 
-function isLessThan(request, field, param){
+function lessThan(request, field, param){
   let value=integerValue(request,field);
   if (value < param) return;
   throw 'validation';
@@ -15,7 +15,7 @@ function integerValue(request, field){
 }
 
 module.exports = {
-  isGreaterThan,
-  isLessThan
+  greaterThan,
+  lessThan
 }
 

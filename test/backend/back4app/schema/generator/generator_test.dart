@@ -17,9 +17,12 @@ void main() {
 
     test('Integer Validation', () async {
       // given
-      final refFile = File(
+      final refIntFile = File(
           'test/backend/back4app/schema/generator/ref-integerValidation.js');
-      List<String> ref = await refFile.readAsLines();
+      final refStringFile = File(
+          'test/backend/back4app/schema/generator/ref-stringValidation.js');
+      List<String> refInt = await refIntFile.readAsLines();
+      List<String> refString = await refStringFile.readAsLines();
       final PSchema pSchema = PSchema(name: 'test', documents: {
         'Issue': PDocument(fields: {'weight': PInteger()})
       });
@@ -28,8 +31,10 @@ void main() {
       generator.generate(pSchema: pSchema);
       // then
 
-      final r = compareLines(ref, generator.files[0].lines);
-      expect(r.length, 0);
+      final intJs = compareLines(refInt, generator.files[0].lines);
+      final stringJs = compareLines(refString, generator.files[1].lines);
+      expect(intJs.length, 0);
+      expect(stringJs.length, 0);
     });
   });
 }

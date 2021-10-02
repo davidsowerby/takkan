@@ -1,10 +1,10 @@
 import 'package:precept_script/schema/field/integer.dart';
 
-String integerFunction(ValidateInteger validateInteger) {
+String integerFunctionCode(ValidateInteger validateInteger) {
   switch (validateInteger) {
-    case ValidateInteger.isGreaterThan:
+    case ValidateInteger.greaterThan:
       return 'value > param';
-    case ValidateInteger.isLessThan:
+    case ValidateInteger.lessThan:
       return 'value < param';
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:precept_back4app_backend/backend/back4app/schema/generator/integerValidations.dart';
+import 'package:precept_back4app_backend/backend/back4app/schema/generator/stringValidations.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 
 abstract class BackendSchemaGenerator {}
@@ -50,8 +52,8 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
   }
 
   _validationFunctions({required PSchema pSchema}) {
-    files.add(_createIntegerValidationFile());
-    files.add(_createStringValidationFile());
+    files.add(_createValidationFile(ValidateInteger.values));
+    files.add(_createValidationFile(ValidateString.values));
   }
 }
 
@@ -65,17 +67,33 @@ GeneratedFile _createStringValidationFile() {
 GeneratedFile _createValidationFile(List<Object> validationEnums) {
   final StringBuffer buf = StringBuffer();
   final List<String> exports = List.empty(growable: true);
-  final validation = validationEnums[0].toString().split('.');
-  final String functionName = validation[1];
-  final dataType = validation[0].replaceFirst('Validate', '').toLowerCase();
+  if (!_checkType(validationEnums[0])) {
+    throw PreceptException(
+        '${validationEnums[0].runtimeType} is not an accepted Validation enum');
+  }
+
+  if (validationEnums[0] is ValidateString) {
+    buf.writeln("var val = require('validator');");
+    buf.writeln();
+  }
+  String dataType = '?';
+  int c = 0;
   validationEnums.forEach((element) {
+    final validation = validationEnums[c].toString().split('.');
+    final String functionName = validation[1];
+    if (c == 0) {
+      dataType = validation[c].replaceFirst('Validate', '').toLowerCase();
+    }
     _validationFunction(
       buf: buf,
-      validationEnum: element,
-      function: _validationFunctionText(element),
+      dataType: dataType,
+      functionCode: _validationFunctionCode(element),
       exports: exports,
+      functionName: functionName,
     );
+    c++;
   });
+
   _retrieveValue(buf: buf, type: dataType);
 
   /// extract exports;
@@ -86,33 +104,15 @@ GeneratedFile _createValidationFile(List<Object> validationEnums) {
       fileName: '${dataType}Validation.js', content: buf.toString());
 }
 
-String _validationFunctionText(Object val) {
+/// Decide which lookup to use
+String _validationFunctionCode(Object val) {
   switch (val.runtimeType) {
     case ValidateInteger:
-      return integerFunction(val as ValidateInteger);
+      return integerFunctionCode(val as ValidateInteger);
+    case ValidateString:
+      return stringFunctionCode(val as ValidateString);
   }
   throw PreceptException('Unrecognised type');
-}
-
-GeneratedFile _createIntegerValidationFile() {
-  final StringBuffer buf = StringBuffer();
-  final List<String> exports = List.empty(growable: true);
-  ValidateInteger.values.forEach((element) {
-    _validationFunction(
-      buf: buf,
-      validationEnum: element,
-      function: integerFunction(element),
-      exports: exports,
-    );
-  });
-  _retrieveValue(buf: buf, type: 'integer');
-
-  /// extract exports;
-  buf.writeln('module.exports = {');
-  buf.writeln(exports.join(',\n'));
-  buf.writeln('}');
-  return JavaScriptFile(
-      fileName: 'integerValidation.js', content: buf.toString());
 }
 
 /// [validationEnum] is not typesafe.  There does not appear to be an 'isEnum' type check available in Dart
@@ -120,20 +120,13 @@ GeneratedFile _createIntegerValidationFile() {
 /// as naming of validationEnum is independent of backend
 void _validationFunction(
     {required StringBuffer buf,
-    required Object validationEnum,
-    required function,
+    required String functionCode,
+    required String functionName,
+    required String dataType,
     required List<String> exports}) {
-  if (!_checkType(validationEnum)) {
-    throw PreceptException(
-        '${validationEnum.runtimeType} is not an accepted Validation enum');
-  }
-  final validation = validationEnum.toString().split('.');
-  final String functionName = validation[1];
-  final dataType = validation[0].replaceFirst('Validate', '').toLowerCase();
-
   buf.writeln('function $functionName(request, field, param){');
   buf.writeln('  let value=${dataType}Value(request,field);');
-  buf.writeln('  if ($function) return;');
+  buf.writeln('  if ($functionCode) return;');
   buf.writeln('  throw \'validation\';');
   buf.writeln('}');
   buf.writeln();
@@ -154,6 +147,7 @@ _retrieveValue({required StringBuffer buf, required String type}) {
 bool _checkType(Object candidate) {
   switch (candidate.runtimeType) {
     case ValidateInteger:
+    case ValidateString:
       return true;
     default:
       return false;
