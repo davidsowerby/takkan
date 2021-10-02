@@ -62,6 +62,38 @@ GeneratedFile _createStringValidationFile() {
       fileName: 'stringValidation.js', content: buf.toString());
 }
 
+GeneratedFile _createValidationFile(List<Object> validationEnums) {
+  final StringBuffer buf = StringBuffer();
+  final List<String> exports = List.empty(growable: true);
+  final validation = validationEnums[0].toString().split('.');
+  final String functionName = validation[1];
+  final dataType = validation[0].replaceFirst('Validate', '').toLowerCase();
+  validationEnums.forEach((element) {
+    _validationFunction(
+      buf: buf,
+      validationEnum: element,
+      function: _validationFunctionText(element),
+      exports: exports,
+    );
+  });
+  _retrieveValue(buf: buf, type: dataType);
+
+  /// extract exports;
+  buf.writeln('module.exports = {');
+  buf.writeln(exports.join(',\n'));
+  buf.writeln('}');
+  return JavaScriptFile(
+      fileName: '${dataType}Validation.js', content: buf.toString());
+}
+
+String _validationFunctionText(Object val) {
+  switch (val.runtimeType) {
+    case ValidateInteger:
+      return integerFunction(val as ValidateInteger);
+  }
+  throw PreceptException('Unrecognised type');
+}
+
 GeneratedFile _createIntegerValidationFile() {
   final StringBuffer buf = StringBuffer();
   final List<String> exports = List.empty(growable: true);
@@ -73,7 +105,7 @@ GeneratedFile _createIntegerValidationFile() {
       exports: exports,
     );
   });
-  _retrieveValue(buf: buf, type: 'integer', parse: 'parseInt');
+  _retrieveValue(buf: buf, type: 'integer');
 
   /// extract exports;
   buf.writeln('module.exports = {');
@@ -108,10 +140,13 @@ void _validationFunction(
   exports.add('  $functionName');
 }
 
-_retrieveValue(
-    {required StringBuffer buf, required String type, required String parse}) {
+_retrieveValue({required StringBuffer buf, required String type}) {
   buf.writeln('function ${type}Value(request, field){');
-  buf.writeln('  return $parse(request.object.get(field));');
+  if (type == 'integer') {
+    buf.writeln('  return parseInt(request.object.get(field));');
+  } else {
+    buf.writeln('  return request.object.get(field);');
+  }
   buf.writeln('}');
   buf.writeln();
 }
