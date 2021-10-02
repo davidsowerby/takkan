@@ -16,8 +16,9 @@ final kitchenSinkSchema = PSchema(
         'accountNumber': PString(defaultValue: 'unknown'),
         'category': PString(
           validations: [
-            StringValidation(method: ValidateString.isLongerThan, param: 2),
-            StringValidation(method: ValidateString.isShorterThan, param: 5),
+            StringValidation(
+                method: ValidateString.lengthGreaterThan, param: 2),
+            StringValidation(method: ValidateString.lengthLessThan, param: 5),
           ],
         ),
         'recordDate': PDate(),

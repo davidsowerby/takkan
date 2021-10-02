@@ -96,6 +96,9 @@ K _$enumDecode<K, V>(
 }
 
 const _$ValidateStringEnumMap = {
-  ValidateString.isLongerThan: 'isLongerThan',
-  ValidateString.isShorterThan: 'isShorterThan',
+  ValidateString.alpha: 'alpha',
+  ValidateString.contains: 'contains',
+  ValidateString.lengthEquals: 'lengthEquals',
+  ValidateString.lengthGreaterThan: 'lengthGreaterThan',
+  ValidateString.lengthLessThan: 'lengthLessThan',
 };

@@ -42,13 +42,13 @@ class IntegerValidation implements ModelValidation<ValidateInteger, int> {
   Map<String, dynamic> toJson() => _$IntegerValidationToJson(this);
 }
 
-enum ValidateInteger { isGreaterThan, isLessThan }
+enum ValidateInteger { greaterThan, lessThan }
 
 bool validateInteger(IntegerValidation validation, int value) {
   switch (validation.method) {
-    case ValidateInteger.isGreaterThan:
+    case ValidateInteger.greaterThan:
       return isGreaterThan(value, validation.param);
-    case ValidateInteger.isLessThan:
+    case ValidateInteger.lessThan:
       return isLessThan(value, validation.param);
   }
 }

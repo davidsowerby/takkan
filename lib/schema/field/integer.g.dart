@@ -72,6 +72,6 @@ K _$enumDecode<K, V>(
 }
 
 const _$ValidateIntegerEnumMap = {
-  ValidateInteger.isGreaterThan: 'isGreaterThan',
-  ValidateInteger.isLessThan: 'isLessThan',
+  ValidateInteger.greaterThan: 'greaterThan',
+  ValidateInteger.lessThan: 'lessThan',
 };

@@ -19,8 +19,8 @@ void main() {
 
       final PString field = PString(
         validations: [
-          StringValidation(method: ValidateString.isLongerThan, param: 3),
-          StringValidation(method: ValidateString.isShorterThan, param: 6),
+          StringValidation(method: ValidateString.lengthGreaterThan, param: 3),
+          StringValidation(method: ValidateString.lengthLessThan, param: 6),
         ],
       );
 

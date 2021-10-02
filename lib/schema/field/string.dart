@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/list.dart';
 import 'package:precept_script/schema/validation/validator.dart';
+import 'package:validators/validators.dart';
 
 part 'string.g.dart';
 
@@ -68,23 +69,26 @@ class StringValidation implements ModelValidation<ValidateString, String> {
   Map<String, dynamic> toJson() => _$StringValidationToJson(this);
 }
 
-enum ValidateString { isLongerThan, isShorterThan }
+enum ValidateString {
+  alpha,
+  contains,
+  lengthEquals,
+  lengthGreaterThan,
+  lengthLessThan
+}
 
 bool validateString(StringValidation validation, String value) {
   switch (validation.method) {
-    case ValidateString.isLongerThan:
-      return isLongerThan(value, validation.param as int);
-    case ValidateString.isShorterThan:
-      return isShorterThan(value, validation.param as int);
-    default:
-      throw UnimplementedError();
+    case ValidateString.alpha:
+      return isAlpha(value);
+    case ValidateString.contains:
+      return contains(value, validation.param);
+    case ValidateString.lengthEquals:
+      return value.length == validation.param;
+
+    case ValidateString.lengthGreaterThan:
+      return value.length > validation.param;
+    case ValidateString.lengthLessThan:
+      return value.length < validation.param;
   }
-}
-
-bool isLongerThan(String value, int limit) {
-  return value.length > limit;
-}
-
-bool isShorterThan(String value, int limit) {
-  return value.length < limit;
 }

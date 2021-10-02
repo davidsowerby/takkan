@@ -14,14 +14,15 @@ void main() {
 
     test('find', () {
       // given
-      final messages = ValidationErrorMessages(typePatterns: defaultValidationErrorMessages);
+      final messages =
+          ValidationErrorMessages(typePatterns: defaultValidationErrorMessages);
 
       // when
 
       // then
       final actual = messages.find(
-          IntegerValidation(method: ValidateInteger.isGreaterThan, param: 3));
-      expect(actual,'must be greater than {0}');
+          IntegerValidation(method: ValidateInteger.greaterThan, param: 3));
+      expect(actual, 'must be greater than {0}');
     });
   });
 }

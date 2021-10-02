@@ -18,8 +18,8 @@ class ValidationErrorMessages {
 }
 
 const Map<dynamic, String> defaultValidationErrorMessages = const {
-  ValidateInteger.isGreaterThan: 'must be greater than {0}',
-  ValidateInteger.isLessThan: 'must be less than {0}',
-  ValidateString.isLongerThan: 'must be more than {0} characters',
-  ValidateString.isShorterThan: 'must be less than {0} characters',
+  ValidateInteger.greaterThan: 'must be greater than {0}',
+  ValidateInteger.lessThan: 'must be less than {0}',
+  ValidateString.lengthGreaterThan: 'must be more than {0} characters',
+  ValidateString.lengthLessThan: 'must be less than {0} characters',
 };
