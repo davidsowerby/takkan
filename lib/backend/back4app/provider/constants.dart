@@ -48,6 +48,7 @@ const String keyHeaderMasterKey = 'X-Parse-Master-Key';
 const String keyHeaderClientKey = 'X-Parse-Client-Key';
 const String keyHeaderRestKey = 'X-Parse-REST-API-Key';
 const String keyHeaderInstallationId = 'X-Parse-Installation-Id';
+const String keyServerUrl = 'serverUrl';
 
 // URL params
 const String keyParamSessionToken = 'sessionToken';

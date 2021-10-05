@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
-import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
+import 'package:meta/meta.dart';
+import 'package:parse_server_sdk/parse_server_sdk.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/preceptUser.dart';
+import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/query/query.dart';
 
 class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
@@ -16,9 +16,9 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
   init(Back4AppDataProvider parent) async {
     this.parent = parent;
     parse = await Parse().initialize(
-      parent.applicationId,
-      parent.appConfig.serverUrl(parent.config),
-      clientKey: parent.clientKey,
+      parent.instanceConfig.appId,
+      parent.instanceConfig.serverUrl,
+      clientKey: parent.instanceConfig.clientKey,
     );
     status = SignInStatus.Initialised;
   }
@@ -68,7 +68,8 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
     } else {
       final errorCode = authResult.error?.code ?? -999;
       if (errorCode == 101) {
-        return AuthenticationResult(success: false, errorCode: -1, user: PreceptUser.unknownUser());
+        return AuthenticationResult(
+            success: false, errorCode: -1, user: PreceptUser.unknownUser());
       }
       return AuthenticationResult(
           success: false,
@@ -109,10 +110,12 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
   @override
   Future<List<String>> loadUserRoles() async {
     PGraphQLQuery query = PGraphQLQuery(
-        querySchemaName: 'userRoles',
-        script: userRolesScript,
-        returnType: QueryReturnType.futureList,
-        variables: {'id': user.objectId});
+      queryName: 'userRoles',
+      script: userRolesScript,
+      returnType: QueryReturnType.futureList,
+      variables: {'id': user.objectId},
+      documentSchema: '_Role',
+    );
     final loadResult =
         await parent.fetchList(queryConfig: query, pageArguments: const {});
     final List<Map<String, dynamic>> result = loadResult.data;
@@ -123,8 +126,6 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
     return roles;
   }
 }
-
-
 
 final userRolesScript = r'''query GetRoles  ($id: ID!) {
   roles (where: {users: {have: {id:{equalTo: $id}}}}){

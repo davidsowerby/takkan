@@ -1,13 +1,13 @@
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
-import 'package:precept_script/schema/field/geoPosition.dart';
+import 'package:precept_script/schema/field/geo_position.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/pointer.dart';
-import 'package:precept_script/schema/field/postCode.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
+import 'package:precept_script/schema/field/post_code.dart';
 import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/version.dart';
 
 final back4appSchema = PSchema(
   name: 'kitchenSink',
@@ -18,9 +18,8 @@ final back4appSchema = PSchema(
         'accountNumber': PString(),
         'category': PString(
           validations: [
-            StringValidation(
-                method: ValidateString.lengthGreaterThan, param: 2),
-            StringValidation(method: ValidateString.lengthLessThan, param: 5),
+            VString.longerThan(2),
+            VString.shorterThan(5),
           ],
         ),
         'recordDate': PDate(),
@@ -62,5 +61,5 @@ final back4appSchema = PSchema(
       },
     ),
   },
-  queries: {'openIssues': PQuerySchema(documentSchema: 'Issue')},
+  version: PVersion(number: 0),
 );

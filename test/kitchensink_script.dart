@@ -1,22 +1,26 @@
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
-import 'package:precept_script/particle/textBox.dart';
+import 'package:precept_script/particle/text_box.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/signin/signIn.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:precept_script/signin/sign_in.dart';
 
-import 'schema.dart';
+import 'kitchensink_schema.dart';
 
 final myScript = PScript(
   name: 'Kitchen Sink',
+  version: PVersion(number: 0),
   locale: 'en_GB',
+  schema: PSchema(version: PVersion(number: 0), name: 'test'),
   dataProvider: PBack4AppDataProvider(
     configSource: PConfigSource(
       segment: 'back4app',
@@ -81,7 +85,8 @@ final myScript = PScript(
       controlEdit: ControlEdit.panelsOnly,
       title: 'Open Issues',
       query: PGraphQLQuery(
-        querySchemaName: 'openIssues',
+        documentSchema: 'Issue',
+        queryName: 'openIssues',
         script: openIssuesScript,
         returnType: QueryReturnType.futureList,
       ),
@@ -106,7 +111,8 @@ final myScript = PScript(
           heading: PPanelHeading(canEdit: true, expandable: true),
           property: '',
           query: PPQuery(
-            querySchemaName: 'Get Account',
+            documentSchema: 'Account',
+            queryName: 'Get Account',
             fields: 'id,objectId, category,accountNumber,createdAt,updatedAt',
             variables: {'id': 'wVdGK8TDXR'},
             types: {

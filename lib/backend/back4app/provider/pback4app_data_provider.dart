@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/data/provider/graphqlDelegate.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/data/provider/graphql_delegate.dart';
+import 'package:precept_script/data/provider/rest_delegate.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/signin/signIn.dart';
+import 'package:precept_script/signin/sign_in.dart';
 
-part 'pBack4AppDataProvider.g.dart';
+part 'pback4app_data_provider.g.dart';
 
 /// When [debug] enabled, prints logs to console
 ///
@@ -24,19 +25,16 @@ class PBack4AppDataProvider extends PDataProvider {
     PSchemaSource? schemaSource,
     bool checkHealthOnConnect = false,
     PSchema? schema,
+    PRest? restDelegate,
     bool useAuthenticator = true,
-    List<String> headerKeys = const [
-      'X-Parse-Application-Id',
-      'X-Parse-Client-Key'
-    ],
   }) : super(
-          providerName: 'Back4App',
+    providerName: 'Back4App',
           schema: schema,
           signIn: signIn,
           signInOptions: signInOptions,
           configSource: configSource,
           graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
-          headerKeys: headerKeys,
+          restDelegate: restDelegate,
           sessionTokenKey: 'sessionToken',
           useAuthenticator: useAuthenticator,
         );

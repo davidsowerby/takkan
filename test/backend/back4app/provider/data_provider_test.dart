@@ -1,36 +1,33 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:graphql/client.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/dataProvider.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/pBack4AppDataProvider.dart';
-import 'package:precept_backend/backend/app/appConfig.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
-import '../../../script.dart';
+import '../../../kitchensink_script.dart';
 
-void main() {
+void main() async {
+  AppConfigFileLoader loader = AppConfigFileLoader();
+  AppConfig appConfig = await loader.load();
   group('Provider CRUD', () {
     DataProvider? provider;
-    AppConfig appConfig = AppConfig({
-      'back4app': {
-        'dev': {
-          'X-Parse-Application-Id': 'xLWKrOqVNy3O1u3z9ovoalO2XFuKQn0NlHPksJV6',
-          'X-Parse-Client-Key': 'Ib1NDOh4ph4fkCci0IIxWF01flSxhpJf6FO1gAkQ',
-          'serverUrl': 'https://parseapi.back4app.com/',
-        }
-      }
-    });
+
     setUpAll(() async {
       final PBack4AppDataProvider providerConfig = PBack4AppDataProvider(
-        configSource: PConfigSource(segment: 'back4app', instance: 'dev'),
-        schema:
-            PSchema(name: 'test', documents: {'PreceptScript': pScriptSchema0}),
+        configSource: PConfigSource(segment: 'precept', instance: 'dev'),
+        schema: PSchema(
+            name: 'test',
+            version: PVersion(number: 0),
+            documents: {'PreceptScript': pScriptSchema0}),
       );
 
       provider = Back4AppDataProvider(config: providerConfig);
@@ -170,7 +167,11 @@ const String fetchAllScripts = r'''query GetPreceptScripts {
 
 deleteAllScripts(DataProvider? provider, PDocument scriptSchema) async {
   final ReadResultList result = await provider!.fetchList(
-      queryConfig: PGraphQLQuery(querySchemaName: '', script: fetchAllScripts),
+      queryConfig: PGraphQLQuery(
+        queryName: 'deleteAllScripts',
+        documentSchema: 'PScript',
+        script: fetchAllScripts,
+      ),
       pageArguments: {});
   final List<Map<String, dynamic>> currentEntries = result.data;
 

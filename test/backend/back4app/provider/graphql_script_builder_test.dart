@@ -1,8 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_back4app_backend/backend/back4app/dataProvider/graphqlDelegate.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_back4app_client/backend/back4app/provider/graphql_delegate.dart';
+import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('GraphQLScriptBuilder', () {

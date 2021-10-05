@@ -1,4 +1,4 @@
-import 'package:precept_backend/backend/scriptHandler.dart';
+import 'package:precept_backend/backend/script_handler.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/dataProvider/graphqlDelegate.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_backend/backend/data_provider/graphql_delegate.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/util/string.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -18,7 +18,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   /// 'nameLocale' value is created to use as a filter, combining script name and Locale
   Future<UpdateResult> uploadPreceptScript({
     required PScript script,
-    required Locale locale,
+    required String locale,
     bool incrementVersion = false,
   }) async {
     final Map<String, dynamic> scriptJson = script.toJson();
@@ -61,7 +61,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   /// updated entry (using the 'updatedAt' field) is returned
   @override
   Future<ReadResultItem> latestScript(
-      {required Locale locale,
+      {required String locale,
       required int fromVersion,
       required String name}) async {
     final variables = {
@@ -70,7 +70,10 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       'nameLocale': '$name:${locale.toString()}'
     };
     ReadResultList result = await fetchList(
-      PGraphQLQuery(querySchemaName: 'laterScripts', script: laterScripts),
+      PGraphQLQuery(
+          queryName: 'laterScripts',
+          script: laterScripts,
+          documentSchema: 'PScript'),
       variables,
     );
 
@@ -205,8 +208,9 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
           fetchPolicy: fetchPolicy),
     );
     if (queryResult.hasException) {
-      throw APIException(
-          message: queryResult.exception.toString(), statusCode: -1);
+      String msg = queryResult.exception.toString();
+      logType(this.runtimeType).e(msg);
+      throw APIException(message: msg, statusCode: -1);
     }
     return queryResult;
   }
