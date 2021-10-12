@@ -1,8 +1,9 @@
 ---
 slug: move-to-docusaurus
 title: Move from VuePress to Docusaurus
+description: Experience of the process of moving existing markdown documentation from VuePress to Docusaurus 
 authors: david
-tags: [documentation, docusaurus]
+tags: [documentation, docusaurus, precept]
 ---
 
 # VuePress to Docusaurus
