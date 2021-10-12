@@ -38,6 +38,8 @@ It could not be much simpler really:
 
 I used [Vercel](https://vercel.com/) because it looked easy! It was.
 
+**Updated 2021-10-12:**  It was easy to set up Vercel, but when the free trial for the Pro version ran out, I ran into problems trying to import as a personal project and went back to Netlify.  This was also straightforward, even though there are some cautionary notes the the Docusaurus documentation.
+
 ### Issues
 
 I did have some broken links, but this seemed inconsistent - some worked, some did not.  
