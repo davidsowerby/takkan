@@ -11,6 +11,8 @@ environment:
 dependencies:
   dio: ^4.0.0
   graphql: ^5.0.0-nullsafety.5
+  json_annotation: ^4.1.0
+  freezed_annotation: ^0.14.2
   precept_script:
     path: ../precept_script
 
@@ -19,6 +21,8 @@ dev_dependencies:
     sdk: flutter
   mocktail: ^0.1.4
   build_runner:
+  json_serializable: ^5.0.2
+  freezed:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

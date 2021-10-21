@@ -13,6 +13,7 @@ import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/query/query.dart';
@@ -35,7 +36,7 @@ import 'package:precept_script/script/script.dart';
 /// An implementation of this interface must be registered with a call to [DataProviderLibrary.register]
 ///
 /// Note that the [DataProviderLibrary] acts as a cache. Multiple instances of the same DataProvider
-/// class are identified by the [PConfigSource], but each such instance is effectively cached to ensure
+/// class are identified by the [PConfigSource], but each such instance is cached to ensure
 /// consistency of state.
 ///
 /// In addition to CRUD calls, a [DataProvider] provides a backend-specific [Authenticator]
@@ -43,10 +44,12 @@ import 'package:precept_script/script/script.dart';
 /// The [Authenticator] also contains a [UserState] object for this data provider, holding
 /// basic user information and authentication status.
 ///
-/// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
-///
 /// This means that a client app can log in as a different user for each [DataProvider]
 /// it uses.
+///
+/// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
+///
+
 abstract class DataProvider<CONFIG extends PDataProvider> {
   init(AppConfig appConfig);
 
@@ -54,7 +57,8 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 
   Authenticator get authenticator;
 
-  /// Fetch exactly one item (document) from the database.
+  /// Fetch exactly one item (document) from the database.  The [Delegate] used
+  /// is determined by the runtime type of [queryConfig]
   ///
   /// [ReadResult.success] is false if there is not exactly one result
   Future<ReadResultItem> fetchItem({
@@ -78,9 +82,13 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// A [DocumentType.standard] simply updates the existing document
   ///
+  /// There are occasions where it is necessary to explicitly select which delegate
+  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
+  /// the [PDataProvider.defaultDelegate] is used.
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
+    Delegate? useDelegate,
     required Map<String, dynamic> data,
   });
 
@@ -92,8 +100,13 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// A [DocumentType.standard] simply deletes the existing document
   ///
   /// No exceptions are thrown if the document does not exist
+  ///
+  /// There are occasions where it is necessary to explicitly select which delegate
+  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
+  /// the [PDataProvider.defaultDelegate] is used.
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
+    Delegate? useDelegate,
   });
 
   /// Reads the document identified by [documentId]
@@ -101,24 +114,34 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// [fieldSelector] is used only by the [GraphQLDataProviderDelegate], to limit the
   /// fields returned, rather than return the whole document
   ///
+  /// There are occasions where it is necessary to explicitly select which delegate
+  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
+  /// the [PDataProvider.defaultDelegate] is used.
+  ///
   /// throws an [APIException] if the document is not found
   Future<ReadResultItem> readDocument({
     required DocumentId documentId,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
   });
 
-  /// Used only to create a completely new document.  The document is create
+  /// Used only to create a completely new document.  The document is created
   /// in a way that is consistent with the document type declared in its [schema].
   ///
   /// Subsequent updates, whether [DocumentType.standard] or [DocumentType.versioned],
   /// should be amended via a call to [updateDocument]
   ///
   /// [path] is the equivalent of [DocumentId.path], so will be something like
-  //  the class / table name used by the [DataProvider]
+  ///  the class / table name used by the [DataProvider]
+  ///
+  /// There are occasions where it is necessary to explicitly select which delegate
+  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
+  /// the [PDataProvider.defaultDelegate] is used.
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   });
 
@@ -198,12 +221,12 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// If overriding this make sure you call super()
   init(AppConfig appConfig) async {
     this._appConfig = appConfig;
-    if (config.useRestDelegate) {
+    if (config.restDelegate != null) {
       _restDelegate = createRestDelegate();
 
       restDelegate.init(appConfig, this);
     }
-    if (config.useGraphQLDelegate) {
+    if (config.graphQLDelegate != null) {
       _graphQLDelegate = createGraphQLDelegate();
       graphQLDelegate.init(appConfig, this);
     }
@@ -219,15 +242,12 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   SignInStatus get authStatus => authenticator.status;
 
   DataProviderDelegate get defaultDelegate {
-    if (_graphQLDelegate != null) {
-      return _graphQLDelegate!;
+    switch (config.defaultDelegate) {
+      case Delegate.graphQl:
+        return graphQLDelegate;
+      case Delegate.rest:
+        return restDelegate;
     }
-    if (_restDelegate != null) {
-      return _restDelegate!;
-    }
-    String msg = 'At least one delegate must be defined';
-    logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
   }
 
   /// see [DataProvider.fetchItem]
@@ -241,7 +261,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     switch (queryConfig.runtimeType) {
       case PGraphQLQuery:
         {
-          if (config.useGraphQLDelegate) {
+          if (config.graphQLDelegate != null) {
             return graphQLDelegate.fetchItem(
                 queryConfig as PGraphQLQuery, variables);
           } else {
@@ -253,7 +273,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         }
       case PRestQuery:
         {
-          if (config.useRestDelegate) {
+          if (config.restDelegate != null) {
             return restDelegate.fetchItem(queryConfig as PRestQuery, variables);
           } else {
             String msg =
@@ -317,6 +337,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) {
     if (config.useGraphQLDelegate) {

@@ -19,17 +19,21 @@ class AppConfig {
   const AppConfig(this.data);
 
   Map<String, String> instanceConfig(PDataProvider config) {
-    final segment = data[config.configSource.segment];
+    return instanceCfg(config.configSource);
+  }
+
+  Map<String, String> instanceCfg(PConfigSource configSource) {
+    final segment = data[configSource.segment];
     if (segment == null) {
       String msg =
-          'File precept.json in project root must define a segment for \'${config.configSource.segment}\'';
+          'File precept.json in project root must define a segment for \'${configSource.segment}\'';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    final instance = segment[config.configSource.instance];
+    final instance = segment[configSource.instance];
     if (instance == null) {
       String msg =
-          'File precept.json in project root must define an instance \'${config.configSource.instance}\' in segment \'${config.configSource.segment}\'';
+          'File precept.json in project root must define an instance \'${configSource.instance}\' in segment \'${configSource.segment}\'';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
