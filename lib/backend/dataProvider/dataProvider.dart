@@ -11,7 +11,6 @@ import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/documentId.dart';
@@ -152,8 +151,16 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// [fromVersion] is used to limit the number of scripts returned.  If there are
   /// multiple scripts with the same version (which should not actually happen),
   /// the one with the most recent 'updatedAt' field is returned
-  Future<PScript> latestScript(
-      {required Locale locale, required int fromVersion, required String name});
+  ///
+  /// If required, [useDelegate] may select a specific delegate, otherwise it will
+  /// default to [PDataProvider.defaultDelegate]
+  ///
+  Future<PScript> latestScript({
+    required Locale locale,
+    required int fromVersion,
+    required String name,
+    Delegate? useDelegate,
+  });
 
   /// Returns a [DocumentId] from a document's data.  This is likely to be backend
   /// specific
@@ -257,42 +264,8 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }) async {
     final Map<String, dynamic> variables =
         combineVariables(queryConfig, pageArguments);
-
-    switch (queryConfig.runtimeType) {
-      case PGraphQLQuery:
-        {
-          if (config.graphQLDelegate != null) {
-            return graphQLDelegate.fetchItem(
-                queryConfig as PGraphQLQuery, variables);
-          } else {
-            String msg =
-                'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider';
-            logType(this.runtimeType).e(msg);
-            throw PreceptException(msg);
-          }
-        }
-      case PRestQuery:
-        {
-          if (config.restDelegate != null) {
-            return restDelegate.fetchItem(queryConfig as PRestQuery, variables);
-          } else {
-            String msg =
-                'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider';
-            logType(this.runtimeType).e(msg);
-            throw PreceptException(msg);
-          }
-        }
-      // case PGetDocument :
-      //   {
-      //     return defaultDelegate.readDocument(
-      //         documentId: (queryConfig as PGetDocument).documentId)
-      //   }
-      default:
-        String msg =
-            'No delegate available to support a ${queryConfig.runtimeType.toString()}';
-        logType(this.runtimeType).e(msg);
-        throw PreceptException(msg);
-    }
+    return _delegateFromQueryType(queryConfig: queryConfig)
+        .fetchItem(queryConfig, variables);
   }
 
   /// Returns a Future of a list of one or more document instances
@@ -302,25 +275,8 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }) async {
     final Map<String, dynamic> variables =
         combineVariables(queryConfig, pageArguments);
-    if (queryConfig is PGraphQLQuery) {
-      if (config.useGraphQLDelegate) {
-        return graphQLDelegate.fetchList(queryConfig, variables);
-      } else {
-        throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
-      }
-    }
-    if (config is PRestQuery) {
-      if (config.useRestDelegate) {
-        return restDelegate.fetchList(queryConfig as PRestQuery, variables);
-      } else {
-        throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
-      }
-    }
-
-    throw PreceptException(
-        'No delegate available to support a ${queryConfig.runtimeType.toString()}');
+    return _delegateFromQueryType(queryConfig: queryConfig)
+        .fetchList(queryConfig, variables);
   }
 
   /// Returns a stream of document
@@ -339,39 +295,20 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     required Map<String, dynamic> data,
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
-  }) {
-    if (config.useGraphQLDelegate) {
-      return graphQLDelegate.createDocument(
-        path: path,
-        data: data,
-        fieldSelector: fieldSelector,
-      );
-    } else {
-      return restDelegate.createDocument(
-        path: path,
-        data: data,
-        fieldSelector: fieldSelector,
-      );
-    }
+  }) async {
+    return await _selectDelegate(useDelegate)
+        .createDocument(path: path, data: data);
   }
 
   /// See [DataProvider.updateDocument]
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
-  }) {
-    if (config.useGraphQLDelegate) {
-      return graphQLDelegate.updateDocument(
-        documentId: documentId,
-        data: data,
-      );
-    } else {
-      return restDelegate.updateDocument(
-        documentId: documentId,
-        data: data,
-      );
-    }
+  }) async {
+    return await _selectDelegate(useDelegate)
+        .updateDocument(documentId: documentId, data: data);
   }
 
   /// Once a document has been created, it should be possible to create a unique id for it
@@ -406,12 +343,10 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   Future<PScript> latestScript(
       {required Locale locale,
       required int fromVersion,
+      Delegate? useDelegate,
       required String name}) async {
-    final DataProviderDelegate scriptDelegate = (config.useGraphQLDelegate)
-        ? graphQLDelegate
-        : restDelegate as DataProviderDelegate;
-    final ReadResult result = await scriptDelegate.latestScript(
-        locale: locale, fromVersion: fromVersion, name: name);
+    final ReadResultItem result = await _selectDelegate(useDelegate)
+        .latestScript(locale: locale, fromVersion: fromVersion, name: name);
     return PScript.fromJson(result.data);
   }
 
@@ -422,12 +357,10 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   @override
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
-  }) {
-    if (config.useGraphQLDelegate) {
-      return graphQLDelegate.deleteDocument(documentId: documentId);
-    } else {
-      return restDelegate.deleteDocument(documentId: documentId);
-    }
+    Delegate? useDelegate,
+  }) async {
+    return await _selectDelegate(useDelegate)
+        .deleteDocument(documentId: documentId);
   }
 
   ///
@@ -436,16 +369,11 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   Future<ReadResultItem> readDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
+    Delegate? useDelegate,
     FetchPolicy? fetchPolicy,
-  }) {
-    final DataProviderDelegate delegate = (config.useGraphQLDelegate)
-        ? graphQLDelegate as DataProviderDelegate
-        : restDelegate;
-    return delegate.readDocument(
-      documentId: documentId,
-      fieldSelector: fieldSelector,
-      fetchPolicy: fetchPolicy,
-    );
+  }) async {
+    return await _selectDelegate(useDelegate)
+        .readDocument(documentId: documentId);
   }
 
   PDocument documentSchemaFromQuery({required String querySchemaName}) {
@@ -454,6 +382,39 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   PDocument documentSchema({required String documentSchemaName}) {
     return config.documentSchema(documentSchemaName: documentSchemaName);
+  }
+
+  DataProviderDelegate _delegateFromQueryType({
+    required PQuery queryConfig,
+  }) {
+    if (queryConfig is PGraphQLQuery) {
+      if (_graphQLDelegate != null) {
+        return graphQLDelegate;
+      } else {
+        throw PreceptException(
+            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
+      }
+    }
+    if (config is PRestQuery) {
+      if (_restDelegate != null) {
+        return restDelegate;
+      } else {
+        throw PreceptException(
+            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
+      }
+    }
+    throw PreceptException(
+        'No delegate available to support a ${queryConfig.runtimeType.toString()}');
+  }
+
+  DataProviderDelegate _selectDelegate(Delegate? selectedDelegate) {
+    final Delegate selection = selectedDelegate ?? config.defaultDelegate;
+    switch (selection) {
+      case Delegate.graphQl:
+        return graphQLDelegate;
+      case Delegate.rest:
+        return restDelegate;
+    }
   }
 
   /// ============ Provided by sub-class implementations ==========================================
@@ -547,6 +508,7 @@ class NoDataProvider implements DataProvider {
   Future<PScript> latestScript(
       {required Locale locale,
       required int fromVersion,
+      Delegate? useDelegate,
       required String name}) {
     throw PreceptException(msg);
   }
@@ -555,6 +517,7 @@ class NoDataProvider implements DataProvider {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) {
     throw PreceptException(msg);
@@ -563,6 +526,7 @@ class NoDataProvider implements DataProvider {
   @override
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
+    Delegate? useDelegate,
   }) {
     throw PreceptException(msg);
   }
@@ -570,6 +534,7 @@ class NoDataProvider implements DataProvider {
   @override
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
+    Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) {
@@ -581,6 +546,7 @@ class NoDataProvider implements DataProvider {
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
     FetchPolicy? fetchPolicy,
+    Delegate? useDelegate,
   }) {
     throw PreceptException(msg);
   }
