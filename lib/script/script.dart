@@ -22,6 +22,7 @@ import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
+import 'package:precept_script/script/version.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'script.g.dart';
@@ -38,6 +39,7 @@ part 'script.g.dart';
 class PScript extends PCommon {
   final String name;
   final String locale;
+  final PVersion version;
   String? nameLocale;
   final Map<String, PPage> routes;
   final ConversionErrorMessages conversionErrorMessages;
@@ -54,6 +56,7 @@ class PScript extends PCommon {
         typePatterns: defaultValidationErrorMessages),
     this.routes = const {},
     required this.name,
+    required this.version,
     this.locale = 'en_GB',
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,

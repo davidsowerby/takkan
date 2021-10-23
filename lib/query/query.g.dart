@@ -17,13 +17,12 @@ PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) =>
       script: json['script'] as String,
       queryName: json['queryName'] as String,
       returnType:
-          _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
-              QueryReturnType.futureList,
-    )..version = json['version'] as int;
+          $enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
+              QueryReturnType.futureItem,
+    );
 
 Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
@@ -31,43 +30,6 @@ Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
       'documentSchema': instance.documentSchema,
       'script': instance.script,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$QueryReturnTypeEnumMap = {
   QueryReturnType.futureItem: 'futureItem',
@@ -92,12 +54,11 @@ PPQuery _$PPQueryFromJson(Map<String, dynamic> json) => PPQuery(
               .toList() ??
           const [],
       returnType:
-          _$enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
-              QueryReturnType.futureList,
-    )..version = json['version'] as int;
+          $enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
+              QueryReturnType.futureItem,
+    );
 
 Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
-      'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
@@ -121,11 +82,10 @@ PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) => PGetDocument(
               ?.map((e) => e as String)
               .toList() ??
           const [],
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'queryName': instance.queryName,
@@ -142,11 +102,10 @@ PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) => PGetStream(
           const [],
       documentId:
           DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'propertyReferences': instance.propertyReferences,
       'queryName': instance.queryName,
       'documentId': instance.documentId.toJson(),

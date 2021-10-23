@@ -36,7 +36,7 @@ Map<String, dynamic> _$PGeoPointToJson(PGeoPoint instance) {
 
 GeoPointValidation _$GeoPointValidationFromJson(Map<String, dynamic> json) =>
     GeoPointValidation(
-      method: _$enumDecode(_$ValidateGeoPointEnumMap, json['method']),
+      method: $enumDecode(_$ValidateGeoPointEnumMap, json['method']),
       param: json['param'] == null
           ? null
           : GeoPoint.fromJson(json['param'] as Map<String, dynamic>),
@@ -47,32 +47,6 @@ Map<String, dynamic> _$GeoPointValidationToJson(GeoPointValidation instance) =>
       'method': _$ValidateGeoPointEnumMap[instance.method],
       'param': instance.param?.toJson(),
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$ValidateGeoPointEnumMap = {
   ValidateGeoPoint.isValid: 'isValid',

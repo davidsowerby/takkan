@@ -1,11 +1,16 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/fake.dart';
+import 'package:test/test.dart';
 
 class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
   Future<PSchema> load(PSchemaSource source) async {
-    return PSchema(name: 'test');
+    return PSchema(
+      name: 'test',
+      version: PVersion(number: 0),
+    );
   }
 }
 

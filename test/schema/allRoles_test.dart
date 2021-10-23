@@ -1,7 +1,8 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
 import '../script/walk_test.dart';
 
@@ -19,7 +20,8 @@ void main() {
     // });
     test('combined', () {
       // given
-      final schema = PSchema(name: '', documents: {
+      final schema =
+          PSchema(name: '', version: PVersion(number: 0), documents: {
         'doc1': PDocument(
             permissions: PPermissions(
                 getRoles: ['doc1-get'], readRoles: ['doc1-read', 'admin']),
@@ -31,9 +33,9 @@ void main() {
       });
       final script = PScript(
           name: 'test',
+          version: PVersion(number: 0),
           dataProvider: PDataProvider(
               schema: schema,
-              headerKeys: [],
               providerName: 'x',
               sessionTokenKey: 'x',
               configSource: PConfigSource(instance: 'x', segment: 'x')));

@@ -35,7 +35,7 @@ Map<String, dynamic> _$PDateToJson(PDate instance) {
 
 DateValidation _$DateValidationFromJson(Map<String, dynamic> json) =>
     DateValidation(
-      method: _$enumDecode(_$ValidateDateEnumMap, json['method']),
+      method: $enumDecode(_$ValidateDateEnumMap, json['method']),
       param: DateTime.parse(json['param'] as String),
     );
 
@@ -44,32 +44,6 @@ Map<String, dynamic> _$DateValidationToJson(DateValidation instance) =>
       'method': _$ValidateDateEnumMap[instance.method],
       'param': instance.param.toIso8601String(),
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$ValidateDateEnumMap = {
   ValidateDate.isLaterThan: 'isLaterThan',

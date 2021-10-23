@@ -41,7 +41,7 @@ Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
 PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
       signInFailureMessage: json['signInFailureMessage'] as String? ??
           'Username or password incorrect',
-      caption: json['caption'] as String,
+      caption: json['caption'] as String? ?? 'Sign in with Email',
       checkingCredentialsMessage:
           json['checkingCredentialsMessage'] as String? ??
               'Checking Credentials',
@@ -51,16 +51,15 @@ PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
       submitCaption: json['submitCaption'] as String? ?? 'Submit',
       successRoute: json['successRoute'] as String? ?? '',
       failureRoute: json['failureRoute'] as String? ?? 'signInFail',
-      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      readTraitName: json['readTraitName'] as String? ?? 'EmailSignIn-default',
       pid: json['pid'] as String?,
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'pid': instance.pid,
       'caption': instance.caption,
       'help': instance.help?.toJson(),

@@ -16,11 +16,10 @@ PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) => PNavButton(
       property: json['property'] as String? ?? notSet,
       staticData: json['staticData'] as String? ?? '',
       pid: json['pid'] as String?,
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PNavButtonToJson(PNavButton instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'pid': instance.pid,
       'caption': instance.caption,
       'property': instance.property,
@@ -36,16 +35,16 @@ PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) =>
     PNavButtonSet(
       buttons: Map<String, String>.from(json['buttons'] as Map),
       width: (json['width'] as num?)?.toDouble(),
-      height: (json['height'] as num?)?.toDouble() ?? 100,
+      height: (json['height'] as num?)?.toDouble() ?? 60,
       pid: json['pid'] as String?,
-      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      readTraitName:
+          json['readTraitName'] as String? ?? 'PNavButtonSet-default',
       buttonTraitName:
           json['buttonTraitName'] as String? ?? 'PNavButton-default',
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PNavButtonSetToJson(PNavButtonSet instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'pid': instance.pid,
       'height': instance.height,
       'readTraitName': instance.readTraitName,

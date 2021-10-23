@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/util/interpolate.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Unit test', () {

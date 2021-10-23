@@ -28,12 +28,11 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) => PPanel(
           ? const PPanelStyle()
           : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
       controlEdit:
-          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+          $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
-      'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,
@@ -46,43 +45,6 @@ Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{
       'pageArguments': instance.pageArguments,
       'heading': instance.heading?.toJson(),
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
@@ -105,11 +67,10 @@ PPanelHeading _$PPanelHeadingFromJson(Map<String, dynamic> json) =>
       style: json['style'] == null
           ? const PHeadingStyle()
           : PHeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PPanelHeadingToJson(PPanelHeading instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'expandable': instance.expandable,
       'canEdit': instance.canEdit,
       'help': instance.help?.toJson(),

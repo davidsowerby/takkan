@@ -41,10 +41,7 @@ class PreceptItem with WalkTarget {
 
   PreceptItem({
     String? id,
-    this.version = 0,
   }) : _pid = id;
-
-  int version = 0;
 
   factory PreceptItem.fromJson(Map<String, dynamic> json) =>
       _$PreceptItemFromJson(json);

@@ -1,4 +1,3 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
@@ -7,6 +6,8 @@ import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
 import '../fixtures.dart';
 
@@ -33,7 +34,10 @@ void main() {
     });
     test('Insufficient components', () {
       // given
-      final script1 = PScript(name: 'A Script');
+      final script1 = PScript(
+        name: 'A Script',
+        version: PVersion(number: 0),
+      );
       // when
       final result = script1.validate();
       // then
@@ -54,6 +58,7 @@ void main() {
       // given
       final script = PScript(
         name: 'test',
+        version: PVersion(number: 0),
         routes: {
           '': PPage(title: 'A page'),
         },
@@ -73,6 +78,7 @@ void main() {
       // given
       final component = PScript(
         name: 'A script',
+        version: PVersion(number: 0),
         isStatic: IsStatic.yes,
         routes: {
           "/home": PPage(title: 'a Page title', pageType: ''),
@@ -93,6 +99,7 @@ void main() {
       // given
       final component = PScript(
         name: 'a script',
+        version: PVersion(number: 0),
         dataProvider: PDataProvider(
           providerName: 'Test',
           configSource: const PConfigSource(
@@ -100,7 +107,6 @@ void main() {
             instance: '',
           ),
           sessionTokenKey: '',
-          headerKeys: const [],
           schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
         routes: {
@@ -127,10 +133,10 @@ void main() {
       // given
       final component = PScript(
           name: 'A Script',
+          version: PVersion(number: 0),
           dataProvider: PDataProvider(
             providerName: 'Test',
             sessionTokenKey: '',
-            headerKeys: const [],
             configSource: PConfigSource(
               segment: 'back4app',
               instance: 'dev',
@@ -164,6 +170,7 @@ void main() {
       // given
       final withoutQueryOrDataProvider = PScript(
         name: 'A Script',
+        version: PVersion(number: 0),
         routes: {
           "/home": PPage(
             pageType: "mine",
@@ -175,10 +182,10 @@ void main() {
 
       final withoutQuery = PScript(
         name: 'A Script',
+        version: PVersion(number: 0),
         dataProvider: PDataProvider(
           providerName: 'Test',
           sessionTokenKey: '',
-          headerKeys: const [],
           configSource: PConfigSource(
             segment: 'back4app',
             instance: 'dev',
@@ -199,10 +206,10 @@ void main() {
 
       final withQueryAndProvider = PScript(
         name: 'A Script',
+        version: PVersion(number: 0),
         dataProvider: PDataProvider(
           providerName: 'Test',
           sessionTokenKey: '',
-          headerKeys: const [],
           configSource: PConfigSource(
             segment: 'back4app',
             instance: 'dev',

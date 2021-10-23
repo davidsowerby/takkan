@@ -34,7 +34,7 @@ Map<String, dynamic> _$PBooleanToJson(PBoolean instance) {
 
 BooleanValidation _$BooleanValidationFromJson(Map<String, dynamic> json) =>
     BooleanValidation(
-      method: _$enumDecode(_$ValidateBooleanEnumMap, json['method']),
+      method: $enumDecode(_$ValidateBooleanEnumMap, json['method']),
       param: json['param'] as bool?,
     );
 
@@ -43,32 +43,6 @@ Map<String, dynamic> _$BooleanValidationToJson(BooleanValidation instance) =>
       'method': _$ValidateBooleanEnumMap[instance.method],
       'param': instance.param,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$ValidateBooleanEnumMap = {
   ValidateBoolean.isTrue: 'isTrue',

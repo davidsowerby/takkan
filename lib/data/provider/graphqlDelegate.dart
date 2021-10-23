@@ -28,7 +28,6 @@ class PGraphQL extends PDataProviderDelegate {
     List<String> headerKeys = const [],
   }) : super(
           sessionTokenKey: sessionTokenKey,
-          headerKeys: headerKeys,
           checkHealthOnConnect: checkHealthOnConnect,
         );
 

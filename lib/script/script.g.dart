@@ -16,60 +16,22 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
           ) ??
           const {},
       name: json['name'] as String,
+      version: PVersion.fromJson(json['version'] as Map<String, dynamic>),
       locale: json['locale'] as String? ?? 'en_GB',
       controlEdit:
-          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.inherited,
-    )
-      ..version = json['version'] as int
-      ..nameLocale = json['nameLocale'] as String?;
+          $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+              ControlEdit.firstLevelPanels,
+    )..nameLocale = json['nameLocale'] as String?;
 
 Map<String, dynamic> _$PScriptToJson(PScript instance) => <String, dynamic>{
-      'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'name': instance.name,
       'locale': instance.locale,
+      'version': instance.version.toJson(),
       'nameLocale': instance.nameLocale,
       'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
       'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',
@@ -83,7 +45,7 @@ const _$ControlEditEnumMap = {
 };
 
 PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
-      pageType: json['pageType'] as String? ?? 'defaultPage',
+  pageType: json['pageType'] as String? ?? 'defaultPage',
       scrollable: json['scrollable'] as bool? ?? true,
       layout: json['layout'] == null
           ? const PPageLayout()
@@ -92,14 +54,13 @@ PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
           ? const []
           : PElementListConverter.fromJson(json['content'] as List),
       controlEdit:
-          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+          $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
       property: json['property'] as String? ?? notSet,
       title: json['title'] as String,
-    )..version = json['version'] as int;
+    );
 
 Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
-      'version': instance.version,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'property': instance.property,
       'pageType': instance.pageType,

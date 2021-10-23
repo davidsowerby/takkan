@@ -9,6 +9,7 @@ import 'package:precept_script/data/provider/restDelegate.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
 import 'package:precept_script/signin/signIn.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -41,7 +42,6 @@ class PDataProvider extends PreceptItem {
   PSchema? _schema;
   final PSchemaSource? schemaSource;
   final String sessionTokenKey;
-  final List<String> headerKeys;
   final Delegate defaultDelegate;
   final PGraphQL? graphQLDelegate;
   final PRest? restDelegate;
@@ -63,7 +63,6 @@ class PDataProvider extends PreceptItem {
     this.useAuthenticator = false,
     this.graphQLDelegate,
     this.restDelegate,
-    required this.headerKeys,
     required this.sessionTokenKey,
     required this.configSource,
     this.defaultDelegate = Delegate.graphQl,
@@ -158,7 +157,6 @@ class PNoDataProvider extends PDataProvider {
           providerName: 'NoDataProvider',
           signInOptions: const PSignInOptions(),
           signIn: const PSignIn(),
-          headerKeys: const [],
           schema: schema,
           configSource: PConfigSource(segment: 'none', instance: 'none'),
           schemaSource: PSchemaSource(segment: 'none', instance: 'none'),
@@ -173,7 +171,7 @@ class PNoDataProvider extends PDataProvider {
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
     /// Set this first so super does not try to laod it
-    _schema = PSchema(name: 'unnamed');
+    _schema = PSchema(name: 'unnamed', version: PVersion(number: -1));
     super.doInit(script, parent, index);
   }
 }

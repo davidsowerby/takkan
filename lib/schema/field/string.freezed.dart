@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'string.dart';
@@ -14,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 VString _$VStringFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType'] as String?) {
+  switch (json['runtimeType']) {
     case 'longerThan':
       return _$StringGreaterThan.fromJson(json);
     case 'shorterThan':
@@ -42,7 +43,7 @@ class _$VStringTearOff {
     );
   }
 
-  VString fromJson(Map<String, Object> json) {
+  VString fromJson(Map<String, Object?> json) {
     return VString.fromJson(json);
   }
 }
@@ -161,10 +162,9 @@ class __$$StringGreaterThanCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_$StringGreaterThan
-    with DiagnosticableTreeMixin
-    implements _$StringGreaterThan {
-  const _$_$StringGreaterThan(this.threshold);
+class _$_$StringGreaterThan implements _$StringGreaterThan {
+  const _$_$StringGreaterThan(this.threshold, {String? $type})
+      : $type = $type ?? 'longerThan';
 
   factory _$_$StringGreaterThan.fromJson(Map<String, dynamic> json) =>
       _$$_$StringGreaterThanFromJson(json);
@@ -172,31 +172,25 @@ class _$_$StringGreaterThan
   @override
   final int threshold;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VString.longerThan(threshold: $threshold)';
-  }
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'VString.longerThan'))
-      ..add(DiagnosticsProperty('threshold', threshold));
+  String toString() {
+    return 'VString.longerThan(threshold: $threshold)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _$StringGreaterThan &&
-            (identical(other.threshold, threshold) ||
-                const DeepCollectionEquality()
-                    .equals(other.threshold, threshold)));
+        (other.runtimeType == runtimeType &&
+            other is _$StringGreaterThan &&
+            const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(threshold);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
@@ -267,7 +261,7 @@ class _$_$StringGreaterThan
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_$StringGreaterThanToJson(this)..['runtimeType'] = 'longerThan';
+    return _$$_$StringGreaterThanToJson(this);
   }
 }
 
@@ -278,7 +272,7 @@ abstract class _$StringGreaterThan implements VString {
       _$_$StringGreaterThan.fromJson;
 
   @override
-  int get threshold => throw _privateConstructorUsedError;
+  int get threshold;
   @override
   @JsonKey(ignore: true)
   _$$StringGreaterThanCopyWith<_$StringGreaterThan> get copyWith =>
@@ -320,10 +314,9 @@ class __$$StringLessThanCopyWithImpl<$Res> extends _$VStringCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_$StringLessThan
-    with DiagnosticableTreeMixin
-    implements _$StringLessThan {
-  const _$_$StringLessThan(this.threshold);
+class _$_$StringLessThan implements _$StringLessThan {
+  const _$_$StringLessThan(this.threshold, {String? $type})
+      : $type = $type ?? 'shorterThan';
 
   factory _$_$StringLessThan.fromJson(Map<String, dynamic> json) =>
       _$$_$StringLessThanFromJson(json);
@@ -331,31 +324,25 @@ class _$_$StringLessThan
   @override
   final int threshold;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VString.shorterThan(threshold: $threshold)';
-  }
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'VString.shorterThan'))
-      ..add(DiagnosticsProperty('threshold', threshold));
+  String toString() {
+    return 'VString.shorterThan(threshold: $threshold)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _$StringLessThan &&
-            (identical(other.threshold, threshold) ||
-                const DeepCollectionEquality()
-                    .equals(other.threshold, threshold)));
+        (other.runtimeType == runtimeType &&
+            other is _$StringLessThan &&
+            const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(threshold);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
@@ -426,7 +413,7 @@ class _$_$StringLessThan
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_$StringLessThanToJson(this)..['runtimeType'] = 'shorterThan';
+    return _$$_$StringLessThanToJson(this);
   }
 }
 
@@ -437,7 +424,7 @@ abstract class _$StringLessThan implements VString {
       _$_$StringLessThan.fromJson;
 
   @override
-  int get threshold => throw _privateConstructorUsedError;
+  int get threshold;
   @override
   @JsonKey(ignore: true)
   _$$StringLessThanCopyWith<_$StringLessThan> get copyWith =>

@@ -1,5 +1,6 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
 
 part of 'integer.dart';
@@ -14,7 +15,7 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 VInteger _$VIntegerFromJson(Map<String, dynamic> json) {
-  switch (json['runtimeType'] as String?) {
+  switch (json['runtimeType']) {
     case 'greaterThan':
       return _$IntegerGreaterThan.fromJson(json);
     case 'lessThan':
@@ -42,7 +43,7 @@ class _$VIntegerTearOff {
     );
   }
 
-  VInteger fromJson(Map<String, Object> json) {
+  VInteger fromJson(Map<String, Object?> json) {
     return VInteger.fromJson(json);
   }
 }
@@ -162,10 +163,9 @@ class __$$IntegerGreaterThanCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_$IntegerGreaterThan
-    with DiagnosticableTreeMixin
-    implements _$IntegerGreaterThan {
-  const _$_$IntegerGreaterThan(this.threshold);
+class _$_$IntegerGreaterThan implements _$IntegerGreaterThan {
+  const _$_$IntegerGreaterThan(this.threshold, {String? $type})
+      : $type = $type ?? 'greaterThan';
 
   factory _$_$IntegerGreaterThan.fromJson(Map<String, dynamic> json) =>
       _$$_$IntegerGreaterThanFromJson(json);
@@ -173,31 +173,25 @@ class _$_$IntegerGreaterThan
   @override
   final int threshold;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VInteger.greaterThan(threshold: $threshold)';
-  }
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'VInteger.greaterThan'))
-      ..add(DiagnosticsProperty('threshold', threshold));
+  String toString() {
+    return 'VInteger.greaterThan(threshold: $threshold)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _$IntegerGreaterThan &&
-            (identical(other.threshold, threshold) ||
-                const DeepCollectionEquality()
-                    .equals(other.threshold, threshold)));
+        (other.runtimeType == runtimeType &&
+            other is _$IntegerGreaterThan &&
+            const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(threshold);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
@@ -269,7 +263,7 @@ class _$_$IntegerGreaterThan
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_$IntegerGreaterThanToJson(this)..['runtimeType'] = 'greaterThan';
+    return _$$_$IntegerGreaterThanToJson(this);
   }
 }
 
@@ -280,7 +274,7 @@ abstract class _$IntegerGreaterThan implements VInteger {
       _$_$IntegerGreaterThan.fromJson;
 
   @override
-  int get threshold => throw _privateConstructorUsedError;
+  int get threshold;
   @override
   @JsonKey(ignore: true)
   _$$IntegerGreaterThanCopyWith<_$IntegerGreaterThan> get copyWith =>
@@ -322,10 +316,9 @@ class __$$IntegerLessThanCopyWithImpl<$Res> extends _$VIntegerCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_$IntegerLessThan
-    with DiagnosticableTreeMixin
-    implements _$IntegerLessThan {
-  const _$_$IntegerLessThan(this.threshold);
+class _$_$IntegerLessThan implements _$IntegerLessThan {
+  const _$_$IntegerLessThan(this.threshold, {String? $type})
+      : $type = $type ?? 'lessThan';
 
   factory _$_$IntegerLessThan.fromJson(Map<String, dynamic> json) =>
       _$$_$IntegerLessThanFromJson(json);
@@ -333,31 +326,25 @@ class _$_$IntegerLessThan
   @override
   final int threshold;
 
-  @override
-  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'VInteger.lessThan(threshold: $threshold)';
-  }
+  @JsonKey(name: 'runtimeType')
+  final String $type;
 
   @override
-  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-    super.debugFillProperties(properties);
-    properties
-      ..add(DiagnosticsProperty('type', 'VInteger.lessThan'))
-      ..add(DiagnosticsProperty('threshold', threshold));
+  String toString() {
+    return 'VInteger.lessThan(threshold: $threshold)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is _$IntegerLessThan &&
-            (identical(other.threshold, threshold) ||
-                const DeepCollectionEquality()
-                    .equals(other.threshold, threshold)));
+        (other.runtimeType == runtimeType &&
+            other is _$IntegerLessThan &&
+            const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(threshold);
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
@@ -428,7 +415,7 @@ class _$_$IntegerLessThan
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_$IntegerLessThanToJson(this)..['runtimeType'] = 'lessThan';
+    return _$$_$IntegerLessThanToJson(this);
   }
 }
 
@@ -439,7 +426,7 @@ abstract class _$IntegerLessThan implements VInteger {
       _$_$IntegerLessThan.fromJson;
 
   @override
-  int get threshold => throw _privateConstructorUsedError;
+  int get threshold;
   @override
   @JsonKey(ignore: true)
   _$$IntegerLessThanCopyWith<_$IntegerLessThan> get copyWith =>

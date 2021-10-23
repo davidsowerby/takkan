@@ -13,6 +13,7 @@ PSchema _$PSchemaFromJson(Map<String, dynamic> json) => PSchema(
           ) ??
           const {},
       name: json['name'] as String,
+      version: PVersion.fromJson(json['version'] as Map<String, dynamic>),
       namedQueries: (json['namedQueries'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(
                 k, const PQueryConverter().fromJson(e as Map<String, dynamic>)),
@@ -24,12 +25,13 @@ Map<String, dynamic> _$PSchemaToJson(PSchema instance) => <String, dynamic>{
       'name': instance.name,
       'namedQueries': instance.namedQueries
           .map((k, e) => MapEntry(k, const PQueryConverter().toJson(e))),
+      'version': instance.version.toJson(),
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };
 
 PPermissions _$PPermissionsFromJson(Map<String, dynamic> json) => PPermissions(
       isPublic: (json['isPublic'] as List<dynamic>?)
-              ?.map((e) => _$enumDecode(_$AccessMethodEnumMap, e))
+              ?.map((e) => $enumDecode(_$AccessMethodEnumMap, e))
               .toList() ??
           const [],
       readRoles: (json['readRoles'] as List<dynamic>?)
@@ -85,32 +87,6 @@ Map<String, dynamic> _$PPermissionsToJson(PPermissions instance) =>
       'countRoles': instance.countRoles,
     };
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
 const _$AccessMethodEnumMap = {
   AccessMethod.all: 'all',
   AccessMethod.read: 'read',
@@ -128,7 +104,7 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) => PDocument(
       fields: const PSchemaFieldMapConverter()
           .fromJson(json['fields'] as Map<String, dynamic>),
       documentType:
-          _$enumDecodeNullable(_$PDocumentTypeEnumMap, json['documentType']) ??
+      $enumDecodeNullable(_$PDocumentTypeEnumMap, json['documentType']) ??
               PDocumentType.standard,
       permissions: json['permissions'] == null
           ? const PPermissions()
@@ -152,17 +128,6 @@ Map<String, dynamic> _$PDocumentToJson(PDocument instance) {
   return val;
 }
 
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
-
 const _$PDocumentTypeEnumMap = {
   PDocumentType.standard: 'standard',
   PDocumentType.versioned: 'versioned',
@@ -172,12 +137,10 @@ PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) =>
     PSchemaSource(
       segment: json['segment'] as String,
       instance: json['instance'] as String,
-      version: json['version'] as int,
     );
 
 Map<String, dynamic> _$PSchemaSourceToJson(PSchemaSource instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'segment': instance.segment,
       'instance': instance.instance,
     };

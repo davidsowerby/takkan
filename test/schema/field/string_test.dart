@@ -1,6 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('StringValidator', () {
@@ -14,7 +15,10 @@ void main() {
 
     test('validate', () {
       // given
-      PScript script = PScript(name: 'A script');
+      PScript script = PScript(
+        name: 'A script',
+        version: PVersion(number: 0),
+      );
       // script.init();
 
       final PString field = PString(

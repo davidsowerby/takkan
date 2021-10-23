@@ -1,4 +1,3 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
@@ -15,6 +14,7 @@ import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
+import 'package:test/test.dart';
 
 import '../fixtures.dart';
 

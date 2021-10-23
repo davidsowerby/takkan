@@ -1,4 +1,3 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
@@ -8,6 +7,8 @@ import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
 import '../fixtures.dart';
 
@@ -29,11 +30,14 @@ void main() {
       // given
       final script = PScript(
         name: 'test',
+        version: PVersion(number: 0),
         dataProvider: PDataProvider(
           providerName: 'Test',
-          schema: PSchema(name: 'unnamed'),
+          schema: PSchema(
+            name: 'unnamed',
+            version: PVersion(number: 0),
+          ),
           sessionTokenKey: '',
-          headerKeys: const [],
           configSource: const PConfigSource(segment: '', instance: ''),
         ),
         isStatic: IsStatic.yes,
@@ -88,23 +92,26 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script =
-          PScript(name: 'test', dataProvider: PNoDataProvider(), routes: {
-        '/test': PPage(
-          title: 'A Page',
-          content: [
-            PPanel(
-              property: '',
+      final script = PScript(
+          name: 'test',
+          version: PVersion(number: 0),
+          dataProvider: PNoDataProvider(),
+          routes: {
+            '/test': PPage(
+              title: 'A Page',
               content: [
-                PPart(
-                  readTraitName: 'default',
+                PPanel(
                   property: '',
+                  content: [
+                    PPart(
+                      readTraitName: 'default',
+                      property: '',
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      });
+          });
       // when
 
       script.init();

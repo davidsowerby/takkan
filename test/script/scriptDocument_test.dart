@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/documentId.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/queryConverter.dart';
+import 'package:test/test.dart';
 
 import '../fixtures.dart';
 

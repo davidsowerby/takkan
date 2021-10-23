@@ -35,20 +35,24 @@ _$_$StringGreaterThan _$$_$StringGreaterThanFromJson(
         Map<String, dynamic> json) =>
     _$_$StringGreaterThan(
       json['threshold'] as int,
+      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$_$StringGreaterThanToJson(
         _$_$StringGreaterThan instance) =>
     <String, dynamic>{
       'threshold': instance.threshold,
+      'runtimeType': instance.$type,
     };
 
 _$_$StringLessThan _$$_$StringLessThanFromJson(Map<String, dynamic> json) =>
     _$_$StringLessThan(
       json['threshold'] as int,
+      $type: json['runtimeType'] as String?,
     );
 
 Map<String, dynamic> _$$_$StringLessThanToJson(_$_$StringLessThan instance) =>
     <String, dynamic>{
       'threshold': instance.threshold,
+      'runtimeType': instance.$type,
     };

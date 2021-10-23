@@ -38,7 +38,7 @@ Map<String, dynamic> _$PPointerToJson(PPointer instance) {
 
 PointerValidation _$PointerValidationFromJson(Map<String, dynamic> json) =>
     PointerValidation(
-      method: _$enumDecode(_$ValidatePointerEnumMap, json['method']),
+      method: $enumDecode(_$ValidatePointerEnumMap, json['method']),
       param: json['param'] == null
           ? null
           : Pointer.fromJson(json['param'] as Map<String, dynamic>),
@@ -49,32 +49,6 @@ Map<String, dynamic> _$PointerValidationToJson(PointerValidation instance) =>
       'method': _$ValidatePointerEnumMap[instance.method],
       'param': instance.param?.toJson(),
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$ValidatePointerEnumMap = {
   ValidatePointer.isValid: 'isValid',

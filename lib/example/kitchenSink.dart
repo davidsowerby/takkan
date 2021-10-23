@@ -10,16 +10,18 @@ import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
 import 'package:precept_script/signin/signIn.dart';
 
 final kitchenSinkScript = PScript(
   dataProvider: PDataProvider(
-      schema: kitchenSinkSchema,
-      sessionTokenKey: 'tokenKey',
-      configSource: PConfigSource(segment: 'test', instance: 'test'),
-      providerName: 'some provider name',
-      headerKeys: []),
+    schema: kitchenSinkSchema,
+    sessionTokenKey: 'tokenKey',
+    configSource: PConfigSource(segment: 'test', instance: 'test'),
+    providerName: 'some provider name',
+  ),
   name: 'Kitchen Sink',
+  version: PVersion(number: 0),
   locale: 'en_GB',
   routes: {
     '/': PPage(

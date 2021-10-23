@@ -11,9 +11,9 @@ PHeadingStyle _$PHeadingStyleFromJson(Map<String, dynamic> json) =>
       textTrait: json['textTrait'] == null
           ? const PTextTrait(textStyle: PTextStyle.subtitle1)
           : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
-      background: _$enumDecodeNullable(_$PColorEnumMap, json['background']) ??
+      background: $enumDecodeNullable(_$PColorEnumMap, json['background']) ??
           PColor.canvas,
-      textTheme: _$enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']) ??
+      textTheme: $enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']) ??
           PTextTheme.cardCanvas,
       height: (json['height'] as num?)?.toDouble() ?? 40,
       elevation: (json['elevation'] as num?)?.toDouble() ?? 20,
@@ -31,43 +31,6 @@ Map<String, dynamic> _$PHeadingStyleToJson(PHeadingStyle instance) =>
       'height': instance.height,
       'elevation': instance.elevation,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$PColorEnumMap = {
   PColor.primary: 'primary',
@@ -101,7 +64,7 @@ PBorderDetailed _$PBorderDetailedFromJson(Map<String, dynamic> json) =>
       side: json['side'] == null
           ? const PBorderSide()
           : PBorderSide.fromJson(json['side'] as Map<String, dynamic>),
-      shape: _$enumDecodeNullable(_$PBorderShapeEnumMap, json['shape']) ??
+      shape: $enumDecodeNullable(_$PBorderShapeEnumMap, json['shape']) ??
           PBorderShape.roundedRectangle,
       sideSet: json['sideSet'] == null
           ? null
@@ -154,10 +117,10 @@ Map<String, dynamic> _$PBorderSideSetToJson(PBorderSideSet instance) =>
     };
 
 PBorderSide _$PBorderSideFromJson(Map<String, dynamic> json) => PBorderSide(
-      color: _$enumDecodeNullable(_$PColorEnumMap, json['color']) ??
-          PColor.primary,
+      color:
+          $enumDecodeNullable(_$PColorEnumMap, json['color']) ?? PColor.primary,
       width: (json['width'] as num?)?.toDouble() ?? 5,
-      style: _$enumDecodeNullable(_$PBorderStyleEnumMap, json['style']) ??
+      style: $enumDecodeNullable(_$PBorderStyleEnumMap, json['style']) ??
           PBorderStyle.solid,
     );
 

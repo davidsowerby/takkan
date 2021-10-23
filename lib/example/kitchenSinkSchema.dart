@@ -6,9 +6,11 @@ import 'package:precept_script/schema/field/postCode.dart';
 import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/version.dart';
 
 final kitchenSinkSchema = PSchema(
   name: 'kitchenSink',
+  version: PVersion(number: 5, label: '2.12.1-alpha', deprecated: const [3, 4]),
   documents: {
     'Account': PDocument(
       fields: {

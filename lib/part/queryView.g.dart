@@ -10,7 +10,7 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
       itemType:
-          _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
+          $enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
               PListViewItemType.navTile,
       height: (json['height'] as num?)?.toDouble() ?? 100,
       tooltip: json['tooltip'] as String?,
@@ -19,17 +19,18 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
       pid: json['pid'] as String?,
-      readOnly: json['readOnly'] as bool? ?? true,
+      readOnly: json['readOnly'] as bool? ?? false,
       controlEdit:
-          _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
+          $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
-      editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
-    )..version = json['version'] as int;
+      readTraitName:
+          json['readTraitName'] as String? ?? 'queryView-read-default',
+      editTraitName:
+          json['editTraitName'] as String? ?? 'queryView-edit-default',
+    );
 
 Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
     <String, dynamic>{
-      'version': instance.version,
       'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
@@ -43,43 +44,6 @@ Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
       'subtitleProperty': instance.subtitleProperty,
       'itemType': _$PListViewItemTypeEnumMap[instance.itemType],
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-K? _$enumDecodeNullable<K, V>(
-  Map<K, V> enumValues,
-  dynamic source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    return null;
-  }
-  return _$enumDecode<K, V>(enumValues, source, unknownValue: unknownValue);
-}
 
 const _$PListViewItemTypeEnumMap = {
   PListViewItemType.tile: 'tile',

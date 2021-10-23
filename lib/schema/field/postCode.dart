@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/postCode.dart';
@@ -31,6 +29,7 @@ class PPostCode extends PField<PostCodeValidation, PostCode> {
   Map<String, dynamic> toJson() => _$PPostCodeToJson(this);
 }
 
+// TODO change this to the freezed method of VInteger / VString
 @JsonSerializable(explicitToJson: true)
 class PostCodeValidation
     implements ModelValidation<ValidatePostCode, PostCode> {
@@ -50,10 +49,10 @@ enum ValidatePostCode { isValidForLocale }
 validatePostCode(PostCodeValidation validation, PostCode value) {
   switch (validation.method) {
     case ValidatePostCode.isValidForLocale:
-      return isValidFor(value, validation.param as Locale);
+      throw UnimplementedError();
   }
 }
 
-bool isValidFor(PostCode value, Locale locale) {
-  return isPostalCode(value.postCode, locale.countryCode ?? 'en_GB');
+bool isValidFor(PostCode value, String locale) {
+  return isPostalCode(value.postCode, locale);
 }

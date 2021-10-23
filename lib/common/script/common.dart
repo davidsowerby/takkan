@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';

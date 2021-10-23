@@ -10,6 +10,7 @@ import 'package:precept_script/query/queryConverter.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
 
 part 'schema.g.dart';
 
@@ -46,11 +47,13 @@ class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
   final Map<String, PQuery> namedQueries;
+  final PVersion version;
 
   PSchema(
       {Map<String, PDocument> documents = const {},
       bool readOnly = false,
       required this.name,
+      required this.version,
       this.namedQueries = const {}})
       : _documents = documents,
         super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
@@ -406,7 +409,7 @@ class PSchemaSource extends PreceptItem {
     required this.instance,
     String? id,
     int version = 0,
-  }) : super(id: id, version: version);
+  }) : super(id: id);
 
   factory PSchemaSource.fromJson(Map<String, dynamic> json) =>
       _$PSchemaSourceFromJson(json);

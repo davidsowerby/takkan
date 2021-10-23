@@ -1,10 +1,11 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
+import 'package:test/test.dart';
 
 import '../fixtures.dart';
 
@@ -26,6 +27,7 @@ void main() {
       // given
       final script = PScript(
         name: 'A Script',
+        version: PVersion(number: 0),
         routes: {
           '/home': PPage(
             title: 'A page',
@@ -83,7 +85,9 @@ void main() {
 
     test('panelsOnly with Part override', () {
       // given
-      final script = PScript(name: 'A Script',
+      final script = PScript(
+        name: 'A Script',
+        version: PVersion(number: 0),
         controlEdit: ControlEdit.panelsOnly,
         routes: {
           '/home': PPage(
@@ -135,7 +139,9 @@ void main() {
 
     test('firstLevelPanels with Part override', () {
       // given
-      final script = PScript(name: 'A Script',
+      final script = PScript(
+        name: 'A Script',
+        version: PVersion(number: 0),
         routes: {
           '/home': PPage(
             title: 'title',
@@ -186,7 +192,9 @@ void main() {
 
     test('thisOnly does nothing if too high', () {
       // given
-      final script = PScript(name:'A script',
+      final script = PScript(
+        name: 'A script',
+        version: PVersion(number: 0),
         routes: {
           '/home': PPage(
             title: 'A page',
@@ -233,7 +241,9 @@ void main() {
 
     test('thisAndBelow with negation', () {
       // given
-      final script = PScript(name: 'A Script',
+      final script = PScript(
+        name: 'A Script',
+        version: PVersion(number: 0),
         controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
         routes: {
           '/home': PPage(
@@ -285,7 +295,9 @@ void main() {
 
     test('partsOnly, single branch', () {
       // given
-      final script = PScript(name: 'A Script',
+      final script = PScript(
+        name: 'A Script',
+        version: PVersion(number: 0),
         controlEdit: ControlEdit.inherited,
         routes: {
           '/home': PPage(

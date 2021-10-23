@@ -33,7 +33,7 @@ Map<String, dynamic> _$PListToJson(PList instance) {
 
 ListValidation _$ListValidationFromJson(Map<String, dynamic> json) =>
     ListValidation(
-      method: _$enumDecode(_$ValidateListEnumMap, json['method']),
+      method: $enumDecode(_$ValidateListEnumMap, json['method']),
       param: json['param'] as int? ?? 0,
     );
 
@@ -42,32 +42,6 @@ Map<String, dynamic> _$ListValidationToJson(ListValidation instance) =>
       'method': _$ValidateListEnumMap[instance.method],
       'param': instance.param,
     };
-
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
-    );
-  }
-
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
 
 const _$ValidateListEnumMap = {
   ValidateList.containsLessThan: 'containsLessThan',
