@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/pointer.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -15,7 +16,9 @@ class PPointer extends PField<PointerValidation, Pointer> {
     required this.targetClass,
     List<PointerValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -25,11 +28,6 @@ class PPointer extends PField<PointerValidation, Pointer> {
       _$PPointerFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPointerToJson(this);
-
-  @override
-  bool doValidation(PointerValidation validation, Pointer value) {
-    return validatePointer(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

@@ -17,34 +17,22 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
           const {},
       name: json['name'] as String,
       locale: json['locale'] as String? ?? 'en_GB',
-      query: PQueryConverter.fromJson(json['query'] as Map<String, dynamic>),
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
     )
       ..version = json['version'] as int
       ..nameLocale = json['nameLocale'] as String?;
 
-Map<String, dynamic> _$PScriptToJson(PScript instance) {
-  final val = <String, dynamic>{
-    'version': instance.version,
-    'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
-    'name': instance.name,
-    'locale': instance.locale,
-    'nameLocale': instance.nameLocale,
-    'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
-    'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('query', PQueryConverter.toJson(instance.query));
-  return val;
-}
+Map<String, dynamic> _$PScriptToJson(PScript instance) => <String, dynamic>{
+      'version': instance.version,
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'name': instance.name,
+      'locale': instance.locale,
+      'nameLocale': instance.nameLocale,
+      'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
+      'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
+    };
 
 K _$enumDecode<K, V>(
   Map<K, V> enumValues,
@@ -105,7 +93,7 @@ PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
           : PElementListConverter.fromJson(json['content'] as List),
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
       property: json['property'] as String? ?? notSet,
       title: json['title'] as String,
     )..version = json['version'] as int;

@@ -7,8 +7,15 @@ part of 'restQuery.dart';
 // **************************************************************************
 
 PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) => PRestQuery(
+      path: json['path'] as String?,
+      variables: json['variables'] as Map<String, dynamic>? ?? const {},
+      propertyReferences: (json['propertyReferences'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       paramsAsPath: json['paramsAsPath'] as bool? ?? true,
-      querySchemaName: json['querySchemaName'] as String,
+      queryName: json['queryName'] as String,
+      documentSchema: json['documentSchema'] as String,
       params: (json['params'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as String),
           ) ??
@@ -21,10 +28,14 @@ PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) => PRestQuery(
 Map<String, dynamic> _$PRestQueryToJson(PRestQuery instance) =>
     <String, dynamic>{
       'version': instance.version,
+      'variables': instance.variables,
+      'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
-      'querySchemaName': instance.querySchemaName,
+      'queryName': instance.queryName,
+      'documentSchema': instance.documentSchema,
       'paramsAsPath': instance.paramsAsPath,
       'params': instance.params,
+      'path': instance.path,
     };
 
 K _$enumDecode<K, V>(

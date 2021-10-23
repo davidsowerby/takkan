@@ -12,21 +12,19 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
       itemType:
           _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
               PListViewItemType.navTile,
-      height: (json['height'] as num?)?.toDouble(),
+      height: (json['height'] as num?)?.toDouble() ?? 100,
       tooltip: json['tooltip'] as String?,
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
       pid: json['pid'] as String?,
-      readOnly: json['readOnly'] as bool? ?? false,
+      readOnly: json['readOnly'] as bool? ?? true,
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
-      editTraitName:
-          json['editTraitName'] as String? ?? 'queryView-edit-default',
+              ControlEdit.inherited,
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
     )..version = json['version'] as int;
 
 Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>

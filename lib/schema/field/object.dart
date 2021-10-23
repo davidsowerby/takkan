@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/jsonObject.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -14,21 +15,18 @@ class PJsonObject extends PField<ObjectValidation, Map<String, dynamic>> {
     Map<String, dynamic>? defaultValue,
     List<ObjectValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    defaultValue: defaultValue,
           validations: validations,
           required: required,
+          readOnly: readOnly,
         );
 
   factory PJsonObject.fromJson(Map<String, dynamic> json) =>
       _$PJsonObjectFromJson(json);
 
   Map<String, dynamic> toJson() => _$PJsonObjectToJson(this);
-
-  @override
-  bool doValidation(ObjectValidation validation, Map<String, dynamic> value) {
-    return validateObject(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

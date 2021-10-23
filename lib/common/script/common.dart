@@ -76,6 +76,7 @@ enum ControlEdit {
 /// set this during construction - this also means that the [PScript] structure cannot be **const**
 ///
 @JsonSerializable(explicitToJson: true)
+@PQueryConverter()
 class PCommon extends PreceptItem {
   IsStatic _isStatic;
   bool _hasEditControl = false;
@@ -84,10 +85,6 @@ class PCommon extends PreceptItem {
   PDataProvider? _dataProvider;
   @JsonKey(ignore: true)
   PScript? _script;
-  @JsonKey(
-      fromJson: PQueryConverter.fromJson,
-      toJson: PQueryConverter.toJson,
-      includeIfNull: false)
   PQuery? _query;
 
   PCommon({

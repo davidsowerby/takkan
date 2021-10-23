@@ -1,12 +1,10 @@
 
 /// replace with [interpolate], but that also means moving to client package
 @deprecated
-String expandErrorMessage(String pattern, List<dynamic> params) {
-  int count = 0;
+String expandErrorMessage(String pattern, Map<String, dynamic> params) {
   String result = pattern;
-  for (var param in params) {
-    result = pattern.replaceFirst('{$count}', param.toString());
-    count++;
+  for (var entry in params.entries) {
+    result = result.replaceAll('{${entry.key}}', entry.value.toString());
   }
   return result;
 }

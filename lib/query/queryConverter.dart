@@ -1,15 +1,18 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
 
 /// JSON converter for [PQuery] sub-classes
-class PQueryConverter {
+class PQueryConverter implements JsonConverter<PQuery, Map<String, dynamic>> {
   static final elementKey = '-type-';
 
-  static PQuery? fromJson(Map<String, dynamic> json) {
+  const PQueryConverter();
+
+  @override
+  PQuery fromJson(Map<String, dynamic> json) {
     final String? typeName = json[elementKey];
-    if (typeName == null) return null;
     json.remove(elementKey);
     switch (typeName) {
       case 'PGetDocument':
@@ -27,16 +30,18 @@ class PQueryConverter {
     }
   }
 
-  static Map<String, dynamic> toJson(PQuery? object) {
-    if (object == null) return Map();
+  @override
+  Map<String, dynamic> toJson(PQuery object) {
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
     jsonMap[elementKey] = type.toString();
     switch (type) {
       case PGetDocument:
+      case PGetStream:
+      case PGraphQLQuery:
+      case PRestQuery:
         {
-          final PGetDocument obj = object as PGetDocument;
-          jsonMap.addAll(obj.toJson());
+          jsonMap.addAll(object.toJson());
           return jsonMap;
         }
       default:

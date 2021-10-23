@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -12,20 +13,17 @@ class PDate extends PField<DateValidation, DateTime> {
     DateTime? defaultValue,
     List<DateValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
     defaultValue: defaultValue,
           validations: validations,
           required: required,
+          readOnly: readOnly,
         );
 
   factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
 
   Map<String, dynamic> toJson() => _$PDateToJson(this);
-
-  @override
-  bool doValidation(DateValidation validation, DateTime value) {
-    return validateDate(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

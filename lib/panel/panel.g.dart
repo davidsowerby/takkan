@@ -29,7 +29,7 @@ PPanel _$PPanelFromJson(Map<String, dynamic> json) => PPanel(
           : PPanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
     )..version = json['version'] as int;
 
 Map<String, dynamic> _$PPanelToJson(PPanel instance) => <String, dynamic>{

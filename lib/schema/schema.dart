@@ -3,10 +3,13 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/query/query.dart';
+import 'package:precept_script/query/queryConverter.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/json/jsonConverter.dart';
+import 'package:precept_script/script/script.dart';
 
 part 'schema.g.dart';
 
@@ -30,23 +33,25 @@ part 'schema.g.dart';
 /// Each level will contain [Hints], which can be used to guide a [SchemaInterpreter} implementation.
 ///
 ///
-/// - In [documents], the map key is the document name.  This is Back4App Class
-/// or a Firestore collection, as determined by the backend implementation.
+/// - In [documents], the map key is the document name.  This is, for example, a
+/// Back4App Class or a Firestore collection, as determined by the backend implementation.
 ///
-/// - [queries] are instances of [ListSchema], but held separately, indexed by query name
+/// - [namedQueries] is a place to put queries that may be used in different
+/// places in the app without having to specify them every time.
 ///
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
+@PQueryConverter()
 class PSchema extends PSchemaElement {
   final String name;
   final Map<String, PDocument> _documents;
-  final Map<String, PQuerySchema> queries;
+  final Map<String, PQuery> namedQueries;
 
   PSchema(
       {Map<String, PDocument> documents = const {},
       bool readOnly = false,
       required this.name,
-      this.queries = const {}})
+      this.namedQueries = const {}})
       : _documents = documents,
         super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
 
@@ -76,6 +81,17 @@ class PSchema extends PSchemaElement {
     }
   }
 
+  @override
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    documents.forEach((key, value) {
+      value.walk(visitors);
+    });
+    namedQueries.forEach((key, value) {
+      value.walk(visitors);
+    });
+  }
+
   PDocument document(String key) {
     final doc = _documents[key];
     if (doc == null) {
@@ -88,6 +104,12 @@ class PSchema extends PSchemaElement {
   }
 
   int get documentCount => _documents.length;
+
+  Set<String> get allRoles {
+    final counter = RoleCounter();
+    walk([counter]);
+    return counter.roles;
+  }
 }
 
 /// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
@@ -100,7 +122,7 @@ class PSchema extends PSchemaElement {
 /// PDocument(fields: [PString(name: 'title')])
 ///
 /// which for longer declarations is a bit more readable
-abstract class PSchemaElement {
+abstract class PSchemaElement with WalkTarget {
   @JsonKey(ignore: true)
   PSchemaElement? _parent;
   @JsonKey(ignore: true)
@@ -159,7 +181,7 @@ abstract class PSchemaElement {
 ///
 ///
 @JsonSerializable(explicitToJson: true)
-class PPermissions {
+class PPermissions with WalkTarget {
   final List<AccessMethod> _requiresAuthentication;
   final List<AccessMethod> isPublic;
 
@@ -229,6 +251,18 @@ class PPermissions {
   List<String> get countRoles {
     final list = List<String>.from(_countRoles, growable: true);
     list.addAll(readRoles);
+    return list;
+  }
+
+  /// A list of all the roles used
+  Set<String> get allRoles {
+    final Set<String> list = Set();
+    list.addAll(updateRoles);
+    list.addAll(createRoles);
+    list.addAll(deleteRoles);
+    list.addAll(getRoles);
+    list.addAll(findRoles);
+    list.addAll(countRoles);
     return list;
   }
 
@@ -326,6 +360,12 @@ class PDocument extends PSchemaElement {
   doInit({required PSchemaElement parent, required String name}) {
     _parent = parent;
     _name = name;
+  }
+
+  @override
+  walk(List<ScriptVisitor> visitors) {
+    super.walk(visitors);
+    permissions.walk(visitors);
   }
 
   bool get requiresCreateAuthentication =>

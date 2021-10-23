@@ -13,21 +13,19 @@ PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
           _$enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
               PListViewItemType.tile,
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
-      readOnly: json['readOnly'] as bool? ?? false,
+      readOnly: json['readOnly'] as bool? ?? true,
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-      staticData: json['staticData'] as String,
+      staticData: json['staticData'] as String? ?? '',
       property: json['property'] as String? ?? notSet,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
-      editTraitName:
-          json['editTraitName'] as String? ?? 'queryView-edit-default',
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
+      editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
       tooltip: json['tooltip'] as String?,
       controlEdit:
           _$enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
-              ControlEdit.firstLevelPanels,
+              ControlEdit.inherited,
       pid: json['pid'] as String?,
     )..version = json['version'] as int;
 

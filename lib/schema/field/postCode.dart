@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/object/postCode.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
@@ -16,7 +17,9 @@ class PPostCode extends PField<PostCodeValidation, PostCode> {
     PostCode? defaultValue,
     List<PostCodeValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -26,11 +29,6 @@ class PPostCode extends PField<PostCodeValidation, PostCode> {
       _$PPostCodeFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPostCodeToJson(this);
-
-  @override
-  bool doValidation(PostCodeValidation validation, PostCode value) {
-    return validatePostCode(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

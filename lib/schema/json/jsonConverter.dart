@@ -69,8 +69,8 @@ class PFieldConverter implements JsonConverter<PField, Map<String, dynamic>> {
 
       // case 'PListBoolean':
       //   return PListBoolean.fromJson(json);
-      case 'PListString':
-        return PListString.fromJson(json);
+      // case 'PListString':
+      //   return PListString.fromJson(json);
 
       // case 'PSelectBoolean':
       //   return PSelectBoolean.fromJson(json);

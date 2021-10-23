@@ -2,6 +2,7 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/example/kitchenSinkSchema.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/queryView.dart';
@@ -12,7 +13,12 @@ import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/signIn.dart';
 
 final kitchenSinkScript = PScript(
-  dataProvider: PNoDataProvider(),
+  dataProvider: PDataProvider(
+      schema: kitchenSinkSchema,
+      sessionTokenKey: 'tokenKey',
+      configSource: PConfigSource(segment: 'test', instance: 'test'),
+      providerName: 'some provider name',
+      headerKeys: []),
   name: 'Kitchen Sink',
   locale: 'en_GB',
   routes: {
@@ -36,6 +42,7 @@ final kitchenSinkScript = PScript(
               staticData: 'Proof of Concept',
             ),
             PNavButton(
+              height: 101,
               isStatic: IsStatic.yes,
               staticData: 'OK',
               route: 'chooseList',
@@ -73,7 +80,8 @@ final kitchenSinkScript = PScript(
       controlEdit: ControlEdit.panelsOnly,
       title: 'Open Issues',
       query: PGraphQLQuery(
-        querySchemaName: 'openIssues',
+        documentSchema: 'Issue',
+        queryName: 'openIssues',
         script: openIssuesScript,
         returnType: QueryReturnType.futureList,
       ),
@@ -98,7 +106,8 @@ final kitchenSinkScript = PScript(
           heading: PPanelHeading(canEdit: true, expandable: true),
           property: '',
           query: PPQuery(
-            querySchemaName: 'Get Account',
+            documentSchema: 'Account',
+            queryName: 'Get Account',
             fields: 'id,objectId, category,accountNumber,createdAt,updatedAt',
             variables: {'id': 'wVdGK8TDXR'},
             types: {

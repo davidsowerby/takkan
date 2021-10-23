@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -10,7 +11,9 @@ class PList extends PField<ListValidation, List> {
     List<ListValidation> validations = const [],
     bool required = false,
     List? defaultValue,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
+    readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
@@ -19,12 +22,6 @@ class PList extends PField<ListValidation, List> {
   factory PList.fromJson(Map<String, dynamic> json) => _$PListFromJson(json);
 
   Map<String, dynamic> toJson() => _$PListToJson(this);
-
-  @override
-  bool doValidation(ListValidation validation, List value) {
-    // TODO: implement doValidation
-    throw UnimplementedError();
-  }
 
   @override
   Type get modelType => List;

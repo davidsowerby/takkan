@@ -33,7 +33,7 @@ class PPart extends PSubContent {
   PPart(
       {String? caption,
       this.readOnly = false,
-      this.height = 60,
+      this.height,
       String property = notSet,
       this.readTraitName = '?',
       this.editTraitName = '?',

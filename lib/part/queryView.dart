@@ -19,7 +19,7 @@ class PQueryView extends PAbstractListView {
     String titleProperty = 'title',
     String subtitleProperty = 'subtitle',
     PListViewItemType itemType = PListViewItemType.navTile,
-    double? height,
+    double height = 100,
     String? tooltip,
     String? caption,
     PHelp? help,

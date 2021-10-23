@@ -22,7 +22,7 @@ void main() {
     });
 
     tearDown(() {});
-    test('script to JSON map and back', () {
+    test('script to JSON map and back', () async {
       // given
       PScript script = kitchenSinkScript;
 
@@ -41,7 +41,12 @@ void main() {
       expect(c0?.title, "Home Page");
       expect(c0?.content.length, 1);
 
-      expect(json.encode(script.toJson()), json.encode(script2.toJson()));
+      File original = File('/home/david/temp/original.json');
+      File returned = File('/home/david/temp/returned.json');
+      await script.writeToFile(original);
+      await script.writeToFile(returned);
+
+      expect(script.toJson(), script2.toJson());
     });
 
     test('script to file and back', () async {

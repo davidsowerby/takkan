@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/validation/validator.dart';
 
@@ -12,10 +13,12 @@ class PFile extends PField<FileValidation, String> {
     String? defaultValue,
     List<FileValidation> validations = const [],
     bool required = false,
+    IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-          defaultValue: defaultValue,
+    defaultValue: defaultValue,
           validations: validations,
           required: required,
+          readOnly: readOnly,
         );
 
   Type get modelType => File;
@@ -23,11 +26,6 @@ class PFile extends PField<FileValidation, String> {
   factory PFile.fromJson(Map<String, dynamic> json) => _$PFileFromJson(json);
 
   Map<String, dynamic> toJson() => _$PFileToJson(this);
-
-  @override
-  bool doValidation(FileValidation validation, String value) {
-    return validateFile(validation, value);
-  }
 }
 
 @JsonSerializable(explicitToJson: true)

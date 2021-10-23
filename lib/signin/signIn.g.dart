@@ -51,8 +51,7 @@ PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
       submitCaption: json['submitCaption'] as String? ?? 'Submit',
       successRoute: json['successRoute'] as String? ?? '',
       failureRoute: json['failureRoute'] as String? ?? 'signInFail',
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
+      readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
       pid: json['pid'] as String?,
       help: json['help'] == null
           ? null

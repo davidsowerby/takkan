@@ -9,7 +9,7 @@ part of 'string.dart';
 PString _$PStringFromJson(Map<String, dynamic> json) => PString(
       defaultValue: json['defaultValue'] as String?,
       validations: (json['validations'] as List<dynamic>?)
-              ?.map((e) => StringValidation.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => VString.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       required: json['required'] as bool? ?? false,
@@ -31,71 +31,24 @@ Map<String, dynamic> _$PStringToJson(PString instance) {
   return val;
 }
 
-PListString _$PListStringFromJson(Map<String, dynamic> json) => PListString(
-      defaultValue: (json['defaultValue'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      required: json['required'] as bool? ?? false,
+_$_$StringGreaterThan _$$_$StringGreaterThanFromJson(
+        Map<String, dynamic> json) =>
+    _$_$StringGreaterThan(
+      json['threshold'] as int,
     );
 
-Map<String, dynamic> _$PListStringToJson(PListString instance) {
-  final val = <String, dynamic>{
-    'required': instance.required,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue);
-  return val;
-}
-
-StringValidation _$StringValidationFromJson(Map<String, dynamic> json) =>
-    StringValidation(
-      method: _$enumDecode(_$ValidateStringEnumMap, json['method']),
-      param: json['param'],
-    );
-
-Map<String, dynamic> _$StringValidationToJson(StringValidation instance) =>
+Map<String, dynamic> _$$_$StringGreaterThanToJson(
+        _$_$StringGreaterThan instance) =>
     <String, dynamic>{
-      'method': _$ValidateStringEnumMap[instance.method],
-      'param': instance.param,
+      'threshold': instance.threshold,
     };
 
-K _$enumDecode<K, V>(
-  Map<K, V> enumValues,
-  Object? source, {
-  K? unknownValue,
-}) {
-  if (source == null) {
-    throw ArgumentError(
-      'A value must be provided. Supported values: '
-      '${enumValues.values.join(', ')}',
+_$_$StringLessThan _$$_$StringLessThanFromJson(Map<String, dynamic> json) =>
+    _$_$StringLessThan(
+      json['threshold'] as int,
     );
-  }
 
-  return enumValues.entries.singleWhere(
-    (e) => e.value == source,
-    orElse: () {
-      if (unknownValue == null) {
-        throw ArgumentError(
-          '`$source` is not one of the supported values: '
-          '${enumValues.values.join(', ')}',
-        );
-      }
-      return MapEntry(unknownValue, enumValues.values.first);
-    },
-  ).key;
-}
-
-const _$ValidateStringEnumMap = {
-  ValidateString.alpha: 'alpha',
-  ValidateString.contains: 'contains',
-  ValidateString.lengthEquals: 'lengthEquals',
-  ValidateString.lengthGreaterThan: 'lengthGreaterThan',
-  ValidateString.lengthLessThan: 'lengthLessThan',
-};
+Map<String, dynamic> _$$_$StringLessThanToJson(_$_$StringLessThan instance) =>
+    <String, dynamic>{
+      'threshold': instance.threshold,
+    };

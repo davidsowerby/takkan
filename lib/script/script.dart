@@ -34,6 +34,7 @@ part 'script.g.dart';
 /// [scriptSchema] is the schema for [PScript] itself
 /// - [_scriptValidationMessages] are collected during the [validate] process
 @JsonSerializable(explicitToJson: true)
+@PQueryConverter()
 class PScript extends PCommon {
   final String name;
   final String locale;
@@ -74,14 +75,16 @@ class PScript extends PCommon {
 
   String get debugId => name;
 
+  Set<String> get allRoles {
+    final counter = RoleCounter();
+    walk([counter]);
+    return counter.roles;
+  }
+
   // String get nameLocale => '$name:$locale';
 
   /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
   @override
-  @JsonKey(
-      fromJson: PQueryConverter.fromJson,
-      toJson: PQueryConverter.toJson,
-      includeIfNull: false)
   PQuery? get query => getQuery();
 
   /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
@@ -332,3 +335,14 @@ enum PageType { standard }
 /// parts || sections must be non empty
 
 //
+
+class RoleCounter implements ScriptVisitor {
+  final Set<String> roles = Set();
+
+  @override
+  step(Object entry) {
+    if (entry is PPermissions) {
+      roles.addAll(entry.allRoles);
+    }
+  }
+}
