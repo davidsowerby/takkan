@@ -163,7 +163,7 @@ class PGetDocument extends PQuery {
     List<String> propertyReferences = const [],
     Map<String, dynamic> params = const {},
   }) : super(
-          queryName: queryName ?? 'get${documentId.toKey}',
+          queryName: queryName ?? 'get${documentId.fullReference}',
           documentSchema: documentId.path,
           propertyReferences: propertyReferences,
           variables: variables,
@@ -195,7 +195,7 @@ class PGetStream extends PQuery {
     propertyReferences: propertyReferences,
           documentSchema: documentId.path,
           variables: arguments,
-          queryName: queryName ?? 'get${documentId.toKey}',
+          queryName: queryName ?? 'get${documentId.fullReference}',
         );
 
   String get table => documentId.path;
