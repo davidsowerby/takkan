@@ -55,6 +55,8 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   String assembleScript(
       PRestQuery queryConfig, Map<String, dynamic> variables) {
     final StringBuffer buf = StringBuffer(documentEndpoint);
+    buf.write('/');
+    buf.write(queryConfig.path);
     if (queryConfig.paramsAsPath) {
       for (var entry in queryConfig.params.entries) {
         buf.write(entry.key);
@@ -79,9 +81,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
       data: firstResult,
       success: success,
       queryReturnType: QueryReturnType.futureItem,
-      path: parent
-          .documentSchemaFromQuery(querySchemaName: queryConfig.querySchemaName)
-          .name,
+      path: queryConfig.documentSchema,
     );
   }
 
@@ -92,16 +92,14 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     final dio.Response response = await dio.Dio(
             dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
         .get(assembleScript(queryConfig, variables));
-    final data = response.data;
-    List<Map<String, dynamic>> output = List.empty(growable: true);
-    for (var entry in data) {
-      output.add(entry as Map<String, dynamic>);
-    }
+    final data = List<Map<String, dynamic>>.from(response.data['results']);
+    // List<Map<String, dynamic>> output = List.empty(growable: true);
+    // for (var entry in data) {
+    //   output.add(entry as Map<String, dynamic>);
+    // }
     return ReadResultList(
-      data: output,
-      path: parent
-          .documentSchemaFromQuery(querySchemaName: queryConfig.querySchemaName)
-          .name,
+      data: data,
+      path: queryConfig.documentSchema,
       queryReturnType: QueryReturnType.futureList,
       success: true,
     );

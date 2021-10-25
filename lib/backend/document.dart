@@ -1,8 +1,0 @@
-
-import 'package:precept_script/data/provider/documentId.dart';
-
-abstract class DocumentIdConverter {
-  DocumentId fromNative(DocumentId documentId);
-
-  DocumentId toNative(DocumentId documentId);
-}

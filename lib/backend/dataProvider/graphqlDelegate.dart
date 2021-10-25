@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:graphql/client.dart';
+import "package:http/http.dart" as http;
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
@@ -34,6 +35,7 @@ class DefaultGraphQLDataProviderDelegate
     HttpLink _httpLink = HttpLink(
       '${appConfig.serverUrl(parent.config)}${config.graphqlEndpoint}',
       defaultHeaders: appConfig.headers(parent.config, config),
+      httpResponseDecoder: httpResponseDecoder,
     );
 
     _client = GraphQLClient(
@@ -109,11 +111,9 @@ class DefaultGraphQLDataProviderDelegate
     for (var e in edges) {
       results.add(e['node']);
     }
-    final documentSchema = parent.documentSchemaFromQuery(
-        querySchemaName: queryConfig.querySchemaName);
     return ReadResultList(
       success: true,
-      path: documentSchema.name,
+      path: queryConfig.documentSchema,
       queryReturnType: QueryReturnType.futureList,
       data: results,
     );
@@ -151,4 +151,11 @@ class DefaultGraphQLDataProviderDelegate
   }) {
     throw UnimplementedError();
   }
+}
+
+Map<String, dynamic>? httpResponseDecoder(http.Response httpResponse) {
+  final bits = httpResponse.bodyBytes;
+  final b = httpResponse.body;
+  print('wait');
+  return Map();
 }

@@ -175,12 +175,6 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// returns a user instance created with [PreceptUser.unknownUser]
   PreceptUser get user;
 
-  /// Returns the document schema identified within [querySchemaName],
-  /// by doing a lookup from [config]
-  ///
-  /// throws a [PreceptException] if not found
-  PDocument documentSchemaFromQuery({required String querySchemaName});
-
   PDocument documentSchema({required String documentSchemaName});
 }
 
@@ -376,9 +370,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         .readDocument(documentId: documentId);
   }
 
-  PDocument documentSchemaFromQuery({required String querySchemaName}) {
-    return config.documentSchemaFromQuery(querySchemaName: querySchemaName);
-  }
+
 
   PDocument documentSchema({required String documentSchemaName}) {
     return config.documentSchema(documentSchemaName: documentSchemaName);
@@ -392,15 +384,17 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         return graphQLDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType
+                .toString()}, a graphQLDelegate must be specified in PDataProvider');
       }
     }
-    if (config is PRestQuery) {
+    if (queryConfig is PRestQuery) {
       if (_restDelegate != null) {
         return restDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType
+                .toString()}, a restDelegate must be specified in PDataProvider');
       }
     }
     throw PreceptException(
