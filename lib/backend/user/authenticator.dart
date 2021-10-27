@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/user/preceptUser.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 
-
-abstract class Authenticator<T extends PDataProvider, USER, D extends DataProvider> {
+abstract class Authenticator<T extends PDataProvider, USER,
+    D extends DataProvider> {
   late D parent;
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners =

@@ -1,7 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter/foundation.dart';
 import 'package:graphql/client.dart';
+import 'package:meta/meta.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
@@ -156,7 +154,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// default to [PDataProvider.defaultDelegate]
   ///
   Future<PScript> latestScript({
-    required Locale locale,
+    required String locale,
     required int fromVersion,
     required String name,
     Delegate? useDelegate,
@@ -335,7 +333,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   @override
   Future<PScript> latestScript(
-      {required Locale locale,
+      {required String locale,
       required int fromVersion,
       Delegate? useDelegate,
       required String name}) async {
@@ -500,7 +498,7 @@ class NoDataProvider implements DataProvider {
 
   @override
   Future<PScript> latestScript(
-      {required Locale locale,
+      {required String locale,
       required int fromVersion,
       Delegate? useDelegate,
       required String name}) {

@@ -1,6 +1,6 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:test/fake.dart';
 
 class FakeAuthenticator extends Fake implements Authenticator {}
 

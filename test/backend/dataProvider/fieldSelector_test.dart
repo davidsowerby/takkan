@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/query/fieldSelector.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('Field Selector', () {

@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
@@ -149,7 +148,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
 
   @override
   Future<ReadResultItem> latestScript(
-      {required Locale locale,
+      {required String locale,
       required int fromVersion,
       required String name}) {
     throw UnimplementedError();

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:graphql/client.dart';
 import "package:http/http.dart" as http;
 import 'package:precept_backend/backend/app/appConfig.dart';
@@ -75,7 +73,7 @@ class DefaultGraphQLDataProviderDelegate
   }
 
   Future<ReadResultItem> latestScript(
-      {required Locale locale,
+      {required String locale,
       required int fromVersion,
       required String name}) {
     throw UnimplementedError();

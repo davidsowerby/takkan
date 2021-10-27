@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:test/test.dart';
 
 final TypeMatcher<Error> isError = isA<Error>();
 final Matcher throwsError = throwsA(isError);

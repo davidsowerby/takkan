@@ -1,4 +1,3 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
@@ -7,6 +6,7 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/data/provider/graphqlDelegate.dart';
 import 'package:precept_script/data/provider/restDelegate.dart';
+import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';
 import '../../fixtures/mocks.dart';

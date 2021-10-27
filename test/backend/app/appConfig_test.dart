@@ -1,7 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';
 import '../../fixtures/mocks.dart';

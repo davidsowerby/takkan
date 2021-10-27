@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
@@ -34,7 +32,7 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   assembleScript(QUERY queryConfig, Map<String, dynamic> pageArguments);
 
   Future<ReadResultItem> latestScript(
-      {required Locale locale, required int fromVersion, required String name});
+      {required String locale, required int fromVersion, required String name});
 
   /// See [DataProvider.deleteDocument]
   Future<DeleteResult> deleteDocument({required DocumentId documentId});
