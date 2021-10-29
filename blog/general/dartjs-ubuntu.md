@@ -3,6 +3,7 @@ slug: dart2js-ubuntu
 title: Finding dart2js on Ubuntu, Snap install
 description: Locating the dart2js executable on a Snap installation of Flutter 
 authors: david
+date: 2021-10-12
 tags: [dart2js, ubuntu, snap]
 ---
 
