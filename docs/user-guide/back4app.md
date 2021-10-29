@@ -9,6 +9,19 @@ The Back4App server-side implementation provides a few Back4App Classes and clou
 
 They are primarily there to enable the use of a single schema for both client and server side, through the use of [server side schema generation](server-side-schema-generation.md).
 
+## Initialisation Process
+Initialising a new Back4App instance goes through the following steps:
+ 
+1. [Create a blank instance](https://www.back4app.com/docs/get-started/new-parse-app).  Note that an app to Back4App may be, say, the test, QA or prod instance for your app.
+1. [Create a Precept app](create-precept-app.md)
+1. Add dependency **precept_back4app_backend** to pubspec.yaml
+1. From a terminal at the project root, execute the command line:
+
+// TODO:  
+
+```bash
+
+```  
 
 ### Classes
 
