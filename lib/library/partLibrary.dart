@@ -123,7 +123,7 @@ class PartLibrary {
   Widget _createParticle(
     ThemeData theme,
     Trait trait,
-ModelConnector connector,
+    ModelConnector connector,
     PPart partConfig,
     final Map<String, dynamic> pageArguments,
     ContentBindings contentBindings,
@@ -151,7 +151,8 @@ ModelConnector connector,
           connector: connector,
         );
       case NavButtonSetTrait:
-        final String buttonTraitName = (trait as NavButtonSetTrait).buttonTraitName;
+        final String buttonTraitName =
+            (trait as NavButtonSetTrait).buttonTraitName;
         final Trait buttonTrait = traitLibrary.findParticleTrait(
           theme: theme,
           traitName: buttonTraitName,
@@ -162,31 +163,41 @@ ModelConnector connector,
             trait: trait,
             pageArguments: pageArguments);
       case EmailSignInTrait:
-        return EmailSignIn(config: partConfig as PEmailSignIn, contentBindings: contentBindings);
+        return EmailSignIn(
+            config: partConfig as PEmailSignIn,
+            contentBindings: contentBindings);
       case QueryViewReadTrait:
         return QueryViewParticle(
-            trait: trait as QueryViewTrait,
-            config: partConfig as PQueryView,
-            connector: connector,
-            readOnly: true);
+          trait: trait as QueryViewTrait,
+          config: partConfig as PQueryView,
+          connector: connector,
+          readOnly: true,
+          schema: contentBindings.dataBinding.schema,
+        );
       case QueryViewEditTrait:
         return QueryViewParticle(
-            trait: trait as QueryViewTrait,
-            config: partConfig as PQueryView,
-            connector: connector,
-            readOnly: false);
+          trait: trait as QueryViewTrait,
+          config: partConfig as PQueryView,
+          connector: connector,
+          readOnly: false,
+          schema: contentBindings.dataBinding.schema,
+        );
       case ListViewReadTrait:
         return ListViewParticle(
-            trait: trait as ListViewTrait,
-            config: partConfig as PListView,
-            connector: connector,
-            readOnly: true);
+          trait: trait as ListViewTrait,
+          config: partConfig as PListView,
+          connector: connector,
+          readOnly: true,
+          schema: contentBindings.dataBinding.schema,
+        );
       case ListViewEditTrait:
         return ListViewParticle(
-            trait: trait as ListViewTrait,
-            config: partConfig as PListView,
-            connector: connector,
-            readOnly: false);
+          trait: trait as ListViewTrait,
+          config: partConfig as PListView,
+          connector: connector,
+          readOnly: false,
+          schema: contentBindings.dataBinding.schema,
+        );
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
@@ -222,12 +233,13 @@ ModelConnector connector,
     ContentBindings contentBindings,
   ) {
     Type particleType = trait.runtimeType;
-    ConnectorFactory connectorFactory=ConnectorFactory();
+    ConnectorFactory connectorFactory = ConnectorFactory();
     final connector = connectorFactory.buildConnector(
         viewDataType: viewDataTypeFor(particleType),
         config: partConfig,
         dataBinding: contentBindings.dataBinding);
-    return _createParticle(theme, trait,connector, partConfig, pageArguments, contentBindings);
+    return _createParticle(
+        theme, trait, connector, partConfig, pageArguments, contentBindings);
   }
 
   Widget findStaticParticle(
@@ -238,7 +250,8 @@ ModelConnector connector,
     ContentBindings contentBindings,
   ) {
     final connector = StaticConnector(partConfig.staticData);
-    return _createParticle(theme, trait, connector, partConfig, pageArguments, contentBindings);
+    return _createParticle(
+        theme, trait, connector, partConfig, pageArguments, contentBindings);
   }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
@@ -261,11 +274,13 @@ ModelConnector connector,
 
 class ConnectorFactory {
   ModelConnector buildConnector(
-      {required DataBinding dataBinding, required PPart config, required Type viewDataType}) {
+      {required DataBinding dataBinding,
+      required PPart config,
+      required Type viewDataType}) {
     final ModelBinding parentBinding = dataBinding.binding;
 
     final PSchemaElement? fieldSchema = (config is PQueryView)
-        ? dataBinding.activeDataSource.dataProvider.config.schema.queries[config.property]
+        ? PQuerySchema(documentSchema: dataBinding.schema.name)
         : dataBinding.schema.fields[config.property];
     if (fieldSchema == null) {
       String msg =
@@ -279,9 +294,10 @@ class ConnectorFactory {
       schema: fieldSchema as PField,
       property: config.property,
     );
-    final converter = _converter(schema: fieldSchema, viewDataType: viewDataType);
-    final connector =
-        ModelConnector(binding: binding, converter: converter, fieldSchema: fieldSchema);
+    final converter =
+        _converter(schema: fieldSchema, viewDataType: viewDataType);
+    final connector = ModelConnector(
+        binding: binding, converter: converter, fieldSchema: fieldSchema);
     return connector;
   }
 }
@@ -305,7 +321,8 @@ Binding _binding(
   }
 }
 
-ModelViewConverter _converter({required PField schema, required Type viewDataType}) {
+ModelViewConverter _converter(
+    {required PField schema, required Type viewDataType}) {
   if (schema.modelType == viewDataType) {
     return PassThroughConverter();
   }

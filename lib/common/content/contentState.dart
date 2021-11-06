@@ -23,7 +23,6 @@ import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
-import 'package:precept_script/schema/field/queryResult.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
@@ -139,7 +138,7 @@ abstract class ContentState<T extends StatefulWidget, CONFIG extends PContent>
         case QueryReturnType.futureList:
           return loadList(
               theme,
-              query.querySchemaName,
+              query.queryName,
               dataProvider.fetchList(
                 queryConfig: query,
                 pageArguments: pageArguments,
@@ -428,7 +427,7 @@ class ContentBindings {
     dataProvider = dataProviderLibrary.find(
         config: config.dataProvider ?? PNoDataProvider());
     final String documentSchemaName = (config.queryIsDeclared)
-        ? lookupDocumentSchemaName()
+        ? config.query!.documentSchema
         : (preloaded)
             ? pageArguments[ContentState.preloadDataKey].path
             : notSet;
@@ -454,32 +453,6 @@ class ContentBindings {
     }
     final PSchema schema = dataProvider.config.schema;
     return schema.document(documentSchemaName);
-  }
-
-  String lookupDocumentSchemaName() {
-    if (config.query is PGetDocument) {
-      return (config.query as PGetDocument).documentSchema;
-    }
-    final PSchema? schema = dataProvider.config.schema;
-    if (schema == null) {
-      throw PreceptException(
-          'Schema cannot be null when looking up document schema');
-    }
-    final String? querySchemaName = config.query?.querySchemaName;
-    if (querySchemaName == null) {
-      String msg = 'querySchema is required in PSchema ${schema.name}';
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    final PQuerySchema? querySchema =
-        schema.queries[config.query?.querySchemaName];
-    if (querySchema == null) {
-      String msg =
-          "No querySchema defined for $querySchemaName in PSchema ${schema.name}.  Have you forgotten to add it to ";
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    return querySchema.documentSchema;
   }
 
   /// Preloaded data is held at page level

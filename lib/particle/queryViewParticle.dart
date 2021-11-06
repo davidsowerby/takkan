@@ -5,24 +5,33 @@ import 'package:precept_client/page/editState.dart';
 import 'package:precept_client/particle/listViewParticle.dart';
 import 'package:precept_client/trait/query.dart';
 import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:provider/provider.dart';
-
 
 class QueryViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final QueryViewTrait trait;
   final PQueryView config;
   final ModelConnector connector;
   final bool readOnly;
+  final PDocument schema;
 
-  const QueryViewParticle({required this.trait,required this.config,required this.connector, required this.readOnly});
+  const QueryViewParticle({
+    required this.trait,
+    required this.config,
+    required this.connector,
+    required this.readOnly,
+    required this.schema,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final bool readMode = (readOnly) ? true : Provider
-        .of<EditState>(context)
-        .readMode;
-    final List<Map<String,dynamic>> data = connector.readFromModel();
-    final ListView listView = ListView.builder(itemCount: data.length,itemBuilder: (context, index) => modelBuilder(context,config, index,data));
+    final bool readMode =
+        (readOnly) ? true : Provider.of<EditState>(context).readMode;
+    final List<Map<String, dynamic>> data = connector.readFromModel();
+    final ListView listView = ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) =>
+            modelBuilder(context, config, index, data, schema));
     if (readMode) {
       final QueryViewReadTrait modeTrait = trait as QueryViewReadTrait;
     } else {

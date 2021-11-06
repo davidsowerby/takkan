@@ -9,7 +9,6 @@ import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/partLibrary.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
@@ -209,7 +208,7 @@ class DataProviderVisitor implements ScriptVisitor {
   List<PDataProvider> dataProviders = List.empty(growable: true);
 
   @override
-  step(PreceptItem entry) {
+  step(Object entry) {
     if (entry is PDataProvider) {
       dataProviders.add(entry);
     }

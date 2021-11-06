@@ -14,9 +14,9 @@ import 'package:provider/provider.dart';
 
 mixin ListViewParticleBuilder {
   Widget modelBuilder(BuildContext context, PAbstractListView config, int index,
-      List<Map<String, dynamic>> data) {
+      List<Map<String, dynamic>> data, PDocument documentSchema) {
     final dataItem = data[index];
-    return _navTileBuilder(dataItem, config);
+    return _navTileBuilder(dataItem, config, documentSchema);
   }
 
   Widget _listTileBuilder(
@@ -29,11 +29,9 @@ mixin ListViewParticleBuilder {
     );
   }
 
-  Widget _navTileBuilder(Map<String, dynamic> entry, PAbstractListView config) {
+  Widget _navTileBuilder(Map<String, dynamic> entry, PAbstractListView config,
+      PDocument documentSchema) {
 // TODO: this Back4App specific
-    final documentSchemaName = config.query!.schema!.documentSchema;
-    final PDocument documentSchema = config.dataProvider!
-        .documentSchema(documentSchemaName: documentSchemaName);
     final String path = documentSchema.name;
     return NavigationTile(
       route: path,
@@ -65,12 +63,14 @@ class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final PListView config;
   final ModelConnector connector;
   final bool readOnly;
+  final PDocument schema;
 
   const ListViewParticle({
     required this.trait,
     required this.config,
     required this.connector,
     required this.readOnly,
+    required this.schema,
   });
 
   @override
@@ -81,7 +81,7 @@ class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
     final ListView listView = ListView.builder(
         itemCount: data.length,
         itemBuilder: (context, index) =>
-            modelBuilder(context, config, index, data));
+            modelBuilder(context, config, index, data, schema));
     if (readMode) {
       final ListViewReadTrait modeTrait = trait as ListViewReadTrait;
     } else {
