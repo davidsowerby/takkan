@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
@@ -47,12 +50,10 @@ class AppConfig {
   /// initialisation.
   ///
   /// The header keys must be declared in *precept.json* exactly as they are to be used
-  Map<String, String> headers(
-    PDataProvider providerConfig,
-    PDataProviderDelegate delegateConfig,
-  ) {
+  Map<String, String> headers(PDataProvider providerConfig,
+      PDataProviderDelegate delegateConfig,) {
     final combinedHeaderKeys =
-        List.from(providerConfig.headerKeys, growable: true);
+    List.from(providerConfig.headerKeys, growable: true);
     combinedHeaderKeys.addAll(delegateConfig.headerKeys);
     final Map<String, String> headers = Map();
     final Map<String, String> instance = instanceConfig(providerConfig);
@@ -78,5 +79,26 @@ class AppConfig {
       serverUrl = serverUrl.substring(0, serverUrl.length - 1);
     }
     return serverUrl;
+  }
+}
+
+/// Assumes that AppConfig is held in a file *precept.json* - if no directory
+/// is specified, the current directory is assumed.
+/// If loading through a Flutter client, this will not work, use the
+/// JSONAssetLoader in the *precept_client* package instead;
+class AppConfigFileLoader {
+  final Directory? directory;
+
+  const AppConfigFileLoader({this.directory});
+
+  Future<AppConfig> load() async {
+    final dir = directory ?? Directory.current;
+    File file = File('${dir.path}/precept.json');
+    if (!file.existsSync()) {
+      throw PreceptException('There is no precept.json file in ${dir.path}');
+    }
+    final content = file.readAsStringSync();
+    final j = json.decode(content);
+    return AppConfig(j);
   }
 }
