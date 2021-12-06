@@ -19,7 +19,7 @@ import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/restQuery.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
-  late AppConfig appConfig;
+  late InstanceConfig instanceConfig;
   late DataProvider parent;
 
   DefaultRestDataProviderDelegate(
@@ -27,9 +27,9 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   );
 
   @override
-  init(AppConfig appConfig, DataProvider parent) async {
+  init(InstanceConfig instanceConfig, DataProvider parent) async {
     this.parent = parent;
-    this.appConfig = appConfig;
+    this.instanceConfig = instanceConfig;
     if (parent.config.restDelegate == null) {
       String msg = 'RestDelegate cannot be used with no configuration';
       logType(this.runtimeType).e(msg);
@@ -88,9 +88,8 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   @override
   Future<ReadResultList> fetchList(
       PRestQuery queryConfig, Map<String, dynamic> variables) async {
-    final dio.Response response = await dio.Dio(
-            dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
-        .get(assembleScript(queryConfig, variables));
+    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers))
+            .get(assembleScript(queryConfig, variables));
     final data = List<Map<String, dynamic>>.from(response.data['results']);
     // List<Map<String, dynamic>> output = List.empty(growable: true);
     // for (var entry in data) {
@@ -112,9 +111,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Updating data provider');
-    final dio.Response response = await dio.Dio(
-            dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
-        .put(
+    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).put(
       documentUrl(documentId),
       data: data,
     );
@@ -144,7 +141,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   String get documentEndpoint =>
-      '${appConfig.serverUrl(parent.config)}${config.documentEndpoint}';
+      '${instanceConfig.serverUrl}/${instanceConfig.documentEndpoint}';
 
   @override
   Future<ReadResultItem> latestScript(
@@ -168,9 +165,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Creating new document');
-    final dio.Response response = await dio.Dio(
-            dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
-        .post(
+    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).post(
       '$documentEndpoint/$path',
       data: data,
     );
@@ -202,9 +197,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     // --data-urlencode "where={\"objectId\":\"HQCxFeKXK9\"}" \
     // https://parseapi.back4app.com/classes/PreceptScript
 
-    final dio.Response response = await dio.Dio(
-            dio.BaseOptions(headers: appConfig.headers(parent.config, config)))
-        .get(
+    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).get(
       '$documentEndpoint/${documentId.path}',
       queryParameters: {'objectId': documentId.itemId},
     );

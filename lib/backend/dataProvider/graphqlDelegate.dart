@@ -23,7 +23,7 @@ class DefaultGraphQLDataProviderDelegate
   DefaultGraphQLDataProviderDelegate();
 
   @override
-  init(AppConfig appConfig, DataProvider parent) async {
+  init(InstanceConfig instanceConfig, DataProvider parent) async {
     this.parent = parent;
     if (parent.config.graphQLDelegate == null) {
       throw PreceptException(
@@ -31,8 +31,8 @@ class DefaultGraphQLDataProviderDelegate
     }
 
     HttpLink _httpLink = HttpLink(
-      '${appConfig.serverUrl(parent.config)}${config.graphqlEndpoint}',
-      defaultHeaders: appConfig.headers(parent.config, config),
+      '${instanceConfig.serverUrl}${instanceConfig.graphqlEndpoint}',
+      defaultHeaders: instanceConfig.headers,
       httpResponseDecoder: httpResponseDecoder,
     );
 

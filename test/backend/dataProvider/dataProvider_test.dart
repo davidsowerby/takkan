@@ -18,7 +18,10 @@ void main() {
         'a': {'serverUrl': 'https://example.com'}
       }
     });
-    setUpAll(() {});
+    setUpAll(() {
+      registerFallbackValue(
+          InstanceConfig(data: {}, instanceName: 'any', identifiedType: 'any'));
+    });
 
     tearDownAll(() {});
 
@@ -30,7 +33,6 @@ void main() {
       // given
       PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
@@ -47,15 +49,14 @@ void main() {
       expect(dp.restDelegate, isNotNull);
       expect(dp.graphQLDelegate, isNotNull);
       expect(() => dp.authenticator, throwsPreceptException);
-      verify(() => dp.restDelegate.init(appConfig, dp)).called(1);
-      verify(() => dp.graphQLDelegate.init(appConfig, dp)).called(1);
+      verify(() => dp.restDelegate.init(any(), dp)).called(1);
+      verify(() => dp.graphQLDelegate.init(any(), dp)).called(1);
     });
 
     test('init, with authenticator', () async {
       // given
       PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
@@ -78,7 +79,6 @@ void main() {
       // given
       PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
@@ -98,7 +98,6 @@ void main() {
       // given
       PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         restDelegate: PRest(sessionTokenKey: 'sessionToken'),
@@ -119,7 +118,6 @@ void main() {
       // given
       PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         restDelegate: PRest(sessionTokenKey: 'sessionToken'),
@@ -130,7 +128,6 @@ void main() {
       );
 
       // when
-
       // then
       expect(() async {
         await dp.init(appConfig);
@@ -140,9 +137,8 @@ void main() {
     test('require GraphQLDelegate without providing construction function',
         () async {
       // given
-      PDataProvider config = PDataProvider(
+          PDataProvider config = PDataProvider(
         providerName: 'Test',
-        headerKeys: ['a'],
         configSource: PConfigSource(segment: 'b', instance: 'a'),
         sessionTokenKey: 'sessionToken',
         graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
@@ -151,7 +147,6 @@ void main() {
       DefaultDataProvider dp = TestDataProvider1(config: config);
 
       // when
-
       // then
       expect(() async {
         await dp.init(appConfig);

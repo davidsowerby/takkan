@@ -181,15 +181,17 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     implements DataProvider<CONFIG> {
   final CONFIG config;
   Authenticator? _authenticator;
-  late AppConfig _appConfig;
   RestDataProviderDelegate? _restDelegate;
   GraphQLDataProviderDelegate? _graphQLDelegate;
+  late InstanceConfig _instanceConfig;
 
   DefaultDataProvider({
     required this.config,
   });
 
   List<String> get userRoles => authenticator.userRoles;
+
+  InstanceConfig get instanceConfig => _instanceConfig;
 
   Authenticator get authenticator {
     if (_authenticator == null) {
@@ -198,8 +200,6 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     }
     return _authenticator!;
   }
-
-  AppConfig get appConfig => _appConfig;
 
   RestDataProviderDelegate get restDelegate {
     if (_restDelegate != null) {
@@ -219,15 +219,16 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   /// If overriding this make sure you call super()
   init(AppConfig appConfig) async {
-    this._appConfig = appConfig;
+    final instanceConfig = appConfig.instanceConfig(config);
+    this._instanceConfig = instanceConfig;
     if (config.restDelegate != null) {
       _restDelegate = createRestDelegate();
 
-      restDelegate.init(appConfig, this);
+      restDelegate.init(instanceConfig, this);
     }
     if (config.graphQLDelegate != null) {
       _graphQLDelegate = createGraphQLDelegate();
-      graphQLDelegate.init(appConfig, this);
+      graphQLDelegate.init(instanceConfig, this);
     }
 
     if (config.useAuthenticator) {
@@ -369,7 +370,6 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
 
-
   PDocument documentSchema({required String documentSchemaName}) {
     return config.documentSchema(documentSchemaName: documentSchemaName);
   }
@@ -391,8 +391,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         return restDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType
-                .toString()}, a restDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
       }
     }
     throw PreceptException(

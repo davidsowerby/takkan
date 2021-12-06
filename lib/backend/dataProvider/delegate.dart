@@ -10,7 +10,7 @@ import 'package:precept_script/query/restQuery.dart';
 abstract class DataProviderDelegate<QUERY extends PQuery> {
   DataProvider get parent;
 
-  init(AppConfig appConfig, DataProvider parent);
+  init(InstanceConfig instanceConfig, DataProvider parent);
 
   /// See [DataProvider.fetchItem]
   Future<ReadResultItem> fetchItem(
