@@ -23,6 +23,10 @@ It would be helpful but not essential to have some knowledge of:
 - GraphQL
 - Back4App 
 
+## Initialiise the App
+
+Steps to [init](init.md) the app.
+
 ## Create a Flutter App
 
 File | New | New Flutter Project
