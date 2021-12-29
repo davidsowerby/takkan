@@ -1,7 +1,7 @@
 # Detailed Tutorial
 
 A detailed step by step guide to developing a Precept app. IF you prefer, there is also
-a [brief version](brief.md)
+a [brief version](tutorial.md)
 
 :::caution
 

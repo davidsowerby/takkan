@@ -36,7 +36,7 @@ The terminology used by the Schema is incredibly simple, and it is up to an impl
 
 When combined with the [Precept Script](./precept-script.md), the overall structure depicted in the diagram below:
 
-::: tip Note
+:::tip Note
 This does not show all Widgets, just those immediately relevant to the script and the schema.
 
 For more on Widgets, see the [Widget Tree](./widget-tree.md)

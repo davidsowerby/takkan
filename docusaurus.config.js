@@ -14,6 +14,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
   favicon: 'img/precept-logo-small.png',
   organizationName: 'precept1', // Usually your GitHub org/user name.
   projectName: 'precept_client', // Usually your repo name.
+  plugins:['remark-code-import'],
 
   presets: [
     [
@@ -62,7 +63,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {
             type: 'doc',
-            docId: 'tutorial/brief',
+            docId: 'tutorial/tutorial',
             position: 'left',
             label: 'Tutorial',
           },
@@ -102,7 +103,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               },
               {
                 label: 'Tutorial',
-                to: '/docs/tutorial/brief',
+                to: '/docs/tutorial/tutorial',
               },
               {
                   label: 'User Guide',

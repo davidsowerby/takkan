@@ -1,27 +1,24 @@
-# Back4App
+# Back4App Implementation
 
 ## Client Side
 The Back4App client side implementation contains implementations for [DataProvider](data-providers.md) and `PDataProvider`.
 
 ## Server Side
 
-The Back4App server-side implementation provides a few Back4App Classes and cloud functions needed to make Precept work.
+The Back4App server-side implementation provides a simple framework - a few Back4App Classes and cloud functions - needed to make Precept work.
 
 They are primarily there to enable the use of a single schema for both client and server side, through the use of [server side schema generation](server-side-schema-generation.md).
 
-## Initialisation Process
-Initialising a new Back4App instance goes through the following steps:
- 
-1. [Create a blank instance](https://www.back4app.com/docs/get-started/new-parse-app).  Note that an app to Back4App may be, say, the test, QA or prod instance for your app.
-1. [Create a Precept app](create-precept-app.md)
-1. Add dependency **precept_back4app_backend** to pubspec.yaml
-1. From a terminal at the project root, execute the command line:
+### Cloud Functions
 
-// TODO:  
+- **initPrecept** creates the Back4App Classes used to manage 
+- **initScriptClasses** prepares Back4App to accept instances of `PScript` and `PSchema`, and needs to be invoked only on a Back4App instance that will be used to store them.
 
-```bash
+### Initialise Server Instance
 
-```  
+[See](../tutorial/prepare-back4app.md)
+
+
 
 ### Classes
 
@@ -41,7 +38,7 @@ Their versions are recorded separately just in case that ever needs to change.
 
 ### Functions
 
-#### initInstance
+#### initPrecept
 
 When a blank Back4App instance is first created, some preparation is needed to enable Precept to work.
 
@@ -49,15 +46,14 @@ The function code is uploaded from a client using the *initFramework* function p
 
 :::tip Note
 
-There is an [outstanding issue](https://gitlab.com/precept1/precept_back4app_backend/-/issues/7) to look at restructuring the *precept_back4app_backend* package.
+There is an [outstanding issue](https://gitlab.com/precept1/precept_back4app_client/-/issues/7) to look at restructuring the *precept_back4app_backend* package.
 :::
 
 
-The *initInstance* function does the following:
 
 
 
 
-Once invoked, this function cannot be called again, without deleting the **PreceptState** class
+
 
 

@@ -1,7 +1,7 @@
-# Brief Tutorial
+# Tutorial
 
 Provides a step by step guide to building the Precept sample app but does not give much in the way
-of explanation. If you want more information, see the [detailed version](detailed.md)
+of explanation. If you want more information, see the [detailed version](tutorial-explanation.md)
 
 :::caution
 
@@ -13,7 +13,7 @@ this tutorial and accompanying video will generate enough interest to push the p
 
 ## Assumptions
 
-You are using Android Studio (with apologies to anyone using any other IDE).
+You are using Android Studio (with apologies to anyone using a different IDE).
 
 ## Prior knowledge
 
@@ -23,13 +23,95 @@ It would be helpful but not essential to have some knowledge of:
 - GraphQL
 - Back4App 
 
-## Initialiise the App
+## Prepare Backend
 
-Steps to [init](init.md) the app.
+- Follow the steps to [prepare back4app](prepare-back4app.md)
 
 ## Create a Flutter App
 
-File | New | New Flutter Project
+In Android Studio, 
+
+- File | New | New Flutter Project
+- Select 'Flutter' on the left
+- Next
+- enter 'myapp' as the project name
+- Finish
+
+
+This will provide a copy of the default sample Flutter application, which we will modify later.
+
+## Initialise Client
+
+### Create precept.json
+
+- Create an [application configuration file](../user-guide/app-configuration.md), *precept.json* in the project root.
+- Copy the App Id and Client Key from your Back4App instance, and place into the JSON structure below.
+
+
+```json
+{
+  "MyApp": {
+    "dev": {
+      "headers": {
+        "X-Parse-Application-Id": "your App Id",
+        "X-Parse-Client-Key": "Your Client Key"
+      },
+      "type": "back4app"
+    }
+  }
+}
+```
+
+
+### Precept dependencies
+
+- in pubspec.yaml, replace:
+
+```yaml
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+```
+
+with:
+
+
+```yaml
+  precept_client:
+    path: ../precept_client
+  precept_script:
+    path: ../precept_script
+  precept_backend:
+    path: ../precept_backend
+
+  precept_back4app_backend:
+    path: ../precept_back4app_backend
+```
+
+
+## Initialise Server
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -76,20 +158,7 @@ void main() async {
 {}
 ```
 
-- in pubspec.yaml, replace:
 
-```yaml
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
-```
-
-with:
-
-```yaml
-  assets:
-    - precept.json
-```
 
 - paste the following into *lib/app/config/precept.dart*:
 
@@ -129,7 +198,7 @@ final myScript = PScript(
   </div>
 </details>
 
-[detail](detailed.md#step-01---hello-world)
+[detail](tutorial-explanation.md#step-01---hello-world)
 
 ## Step 02 - Styling text
 
@@ -261,7 +330,7 @@ We need a backend now to demonstrate data retrieval.
 
 We will use Precept to generate the Back4App schema and populate some test data.
 
-[:point_right:](detailed.md#step-04---page-with-query)
+[:point_right:](tutorial-explanation.md#step-04---page-with-query)
 
 ### Create Back4App instance
 
@@ -312,4 +381,4 @@ route, which we have not yet defined.
 
 - Update *precept.dart* to:
 
-[![Boo](images/notes.svg)](detailed.md#step-04---page-with-query)
+[![Boo](images/notes.svg)](tutorial-explanation.md#step-04---page-with-query)

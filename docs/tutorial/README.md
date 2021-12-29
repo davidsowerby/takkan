@@ -1,10 +1,10 @@
 # Tutorials
 
-There are 2 tutorials, both using the same example [code](https://gitlab.com/precept1/precept_tutorial.git). 
+There are 2 parts to the Tutorial: 
 
-- The [brief](brief.md), summary version
+- The [tutorial](tutorial.md) itself,
 
-- The [detailed](detailed.md) version, with extensive explanation
+- The [tutorial explanation](tutorial-explanation.md) provides a more detailed explanation of the steps taken in the Tutorial.
 
 :::caution
 
