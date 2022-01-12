@@ -30,6 +30,12 @@ There is a slight difference in terminology here - for Back4App, every instance 
 each of which would be a separate Back4App 'app'.
 :::
 
+- cd to your home directory:
+
+```bash
+cd
+```
+
 - Create a new Back4App app with the Back4App CLI. In a terminal enter:
 
 ```bash

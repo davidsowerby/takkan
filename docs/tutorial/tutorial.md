@@ -23,9 +23,6 @@ It would be helpful but not essential to have some knowledge of:
 - GraphQL
 - Back4App 
 
-## Prepare Backend
-
-- Follow the steps to [prepare back4app](prepare-back4app.md)
 
 ## Create a Flutter App
 
@@ -40,7 +37,15 @@ In Android Studio,
 
 This will provide a copy of the default sample Flutter application, which we will modify later.
 
-## Initialise Client
+
+## Prepare Server
+
+- Follow the steps to [prepare back4app](prepare-back4app.md).  
+
+- Note the App Id and Client Key from the Back4App instance you have just created.  (Server settings | Core Settings)  
+
+
+## Set up Precept on Client
 
 ### Create precept.json
 
@@ -62,8 +67,22 @@ This will provide a copy of the default sample Flutter application, which we wil
 }
 ```
 
+- Add *precept.json* to .gitignore (We do not want to commit keys to the repository)
 
 ### Precept dependencies
+
+- in pubspec.yaml, add dependencies:
+
+```yaml
+  precept_client:
+    path: ../precept_client
+  precept_script:
+    path: ../precept_script
+  precept_backend:
+    path: ../precept_backend
+  precept_back4app_client:
+    path: ../precept_back4app_client
+```
 
 - in pubspec.yaml, replace:
 
@@ -74,25 +93,44 @@ This will provide a copy of the default sample Flutter application, which we wil
 ```
 
 with:
-
-
 ```yaml
-  precept_client:
-    path: ../precept_client
-  precept_script:
-    path: ../precept_script
-  precept_backend:
-    path: ../precept_backend
-
-  precept_back4app_backend:
-    path: ../precept_back4app_backend
+  assets:
+    - precept.json
 ```
 
 
-## Initialise Server
+### Precept Code
 
+In *lib/main.dart*, replace:
 
+```dart
+void main() {
+  runApp(const MyApp());
+}
+```
 
+with:
+
+```dart
+import 'package:precept_back4app_client/backend/back4app/dataProvider/dataProvider.dart';
+import 'package:precept_client/app/app.dart';
+import 'package:precept_client/app/loader.dart';
+import 'package:precept_client/app/precept.dart';
+
+void main() async {
+  Back4App.register();
+  await precept.init(
+    loaders: [
+      DirectPreceptLoader(script: myScript),
+    ],
+  );
+  final ThemeData theme = ThemeData(
+    primarySwatch: Colors.green,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+  );
+  runApp(PreceptApp(theme: theme));
+}
+```
 
 
 
