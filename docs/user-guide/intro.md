@@ -13,17 +13,6 @@ This document is written as though functionality exists, even when it is still i
 
 :::
 
-## Purpose
-
-Precept aims to reduce development time, in three broad areas:
-
-1. by automating a substantial amount of the work currently needed to bind Widgets to data,
-1. by providing device aware layouts that simplify the construction of pages in a consistent way across an application,
-1. by providing Traits (basically styles, but with some behavioural attributes), which enable consistent appearance and behaviour across an application.
-
-Equally important, none of these features actually prevent a developer from direct access to Flutter's immense range of features.
-
-Precept is useful for any app which requires the presentation and editing of data, regardless of how the data is actually presented - whether a standard, boring form, or the slickest, most magical way of presenting data.
 
 ## View and Model
 

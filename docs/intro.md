@@ -9,6 +9,20 @@ However, I found connecting to data repetitive - so I decided to try and improve
 
 The result is something (currently at Proof of Concept stage) which I believe substantially reduces development time for any Flutter project which connects Widgets to data.
 
+## Purpose
+
+Precept aims to reduce development time, in these broad areas:
+
+1. by automating a substantial amount of the work currently needed to bind Widgets to data,
+1. by providing device aware layouts that simplify the construction of pages in a consistent way across an application,
+1. by providing Traits (basically styles, but with some behavioural attributes), which enable consistent appearance and behaviour across an application.
+1. by defining a schema, which can be used to control presentation epedning on data type and user permissions, and generate server side validation code. 
+
+Equally important, none of these features actually prevent a developer from direct access to Flutter's immense range of features.
+
+Precept is useful for any app which requires the presentation and editing of data, regardless of how the data is actually presented - whether a standard, boring form, or the slickest, most magical way of presenting data.
+
+
 :::caution Status
 
 This documentation is written as though functionality already exists, even though it may still be in development.
@@ -32,10 +46,11 @@ For each feature, tap the ![status](images/status.svg) icon for the latest statu
 1. The Edit / Save / Cancel logic is generated automatically (unless an item is read only).[![status](images/status.svg)](status.md#edit-save-cancel) [:point_right:](./user-guide/edit-save-cancel.md)
 1. Roles defined by the `PSchema` are used to hide / show widgets / pages as appropriate. [![status](images/status.svg)](status.md#roles-control-display) [:point_right:](./user-guide/roles-control-display.md)
 1. Validation is defined by the schema and executed by the Widgets assembled by the `PScript`. [![status](images/status.svg)](status.md#validation) [:point_right:](./user-guide/validation.md)
-1. A backend schema for Back4App can be generated from `PSchema`, complete with roles and validation.[![status](images/status.svg)](status.md#server-side-schema-generation) [:point_right:](./user-guide/server-side-schema-generation.md)
+1. A backend schema for Back4App can be generated from `PSchema`, complete with roles and validation.[![status](images/status.svg)](status.md#server-side-schema-generation) [:point_right:](user-guide/server-side.md)
 1. Support for Back4App and generic REST APIs are included, others can be added. [![status](images/status.svg)](status.md#data-providers) [:point_right:](./user-guide/data-providers.md)
 1. An app may be updated remotely by revising `PScript`.[![status](images/status.svg)](status.md#remote-update) [:point_right:](./user-guide/script-management.md#remote-update)
 1. Precept can be used for just part of an app if required.[![status](images/status.svg)](status.md#partial-use) [:point_right:](./user-guide/partial-use.md)
+1. An app can be code generated to avoid any performance loss from interpreting `PScript`
 
 
 
