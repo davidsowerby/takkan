@@ -63,7 +63,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {
             type: 'doc',
-            docId: 'tutorial/tutorial',
+            docId: 'tutorial-guide/tutorial',
             position: 'left',
             label: 'Tutorial',
           },
@@ -103,7 +103,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               },
               {
                 label: 'Tutorial',
-                to: '/docs/tutorial/tutorial',
+                to: '/docs/tutorial-guide/tutorial',
               },
               {
                   label: 'User Guide',

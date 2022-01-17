@@ -41,7 +41,7 @@ Every instance used with a Precept client needs to be initialised, a two step pr
 
 1. the Cloud function **initPrecept** is invoked to create the Back4App [Classes](#classes) used to manage Schema versions.
 
-Refer to the Tutorial for detailed steps to [create an app](../tutorial/tutorial.md).
+Refer to the Tutorial for detailed steps to [create an app](../tutorial-guide/tutorial.md).
 
 Precept uses these classes:
 
