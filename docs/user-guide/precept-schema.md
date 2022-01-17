@@ -2,23 +2,14 @@
 
 ## Introduction
 
-The Precept Schema describes the data structure, data types, validation and permissions.  
+The Precept Schema describes the data structure, data types, validation and permissions of the application.  
 
-It supports the [Precept Script](precept-script.md) by providing data type information, validation, and user permissions.
+In conjunction with the [Precept Script](precept-script.md) it provides information to support:
 
-On the client side, the Schema is not about security, but usability.
-
-One day the Precept Schema will also be used to create the server side schema and permissions :crossed_fingers:
-
-:::caution
-
-**Security**
-
-The Precept client does not provide security.  It is designed with the simple premise that nothing from a client can be trusted.
-
-If you want proper security, validation and access control must be provided by the server - but that's true for any client.
-
-:::
+- selection of display dependent ondata type,
+- show / hide controls depending on user access rights
+- enable / disable editing depending on user access rights,
+- the same validation logic on both client and server (by using [server schema generation](server-side.md))
 
 ## Structure
 
