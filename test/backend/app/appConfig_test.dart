@@ -85,7 +85,8 @@ void main() {
 
       expect(
           instance.cloudCodeDirectory.path,
-          Directory('${Platform.environment['HOME']!}/b4a/MyApp/instance1')
+          Directory(
+                  '${Platform.environment['HOME']!}/b4a/MyApp/instance1/cloud')
               .path);
       expect(instance.type, 'back4app');
       expect(instance.serverUrl, 'https://parseapi.back4app.com');

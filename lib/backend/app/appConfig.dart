@@ -34,28 +34,41 @@ class AppConfig {
   }
 
   InstanceConfig instanceCfg(PConfigSource configSource) {
-    final segment = data[configSource.segment];
-    if (segment == null) {
+    return instance(
+        segment: configSource.segment, instance: configSource.instance);
+  }
+
+  InstanceConfig instance({required String segment, required String instance}) {
+    final segmentData = data[segment];
+    if (segmentData == null) {
       String msg =
-          'File precept.json in project root must define a segment for \'${configSource.segment}\'';
+          'File precept.json in project root must define a segment for \'${segment}\'';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    final instanceData = segment[configSource.instance];
+    final instanceData = segmentData[instance];
     if (instanceData == null) {
       String msg =
-          'File precept.json in project root must define an instance \'${configSource.instance}\' in segment \'${configSource.segment}\'';
+          'File precept.json in project root must define an instance \'${instance}\' in segment \'${segment}\'';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
     return InstanceConfig(
         data: instanceData,
-        instanceName: configSource.instance,
-        identifiedType: _identifyType(configSource));
+        instanceName: instance,
+        identifiedType: _identifyType(segment: segment, instance: instance));
   }
 
-  String _identifyType(PConfigSource configSource) {
-    if (configSource.segment.contains('back4app')) {
+  String _identifyTypeFromSource(PConfigSource configSource) {
+    return _identifyType(
+        segment: configSource.segment, instance: configSource.instance);
+  }
+
+  String _identifyType({required String segment, required String instance}) {
+    if (data.containsKey('type')) {
+      return data['type'];
+    }
+    if (segment.contains('back4app')) {
       return 'back4app';
     }
     return defaultInstanceType;
@@ -68,7 +81,7 @@ class AppConfig {
   ///
   /// The header keys must be declared in *precept.json* exactly as they are to be used
   ///
-  Map<String, String> headers(
+  Map<String, dynamic> headers(
     PDataProvider providerConfig,
   ) {
     final instanceHeaders = instanceConfig(providerConfig).headers;
@@ -76,31 +89,34 @@ class AppConfig {
   }
 }
 
-/// Assumes that AppConfig is held in a file *precept.json* - if no [directory]
-/// is specified, the current directory is assumed.
+/// The default is to hold app configuration in a file *precept.json* in the project root.
+///
+/// Except for testing, any deviation from this convention is discouraged, as Precept will
+/// assumes that is where the configuration is.
+///
+/// It is therefore usually unnecessary to specify [file], except when testing
 ///
 ///
-/// If loading through a Flutter client, this will not work, use the
+/// If loading through a Flutter client, this loader will not work, use the
 /// JSONAssetLoader in the *precept_client* package instead
 class AppConfigFileLoader {
-  final Directory? directory;
+  final File? file;
 
-  const AppConfigFileLoader({this.directory});
+  const AppConfigFileLoader({this.file});
 
   /// If [returnEmptyIfAbsent] is true, a missing *precept.json* returns an empty
   /// [AppConfig] - if false, a [PreceptException] is thrown if no *precept.json*
-  /// exists in [directory]
+  /// exists in [file]
   Future<AppConfig> load({bool returnEmptyIfAbsent = false}) async {
-    final dir = directory ?? Directory.current;
-    File file = File('${dir.path}/precept.json');
-    if (!file.existsSync()) {
+    final f = file ?? File('${Directory.current.path}/precept.json');
+    if (!f.existsSync()) {
       if (returnEmptyIfAbsent) {
         return AppConfig(Map());
       } else {
-        throw PreceptException('There is no precept.json file in ${dir.path}');
+        throw PreceptException('There is no file at ${f.path}');
       }
     }
-    final content = file.readAsStringSync();
+    final content = f.readAsStringSync();
     final j = json.decode(content);
     return AppConfig(j);
   }
@@ -128,10 +144,24 @@ class InstanceConfig {
       data[AppConfig.keyGraphqlEndpoint] ?? _appendToServerUrl('graphql');
 
   Directory get cloudCodeDirectory => (data[AppConfig.keyCloudCodeDir] == null)
-      ? Directory('${Platform.environment['HOME']!}/b4a/$appName/$instanceName')
+      ? Directory(
+          '${Platform.environment['HOME']!}/b4a/$appName/$instanceName/cloud')
       : Directory(data[AppConfig.keyCloudCodeDir]);
 
-  Map<String, String> get headers => data['headers'] ?? {};
+  /// This seems unnecessarily complicated just to get a Map<String,String> from a
+  /// Map<String,dynamic> but was the only way I found to get around Dart's typing
+  Map<String, String> get headers {
+    final Map<String, dynamic>? h1 = data['headers'];
+    if (h1 != null) {
+      final Map<String, String> h2 = Map();
+      h1.entries.forEach((element) {
+        h2[element.key] = element.value;
+      });
+      return h2;
+    } else {
+      return {};
+    }
+  }
 
   String get type => data['type'] ?? identifiedType;
 

@@ -31,7 +31,7 @@ class DefaultGraphQLDataProviderDelegate
     }
 
     HttpLink _httpLink = HttpLink(
-      '${instanceConfig.serverUrl}${instanceConfig.graphqlEndpoint}',
+      '${instanceConfig.graphqlEndpoint}',
       defaultHeaders: instanceConfig.headers,
       httpResponseDecoder: httpResponseDecoder,
     );
