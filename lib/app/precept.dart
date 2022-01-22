@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/app/appConfig.dart';
 import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
 import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_client/app/loader.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/assetLoader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/partLibrary.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/loader/assembler.dart';
+import 'package:precept_script/loader/loaders.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/validation/validationErrorMessages.dart';
 import 'package:precept_script/script/script.dart';
 
 // TODO error handling, loader may fail
@@ -58,8 +53,13 @@ class Precept {
         await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
     _loaders = loaders;
     _particleLibraryEntries = particleLibraryEntries;
-    await loadScripts(loaders: _loaders);
+    await _loadScripts();
     await _doAfterLoad();
+  }
+
+  _loadScripts() async {
+    _rootModel = await ScriptAssembler().assemble(loaders: _loaders);
+    _rootModel.init();
   }
 
   _doAfterLoad() async {
@@ -81,7 +81,7 @@ class Precept {
   reload() async {
     _isReady = false;
     notifyReadyListeners();
-    await loadScripts(loaders: _loaders);
+    await _loadScripts();
     await _doAfterLoad();
   }
 
@@ -132,68 +132,6 @@ class Precept {
 
   Map<String, dynamic> getConfig(String segment) {
     return _jsonConfig[segment];
-  }
-
-  /// Loads all requested [PScript], and merges them into a single [_rootModel]
-  loadScripts({required List<PreceptLoader> loaders}) async {
-    logType(this.runtimeType).d("Loading models");
-    List<Future<PScript>> modelFutures = List.empty(growable: true);
-    for (PreceptLoader loader in loaders) {
-      modelFutures.add(loader.load());
-    }
-    final m = await Future.wait(modelFutures);
-    logType(this.runtimeType).d("All models loaded");
-    if (m.length > 1) {
-      _mergeModels(m);
-    } else {
-      _rootModel = m[0];
-    }
-    _rootModel.init();
-  }
-
-  /// Merging is carried out in the order specified in [models], and follows these principles:
-  /// - for single value properties (such as authenticator), a non-null value overwrites a previous value
-  /// - for multi-value properties (lists and maps), values are added to previous values.  This means that
-  /// later map values will overwrite earlier entries with the same keys.
-  /// - [ConversionErrorMessages] and [ValidationErrorMessages] are merged as maps
-  /// - name and id is always taken from the first entry in [models]
-  ///
-  /// This is a bit of a sledgehammer approach, see [open issue](https://gitlab.com/precept1/precept-client/-/issues/2).
-  _mergeModels(List<PScript> models) {
-    final PScript firstModel = models[0];
-    String name = firstModel.name;
-    String id = firstModel.pid ?? name;
-    Map<String, PPage> routes = Map();
-    final ConversionErrorMessages conversionErrorMessages =
-        ConversionErrorMessages(patterns: Map());
-    final ValidationErrorMessages validationErrorMessages =
-        ValidationErrorMessages(typePatterns: Map());
-    IsStatic isStatic = IsStatic.inherited;
-    PDataProvider? dataProvider;
-    PQuery? query;
-    ControlEdit controlEdit = ControlEdit.firstLevelPanels;
-    for (PScript s in models) {
-      routes.addAll(s.routes);
-      conversionErrorMessages.patterns
-          .addAll(s.conversionErrorMessages.patterns);
-      validationErrorMessages.typePatterns
-          .addAll(s.validationErrorMessages.typePatterns);
-      isStatic = s.isStatic;
-      if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
-      if (s.queryIsDeclared) query = s.query;
-      controlEdit = s.controlEdit;
-      _rootModel = PScript(
-        name: name,
-        routes: routes,
-        id: id,
-        conversionErrorMessages: conversionErrorMessages,
-        validationErrorMessages: validationErrorMessages,
-        isStatic: isStatic,
-        query: query,
-        dataProvider: dataProvider,
-        controlEdit: controlEdit,
-      );
-    }
   }
 }
 
