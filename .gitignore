@@ -4,5 +4,5 @@
 
 # Conventional directory for build output.
 build/
-/precept-dev-generator.iml
 /.idea/
+/precept-server-code-generator.iml
