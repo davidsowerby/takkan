@@ -1,4 +1,4 @@
-# Schema and Script Management
+# Schema Management
 
 The application schema, defined by instances of `PSchema` are an integral part of Precept.  
 
