@@ -14,7 +14,7 @@ function contains(request, field, param){
 
 function lengthEquals(request, field, param){
   let value=stringValue(request,field);
-  if (value.length == param) return;
+  if (value.length === param) return;
   throw 'validation';
 }
 
