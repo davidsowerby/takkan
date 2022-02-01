@@ -1,4 +1,5 @@
 import 'package:precept_script/schema/field/string.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 import 'package:test/test.dart';
@@ -18,6 +19,10 @@ void main() {
       PScript script = PScript(
         name: 'A script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
       );
       // script.init();
 

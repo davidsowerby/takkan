@@ -34,6 +34,10 @@ void main() {
       final script = PScript(
           name: 'test',
           version: PVersion(number: 0),
+          schema: PSchema(
+            name: 'test',
+            version: PVersion(number: 0),
+          ),
           dataProvider: PDataProvider(
               schema: schema,
               providerName: 'x',

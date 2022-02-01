@@ -104,7 +104,7 @@ PDocument _$PDocumentFromJson(Map<String, dynamic> json) => PDocument(
       fields: const PSchemaFieldMapConverter()
           .fromJson(json['fields'] as Map<String, dynamic>),
       documentType:
-      $enumDecodeNullable(_$PDocumentTypeEnumMap, json['documentType']) ??
+          $enumDecodeNullable(_$PDocumentTypeEnumMap, json['documentType']) ??
               PDocumentType.standard,
       permissions: json['permissions'] == null
           ? const PPermissions()

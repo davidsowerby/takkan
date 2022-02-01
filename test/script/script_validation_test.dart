@@ -37,6 +37,10 @@ void main() {
       final script1 = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
       );
       // when
       final result = script1.validate();
@@ -59,6 +63,10 @@ void main() {
       final script = PScript(
         name: 'test',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         routes: {
           '': PPage(title: 'A page'),
         },
@@ -79,6 +87,10 @@ void main() {
       final component = PScript(
         name: 'A script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         isStatic: IsStatic.yes,
         routes: {
           "/home": PPage(title: 'a Page title', pageType: ''),
@@ -100,6 +112,10 @@ void main() {
       final component = PScript(
         name: 'a script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         dataProvider: PDataProvider(
           providerName: 'Test',
           configSource: const PConfigSource(
@@ -134,6 +150,10 @@ void main() {
       final component = PScript(
           name: 'A Script',
           version: PVersion(number: 0),
+          schema: PSchema(
+            name: 'test',
+            version: PVersion(number: 0),
+          ),
           dataProvider: PDataProvider(
             providerName: 'Test',
             sessionTokenKey: '',
@@ -171,6 +191,10 @@ void main() {
       final withoutQueryOrDataProvider = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         routes: {
           "/home": PPage(
             pageType: "mine",
@@ -183,6 +207,10 @@ void main() {
       final withoutQuery = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         dataProvider: PDataProvider(
           providerName: 'Test',
           sessionTokenKey: '',
@@ -207,6 +235,10 @@ void main() {
       final withQueryAndProvider = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         dataProvider: PDataProvider(
           providerName: 'Test',
           sessionTokenKey: '',

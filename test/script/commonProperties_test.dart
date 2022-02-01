@@ -31,6 +31,10 @@ void main() {
       final script = PScript(
         name: 'test',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         dataProvider: PDataProvider(
           providerName: 'Test',
           schema: PSchema(
@@ -95,6 +99,10 @@ void main() {
       final script = PScript(
           name: 'test',
           version: PVersion(number: 0),
+          schema: PSchema(
+            name: 'test',
+            version: PVersion(number: 0),
+          ),
           dataProvider: PNoDataProvider(),
           routes: {
             '/test': PPage(

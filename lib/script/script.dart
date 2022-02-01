@@ -41,6 +41,7 @@ class PScript extends PCommon {
   final String locale;
   final PVersion version;
   String? nameLocale;
+  final PSchema schema;
   final Map<String, PPage> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
@@ -58,6 +59,7 @@ class PScript extends PCommon {
     required this.name,
     required this.version,
     this.locale = 'en_GB',
+    required this.schema,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
     PQuery? query,

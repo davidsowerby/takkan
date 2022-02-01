@@ -18,17 +18,20 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
       name: json['name'] as String,
       version: PVersion.fromJson(json['version'] as Map<String, dynamic>),
       locale: json['locale'] as String? ?? 'en_GB',
+      schema: PSchema.fromJson(json['schema'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.firstLevelPanels,
     )..nameLocale = json['nameLocale'] as String?;
 
-Map<String, dynamic> _$PScriptToJson(PScript instance) => <String, dynamic>{
+Map<String, dynamic> _$PScriptToJson(PScript instance) =>
+    <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'name': instance.name,
       'locale': instance.locale,
       'version': instance.version.toJson(),
       'nameLocale': instance.nameLocale,
+      'schema': instance.schema.toJson(),
       'routes': instance.routes.map((k, e) => MapEntry(k, e.toJson())),
       'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
     };

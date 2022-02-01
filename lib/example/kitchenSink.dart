@@ -9,6 +9,7 @@ import 'package:precept_script/part/queryView.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/textBox.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 import 'package:precept_script/signin/signIn.dart';
@@ -22,6 +23,10 @@ final kitchenSinkScript = PScript(
   ),
   name: 'Kitchen Sink',
   version: PVersion(number: 0),
+  schema: PSchema(
+    name: 'dummy - move from data provider',
+    version: PVersion(number: -1),
+  ),
   locale: 'en_GB',
   routes: {
     '/': PPage(

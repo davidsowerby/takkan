@@ -3,6 +3,7 @@ import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 import 'package:test/test.dart';
@@ -28,6 +29,10 @@ void main() {
       final script = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         routes: {
           '/home': PPage(
             title: 'A page',
@@ -88,6 +93,10 @@ void main() {
       final script = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         controlEdit: ControlEdit.panelsOnly,
         routes: {
           '/home': PPage(
@@ -142,6 +151,10 @@ void main() {
       final script = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         routes: {
           '/home': PPage(
             title: 'title',
@@ -195,6 +208,10 @@ void main() {
       final script = PScript(
         name: 'A script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         routes: {
           '/home': PPage(
             title: 'A page',
@@ -244,7 +261,12 @@ void main() {
       final script = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
-        controlEdit: ControlEdit.thisAndBelow, // ignore: missing_required_param
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
+        controlEdit: ControlEdit.thisAndBelow,
+        // ignore: missing_required_param
         routes: {
           '/home': PPage(
             title: 'A page',
@@ -298,6 +320,10 @@ void main() {
       final script = PScript(
         name: 'A Script',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
         controlEdit: ControlEdit.inherited,
         routes: {
           '/home': PPage(

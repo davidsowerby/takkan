@@ -1,4 +1,5 @@
 import 'package:precept_script/schema/field/integer.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 import 'package:test/test.dart';
@@ -61,6 +62,10 @@ void main() {
       final PScript script = PScript(
         name: 'test',
         version: PVersion(number: 0),
+        schema: PSchema(
+          name: 'test',
+          version: PVersion(number: 0),
+        ),
       );
       final field = PInteger(validations: [
         VInteger.greaterThan(5),

@@ -4,6 +4,7 @@ import 'package:precept_script/data/converter/conversionErrorMessages.dart';
 import 'package:precept_script/data/provider/dataProvider.dart';
 import 'package:precept_script/loader/loaders.dart';
 import 'package:precept_script/query/query.dart';
+import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validationErrorMessages.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -59,6 +60,10 @@ class ScriptAssembler {
     }
     return PScript(
       name: name,
+      schema: PSchema(
+        name: 'dummy - move from data provider',
+        version: PVersion(number: -1),
+      ),
       routes: routes,
       version: version,
       id: id,
