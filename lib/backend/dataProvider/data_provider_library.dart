@@ -1,8 +1,8 @@
-import 'package:precept_backend/backend/app/appConfig.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/dataProvider/data_provider.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 
 /// A lookup facility for instances of [DataProvider] implementations.
 /// Provides an instance from the [find] method, from a supplied [PDataProvider]

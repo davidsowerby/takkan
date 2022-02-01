@@ -1,4 +1,4 @@
-import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/data/provider/document_id.dart';
 
 class Data {
   final DocumentId documentId;

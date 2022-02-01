@@ -1,4 +1,4 @@
-import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/query/query.dart';
 
 abstract class QueryResults<DATA> {

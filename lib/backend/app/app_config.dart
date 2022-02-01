@@ -5,7 +5,7 @@ import 'package:precept_backend/backend/dataProvider/constants.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/constants.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 
 /// A wrapper for the JSON application configuration held in *precept.json*
 /// The entire contents of *precept.json* are loaded through the constructor.

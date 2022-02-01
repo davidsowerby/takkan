@@ -2,21 +2,21 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/app/appConfig.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/dataProvider/data_provider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/preceptUser.dart';
+import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/data/provider/restDelegate.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/data/provider/rest_delegate.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/restQuery.dart';
+import 'package:precept_script/query/rest_query.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late InstanceConfig instanceConfig;

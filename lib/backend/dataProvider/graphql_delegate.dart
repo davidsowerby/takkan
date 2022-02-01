@@ -1,15 +1,15 @@
 import 'package:graphql/client.dart';
 import "package:http/http.dart" as http;
-import 'package:precept_backend/backend/app/appConfig.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/dataProvider/data_provider.dart';
 import 'package:precept_backend/backend/dataProvider/delegate.dart';
 import 'package:precept_backend/backend/dataProvider/result.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/preceptUser.dart';
+import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/data/provider/graphqlDelegate.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/data/provider/graphql_delegate.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 

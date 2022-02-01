@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/app/appConfig.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/dataProvider/constants.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';
