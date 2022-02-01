@@ -1,19 +1,19 @@
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/example/kitchenSink.dart';
-import 'package:precept_script/example/kitchenSinkSchema.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/example/kitchen_sink.dart';
+import 'package:precept_script/example/kitchen_sink_schema.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/signin/signIn.dart';
+import 'package:precept_script/signin/sign_in.dart';
 import 'package:test/test.dart';
 
 import '../fixtures.dart';

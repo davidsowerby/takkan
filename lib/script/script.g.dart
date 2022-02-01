@@ -24,8 +24,7 @@ PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
               ControlEdit.firstLevelPanels,
     )..nameLocale = json['nameLocale'] as String?;
 
-Map<String, dynamic> _$PScriptToJson(PScript instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$PScriptToJson(PScript instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'name': instance.name,
       'locale': instance.locale,

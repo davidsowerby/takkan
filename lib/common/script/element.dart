@@ -4,9 +4,9 @@ import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
-import 'package:precept_script/signin/signIn.dart';
+import 'package:precept_script/signin/sign_in.dart';
 
 class PElementListConverter {
   static const elementKeyName = "-element-";

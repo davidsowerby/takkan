@@ -1,5 +1,5 @@
 import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/queryView.dart';
+import 'package:precept_script/part/query_view.dart';
 import 'package:test/test.dart';
 
 /// Round tripping some times fails if default values are not set consistent through the inheritance tree.

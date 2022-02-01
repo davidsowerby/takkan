@@ -1,5 +1,5 @@
 
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 
 class DebugNode {
   final PreceptItem item;

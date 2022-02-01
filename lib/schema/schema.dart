@@ -2,13 +2,13 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/queryConverter.dart';
+import 'package:precept_script/query/query_converter.dart';
 import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/json/jsonConverter.dart';
+import 'package:precept_script/schema/json/json_converter.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 

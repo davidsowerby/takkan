@@ -1,4 +1,4 @@
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 
 class ValidationMessage {
   final String type;

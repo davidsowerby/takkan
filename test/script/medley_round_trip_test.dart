@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/example/medley_script.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';

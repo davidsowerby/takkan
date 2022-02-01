@@ -6,14 +6,14 @@ import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/element.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/panel/panelStyle.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/panel/panel_style.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/style.dart';
-import 'package:precept_script/trait/textTrait.dart';
+import 'package:precept_script/trait/text_trait.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'panel.g.dart';

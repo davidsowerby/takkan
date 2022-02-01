@@ -1,15 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/queryConverter.dart';
+import 'package:precept_script/query/query_converter.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/trait/textTrait.dart';
+import 'package:precept_script/trait/text_trait.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'common.g.dart';

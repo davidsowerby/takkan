@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
-import 'package:precept_script/data/provider/documentId.dart';
-import 'package:precept_script/query/fieldSelector.dart';
+import 'package:precept_script/common/script/precept_item.dart';
+import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
