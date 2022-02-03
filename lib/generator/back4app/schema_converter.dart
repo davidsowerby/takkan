@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/object/geo.dart';
-import 'package:precept_script/data/object/jsonObject.dart';
+import 'package:precept_script/data/object/json_object.dart';
 import 'package:precept_script/data/object/pointer.dart';
 import 'package:precept_script/data/object/relation.dart';
 import 'package:precept_script/schema/field/field.dart';

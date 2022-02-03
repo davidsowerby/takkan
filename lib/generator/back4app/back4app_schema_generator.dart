@@ -1,6 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:precept_server_code_generator/generator/diff.dart';
+import 'package:precept_server_code_generator/generator/format.dart';
+import 'package:precept_server_code_generator/generator/generated_file.dart';
+import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -9,64 +13,13 @@ import 'package:precept_script/validation/validate.dart';
 
 abstract class BackendSchemaGenerator {}
 
-abstract class GeneratedFile {
-  final String fileName;
-
-  GeneratedFile({required this.fileName});
-
-  List<String> get lines => content.split('\n');
-
-  String get content;
-
-  Future<File> writeFile(Directory outputDirectory) async {
-    final File outputFile = File('${outputDirectory.path}/$fileName');
-    if (outputFile.existsSync()) {
-      await outputFile.delete();
-    }
-    await outputFile.create();
-    return outputFile.writeAsString(content, flush: true);
-  }
-}
-
-class JavaScriptFile extends GeneratedFile {
-  @override
-  final String content;
-  final String dataTypeLabel;
-
-  JavaScriptFile(
-      {required String fileName,
-      required this.dataTypeLabel,
-      required this.content})
-      : super(fileName: fileName);
-}
-
-class JSONFile extends GeneratedFile {
-  final Map<String, dynamic> json;
-
-  JSONFile({required String fileName, required this.json})
-      : super(fileName: fileName);
-
-  @override
-  String get content => jsonEncode(json);
-}
-
-class JsonFile extends GeneratedFile {
-  final Map<String, dynamic> data;
-
-  JsonFile({required String fileName, required this.data})
-      : super(fileName: fileName);
-
-  @override
-  String get content => json.encode(data);
-}
-
 /// Generates Back4App Cloud Code files
-/// [main] and [files] are only valid after [generate] has been invoked
+/// [mainJs] and [files] are only valid after [generateCode] has been invoked
 class Back4AppSchemaGenerator implements BackendSchemaGenerator {
   final Map<String, GeneratedFile> files = {};
 
   /// Writes all the [files] to [outputDirectory].  This is usually the directory you use for
-  /// uploading cloud code to Back4App
+  /// uploading cloud code to Back4App.  Call [generateCode] first.
   Future<List<File>> writeFiles(Directory outputDirectory) async {
     final List<Future<File>> futures = List.empty(growable: true);
     for (GeneratedFile gf in files.values) {
@@ -75,21 +28,128 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     return Future.wait(futures);
   }
 
-  generate({required PSchema pSchema}) {
-    _validationFunctions(pSchema: pSchema);
-    _main(pSchema: pSchema);
-    _packageJson();
+  /// [schemas] must contain an list of PSchema ordered by descending version number,
+  /// that is, newest first.
+  generateCode({required List<PSchema> schemas}) {
+    final schema = schemas.first;
+    final diff = generateDiff(
+      current: schema,
+      previous: (schemas.length > 1) ? schemas[1] : null,
+    );
+    _generateAppJs(schema, diff);
+    _generateValidationFiles();
+    _generateBeforeSaveJs();
+    _generateFrameworkJs();
+
+    generateMainJs(schema: schema);
+    generatePackageJson();
   }
 
+  _generateFrameworkJs() {
+    resetBuf();
+    final file = JavaScriptFile(
+        fileName: 'framework.js', dataTypeLabel: '', lines: bufContentAsLines);
+    files[file.fileName] = file;
+  }
+
+  _generateAppJs(PSchema schema, SchemaDiff diff) {
+    final currentVersion = schema.version.number;
+    final deprecatedVersions = schema.version.deprecated.join(',');
+    outln(
+        'const versionStatus = {\'current\': $currentVersion, \'deprecated\': [$deprecatedVersions]};');
+    outln();
+    outn('const userCLP = ');
+    outJson(map: publicCLP);
+    outln();
+    outn('const roleCLP = ');
+    outJson(map: roleDefaultCLP);
+
+    for (int version in schema.version.activeVersions) {
+      _version(version, diff);
+    }
+    _appSchemas(schema.version.activeVersions);
+    _moduleExports();
+    final file = JavaScriptFile(
+        fileName: 'app.js', dataTypeLabel: '', lines: bufContentAsLines);
+    files[file.fileName] = file;
+  }
+
+  _appSchemas(List<int> allVersions) {
+    outln();
+    outt('async function appSchemas(version) ');
+    openBlock();
+    outln();
+    outt('switch (version) ');
+    openBlock();
+    for (int version in allVersions) {
+      outlt('case $version:');
+      tabLevel++;
+      outlt('return version$version();');
+      tabLevel--;
+    }
+    outlt('default :');
+    tabLevel++;
+    outlt('throw \'Invalid version\'');
+    tabLevel--;
+    closeBlock();
+    closeBlock();
+  }
+
+  _version(int versionNumber, SchemaDiff diff) {
+    outln();
+    outt('async function version$versionNumber() ');
+    openBlock();
+    outln();
+    outlt('// Create Classes');
+
+    for (PDocument doc in diff.create.values) {
+      _createClass(doc);
+    }
+
+    outln();
+    outlt('// Update Classes');
+    for (DocumentDiff doc in diff.update.values) {
+      _updateClass(doc);
+    }
+    outln();
+    outlt('// Delete Classes');
+    for (PDocument doc in diff.delete.values) {
+      _deleteClass(doc);
+    }
+    outln();
+    closeBlock();
+  }
+
+  _createClass(PDocument doc) {
+    outln();
+    outlt('const schema = new Parse.Schema(\'${doc.name}\');');
+    for (String s in doc.fields.keys) {
+      final PField f = doc.fields[s]!;
+      outlt('schema.add${_modelType(f)}(\'$s\', ${_fieldAttribs(f)});');
+    }
+    outlt('await schema.save(null, {useMasterKey: true});');
+  }
+
+  _updateClass(DocumentDiff diff) {}
+
+  _deleteClass(PDocument doc) {}
+
   GeneratedFile get stringValidation =>
-      _generatedFileProperty('stringValidation.js');
+      _generatedFileProperty('string_validation.js');
 
   GeneratedFile get integerValidation =>
-      _generatedFileProperty('integerValidation.js');
+      _generatedFileProperty('integer_validation.js');
 
-  GeneratedFile get main => _generatedFileProperty('main.js');
+  GeneratedFile get mainJs => _generatedFileProperty('main.js');
 
-  GeneratedFile get packageJson => _generatedFileProperty('package.json');
+  GeneratedFile get beforeSaveJs => _generatedFileProperty('before_save.js');
+
+  GeneratedFile get frameworkJs => _generatedFileProperty('framework.js');
+
+  JSONFile get packageJson =>
+      _generatedFileProperty('package.json') as JSONFile;
+
+  GeneratedFile get appJs => _generatedFileProperty('app.js');
 
   GeneratedFile _generatedFileProperty(String fileName) {
     final f = files[fileName];
@@ -99,46 +159,83 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     throw Exception('GeneratedFile for $fileName not found');
   }
 
-  _packageJson() {
+  _modelType(PField source) {
+    switch (source.runtimeType) {
+      case PInteger:
+        return 'Number';
+      case PString:
+        return 'String';
+    }
+  }
+
+  String _fieldAttribs(PField source) {
+    final req = '{required: ${source.required.toString()}';
+    return (source.defaultValue == null)
+        ? '$req}'
+        : '$req, defaultValue: ${source.defaultValue}}';
+  }
+
+  generatePackageJson() {
     final JSONFile file = JSONFile(fileName: 'package.json', json: {
       "dependencies": {"validator": "13.6.0"}
     });
     files[file.fileName] = file;
   }
 
-  _main({required PSchema pSchema}) {
-    final StringBuffer buf = StringBuffer();
+  /// This relies on validation files being generated first
+  generateMainJs({required PSchema schema}) {
+    resetBuf();
+    _requiredFile(appJs);
+    _requiredFile(beforeSaveJs);
+    _requiredFile(frameworkJs);
 
-    /// This relies on validation files being generated first
-    for (GeneratedFile gf in files.values) {
-      final jf = gf as JavaScriptFile;
-      buf.writeln(
-          "var validate${jf.dataTypeLabel} = require('./${jf.fileName}');");
-    }
-    buf.writeln();
-    for (PDocument doc in pSchema.documents.values) {
-      buf.writeln('Parse.Cloud.beforeSave("${doc.name}", (request) => {');
-      doc.fields.forEach((fieldName, field) {
-        for (V v in field.validations) {
-          final ref = validationRef(v);
-          final paramsList = ref.params.values.join(',');
-          final dataTypeLabel = field.runtimeType.toString().substring(1);
-          buf.writeln(
-              '  validate$dataTypeLabel.${ref.name}(request,\'$fieldName\',$paramsList);');
-        }
-      });
-      buf.writeln('})');
-    }
+    // for (GeneratedFile gf in files.values) {
+    //   final jf = gf as JavaScriptFile;
+    //   outlt("var validate${jf.dataTypeLabel} = require('./${jf.fileName}');");
+    // }
+    // outln();
+    // for (PDocument doc in schema.documents.values) {
+    //   outt('Parse.Cloud.beforeSave("${doc.name}", (request) => ');
+    //   openBlock();
+    //   outlt(
+    //       'const requestedSchemaVersion = parseInt(request.params.schema_version); ');
+    //   outt('switch (requestedSchemaVersion) ');
+    //   openBlock();
+    //   for (int c in schema.version.activeVersions) {
+    //     outt('case $c: ');
+    //     openBlock();
+    //     doc.fields.forEach((fieldName, field) {
+    //       for (V v in field.validations) {
+    //         final ref = validationRef(v);
+    //         final paramsList = ref.params.values.join(',');
+    //         final dataTypeLabel = field.runtimeType.toString().substring(1);
+    //         outlt(
+    //             'validate$dataTypeLabel.${ref.name}(request,\'$fieldName\',$paramsList);');
+    //       }
+    //     });
+    //     outlt("'return 'success';'");
+    //     closeBlock();
+    //     outt('default: ');
+    //     openBlock();
+    //     outln("throw 'invalid use ${schema.version.number}';");
+    //     closeBlock();
+    //     closeBlock();
+    //     closeBlock(terminator: ');');
+    //   }
+    //
+    //   // closeBlock(terminator: ');');
+    //   closeBlock();
+    // }
 
     final mainJs = JavaScriptFile(
       fileName: 'main.js',
       dataTypeLabel: '',
-      content: buf.toString(),
+      lines: bufContentAsLines,
     );
     files[mainJs.fileName] = mainJs;
   }
 
-  _validationFunctions({required PSchema pSchema}) {
+  _generateValidationFiles() {
     final intVal = _createValidationFile(
       cases: VInteger.refs(),
       dataTypeLabel: 'Integer',
@@ -151,6 +248,32 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     );
     files[stringVal.fileName] = stringVal;
   }
+
+  _generateBeforeSaveJs() {
+    resetBuf();
+    _requiredFile(integerValidation);
+    _requiredFile(stringValidation);
+    JavaScriptFile beforeSave = JavaScriptFile(
+      fileName: 'before_save.js',
+      lines: bufContentAsLines,
+    );
+    files[beforeSave.fileName] = beforeSave;
+  }
+
+  void _moduleExports() {
+    outln();
+    outt('module.exports = ');
+    openBlock();
+    outlt('userCLP: userCLP,');
+    outlt('roleCLP: roleCLP,');
+    outlt('appSchemas: appSchemas,');
+    outlt('versionStatus: versionStatus');
+    closeBlock(terminator: ';');
+  }
+}
+
+_requiredFile(GeneratedFile gf) {
+  outlt('require(\'./${gf.fileName}\');');
 }
 
 /// For each option within a V (VInteger, VString etc) we need to generate javascript
@@ -162,22 +285,21 @@ GeneratedFile _createValidationFile({
   required String dataTypeLabel,
   List<String> requireModules = const [],
 }) {
-  final StringBuffer buf = StringBuffer();
+  resetBuf();
   final List<String> exports = List.empty(growable: true);
 
   for (var element in requireModules) {
-    buf.writeln("var val = require('$element');");
+    outlt("var val = require('$element');");
   }
 
   if (requireModules.isNotEmpty) {
-    buf.writeln();
+    outln();
   }
 
   int c = 0;
   for (var element in cases) {
     final String functionName = element.name;
     _validationFunction(
-      buf: buf,
       dataTypeLabel: dataTypeLabel.toLowerCase(),
       functionCode: element.javaScript,
       exports: exports,
@@ -187,47 +309,52 @@ GeneratedFile _createValidationFile({
     c++;
   }
 
-  _retrieveValue(buf: buf, dataTypeLabel: dataTypeLabel);
+  _retrieveValue(dataTypeLabel: dataTypeLabel);
 
   /// extract exports;
-  buf.writeln('module.exports = {');
-  buf.writeln(exports.join(',\n'));
-  buf.writeln('}');
+  outt('module.exports = ');
+  openBlock();
+  for (String export in exports) {
+    final comma = export == (exports.last) ? '' : ',';
+    outlt('$export$comma');
+  }
+  closeBlock(terminator: ';');
   return JavaScriptFile(
       dataTypeLabel: dataTypeLabel,
-      fileName: '${dataTypeLabel.toLowerCase()}Validation.js',
-      content: buf.toString());
+      fileName: '${dataTypeLabel.toLowerCase()}_validation.js',
+      lines: bufContentAsLines);
 }
 
 /// [validationEnum] is not typesafe.  There does not appear to be an 'isEnum' type check available in Dart
 /// Data type is used for file names etc, may not exactly match the real data type
 /// as naming of validationEnum is independent of backend
 void _validationFunction(
-    {required StringBuffer buf,
-    required String functionCode,
+    {required String functionCode,
     required String functionName,
     required String dataTypeLabel,
     required List<String> params,
     required List<String> exports}) {
   final p = params.join(',');
-  buf.writeln('function $functionName(request, field, $p){');
-  buf.writeln('  let value=${dataTypeLabel}Value(request,field);');
-  buf.writeln('  if ($functionCode) return;');
-  buf.writeln('  throw \'validation\';');
-  buf.writeln('}');
-  buf.writeln();
-  exports.add('  $functionName');
+  outt('function $functionName(request, field, $p) ');
+  openBlock();
+  outlt('let value = ${dataTypeLabel}Value(request, field);');
+  outlt('if ($functionCode) return;');
+  outlt('throw \'validation\';');
+  closeBlock();
+  outln();
+  exports.add(functionName);
 }
 
-_retrieveValue({required StringBuffer buf, required String dataTypeLabel}) {
-  buf.writeln('function ${dataTypeLabel.toLowerCase()}Value(request, field){');
+_retrieveValue({required String dataTypeLabel}) {
+  outt('function ${dataTypeLabel.toLowerCase()}Value(request, field) ');
+  openBlock();
   if (dataTypeLabel.toLowerCase() == 'integer') {
-    buf.writeln('  return parseInt(request.object.get(field));');
+    outlt('return parseInt(request.object.get(field));');
   } else {
-    buf.writeln('  return request.object.get(field);');
+    outlt('return request.object.get(field);');
   }
-  buf.writeln('}');
-  buf.writeln();
+  closeBlock();
+  outln();
 }
 
 //object.save (validation and ACL)
@@ -235,3 +362,27 @@ _retrieveValue({required StringBuffer buf, required String dataTypeLabel}) {
 // roles
 
 // CLP
+
+/// This is what Back4App sets User CLP to initially
+const publicCLP = {
+  "find": {"*": true},
+  "count": {"*": true},
+  "get": {"*": true},
+  "create": {"*": true},
+  "update": {"*": true},
+  "delete": {"*": true},
+  "addField": {"*": true},
+  "protectedFields": {"*": []}
+};
+
+/// This is what Back4App sets Role CLP to initially
+const roleDefaultCLP = {
+  "find": {"*": true, "requiresAuthentication": true},
+  "count": {"*": true, "requiresAuthentication": true},
+  "get": {"*": true, "requiresAuthentication": true},
+  "create": {"requiresAuthentication": true},
+  "update": {},
+  "delete": {},
+  "addField": {},
+  "protectedFields": {"*": []}
+};

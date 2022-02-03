@@ -1,4 +1,4 @@
-name: precept_dev_generator
+name: precept_server_code_generator
 description: A simple command-line application.
 version: 1.0.0
 # homepage: https://www.example.com
@@ -10,11 +10,11 @@ environment:
 dependencies:
   dio: ^4.0.0
   precept_script:
-    path: ../precept_script
+    path: /home/david/git/precept/precept_script
   precept_back4app_client:
-    path: ../precept_back4app_client
+    path: /home/david/git/precept/precept_back4app_client
   precept_backend:
-    path: ../precept_backend
+    path: /home/david/git/precept/precept_backend
 
 dev_dependencies:
   path: ^1.8.1

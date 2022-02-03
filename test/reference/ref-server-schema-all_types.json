@@ -135,7 +135,7 @@
       }
     },
     {
-      "className": "Sample",
+      "className": "Person",
       "fields": {
         "objectId": {
           "type": "String"
@@ -149,91 +149,32 @@
         "ACL": {
           "type": "ACL"
         },
-        "name": {
-          "type": "String",
-          "required": false
-        },
-        "nameWithDefault": {
-          "type": "String",
-          "required": false,
-          "defaultValue": "aDefaultValue"
-        },
-        "nameRequired": {
-          "type": "String",
-          "required": true
-        },
-        "number": {
+        "age": {
           "type": "Number",
-          "required": false
-        },
-        "date": {
-          "type": "Date",
-          "required": false
-        },
-        "object": {
-          "type": "Object",
-          "required": false
-        },
-        "array": {
-          "type": "Array",
-          "required": false
-        },
-        "geoPoint": {
-          "type": "GeoPoint",
-          "required": false
-        },
-        "polygon": {
-          "type": "Polygon",
-          "required": false
-        },
-        "file": {
-          "type": "File",
-          "required": false
-        },
-        "pointToUser": {
-          "type": "Pointer",
-          "targetClass": "_User",
-          "required": false
-        },
-        "relationToUser": {
-          "type": "Relation",
-          "targetClass": "_User",
-          "required": false
-        },
-        "extraField": {
-          "type": "String",
           "required": false
         }
       },
       "classLevelPermissions": {
         "find": {
-          "role:author": true,
-          "requiresAuthentication": true,
-          "role:editor": true
+          "*": true
         },
         "count": {
-          "role:author": true,
-          "role:editor": true
+          "*": true
         },
         "get": {
-          "role:author": true,
-          "role:editor": true,
           "*": true
         },
         "create": {
-          "role:author": true,
-          "role:editor": true,
-          "requiresAuthentication": true
+          "*": true
         },
         "update": {
-          "role:editor": true
+          "*": true
         },
         "delete": {
-          "role:author": true,
-          "role:editor": true
+          "*": true
         },
         "addField": {
-          "requiresAuthentication": true
+          "*": true
         },
         "protectedFields": {
           "*": []
@@ -242,9 +183,6 @@
       "indexes": {
         "_id_": {
           "_id": 1
-        },
-        "polygon_2dsphere": {
-          "polygon": "2dsphere"
         }
       }
     }
