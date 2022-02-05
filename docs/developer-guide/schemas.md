@@ -32,7 +32,7 @@ The concept used by Precept is straightforward:
 - Any number of versions may be 'deprecated'
 - all other versions are considered 'invalid'
 
-These are defined within the generated code, from the current and previous versions of `PSchema`. Version status can be accessed by a call to server function 'schemaStatus'.
+These are defined within the generated code, from the current and previous versions of `PSchema`. Version status (of both script and schema) can be accessed by a call to server function 'versionStatus'.
 
 The current version from the client is included with all calls to the server. This allows 3 different responses:
 
