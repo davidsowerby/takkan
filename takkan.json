@@ -1,6 +1,6 @@
 {
-  "precept": {
-    "precept-test": {
+  "takkan": {
+    "test": {
       "type" : "back4app",
       "headers": {
         "X-Parse-Application-Id": "H4T5mPRMK3Q1mFUhziYV5Rf3GciG1jcyXePFloAn",

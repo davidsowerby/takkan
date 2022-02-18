@@ -1,7 +1,9 @@
 
-import 'package:precept_server_code_generator/generator/diff.dart';
+import 'package:takkan_server_code_generator/generator/diff.dart';
+import 'package:takkan_medley_script/medley/medley_schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
-import 'package:precept_script/example/medley_schema.dart';
 
 void main() {
   group('Diff', () {
@@ -17,7 +19,8 @@ void main() {
       // given
       final previous = null;
       final current = medleySchema[0];
-      current.init();
+      final Script script = Script(name: 'test', schema: current,version: Version(number: 0));
+      script.init();
       // when
       final result = generateDiff(previous: previous, current: current);
       // then
@@ -31,12 +34,14 @@ void main() {
     });
     test('0 to 1', () {
       // given
-      final previous = medleySchema[0];
-      final current = medleySchema[1];
-      previous.init();
-      current.init();
+      final previousSchema = medleySchema[0];
+      final currentSchema = medleySchema[1];
+      final Script previousScript = Script(name: 'previous', schema: previousSchema,version: Version(number: 0));
+      final Script currentScript = Script(name: 'current', schema: currentSchema,version: Version(number: 0));
+      previousScript.init();
+      currentScript.init();
       // when
-      final result = generateDiff(previous: previous, current: current);
+      final result = generateDiff(previous: previousSchema, current: currentSchema);
       // then
 
       expect(result.create, isEmpty);

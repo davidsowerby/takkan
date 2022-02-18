@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:precept_script/loader/loaders.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_server_code_generator/generator/back4app/back4app_schema_generator.dart';
-import 'package:precept_server_code_generator/target/app/loaders.dart';
+import 'package:takkan_script/loader/loaders.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_server_code_generator/generator/back4app/back4app_schema_generator.dart';
+import 'package:takkan_server_code_generator/target/app/loaders.dart';
 
 void main(List<String> arguments) async {
   print ("Starting server code generator  with args: ${arguments.join('\n')}");
@@ -30,18 +30,18 @@ void main(List<String> arguments) async {
   print('Server code generation complete, see directory: ${args.serverCodeDir}');
 }
 
-/// Extracts PSchema instances from the target app's loaders
-Future<List<PSchema>> extractSchemas() async {
-  final List<PSchema> schemas = List.empty(growable: true);
-  for (PreceptLoader loader in loaders) {
-    final PScript script = await loader.load();
+/// Extracts Schema instances from the target app's loaders
+Future<List<Schema>> extractSchemas() async {
+  final List<Schema> schemas = List.empty(growable: true);
+  for (TakkanLoader loader in loaders) {
+    final Script script = await loader.load();
     schemas.add(script.schema);
     script.init();
   }
   return schemas;
 }
 
-/// This should be in a utils package somewhere, it is used in precept_server_code_generator and precept_dev_app
+/// This should be in a utils package somewhere, it is used in takkan_server_code_generator and takkan_dev_app
 class Args {
   final Map<String, String> mappedArgs = {};
   final List<String> raw;

@@ -1,5 +1,5 @@
-import 'package:precept_server_code_generator/generator/format.dart';
-import 'package:precept_server_code_generator/generator/back4app/back4app_schema_generator.dart';
+import 'package:takkan_server_code_generator/generator/format.dart';
+import 'package:takkan_server_code_generator/generator/back4app/back4app_schema_generator.dart';
 import 'package:test/test.dart';
 
 import '../compare_file.dart';

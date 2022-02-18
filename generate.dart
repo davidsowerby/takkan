@@ -1,9 +1,9 @@
 
-/// Attaches to a specified Precept App project, generates its validation code and server schema
-/// into a holding directory. Generation uses the PSchema instances defined by the
-/// Precept App.
+/// Attaches to a specified Takkan App project, generates its validation code and server schema
+/// into a holding directory. Generation uses the Schema instances defined by the
+/// Takkan App.
 ///
-/// Precept code code is downloaded from GitLab to the same holding directory.
+/// Takkan code is downloaded from GitLab to the same holding directory.
 ///
 /// For Back4App this holding directory is pushed to the server instance using b4a deploy
 ///

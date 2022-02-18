@@ -1,15 +1,13 @@
 import 'dart:io';
 
-import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_server_code_generator/generator/back4app/back4app_schema_generator.dart';
-import 'package:precept_server_code_generator/generator/back4app/schema_converter.dart';
+import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:takkan_server_code_generator/generator/back4app/back4app_schema_generator.dart';
+import 'package:takkan_server_code_generator/generator/back4app/schema_converter.dart';
 
 
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/delegate.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/delegate.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 /// It is expected that eventually this function will only be available in a
 /// "Precept Developer" app or similar.  Some of the functionality it uses (for
@@ -22,7 +20,7 @@ import 'package:precept_script/schema/schema.dart';
 /// - adding new roles
 ///
 /// - The Back4App App is identified by [providerConfig], which is also used
-/// to look up the necessary keys from *precept.json*
+/// to look up the necessary keys from *takkan.json*
 ///
 /// - The output directory is identified by a combination of [targetBaseDirectory]
 /// and the instance identified by the [PConfigSource] in [providerConfig], and
@@ -46,7 +44,7 @@ import 'package:precept_script/schema/schema.dart';
 ///
 /// - [pSchema] is used to generate a Back4App server schema.  This is
 /// persisted in the ***ServerSchema*** class.  This is held separately because
-/// a [PSchema] may change in a way which does not impact the server schema.
+/// a [Schema] may change in a way which does not impact the server schema.
 /// The server schema would then be released by an authorised user at a later date.
 /// The release mechanism is one of the cloud code functions provided by the
 /// code code.
@@ -71,7 +69,7 @@ import 'package:precept_script/schema/schema.dart';
 //   final Map<String, dynamic> pSchemaObject = {};
 //
 //   /// Send schemas to be persisted
-//   /// PSchema
+//   /// Schema
 //   /// Version is set by Cloud Function
 //   final pSchema = providerConfig.schema;
 //
@@ -90,7 +88,7 @@ import 'package:precept_script/schema/schema.dart';
 //   provider.init(appConfig);
 //
 //   await provider.createDocument(
-//     path: 'PSchema',
+//     path: 'Schema',
 //     data: pSchemaObject,
 //     useDelegate: Delegate.rest,
 //   );
@@ -110,7 +108,7 @@ import 'package:precept_script/schema/schema.dart';
 //   return outputDirectory;
 // }
 //
-// Map<String, Map<String, dynamic>> _serverSchema(PSchema pSchema) {
+// Map<String, Map<String, dynamic>> _serverSchema(Schema pSchema) {
 //   final Map<String, Map<String, dynamic>> serverClassSchemas = {};
 //   pSchema.documents.forEach((key, value) {
 //     final ServerSchemaClass schemaClass = ServerSchemaClass.fromPrecept(value);

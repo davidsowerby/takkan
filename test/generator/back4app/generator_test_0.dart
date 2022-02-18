@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_server_code_generator/generator/back4app/back4app_schema_generator.dart';
-import 'package:precept_server_code_generator/generator/diff.dart';
-import 'package:precept_script/example/medley_schema.dart';
+import 'package:takkan_server_code_generator/generator/back4app/back4app_schema_generator.dart';
+import 'package:takkan_server_code_generator/generator/diff.dart';
+import 'package:takkan_medley_script/medley/medley_schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 import '../../compare_file.dart';
 
 void main() {
-  group('Generated files', () {
+  group('Generated files match reference', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -23,7 +25,8 @@ void main() {
       Directory systemTemp = Directory.systemTemp;
       final Directory tempDir = await systemTemp.createTemp();
       final schema = medleySchema0;
-      schema.init();
+      final Script script = Script(name: 'test', schema: schema,version: Version(number: 0));
+      script.init();
       final generator = Back4AppSchemaGenerator();
       final refAppJs = File('test/reference/0/cloud/app.js');
       final refMainJs = File('test/reference/0/cloud/main.js');

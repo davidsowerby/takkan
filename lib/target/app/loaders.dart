@@ -1,5 +1,5 @@
-import 'package:precept_script/loader/loaders.dart';
+import 'package:takkan_script/loader/loaders.dart';
 
-final loaders = <PreceptLoader>[];
+final loaders = <TakkanLoader>[];
 
-/// This is a placeholder file, which is overwritten by *precept_dev_app* to create an app specific server code generator
+/// This is a placeholder file, which is overwritten by *takkan_dev_app* to create an app specific server code generator

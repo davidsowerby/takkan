@@ -27,7 +27,7 @@ Parse.Cloud.define("initPrecept", async (request) => {
 Parse.Cloud.define("applyServerSchema", async (request) => {
     const version = parseInt(request.params.version);
     await app.appSchemas(version);
-    return 'success';
+    return await Parse.Schema.all();
 });
 
 // Returns the roles allocated to the current user

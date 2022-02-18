@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/object/geo.dart';
-import 'package:precept_script/data/object/json_object.dart';
-import 'package:precept_script/data/object/pointer.dart';
-import 'package:precept_script/data/object/relation.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/pointer.dart';
-import 'package:precept_script/schema/field/relation.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/data/object/geo.dart';
+import 'package:takkan_script/data/object/json_object.dart';
+import 'package:takkan_script/data/object/pointer.dart';
+import 'package:takkan_script/data/object/relation.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/pointer.dart';
+import 'package:takkan_script/schema/field/relation.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 import 'converter.dart';
 
@@ -70,26 +70,26 @@ class ServerSchemaClass {
 
   Map<String, dynamic> toJson() => _$ServerSchemaClassToJson(this);
 
-  ServerSchemaClass.fromPrecept(PDocument doc)
+  ServerSchemaClass.fromPrecept(Document doc)
       : className = doc.name,
         fields = convertFields(doc),
         classLevelPermissions = SchemaClassLevelPermissions.fromDocument(doc),
         indexes = null;
 
-  static Map<String, ServerSchemaField> convertFields(PDocument doc) {
+  static Map<String, ServerSchemaField> convertFields(Document doc) {
     Map<String, ServerSchemaField> fields = {};
     doc.fields.forEach((key, value) {
       switch (value.runtimeType) {
-        case PPointer:
+        case FPointer:
           fields[key] = ReferenceSchemaField(
-            targetClass: (value as PPointer).targetClass,
+            targetClass: (value as FPointer).targetClass,
             required: value.required,
             type: selectFieldType(value),
           );
           break;
-        case PRelation:
+        case FRelation:
           fields[key] = ReferenceSchemaField(
-            targetClass: (value as PRelation).targetClass,
+            targetClass: (value as FRelation).targetClass,
             required: value.required,
             type: selectFieldType(value),
           );
@@ -106,8 +106,8 @@ class ServerSchemaClass {
     return fields;
   }
 
-  static String selectFieldType(PField preceptField) {
-    switch (preceptField.modelType) {
+  static String selectFieldType(Field takkanField) {
+    switch (takkanField.modelType) {
       case int:
         return 'Number';
       case String:
@@ -132,10 +132,10 @@ class ServerSchemaClass {
         return 'File';
     }
     throw UnsupportedError(
-        '${preceptField.modelType.toString()} is not supported');
+        '${takkanField.modelType.toString()} is not supported');
   }
 
-  void addField(PField pField) {}
+  void addField(Field pField) {}
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
@@ -186,7 +186,7 @@ class SchemaClassLevelPermissions {
   final Map<String, dynamic> delete;
   final Map<String, dynamic> addField;
 
-  SchemaClassLevelPermissions.fromDocument(PDocument document)
+  SchemaClassLevelPermissions.fromDocument(Document document)
       : get = buildPermissions(AccessMethod.get, document),
         find = buildPermissions(AccessMethod.find, document),
         count = buildPermissions(AccessMethod.count, document),
@@ -206,7 +206,7 @@ class SchemaClassLevelPermissions {
   });
 
   static Map<String, dynamic> buildPermissions(
-      AccessMethod method, PDocument document) {
+      AccessMethod method, Document document) {
     final Map<String, dynamic> map = {};
     switch (method) {
       case AccessMethod.get:
@@ -241,7 +241,7 @@ class SchemaClassLevelPermissions {
       case AccessMethod.all:
       case AccessMethod.read:
       case AccessMethod.write:
-        throw PreceptException(
+        throw TakkanException(
             '\'$method\' is not appropriate in this context');
     }
     if (document.permissions.isPublic.contains(method)) {

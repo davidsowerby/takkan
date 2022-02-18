@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_server_code_generator/generator/generated_file.dart';
+import 'package:takkan_server_code_generator/generator/generated_file.dart';
 
 Future<List<LineComparison>> compareFileToGenerated(
     {required File reference, required GeneratedFile generated}) async {

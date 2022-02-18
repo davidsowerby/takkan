@@ -1,26 +1,26 @@
 import 'dart:convert';
 
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/validation/validate.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/validation/validate.dart';
 
-/// Creates a diff between 2 versions of a PSchema
+/// Creates a diff between 2 versions of a Schema
 ///
 ///
-SchemaDiff generateDiff({PSchema? previous, required PSchema current}) {
+SchemaDiff generateDiff({Schema? previous, required Schema current}) {
   if (previous != null) {
     if (current.version.number - previous.version.number == 0) {
-      throw PreceptException(
+      throw TakkanException(
           'To create a diff, two different versions are required');
     }
     if (current.version.number < previous.version.number) {
-      throw PreceptException('Previous version must precede current version');
+      throw TakkanException('Previous version must precede current version');
     }
   }
 
-  final Map<String, PDocument> create = {};
-  final Map<String, PDocument> delete = {};
+  final Map<String, Document> create = {};
+  final Map<String, Document> delete = {};
   final Map<String, DocumentDiff> update = {};
   if (previous == null) {
     create.addAll(current.documents);
@@ -47,10 +47,10 @@ SchemaDiff generateDiff({PSchema? previous, required PSchema current}) {
 /// Updating a field is actually just replacing old with new, except that changing field type is not
 /// possible.  Trying to will throw a PreceptException
 DocumentDiff diffDocument(
-    {required PDocument previous, required PDocument current}) {
-  final Map<String, PField> create = {};
-  final Map<String, PField> delete = {};
-  final Map<String, PField> update = {};
+    {required Document previous, required Document current}) {
+  final Map<String, Field> create = {};
+  final Map<String, Field> delete = {};
+  final Map<String, Field> update = {};
 
   for (String field in current.fields.keys) {
     final currentField = current.fields[field]!;
@@ -75,9 +75,9 @@ DocumentDiff diffDocument(
 
 class DocumentDiff {
   final String name;
-  final Map<String, PField> create;
-  final Map<String, PField> delete;
-  final Map<String, PField> update;
+  final Map<String, Field> create;
+  final Map<String, Field> delete;
+  final Map<String, Field> update;
 
   const DocumentDiff({
     required this.name,
@@ -88,9 +88,9 @@ class DocumentDiff {
 }
 
 class SchemaDiff {
-  final Map<String, PDocument> create;
+  final Map<String, Document> create;
   final Map<String, DocumentDiff> update;
-  final Map<String, PDocument> delete;
+  final Map<String, Document> delete;
 
   const SchemaDiff({
     required this.create,
@@ -103,9 +103,9 @@ class SchemaDiff {
 // final bool required;
 // @JsonKey(includeIfNull: false)
 // final MODEL? defaultValue;
-bool fieldUnchanged({required PField previous, required PField current}) {
+bool fieldUnchanged({required Field previous, required Field current}) {
   if (current.modelType != previous.modelType) {
-    throw PreceptException('A field data type cannot be changed');
+    throw TakkanException('A field data type cannot be changed');
   }
   if (previous.defaultValue != current.defaultValue) {
     return false;

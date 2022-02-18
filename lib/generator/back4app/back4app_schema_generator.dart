@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_server_code_generator/generator/diff.dart';
-import 'package:precept_server_code_generator/generator/format.dart';
-import 'package:precept_server_code_generator/generator/generated_file.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/validation/result.dart';
-import 'package:precept_script/validation/validate.dart';
+import 'package:takkan_server_code_generator/generator/diff.dart';
+import 'package:takkan_server_code_generator/generator/format.dart';
+import 'package:takkan_server_code_generator/generator/generated_file.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/validation/result.dart';
+import 'package:takkan_script/validation/validate.dart';
 
 abstract class BackendSchemaGenerator {}
 
@@ -28,9 +28,9 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     return Future.wait(futures);
   }
 
-  /// [schemas] must contain an list of PSchema ordered by descending version number,
+  /// [schemas] must contain an list of Schema ordered by descending version number,
   /// that is, newest first.
-  generateCode({required List<PSchema> schemas}) {
+  generateCode({required List<Schema> schemas}) {
     final schema = schemas.first;
     final diff = generateDiff(
       current: schema,
@@ -39,20 +39,12 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     _generateAppJs(schema, diff);
     _generateValidationFiles();
     _generateBeforeSaveJs();
-    _generateFrameworkJs();
 
     generateMainJs(schema: schema);
     generatePackageJson();
   }
 
-  _generateFrameworkJs() {
-    resetBuf();
-    final file = JavaScriptFile(
-        fileName: 'framework.js', dataTypeLabel: '', lines: bufContentAsLines);
-    files[file.fileName] = file;
-  }
-
-  _generateAppJs(PSchema schema, SchemaDiff diff) {
+  _generateAppJs(Schema schema, SchemaDiff diff) {
     final currentVersion = schema.version.number;
     final deprecatedVersions = schema.version.deprecated.join(',');
     outln(
@@ -102,7 +94,7 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     outln();
     outlt('// Create Classes');
 
-    for (PDocument doc in diff.create.values) {
+    for (Document doc in diff.create.values) {
       _createClass(doc);
     }
 
@@ -113,18 +105,18 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     }
     outln();
     outlt('// Delete Classes');
-    for (PDocument doc in diff.delete.values) {
+    for (Document doc in diff.delete.values) {
       _deleteClass(doc);
     }
     outln();
     closeBlock();
   }
 
-  _createClass(PDocument doc) {
+  _createClass(Document doc) {
     outln();
     outlt('const schema = new Parse.Schema(\'${doc.name}\');');
     for (String s in doc.fields.keys) {
-      final PField f = doc.fields[s]!;
+      final Field f = doc.fields[s]!;
       outlt('schema.add${_modelType(f)}(\'$s\', ${_fieldAttribs(f)});');
     }
     outlt('await schema.save(null, {useMasterKey: true});');
@@ -132,7 +124,7 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
 
   _updateClass(DocumentDiff diff) {}
 
-  _deleteClass(PDocument doc) {}
+  _deleteClass(Document doc) {}
 
   GeneratedFile get stringValidation =>
       _generatedFileProperty('string_validation.js');
@@ -159,16 +151,16 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     throw Exception('GeneratedFile for $fileName not found');
   }
 
-  _modelType(PField source) {
+  _modelType(Field source) {
     switch (source.runtimeType) {
-      case PInteger:
+      case FInteger:
         return 'Number';
-      case PString:
+      case FString:
         return 'String';
     }
   }
 
-  String _fieldAttribs(PField source) {
+  String _fieldAttribs(Field source) {
     final req = '{required: ${source.required.toString()}';
     return (source.defaultValue == null)
         ? '$req}'
@@ -183,7 +175,7 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
   }
 
   /// This relies on validation files being generated first
-  generateMainJs({required PSchema schema}) {
+  generateMainJs({required Schema schema}) {
     resetBuf();
     _requiredFile(appJs);
     _requiredFile(beforeSaveJs);
@@ -194,7 +186,7 @@ class Back4AppSchemaGenerator implements BackendSchemaGenerator {
     //   outlt("var validate${jf.dataTypeLabel} = require('./${jf.fileName}');");
     // }
     // outln();
-    // for (PDocument doc in schema.documents.values) {
+    // for (Document doc in schema.documents.values) {
     //   outt('Parse.Cloud.beforeSave("${doc.name}", (request) => ');
     //   openBlock();
     //   outlt(
