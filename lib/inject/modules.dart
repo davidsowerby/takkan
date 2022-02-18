@@ -1,15 +1,15 @@
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/locale.dart';
-import 'package:precept_client/common/page/signInPage.dart';
+import 'package:precept_client/common/page/signin_page.dart';
 import 'package:precept_client/common/toast.dart';
-import 'package:precept_client/config/assetLoader.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/library/borderLibrary.dart';
-import 'package:precept_client/library/themeLookup.dart';
-import 'package:precept_client/user/signInFactory.dart';
+import 'package:precept_client/config/asset_loader.dart';
+import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/library/border_library.dart';
+import 'package:precept_client/library/theme_lookup.dart';
+import 'package:precept_client/user/signin_factory.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/signin/signIn.dart';
+import 'package:precept_script/signin/sign_in.dart';
 
 void preceptDefaultInjectionBindings() {
   commonInjectionBindings();
@@ -18,7 +18,6 @@ void preceptDefaultInjectionBindings() {
   routerInjectionBindings();
   themeInjectionBindings();
 }
-
 
 commonInjectionBindings() {
   getIt.registerFactory<LocaleReader>(() => DefaultLocaleReader());

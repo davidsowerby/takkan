@@ -1,7 +1,7 @@
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/listBinding.dart';
-import 'package:precept_client/binding/stringBinding.dart';
+import 'package:precept_client/binding/list_binding.dart';
+import 'package:precept_client/binding/string_binding.dart';
 import 'package:precept_client/common/exceptions.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/converter/converter.dart';

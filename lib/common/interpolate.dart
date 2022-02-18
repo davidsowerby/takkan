@@ -1,4 +1,4 @@
-import 'package:precept_client/common/content/contentState.dart';
+import 'package:precept_client/common/content/content_state.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:validators/validators.dart';
 

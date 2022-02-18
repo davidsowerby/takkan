@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/common/content/contentState.dart';
-import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/page/editState.dart';
+import 'package:precept_client/common/content/content_state.dart';
+import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/page/edit_state.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:provider/provider.dart';

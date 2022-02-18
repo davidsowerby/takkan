@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/common/action/editSave.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
-import 'package:precept_client/library/borderLibrary.dart';
+import 'package:precept_client/common/action/edit_save.dart';
+import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/library/border_library.dart';
 import 'package:precept_client/library/library.dart';
-import 'package:precept_client/library/themeLookup.dart';
-import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_client/library/theme_lookup.dart';
+import 'package:precept_client/page/standard_page.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
-import 'package:precept_script/data/provider/documentId.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
-import 'package:precept_script/schema/field/geoPosition.dart';
+import 'package:precept_script/schema/field/geo_position.dart';
 import 'package:precept_script/schema/field/pointer.dart';
-import 'package:precept_script/schema/field/postCode.dart';
+import 'package:precept_script/schema/field/post_code.dart';
 import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
 
 import 'helper/fake.dart';
 import 'helper/mock.dart';
-import 'helper/widgetTestTree.dart';
+import 'helper/widget_test_tree.dart';
 
 initialData(String instanceName) {}
 
@@ -65,6 +66,7 @@ final validationSchema = PSchema(
       },
     ),
   },
+  version: PVersion(number: 0),
 );
 
 final PScript kitchenSinkValidation = PScript(
@@ -98,6 +100,8 @@ final PScript kitchenSinkValidation = PScript(
       ],
     ),
   },
+  schema: validationSchema,
+  version: PVersion(number: 0),
 );
 
 /// See [developer guide]()
@@ -108,8 +112,8 @@ void main() {
       getIt.reset();
       getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
-      getIt
-          .registerSingleton<BorderLibrary>(BorderLibrary(modules: [PreceptBorderLibraryModule()]));
+      getIt.registerSingleton<BorderLibrary>(
+          BorderLibrary(modules: [PreceptBorderLibraryModule()]));
     });
 
     tearDownAll(() {});
@@ -125,12 +129,13 @@ void main() {
       // when
       final app = MaterialApp(
           home: PreceptPage(
-            config: kitchenSinkValidation.routes['/test']!,
+        config: kitchenSinkValidation.routes['/test']!,
       ));
 
       await tester.pumpWidget(app);
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      final testTree = WidgetTestTree(kitchenSinkValidation, tester.allWidgets.toList(),
+      final testTree = WidgetTestTree(
+          kitchenSinkValidation, tester.allWidgets.toList(),
           pages: 1, panels: 1, parts: 2);
       testTree.verify();
       // then

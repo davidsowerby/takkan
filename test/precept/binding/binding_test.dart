@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/listBinding.dart';
-import 'package:precept_client/binding/mapBinding.dart';
-import 'package:precept_client/binding/stringBinding.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/binding/list_binding.dart';
+import 'package:precept_client/binding/map_binding.dart';
+import 'package:precept_client/binding/string_binding.dart';
+import 'package:precept_client/data/temporary_document.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/catcher.dart';

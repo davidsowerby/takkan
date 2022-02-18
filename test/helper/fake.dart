@@ -1,16 +1,17 @@
 import 'package:mockito/mockito.dart';
-import 'package:precept_backend/backend/app/appConfig.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_backend/backend/dataProvider/dataProviderLibrary.dart';
-import 'package:precept_backend/backend/user/preceptUser.dart';
-import 'package:precept_client/binding/mapBinding.dart';
-import 'package:precept_client/common/content/contentState.dart';
-import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/data/dataSource.dart';
-import 'package:precept_script/common/script/preceptItem.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
+import 'package:precept_backend/backend/user/precept_user.dart';
+import 'package:precept_client/binding/map_binding.dart';
+import 'package:precept_client/common/content/content_state.dart';
+import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/data/data_source.dart';
+import 'package:precept_script/common/script/precept_item.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
+import 'package:precept_script/script/version.dart';
 import 'package:precept_script/validation/message.dart';
 
 class FakeDataSource extends Fake implements DataSource {
@@ -85,6 +86,6 @@ class PFakeDataProvider extends Fake implements PDataProvider {
 
 class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
   Future<PSchema> load(PSchemaSource source) async {
-    return PSchema(name: 'test');
+    return PSchema(name: 'test', version: PVersion(number: 0));
   }
 }

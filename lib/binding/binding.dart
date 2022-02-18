@@ -1,7 +1,7 @@
-import 'package:precept_client/binding/listBinding.dart';
-import 'package:precept_client/binding/mapBinding.dart';
+import 'package:precept_client/binding/list_binding.dart';
+import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/data/temporaryDocument.dart';
+import 'package:precept_client/data/temporary_document.dart';
 import 'package:precept_script/common/script/constants.dart';
 
 /// [T] is model
@@ -10,7 +10,7 @@ import 'package:precept_script/common/script/constants.dart';
 /// If this binding is looked up from a [ListBinding], [index] is used
 /// Either [property] or [index] may be null, but not both.  If both are specified, [property] takes precedence
 abstract class Binding<T> {
-    static const int noValue = -999;
+  static const int noValue = -999;
   final MutableDocument? editHost;
   final String firstLevelKey;
   final CollectionBinding? parent;

@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/common/interpolate.dart';
-import 'package:precept_script/data/provider/dataProvider.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/version.dart';
 
 import '../helper/catcher.dart';
 import '../helper/fake.dart';
@@ -14,7 +15,7 @@ void main() {
     FakeDataProvider(
       config: PFakeDataProvider(
         instanceName: 'a',
-        schema: PSchema(name: '?'),
+        schema: PSchema(name: '?', version: PVersion(number: 0)),
         configSource: PConfigSource(segment: 'fake', instance: 'fake'),
       ),
     ),
@@ -33,7 +34,7 @@ void main() {
           FakeDataProvider(
             config: PFakeDataProvider(
               instanceName: 'a',
-              schema: PSchema(name: '?'),
+              schema: PSchema(name: '?', version: PVersion(number: 0)),
               configSource: PConfigSource(segment: 'fake', instance: 'fake'),
             ),
           ),

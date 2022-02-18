@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/trait/traitLibrary.dart';
+import 'package:precept_client/trait/trait_library.dart';
 import 'package:precept_script/part/navigation.dart';
 
 class NavButtonTrait extends Trait {

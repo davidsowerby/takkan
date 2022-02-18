@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/dataProvider/dataProvider.dart';
-import 'package:precept_client/common/content/contentState.dart';
-import 'package:precept_client/data/dataBinding.dart';
-import 'package:precept_client/library/partLibrary.dart';
-import 'package:precept_client/page/editState.dart';
-import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_client/common/content/content_state.dart';
+import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/library/part_library.dart';
+import 'package:precept_client/page/edit_state.dart';
+import 'package:precept_client/page/standard_page.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/part/part.dart';

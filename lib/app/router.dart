@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/page/errorPage.dart';
-import 'package:precept_client/page/standardPage.dart';
+import 'package:precept_client/page/error_page.dart';
+import 'package:precept_client/page/standard_page.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/script/script.dart';
