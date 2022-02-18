@@ -1,5 +1,5 @@
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';

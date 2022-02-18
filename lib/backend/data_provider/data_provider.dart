@@ -1,10 +1,10 @@
 import 'package:graphql/client.dart';
 import 'package:meta/meta.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider_library.dart';
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/rest_delegate.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/rest_delegate.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
@@ -371,7 +371,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
 
   PDocument documentSchema({required String documentSchemaName}) {
-    return config.documentSchema(documentSchemaName: documentSchemaName);
+    return config.script.documentSchema(documentSchemaName: documentSchemaName);
   }
 
   DataProviderDelegate _delegateFromQueryType({

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_backend/backend/dataProvider/constants.dart';
+import 'package:precept_backend/backend/data_provider/constants.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/constants.dart';

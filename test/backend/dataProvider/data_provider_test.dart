@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/graphql_delegate.dart';
