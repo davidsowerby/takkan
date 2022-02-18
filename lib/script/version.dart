@@ -18,4 +18,11 @@ class PVersion {
       _$PVersionFromJson(json);
 
   Map<String, dynamic> toJson() => _$PVersionToJson(this);
+
+  /// current version [number], combined with [deprecated]
+  List<int> get activeVersions {
+    final all = List<int>.from(deprecated, growable: true);
+    all.insert(0, number);
+    return all;
+  }
 }

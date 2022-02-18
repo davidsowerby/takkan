@@ -4,7 +4,9 @@ import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/validation/result.dart';
 
-abstract class V {}
+abstract class V {
+  Map<String, dynamic> toJson();
+}
 
 VResult validate(V v, dynamic value) {
   if (v is VInteger) {
