@@ -1,9 +1,9 @@
 import 'package:graphql/client.dart';
 import "package:http/http.dart" as http;
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
@@ -69,7 +69,7 @@ class DefaultGraphQLDataProviderDelegate
   @override
   String assembleScript(
       PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
-    return queryConfig.script;
+    return queryConfig.queryScript;
   }
 
   Future<ReadResultItem> latestScript(
@@ -89,8 +89,8 @@ class DefaultGraphQLDataProviderDelegate
   @override
   Future<ReadResultList> fetchList(
       PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
-    final queryOptions =
-        QueryOptions(document: gql(queryConfig.script), variables: variables);
+    final queryOptions = QueryOptions(
+        document: gql(queryConfig.queryScript), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
 
     // TODO: is 'typename' Back4App specific?
@@ -136,6 +136,7 @@ class DefaultGraphQLDataProviderDelegate
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),
   }) {
     throw UnimplementedError();

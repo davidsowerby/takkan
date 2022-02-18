@@ -1,4 +1,4 @@
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/log.dart';

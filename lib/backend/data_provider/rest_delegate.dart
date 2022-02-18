@@ -3,9 +3,10 @@ import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
+import 'package:precept_backend/backend/data_provider/server_connect.dart';
 import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
@@ -14,6 +15,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/data/provider/rest_delegate.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/rest_query.dart';
@@ -21,6 +23,7 @@ import 'package:precept_script/query/rest_query.dart';
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late InstanceConfig instanceConfig;
   late DataProvider parent;
+  late RestServerConnect serverConnect;
 
   DefaultRestDataProviderDelegate(
     this.parent,
@@ -31,10 +34,11 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     this.parent = parent;
     this.instanceConfig = instanceConfig;
     if (parent.config.restDelegate == null) {
-      String msg = 'RestDelegate cannot be used with no configuration';
+      String msg = 'RestDelegate cannot be used without configuration';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
+    serverConnect = inject<RestServerConnect>();
   }
 
   @override
@@ -50,10 +54,11 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   PRest get config =>
       parent.config.restDelegate as PRest; // safe only after init called
 
+  /// TODO: For REST this should be called assembleURL
   @override
   String assembleScript(
       PRestQuery queryConfig, Map<String, dynamic> variables) {
-    final StringBuffer buf = StringBuffer(documentEndpoint);
+    final StringBuffer buf = StringBuffer(instanceConfig.documentEndpoint);
     buf.write('/');
     buf.write(queryConfig.path);
     if (queryConfig.paramsAsPath) {
@@ -87,16 +92,13 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   /// Default content type is JSON
   @override
   Future<ReadResultList> fetchList(
-      PRestQuery queryConfig, Map<String, dynamic> variables) async {
-    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers))
-            .get(assembleScript(queryConfig, variables));
-    final data = List<Map<String, dynamic>>.from(response.data['results']);
-    // List<Map<String, dynamic>> output = List.empty(growable: true);
-    // for (var entry in data) {
-    //   output.add(entry as Map<String, dynamic>);
-    // }
+    PRestQuery queryConfig,
+    Map<String, dynamic> variables,
+  ) async {
+    final serverConnectResponse = await serverConnect.fetch(
+        instanceConfig, assembleScript(queryConfig, variables));
     return ReadResultList(
-      data: data,
+      data: transformResponseData(serverConnectResponse),
       path: queryConfig.documentSchema,
       queryReturnType: QueryReturnType.futureList,
       success: true,
@@ -111,22 +113,15 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Updating data provider');
-    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).put(
-      documentUrl(documentId),
-      data: data,
+    final serverConnectResponse = await serverConnect.update(
+        instanceConfig, '$documentEndpoint/${documentId.path}', data);
+
+    return UpdateResult(
+      data: transformResponseData(serverConnectResponse),
+      success: true,
+      path: documentId.path,
+      itemId: documentId.itemId,
     );
-    if (response.statusCode == HttpStatus.ok) {
-      logType(this.runtimeType).d('Data provider updated document');
-      return UpdateResult(
-        data: response.data,
-        success: true,
-        path: documentId.path,
-        itemId: documentId.itemId,
-      );
-    }
-    throw APIException(
-        message: response.statusMessage ?? 'Unknown',
-        statusCode: response.statusCode ?? -999);
   }
 
   Future<Authenticator> createAuthenticator() {
@@ -140,8 +135,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     return '$documentEndpoint/${documentId.path}/${documentId.itemId}';
   }
 
-  String get documentEndpoint =>
-      '${instanceConfig.serverUrl}/${instanceConfig.documentEndpoint}';
+  String get documentEndpoint => instanceConfig.documentEndpoint;
 
   @override
   Future<ReadResultItem> latestScript(
@@ -152,9 +146,18 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   @override
-  Future<DeleteResult> deleteDocument({required DocumentId documentId}) {
-    // TODO: implement deleteDocument
-    throw UnimplementedError();
+  Future<DeleteResult> deleteDocument({required DocumentId documentId}) async {
+    logType(this.runtimeType).d('Deleting document');
+    final serverConnectResponse = await serverConnect.delete(
+      instanceConfig,
+      '$documentEndpoint/${documentId.path}/${documentId.itemId}',
+    );
+    return DeleteResult(
+      path: documentId.path,
+      data: transformResponseData(serverConnectResponse),
+      success: true,
+      itemId: documentId.itemId,
+    );
   }
 
   /// see [DataProvider.createDocument]
@@ -162,25 +165,19 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Creating new document');
-    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).post(
-      '$documentEndpoint/$path',
-      data: data,
+    final serverConnectResponse = await serverConnect.create(
+        instanceConfig, '$documentEndpoint/$path', data);
+
+    return CreateResult(
+      path: path,
+      data: transformResponseData(serverConnectResponse),
+      success: true,
+      itemId: data[documentIdKey],
     );
-    if (response.statusCode == HttpStatus.created) {
-      logType(this.runtimeType).d('Document created');
-      return CreateResult(
-        path: path,
-        data: response.data,
-        success: true,
-        itemId: response.data['objectId'],
-      );
-    }
-    throw APIException(
-        message: response.statusMessage ?? 'Unknown',
-        statusCode: response.statusCode ?? -999);
   }
 
   @override
@@ -190,14 +187,8 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     FetchPolicy? fetchPolicy,
   }) async {
     logType(this.runtimeType).d('Reading document');
-    // GET \
-    // -H "X-Parse-Application-Id: xLWKrOqVNy3O1u3z9ovoalO2XFuKQn0NlHPksJV6" \
-    // -H "X-Parse-REST-API-Key: hgRclD9aBr3BL1Tz8hw3G1LSoeI84QahWdSRPuu1" \
-    // -G \
-    // --data-urlencode "where={\"objectId\":\"HQCxFeKXK9\"}" \
-    // https://parseapi.back4app.com/classes/PreceptScript
-
-    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).get(
+    final dio.Response response =
+        await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).get(
       '$documentEndpoint/${documentId.path}',
       queryParameters: {'objectId': documentId.itemId},
     );
@@ -213,5 +204,43 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     throw APIException(
         message: response.statusMessage ?? 'Unknown',
         statusCode: response.statusCode ?? -999);
+  }
+
+  transformResponseData(dio.Response response) {
+    if (response.data is List) {
+      final List<Map<String, dynamic>> data = (response.data as List)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
+      return data;
+    }
+    if (response.data is Map) {
+      return Map<String, dynamic>.from(response.data);
+    }
+    throw PreceptException('Not a map or list');
+  }
+
+  @override
+  Future<ReadResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+  }) async {
+    print('Calling Cloud Function \'$functionName\'');
+    final serverConnectResponse = await serverConnect
+        .executeFunction(instanceConfig, functionName, params: params);
+    final data = transformResponseData(serverConnectResponse);
+    if (data is List) {
+      return ReadResultList(
+          data: data as List<Map<String, dynamic>>,
+          success: true,
+          queryReturnType: QueryReturnType.futureList,
+          path: 'function');
+    } else {
+      return ReadResultItem(
+        success: true,
+        data: data as Map<String, dynamic>,
+        queryReturnType: QueryReturnType.futureItem,
+        path: 'function',
+      );
+    }
   }
 }

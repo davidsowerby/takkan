@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_backend/backend/dataProvider/constants.dart';
+import 'package:precept_backend/backend/data_provider/constants.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/constants.dart';
@@ -24,6 +24,7 @@ class AppConfig {
   static const String keyAppName = 'appName';
   static const String keyGraphqlEndpoint = 'graphqlEndpoint';
   static const String keyDocumentEndpoint = 'documentEndpoint';
+  static const String keyFunctionEndpoint = 'functionEndpoint';
   static const String defaultInstanceType = 'generic REST';
   final Map<String, dynamic> data;
 
@@ -46,32 +47,18 @@ class AppConfig {
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }
-    final instanceData = segmentData[instance];
+    final Map? instanceData = segmentData[instance];
     if (instanceData == null) {
       String msg =
           'File precept.json in project root must define an instance \'${instance}\' in segment \'${segment}\'';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
-    }
-    return InstanceConfig(
-        data: instanceData,
+    } else {
+      return InstanceConfig(
+        data: Map<String, dynamic>.from(instanceData),
         instanceName: instance,
-        identifiedType: _identifyType(segment: segment, instance: instance));
-  }
-
-  String _identifyTypeFromSource(PConfigSource configSource) {
-    return _identifyType(
-        segment: configSource.segment, instance: configSource.instance);
-  }
-
-  String _identifyType({required String segment, required String instance}) {
-    if (data.containsKey('type')) {
-      return data['type'];
+      );
     }
-    if (segment.contains('back4app')) {
-      return 'back4app';
-    }
-    return defaultInstanceType;
   }
 
   /// Headers are loaded from the appropriate instance definition within *precept.json*
@@ -126,7 +113,6 @@ class AppConfigFileLoader {
 class InstanceConfig {
   final Map<String, dynamic> data;
   final String instanceName;
-  final String identifiedType;
 
   String get serverUrl =>
       data[AppConfig.keyServerUrl] ?? 'https://parseapi.back4app.com';
@@ -136,6 +122,9 @@ class InstanceConfig {
   String get clientKey => headers[keyHeaderClientKey] ?? notSet;
 
   String get appName => data[AppConfig.keyAppName] ?? 'MyApp';
+
+  String get functionEndpoint =>
+      data[AppConfig.keyFunctionEndpoint] ?? _appendToServerUrl('functions');
 
   String get documentEndpoint =>
       data[AppConfig.keyDocumentEndpoint] ?? _appendToServerUrl('classes');
@@ -163,12 +152,9 @@ class InstanceConfig {
     }
   }
 
-  String get type => data['type'] ?? identifiedType;
+  String get type => data['type'] ?? 'back4app';
 
-  InstanceConfig(
-      {required this.data,
-      required this.instanceName,
-      required this.identifiedType}) {}
+  InstanceConfig({required this.data, required this.instanceName}) {}
 
   String _appendToServerUrl(String appendage) {
     return serverUrl.endsWith('/')

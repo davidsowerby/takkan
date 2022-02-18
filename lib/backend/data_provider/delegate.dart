@@ -1,7 +1,7 @@
 import 'package:graphql/client.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/dataProvider/data_provider.dart';
-import 'package:precept_backend/backend/dataProvider/result.dart';
+import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/query/query.dart';
@@ -41,6 +41,7 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),
   });
 
@@ -53,7 +54,10 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
 
 /// Defined as an interface to enable injection of alternative implementations
 abstract class RestDataProviderDelegate
-    implements DataProviderDelegate<PRestQuery> {}
+    implements DataProviderDelegate<PRestQuery> {
+  Future<ReadResult> executeFunction(
+      {required String functionName, Map<String, dynamic> params = const {}});
+}
 
 /// Defined as an interface to enable injection of alternative implementations
 abstract class GraphQLDataProviderDelegate

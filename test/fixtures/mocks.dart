@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 

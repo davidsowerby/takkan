@@ -1,4 +1,4 @@
-import 'package:precept_backend/backend/dataProvider/delegate.dart';
+import 'package:precept_backend/backend/data_provider/delegate.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:test/fake.dart';
 
