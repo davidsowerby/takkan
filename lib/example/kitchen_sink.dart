@@ -2,7 +2,6 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/example/kitchen_sink_schema.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/query_view.dart';
@@ -16,7 +15,6 @@ import 'package:precept_script/signin/sign_in.dart';
 
 final kitchenSinkScript = PScript(
   dataProvider: PDataProvider(
-    schema: kitchenSinkSchema,
     sessionTokenKey: 'tokenKey',
     configSource: PConfigSource(segment: 'test', instance: 'test'),
     providerName: 'some provider name',

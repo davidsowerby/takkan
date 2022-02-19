@@ -37,10 +37,6 @@ void main() {
         ),
         dataProvider: PDataProvider(
           providerName: 'Test',
-          schema: PSchema(
-            name: 'unnamed',
-            version: PVersion(number: 0),
-          ),
           sessionTokenKey: '',
           configSource: const PConfigSource(segment: '', instance: ''),
         ),

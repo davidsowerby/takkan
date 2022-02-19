@@ -42,7 +42,6 @@ void main() {
           version: PVersion(number: 0),
           schema: schema,
           dataProvider: PDataProvider(
-              schema: schema,
               providerName: 'x',
               sessionTokenKey: 'x',
               configSource: PConfigSource(instance: 'x', segment: 'x')));
