@@ -1,15 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/graphql_delegate.dart';
 import 'package:precept_script/data/provider/rest_delegate.dart';
-import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
 import 'package:precept_script/signin/sign_in.dart';
 import 'package:precept_script/validation/message.dart';
 
@@ -39,24 +35,12 @@ class PDataProvider extends PreceptItem {
   final String providerName;
 
   @JsonKey(ignore: true)
-  PSchema? _schema;
   final PSchemaSource? schemaSource;
   final String sessionTokenKey;
   final Delegate defaultDelegate;
   final PGraphQL? graphQLDelegate;
   final PRest? restDelegate;
   final bool useAuthenticator;
-
-  @JsonKey(ignore: true)
-  PSchema get schema {
-    if (_schema == null) {
-      throw PreceptException(
-          'Schema must not be null now - has PDataProvider.init() been called?');
-    }
-    return _schema!;
-  }
-
-  set schema(value) => _schema = value;
 
   PDataProvider({
     required this.providerName,
@@ -71,8 +55,7 @@ class PDataProvider extends PreceptItem {
     this.schemaSource,
     this.signIn = const PSignIn(),
     String? id,
-  })  : _schema = schema,
-        super(id: id);
+  }) : super(id: id);
 
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) async {
@@ -80,41 +63,16 @@ class PDataProvider extends PreceptItem {
     if (schemaSource != null) {
       schemaSource!.doInit(script, parent, index);
     }
-    if (_schema == null) {
-      if (schemaSource == null) {
-        throw PreceptException(
-            'If a Schema is not defined, a schema source must be');
-      }
 
-      final schemaLoader = inject<PreceptSchemaLoader>();
-      _schema = await schemaLoader.load(schemaSource!);
-    }
-    schema.init();
   }
 
   void doValidate(List<ValidationMessage> messages) {
     super.doValidate(messages);
-    if (_schema == null && schemaSource == null) {
-      messages.add(ValidationMessage(
-          item: this,
-          msg: "Either 'schema' or 'schemaSource' must be specified"));
-    }
-  }
-
-  PDocument documentSchema({required String documentSchemaName}) {
-    final PDocument? documentSchema = schema.documents[documentSchemaName];
-    if (documentSchema == null) {
-      String msg = "document schema '$documentSchemaName' not found";
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    return documentSchema;
   }
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (schemaSource != null) schemaSource?.walk(visitors);
-    if (_schema != null) _schema?.walk(visitors);
     graphQLDelegate?.walk(visitors);
     this.restDelegate?.walk(visitors);
   }
@@ -170,8 +128,6 @@ class PNoDataProvider extends PDataProvider {
 
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
-    /// Set this first so super does not try to laod it
-    _schema = PSchema(name: 'unnamed', version: PVersion(number: -1));
     super.doInit(script, parent, index);
   }
 }

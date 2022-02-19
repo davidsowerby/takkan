@@ -23,21 +23,24 @@ void main() {
       final schema =
           PSchema(name: '', version: PVersion(number: 0), documents: {
         'doc1': PDocument(
-            permissions: PPermissions(
-                getRoles: ['doc1-get'], readRoles: ['doc1-read', 'admin']),
-            fields: {}),
+          permissions: PPermissions(
+            getRoles: ['doc1-get'],
+            readRoles: ['doc1-read', 'admin'],
+          ),
+          fields: {},
+        ),
         'doc2': PDocument(
-            permissions: PPermissions(
-                readRoles: ['doc1-read', 'doc2-read'], updateRoles: ['admin']),
-            fields: {}),
+          permissions: PPermissions(
+            readRoles: ['doc1-read', 'doc2-read'],
+            updateRoles: ['admin'],
+          ),
+          fields: {},
+        ),
       });
       final script = PScript(
           name: 'test',
           version: PVersion(number: 0),
-          schema: PSchema(
-            name: 'test',
-            version: PVersion(number: 0),
-          ),
+          schema: schema,
           dataProvider: PDataProvider(
               schema: schema,
               providerName: 'x',

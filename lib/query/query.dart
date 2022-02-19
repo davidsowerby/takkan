@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/query/field_selector.dart';
@@ -52,10 +51,6 @@ abstract class PQuery extends PreceptItem {
     this.returnType = QueryReturnType.futureItem,
     required this.queryName,
   });
-
-  @JsonKey(ignore: true)
-  PDocument? get schema =>
-      (parent as PCommon).dataProvider?.schema.documents[documentSchema];
 
   /// For queries, property property to lookup its data (query results) in local storage
 

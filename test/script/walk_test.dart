@@ -37,7 +37,6 @@ void main() {
       final script = kitchenSinkScript;
       script.init();
       print(kitchenSinkSchema.name);
-      print(script.dataProvider?.schema.name);
       final log = WalkLog();
       final classes = WalkClasses();
       // when
@@ -57,9 +56,6 @@ void main() {
       expect(classes.calls, [
         PScript,
         PDataProvider,
-        PSchema,
-        PDocument,
-        PPermissions,
         PPage,
         PPanel,
         PText,
@@ -69,7 +65,8 @@ void main() {
         PGraphQLQuery,
         PQueryView,
         PPQuery,
-        PPanelHeading
+        PPanelHeading,
+        PSchema
       ]);
       expect(log.calls, [
         'Kitchen Sink',

@@ -176,6 +176,7 @@ class PScript extends PCommon {
     for (PPage entry in routes.values) {
       entry.walk(visitors);
     }
+    schema.walk(visitors);
   }
 
   bool get failed => _scriptValidationMessages.length > 0;
@@ -276,9 +277,7 @@ class PPage extends PContent {
       ));
     }
     for (var element in content) {
-      if (element is PCommon) {
-        element.doValidate(messages);
-      }
+      element.doValidate(messages);
     }
   }
 
