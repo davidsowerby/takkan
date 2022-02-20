@@ -87,7 +87,7 @@ final kitchenSinkScript = PScript(
       query: PGraphQLQuery(
         documentSchema: 'Issue',
         queryName: 'openIssues',
-        script: openIssuesScript,
+        queryScript: openIssuesScript,
         returnType: QueryReturnType.futureList,
       ),
       content: [

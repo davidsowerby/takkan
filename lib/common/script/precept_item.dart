@@ -38,6 +38,8 @@ class PreceptItem with WalkTarget {
   late PreceptItem _parent;
   @JsonKey(ignore: true)
   int? _index;
+  @JsonKey(ignore: true)
+  late PScript _script;
 
   PreceptItem({
     String? id,
@@ -52,13 +54,18 @@ class PreceptItem with WalkTarget {
   /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
   String? get debugId => _debugId;
 
+  /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/precept1/precept_script/-/issues/21
   PreceptItem get parent => _parent;
 
   String? get pid => _pid;
 
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
+  PScript get script => _script;
+
+  doInit(PScript script, PreceptItem parent, int index,
+      {bool useCaptionsAsIds = true}) {
     _parent = parent;
     _index = index;
+    _script = script;
 
     /// Use caption (or other specified alternative) if required
     if (useCaptionsAsIds) {

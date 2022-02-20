@@ -83,7 +83,6 @@ class PCommon extends PreceptItem {
   @protected
   PDataProvider? _dataProvider;
   @JsonKey(ignore: true)
-  PScript? _script;
   PQuery? _query;
 
   PCommon({
@@ -141,16 +140,12 @@ class PCommon extends PreceptItem {
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
 
-  @JsonKey(ignore: true)
-  PScript? get script => _script;
-
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    _script = script;
     PreceptItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;

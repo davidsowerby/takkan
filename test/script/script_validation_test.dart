@@ -123,7 +123,6 @@ void main() {
             instance: '',
           ),
           sessionTokenKey: '',
-          schemaSource: PSchemaSource(segment: 'back4app', instance: 'dev'),
         ),
         routes: {
           "/home": PPage(
@@ -158,10 +157,6 @@ void main() {
             providerName: 'Test',
             sessionTokenKey: '',
             configSource: PConfigSource(
-              segment: 'back4app',
-              instance: 'dev',
-            ),
-            schemaSource: PSchemaSource(
               segment: 'back4app',
               instance: 'dev',
             ),
@@ -218,10 +213,6 @@ void main() {
             segment: 'back4app',
             instance: 'dev',
           ),
-          schemaSource: PSchemaSource(
-            segment: 'back4app',
-            instance: 'dev',
-          ),
         ),
         routes: {
           "/home": PPage(
@@ -243,10 +234,6 @@ void main() {
           providerName: 'Test',
           sessionTokenKey: '',
           configSource: PConfigSource(
-            segment: 'back4app',
-            instance: 'dev',
-          ),
-          schemaSource: PSchemaSource(
             segment: 'back4app',
             instance: 'dev',
           ),

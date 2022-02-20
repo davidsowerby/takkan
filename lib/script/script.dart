@@ -42,6 +42,8 @@ class PScript extends PCommon {
   final PVersion version;
   String? nameLocale;
   final PSchema schema;
+  @JsonKey(ignore: true)
+  final PSchemaSource? schemaSource;
   final Map<String, PPage> routes;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
@@ -59,6 +61,7 @@ class PScript extends PCommon {
     required this.name,
     required this.version,
     this.locale = 'en_GB',
+    this.schemaSource,
     required this.schema,
     IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
@@ -167,6 +170,10 @@ class PScript extends PCommon {
       entry.value.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
       i++;
     }
+    if (schemaSource != null) {
+      schemaSource!.doInit(script, parent, index);
+    }
+    schema.init();
   }
 
   /// Walks through all instances of [PreceptItem] or its sub-classes held within the [PScript].
@@ -176,7 +183,18 @@ class PScript extends PCommon {
     for (PPage entry in routes.values) {
       entry.walk(visitors);
     }
+    if (schemaSource != null) schemaSource?.walk(visitors);
     schema.walk(visitors);
+  }
+
+  PDocument documentSchema({required String documentSchemaName}) {
+    final PDocument? documentSchema = schema.documents[documentSchemaName];
+    if (documentSchema == null) {
+      String msg = "document schema '$documentSchemaName' not found";
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return documentSchema;
   }
 
   bool get failed => _scriptValidationMessages.length > 0;

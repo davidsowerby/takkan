@@ -33,9 +33,6 @@ class PDataProvider extends PreceptItem {
   final PSignIn signIn;
   final PConfigSource configSource;
   final String providerName;
-
-  @JsonKey(ignore: true)
-  final PSchemaSource? schemaSource;
   final String sessionTokenKey;
   final Delegate defaultDelegate;
   final PGraphQL? graphQLDelegate;
@@ -51,7 +48,6 @@ class PDataProvider extends PreceptItem {
     required this.configSource,
     this.defaultDelegate = Delegate.graphQl,
     this.signInOptions = const PSignInOptions(),
-    this.schemaSource,
     this.signIn = const PSignIn(),
     String? id,
   }) : super(id: id);
@@ -59,10 +55,6 @@ class PDataProvider extends PreceptItem {
   doInit(PScript script, PreceptItem parent, int index,
       {bool useCaptionsAsIds = true}) async {
     super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (schemaSource != null) {
-      schemaSource!.doInit(script, parent, index);
-    }
-
   }
 
   void doValidate(List<ValidationMessage> messages) {
@@ -71,7 +63,6 @@ class PDataProvider extends PreceptItem {
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if (schemaSource != null) schemaSource?.walk(visitors);
     graphQLDelegate?.walk(visitors);
     this.restDelegate?.walk(visitors);
   }
@@ -115,7 +106,6 @@ class PNoDataProvider extends PDataProvider {
           signInOptions: const PSignInOptions(),
           signIn: const PSignIn(),
           configSource: PConfigSource(segment: 'none', instance: 'none'),
-          schemaSource: PSchemaSource(segment: 'none', instance: 'none'),
           sessionTokenKey: 'No Data Provider',
         );
 

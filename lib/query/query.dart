@@ -66,7 +66,7 @@ abstract class PQuery extends PreceptItem {
 /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
 /// 1. Values passed as [pageArguments]
 ///
-/// [script] is the GraphQL script, and typically needs to be expressed as a Dart 'raw String', see:
+/// [queryScript] is the GraphQL script, and typically needs to be expressed as a Dart 'raw String', see:
 /// https://dart.dev/guides/language/language-tour (search for 'raw').  This makes sure none of the
 /// GraphQL syntax gets lost during interpolation by Dart.
 ///
@@ -74,17 +74,17 @@ abstract class PQuery extends PreceptItem {
 /// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
 @JsonSerializable(explicitToJson: true)
 class PGraphQLQuery extends PQuery {
-  final String script;
+  final String queryScript;
 
   PGraphQLQuery({
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
     required String documentSchema,
-    required this.script,
+    required this.queryScript,
     required String queryName,
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-    queryName: queryName,
+          queryName: queryName,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,
@@ -126,9 +126,9 @@ class PPQuery extends PGraphQLQuery {
     List<String> propertyReferences = const [],
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-          queryName: queryName,
+    queryName: queryName,
           documentSchema: documentSchema,
-          script: '',
+          queryScript: '',
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: returnType,

@@ -26,10 +26,6 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
           ? const PSignInOptions()
           : PSignInOptions.fromJson(
               json['signInOptions'] as Map<String, dynamic>),
-      schemaSource: json['schemaSource'] == null
-          ? null
-          : PSchemaSource.fromJson(
-              json['schemaSource'] as Map<String, dynamic>),
       signIn: json['signIn'] == null
           ? const PSignIn()
           : PSignIn.fromJson(json['signIn'] as Map<String, dynamic>),
@@ -41,7 +37,6 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource.toJson(),
       'providerName': instance.providerName,
-      'schemaSource': instance.schemaSource?.toJson(),
       'sessionTokenKey': instance.sessionTokenKey,
       'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate],
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),

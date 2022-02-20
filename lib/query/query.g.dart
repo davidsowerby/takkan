@@ -14,7 +14,7 @@ PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const [],
       documentSchema: json['documentSchema'] as String,
-      script: json['script'] as String,
+      queryScript: json['queryScript'] as String,
       queryName: json['queryName'] as String,
       returnType:
           $enumDecodeNullable(_$QueryReturnTypeEnumMap, json['returnType']) ??
@@ -28,7 +28,7 @@ Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
       'queryName': instance.queryName,
       'documentSchema': instance.documentSchema,
-      'script': instance.script,
+      'queryScript': instance.queryScript,
     };
 
 const _$QueryReturnTypeEnumMap = {
