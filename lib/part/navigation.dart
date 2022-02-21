@@ -32,7 +32,7 @@ class PNavButton extends PPart {
           height: height,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
-          pid: pid,
+          id: pid,
         );
 
   factory PNavButton.fromJson(Map<String, dynamic> json) =>
@@ -58,11 +58,11 @@ class PNavButtonSet extends PPart {
     String readTraitName = 'PNavButtonSet-default',
     this.buttonTraitName = 'PNavButton-default',
   }) : super(
-          readOnly: true,
+    readOnly: true,
           height: height,
           isStatic: IsStatic.yes,
           readTraitName: readTraitName,
-          pid: pid,
+          id: pid,
         );
 
   factory PNavButtonSet.fromJson(Map<String, dynamic> json) =>

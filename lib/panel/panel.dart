@@ -11,7 +11,6 @@ import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/panel/panel_style.dart';
 import 'package:precept_script/query/query.dart';
-import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/style.dart';
 import 'package:precept_script/trait/text_trait.dart';
 import 'package:precept_script/validation/message.dart';
@@ -20,7 +19,9 @@ part 'panel.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class PPanel extends PSubContent {
-  @JsonKey(fromJson: PElementListConverter.fromJson, toJson: PElementListConverter.toJson)
+  @JsonKey(
+      fromJson: PElementListConverter.fromJson,
+      toJson: PElementListConverter.toJson)
   final List<PSubContent> content;
   @JsonKey(ignore: true)
   PPanelHeading? _heading;
@@ -54,7 +55,7 @@ class PPanel extends PSubContent {
     String? id,
   })  : _heading = heading,
         super(
-          pid: id,
+          id: id,
           isStatic: isStatic,
           dataProvider: dataProvider,
           query: query,
@@ -63,31 +64,17 @@ class PPanel extends PSubContent {
           property: property,
         );
 
-  @override
-  doInit(PScript script, PreceptItem parent, int index, {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    if (heading != null) {
-      heading?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
-    }
-    int i = 0;
-    for (var element in content) {
-      element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
-      i++;
-    }
-  }
+  List<dynamic> get children => [
+        if (heading != null) heading,
+        content,
+        ...super.children,
+      ];
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (heading != null) heading?.walk(visitors);
     for (PSubContent entry in content) {
       entry.walk(visitors);
-    }
-  }
-
-  void doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
-    for (PSubContent element in content) {
-      element.doValidate(messages);
     }
   }
 
@@ -126,7 +113,8 @@ class PPanelHeading extends PreceptItem {
     String? id,
   }) : super(id: id);
 
-  factory PPanelHeading.fromJson(Map<String, dynamic> json) => _$PPanelHeadingFromJson(json);
+  factory PPanelHeading.fromJson(Map<String, dynamic> json) =>
+      _$PPanelHeadingFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPanelHeadingToJson(this);
 
@@ -140,7 +128,8 @@ class PPanelLayout {
 
   const PPanelLayout({this.padding = const PPadding(), this.width});
 
-  factory PPanelLayout.fromJson(Map<String, dynamic> json) => _$PPanelLayoutFromJson(json);
+  factory PPanelLayout.fromJson(Map<String, dynamic> json) =>
+      _$PPanelLayoutFromJson(json);
 
   Map<String, dynamic> toJson() => _$PPanelLayoutToJson(this);
 }

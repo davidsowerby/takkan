@@ -10,11 +10,9 @@ PCommon _$PCommonFromJson(Map<String, dynamic> json) => PCommon(
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      pid: json['pid'] as String?,
     );
 
 Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
-      'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     };
 

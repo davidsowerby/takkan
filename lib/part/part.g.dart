@@ -20,12 +20,10 @@ PPart _$PPartFromJson(Map<String, dynamic> json) => PPart(
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      pid: json['pid'] as String?,
       tooltip: json['tooltip'] as String?,
     );
 
 Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
-      'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,

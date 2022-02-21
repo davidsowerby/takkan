@@ -27,7 +27,7 @@ abstract class PField<VAL, MODEL> extends PSchemaElement {
   }) : super(readOnly: readOnly);
 
   /// Returns a list of validation errors, or an empty list if there are none
-  List<String> doValidate(MODEL value, PScript pScript) {
+  List<String> doValidation(MODEL value, PScript pScript) {
     if (validations.isEmpty) {
       return List.empty();
     }

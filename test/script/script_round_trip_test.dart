@@ -34,7 +34,8 @@ void main() {
 
       expect(jsonMap['nameLocale'], 'Kitchen Sink:en_GB');
       expect(script2.routes.length, 8);
-      script2.init();
+      final tracker = script2.init().tracker;
+      expect(nullsInTracker(tracker), 0);
       final c0 = script2.routes['/'];
       expect(c0?.route, '/');
 
@@ -64,4 +65,14 @@ void main() {
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));
     });
   });
+}
+
+int nullsInTracker(List<String> tracker) {
+  int count = 0;
+  for (String item in tracker) {
+    if (item.contains('null')) {
+      count++;
+    }
+  }
+  return count;
 }

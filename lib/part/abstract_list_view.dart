@@ -44,7 +44,7 @@ abstract class PAbstractListView extends PPart {
           isStatic: isStatic,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
-          pid: pid,
+          id: pid,
         );
 }
 

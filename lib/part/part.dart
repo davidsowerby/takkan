@@ -4,12 +4,16 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/common/script/help.dart';
+import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/validation/message.dart';
 
 part 'part.g.dart';
 
-/// Contained within a [PScript] a [PPart] describes a [Part]
+/// Contained within a [PScript] a [PPart] describes a [Part].  A Part usually presents two different widgets, one for readOnly one for edit mode.
+/// More sophisticated Parts may present further widgets depending on configuration.
+///
+///
 /// [T] is the data type as held by the database.  Depending on how it is displayed, this may need conversion
 /// [isStatic] - if true, the value is taken from [staticData], if false, the value is dynamic data loaded via [property]
 /// [staticData] - the value to use if [isStatic] is true. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
@@ -41,10 +45,10 @@ class PPart extends PSubContent {
       this.staticData = notSet,
       this.help,
       ControlEdit controlEdit = ControlEdit.inherited,
-      String? pid,
+      String? id,
       this.tooltip})
       : super(
-    pid: pid,
+          id: id,
           isStatic: isStatic,
           controlEdit: controlEdit,
           caption: caption,
@@ -69,11 +73,11 @@ class PPart extends PSubContent {
     return DebugNode(this, children);
   }
 
-  void doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
+  void doValidate(ValidationWalkerCollector collector) {
+    super.doValidate(collector);
     if (isStatic != IsStatic.yes || readOnly) {
       if (property.isEmpty == true) {
-        messages.add(ValidationMessage(
+        collector.messages.add(ValidationMessage(
             item: this,
             msg:
                 'unless a Part is static or readOnly, it must provide a non-null, non-empty property'));

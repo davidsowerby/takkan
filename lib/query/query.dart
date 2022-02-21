@@ -41,7 +41,7 @@ abstract class PQuery extends PreceptItem {
   final Map<String, dynamic> variables;
   final List<String> propertyReferences;
   final QueryReturnType returnType;
-  final String queryName;
+  String queryName;
   final String documentSchema;
 
   PQuery({
@@ -54,7 +54,7 @@ abstract class PQuery extends PreceptItem {
 
   /// For queries, property property to lookup its data (query results) in local storage
 
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
+  String get idAlternative => queryName;
 }
 
 /// A 'pure' GraphQL query.  [script] must contain a complete GraphQL script
@@ -172,8 +172,7 @@ class PGetDocument extends PQuery {
 
   String get table => documentId.path;
 
-  @override
-  void doValidate(List<ValidationMessage> messages, {int index = -1}) {}
+
 }
 
 @JsonSerializable(explicitToJson: true)

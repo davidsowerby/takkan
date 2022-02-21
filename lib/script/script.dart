@@ -14,8 +14,6 @@ import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversion_error_messages.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/part.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/query/query_converter.dart';
 import 'package:precept_script/schema/field/integer.dart';
@@ -69,7 +67,7 @@ class PScript extends PCommon {
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
     String? id,
   }) : super(
-          pid: id,
+          id: id,
           isStatic: isStatic,
           dataProviderConfig: dataProvider ?? PNoDataProvider(),
           query: query,
@@ -84,7 +82,7 @@ class PScript extends PCommon {
   String get debugId => name;
 
   Set<String> get allRoles {
-    final counter = RoleCounter();
+    final counter = RoleVisitor();
     walk([counter]);
     return counter.roles;
   }
@@ -112,21 +110,10 @@ class PScript extends PCommon {
       bool useCaptionsAsIds = true,
       bool logFailures = true}) {
     init(useCaptionsAsIds: useCaptionsAsIds);
-    _scriptValidationMessages = List.empty(growable: true);
-    doValidate(_scriptValidationMessages);
-
-    if (routes.length == 0) {
-      _scriptValidationMessages.add(
-          ValidationMessage(item: this, msg: "must contain at least one page"));
-    } else {
-      for (var entry in routes.entries) {
-        if (entry.key.isEmpty) {
-          _scriptValidationMessages.add(ValidationMessage(
-              item: this, msg: "PPage route cannot be an empty String"));
-        }
-        entry.value.doValidate(_scriptValidationMessages);
-      }
-    }
+    final ValidationWalker walker = ValidationWalker();
+    final collector = ValidationWalkerCollector();
+    walker.walk(this, collector);
+    _scriptValidationMessages = collector.messages;
     if (logFailures || throwOnFail) {
       final StringBuffer buf = StringBuffer();
       for (ValidationMessage message in _scriptValidationMessages) {
@@ -145,47 +132,51 @@ class PScript extends PCommon {
     return _scriptValidationMessages;
   }
 
+  void doValidate(ValidationWalkerCollector collector) {
+    super.doValidate(collector);
+    if (routes.length == 0) {
+      collector.messages.add(
+          ValidationMessage(item: this, msg: "must contain at least one page"));
+    } else {
+      if (routes.containsKey('')) {
+        collector.messages.add(ValidationMessage(
+            item: this, msg: "PPage route cannot be an empty String"));
+      }
+    }
+  }
+
   /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user
   /// See the [doInit] call for each [PreceptItem} type
   ///
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
   /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
-  init({bool useCaptionsAsIds = true}) {
-    doInit(this, NullPreceptItem(), 0, useCaptionsAsIds: useCaptionsAsIds);
+  InitWalker init({bool useCaptionsAsIds = true}) {
+    final walker = InitWalker();
+    final params = InitWalkerParams(
+      script: this,
+      parent: NullPreceptItem(),
+      useCaptionsAsIds: useCaptionsAsIds,
+    );
+    walker.walk(this, params);
+    return walker;
   }
 
   /// Passes call to all components, and sets the [PPage.route] the keys in [routes]
   @override
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    super.doInit(script, NullPreceptItem(), 0);
+  doInit(InitWalkerParams params) {
+    super.doInit(params);
     nameLocale = '$name:$locale';
     setupControlEdit(ControlEdit.inherited);
-    int i = 0;
-    for (var entry in routes.entries) {
-      entry.value.route = entry.key;
-
-      /// This must be done first or validation messages get wrong debugId
-      entry.value.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
-      i++;
-    }
-    if (schemaSource != null) {
-      schemaSource!.doInit(script, parent, index);
-    }
-    schema.init();
   }
 
-  /// Walks through all instances of [PreceptItem] or its sub-classes held within the [PScript].
-  /// At each instance, the [ScriptVisitor.step] is invoked
-  walk(List<ScriptVisitor> visitors) {
-    super.walk(visitors);
-    for (PPage entry in routes.values) {
-      entry.walk(visitors);
-    }
-    if (schemaSource != null) schemaSource?.walk(visitors);
-    schema.walk(visitors);
-  }
+  /// [routes] must be done first or validation messages get wrong debugId
+  List<dynamic> get children => [
+        schema,
+        if (schemaSource != null) schemaSource,
+        ...super.children,
+        routes,
+      ];
 
   PDocument documentSchema({required String documentSchemaName}) {
     final PDocument? documentSchema = schema.documents[documentSchemaName];
@@ -258,11 +249,11 @@ class PPage extends PContent {
     String property = notSet,
     required String title,
   }) : super(
-    isStatic: isStatic,
+          isStatic: isStatic,
           dataProviderConfig: dataProvider,
           query: query,
           controlEdit: controlEdit,
-          pid: id,
+          id: id,
           property: property,
           caption: title,
         );
@@ -286,34 +277,25 @@ class PPage extends PContent {
 
   Map<String, dynamic> toJson() => _$PPageToJson(this);
 
-  void doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
+  void doValidate(ValidationWalkerCollector collector) {
+    super.doValidate(collector);
     if (pageType.isEmpty) {
-      messages.add(ValidationMessage(
+      collector.messages.add(ValidationMessage(
         item: this,
         msg: 'must define a non-empty pageType',
       ));
     }
-    for (var element in content) {
-      element.doValidate(messages);
-    }
   }
 
-  @override
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-    int i = 0;
-    for (var element in content) {
-      if (element is PPanel) {
-        element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
-      }
-      if (element is PPart) {
-        element.doInit(script, this, i, useCaptionsAsIds: useCaptionsAsIds);
-      }
-      i++;
-    }
+  doInit(InitWalkerParams params) {
+    route = params.name;
+    super.doInit(params);
   }
+
+  List<dynamic> get children => [
+        content,
+        ...super.children,
+      ];
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -321,9 +303,6 @@ class PPage extends PContent {
       entry.walk(visitors);
     }
   }
-
-  @override
-  String? get idAlternative => title;
 
   String? get title => caption;
 
@@ -337,6 +316,8 @@ class PPage extends PContent {
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get queryIsDeclared => query != null;
+
+  String? get idAlternative => title;
 }
 
 // TODO add pages (PObject), query & conversionErrorMessages
@@ -358,13 +339,13 @@ enum PageType { standard }
 
 //
 
-class RoleCounter implements ScriptVisitor {
+class RoleVisitor implements ScriptVisitor {
   final Set<String> roles = Set();
 
   @override
   step(Object entry) {
-    if (entry is PPermissions) {
-      roles.addAll(entry.allRoles);
+    if (entry is PDocument) {
+      roles.addAll(entry.permissions.allRoles);
     }
   }
 }

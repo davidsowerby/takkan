@@ -4,20 +4,8 @@ import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 import 'package:test/test.dart';
 
-import '../script/walk_test.dart';
-
 void main() {
   group('all roles', () {
-    // test('empty', () {
-    //   // given
-    //   final script = kitchenSinkScript;
-    //   script.init();
-    //   // when
-    //
-    //   // then
-    //
-    //   expect(script.allRoles.length, 0);
-    // });
     test('combined', () {
       // given
       final schema =
@@ -45,19 +33,19 @@ void main() {
               providerName: 'x',
               sessionTokenKey: 'x',
               configSource: PConfigSource(instance: 'x', segment: 'x')));
-
+      script.init();
       final expected = ['doc1-get', 'doc1-read', 'admin', 'doc2-read'];
       // when
 
       // then
-      final walkLog = WalkClasses();
-      script.walk([walkLog]);
+      // final walkLog = WalkClasses();
+      // script.walk([walkLog]);
       print(script.allRoles);
       expect(script.allRoles, containsAll(expected));
       expect(script.allRoles.length, expected.length);
-
-      expect(schema.allRoles, containsAll(expected));
-      expect(schema.allRoles.length, expected.length);
+      //
+      // expect(schema.allRoles, containsAll(expected));
+      // expect(schema.allRoles.length, expected.length);
     });
   });
 }

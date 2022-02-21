@@ -75,8 +75,8 @@ void main() {
 
       // then
 
-      expect(field.doValidate(3, script), ['must be greater than 5']);
-      expect(field.doValidate(11, script), ['must be less than 10']);
+      expect(field.doValidation(3, script), ['must be greater than 5']);
+      expect(field.doValidation(11, script), ['must be less than 10']);
     });
 
     /// The set is used to detect duplicates declared in refs

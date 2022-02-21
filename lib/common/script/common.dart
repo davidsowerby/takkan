@@ -1,7 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -10,7 +9,6 @@ import 'package:precept_script/query/query_converter.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/text_trait.dart';
-import 'package:precept_script/validation/message.dart';
 
 part 'common.g.dart';
 
@@ -92,11 +90,11 @@ class PCommon extends PreceptItem {
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema? schema,
-    String? pid,
+    String? id,
   })  : _isStatic = isStatic,
         _dataProvider = dataProviderConfig,
         _query = query,
-        super(id: pid);
+        super(id: id);
 
   @JsonKey(ignore: true)
   IsStatic get isStatic =>
@@ -143,9 +141,8 @@ class PCommon extends PreceptItem {
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [PScript] level
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
+  doInit(InitWalkerParams params) {
+    super.doInit(params);
     PreceptItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
@@ -158,13 +155,12 @@ class PCommon extends PreceptItem {
       p = p.parent;
     }
     setupControlEdit(inherited);
-    if (_dataProvider != null) {
-      _dataProvider?.doInit(script, this, index,
-          useCaptionsAsIds: useCaptionsAsIds);
-    }
-    if (_query != null)
-      _query?.doInit(script, this, index, useCaptionsAsIds: useCaptionsAsIds);
   }
+
+  List<dynamic> get children => [
+        if (_query != null) _query,
+        if (_dataProvider != null) _dataProvider,
+      ];
 
   /// [ControlEdit.noEdit] overrides everything
   setupControlEdit(ControlEdit inherited) {
@@ -222,30 +218,12 @@ class PCommon extends PreceptItem {
       }
     }
   }
-
-  walk(List<ScriptVisitor> visitors) {
-    super.walk(visitors);
-    if (_query != null) _query?.walk(visitors);
-    if (_dataProvider != null) _dataProvider?.walk(visitors);
-  }
-
-  void doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
-    if (dataProvider != null) {
-      dataProvider?.doValidate(messages);
-    }
-    if (query != null) {
-      query?.doValidate(messages);
-    }
-  }
 }
 
 class NullPreceptItem extends PCommon {
   NullPreceptItem() : super();
+}
 
-  @override
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    super.doInit(script, NullPreceptItem(), index);
-  }
+class NullSchemaElement extends PSchemaElement {
+  NullSchemaElement() : super();
 }

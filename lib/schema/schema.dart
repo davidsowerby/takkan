@@ -64,24 +64,18 @@ class PSchema extends PSchemaElement {
   Map<String, dynamic> toJson() => _$PSchemaToJson(this);
 
   @JsonKey(ignore: true)
-  PSchemaElement? get parent => null;
+  PSchemaElement get parent => NullSchemaElement();
 
   Map<String, PDocument> get documents => _documents;
 
   @JsonKey(ignore: true)
   IsReadOnly get isReadOnly => _isReadOnly;
 
-  init() {
-    doInit(parent: this, name: name);
-  }
+  List<dynamic> get children => [_documents, namedQueries];
 
-  @override
-  doInit({required PSchemaElement parent, required String name}) {
+  doInit(InitWalkerParams params) {
     _name = name;
-    for (var entry in _documents.entries) {
-      final document = entry.value;
-      document.doInit(parent: this, name: entry.key);
-    }
+    super.doInit(params);
   }
 
   @override
@@ -109,7 +103,7 @@ class PSchema extends PSchemaElement {
   int get documentCount => _documents.length;
 
   Set<String> get allRoles {
-    final counter = RoleCounter();
+    final counter = RoleVisitor();
     walk([counter]);
     return counter.roles;
   }
@@ -125,11 +119,8 @@ class PSchema extends PSchemaElement {
 /// PDocument(fields: [PString(name: 'title')])
 ///
 /// which for longer declarations is a bit more readable
-abstract class PSchemaElement with WalkTarget {
-  @JsonKey(ignore: true)
-  PSchemaElement? _parent;
-  @JsonKey(ignore: true)
-  late String _name;
+abstract class PSchemaElement extends PreceptItem {
+  String? _name;
 
   final IsReadOnly _isReadOnly;
 
@@ -138,28 +129,26 @@ abstract class PSchemaElement with WalkTarget {
 
   Map<String, dynamic> toJson();
 
-  /// see [PSchemaElement] for explanation of why name is set here
-  doInit({required PSchemaElement parent, required String name}) {
-    _parent = parent;
-    _name = name;
+  doInit(InitWalkerParams params) {
+    _name = params.name;
+    super.doInit(params);
   }
 
   @JsonKey(ignore: true)
   bool get readOnly => _readOnlyState() == IsReadOnly.yes;
 
-  PSchemaElement? get parent => _parent;
+  String get name => _name!;
+
+  @JsonKey(ignore: true)
+  PSchemaElement get parent => super.parent as PSchemaElement;
 
   IsReadOnly _readOnlyState() {
-    if (parent == null) {
-      String msg = "'parent' must be set before invoking";
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    } else {
-      return (_isReadOnly == IsReadOnly.inherited)
-          ? parent!._isReadOnly
-          : _isReadOnly;
-    }
+    return (_isReadOnly == IsReadOnly.inherited)
+        ? parent._isReadOnly
+        : _isReadOnly;
   }
+
+  String get idAlternative => name;
 }
 
 /// Permissions were designed very much with Back4App in mind, so there is a
@@ -349,10 +338,6 @@ class PDocument extends PSchemaElement {
     this.permissions = const PPermissions(),
   }) : super();
 
-  String get name => _name;
-
-  @JsonKey(ignore: true)
-  PSchemaElement? get parent => _parent;
 
   factory PDocument.fromJson(Map<String, dynamic> json) =>
       _$PDocumentFromJson(json);
@@ -360,9 +345,9 @@ class PDocument extends PSchemaElement {
   Map<String, dynamic> toJson() => _$PDocumentToJson(this);
 
   @override
-  doInit({required PSchemaElement parent, required String name}) {
-    _parent = parent;
-    _name = name;
+  doInit(InitWalkerParams params) {
+    super.doInit(params);
+    _name = params.name!;
   }
 
   @override

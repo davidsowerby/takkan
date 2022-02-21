@@ -38,10 +38,10 @@ void main() {
       // then
 
       expect(
-          field.doValidate('ab', script), ['must be more than 3 characters']);
-      expect(field.doValidate('abcdedfg', script),
+          field.doValidation('ab', script), ['must be more than 3 characters']);
+      expect(field.doValidation('abcdedfg', script),
           ['must be less than 6 characters']);
-      expect(field.doValidate('abcd', script), []);
+      expect(field.doValidation('abcd', script), []);
     });
 
     test('shorterThan', () {

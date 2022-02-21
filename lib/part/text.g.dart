@@ -20,12 +20,10 @@ PText _$PTextFromJson(Map<String, dynamic> json) => PText(
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      pid: json['pid'] as String?,
       tooltip: json['tooltip'] as String?,
     );
 
 Map<String, dynamic> _$PTextToJson(PText instance) => <String, dynamic>{
-      'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,

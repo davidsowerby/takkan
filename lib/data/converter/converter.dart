@@ -33,7 +33,7 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   List<String> validate(VIEW inputData, PField field, PScript pScript) {
     final conversionValidation = viewModelValidate(inputData);
     if (conversionValidation) {
-      return field.doValidate(viewToModel(inputData), pScript);
+      return field.doValidation(viewToModel(inputData), pScript);
     } else {
       final String key=this.runtimeType.toString();
       return [pScript.conversionErrorMessages.patterns[key] ?? 'unknown'];

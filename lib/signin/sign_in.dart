@@ -84,7 +84,7 @@ class PEmailSignIn extends PPart {
           isStatic: IsStatic.yes,
           controlEdit: ControlEdit.noEdit,
           caption: caption,
-          pid: pid,
+          id: pid,
         );
 
   factory PEmailSignIn.fromJson(Map<String, dynamic> json) => _$PEmailSignInFromJson(json);

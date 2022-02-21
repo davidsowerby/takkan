@@ -5,9 +5,7 @@ import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/graphql_delegate.dart';
 import 'package:precept_script/data/provider/rest_delegate.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
 import 'package:precept_script/signin/sign_in.dart';
-import 'package:precept_script/validation/message.dart';
 
 part 'data_provider.g.dart';
 
@@ -52,14 +50,6 @@ class PDataProvider extends PreceptItem {
     String? id,
   }) : super(id: id);
 
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) async {
-    super.doInit(script, parent, index, useCaptionsAsIds: useCaptionsAsIds);
-  }
-
-  void doValidate(List<ValidationMessage> messages) {
-    super.doValidate(messages);
-  }
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -113,11 +103,6 @@ class PNoDataProvider extends PDataProvider {
       _$PNoDataProviderFromJson(json);
 
   Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
-
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    super.doInit(script, parent, index);
-  }
 }
 
 abstract class PreceptSchemaLoader {
