@@ -41,7 +41,7 @@ final PScript kitchenSink00 = PScript(
                     caption: 'Part 2-1-1',
                     staticData: 'Part 2-1-1'),
                 PText(
-                  pid: 'Part 2-1-2',
+                  id: 'Part 2-1-2',
                   staticData: 'Part 2-1-2',
                 ),
               ],
@@ -50,7 +50,7 @@ final PScript kitchenSink00 = PScript(
                 readTraitName: PText.defaultReadTrait,
                 caption: 'Part 2-2',
                 staticData: 'Part 2-2'),
-            PText(pid: 'Part 2-3', staticData: 'Part 2-3'),
+            PText(id: 'Part 2-3', staticData: 'Part 2-3'),
           ],
         ),
         PPart(

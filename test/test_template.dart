@@ -93,7 +93,7 @@ final PScript kitchenSinkValidation = PScript(
           content: [
             PText(
               property: 'category',
-              pid: 'Part 2-1-2',
+              id: 'Part 2-1-2',
             ),
           ],
         ),

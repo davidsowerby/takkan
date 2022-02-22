@@ -38,11 +38,11 @@ final PScript kitchenSink01 = PScript(
           heading: PPanelHeading(),
           content: [
             PText(
-              pid: 'Part 1-1',
+              id: 'Part 1-1',
               staticData: 'Part 1-1',
             ),
             PText(
-              pid: 'Part 1-2',
+              id: 'Part 1-2',
               staticData: 'Part 1-2',
             ),
             PPanel(
@@ -81,12 +81,12 @@ final PScript kitchenSink01 = PScript(
         ),
         PPart(
             readTraitName: PText.defaultReadTrait,
-            pid: 'Part 2',
+            id: 'Part 2',
             staticData: 'Part 2',
             caption: 'Part 2'),
         PPart(
             readTraitName: PText.defaultReadTrait,
-            pid: 'Part 3',
+            id: 'Part 3',
             staticData: 'Part 3',
             caption: 'Part 3'),
       ],

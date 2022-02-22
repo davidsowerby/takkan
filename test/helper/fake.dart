@@ -7,12 +7,9 @@ import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/common/content/content_state.dart';
 import 'package:precept_client/data/data_binding.dart';
 import 'package:precept_client/data/data_source.dart';
-import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
-import 'package:precept_script/validation/message.dart';
 
 class FakeDataSource extends Fake implements DataSource {
   bool resetCalled = false;
@@ -69,12 +66,6 @@ class PFakeDataProvider extends Fake implements PDataProvider {
       required this.schema,
       required this.configSource});
 
-  doInit(PScript script, PreceptItem parent, int index,
-      {bool useCaptionsAsIds = true}) {
-    schema.init();
-  }
-
-  void doValidate(List<ValidationMessage> messages) {}
 
   static register() {
     dataProviderLibrary.register(
