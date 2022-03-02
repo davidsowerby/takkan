@@ -19,8 +19,7 @@ void main() {
       }
     });
     setUpAll(() {
-      registerFallbackValue(
-          InstanceConfig(data: {}, instanceName: 'any', identifiedType: 'any'));
+      registerFallbackValue(InstanceConfig(data: {}, instanceName: 'any'));
     });
 
     tearDownAll(() {});

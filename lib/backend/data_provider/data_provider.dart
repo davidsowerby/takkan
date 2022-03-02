@@ -106,6 +106,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     Delegate? useDelegate,
   });
 
+  /// Executes a server-side function [functionName], with [params]
+  ///
+  /// The REST delegate is always used
+  Future<ReadResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+  });
+
   /// Reads the document identified by [documentId]
   ///
   /// [fieldSelector] is used only by the [GraphQLDataProviderDelegate], to limit the
@@ -179,6 +187,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 /// Routes all calls to the [graphQLDelegate]
 class DefaultDataProvider<CONFIG extends PDataProvider>
     implements DataProvider<CONFIG> {
+  final String documentIdKey;
   final CONFIG config;
   Authenticator? _authenticator;
   RestDataProviderDelegate? _restDelegate;
@@ -187,6 +196,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   DefaultDataProvider({
     required this.config,
+    this.documentIdKey = 'objectId',
   });
 
   List<String> get userRoles => authenticator.userRoles;
@@ -256,7 +266,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
-        combineVariables(queryConfig, pageArguments);
+    combineVariables(queryConfig, pageArguments);
     return _delegateFromQueryType(queryConfig: queryConfig)
         .fetchItem(queryConfig, variables);
   }
@@ -267,7 +277,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
-        combineVariables(queryConfig, pageArguments);
+    combineVariables(queryConfig, pageArguments);
     return _delegateFromQueryType(queryConfig: queryConfig)
         .fetchList(queryConfig, variables);
   }
@@ -290,7 +300,17 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     return await _selectDelegate(useDelegate)
-        .createDocument(path: path, data: data);
+        .createDocument(path: path, data: data, documentIdKey: documentIdKey);
+  }
+
+  Future<ReadResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+  }) async {
+    return await restDelegate.executeFunction(
+      functionName: functionName,
+      params: params,
+    );
   }
 
   /// See [DataProvider.updateDocument]
@@ -316,8 +336,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
   /// 1. Values passed as [pageArguments]
   @protected
-  Map<String, dynamic> combineVariables(
-      PQuery query, Map<String, dynamic> pageArguments) {
+  Map<String, dynamic> combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
     final variables = Map<String, dynamic>();
     final propertyVariables = _buildPropertyVariables(query.propertyReferences);
     variables.addAll(pageArguments);
@@ -327,17 +346,15 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
 // TODO: get variable values from property references
-  Map<String, dynamic> _buildPropertyVariables(
-      List<String> propertyReferences) {
+  Map<String, dynamic> _buildPropertyVariables(List<String> propertyReferences) {
     return {};
   }
 
   @override
-  Future<PScript> latestScript(
-      {required String locale,
-      required int fromVersion,
-      Delegate? useDelegate,
-      required String name}) async {
+  Future<PScript> latestScript({required String locale,
+    required int fromVersion,
+    Delegate? useDelegate,
+    required String name}) async {
     final ReadResultItem result = await _selectDelegate(useDelegate)
         .latestScript(locale: locale, fromVersion: fromVersion, name: name);
     return PScript.fromJson(result.data);
@@ -369,7 +386,6 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         .readDocument(documentId: documentId);
   }
 
-
   PDocument documentSchema({required String documentSchemaName}) {
     return config.script.documentSchema(documentSchemaName: documentSchemaName);
   }
@@ -382,8 +398,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         return graphQLDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType
-                .toString()}, a graphQLDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
       }
     }
     if (queryConfig is PRestQuery) {
@@ -549,5 +564,12 @@ class NoDataProvider implements DataProvider {
   @override
   PDocument documentSchema({required String documentSchemaName}) {
     throw PreceptException(msg);
+  }
+
+  @override
+  Future<ReadResult> executeFunction(
+      {required String functionName, Map<String, dynamic> params = const {}}) {
+    // TODO: implement executeFunction
+    throw UnimplementedError();
   }
 }
