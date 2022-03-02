@@ -24,12 +24,10 @@ class PBack4AppDataProvider extends PDataProvider {
     required PConfigSource configSource,
     PSchemaSource? schemaSource,
     bool checkHealthOnConnect = false,
-    PSchema? schema,
     PRest? restDelegate,
     bool useAuthenticator = true,
   }) : super(
     providerName: 'Back4App',
-          schema: schema,
           signIn: signIn,
           signInOptions: signInOptions,
           configSource: configSource,

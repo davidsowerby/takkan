@@ -18,10 +18,6 @@ PBack4AppDataProvider _$PBack4AppDataProviderFromJson(
           : PSignIn.fromJson(json['signIn'] as Map<String, dynamic>),
       configSource:
           PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
-      schemaSource: json['schemaSource'] == null
-          ? null
-          : PSchemaSource.fromJson(
-              json['schemaSource'] as Map<String, dynamic>),
       restDelegate: json['restDelegate'] == null
           ? null
           : PRest.fromJson(json['restDelegate'] as Map<String, dynamic>),
@@ -34,7 +30,6 @@ Map<String, dynamic> _$PBack4AppDataProviderToJson(
       'signInOptions': instance.signInOptions.toJson(),
       'signIn': instance.signIn.toJson(),
       'configSource': instance.configSource.toJson(),
-      'schemaSource': instance.schemaSource?.toJson(),
       'restDelegate': instance.restDelegate?.toJson(),
       'useAuthenticator': instance.useAuthenticator,
     };

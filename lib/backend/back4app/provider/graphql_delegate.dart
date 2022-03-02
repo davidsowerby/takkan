@@ -72,7 +72,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     ReadResultList result = await fetchList(
       PGraphQLQuery(
           queryName: 'laterScripts',
-          script: laterScripts,
+          queryScript: laterScripts,
           documentSchema: 'PScript'),
       variables,
     );
@@ -146,6 +146,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   Future<CreateResult> createDocument({
     required String path,
     required Map<String, dynamic> data,
+    required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     final PDocument schema = parent.documentSchema(documentSchemaName: path);

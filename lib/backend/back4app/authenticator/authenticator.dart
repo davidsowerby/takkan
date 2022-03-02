@@ -111,7 +111,7 @@ class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
   Future<List<String>> loadUserRoles() async {
     PGraphQLQuery query = PGraphQLQuery(
       queryName: 'userRoles',
-      script: userRolesScript,
+      queryScript: userRolesScript,
       returnType: QueryReturnType.futureList,
       variables: {'id': user.objectId},
       documentSchema: '_Role',
