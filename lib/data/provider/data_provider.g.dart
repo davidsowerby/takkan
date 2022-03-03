@@ -8,7 +8,6 @@ part of 'data_provider.dart';
 
 PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
     PDataProvider(
-      providerName: json['providerName'] as String,
       useAuthenticator: json['useAuthenticator'] as bool? ?? false,
       graphQLDelegate: json['graphQLDelegate'] == null
           ? null
@@ -16,12 +15,11 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
       restDelegate: json['restDelegate'] == null
           ? null
           : PRest.fromJson(json['restDelegate'] as Map<String, dynamic>),
-      sessionTokenKey: json['sessionTokenKey'] as String,
-      configSource:
-          PConfigSource.fromJson(json['configSource'] as Map<String, dynamic>),
+      instanceConfig:
+          PInstance.fromJson(json['instanceConfig'] as Map<String, dynamic>),
       defaultDelegate:
           $enumDecodeNullable(_$DelegateEnumMap, json['defaultDelegate']) ??
-              Delegate.graphQl,
+              Delegate.rest,
       signInOptions: json['signInOptions'] == null
           ? const PSignInOptions()
           : PSignInOptions.fromJson(
@@ -35,9 +33,7 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
     <String, dynamic>{
       'signInOptions': instance.signInOptions.toJson(),
       'signIn': instance.signIn.toJson(),
-      'configSource': instance.configSource.toJson(),
-      'providerName': instance.providerName,
-      'sessionTokenKey': instance.sessionTokenKey,
+      'instanceConfig': instance.instanceConfig.toJson(),
       'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate],
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),
       'restDelegate': instance.restDelegate?.toJson(),
@@ -49,15 +45,13 @@ const _$DelegateEnumMap = {
   Delegate.rest: 'rest',
 };
 
-PConfigSource _$PConfigSourceFromJson(Map<String, dynamic> json) =>
-    PConfigSource(
-      segment: json['segment'] as String,
-      instance: json['instance'] as String,
+PInstance _$PInstanceFromJson(Map<String, dynamic> json) => PInstance(
+      group: json['group'] as String,
+      instance: json['instance'] as String?,
     );
 
-Map<String, dynamic> _$PConfigSourceToJson(PConfigSource instance) =>
-    <String, dynamic>{
-      'segment': instance.segment,
+Map<String, dynamic> _$PInstanceToJson(PInstance instance) => <String, dynamic>{
+      'group': instance.group,
       'instance': instance.instance,
     };
 

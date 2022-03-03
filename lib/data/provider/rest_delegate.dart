@@ -23,11 +23,9 @@ class PRest extends PDataProviderDelegate {
 
   PRest({
     this.documentEndpoint = '/classes',
-    required String sessionTokenKey,
     bool checkHealthOnConnect = false,
     List<String> headerKeys = const [],
   }) : super(
-          sessionTokenKey: sessionTokenKey,
           checkHealthOnConnect: checkHealthOnConnect,
         );
 

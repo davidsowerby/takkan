@@ -323,6 +323,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
+  precept_medley_script:
+    dependency: "direct dev"
+    description:
+      path: "../precept_medley_script"
+      relative: true
+    source: path
+    version: "0.0.1"
   pub_semver:
     dependency: transitive
     description:

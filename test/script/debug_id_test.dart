@@ -36,7 +36,7 @@ void main() {
             )
           },
         ),
-        schemaSource: PSchemaSource(segment: 'x', instance: 'dev'),
+        schemaSource: PSchemaSource(group: 'x', instance: 'dev'),
         routes: {
           'home': PPage(
             title: 'Home',

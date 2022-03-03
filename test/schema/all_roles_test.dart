@@ -30,9 +30,7 @@ void main() {
           version: PVersion(number: 0),
           schema: schema,
           dataProvider: PDataProvider(
-              providerName: 'x',
-              sessionTokenKey: 'x',
-              configSource: PConfigSource(instance: 'x', segment: 'x')));
+              instanceConfig: PInstance(instance: 'x', group: 'x')));
       script.init();
       final expected = ['doc1-get', 'doc1-read', 'admin', 'doc2-read'];
       // when

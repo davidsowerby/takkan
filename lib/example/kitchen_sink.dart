@@ -15,9 +15,7 @@ import 'package:precept_script/signin/sign_in.dart';
 
 final kitchenSinkScript = PScript(
   dataProvider: PDataProvider(
-    sessionTokenKey: 'tokenKey',
-    configSource: PConfigSource(segment: 'test', instance: 'test'),
-    providerName: 'some provider name',
+    instanceConfig: PInstance(group: 'test', instance: 'test'),
   ),
   name: 'Kitchen Sink',
   version: PVersion(number: 0),

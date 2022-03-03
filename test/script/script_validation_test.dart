@@ -117,12 +117,10 @@ void main() {
           version: PVersion(number: 0),
         ),
         dataProvider: PDataProvider(
-          providerName: 'Test',
-          configSource: const PConfigSource(
-            segment: '',
+          instanceConfig: const PInstance(
+            group: '',
             instance: '',
           ),
-          sessionTokenKey: '',
         ),
         routes: {
           "/home": PPage(
@@ -154,10 +152,8 @@ void main() {
             version: PVersion(number: 0),
           ),
           dataProvider: PDataProvider(
-            providerName: 'Test',
-            sessionTokenKey: '',
-            configSource: PConfigSource(
-              segment: 'back4app',
+            instanceConfig: PInstance(
+              group: 'back4app',
               instance: 'dev',
             ),
           ),
@@ -207,10 +203,8 @@ void main() {
           version: PVersion(number: 0),
         ),
         dataProvider: PDataProvider(
-          providerName: 'Test',
-          sessionTokenKey: '',
-          configSource: PConfigSource(
-            segment: 'back4app',
+          instanceConfig: PInstance(
+            group: 'back4app',
             instance: 'dev',
           ),
         ),
@@ -231,10 +225,8 @@ void main() {
           version: PVersion(number: 0),
         ),
         dataProvider: PDataProvider(
-          providerName: 'Test',
-          sessionTokenKey: '',
-          configSource: PConfigSource(
-            segment: 'back4app',
+          instanceConfig: PInstance(
+            group: 'back4app',
             instance: 'dev',
           ),
         ),

@@ -4,7 +4,6 @@ import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/message.dart';
 
 part 'query.g.dart';
 

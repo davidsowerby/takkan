@@ -382,15 +382,15 @@ class PDocument extends PSchemaElement {
 /// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure
 /// the application.
 ///
-/// [segment] relates to the first level within *precept.json*
+/// [group] relates to the first level within *precept.json*
 /// [instance] relates to the second level within *precept.json*
 @JsonSerializable(explicitToJson: true)
 class PSchemaSource extends PreceptItem {
-  final String segment;
+  final String group;
   final String instance;
 
   PSchemaSource({
-    required this.segment,
+    required this.group,
     required this.instance,
     String? id,
     int version = 0,

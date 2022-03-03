@@ -13,7 +13,6 @@ import 'package:precept_script/panel/panel_style.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/trait/style.dart';
 import 'package:precept_script/trait/text_trait.dart';
-import 'package:precept_script/validation/message.dart';
 
 part 'panel.g.dart';
 

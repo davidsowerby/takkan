@@ -22,12 +22,10 @@ class PGraphQL extends PDataProviderDelegate {
   final String graphqlEndpoint;
 
   const PGraphQL({
-    required String sessionTokenKey,
     this.graphqlEndpoint = '/graphql',
     bool checkHealthOnConnect = false,
     List<String> headerKeys = const [],
   }) : super(
-          sessionTokenKey: sessionTokenKey,
           checkHealthOnConnect: checkHealthOnConnect,
         );
 

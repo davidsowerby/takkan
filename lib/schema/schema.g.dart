@@ -135,12 +135,12 @@ const _$PDocumentTypeEnumMap = {
 
 PSchemaSource _$PSchemaSourceFromJson(Map<String, dynamic> json) =>
     PSchemaSource(
-      segment: json['segment'] as String,
+      group: json['group'] as String,
       instance: json['instance'] as String,
     );
 
 Map<String, dynamic> _$PSchemaSourceToJson(PSchemaSource instance) =>
     <String, dynamic>{
-      'segment': instance.segment,
+      'group': instance.group,
       'instance': instance.instance,
     };

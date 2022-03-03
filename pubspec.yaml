@@ -16,9 +16,12 @@ dependencies:
   freezed_annotation: ^1.1.0
   meta: ^1.7.0
 
+
+
 dev_dependencies:
   test:
   build_runner: ^2.0.3
   json_serializable: ^6.1.4
   freezed: ^1.1.1
-
+  precept_medley_script:
+    path: ../precept_medley_script

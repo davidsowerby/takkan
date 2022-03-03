@@ -36,9 +36,7 @@ void main() {
           version: PVersion(number: 0),
         ),
         dataProvider: PDataProvider(
-          providerName: 'Test',
-          sessionTokenKey: '',
-          configSource: const PConfigSource(segment: '', instance: ''),
+          instanceConfig: const PInstance(group: '', instance: ''),
         ),
         isStatic: IsStatic.yes,
         query: PGetDocument(
