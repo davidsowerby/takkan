@@ -54,8 +54,7 @@ void main() {
       final instanceConfig =
           dataProviderLibrary.appConfig.instanceConfig(providerConfig);
       // when
-      dataProviderLibrary.register(
-          instanceConfig: instanceConfig, builder: _defaultBuilder);
+      dataProviderLibrary.register(type: 'default', builder: _defaultBuilder);
       // then
 
       expect(dataProviderLibrary.find(providerConfig: providerConfig),
@@ -78,7 +77,7 @@ void main() {
 
       // when
       dataProviderLibrary.register(
-        instanceConfig: instanceConfig1,
+        type: 'default',
         builder: _defaultBuilder,
       );
       // then
@@ -118,13 +117,11 @@ void main() {
       );
       // when
       dataProviderLibrary.register(
-        instanceConfig:
-            dataProviderLibrary.appConfig.instanceConfig(providerConfig1),
+        type: 'default',
         builder: _defaultBuilder,
       );
       dataProviderLibrary.register(
-        instanceConfig:
-            dataProviderLibrary.appConfig.instanceConfig(providerConfig3),
+        type: 'other',
         builder: _otherBuilder,
       );
       // then

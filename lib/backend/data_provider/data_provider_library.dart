@@ -73,9 +73,9 @@ class DataProviderLibrary {
   }
 
   register(
-      {required InstanceConfig instanceConfig,
+      {required String type,
       required DataProvider Function(PDataProvider) builder}) {
-    builders[instanceConfig.type] = builder;
+    builders[type] = builder;
   }
 
   /// Clears all [builders] and [instances]
