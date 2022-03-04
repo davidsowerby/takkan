@@ -187,7 +187,6 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
 /// Routes all calls to the [graphQLDelegate]
 class DefaultDataProvider<CONFIG extends PDataProvider>
     implements DataProvider<CONFIG> {
-  final String documentIdKey;
   final CONFIG config;
   Authenticator? _authenticator;
   RestDataProviderDelegate? _restDelegate;
@@ -196,12 +195,15 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   DefaultDataProvider({
     required this.config,
-    this.documentIdKey = 'objectId',
   });
 
   List<String> get userRoles => authenticator.userRoles;
 
   InstanceConfig get instanceConfig => _instanceConfig;
+
+  /// The key to look up the item id of a document
+  /// Back4App for example, uses 'objectId'
+  String get itemIdKey => 'objectId';
 
   Authenticator get authenticator {
     if (_authenticator == null) {
@@ -300,7 +302,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     return await _selectDelegate(useDelegate)
-        .createDocument(path: path, data: data, documentIdKey: documentIdKey);
+        .createDocument(path: path, data: data, documentIdKey: itemIdKey);
   }
 
   Future<ReadResult> executeFunction({

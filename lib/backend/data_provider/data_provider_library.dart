@@ -5,7 +5,8 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 
 /// A lookup facility for instances of [DataProvider] implementations.
-/// Provides an instance from the [find] method, from a supplied [PDataProvider]
+/// Provides an instance using the [find] method, from a supplied type name, defined in *precept.json*
+///
 /// Also acts as a cache, as most [DataProvider] implementations are stateful and should be retained once
 /// connected
 ///
@@ -15,7 +16,7 @@ import 'package:precept_script/data/provider/data_provider.dart';
 ///
 /// [appConfig] is initialised during Precept start up
 class DataProviderLibrary {
-  final Map<Type, DataProvider Function(PDataProvider)> builders = Map();
+  final Map<String, DataProvider Function(PDataProvider)> builders = Map();
   final Map<String, DataProvider> instances = Map();
   late AppConfig _appConfig;
 
@@ -27,35 +28,38 @@ class DataProviderLibrary {
     this._appConfig = appConfig;
   }
 
-  /// Finds an entry in the library matching [config.configSource], and returns
-  /// an instance of the appropriate [DataProvider] implementation, with its
-  /// config property set to [config].
+  /// Finds a previously cached, or creates a [DataProvider] instance appropriate to the
+  /// type of provider (identified by [instanceConfig.type])
   ///
-  /// [config] must be of the type appropriate to the [DataProvider] implementation required.
+  /// An instance of DataProvider is identified uniquely by [providerConfig.configSource],
+  /// thus allowing multiple instances of the same DataProvider type.
   ///
-  /// [config.instanceName] is only needed if you require two instances of the same [DataProvider] type. // TODO: remove config.instanceName, not needed now configSource is the key
+  /// Requires that the [instanceConfig.type] has been registered using [register].
+  /// This is usually done in your main.dart file, using for example, `Back4App.register()`
+  ///
+  /// Note: The [instanceConfig] is retrieved from [AppConfig], which is the in-app
+  /// representation of precept.json.
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
-  DataProvider find({required PDataProvider config}) {
-    if (config is PNoDataProvider) {
+  DataProvider find({required PDataProvider providerConfig}) {
+    if (providerConfig is PNoDataProvider) {
       logType(this.runtimeType).d("Returning a NoDataProvider");
       return NoDataProvider();
     }
-    final String key = config.configSource.toString();
-    logType(this.runtimeType).d("Finding DataProvider for ConfigSource: $key");
 
-    if (config is PNoDataProvider) {
-      return NoDataProvider();
-    }
+    final InstanceConfig instanceConfig =
+        appConfig.instanceConfig(providerConfig);
+    final String key = providerConfig.configSource.toString();
+    logType(this.runtimeType).d("Finding DataProvider for ConfigSource: $key");
 
     /// Use existing instance if there is one
     final instance = instances[key];
     if (instance != null) return instance;
 
-    /// Otherwise create instance from builder, store and return it
-    final builder = builders[config.runtimeType];
+    /// Otherwise create instance from builder, cache and return it
+    final builder = builders[instanceConfig.type];
     if (builder != null) {
-      final newInstance = builder(config);
+      final newInstance = builder(providerConfig);
       newInstance.init(appConfig);
       instances[key] = newInstance;
       return newInstance;
@@ -63,15 +67,15 @@ class DataProviderLibrary {
 
     /// Failed
     String msg =
-        "No entry is defined for ${config.runtimeType.toString()} in $runtimeType.\n  Have you forgotten to call ${config.providerName}.register() in your 'main.dart'?";
+        "No entry is defined for ${instanceConfig.type} in $runtimeType.\n  Have you forgotten to call register() for your DataProvider in your 'main.dart'?";
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
 
-  /// Is there a way to check that [config] is a [PDataProvider] ?
-  register({required Type configType,
-    required DataProvider Function(PDataProvider) builder}) {
-    builders[configType] = builder;
+  register(
+      {required InstanceConfig instanceConfig,
+      required DataProvider Function(PDataProvider) builder}) {
+    builders[instanceConfig.type] = builder;
   }
 
   /// Clears all [builders] and [instances]

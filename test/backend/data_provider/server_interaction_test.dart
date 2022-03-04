@@ -25,7 +25,6 @@ void main() {
       instance: 'instance',
     ),
     sessionTokenKey: 'sessionToken',
-    providerName: 'Anon',
     restDelegate: PRest(sessionTokenKey: '?'),
   );
   group('Positive tests', () {
