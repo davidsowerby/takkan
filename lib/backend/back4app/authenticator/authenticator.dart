@@ -1,13 +1,13 @@
 import 'package:meta/meta.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/query/query.dart';
 
-class Back4AppAuthenticator extends Authenticator<PBack4AppDataProvider,
-    ParseUser, Back4AppDataProvider> {
+class Back4AppAuthenticator
+    extends Authenticator<PDataProvider, ParseUser, Back4AppDataProvider> {
   late Parse parse;
   late Back4AppDataProvider parent;
 

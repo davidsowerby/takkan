@@ -442,6 +442,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  precept_medley_script:
+    dependency: "direct dev"
+    description:
+      path: "../precept_medley_script"
+      relative: true
+    source: path
+    version: "0.0.1"
   precept_script:
     dependency: "direct main"
     description:

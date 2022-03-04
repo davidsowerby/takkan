@@ -19,11 +19,14 @@ dependencies:
     path: ../precept_backend
 
 
+
 dev_dependencies:
   test:
   build_runner:
   mockito: ^5.0.7
   json_serializable: ^6.1.4
+  precept_medley_script:
+    path: ../precept_medley_script
 
 
 # For information on the generic Dart part of this file, see the

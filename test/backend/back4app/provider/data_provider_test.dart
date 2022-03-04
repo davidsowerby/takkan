@@ -1,9 +1,8 @@
 import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_script/example/medley_script.dart';
+import 'package:precept_medley_script/medley/medley_script.dart';
 import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -18,8 +17,7 @@ void main() async {
     setUpAll(() async {
       script = medleyScript[0];
       script.init();
-      provider = Back4AppDataProvider(
-          config: script.dataProvider! as PBack4AppDataProvider);
+      provider = Back4AppDataProvider(config: script.dataProvider!);
       provider?.init(appConfig);
     });
 

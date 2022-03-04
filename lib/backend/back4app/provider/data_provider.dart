@@ -1,7 +1,6 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:precept_back4app_client/backend/back4app/authenticator/authenticator.dart';
 import 'package:precept_back4app_client/backend/back4app/provider/graphql_delegate.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/pback4app_data_provider.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
 import 'package:precept_backend/backend/data_provider/delegate.dart';
@@ -9,8 +8,8 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 
-class Back4AppDataProvider extends DefaultDataProvider<PBack4AppDataProvider> {
-  Back4AppDataProvider({required PBack4AppDataProvider config})
+class Back4AppDataProvider extends DefaultDataProvider<PDataProvider> {
+  Back4AppDataProvider({required PDataProvider config})
       : super(
           config: config,
         );
@@ -31,9 +30,8 @@ class Back4AppDataProvider extends DefaultDataProvider<PBack4AppDataProvider> {
 class Back4App {
   static register() {
     dataProviderLibrary.register(
-        configType: PBack4AppDataProvider,
-        builder: (config) =>
-            Back4AppDataProvider(config: config as PBack4AppDataProvider));
+        type: 'back4app',
+        builder: (config) => Back4AppDataProvider(config: config));
   }
 }
 
@@ -42,7 +40,7 @@ Back4AppGraphQLDelegate constructGraphQLDelegate() {
 }
 
 Future<Authenticator<PDataProvider, ParseUser, Back4AppDataProvider>>
-constructAuthenticator() async {
+    constructAuthenticator() async {
   return Back4AppAuthenticator();
 }
 
