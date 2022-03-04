@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:precept_backend/backend/data_provider/constants.dart';
@@ -16,8 +15,13 @@ import 'package:precept_script/data/provider/data_provider.dart';
 /// Headers for HTTP / GraphQL clients can be obtained from [headers], assuming
 /// of course that they have been declared in *precept.json*
 ///
-class AppConfig {
-  static const String keySegment = 'segment';
+/// Many properties are 'inherited', which means they can be defined at
+/// app, group or instance level.  An inherited property value is valid for all lower
+/// levels, unless overridden at a lower level:
+///
+/// See https://preceptblog.co.uk/docs/user-guide/app-configuration
+class AppConfig extends BaseConfig with Appendage {
+  static const String keyGroup = 'group';
   static const String keyInstance = 'instance';
   static const String keyServerUrl = 'serverUrl';
   static const String keyCloudCodeDir = 'cloudCode';
@@ -25,122 +29,138 @@ class AppConfig {
   static const String keyGraphqlEndpoint = 'graphqlEndpoint';
   static const String keyDocumentEndpoint = 'documentEndpoint';
   static const String keyFunctionEndpoint = 'functionEndpoint';
-  static const String defaultInstanceType = 'generic REST';
-  final Map<String, dynamic> data;
+  static const String keyGraphqlStub = 'graphqlStub';
+  static const String keyDocumentStub = 'documentStub';
+  static const String keyFunctionStub = 'functionStub';
+  static const String keyStages = 'stages';
+  static const String keyType = 'type';
+  static const String defaultInstanceType = 'back4app';
+  final Map<String, GroupConfig> _groups = Map();
+  final String currentStage;
 
-  const AppConfig(this.data);
-
-  InstanceConfig instanceConfig(PDataProvider config) {
-    return instanceCfg(config.configSource);
-  }
-
-  InstanceConfig instanceCfg(PConfigSource configSource) {
-    return instance(
-        segment: configSource.segment, instance: configSource.instance);
-  }
-
-  InstanceConfig instance({required String segment, required String instance}) {
-    final segmentData = data[segment];
-    if (segmentData == null) {
-      String msg =
-          'File precept.json in project root must define a segment for \'${segment}\'';
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    }
-    final Map? instanceData = segmentData[instance];
-    if (instanceData == null) {
-      String msg =
-          'File precept.json in project root must define an instance \'${instance}\' in segment \'${segment}\'';
-      logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
-    } else {
-      return InstanceConfig(
-        data: Map<String, dynamic>.from(instanceData),
-        instanceName: instance,
+  AppConfig({
+    this.currentStage = notSet,
+    required Map<String, dynamic> data,
+    String? type,
+  }) : super(ConfigPropsRoot(data), null) {
+    for (String groupKey in data.keys) {
+      _groups[groupKey] = GroupConfig(
+        parent: this,
+        data: data[groupKey],
+        name: groupKey,
       );
     }
   }
 
-  /// Headers are loaded from the appropriate instance definition within *precept.json*
-  ///
-  /// These are typically API Keys, Client Keys etc, and required for HTTP/GraphQL client
-  /// initialisation.
-  ///
-  /// The header keys must be declared in *precept.json* exactly as they are to be used
-  ///
-  Map<String, dynamic> headers(
-    PDataProvider providerConfig,
-  ) {
-    final instanceHeaders = instanceConfig(providerConfig).headers;
-    return instanceHeaders;
+  InstanceConfig instanceConfig(PDataProvider providerConfig) {
+    final g = group(providerConfig.instanceConfig.group);
+    final instanceName =
+        (g.staged) ? currentStage : providerConfig.instanceConfig.instance;
+    if (instanceName == null) {
+      String msg =
+          'Either a current stage must be set from precept.json or PDataProvider must define an instance name';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    final i = g.instance(instanceName);
+    return i;
+  }
+
+  GroupConfig group(String groupName) {
+    final group = _groups[groupName];
+    if (group == null) {
+      String msg =
+          'File precept.json in project root does not define a group \'${groupName}\'';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return group;
   }
 }
 
-/// The default is to hold app configuration in a file *precept.json* in the project root.
-///
-/// Except for testing, any deviation from this convention is discouraged, as Precept will
-/// assumes that is where the configuration is.
-///
-/// It is therefore usually unnecessary to specify [file], except when testing
-///
-///
-/// If loading through a Flutter client, this loader will not work, use the
-/// JSONAssetLoader in the *precept_client* package instead
-class AppConfigFileLoader {
-  final File? file;
+class GroupConfig extends BaseConfig with Appendage {
+  final Map<String, InstanceConfig> _instances = Map();
+  final Map<String, dynamic> data = Map();
+  final String name;
 
-  const AppConfigFileLoader({this.file});
-
-  /// If [returnEmptyIfAbsent] is true, a missing *precept.json* returns an empty
-  /// [AppConfig] - if false, a [PreceptException] is thrown if no *precept.json*
-  /// exists in [file]
-  Future<AppConfig> load({bool returnEmptyIfAbsent = false}) async {
-    final f = file ?? File('${Directory.current.path}/precept.json');
-    if (!f.existsSync()) {
-      if (returnEmptyIfAbsent) {
-        return AppConfig(Map());
+  GroupConfig(
+      {required this.name,
+      required AppConfig parent,
+      required Map<String, dynamic> data})
+      : super(ConfigProps(data, parent), parent) {
+    for (String key in data.keys) {
+      if (data[key] is Map) {
+        final instanceKey = key;
+        final Map untypedMap = data[instanceKey];
+        final Map<String, dynamic> t = Map.castFrom(untypedMap);
+        _instances[instanceKey] = InstanceConfig(
+          name: instanceKey,
+          parent: this,
+          data: t,
+        );
       } else {
-        throw PreceptException('There is no file at ${f.path}');
+        this.data[key] = data[key];
       }
     }
-    final content = f.readAsStringSync();
-    final j = json.decode(content);
-    return AppConfig(j);
+  }
+
+  List<String> get stages => (data[AppConfig.keyStages] == null)
+      ? []
+      : List.castFrom(data[AppConfig.keyStages]);
+
+
+  bool get staged => stages.isNotEmpty;
+
+  InstanceConfig instance(String instanceName) {
+    final instanceConfig = _instances[instanceName];
+
+    if (instanceConfig == null) {
+      String msg =
+          'File precept.json in project root does not define an instance \'${instanceName}\' in group \'${name}\'';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
+    }
+    return instanceConfig;
+  }
+
+  bool hasInstance(String? instanceName) {
+    if (instanceName == null) {
+      return false;
+    }
+    return _instances.containsKey(instanceName);
   }
 }
 
 /// Headers are grouped together under 'headers'
-class InstanceConfig {
-  final Map<String, dynamic> data;
-  final String instanceName;
+class InstanceConfig extends BaseConfig with Appendage {
+  final String? name;
 
-  String get serverUrl =>
-      data[AppConfig.keyServerUrl] ?? 'https://parseapi.back4app.com';
+  InstanceConfig(
+      {required GroupConfig parent,
+      required Map<String, dynamic> data,
+      required this.name})
+      : super(ConfigProps(data, parent), parent) {}
 
   String get appId => headers[keyHeaderApplicationId] ?? notSet;
 
   String get clientKey => headers[keyHeaderClientKey] ?? notSet;
 
-  String get appName => data[AppConfig.keyAppName] ?? 'MyApp';
+  Directory get cloudCodeDirectory => (props.data[AppConfig.keyCloudCodeDir] ==
+          null)
+      ? Directory('${Platform.environment['HOME']!}/b4a/$appName/$name/cloud')
+      : Directory(props.data[AppConfig.keyCloudCodeDir]);
 
-  String get functionEndpoint =>
-      data[AppConfig.keyFunctionEndpoint] ?? _appendToServerUrl('functions');
-
-  String get documentEndpoint =>
-      data[AppConfig.keyDocumentEndpoint] ?? _appendToServerUrl('classes');
-
-  String get graphqlEndpoint =>
-      data[AppConfig.keyGraphqlEndpoint] ?? _appendToServerUrl('graphql');
-
-  Directory get cloudCodeDirectory => (data[AppConfig.keyCloudCodeDir] == null)
-      ? Directory(
-          '${Platform.environment['HOME']!}/b4a/$appName/$instanceName/cloud')
-      : Directory(data[AppConfig.keyCloudCodeDir]);
-
+  /// These are typically API Keys, Client Keys etc, and required for HTTP/GraphQL client
+  /// initialisation.
+  ///
+  /// The header keys must be declared in *precept.json* exactly as they are to be used
+  ///
   /// This seems unnecessarily complicated just to get a Map<String,String> from a
   /// Map<String,dynamic> but was the only way I found to get around Dart's typing
+  ///
+  /// TODO: use Map.castFrom
   Map<String, String> get headers {
-    final Map<String, dynamic>? h1 = data['headers'];
+    final Map<String, dynamic>? h1 = props.data['headers'];
     if (h1 != null) {
       final Map<String, String> h2 = Map();
       h1.entries.forEach((element) {
@@ -151,14 +171,90 @@ class InstanceConfig {
       return {};
     }
   }
+}
 
-  String get type => data['type'] ?? 'back4app';
-
-  InstanceConfig({required this.data, required this.instanceName}) {}
-
-  String _appendToServerUrl(String appendage) {
+mixin Appendage {
+  String _appendToServerUrl(String serverUrl, String appendage) {
     return serverUrl.endsWith('/')
         ? '$serverUrl$appendage'
         : '$serverUrl/$appendage';
   }
+}
+
+class ConfigProps extends ConfigPropsRoot with Appendage {
+  final BaseConfig parent;
+
+  ConfigProps(Map<String, dynamic> data, this.parent) : super(data);
+
+  String get appName => data[AppConfig.keyAppName] ?? parent.appName;
+
+  String get type => data[AppConfig.keyType] ?? parent.type;
+
+  String get serverUrl => data[AppConfig.keyServerUrl] ?? parent.serverUrl;
+
+  String get documentStub =>
+      data[AppConfig.keyDocumentStub] ?? parent.documentStub;
+
+  String get graphqlStub =>
+      data[AppConfig.keyGraphqlStub] ?? parent.graphqlStub;
+
+  String get functionStub =>
+      data[AppConfig.keyFunctionStub] ?? parent.functionStub;
+}
+
+class ConfigPropsRoot with Appendage {
+  final Map<String, dynamic> data;
+
+  ConfigPropsRoot(this.data);
+
+  /// Inherited properties
+  String get type => data[AppConfig.keyType] ?? 'back4app';
+
+  String get appName => data[AppConfig.keyAppName] ?? 'MyApp';
+
+  String get serverUrl =>
+      data[AppConfig.keyServerUrl] ?? 'https://parseapi.back4app.com';
+
+  String get documentStub => data[AppConfig.keyDocumentStub] ?? 'classes';
+
+  String get graphqlStub => data[AppConfig.keyGraphqlStub] ?? 'graphql';
+
+  String get functionStub => data[AppConfig.keyFunctionStub] ?? 'functions';
+
+  String get documentEndpoint =>
+      data[AppConfig.keyDocumentEndpoint] ??
+      _appendToServerUrl(serverUrl, documentStub);
+
+  String get graphqlEndpoint =>
+      data[AppConfig.keyGraphqlEndpoint] ??
+      _appendToServerUrl(serverUrl, graphqlStub);
+
+  String get functionEndpoint =>
+      data[AppConfig.keyFunctionEndpoint] ??
+      _appendToServerUrl(serverUrl, functionStub);
+}
+
+abstract class BaseConfig {
+  final ConfigPropsRoot props;
+  final BaseConfig? parent;
+
+  const BaseConfig(this.props, this.parent);
+
+  String get type => props.type;
+
+  String get appName => props.appName;
+
+  String get serverUrl => props.serverUrl;
+
+  String get documentStub => props.documentStub;
+
+  String get graphqlStub => props.graphqlStub;
+
+  String get functionStub => props.functionStub;
+
+  String get documentEndpoint => props.documentEndpoint;
+
+  String get graphqlEndpoint => props.graphqlEndpoint;
+
+  String get functionEndpoint => props.functionEndpoint;
 }

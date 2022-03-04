@@ -20,12 +20,11 @@ void main() {
   late Dio dio;
   late DioAdapter dioAdapter;
   PDataProvider config = PDataProvider(
-    configSource: PConfigSource(
-      segment: 'segment',
+    instanceConfig: PInstance(
+      group: 'group',
       instance: 'instance',
     ),
-    sessionTokenKey: 'sessionToken',
-    restDelegate: PRest(sessionTokenKey: '?'),
+    restDelegate: PRest(),
   );
   group('Positive tests', () {
     const baseUrl = 'https://example.com';
@@ -45,9 +44,11 @@ void main() {
 
     test('fetchList', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
       final route = '${instanceConfig.documentEndpoint}/Person';
       final returnedData = [
@@ -76,9 +77,11 @@ void main() {
 
     test('fetchItem', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
       final route = '${instanceConfig.documentEndpoint}/Person';
       final returnedData = [
@@ -106,9 +109,11 @@ void main() {
     });
     test('createDocument', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
       final route = '${instanceConfig.documentEndpoint}/Person';
       final data = {
@@ -142,9 +147,11 @@ void main() {
     });
     test('updateDocument', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final updateResponse = {"updatedAt": "2011-08-21T18:02:52.248Z"};
       final objectId = 'XXxxnnyy';
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
@@ -181,9 +188,11 @@ void main() {
 
     test('deleteDocument', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final deleteResponse = {};
       final objectId = 'XXxxnnyy';
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
@@ -211,9 +220,11 @@ void main() {
 
     test('executeFunction', () async {
       // given
-      AppConfig appConfig = AppConfig({
-        'segment': {'instance': {}},
-      });
+      AppConfig appConfig = AppConfig(
+        data: {
+          'group': {'instance': {}},
+        },
+      );
       final String functionName = 'dummyFunction';
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
       final route = '${instanceConfig.functionEndpoint}/$functionName';

@@ -13,13 +13,15 @@ import '../../fixtures/mocks.dart';
 
 void main() {
   group('DefaultDataProvider', () {
-    AppConfig appConfig = AppConfig({
-      'b': {
-        'a': {'serverUrl': 'https://example.com'}
-      }
-    });
+    AppConfig appConfig = AppConfig(
+      data: {
+        'b': {
+          'a': {'serverUrl': 'https://example.com'}
+        }
+      },
+    );
     setUpAll(() {
-      registerFallbackValue(InstanceConfig(data: {}, instanceName: 'any'));
+      registerFallbackValue(appConfig.group('b').instance('a'));
     });
 
     tearDownAll(() {});
@@ -31,11 +33,10 @@ void main() {
     test('init, no authenticator', () async {
       // given
       PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: PGraphQL(),
         useAuthenticator: false,
-        restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        restDelegate: PRest(),
       );
       DefaultDataProvider dp = TestDataProvider1(
         config: config,
@@ -54,10 +55,9 @@ void main() {
     test('init, with authenticator', () async {
       // given
       PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
-        restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: PGraphQL(),
+        restDelegate: PRest(),
         useAuthenticator: true,
       );
       TestDataProvider2 dp = TestDataProvider2(
@@ -75,9 +75,8 @@ void main() {
     test('call RestDelegate without specifying it', () async {
       // given
       PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: PGraphQL(),
       );
       DefaultDataProvider dp = TestDataProvider2(
         config: config,
@@ -93,9 +92,8 @@ void main() {
     test('call GraphQLDelegate without specifying it', () async {
       // given
       PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        restDelegate: PRest(),
       );
       DefaultDataProvider dp = TestDataProvider2(
         config: config,
@@ -112,9 +110,8 @@ void main() {
         () async {
       // given
       PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        restDelegate: PRest(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        restDelegate: PRest(),
         useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(
@@ -132,9 +129,8 @@ void main() {
         () async {
       // given
           PDataProvider config = PDataProvider(
-        configSource: PConfigSource(segment: 'b', instance: 'a'),
-        sessionTokenKey: 'sessionToken',
-        graphQLDelegate: PGraphQL(sessionTokenKey: 'sessionToken'),
+        instanceConfig: PInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: PGraphQL(),
         useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(config: config);

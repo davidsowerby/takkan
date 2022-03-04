@@ -33,7 +33,7 @@ import 'package:precept_script/script/script.dart';
 /// An implementation of this interface must be registered with a call to [DataProviderLibrary.register]
 ///
 /// Note that the [DataProviderLibrary] acts as a cache. Multiple instances of the same DataProvider
-/// class are identified by the [PConfigSource], but each such instance is cached to ensure
+/// class are identified by the [PInstance], but each such instance is cached to ensure
 /// consistency of state.
 ///
 /// In addition to CRUD calls, a [DataProvider] provides a backend-specific [Authenticator]
@@ -182,6 +182,9 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   PreceptUser get user;
 
   PDocument documentSchema({required String documentSchemaName});
+
+  /// The HTTP header key for the session token
+  String get sessionTokenKey;
 }
 
 /// Routes all calls to the [graphQLDelegate]
@@ -440,6 +443,9 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   RestDataProviderDelegate createRestDelegate() {
     return DefaultRestDataProviderDelegate(this);
   }
+
+  @override
+  String get sessionTokenKey => 'X-Parse-Session-Token';
 }
 
 /// When operating within a session, the addition of a session token is implementation specific
@@ -511,6 +517,8 @@ class NoDataProvider implements DataProvider {
   PreceptUser get user => throw PreceptException(msg);
 
   List<String> get userRoles => throw PreceptException(msg);
+
+  String get sessionTokenKey => 'X-Parse-Session-Token';
 
   @override
   Future<PScript> latestScript(

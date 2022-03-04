@@ -58,7 +58,7 @@ class DefaultGraphQLDataProviderDelegate
     if (authenticator.isAuthenticated) {
       HttpLink link = _client.link as HttpLink;
       if (user.sessionToken != null) {
-        link.defaultHeaders[config.sessionTokenKey] = user.sessionToken!;
+        link.defaultHeaders[parent.sessionTokenKey] = user.sessionToken!;
       } else {
         throw PreceptException(
             'Session token should not be null at this stage');

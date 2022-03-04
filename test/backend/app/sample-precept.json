@@ -1,0 +1,45 @@
+{
+  "main": {
+    "appName": "Sample App",
+    "type": "back4app",
+    "stages": [
+      "dev",
+      "test",
+      "qa",
+      "prod"
+    ],
+    "serverUrl": "https://parseapi.back4app.com",
+    "dev": {
+      "headers": {
+        "X-Parse-Application-Id": "dev app id",
+        "X-Parse-Client-Key": "dev client key"
+      }
+    },
+    "test": {
+      "headers": {
+        "X-Parse-Application-Id": "test app id",
+        "X-Parse-Client-Key": "test client key"
+      },
+      "serverUrl": "http://localhost:1337/parse/"
+    },
+    "qa": {
+      "headers": {
+        "X-Parse-Application-Id": "qa app id",
+        "X-Parse-Client-Key": "qa client key"
+      }
+    },
+    "prod": {
+      "headers": {
+        "X-Parse-Application-Id": "prod app id",
+        "X-Parse-Client-Key": "prod client key"
+      }
+    }
+  },
+  "public REST": {
+    "type": "rest",
+    "restcountries": {
+      "headers": {},
+      "documentEndpoint": "https://restcountries.eu/"
+    }
+  }
+}

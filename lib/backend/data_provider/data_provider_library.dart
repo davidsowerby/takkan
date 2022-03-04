@@ -49,8 +49,9 @@ class DataProviderLibrary {
 
     final InstanceConfig instanceConfig =
         appConfig.instanceConfig(providerConfig);
-    final String key = providerConfig.configSource.toString();
-    logType(this.runtimeType).d("Finding DataProvider for ConfigSource: $key");
+    final String key = providerConfig.instanceConfig.toString();
+    logType(this.runtimeType)
+        .d("Finding DataProvider for instanceConfig: $key");
 
     /// Use existing instance if there is one
     final instance = instances[key];

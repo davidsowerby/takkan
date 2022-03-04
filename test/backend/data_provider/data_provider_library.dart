@@ -7,28 +7,34 @@ import 'package:test/test.dart';
 
 void main() {
   group('DataProviderLibrary', () {
-    setUpAll(() {
-      dataProviderLibrary.init(AppConfig({
-        'myApp': {
-          'dev': {
-            'type': 'default',
-          }
-        },
-        'refApp': {
-          'dev': {
-            'type': 'default',
-          }
-        },
-        'other': {
-          'public': {
-            'type': 'other',
-          },
-          'private': {
-            'type': 'other',
-          }
-        },
-      }));
-    });
+    setUpAll(
+      () {
+        dataProviderLibrary.init(
+          AppConfig(
+            data: {
+              'myApp': {
+                'dev': {
+                  'type': 'default',
+                }
+              },
+              'refApp': {
+                'dev': {
+                  'type': 'default',
+                }
+              },
+              'other': {
+                'public': {
+                  'type': 'other',
+                },
+                'private': {
+                  'type': 'other',
+                }
+              },
+            },
+          ),
+        );
+      },
+    );
 
     tearDownAll(() {});
 
@@ -49,8 +55,7 @@ void main() {
     test('register and retrieve', () {
       // given
       final providerConfig = PDataProvider(
-          sessionTokenKey: '',
-          configSource: PConfigSource(segment: 'myApp', instance: 'dev'));
+          instanceConfig: PInstance(group: 'myApp', instance: 'dev'));
       final instanceConfig =
           dataProviderLibrary.appConfig.instanceConfig(providerConfig);
       // when
@@ -64,12 +69,10 @@ void main() {
     test('Multiple instances of same type', () {
       // given
       final providerConfig1 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'myApp', instance: 'dev'),
+        instanceConfig: PInstance(group: 'myApp', instance: 'dev'),
       );
       final providerConfig2 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'refApp', instance: 'dev'),
+        instanceConfig: PInstance(group: 'refApp', instance: 'dev'),
       );
 
       final instanceConfig1 =
@@ -100,20 +103,16 @@ void main() {
     test('Multiple instances, multiple types', () {
       // given
       final providerConfig1 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'myApp', instance: 'dev'),
+        instanceConfig: PInstance(group: 'myApp', instance: 'dev'),
       );
       final providerConfig2 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'refApp', instance: 'dev'),
+        instanceConfig: PInstance(group: 'refApp', instance: 'dev'),
       );
       final providerConfig3 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'other', instance: 'public'),
+        instanceConfig: PInstance(group: 'other', instance: 'public'),
       );
       final providerConfig4 = PDataProvider(
-        sessionTokenKey: '',
-        configSource: PConfigSource(segment: 'other', instance: 'private'),
+        instanceConfig: PInstance(group: 'other', instance: 'private'),
       );
       // when
       dataProviderLibrary.register(
@@ -152,8 +151,7 @@ void main() {
       // given
       dataProviderLibrary.clear();
       final providerConfig = PDataProvider(
-          sessionTokenKey: '',
-          configSource: PConfigSource(segment: 'myApp', instance: 'dev'));
+          instanceConfig: PInstance(group: 'myApp', instance: 'dev'));
 
       // when
 
