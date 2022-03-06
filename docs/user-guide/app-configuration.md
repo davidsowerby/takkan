@@ -42,25 +42,30 @@ There is an [open issue](https://gitlab.com/precept1/precept_client/-/issues/89)
 
 ### Inherited Properties
 
-| property         |              | default                          | notes                                                     |
-|------------------|--------------|----------------------------------|-----------------------------------------------------------|
-| appName          | String       | MyApp                            |                                                           |  
-| stages           | List of String | empty                            | see 'stages' below                                        |
-| type             | String       | 'back4app'                       | the type of 'backend' currently only 'back4app' or 'rest' |
-| serverUrl        | String       | "https://parseapi.back4app.com/" |                                                           |
-| documentStub     | String       | classes                          | Appended to serverUrl to produce document endpoint        |
-| graphqlStub      | String       | graphql                          | Appended to serverUrl to produce GraphQL endpoint         |
-| functionStub     | String       | functions                        | Appended to serverUrl to produce cloud functions endpoint |
+| property           |              | default                          | notes                                                     |
+|--------------------|--------------|----------------------------------|-----------------------------------------------------------|
+| appName            | String       | MyApp                            |                                                           |  
+| type               | String       | 'back4app'                       | the type of 'backend' currently only 'back4app' or 'rest' |
+| serverUrl          | String       | "https://parseapi.back4app.com/" |                                                           |
+| documentStub       | String       | classes                          | Appended to serverUrl to produce document endpoint        |
+| graphqlStub        | String       | graphql                          | Appended to serverUrl to produce GraphQL endpoint         |
+| functionStub       | String       | functions                        | Appended to serverUrl to produce cloud functions endpoint |
+| documentEndpoint   | String       |                                  | If defined, completely replaces serverUrl+documentStub    |
+| graphqlEndpoint    | String       |                                  | If defined, completely replaces serverUrl+graphqlStub     |
+| functionEndpoint   | String       |                                  | If defined, completely replaces serverUrl+functionStub    |   
 
 
+### Group Only Properties
 
-### Instance Level Only Properties
+| property         |                | default                            | notes                                                     |
+|------------------|----------------|------------------------------------|-----------------------------------------------------------|
+| stages           | List of String | empty                              | see 'stages' below                                        |
+| staged           | bool           | false | true if 'stages' not empty |                                                           |
+
+### Instance Only Properties
 
 | property           |                                | default                   | notes                                                     |
 |--------------------|--------------------------------|---------------------------|-----------------------------------------------------------|
-| documentEndpoint   | String                         |                           | If defined, completely replaces serverUrl+documentStub    |
-| graphqlEndpoint    | String                         |                           | If defined, completely replaces serverUrl+graphqlStub     |
-| functionEndpoint   | String                         |                           | If defined, completely replaces serverUrl+functionStub    |    
 | headers            | List                           |                           | Header keys, declare exactly as used, see example below   |      
 | cloudCodeDirectory | String                         | ~/b4a/$appName/$instance  | Used to deploy cloud code.  Must be [set up](https://www.back4app.com/docs/platform/parse-cli) for the purpose              |                                   
 
@@ -80,14 +85,15 @@ The default current stage is the last item declared in 'stages', in this example
 ```json
 {
   "main": {
+    "appName" : "Sample App",
     "type" : "back4app",
     "stages": ["dev","test","qa","prod"],
-    "serverUrl": "https://parseapi.back4app.com/"
+    "serverUrl": "https://parseapi.back4app.com/",
     "dev": {
       "headers": {
         "X-Parse-Application-Id": "dev app id",
         "X-Parse-Client-Key": "dev client key"
-      },
+      }
     },
     "test": {
       "headers": {
@@ -117,7 +123,6 @@ The default current stage is the last item declared in 'stages', in this example
     }
   }
 }
-
 ```
 
 Some points to note from this example:
