@@ -48,5 +48,11 @@ Currently only Back4App is supported. References to database instances here ther
 :::
 
 
+## Deployment
+
+The _precept_dev_app_ is used to link to the Medley app, generate server code and deploy to the selected database instance.
+
+Data ... by code or JSON? What about relationships?
+
 
  
