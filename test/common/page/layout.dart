@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/common/page/layout.dart';
+import 'package:precept_client/page/layout/layout.dart';
 
 import '../../helper/mock.dart';
 

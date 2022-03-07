@@ -1,156 +1,95 @@
-import 'package:flutter/widgets.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/document_cache.dart';
+import 'package:precept_client/page/standard_page.dart';
+import 'package:precept_client/panel/panel.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/constants.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/script.dart';
 
-/// The intersection point between application and data.
+/// Provides the context of a connection from data in the [DocumentCache] to a [PreceptPage] or
+/// [Panel].
 ///
-/// Retrieval of data, where required, is specified by a [query] defined within [config].  This query
-/// relates to a specific [DataProvider].  A fully static page does not of course require data at all,
-/// and [documentSchemaName] name should be set to [notSet]
+/// The data itself is provided via a [CacheEntry]
 ///
-/// A copy of the retrieved data is held in [_temporaryDocument], and notifies listeners
-/// as the retrieval state changes.  The retrieval state mirrors that used by [FutureBuilder] and [StreamBuilder]
-/// depending on whether [config] requires a Future or Stream in response.
+/// A static page or panel does not use dynamic data, but may still contain an
+/// implementation of [DataContext] to pass data through to lower
+/// levels.
 ///
-/// [_temporaryDocument] records all changes in its [MutableDocument.changeList]
+
+abstract class DataContext {
+  DataProvider get dataProvider;
+
+  DocumentClassCache get classCache;
+
+  PDocument get documentSchema;
+}
+
+/// A standard [DataContext] pointing back to the relevant [DocumentClassCache]
+class DefaultDataContext implements DataContext {
+  final DocumentClassCache classCache;
+
+  const DefaultDataContext({
+    required this.classCache,
+  });
+
+  DataProvider get dataProvider => classCache.dataProvider;
+
+  PDocument get documentSchema => classCache.documentSchema;
+}
+
+
+/// An implementation to enable the use of a non-null [DataContext] property
+/// in [PreceptPage] and [Panel].
+class NullDataContext implements DataContext {
+  const NullDataContext();
+
+  throwException() {
+    String msg =
+        'This is a NullDataContext and does not provide access to data ';
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
+  }
+
+  @override
+  DataProvider<PDataProvider> get dataProvider => throwException();
+
+
+  @override
+  PDocument get documentSchema => throwException();
+
+  @override
+  DocumentClassCache get classCache => throwException();
+}
+
+/// A [PreceptPage] or [Panel] which uses only static data is allocated
+/// a [StaticDataContext].  This could be part way through a chain of connectors,
+/// in which case the [StaticDataContext] becomes transparent, and access to dynamic data
+/// is via [parent].
 ///
-/// Once data has been retrieved, [_temporaryDocument.output] is connected to a [RootBinding],
-/// for [DataBinding] instances to connect to.  In this way, [DataBindings] provide a connection chain
-/// from the data source to the element which actually displays the data.
-///
-/// In addition to retrieving data from [query], data may also be passed in [initialData].  This is usually
-/// passed from a page displaying a list of query results. A query is then automatically created so that
-/// data can be refreshed if required.
-///
-/// When [readMode] is true, the document and therefore pages using it, are read only.
-/// When [canEdit] is true, [readMode] can be changed to false (thus allowing editing) by user action
-///
-/// Precept potentially creates a number of [Form] instances on one page, as each [Panel]
-/// may have its own.  This class just holds the [GlobalKey] for each, so Form content can be pushed
-/// to the [_temporaryDocument] prior to saving it.
-///
-class DataSource {
-  late MutableDocument _temporaryDocument;
-  late PQuery _query;
-  late List<GlobalKey<FormState>> _formKeys;
-  final PDocument? documentSchema;
-  PContent config;
-  final DataProvider dataProvider;
-  final bool preloadedData;
+/// If, however, there is no root above this, any attempt to access a root will
+/// throw an exception.  This should not happen if the [PScript] has been successfully
+/// validated
+class StaticDataContext implements DataContext {
+  final DataContext parentDataContext;
 
-  /// [callback] is usually a setState from a StatefulWidget
-  DataSource({
-    required this.config,
-    required this.dataProvider,
-    required this.preloadedData,
-    required this.documentSchema,
-  }) {
-    init(config);
+  const StaticDataContext({required this.parentDataContext});
+
+  throwException() {
+    String msg =
+        'This is a StaticDataContext, and if its parent is a NullDataContext will throw an exception if you attempt to access dynamic data.  Check that your PScript validates successfully.  If it does, please raise an issue';
+    logType(this.runtimeType).e(msg);
+    throw PreceptException(msg);
   }
 
-  RootBinding get rootBinding => _temporaryDocument.rootBinding;
+  @override
+  DataProvider<PDataProvider> get dataProvider =>
+      parentDataContext.dataProvider;
 
-  List<GlobalKey<FormState>> get formKeys => _formKeys;
+  @override
+  PDocument get documentSchema => parentDataContext.documentSchema;
 
-  init(PContent config) {
-    this.config = config;
-    if (config.queryIsDeclared || preloadedData) {
-      _temporaryDocument = inject<MutableDocument>();
-      _formKeys = List.empty(growable: true);
-    }
-  }
-
-  MutableDocument get temporaryDocument => _temporaryDocument;
-
-  PQuery get query => _query;
-
-  /// Stores a key for a Form.
-  /// Forms are 'flushed' to the backing data by [flushFormsToModel]
-  addForm(GlobalKey<FormState> formKey) {
-    formKeys.add(formKey);
-    logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
-  }
-
-  /// Iterates though form keys registered by Pages, Panels or Parts using the same [temporaryDocument].
-  /// Keys are added through [addForm], this method 'saves' the [Form] data -
-  /// that is, it transfers data from the [Form] back to the [temporaryDocument] via [Binding]s.
-  ///
-  /// Returns true if validation is successful, and form data is saved back [MutableDocument]
-  flushFormsToModel() {
-    logType(this.runtimeType).d('Flushing forms data to Temporary Document');
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        key.currentState!.save();
-        logType(this.runtimeType).d("Form saved for $key");
-      }
-    }
-// TODO: purge those with null current state
-  }
-
-  bool validate() {
-    logType(this.runtimeType).d('Validating data source');
-    bool isValid = true;
-    for (GlobalKey<FormState> key in formKeys) {
-      if (key.currentState != null) {
-        final bool validated = key.currentState!.validate();
-        if (!validated) isValid = false;
-      }
-    }
-    logType(this.runtimeType).d('Changes are valid? :  $isValid');
-    return isValid;
-  }
-
-  Future<UpdateResult> persist() async {
-    logType(this.runtimeType).d('Persisting data source');
-    final dataProviderConfig = config.dataProvider;
-    if (dataProviderConfig == null) {
-      throw PreceptException('DataProvider config should not be null');
-    }
-    final DataProvider dataProvider =
-        dataProviderLibrary.find(config: dataProviderConfig);
-    return dataProvider.updateDocument(
-      documentId: temporaryDocument.documentId,
-      data: temporaryDocument.changes,
-    );
-  }
-
-  reset() {
-    temporaryDocument.reset();
-  }
-
-  MutableDocument updateMutableDocument(
-      {required ReadResultItem source,
-      required DataProvider dataProvider,
-      required bool fireListeners}) {
-    final DocumentId documentId = source.documentId;
-    return _temporaryDocument.updateFromSource(
-      source: source.data,
-      documentId: documentId,
-      fireListeners: fireListeners,
-    );
-  }
-
-  /// Delegate call to [MutableDocument.storeQueryResults]
-  MutableDocument storeQueryResults({
-    required String queryName,
-    required List<Map<String, dynamic>> queryResults,
-    bool fireListeners = false,
-  }) {
-    return _temporaryDocument.storeQueryResults(
-      queryName: queryName,
-      queryResults: queryResults,
-      fireListeners: fireListeners,
-    );
-  }
+  @override
+  DocumentClassCache get classCache => parentDataContext.classCache;
 }

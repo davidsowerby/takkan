@@ -1,50 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/action/action_icon.dart';
 import 'package:precept_client/common/content/pod_state.dart';
 import 'package:precept_client/data/data_source.dart';
+import 'package:precept_client/page/document_page.dart';
 import 'package:precept_client/page/layout/layout.dart';
+import 'package:precept_client/page/standard_page.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/panel/panel.dart';
 
-class PreceptPage extends StatefulWidget {
+/// This could be used directly, but is generally used only by Precept to generate
+/// pages automatically from [PScript]
+///
+/// Represents a page displaying 0..n pages of document class [config.documentClass]
+///
+/// To display a single of document, use [DocumentPage]
+///
+class DocumentListPage extends StatefulWidget {
   final PPage config;
-  final DataContext parentDataContext;
   final Map<String, dynamic> pageArguments;
+  final DataContext dataContext;
+  final String route;
+  final List<String>? objectIds;
 
-  /// [parentDataContext] defaults to a [NullDataContext] as a top level page
-  /// will have no parent.
+  /// [dataContext] defaults to a [NullDataContext] when used as a top level page,
+  /// as it will have no parent..
   ///
   /// [pageArguments] are optional and are passed from the [RouteSettings] associated with the route
   /// producing this page.  Note that [RouteSettings.arguments] is an Object, but [pageArguments] requires
   /// a Map<String,dynamic>
   ///
-  const PreceptPage({
+  const DocumentListPage({
     Key? key,
     required this.config,
-    DataContext? parentDataContext,
+    required this.dataContext,
+    required this.route,
+    this.objectIds,
     this.pageArguments = const {},
-  })  : parentDataContext = parentDataContext ?? const NullDataContext(),
-        super(key: key);
+  }) : super(key: key);
 
   @override
-  PreceptPageState createState() => PreceptPageState(
-    config: config,
+  DocumentListPageState createState() => DocumentListPageState(
+        config: config,
         pageArguments: pageArguments,
-        dataContext: parentDataContext,
       );
 }
 
-class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
-  PreceptPageState({
+class DocumentListPageState extends PodState<DocumentListPage>
+    with DisplayColumns {
+  DocumentListPageState({
     required PPage config,
     DataProvider? dataProvider,
-    required DataContext dataContext,
     Map<String, dynamic> pageArguments = const {},
   }) : super(
-    parentDataContext: dataContext,
+    parentDataContext: NullDataContext(),
           config: config,
           pageArguments: pageArguments,
         );
@@ -115,18 +124,4 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
           widgets: children),
     );
   }
-}
-
-class PreceptRefreshButton extends ActionIcon {
-  @override
-  void doAction(BuildContext context) {
-    precept.reload();
-  }
-
-  const PreceptRefreshButton({
-    Key? key,
-    IconData icon = Icons.update,
-    List<Function(BuildContext)> onBefore = const [],
-    List<Function(BuildContext)> onAfter = const [],
-  }) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
 }

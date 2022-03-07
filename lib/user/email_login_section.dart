@@ -5,7 +5,7 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_client/common/component/key_assist.dart';
 import 'package:precept_client/common/component/message_panel.dart';
 import 'package:precept_client/common/component/text.dart';
-import 'package:precept_client/common/page/layout.dart';
+import 'package:precept_client/page/layout/layout.dart';
 import 'package:precept_client/user/user_state.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';

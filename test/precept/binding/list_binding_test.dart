@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_client/binding/list_binding.dart';
 import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
@@ -21,9 +21,9 @@ void main() {
   setUp(() {
     data = generateData();
     getIt.reset();
-    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
-    temporaryDocument = inject<MutableDocument>();
-    rootBinding = RootBinding(data: data, editHost: temporaryDocument, id: "test");
+    temporaryDocument = MutableDocument();
+    rootBinding =
+        RootBinding(data: data, editHost: temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });

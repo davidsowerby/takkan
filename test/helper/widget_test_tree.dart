@@ -3,8 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_client/common/content/content_state.dart';
-import 'package:precept_client/data/data_binding.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/part_library.dart';
 import 'package:precept_client/page/edit_state.dart';
@@ -16,7 +14,7 @@ import 'package:precept_script/script/script.dart';
 import 'package:provider/provider.dart';
 
 import './exception.dart';
-import 'fake.dart';
+import 'mock.dart';
 
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
@@ -99,17 +97,19 @@ class WidgetTestTree {
   }
 
   bool elementHasDataBinding(String id, Type type, WidgetTester tester) {
-    final index = _allIndexes[id]!;
-    final Widget widget = widgets[index];
-    final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
-    return (state.dataBinding is FullDataBinding);
+    // final index = _allIndexes[id]!;
+    // final Widget widget = widgets[index];
+    // final PodState state = tester.state(find.byWidget(widget)) as PodState;
+    // return state.hasModelBinding;
+    throw UnsupportedError('rethink');
   }
 
-  bool elementHasDataSource(String id, Type type, WidgetTester tester) {
-    final index = _allIndexes[id]!;
-    final Widget widget = widgets[index];
-    final ContentState state = tester.state(find.byWidget(widget)) as ContentState;
-    return state.dataSource != null;
+  bool elementHasDataStore(String id, Type type, WidgetTester tester) {
+    // final index = _allIndexes[id]!;
+    // final Widget widget = widgets[index];
+    // final PodState state = tester.state(find.byWidget(widget)) as PodState;
+    // return state.dataContext.isRoot;
+    throw UnsupportedError('rethink');
   }
 
   verify() {
@@ -135,7 +135,8 @@ class KitchenSinkTest {
       {required PScript script, bool useCaptionsAsIds = true, required AppConfig appConfig}) {
     preceptDefaultInjectionBindings();
     partLibrary.init();
-    PFakeDataProvider.register();
+    dataProviderLibrary.register(
+        type: 'mock', builder: (dp) => MockDataProvider());
     dataProviderLibrary.init(appConfig);
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {

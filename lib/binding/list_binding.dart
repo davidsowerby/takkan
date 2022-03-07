@@ -1,7 +1,7 @@
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/constants.dart';
 

@@ -2,7 +2,7 @@ import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/list_binding.dart';
 import 'package:precept_client/binding/string_binding.dart';
 import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/common/script/constants.dart';
 
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
@@ -165,18 +165,4 @@ class ModelBinding extends MapBinding<String, dynamic> {
   Map<String, dynamic> emptyValue() {
     return Map<String, dynamic>();
   }
-}
-
-/// A specialised form of [RootBinding] used with the [MutableDocument.queryResults]
-class QueryRootBinding extends RootBinding {
-  QueryRootBinding({
-    required Map<String, dynamic> data,
-    MutableDocument? editHost,
-    required String id,
-    required queryName,
-  }) : super(
-          id: id,
-          data: data,
-          editHost: editHost,
-        );
 }

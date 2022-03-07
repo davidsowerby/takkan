@@ -4,11 +4,11 @@ import 'package:precept_client/common/action/action_icon.dart';
 import 'package:precept_client/common/component/edit_save_cancel.dart';
 import 'package:precept_client/common/component/key_assist.dart';
 import 'package:precept_client/common/locale.dart';
-import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/library/border_library.dart';
 import 'package:precept_client/library/theme_lookup.dart';
 import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_script/common/script/common.dart';
+import 'package:precept_client/pod/data_root.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -19,7 +19,7 @@ import 'package:provider/provider.dart';
 /// - [actionButtons], if present, are placed before the 'expand' widget
 /// - [showEditSave] can be set to false to override the default behaviour of showing the edit/save icons.
 /// These icons are supplied by a [EditSaveCancel] widget when [EditState.canEdit] is true.
-/// - [dataBinding] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
+/// - [dataContext] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
 class Heading extends StatefulWidget {
   final String headingText;
   final PHeadingStyle headingStyle;
@@ -35,14 +35,15 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onAfterSave;
   final bool showEditSave;
   final PPanelHeading config;
-  final DataBinding? dataBinding;
+  final DataContext? dataContext;
+  final DocumentRoot documentRoot;
 
   const Heading({
     Key? key,
     required this.config,
-    this.headingText='Heading',
-    this.dataBinding,
+    this.headingText = 'Heading',
     this.help,
+    this.dataContext,
     this.headingStyle = const PHeadingStyle(),
     this.openExpanded = true,
     required this.expandedContent,
@@ -54,6 +55,7 @@ class Heading extends StatefulWidget {
     this.onBeforeSave = const [],
     this.onAfterSave = const [],
     this.showEditSave = true,
+    required this.documentRoot,
   }) : super(key: key);
 
   @override
@@ -73,11 +75,11 @@ class _HeadingState extends State<Heading> with Interpolator {
 
   @override
   Widget build(BuildContext context) {
-    final PPanel panelConfig = widget.config.parent;
+    final PPanels panelConfig = widget.config.parent as PPanels;
     bool editMode = false;
     bool editable = false;
 
-    if (panelConfig.isStatic != IsStatic.yes) {
+    if (panelConfig.isStatic) {
       final EditState editState = Provider.of<EditState>(context);
       editable = editState.canEdit;
       editMode = editState.editMode;
@@ -86,13 +88,15 @@ class _HeadingState extends State<Heading> with Interpolator {
     final List<Widget> actionButtons = List.empty(growable: true);
 
     if (widget.expandable) {
-      actionButtons.add(HeadingExpandCloseAction(onAfter: [_toggleExpanded], expanded: expanded));
+      actionButtons.add(HeadingExpandCloseAction(
+          onAfter: [_toggleExpanded], expanded: expanded));
     }
 
     final theme = Theme.of(context);
     final borderLibrary = inject<BorderLibrary>();
     return Card(
-      shape: borderLibrary.find(theme: theme, border: widget.headingStyle.border),
+      shape:
+          borderLibrary.find(theme: theme, border: widget.headingStyle.border),
       elevation: widget.headingStyle.elevation,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +127,10 @@ class _HeadingState extends State<Heading> with Interpolator {
                     ),
                   Spacer(),
                   if (editable)
-                    EditSaveCancel(key: keys(widget.key, ['esc']), dataBinding: widget.dataBinding!),
+                    EditSaveCancel(
+                      key: keys(widget.key, ['esc']),
+                      // documentRoot: widget.documentRoot,
+                    ),
                   if (actionButtons.isNotEmpty)
                     Row(
                       children: actionButtons,
@@ -196,5 +203,3 @@ class HelpButton extends ActionIcon with Interpolator {
     ); // TODO interpolate with params, but params from where.  A Binding with property names maybe?
   }
 }
-
-

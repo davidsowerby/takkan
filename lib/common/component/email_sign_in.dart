@@ -3,7 +3,7 @@ import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_client/app/router.dart';
 import 'package:precept_client/common/component/key_assist.dart';
 import 'package:precept_client/common/component/message_panel.dart';
-import 'package:precept_client/common/content/content_state.dart';
+import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/trait_library.dart';
 import 'package:precept_script/common/exception.dart';
@@ -16,17 +16,20 @@ class EmailSignIn extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final PEmailSignIn config;
-  final ContentBindings contentBindings;
+  final DataContext dataContext;
 
-  EmailSignIn({Key? key, required this.config, required this.contentBindings}) : super(key: key);
+  EmailSignIn({Key? key, required this.config, required this.dataContext})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final status = contentBindings.dataProvider.authenticator.status;
+    final provider = dataContext.dataProvider;
+    final status = provider.authenticator.status;
     switch (status) {
       case SignInStatus.Authenticating:
-        return Center(child: MessagePanel(message: config.checkingCredentialsMessage));
+        return Center(
+            child: MessagePanel(message: config.checkingCredentialsMessage));
       case SignInStatus.Uninitialized:
       case SignInStatus.Initialised:
       case SignInStatus.Unauthenticated:
@@ -76,7 +79,7 @@ class EmailSignIn extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
                     child: Text(config.submitCaption),
-                    onPressed: () => submitCredentials(context, contentBindings)),
+                    onPressed: () => submitCredentials(context, dataContext)),
               )
             ],
           ),
@@ -101,8 +104,9 @@ class EmailSignIn extends StatelessWidget {
   /// - If [config.successRoute] is empty, navigate to page user was going to before interrupted by sign in,
   /// held by [router.preSignInRoute]
   /// - If [router.preSignInRoute] is null, default to '/'
-  submitCredentials(BuildContext context, ContentBindings contentBindings) async {
-    AuthenticationResult result = await contentBindings.dataProvider.authenticator.signInByEmail(
+  submitCredentials(BuildContext context, DataContext dataConnector) async {
+    final provider = dataConnector.dataProvider;
+    AuthenticationResult result = await provider.authenticator.signInByEmail(
       username: emailController.text,
       password: passwordController.text,
     );
@@ -114,8 +118,8 @@ class EmailSignIn extends StatelessWidget {
       Navigator.of(context).pop();
       final nextRoute = (config.successRoute == '')
           ? (router.preSignInRoute == null)
-              ? '/'
-              : router.preSignInRoute
+          ? '/'
+          : router.preSignInRoute
           : config.successRoute;
       Navigator.of(context).pushNamed(nextRoute!);
     } else {

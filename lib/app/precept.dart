@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
+import 'package:precept_client/app/router.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/asset_loader.dart';
+import 'package:precept_client/data/document_cache.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/part_library.dart';
 import 'package:precept_client/util/args.dart';
@@ -13,6 +15,7 @@ import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/loader/assembler.dart';
 import 'package:precept_script/loader/loaders.dart';
+import 'package:precept_script/page/page.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -37,6 +40,7 @@ class Precept {
   late Map<Type, Widget Function(PPart, ModelConnector)>
       _particleLibraryEntries;
   late List<String> commandLineArguments;
+  final DocumentCache cache = DocumentCache();
 
   Precept({this.useDefaultDataProvider = true});
 
@@ -48,6 +52,10 @@ class Precept {
         const {},
     List<PreceptLoader> loaders = const [],
     List<void Function()> injectionBindings = const [],
+    List<Route<dynamic> Function(RouteSettings, BuildContext)> routersBefore =
+        const [],
+    List<Route<dynamic> Function(RouteSettings, BuildContext)> routersAfter =
+        const [],
   }) async {
     this.commandLineArguments = commandLineArguments;
     if (includePreceptDefaults || injectionBindings.isEmpty) {
@@ -58,12 +66,14 @@ class Precept {
         await inject<JsonAssetLoader>().loadFile(filePath: 'precept.json');
     _loaders = loaders;
     _particleLibraryEntries = particleLibraryEntries;
-    await _loadScripts();
+    router.init(routersBefore: routersBefore, routersAfter: routersAfter);
+    await loadScripts(loaders);
     await _doAfterLoad();
   }
 
-  _loadScripts() async {
-    _rootModel = await ScriptAssembler().assemble(loaders: _loaders);
+  /// This is public for testing purposes only.
+  loadScripts(List<PreceptLoader> loaders) async {
+    _rootModel = await ScriptAssembler().assemble(loaders: loaders);
     _rootModel.init();
   }
 
@@ -88,7 +98,7 @@ class Precept {
   reload() async {
     _isReady = false;
     notifyReadyListeners();
-    await _loadScripts();
+    await loadScripts(_loaders);
     await _doAfterLoad();
   }
 

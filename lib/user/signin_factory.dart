@@ -1,5 +1,5 @@
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/common/page/signin_page.dart';
+import 'package:precept_client/page/signin_page.dart';
 import 'package:precept_client/user/email_signin_page.dart';
 
 abstract class SignInFactory {

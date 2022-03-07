@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/inject/inject.dart';
 
@@ -8,22 +8,25 @@ import '../../helper/listener.dart';
 void main() {
   late MutableDocument tdoc;
   late ChangeListener listener;
+  late StreamMonitor monitor;
 
   setUp(() {
     getIt.reset();
-    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
-    tdoc = inject<MutableDocument>();
+    tdoc = MutableDocument();
     listener = ChangeListener();
     tdoc.addListener(listener.listenToChange);
+    monitor = StreamMonitor(tdoc.stream);
   });
 
-  group("data changes correctly and fires listeners", () {
+  group("data changes correctly and fires listeners and stream", () {
     group("changes to first level keys", () {
       test(
           "add, change, remove, clear. Output, changes & changeList tracks changes, initial data unchanged",
-          () {
+          () async {
         tdoc.createNew(initialData: {"item1": 3});
         expect(tdoc.initialData["item1"], 3);
+        expect(listener.changeCount, 1);
+        expect(tdoc.output['item1'], 3);
 
         tdoc["item1"] = 23;
         expect(tdoc["item1"], 23);
@@ -47,11 +50,24 @@ void main() {
         expect(tdoc.changes["item1"], null);
         expect(tdoc.keys.length, 1);
         expect(tdoc.keys, contains("item2"));
+
         tdoc.reset();
         expect(listener.changeCount, 6);
         expect(tdoc.output, tdoc.initialData);
         expect(tdoc.changes.isEmpty, true);
         expect(tdoc.changeList.isEmpty, true);
+
+        await Future.delayed(Duration(milliseconds: 500));
+        expect(monitor.eventCount, listener.changeCount);
+        expect(monitor.events, [
+          {'item1': 3},
+          {'item1': 23},
+          {'item1': 23, 'item2': 24},
+          {'item1': 25, 'item2': 24},
+          {'item2': 24},
+          {'item1': 3}
+        ]);
+        print(monitor.events);
       });
     });
     group("changes to deeper keys", () {
@@ -69,7 +85,8 @@ void main() {
     });
     group("using binding on first level", () {
       test("fires only one change event", () {
-        final stringBinding = tdoc.rootBinding.stringBinding(property: "First level");
+        final stringBinding =
+            tdoc.rootBinding.stringBinding(property: "First level");
         stringBinding.write("something");
         expect(listener.changeCount, 1);
         expect(tdoc.changeList[0].type, ChangeType.update);
@@ -90,7 +107,9 @@ void main() {
       };
 
       // when
-      tdoc.updateFromSource(source: originalSource, documentId: DocumentId(path: '',itemId: 'x'));
+      tdoc.updateFromSource(
+          source: originalSource,
+          documentId: DocumentId(documentClass: '', objectId: 'x'));
 
       // then
       expect(tdoc.initialData, originalSource);
@@ -112,7 +131,9 @@ void main() {
       };
 
       // when
-      tdoc.updateFromSource(source: updatedSource,documentId: DocumentId(path:'',itemId: 'x'));
+      tdoc.updateFromSource(
+          source: updatedSource,
+          documentId: DocumentId(documentClass: '', objectId: 'x'));
 
       // then
       expect(item1.read(), "localupdated1");
@@ -174,3 +195,17 @@ void main() {
 //     "item2": 444,
 //   };
 // }
+
+class StreamMonitor {
+  final Stream<Map<String, dynamic>> stream;
+  List<Map<String, dynamic>> events = List.empty(growable: true);
+  int eventCount = 0;
+
+  StreamMonitor(this.stream) {
+    stream.forEach((element) {
+      eventCount++;
+      events.add(element);
+      print('stream event: $eventCount, data: $element');
+    });
+  }
+}

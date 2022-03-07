@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_client/common/component/edit_save_cancel.dart';
 import 'package:precept_client/common/component/key_assist.dart';
 import 'package:precept_client/page/edit_state.dart';
@@ -22,13 +21,11 @@ void main() {
 
     testWidgets('All ', (WidgetTester tester) async {
       // given
-      MockDataSource dataSource = MockDataSource();
-      MockDataBinding dataBinding = MockDataBinding();
-      when(() => dataBinding.activeDataSource).thenReturn(dataSource);
+      MockDocumentRoot dataStore = MockDocumentRoot();
       final escKey = 'esc';
       final esc = EditSaveCancel(
         key: keys(null, [escKey]),
-        dataBinding: dataBinding,
+        // documentRoot: dataStore,
       );
       final EditState editState = EditState(readMode: true);
       // when
@@ -57,7 +54,7 @@ void main() {
       await tester.pumpWidget(widgetTree);
 
       // then we are in read mode
-      verify(() => dataSource.reset());
+      verify(() => dataStore.cancelChanges());
       row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
 
       // go back into edit mode
@@ -65,7 +62,7 @@ void main() {
       await tester.pumpWidget(widgetTree);
 
       // when we save, with invalid data
-      when(() => dataSource.validate()).thenReturn(false);
+      when(() => dataStore.validate()).thenReturn(false);
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
@@ -73,18 +70,19 @@ void main() {
       row(esc.rowKey).contains([esc.saveKey, esc.cancelKey]);
 
       // when we save, with valid data
-      when(() => dataSource.validate()).thenReturn(true);
-      when(() => dataSource.persist()).thenAnswer((_) async => UpdateResult(
-          success: true, path: 'Wiggly', itemId: 'beast', data: {}));
+      when(() => dataStore.validate()).thenReturn(true);
+      // when(() => dataStore.save()).thenAnswer((_) async => UpdateResult(
+      //     success: true, documentClass: 'Wiggly', objectId: 'beast', data: {}));
+      when(() => dataStore.save()).thenAnswer((_) async => true);
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
       // then we are back in read mode
       // row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
       verifyInOrder([
-        () => dataSource.validate(),
-        () => dataSource.flushFormsToModel(),
-        () => dataSource.persist(),
+        () => dataStore.validate(),
+        () => dataStore.flushFormsToModel(),
+        () => dataStore.save(),
       ]);
     });
   });

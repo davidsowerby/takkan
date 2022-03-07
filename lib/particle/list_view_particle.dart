@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/common/component/nav/nav_tile.dart';
-import 'package:precept_client/common/content/content_state.dart';
 import 'package:precept_client/page/edit_state.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_script/part/abstract_list_view.dart';
 import 'package:precept_script/part/list_view.dart';
-import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:provider/provider.dart';
 
@@ -32,16 +29,10 @@ mixin ListViewParticleBuilder {
       PDocument documentSchema) {
 // TODO: this Back4App specific
     final String path = documentSchema.name;
+    final String objectId = entry['objectId']!;
     return NavigationTile(
-      route: path,
-      arguments: {
-        ContentState.preloadDataKey: ReadResultItem(
-          data: entry,
-          success: true,
-          path: path,
-          queryReturnType: QueryReturnType.futureItem,
-        )
-      },
+      route: '$path/$objectId',
+      arguments: {},
       title: Text(entry[config.titleProperty]),
       subtitle: Text(
         entry[config.subtitleProperty] ?? '',

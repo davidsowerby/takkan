@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/common/component/email_sign_in.dart';
 import 'package:precept_client/common/component/nav/nav_button.dart';
 import 'package:precept_client/common/component/nav/nav_buttonset.dart';
-import 'package:precept_client/common/content/content_state.dart';
-import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/data/cache_entry.dart';
+import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/part/part.dart';
 import 'package:precept_client/particle/list_view_particle.dart';
 import 'package:precept_client/particle/query_view_particle.dart';
@@ -21,7 +20,6 @@ import 'package:precept_client/trait/text_box.dart';
 import 'package:precept_client/trait/trait_library.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/converter/converter.dart';
 import 'package:precept_script/part/list_view.dart';
 import 'package:precept_script/part/navigation.dart';
@@ -30,7 +28,6 @@ import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/field/integer.dart';
 import 'package:precept_script/schema/field/list.dart';
-import 'package:precept_script/schema/field/query_result.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/signin/sign_in.dart';
@@ -50,38 +47,36 @@ class PartLibrary {
   Part partBuilder({
     required PPart partConfig,
     required ThemeData theme,
-    required ContentBindings contentBindings,
+    required DataContext dataContext,
+    required DataBinding parentBinding,
     final Map<String, dynamic> pageArguments = const {},
   }) {
     final readTrait = traitLibrary.findParticleTrait(
       theme: theme,
       traitName: partConfig.readTraitName,
     );
-    final Widget readParticle = (partConfig.isStatic == IsStatic.yes)
+    final Widget readParticle = (partConfig.isStatic)
         ? findStaticParticle(
-            theme,
-            readTrait,
-            partConfig,
-            pageArguments,
-            contentBindings,
+      theme: theme,
+            trait: readTrait,
+            partConfig: partConfig,
+            pageArguments: pageArguments,
+            dataContext: dataContext,
           )
         : findParticle(
-            theme,
-            contentBindings.dataBinding,
-            readTrait,
-            partConfig,
-            pageArguments,
-            contentBindings,
+            parentBinding: parentBinding,
+            theme: theme,
+            dataContext: dataContext,
+            trait: readTrait,
+            partConfig: partConfig,
+            pageArguments: pageArguments,
           );
 
     /// Either of these conditions mean we do not need an edit particle
-    if (partConfig.readOnly == true || partConfig.isStatic == IsStatic.yes) {
+    if (partConfig.readOnly == true || partConfig.isStatic) {
       return Part(
-        parentDataProvider: contentBindings.dataProvider,
         readParticle: readParticle,
         config: partConfig,
-        pageArguments: pageArguments,
-        parentBinding: contentBindings.dataBinding,
       );
     }
 
@@ -91,21 +86,18 @@ class PartLibrary {
       traitName: partConfig.editTraitName!,
     );
     final editParticle = findParticle(
-      theme,
-      contentBindings.dataBinding,
-      editTrait,
-      partConfig,
-      pageArguments,
-      contentBindings,
+      theme: theme,
+      dataContext: dataContext,
+      parentBinding: parentBinding,
+      trait: editTrait,
+      partConfig: partConfig,
+      pageArguments: pageArguments,
     );
 
     return Part(
-      parentDataProvider: contentBindings.dataProvider,
       readParticle: readParticle,
       editParticle: editParticle,
       config: partConfig,
-      pageArguments: pageArguments,
-      parentBinding: contentBindings.dataBinding,
     );
   }
 
@@ -125,9 +117,8 @@ class PartLibrary {
     ModelConnector connector,
     PPart partConfig,
     final Map<String, dynamic> pageArguments,
-    ContentBindings contentBindings,
+    DataContext dataConnector,
   ) {
-    final ConnectorFactory connectorFactory = ConnectorFactory();
     final particleType = trait.runtimeType;
 
     switch (particleType) {
@@ -163,15 +154,14 @@ class PartLibrary {
             pageArguments: pageArguments);
       case EmailSignInTrait:
         return EmailSignIn(
-            config: partConfig as PEmailSignIn,
-            contentBindings: contentBindings);
+            config: partConfig as PEmailSignIn, dataContext: dataConnector);
       case QueryViewReadTrait:
         return QueryViewParticle(
           trait: trait as QueryViewTrait,
           config: partConfig as PQueryView,
           connector: connector,
           readOnly: true,
-          schema: contentBindings.dataBinding.schema,
+          schema: dataConnector.documentSchema,
         );
       case QueryViewEditTrait:
         return QueryViewParticle(
@@ -179,7 +169,7 @@ class PartLibrary {
           config: partConfig as PQueryView,
           connector: connector,
           readOnly: false,
-          schema: contentBindings.dataBinding.schema,
+          schema: dataConnector.documentSchema,
         );
       case ListViewReadTrait:
         return ListViewParticle(
@@ -187,7 +177,7 @@ class PartLibrary {
           config: partConfig as PListView,
           connector: connector,
           readOnly: true,
-          schema: contentBindings.dataBinding.schema,
+          schema: dataConnector.documentSchema,
         );
       case ListViewEditTrait:
         return ListViewParticle(
@@ -195,7 +185,7 @@ class PartLibrary {
           config: partConfig as PListView,
           connector: connector,
           readOnly: false,
-          schema: contentBindings.dataBinding.schema,
+          schema: dataConnector.documentSchema,
         );
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
@@ -223,34 +213,36 @@ class PartLibrary {
     throw PreceptException(msg);
   }
 
-  Widget findParticle(
-    ThemeData theme,
-    DataBinding dataBinding,
-    Trait trait,
-    PPart partConfig,
-    final Map<String, dynamic> pageArguments,
-    ContentBindings contentBindings,
-  ) {
+  Widget findParticle({
+    required ThemeData theme,
+    required Trait trait,
+    required PPart partConfig,
+    required Map<String, dynamic> pageArguments,
+    required DataContext dataContext,
+    required DataBinding parentBinding,
+  }) {
     Type particleType = trait.runtimeType;
     ConnectorFactory connectorFactory = ConnectorFactory();
     final connector = connectorFactory.buildConnector(
-        viewDataType: viewDataTypeFor(particleType),
-        config: partConfig,
-        dataBinding: contentBindings.dataBinding);
+      viewDataType: viewDataTypeFor(particleType),
+      config: partConfig,
+      documentSchema: dataContext.documentSchema,
+      parentBinding: parentBinding,
+    );
     return _createParticle(
-        theme, trait, connector, partConfig, pageArguments, contentBindings);
+        theme, trait, connector, partConfig, pageArguments, dataContext);
   }
 
-  Widget findStaticParticle(
-    ThemeData theme,
-    Trait trait,
-    PPart partConfig,
-    final Map<String, dynamic> pageArguments,
-    ContentBindings contentBindings,
-  ) {
-    final connector = StaticConnector(partConfig.staticData);
+  Widget findStaticParticle({
+    required ThemeData theme,
+    required Trait trait,
+    required PPart partConfig,
+    required Map<String, dynamic> pageArguments,
+    required DataContext dataContext,
+  }) {
+    final connector = StaticConnector(partConfig.staticData!);
     return _createParticle(
-        theme, trait, connector, partConfig, pageArguments, contentBindings);
+        theme, trait, connector, partConfig, pageArguments, dataContext);
   }
 
 // ParticleRecord _findParticleRecord(PPart config, bool read){
@@ -273,14 +265,11 @@ class PartLibrary {
 
 class ConnectorFactory {
   ModelConnector buildConnector(
-      {required DataBinding dataBinding,
+      {required DataBinding parentBinding,
+      required PDocument documentSchema,
       required PPart config,
       required Type viewDataType}) {
-    final ModelBinding parentBinding = dataBinding.binding;
-
-    final PSchemaElement? fieldSchema = (config is PQueryView)
-        ? PQuerySchema(documentSchema: dataBinding.schema.name)
-        : dataBinding.schema.fields[config.property];
+    final PSchemaElement? fieldSchema = documentSchema.fields[config.property];
     if (fieldSchema == null) {
       String msg =
           'No schema found for property ${config.property}, have you forgotten to add it to PSchema?';
@@ -288,10 +277,9 @@ class ConnectorFactory {
       throw PreceptException(msg);
     }
     final binding = _binding(
-      dataBinding: dataBinding,
       parentBinding: parentBinding,
-      schema: fieldSchema as PField,
-      property: config.property,
+      fieldSchema: fieldSchema as PField,
+      property: config.property!,
     );
     final converter =
         _converter(schema: fieldSchema, viewDataType: viewDataType);
@@ -302,21 +290,19 @@ class ConnectorFactory {
 }
 
 Binding _binding(
-    {required DataBinding dataBinding,
-    required ModelBinding parentBinding,
-    required PField schema,
+    {required DataBinding parentBinding,
+    required PField fieldSchema,
     required String property}) {
-  switch (schema.runtimeType) {
+  switch (fieldSchema.runtimeType) {
     case PString:
-      return parentBinding.stringBinding(property: property);
+      return parentBinding.modelBinding.stringBinding(property: property);
     case PList:
-      return parentBinding.listBinding(property: property);
-    case PQuerySchema:
-      return dataBinding.activeDataSource.temporaryDocument.queryRootBinding
-          .listBinding(property: property);
+      return parentBinding.modelBinding.listBinding(property: property);
+    case PInteger:
+      return parentBinding.modelBinding.intBinding(property: property);
     default:
       throw UnimplementedError(
-          "No defined binding for field data type ${schema.runtimeType.toString()}");
+          "No defined binding for field data type ${fieldSchema.runtimeType.toString()}");
   }
 }
 

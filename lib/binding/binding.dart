@@ -1,7 +1,7 @@
 import 'package:precept_client/binding/list_binding.dart';
 import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/common/script/constants.dart';
 
 /// [T] is model

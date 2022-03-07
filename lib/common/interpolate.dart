@@ -1,11 +1,13 @@
-import 'package:precept_client/common/content/content_state.dart';
+import 'package:precept_client/binding/map_binding.dart';
+import 'package:precept_client/data/data_source.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:validators/validators.dart';
 
 final int backlash = '\\'.codeUnits.single;
 const k = '@';
 
-String interpolate(String source, ContentBindings contentBindings, Map<String, dynamic> variables) {
+String interpolate(String source, DataContext dataContext,
+    ModelBinding modelBinding, Map<String, dynamic> variables) {
   final int q = source.indexOf(k);
   if (q == -1) return source;
   int completedTo = 0;
@@ -31,7 +33,8 @@ String interpolate(String source, ContentBindings contentBindings, Map<String, d
       if (braced && !(source[end] == '}')) {
         throw PreceptException("Closing '}' missing");
       }
-      final expanded = _expandFrom(source, start, end, contentBindings, variables);
+      final expanded =
+          _expandFrom(source, start, end, dataContext, modelBinding, variables);
       buf.write(expanded);
       completedTo = (source[end] == '}') ? end + 1 : end;
     }
@@ -68,7 +71,8 @@ String _expandFrom(
   String source,
   int start,
   int end,
-  ContentBindings contentBindings,
+  DataContext dataContext,
+  ModelBinding modelBinding,
   Map<String, dynamic> variables,
 ) {
   final int s = start;
@@ -76,10 +80,9 @@ String _expandFrom(
   final List<String> segments = variablePath.split('.');
   Map<String, dynamic> lookupData = (segments[0] == 'user')
       ? {
-          'user': Map<String, dynamic>.from(contentBindings.dataProvider.user.data),
+          'user': Map<String, dynamic>.from(dataContext.dataProvider.user.data),
         }
-      : Map.from(
-          contentBindings.dataBinding.binding.modelBinding(property: segments[0]).read() ?? {});
+      : Map.from(modelBinding.modelBinding(property: segments[0]).read() ?? {});
   lookupData.addAll(variables);
   Map<String, dynamic> lastLevel = lookupData;
   for (int i = 0; i < segments.length - 1; i++) {

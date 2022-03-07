@@ -1,18 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/common/action/edit_save.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
 import 'package:precept_client/library/border_library.dart';
 import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/theme_lookup.dart';
-import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/data/select/single.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/text.dart';
-import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
 import 'package:precept_script/schema/field/geo_position.dart';
@@ -24,9 +20,7 @@ import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 
-import 'helper/fake.dart';
 import 'helper/mock.dart';
-import 'helper/widget_test_tree.dart';
 
 initialData(String instanceName) {}
 
@@ -71,26 +65,27 @@ final validationSchema = PSchema(
 
 final PScript kitchenSinkValidation = PScript(
   name: 'data validation test',
-  dataProvider: PFakeDataProvider(
-    instanceName: 'mock1',
-    schema: validationSchema,
-    configSource: PConfigSource(segment: 'fake', instance: 'fake'),
+  dataProvider: PDataProvider(
+    instanceConfig: PInstance(group: 'fake', instance: 'fake'),
   ),
-  routes: {
-    '/test': PPage(
+  pages: [
+    PPageStatic(
+      routes: ['/test'],
       pageType: Library.simpleKey,
-      title: 'Page 1',
-      content: [
-        PText(caption: 'Part 1', staticData: 'Part 1', isStatic: IsStatic.yes),
+      caption: 'Page 1',
+      children: [
+        PText(caption: 'Part 1', staticData: 'Part 1'),
         PPanel(
-          query: PGetDocument(
-            documentId: DocumentId(path: 'Account', itemId: 'wVdGK8TDXR'),
-            documentSchema: 'Account',
-          ),
+          dataSelectors: [
+            PSingleById(
+              objectId: 'wVdGK8TDXR',
+              tag: 'fixed thing',
+            ),
+          ],
           caption: 'Panel 2',
           property: '',
           heading: PPanelHeading(),
-          content: [
+          children: [
             PText(
               property: 'category',
               id: 'Part 2-1-2',
@@ -99,7 +94,7 @@ final PScript kitchenSinkValidation = PScript(
         ),
       ],
     ),
-  },
+  ],
   schema: validationSchema,
   version: PVersion(number: 0),
 );
@@ -108,9 +103,9 @@ final PScript kitchenSinkValidation = PScript(
 void main() {
   group('Validation process', () {
     setUpAll(() {
-      PFakeDataProvider.register();
+      dataProviderLibrary.register(
+          type: 'mock', builder: (dp) => MockDataProvider());
       getIt.reset();
-      getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
       getIt.registerSingleton<BorderLibrary>(
           BorderLibrary(modules: [PreceptBorderLibraryModule()]));
@@ -124,25 +119,25 @@ void main() {
 
     tearDown(() {});
 
-    testWidgets('??? ', (WidgetTester tester) async {
-      // given
-      // when
-      final app = MaterialApp(
-          home: PreceptPage(
-        config: kitchenSinkValidation.routes['/test']!,
-      ));
-
-      await tester.pumpWidget(app);
-      await tester.pumpAndSettle(const Duration(seconds: 1));
-      final testTree = WidgetTestTree(
-          kitchenSinkValidation, tester.allWidgets.toList(),
-          pages: 1, panels: 1, parts: 2);
-      testTree.verify();
-      // then
-
-      final EditAction editAction = testTree.widgets[191] as EditAction;
-      editAction.doAction(MockBuildContext());
-      expect(1, 1);
-    });
+    // testWidgets('??? ', (WidgetTester tester) async {
+    //   // given
+    //   // when
+    //   final app = MaterialApp(
+    //       home: PreceptPage(
+    //     config: kitchenSinkValidation.routes['/test']!, dataConnector: null,
+    //   ));
+    //
+    //   await tester.pumpWidget(app);
+    //   await tester.pumpAndSettle(const Duration(seconds: 1));
+    //   final testTree = WidgetTestTree(
+    //       kitchenSinkValidation, tester.allWidgets.toList(),
+    //       pages: 1, panels: 1, parts: 2);
+    //   testTree.verify();
+    //   // then
+    //
+    //   final EditAction editAction = testTree.widgets[191] as EditAction;
+    //   editAction.doAction(MockBuildContext());
+    //   expect(1, 1);
+    // });
   });
 }

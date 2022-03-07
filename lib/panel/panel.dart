@@ -1,47 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/common/content/content_state.dart';
-import 'package:precept_client/data/data_binding.dart';
+import 'package:precept_client/common/content/pod_state.dart';
+import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:provider/provider.dart';
 
 ///
-/// [parentDataProvider] gives access to the 'nearest' [DataProvider] up the widget tree.  This will
-/// be overridden if a data provider is declared at the level of this Panel (that is, the [PPanel]
-/// in [config] contains a [PDataProvider]).  The [DataProvider] contains a [PreceptUser] object
-/// relating to that provider, and access may therefore be required in any [Panel] or [Part].
-///
-/// [parentBinding] provides access to the chain of data bindings leading back to the 'nearest' [DataSource]
-/// up the widget tree.  This will be overridden if a new [DataSource] is declared in [config].
+/// [dataContext] provides access to data and associated functions
 ///
 /// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [Panel]
 class Panel extends StatefulWidget {
   final PPanel config;
-  final DataBinding parentBinding;
+  final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
-  final DataProvider parentDataProvider;
 
-  const Panel(
-      {Key? key,
-      required this.config,
-      required this.pageArguments,
-      required this.parentDataProvider,
-      this.parentBinding = const NoDataBinding()})
-      : super(key: key);
+  const Panel({
+    Key? key,
+    required this.config,
+    required this.dataContext,
+    this.pageArguments = const {},
+  }) : super(key: key);
 
   @override
-  PanelState createState() => PanelState(config, parentBinding, parentDataProvider, pageArguments);
+  PanelState createState() => PanelState(
+    config: config,
+        pageArguments: pageArguments,
+        parentDataContext: dataContext,
+      );
 }
 
-class PanelState extends ContentState<Panel, PPanel> {
+///
+
+///
+/// A [Panel] always relates to a single document, which is obtained via the [cache].
+///
+/// [DocumentCache] has a [DocumentClassCache] for each document class [cache]
+/// is an instance of [DocumentClassCache], and contains the [dataProvider]
+/// responsible for that document class.
+///
+/// Selection of the appropriate document class is determined by [config.documentClass].
+///
+/// The [DataProvider] is mostly used to access the [PreceptUser] object it contains.
+class PanelState extends PodState<Panel> {
   final formKey = GlobalKey<FormState>();
 
-  PanelState(PContent config, DataBinding parentBinding, DataProvider parentDataProvider,
-      Map<String, dynamic> pageArguments)
-      : super(config, parentBinding, parentDataProvider, pageArguments);
+  PanelState(
+      {required PPanel config,
+      required DataContext parentDataContext,
+      required Map<String, dynamic> pageArguments})
+      : super(
+    config: config,
+          pageArguments: pageArguments,
+          parentDataContext: parentDataContext,
+        );
   late bool expanded;
 
   @override
@@ -52,38 +65,41 @@ class PanelState extends ContentState<Panel, PPanel> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return doBuild(context, theme, dataSource, widget.config, widget.pageArguments);
+    return doBuild(context, theme);
   }
 
   Widget _expandedContent(ThemeData theme, bool editMode) {
     final content = buildSubContent(
-      parentDataProvider: widget.parentDataProvider,
+      dataContext: dataContext,
       theme: theme,
       config: widget.config,
       pageArguments: widget.pageArguments,
-      parentBinding: dataBinding,
     );
 
-    return (editMode) ? wrapInForm(context, content, dataBinding, formKey) : content;
+    return (editMode) ? wrapInForm(context, content, formKey) : content;
   }
 
   Widget assembleContent(ThemeData theme) {
     if (widget.config.heading != null) {
       return Heading(
+        documentRoot: documentRoot,
         config: widget.config.heading!,
         headingText: widget.config.caption ?? '',
         expandedContent: (es) => _expandedContent(theme, es),
-        dataBinding: dataBinding,
+        dataContext: dataContext,
         openExpanded: true,
       );
     }
     final EditState editState = Provider.of<EditState>(context, listen: false);
-    return Center(child: Container(child: _expandedContent(theme, editState.editMode)));
+    return Center(
+        child: Container(child: _expandedContent(theme, editState.editMode)));
   }
 
   @override
   Widget layout(
-      {required List<Widget> children, required Size screenSize, required PPanel config}) {
+      {required List<Widget> children,
+      required Size screenSize,
+      required PPod config}) {
     final Widget wrapped = (widget.config.scrollable)
         ? ListView(
             children: children,
@@ -94,10 +110,7 @@ class PanelState extends ContentState<Panel, PPanel> {
           );
     return Container(
       child: wrapped,
-      width: widget.config.layout.width,
+      width: widget.config.layout.preferredColumnWidth,
     );
   }
-
-  @override
-  bool get preloaded => false;
 }

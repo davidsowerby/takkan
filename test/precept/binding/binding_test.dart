@@ -3,7 +3,7 @@ import 'package:precept_client/binding/binding.dart';
 import 'package:precept_client/binding/list_binding.dart';
 import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/data/temporary_document.dart';
+import 'package:precept_client/data/mutable_document.dart';
 import 'package:precept_script/inject/inject.dart';
 
 import '../../helper/catcher.dart';
@@ -18,8 +18,7 @@ void main() {
   setUp(() {
     data = generateData();
     getIt.reset();
-    getIt.registerFactory<MutableDocument>(() => DefaultMutableDocument());
-    temporaryDocument = inject<MutableDocument>();
+    temporaryDocument = MutableDocument();
     rootBinding =
         RootBinding(id: "-root-", data: data, editHost: temporaryDocument);
     changeListener = ChangeListener();

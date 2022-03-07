@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/common/component/key_assist.dart';
-import 'package:precept_client/data/data_binding.dart';
 import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_script/common/log.dart';
 import 'package:provider/provider.dart';
 
 class EditSaveCancel extends StatelessWidget {
@@ -12,29 +10,31 @@ class EditSaveCancel extends StatelessWidget {
 
   final IconData saveIcon;
 
-  final DataBinding dataBinding;
-  
-  final _saveKey='save';
-  final _cancelKey='cancel';
-  final _rowKey='row';
-  final _editKey='edit';
-  final _blankKey='blank';
+  // final DocumentRoot documentRoot;
 
+  final _saveKey = 'save';
+  final _cancelKey = 'cancel';
+  final _rowKey = 'row';
+  final _editKey = 'edit';
+  final _blankKey = 'blank';
 
   const EditSaveCancel({
     Key? key,
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
-    required this.dataBinding,
+    // required this.documentRoot,
   }) : super(key: key);
 
+  Key get rowKey => keys(key, [_rowKey]);
 
-  Key get rowKey => keys(key,[_rowKey]);
-  Key get saveKey => keys(key,[_rowKey,_saveKey]);
-  Key get editKey => keys(key,[_rowKey,_editKey]);
-  Key get cancelKey => keys(key,[_rowKey,_cancelKey]);
-  Key get blankKey => keys(key,[_rowKey,_blankKey]);
+  Key get saveKey => keys(key, [_rowKey, _saveKey]);
+
+  Key get editKey => keys(key, [_rowKey, _editKey]);
+
+  Key get cancelKey => keys(key, [_rowKey, _cancelKey]);
+
+  Key get blankKey => keys(key, [_rowKey, _blankKey]);
 
   @override
   Widget build(BuildContext context) {
@@ -77,18 +77,11 @@ class EditSaveCancel extends StatelessWidget {
   }
 
   _onCancel(EditState editState) {
-    dataBinding.activeDataSource.reset();
     editState.readMode = true;
   }
 
   _onSave(EditState editState) async {
-    bool isValid = dataBinding.activeDataSource.validate();
-    if (isValid) {
-      dataBinding.activeDataSource.flushFormsToModel();
-      await dataBinding.activeDataSource.persist();
-      editState.readMode = true;
-      logType(this.runtimeType).d('Save completed by $key');
-    }
+    editState.save();
   }
 
   _onEdit(EditState editState) {
