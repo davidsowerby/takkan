@@ -6,6 +6,8 @@ import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/config/asset_loader.dart';
 import 'package:precept_client/inject/modules.dart';
 import 'package:precept_client/library/part_library.dart';
+import 'package:precept_client/util/args.dart';
+import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
@@ -34,10 +36,12 @@ class Precept {
   late List<PreceptLoader> _loaders;
   late Map<Type, Widget Function(PPart, ModelConnector)>
       _particleLibraryEntries;
+  late List<String> commandLineArguments;
 
   Precept({this.useDefaultDataProvider = true});
 
   init({
+    required List<String> commandLineArguments,
     bool includePreceptDefaults = true,
     Map<String, Widget Function(PPage)> pageLibraryEntries = const {},
     Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries =
@@ -45,6 +49,7 @@ class Precept {
     List<PreceptLoader> loaders = const [],
     List<void Function()> injectionBindings = const [],
   }) async {
+    this.commandLineArguments = commandLineArguments;
     if (includePreceptDefaults || injectionBindings.isEmpty) {
       preceptDefaultInjectionBindings();
     }
@@ -65,12 +70,14 @@ class Precept {
   _doAfterLoad() async {
     await _loadSchemas();
     partLibrary.init(entries: _particleLibraryEntries);
-    dataProviderLibrary.init(AppConfig(_jsonConfig));
+
+    final stage = extractCurrentStage(commandLineArguments);
+    dataProviderLibrary.init(AppConfig(data: _jsonConfig, currentStage: stage));
 
     /// register the default data provider
     if (useDefaultDataProvider) {
       dataProviderLibrary.register(
-          configType: PDataProvider,
+          type: 'default',
           builder: (config) => DefaultDataProvider(config: config));
     }
     _isReady = true;
@@ -132,6 +139,12 @@ class Precept {
 
   Map<String, dynamic> getConfig(String segment) {
     return _jsonConfig[segment];
+  }
+
+  String extractCurrentStage(List<String> commandLineArguments) {
+    final Args args = Args(args: commandLineArguments);
+    final stage = args.mappedArgs['stage'];
+    return (stage == null) ? notSet : stage;
   }
 }
 
