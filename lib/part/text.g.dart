@@ -10,10 +10,10 @@ PText _$PTextFromJson(Map<String, dynamic> json) => PText(
       caption: json['caption'] as String?,
       readOnly: json['readOnly'] as bool? ?? false,
       height: (json['height'] as num?)?.toDouble() ?? 60,
-      property: json['property'] as String? ?? notSet,
+      property: json['property'] as String?,
       readTraitName: json['readTraitName'] as String? ?? 'text-read-default',
       editTraitName: json['editTraitName'] as String? ?? 'PTextBox-default',
-      staticData: json['staticData'] as String? ?? notSet,
+      staticData: json['staticData'] as String?,
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),

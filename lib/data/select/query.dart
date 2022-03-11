@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/precept_item.dart';
+import 'package:precept_script/data/select/field_selector.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/field_selector.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -11,19 +11,19 @@ part 'query.g.dart';
 ///
 /// Will eventually have the option to just return a Future or connect a Stream.
 ///
-/// [queryName] is used to identify query results held in local storage, and also
-/// as a lookup key if used as a named query in [PSchema.namedQueries].
+/// [queryName] is used to identify data-select results held in local storage, and also
+/// as a lookup key if used as a named data-select in [PSchema.namedQueries].
 ///
 /// [fields] is a comma separated list of field names you want values to be returned
 /// for, and applies only to GraphQL queries.  REST queries always return all fields.
 /// There is an outstanding issue to automatically generate this list for GraphQL
 /// queries. https://gitlab.com/precept1/precept_script/-/issues/2
 ///
-/// [propertyReferences] allow linking the query variables dynamically to other data accessible to the query.
-/// The reference is relative to the [parentBinding] of the [PreceptPage], [Panel] or [Part] holding the query.
+/// [propertyReferences] allow linking the data-select variables dynamically to other data accessible to the data-select.
+/// The reference is relative to the [parentBinding] of the [PreceptPage], [Panel] or [Part] holding the data-select.
 ///
-/// [variables] are also passed to query variables, and take the form of key-value pairs.  They may be defined
-/// as part of the [PScript] if the query is 'fixed', or originate in the [RouteSettings] passed to the [PreceptPage].
+/// [variables] are also passed to data-select variables, and take the form of key-value pairs.  They may be defined
+/// as part of the [PScript] if the data-select is 'fixed', or originate in the [RouteSettings] passed to the [PreceptPage].
 ///
 /// There are potentially therefore 3 sources of variables, which are combined into a single map in this order.
 /// Thus, any duplicated keys will have the value provided by the lowest on this list:
@@ -51,12 +51,12 @@ abstract class PQuery extends PreceptItem {
     required this.queryName,
   });
 
-  /// For queries, property property to lookup its data (query results) in local storage
+  /// For queries, property property to lookup its data (data-select results) in local storage
 
   String get idAlternative => queryName;
 }
 
-/// A 'pure' GraphQL query.  [script] must contain a complete GraphQL script
+/// A 'pure' GraphQL data-select.  [script] must contain a complete GraphQL script
 /// Variable values can be added directly with [variables] or can be looked up from the [propertyReferences].
 /// Both can be specified.  When used within the Precept client, variables are combined with those
 /// passed as page arguments.  They are combined in the following order of precedence:
@@ -96,7 +96,7 @@ class PGraphQLQuery extends PQuery {
   Map<String, dynamic> toJson() => _$PGraphQLQueryToJson(this);
 }
 
-/// **EXPERIMENTAL** A currently very limited attempt to simplify the specification of a GraphQL query.
+/// **EXPERIMENTAL** A currently very limited attempt to simplify the specification of a GraphQL data-select.
 ///
 /// [types] defines the data types of [fields]
 /// [fields] defines which field values should be returned
@@ -158,7 +158,7 @@ class PGetDocument extends PQuery {
     Map<String, dynamic> params = const {},
   }) : super(
           queryName: queryName ?? 'get${documentId.fullReference}',
-          documentSchema: documentId.path,
+          documentSchema: documentId.documentClass,
           propertyReferences: propertyReferences,
           variables: variables,
           returnType: QueryReturnType.futureDocument,
@@ -169,9 +169,7 @@ class PGetDocument extends PQuery {
 
   Map<String, dynamic> toJson() => _$PGetDocumentToJson(this);
 
-  String get table => documentId.path;
-
-
+  String get table => documentId.documentClass;
 }
 
 @JsonSerializable(explicitToJson: true)
@@ -186,12 +184,12 @@ class PGetStream extends PQuery {
     Map<String, dynamic> params = const {},
   }) : super(
     propertyReferences: propertyReferences,
-          documentSchema: documentId.path,
+          documentSchema: documentId.documentClass,
           variables: arguments,
           queryName: queryName ?? 'get${documentId.fullReference}',
         );
 
-  String get table => documentId.path;
+  String get table => documentId.documentClass;
 
   factory PGetStream.fromJson(Map<String, dynamic> json) =>
       _$PGetStreamFromJson(json);

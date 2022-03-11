@@ -21,9 +21,9 @@ part 'precept_item.g.dart';
 /// can be identified via its parent chain. This also becomes the Widget key of the
 /// item's associated Widget, especially useful for functional testing.
 ///
-/// A [_id] is optional and can be set by the constructor [id] parameter, but rarely used.
+/// A [_id] is optional and can be set by the constructor [id] parameter.
 /// If set it overrides the generated [uid] and become part of the [debugId].
-/// It is useful to identify a specific component during testing, or where ambiguity arises from the use of [uid].
+/// It is useful to identify a specific component, or where ambiguity arises from the use of [uid].
 /// That is unlikely unless there are two components with the same caption or name.
 ///
 /// - [_index] is the child index within a [_parent] where it is held in a list. Null if not used.
@@ -66,14 +66,25 @@ class PreceptItem with WalkTarget {
 
   PScript get script => _script;
 
-  /// Defines those properties which represent [PreceptItem] child nodes
-  List<dynamic> get children => [];
+  /// Defines those properties which represent child elements which require the
+  /// [Walker] to visit.
+  ///
+  /// These have to be coded explicitly for each [PreceptItem] sub-class to enable
+  /// the [Walker].
+  ///
+  /// See [PCommon] for an example.
+  ///
+  /// Not all elements are [PreceptItem] sub-classes, hence the returned list is not
+  /// typed.
+  List<dynamic> get subElements => [];
+
+  setParent(SetParentWalkerParams params) {
+    _parent = params.parent;
+    _script = params.script;
+  }
 
   doInit(InitWalkerParams params) {
-    _parent = params.parent;
     _index = params.index;
-    _script = params.script;
-
     uid = _id;
 
     /// _pid overrides generated [uid]
@@ -87,10 +98,6 @@ class PreceptItem with WalkTarget {
             uid = '$s${params.name}';
           }
         }
-      }
-
-      if (this is PPage) {
-        uid = (this as PPage).route;
       }
 
       /// if we still don't have a uid, generate one
@@ -158,7 +165,7 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
   TRACK _processItem(PreceptItem root, PARAMS params);
 
   void cascade(PreceptItem item, PARAMS params) {
-    for (Object child in item.children) {
+    for (Object child in item.subElements) {
       if (child is PreceptItem) {
         walk(child, childParams(item, params));
       } else {
@@ -192,16 +199,11 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
 }
 
 class InitWalkerParams extends WalkerParams {
-  final PScript script;
-  final PreceptItem parent;
   final int? index;
   final String? name;
   final bool useCaptionsAsIds;
 
-  const InitWalkerParams(
-      {required this.script,
-      required this.parent,
-      this.name,
+  const InitWalkerParams({this.name,
       this.index,
       this.useCaptionsAsIds = true});
 }
@@ -217,11 +219,37 @@ class InitWalker extends Walker<InitWalkerParams, String> {
   InitWalkerParams childParams(PreceptItem parentItem, InitWalkerParams params,
       {int? index, String? name}) {
     return InitWalkerParams(
-      script: params.script,
-      parent: parentItem,
       name: name,
       index: index,
       useCaptionsAsIds: params.useCaptionsAsIds,
+    );
+  }
+}
+
+class SetParentWalkerParams extends WalkerParams {
+  final PScript script;
+  final PreceptItem parent;
+
+  const SetParentWalkerParams({
+    required this.script,
+    required this.parent,
+  });
+}
+
+class SetParentWalker extends Walker<SetParentWalkerParams, String> {
+  @override
+  String _processItem(PreceptItem item, SetParentWalkerParams params) {
+    item.setParent(params);
+    return item.runtimeType.toString();
+  }
+
+  @override
+  SetParentWalkerParams childParams(
+      PreceptItem parentItem, SetParentWalkerParams params,
+      {int? index, String? name}) {
+    return SetParentWalkerParams(
+      script: params.script,
+      parent: parentItem,
     );
   }
 }

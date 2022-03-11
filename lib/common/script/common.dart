@@ -2,17 +2,19 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/query_converter.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/query_converter.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/trait/text_trait.dart';
 
 part 'common.g.dart';
 
-enum IsStatic { yes, no, inherited }
 enum IsReadOnly { yes, no, inherited }
 
 /// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
@@ -43,7 +45,7 @@ enum ControlEdit {
 /// [PScript] and its constituents mimic this 'inheritance' structure for the purpose of validation.
 ///
 /// - [dataProvider]
-/// - [query]
+/// - [data-select]
 /// - [textTrait] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
 /// - [panelStyle] defines borders and other styling for panels
 /// - [isStatic] which if true, means a [Part] takes its data from the [PScript] and not a data source.
@@ -63,7 +65,7 @@ enum ControlEdit {
 /// a [Page], [Panel] or [Part] can trigger an edit.  It also determines whether there is an associated [EditState] as shown in
 /// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
 ///
-/// - [documentId] combined with [itemId] are used to identify the item during validation, where no caption or title is defined.  It is also
+/// - [documentId] combined with [objectId] are used to identify the item during validation, where no caption or title is defined.  It is also
 /// used as a key in the corresponding, constructed Widget to aid functional testing.
 ///
 /// - [script] provides a direct reference to the root [PScript].  It is added during init
@@ -75,7 +77,6 @@ enum ControlEdit {
 @JsonSerializable(explicitToJson: true)
 @PQueryConverter()
 class PCommon extends PreceptItem {
-  IsStatic _isStatic;
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @protected
@@ -84,26 +85,15 @@ class PCommon extends PreceptItem {
   PQuery? _query;
 
   PCommon({
-    IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProviderConfig,
     PQuery? query,
     PTextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     PSchema? schema,
     String? id,
-  })  : _isStatic = isStatic,
-        _dataProvider = dataProviderConfig,
+  })  : _dataProvider = dataProviderConfig,
         _query = query,
         super(id: id);
-
-  @JsonKey(ignore: true)
-  IsStatic get isStatic =>
-      (_isStatic == IsStatic.inherited) ? parent.isStatic : _isStatic;
-
-  /// To give descendant access to private field without messing up property cascading
-  IsStatic getIsStatic() {
-    return _isStatic;
-  }
 
   bool get hasEditControl => _hasEditControl;
 
@@ -124,16 +114,6 @@ class PCommon extends PreceptItem {
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
-  @JsonKey(ignore: true)
-  PQuery? get query => _query ?? parent.query;
-
-  /// To give descendant access to private field without messing up property cascading
-  PQuery? getQuery() {
-    return _query;
-  }
-
-  /// [query] is declared rather than inherited
-  bool get queryIsDeclared => (_query != null);
 
   @JsonKey(ignore: true)
   PCommon get parent => super.parent as PCommon;
@@ -157,7 +137,8 @@ class PCommon extends PreceptItem {
     setupControlEdit(inherited);
   }
 
-  List<dynamic> get children => [
+  /// See [PreceptItem.subElements]
+  List<dynamic> get subElements => [
         if (_query != null) _query,
         if (_dataProvider != null) _dataProvider,
       ];
@@ -194,7 +175,7 @@ class PCommon extends PreceptItem {
       }
     }
 
-    if (this is PPanel) {
+    if (this is PPanel || this is PPanelStatic) {
       if (controlEdit == ControlEdit.panelsOnly ||
           inherited == ControlEdit.panelsOnly) {
         _hasEditControl = true;
@@ -202,7 +183,7 @@ class PCommon extends PreceptItem {
       }
     }
 
-    if (this is PPage) {
+    if (this is PPage || this is PPageStatic) {
       if (controlEdit == ControlEdit.pagesOnly ||
           inherited == ControlEdit.pagesOnly) {
         _hasEditControl = true;
@@ -212,7 +193,7 @@ class PCommon extends PreceptItem {
 
     if (controlEdit == ControlEdit.firstLevelPanels ||
         inherited == ControlEdit.firstLevelPanels) {
-      if (this is PPanel && parent is PPage) {
+      if ((this is PPanel || this is PPanelStatic) && parent is PPages) {
         _hasEditControl = true;
         return;
       }

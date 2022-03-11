@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/query_converter.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/query_converter.dart';
 import 'package:test/test.dart';
 
 import '../fixtures.dart';
@@ -26,8 +26,8 @@ void main() {
       // given
       PGetDocument g = PGetDocument(
         documentId: DocumentId(
-          path: "user/prefs",
-          itemId: "23",
+          documentClass: "user/prefs",
+          objectId: "23",
         ),
         documentSchema: 'Document',
       );

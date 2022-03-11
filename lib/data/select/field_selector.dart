@@ -3,7 +3,7 @@ import 'package:precept_script/schema/schema.dart';
 
 part 'field_selector.g.dart';
 
-/// Used to define the fields required from a GraphQL query
+/// Used to define the fields required from a GraphQL data-select
 ///
 /// [fields] are the document fields, excluding meta fields.  Setting [allFields]
 /// to true extracts the document fields from the [schema].  Setting [allFields]

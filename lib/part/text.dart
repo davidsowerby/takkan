@@ -1,12 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/part.dart';
 
 part 'text.g.dart';
 
-@JsonSerializable( explicitToJson: true)
+@JsonSerializable(explicitToJson: true)
 class PText extends PPart {
   static const String defaultReadTrait = 'text-read-default';
   static const String heading1 = 'text-heading-1';
@@ -22,17 +21,16 @@ class PText extends PPart {
       {String? caption,
       bool readOnly = false,
       double height = 60,
-      String property = notSet,
+      String? property,
       String readTraitName = 'text-read-default',
       String editTraitName = 'PTextBox-default',
-      IsStatic isStatic = IsStatic.inherited,
-      String staticData = notSet,
+      String? staticData,
       PHelp? help,
       ControlEdit controlEdit = ControlEdit.inherited,
       String? id,
       String? tooltip})
       : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           readTraitName: readTraitName,
           height: height,
           property: property,
@@ -40,7 +38,6 @@ class PText extends PPart {
           controlEdit: controlEdit,
           staticData: staticData,
           caption: caption,
-          isStatic: isStatic,
           help: help,
           id: id,
           tooltip: tooltip,

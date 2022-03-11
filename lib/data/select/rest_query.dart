@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/query.dart';
 
 part 'rest_query.g.dart';
 
-/// A query that is executed using a REST client. Currently only supports a
-/// REST API which takes query parameters as part of the path ([paramsAsPath]=true).
+/// A data-select that is executed using a REST client. Currently only supports a
+/// REST API which takes data-select parameters as part of the path ([paramsAsPath]=true).
 ///
 /// [path] is not usually required, certainly not for Back4App, and uses the
 /// [documentSchema], which is the document type defined within [PSchema.documents]

@@ -13,7 +13,7 @@ PNavButton _$PNavButtonFromJson(Map<String, dynamic> json) => PNavButton(
       readTraitName: json['readTraitName'] as String? ?? 'PNavButton-default',
       editTraitName: json['editTraitName'] as String? ?? 'PNavButton-default',
       height: (json['height'] as num?)?.toDouble() ?? 100,
-      property: json['property'] as String? ?? notSet,
+      property: json['property'] as String?,
       staticData: json['staticData'] as String? ?? '',
       pid: json['pid'] as String?,
     );
@@ -41,11 +41,12 @@ PNavButtonSet _$PNavButtonSetFromJson(Map<String, dynamic> json) =>
           json['readTraitName'] as String? ?? 'PNavButtonSet-default',
       buttonTraitName:
           json['buttonTraitName'] as String? ?? 'PNavButton-default',
-    );
+    )..caption = json['caption'] as String?;
 
 Map<String, dynamic> _$PNavButtonSetToJson(PNavButtonSet instance) =>
     <String, dynamic>{
       'pid': instance.pid,
+      'caption': instance.caption,
       'height': instance.height,
       'readTraitName': instance.readTraitName,
       'buttons': instance.buttons,

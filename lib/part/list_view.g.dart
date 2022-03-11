@@ -9,16 +9,13 @@ part of 'list_view.dart';
 PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
       isQuery: json['isQuery'] as bool? ?? false,
       titleProperty: json['titleProperty'] as String? ?? 'title',
-      itemType:
-          $enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
-              PListViewItemType.tile,
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
       readOnly: json['readOnly'] as bool? ?? false,
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
           : PHelp.fromJson(json['help'] as Map<String, dynamic>),
-      staticData: json['staticData'] as String? ?? notSet,
+      staticData: json['staticData'] as String?,
       property: json['property'] as String,
       readTraitName: json['readTraitName'] as String? ?? 'list-read-default',
       editTraitName: json['editTraitName'] as String? ?? 'list-edit-default',
@@ -43,14 +40,7 @@ Map<String, dynamic> _$PListViewToJson(PListView instance) => <String, dynamic>{
       'isQuery': instance.isQuery,
       'titleProperty': instance.titleProperty,
       'subtitleProperty': instance.subtitleProperty,
-      'itemType': _$PListViewItemTypeEnumMap[instance.itemType],
     };
-
-const _$PListViewItemTypeEnumMap = {
-  PListViewItemType.tile: 'tile',
-  PListViewItemType.navTile: 'navTile',
-  PListViewItemType.panel: 'panel',
-};
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',

@@ -1,5 +1,7 @@
+import 'package:precept_medley_script/medley/medley_script.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/query_view.dart';
+import 'package:precept_script/part/text.dart';
 import 'package:test/test.dart';
 
 /// Round tripping some times fails if default values are not set consistent through the inheritance tree.
@@ -34,6 +36,15 @@ void main() {
       // then
       // expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
+    });
+    test('caption from PText', () {
+      // given
+      medleyScript0.init();
+      // when
+      PText pText = medleyScript0.routes['/']?.children[0] as PText;
+      // then
+
+      expect(pText.caption, isNull);
     });
   });
 }

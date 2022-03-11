@@ -81,7 +81,6 @@ class PEmailSignIn extends PPart {
           readOnly: true,
           staticData: '',
           readTraitName: readTraitName,
-          isStatic: IsStatic.yes,
           controlEdit: ControlEdit.noEdit,
           caption: caption,
           id: pid,

@@ -5,11 +5,11 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/query_converter.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/query_converter.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/json/json_converter.dart';
-import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
 
 part 'schema.g.dart';
@@ -71,7 +71,7 @@ class PSchema extends PSchemaElement {
   @JsonKey(ignore: true)
   IsReadOnly get isReadOnly => _isReadOnly;
 
-  List<dynamic> get children => [_documents, namedQueries];
+  List<dynamic> get subElements => [_documents, namedQueries];
 
   doInit(InitWalkerParams params) {
     _name = name;

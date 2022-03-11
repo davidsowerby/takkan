@@ -2,17 +2,19 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/panel/static_panel.dart';
+import 'package:precept_script/part/list_view.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/signin/sign_in.dart';
 
-class PElementListConverter {
+class PContentConverter {
   static const elementKeyName = "-element-";
 
-  static List<PSubContent> fromJson(List<dynamic> json) {
-    List<PSubContent> list = List.empty(growable: true);
+  static List<PContent> fromJson(List<dynamic> json) {
+    List<PContent> list = List.empty(growable: true);
     for (var entry in json) {
       final elementType = entry[elementKeyName];
       final entryCopy = Map<String, dynamic>.from(entry);
@@ -20,6 +22,12 @@ class PElementListConverter {
       switch (elementType) {
         case "PPanel":
           list.add(PPanel.fromJson(entryCopy));
+          break;
+        case "PPanelStatic":
+          list.add(PPanelStatic.fromJson(entryCopy));
+          break;
+        case "PGroup":
+          list.add(PGroup.fromJson(entryCopy));
           break;
         case "PPart":
           list.add(PPart.fromJson(entryCopy));
@@ -39,9 +47,13 @@ class PElementListConverter {
         case "PQueryView":
           list.add(PQueryView.fromJson(entryCopy));
           break;
+        case "PListView":
+          list.add(PListView.fromJson(entryCopy));
+          break;
 
         default:
-          final msg = "JSON conversion has not been implemented for $elementType";
+          final msg =
+              "JSON conversion has not been implemented for $elementType";
           logType(Object().runtimeType).e(msg);
           throw PreceptException(msg);
       }
@@ -49,7 +61,7 @@ class PElementListConverter {
     return list;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PSubContent>? elementList) {
+  static List<Map<String, dynamic>> toJson(List<PContent>? elementList) {
     final outputList = List<Map<String, dynamic>>.empty(growable: true);
     if (elementList == null) {
       return outputList;

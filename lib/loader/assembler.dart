@@ -3,7 +3,8 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/converter/conversion_error_messages.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/loader/loaders.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validation_error_messages.dart';
 import 'package:precept_script/script/script.dart';
@@ -38,24 +39,22 @@ class ScriptAssembler {
     String name = firstModel.name;
     String id = firstModel.pid ?? name;
     PVersion version = firstModel.version;
-    Map<String, PPage> routes = Map();
+    List<PPages> pages = List.empty(growable: true);
     final ConversionErrorMessages conversionErrorMessages =
         ConversionErrorMessages(patterns: Map());
     final ValidationErrorMessages validationErrorMessages =
         ValidationErrorMessages(typePatterns: Map());
-    IsStatic isStatic = IsStatic.inherited;
     PDataProvider? dataProvider;
     PQuery? query;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (PScript s in models) {
-      routes.addAll(s.routes);
+      pages.addAll(s.pages);
       conversionErrorMessages.patterns
           .addAll(s.conversionErrorMessages.patterns);
       validationErrorMessages.typePatterns
           .addAll(s.validationErrorMessages.typePatterns);
-      isStatic = s.isStatic;
       if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
-      if (s.queryIsDeclared) query = s.query;
+      // if (s.queryIsDeclared) data-select = s.data-select;  TODO: queryIsDeclared was removed
       controlEdit = s.controlEdit;
     }
     return PScript(
@@ -64,13 +63,10 @@ class ScriptAssembler {
         name: 'dummy - move from data provider',
         version: PVersion(number: -1),
       ),
-      routes: routes,
+      pages: pages,
       version: version,
-      id: id,
       conversionErrorMessages: conversionErrorMessages,
       validationErrorMessages: validationErrorMessages,
-      isStatic: isStatic,
-      query: query,
       dataProvider: dataProvider,
       controlEdit: controlEdit,
     );

@@ -21,7 +21,7 @@ part 'rest_delegate.g.dart';
 class PRest extends PDataProviderDelegate {
   final String documentEndpoint;
 
-  PRest({
+  const PRest({
     this.documentEndpoint = '/classes',
     bool checkHealthOnConnect = false,
     List<String> headerKeys = const [],

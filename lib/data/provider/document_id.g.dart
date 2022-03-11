@@ -7,12 +7,12 @@ part of 'document_id.dart';
 // **************************************************************************
 
 DocumentId _$DocumentIdFromJson(Map<String, dynamic> json) => DocumentId(
-      path: json['path'] as String,
-      itemId: json['itemId'] as String,
+      documentClass: json['documentClass'] as String,
+      objectId: json['objectId'] as String,
     );
 
 Map<String, dynamic> _$DocumentIdToJson(DocumentId instance) =>
     <String, dynamic>{
-      'path': instance.path,
-      'itemId': instance.itemId,
+      'documentClass': instance.documentClass,
+      'objectId': instance.objectId,
     };

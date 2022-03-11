@@ -2,12 +2,16 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/data/select/multi.dart';
+import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/particle/text_box.dart';
-import 'package:precept_script/query/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -24,29 +28,27 @@ final kitchenSinkScript = PScript(
     version: PVersion(number: -1),
   ),
   locale: 'en_GB',
-  routes: {
-    '/': PPage(
-      layout: PPageLayout(margins: PMargins(top: 50)),
+  pages: [
+    PPageStatic(
+      routes: ['/'],
+      layout: PLayoutDistributedColumn(padding: PPadding(top: 50)),
       controlEdit: ControlEdit.panelsOnly,
-      title: 'Home Page',
-      content: [
-        PPanel(
-          layout: PPanelLayout(width: 350),
-          content: [
+      caption: 'Home Page',
+      children: [
+        PPanelStatic(
+          layout: PLayoutDistributedColumn(preferredColumnWidth: 350),
+          children: [
             PText(
               id: 'id1',
               readTraitName: PText.heading1,
-              isStatic: IsStatic.yes,
               staticData: 'Welcome to Precept',
             ),
             PText(
               readTraitName: PText.heading3,
-              isStatic: IsStatic.yes,
               staticData: 'Proof of Concept',
             ),
             PNavButton(
               height: 101,
-              isStatic: IsStatic.yes,
               staticData: 'OK',
               route: 'chooseList',
             ),
@@ -54,20 +56,24 @@ final kitchenSinkScript = PScript(
         ),
       ],
     ),
-    'signIn': PPage(
-      title: 'Sign In',
-      isStatic: IsStatic.yes,
-      content: [
+    PPageStatic(
+      routes: ['signIn'],
+      caption: 'Sign In',
+      children: [
         PNavButtonSet(
           buttons: {'email': 'emailSignIn'},
         ),
       ],
     ),
-    'emailSignIn': PPage(title: 'Email Sign In', content: [PEmailSignIn()]),
-    'chooseList': PPage(
-      layout: PPageLayout(margins: PMargins(top: 50)),
-      title: 'Select List to View',
-      content: [
+    PPageStatic(
+        routes: ['emailSignIn'],
+        caption: 'Email Sign In',
+        children: [PEmailSignIn()]),
+    PPageStatic(
+      routes: ['chooseList'],
+      layout: PLayoutDistributedColumn(padding: PPadding(top: 50)),
+      caption: 'Select List to View',
+      children: [
         PNavButtonSet(
           buttons: {
             'Open Issues': 'openIssues',
@@ -79,20 +85,20 @@ final kitchenSinkScript = PScript(
         ),
       ],
     ),
-    'openIssues': PPage(
+    PPage(
       controlEdit: ControlEdit.panelsOnly,
-      title: 'Open Issues',
-      query: PGraphQLQuery(
-        documentSchema: 'Issue',
-        queryName: 'openIssues',
-        queryScript: openIssuesScript,
-        returnType: QueryReturnType.futureList,
-      ),
-      content: [
-        PPanel(
-          property: '',
+      caption: 'Open Issues',
+      dataSelectors: [
+        PMultiByGQL(
+          caption: 'Open Issues',
+          tag: 'openIssues',
+          script: openIssuesScript,
+        )
+      ],
+      children: [
+        PPanelStatic(
           caption: 'test',
-          content: [
+          children: [
             PQueryView(
               queryName: 'openIssues',
               caption: 'Open Issues',
@@ -102,23 +108,19 @@ final kitchenSinkScript = PScript(
         ),
       ],
     ),
-    'account': PPage(
-      title: 'Account',
-      content: [
+    PPageStatic(
+      routes: ['account'],
+      caption: 'Account',
+      children: [
         PPanel(
           heading: PPanelHeading(canEdit: true, expandable: true),
           property: '',
-          query: PPQuery(
-            documentSchema: 'Account',
-            queryName: 'Get Account',
-            fields: 'id,objectId, category,accountNumber,createdAt,updatedAt',
-            variables: {'id': 'wVdGK8TDXR'},
-            types: {
-              'id': 'ID!',
-            },
-          ),
+          dataSelectors: [
+            PSingleById(
+                caption: 'My Object', tag: 'MyObject', objectId: 'wVdGK8TDXR')
+          ],
           caption: 'Account',
-          content: [
+          children: [
             PText(
               property: 'accountNumber',
               readOnly: true,
@@ -133,27 +135,26 @@ final kitchenSinkScript = PScript(
         ),
       ],
     ),
-    'search': PPage(
-      title: 'Search Issues',
-      content: [],
+    PPageStatic(
+      routes: ['search'],
+      caption: 'Search Issues',
+      children: [],
     ),
-    'Issue': PPage(
-      title: 'Issue',
-      content: [
-        PPanel(
+    PPageStatic(
+      routes: ['issue'],
+      caption: 'Issue',
+      children: [
+        PPanelStatic(
           caption: 'Issue',
           heading: PPanelHeading(),
-          property: '',
-          content: [
+          children: [
             PText(
               readOnly: true,
-              isStatic: IsStatic.no,
               property: 'title',
               caption: 'Title',
               help: PHelp(title: 'Title', message: 'Keep it short and punchy'),
             ),
             PText(
-              isStatic: IsStatic.no,
               property: 'description',
               caption: 'Description',
               help: PHelp(title: 'Description', message: 'Lots of  details'),
@@ -162,10 +163,10 @@ final kitchenSinkScript = PScript(
         ),
       ],
     ),
-  },
+  ],
 );
 
-final openIssuesScript = r'''query OpenIssues {
+final openIssuesScript = r'''data-select OpenIssues {
   issues(where: { state: {equalTo: "open"} }) {
     count
     edges {

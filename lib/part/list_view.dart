@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/abstract_list_view.dart';
 
@@ -9,7 +8,7 @@ part 'list_view.g.dart';
 /// [titleProperty] and [subtitleProperty] are passed to the items in the list.  A [ListTile] for example,
 /// will use these to get and display the data for an item
 ///
-/// [isQuery] should be set to true if the data displayed is directly from a query
+/// [isQuery] should be set to true if the data displayed is directly from a data-select
 @JsonSerializable(explicitToJson: true)
 class PListView extends PAbstractListView {
   static const String defaultReadTrait = 'list-read-default';
@@ -19,19 +18,16 @@ class PListView extends PAbstractListView {
   final bool isQuery;
   final String titleProperty;
   final String subtitleProperty;
-  final PListViewItemType itemType;
 
   PListView({
     this.isQuery = false,
     this.titleProperty = 'title',
-    this.itemType = PListViewItemType.tile,
     this.subtitleProperty = 'subtitle',
     bool readOnly = false,
-    IsStatic isStatic = IsStatic.inherited,
     double? particleHeight,
     String? caption,
     PHelp? help,
-    String staticData = notSet,
+    String? staticData,
     required String property,
     String readTraitName = 'list-read-default',
     String editTraitName = 'list-edit-default',
@@ -47,7 +43,6 @@ class PListView extends PAbstractListView {
           help: help,
           particleHeight: particleHeight,
           readOnly: readOnly,
-          isStatic: isStatic,
           readTraitName: readTraitName,
           editTraitName: editTraitName,
           pid: pid,

@@ -30,10 +30,10 @@ void main() {
       // then
       Map<String, dynamic> jsonMap = script.toJson();
       PScript script2 = PScript.fromJson(jsonMap);
+      script2.init();
 
       expect(jsonMap['nameLocale'], 'Medley:en_GB');
       expect(script2.routes.length, script.routes.length);
-      script2.init();
 
       expect(script.toJson(), script2.toJson());
       expect(json.encode(script.toJson()), json.encode(script2.toJson()));

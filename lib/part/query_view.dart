@@ -1,7 +1,6 @@
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/common/script/help.dart';
 import 'package:precept_script/part/abstract_list_view.dart';
 
@@ -15,10 +14,9 @@ class PQueryView extends PAbstractListView {
   static const String defaultItemEditTrait = 'queryView-item-edit-default';
 
   PQueryView({
-    String queryName = notSet,
+    String? queryName,
     String titleProperty = 'title',
     String subtitleProperty = 'subtitle',
-    PListViewItemType itemType = PListViewItemType.navTile,
     double height = 100,
     String? tooltip,
     String? caption,
@@ -32,9 +30,7 @@ class PQueryView extends PAbstractListView {
           property: queryName,
           titleProperty: titleProperty,
           subtitleProperty: subtitleProperty,
-          itemType: itemType,
           particleHeight: height,
-          isStatic: IsStatic.no,
           tooltip: tooltip,
           caption: caption,
           help: help,

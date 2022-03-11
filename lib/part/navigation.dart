@@ -1,6 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/constants.dart';
 import 'package:precept_script/part/part.dart';
 
 part 'navigation.g.dart';
@@ -15,18 +13,16 @@ class PNavButton extends PPart {
     required this.route,
     String? caption,
     bool showCaption = false,
-    IsStatic isStatic = IsStatic.yes,
     String readTraitName = 'PNavButton-default',
     String editTraitName = 'PNavButton-default',
     double height = 100,
-    String property = notSet,
+    String? property,
     String staticData = '',
     final Map<String, dynamic> args = const {},
     String? pid,
   }) : super(
     readOnly: readOnly,
           caption: caption,
-          isStatic: isStatic,
           staticData: staticData,
           property: property,
           height: height,
@@ -60,7 +56,6 @@ class PNavButtonSet extends PPart {
   }) : super(
     readOnly: true,
           height: height,
-          isStatic: IsStatic.yes,
           readTraitName: readTraitName,
           id: pid,
         );

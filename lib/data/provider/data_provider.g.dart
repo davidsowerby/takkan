@@ -13,7 +13,7 @@ PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
           ? null
           : PGraphQL.fromJson(json['graphQLDelegate'] as Map<String, dynamic>),
       restDelegate: json['restDelegate'] == null
-          ? null
+          ? const PRest()
           : PRest.fromJson(json['restDelegate'] as Map<String, dynamic>),
       instanceConfig:
           PInstance.fromJson(json['instanceConfig'] as Map<String, dynamic>),
@@ -36,7 +36,7 @@ Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
       'instanceConfig': instance.instanceConfig.toJson(),
       'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate],
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),
-      'restDelegate': instance.restDelegate?.toJson(),
+      'restDelegate': instance.restDelegate.toJson(),
       'useAuthenticator': instance.useAuthenticator,
     };
 

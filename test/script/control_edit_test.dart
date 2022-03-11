@@ -1,8 +1,12 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
+import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/part.dart';
+import 'package:precept_script/data/select/data.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -33,20 +37,19 @@ void main() {
           name: 'test',
           version: PVersion(number: 0),
         ),
-        routes: {
-          '/home': PPage(
-            title: 'A page',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'A page',
             // ignore: missing_required_param
-            content: [
-              PPanel(
-                property: '',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
@@ -58,21 +61,20 @@ void main() {
                   caption: 'page-part1'),
             ],
           ),
-        },
+        ],
       );
-
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      script.init();
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
       // then
       expect(script.controlEdit, ControlEdit.firstLevelPanels);
-      expect(page?.controlEdit, ControlEdit.inherited);
+      expect(page.controlEdit, ControlEdit.inherited);
       expect(panel1.controlEdit, ControlEdit.inherited);
       expect(panel11.controlEdit, ControlEdit.inherited);
       expect(panel1Part1.controlEdit, ControlEdit.inherited);
@@ -80,7 +82,7 @@ void main() {
       expect(pagePart.controlEdit, ControlEdit.inherited);
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, false);
+      expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -98,20 +100,19 @@ void main() {
           version: PVersion(number: 0),
         ),
         controlEdit: ControlEdit.panelsOnly,
-        routes: {
-          '/home': PPage(
-            title: 'A page',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'A page',
             // ignore: missing_required_param
-            content: [
-              PPanel(
-                property: '',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
@@ -123,22 +124,22 @@ void main() {
                   controlEdit: ControlEdit.thisOnly),
             ],
           ),
-        },
+        ],
       );
+      script.init();
 
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, false);
+      expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, true);
       expect(panel1Part1.hasEditControl, false);
@@ -155,20 +156,19 @@ void main() {
           name: 'test',
           version: PVersion(number: 0),
         ),
-        routes: {
-          '/home': PPage(
-            title: 'title',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
-            content: [
-              PPanel(
-                property: '',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
@@ -180,22 +180,23 @@ void main() {
                   controlEdit: ControlEdit.thisOnly),
             ],
           ),
-        },
+        ],
       );
+      script.init();
 
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
+
       // then
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, false);
+      expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -212,19 +213,18 @@ void main() {
           name: 'test',
           version: PVersion(number: 0),
         ),
-        routes: {
-          '/home': PPage(
-            title: 'A page',
-            content: [
-              PPanel(
-                property: '',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'A page',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
@@ -233,22 +233,23 @@ void main() {
               PPart(readTraitName: 'part', caption: 'page-part1'),
             ],
           ),
-        },
+        ],
       );
+      script.init();
 
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
+
       // then
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, false);
+      expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);
@@ -267,20 +268,19 @@ void main() {
         ),
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
-        routes: {
-          '/home': PPage(
-            title: 'A page',
-            content: [
-              PPanel(
-                property: '',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'A page',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     controlEdit: ControlEdit.noEdit,
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
@@ -292,22 +292,21 @@ void main() {
                   controlEdit: ControlEdit.thisOnly),
             ],
           ),
-        },
+        ],
       );
-
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      script.init();
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, true);
+      expect(page.hasEditControl, true);
       expect(panel1.hasEditControl, true);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, true);
@@ -325,23 +324,22 @@ void main() {
           version: PVersion(number: 0),
         ),
         controlEdit: ControlEdit.inherited,
-        routes: {
-          '/home': PPage(
-            title: 'A page',
-            content: [
-              PPanel(
-                property: '',
+        pages: [
+          PPageStatic(
+            routes: ['/home'],
+            caption: 'A page',
+            children: [
+              PPanelStatic(
                 caption: 'panel1',
-                content: [
+                children: [
                   PPart(
                       readTraitName: 'default',
                       property: '',
                       caption: 'panel1-part1'),
-                  PPanel(
-                    property: '',
+                  PPanelStatic(
                     controlEdit: ControlEdit.partsOnly,
                     caption: 'panel11',
-                    content: [
+                    children: [
                       PPart(
                           readTraitName: 'default',
                           property: '',
@@ -356,22 +354,21 @@ void main() {
                   caption: 'page-part1'),
             ],
           ),
-        },
+        ],
       );
-
-      final page = script.routes['/home'];
-      final panel1 = page?.content[0] as PPanel;
-      final panel11 = panel1.content[1] as PPanel;
-      final panel1Part1 = panel1.content[0] as PPart;
-      final panel11Part1 = panel11.content[0] as PPart;
-      final pagePart = page?.content[1] as PPart;
+      script.init();
+      final page = script.routes['/home'] as PPageStatic;
+      final panel1 = page.children[0] as PPanelStatic;
+      final panel11 = panel1.children[1] as PPanelStatic;
+      final panel1Part1 = panel1.children[0] as PPart;
+      final panel11Part1 = panel11.children[0] as PPart;
+      final pagePart = page.children[1] as PPart;
 
       // when
-      script.init();
       // then
 
       expect(script.hasEditControl, false);
-      expect(page?.hasEditControl, false);
+      expect(page.hasEditControl, false);
       expect(panel1.hasEditControl, false);
       expect(panel11.hasEditControl, false);
       expect(panel1Part1.hasEditControl, false);

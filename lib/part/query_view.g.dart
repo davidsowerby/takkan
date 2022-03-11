@@ -9,9 +9,6 @@ part of 'query_view.dart';
 PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
-      itemType:
-          $enumDecodeNullable(_$PListViewItemTypeEnumMap, json['itemType']) ??
-              PListViewItemType.navTile,
       height: (json['height'] as num?)?.toDouble() ?? 100,
       tooltip: json['tooltip'] as String?,
       caption: json['caption'] as String?,
@@ -42,14 +39,7 @@ Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
       'editTraitName': instance.editTraitName,
       'titleProperty': instance.titleProperty,
       'subtitleProperty': instance.subtitleProperty,
-      'itemType': _$PListViewItemTypeEnumMap[instance.itemType],
     };
-
-const _$PListViewItemTypeEnumMap = {
-  PListViewItemType.tile: 'tile',
-  PListViewItemType.navTile: 'navTile',
-  PListViewItemType.panel: 'panel',
-};
 
 const _$ControlEditEnumMap = {
   ControlEdit.inherited: 'inherited',

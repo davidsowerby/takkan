@@ -6,18 +6,11 @@ import 'package:precept_script/common/debug.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/constants.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/element.dart';
-import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/converter/conversion_error_messages.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/query_converter.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/string.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/query_converter.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validation_error_messages.dart';
 import 'package:precept_script/script/version.dart';
@@ -26,12 +19,48 @@ import 'package:precept_script/validation/message.dart';
 part 'script.g.dart';
 
 /// The heart of Precept, this structure describes the the Widgets to use and their layout.
+/// It also contains a reference to the [schema] to use.
 ///
-/// For more see the [overview](https://www.preceptblog.co.uk/user-guide/#overview) of the User Guide,
-/// and the [detailed description](https://www.preceptblog.co.uk/user-guide/precept-script.html#introduction) of PScript
+/// [name] must be unique within the scope of where the script will be used.
+/// Multiple scripts can be merged
+/// [locale] Because a script carries static data, a version is required for each
+/// locale in use.  This also limits the amount of translation needed on the client.
+/// [nameLocale] is generated automatically and should not be set directly
+/// [version] is a combination of an incrementing integer and a tag or label for use
+/// by the developer.  It is imperative that this version is maintained correctly,
+/// so that Precept version control can work correctly
+/// [schema] describes the data in use, along with validation and permissions.  As
+/// an alternative to specifying the schema directly, [schemaSource] can be used to
+/// load the schema during application start.
 ///
-/// [scriptSchema] is the schema for [PScript] itself
+/// Pages are defined by a combination of [pages] and [routes].  Most pages can
+/// be declared in [pages] without the need to explicitly define a route.  Precept
+/// then constructs the route from the document class and objectId, being displayed
+/// and the [PreceptRouter] will display the page correctly. A similar approach is
+/// taken for pages based on a list of a document class. Static pages (that is,
+/// pages which do not directly use dynamic data) need to be explicitly declared
+/// in routes, as a route-page pair. You may also use [routes] for custom pages,
+/// or just because you want to!  The [PreceptRouter] first checks for the existence
+/// of an entry in [routes], and if none is found, uses a default route.
+///
+/// Note that if you want two different pages for the same document class, one of them
+/// will need an explicit entry in [routes]
+///
+/// [routeMap] is created during the [init] process and combines the routes
+/// defined by [pages] and [routes]
+///
+/// [dataProvider] is the remote provider of data, for example Back4App.
+///
+/// [controlEdit] defines where edit controls are placed.  See [ControlEdit]
+///
+/// - [conversionErrorMessages] TODO
+/// - [validationErrorMessages] TODO
 /// - [_scriptValidationMessages] are collected during the [validate] process
+///
+/// See also the [overview](https://preceptblog.co.uk/docs/user-guide/intro) of the User Guide,
+/// and the [detailed description](https://preceptblog.co.uk/docs/user-guide/precept-script) of PScript
+///
+
 @JsonSerializable(explicitToJson: true)
 @PQueryConverter()
 class PScript extends PCommon {
@@ -42,7 +71,11 @@ class PScript extends PCommon {
   final PSchema schema;
   @JsonKey(ignore: true)
   final PSchemaSource? schemaSource;
-  final Map<String, PPage> routes;
+  @JsonKey(
+    toJson: PPagesJsonConverter.toJson,
+    fromJson: PPagesJsonConverter.fromJson,
+  )
+  final List<PPages> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
@@ -50,27 +83,23 @@ class PScript extends PCommon {
   List<ValidationMessage> _scriptValidationMessages =
       List.empty(growable: true);
 
+  Map<String, PPages> _routes = Map();
+
   PScript({
     this.conversionErrorMessages =
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(
         typePatterns: defaultValidationErrorMessages),
-    this.routes = const {},
+    this.pages = const [],
     required this.name,
     required this.version,
     this.locale = 'en_GB',
     this.schemaSource,
     required this.schema,
-    IsStatic isStatic = IsStatic.inherited,
     PDataProvider? dataProvider,
-    PQuery? query,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
-    String? id,
   }) : super(
-          id: id,
-          isStatic: isStatic,
           dataProviderConfig: dataProvider ?? PNoDataProvider(),
-          query: query,
           controlEdit: controlEdit,
         );
 
@@ -81,6 +110,9 @@ class PScript extends PCommon {
 
   String get debugId => name;
 
+  @JsonKey(ignore: true)
+  Map<String, PPages> get routeMap => _routes;
+
   Set<String> get allRoles {
     final counter = RoleVisitor();
     walk([counter]);
@@ -88,13 +120,6 @@ class PScript extends PCommon {
   }
 
   // String get nameLocale => '$name:$locale';
-
-  /// We have to override here, because the inherited getter looks to the parent - but now we do not have a parent
-  @override
-  PQuery? get query => getQuery();
-
-  /// We have to override these here, because the inherited getter looks to the parent - but now we do not have a parent
-  IsStatic get isStatic => getIsStatic();
 
   static Future<PScript> readFromFile(File f) async {
     final encoded = await f.readAsString();
@@ -145,37 +170,57 @@ class PScript extends PCommon {
     }
   }
 
-  /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user
-  /// See the [doInit] call for each [PreceptItem} type
+  /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user.
+  ///
+  /// This is a two stage process.
+  /// 1.  the [parent] and [script] properties are set.
+  /// 1.  [doInit] is called for each [PreceptItem}
+  ///
+  /// Both stages cascade down to the [subElements].
+  ///
+  /// The [parent] and [script] properties are set first, because some [doInit] calls
+  /// require that the [parent] is already set, and it is hard to guarantee that
+  /// without making the order of [subElements] critical.
   ///
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
   /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
-  InitWalker init({bool useCaptionsAsIds = true}) {
-    final walker = InitWalker();
-    final params = InitWalkerParams(
+  Walkers init({bool useCaptionsAsIds = true}) {
+    final parentWalker = SetParentWalker();
+    final parentParams = SetParentWalkerParams(
       script: this,
       parent: NullPreceptItem(),
+    );
+    parentWalker.walk(this, parentParams);
+
+    final initWalker = InitWalker();
+    final params = InitWalkerParams(
       useCaptionsAsIds: useCaptionsAsIds,
     );
-    walker.walk(this, params);
-    return walker;
+    initWalker.walk(this, params);
+
+    return Walkers(
+      parentWalker: parentWalker,
+      initWalker: initWalker,
+    );
   }
 
-  /// Passes call to all components, and sets the [PPage.route] the keys in [routes]
+  /// Passes call to all components, and builds [_routes] from [pages]
   @override
   doInit(InitWalkerParams params) {
     super.doInit(params);
     nameLocale = '$name:$locale';
     setupControlEdit(ControlEdit.inherited);
+    _mergeRoutes();
   }
 
-  /// [routes] must be done first or validation messages get wrong debugId
-  List<dynamic> get children => [
+  /// See [PreceptItem.subElements]
+  List<dynamic> get subElements =>
+      [
         schema,
         if (schemaSource != null) schemaSource,
-        ...super.children,
-        routes,
+        ...super.subElements,
+        pages,
       ];
 
   PDocument documentSchema({required String documentSchemaName}) {
@@ -218,134 +263,21 @@ class PScript extends PCommon {
     final encoded = json.encode(jsonMap);
     await f.writeAsString(encoded);
   }
+
+  /// Creates a lookup list of all routes to pages, regardless of whether they are defined
+  /// via [pages] or [routes]
+  void _mergeRoutes() {
+    for (PPages page in pages) {
+      _routes.addAll(page.routeMap);
+    }
+  }
+
+  Map<String, PPages> get routes => _routes;
 }
 
-/// [pageType] is used to look up from [PageLibrary]
-/// although [content] is a list, this simplest page only uses the first one
-/// [route] is set during script initialisation
-@JsonSerializable(explicitToJson: true)
-class PPage extends PContent {
-  final String pageType;
-  final bool scrollable;
-  @JsonKey(
-      fromJson: PElementListConverter.fromJson,
-      toJson: PElementListConverter.toJson)
-  final List<PSubContent> content;
-  final PPageLayout layout;
-  @JsonKey(ignore: true)
-  String? route;
+class Walkers {
+  final InitWalker initWalker;
+  final SetParentWalker parentWalker;
 
-  // @JsonKey(ignore: true)
-  PPage({
-    this.pageType = 'defaultPage',
-    this.scrollable = true,
-    this.layout = const PPageLayout(),
-    IsStatic isStatic = IsStatic.inherited,
-    this.content = const [],
-    PDataProvider? dataProvider,
-    PQuery? query,
-    ControlEdit controlEdit = ControlEdit.inherited,
-    String? id,
-    String property = notSet,
-    required String title,
-  }) : super(
-          isStatic: isStatic,
-          dataProviderConfig: dataProvider,
-          query: query,
-          controlEdit: controlEdit,
-          id: id,
-          property: property,
-          caption: title,
-        );
-
-  factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
-
-  PScript get parent => super.parent as PScript;
-
-  DebugNode get debugNode {
-    final List<DebugNode> children = content.map((e) => e.debugNode).toList();
-    if (dataProviderIsDeclared) {
-      DebugNode? dn = dataProvider?.debugNode;
-      if (dn != null) children.add(dn);
-    }
-    if (queryIsDeclared) {
-      DebugNode? dn = query?.debugNode;
-      if (dn != null) children.add(dn);
-    }
-    return DebugNode(this, children);
-  }
-
-  Map<String, dynamic> toJson() => _$PPageToJson(this);
-
-  void doValidate(ValidationWalkerCollector collector) {
-    super.doValidate(collector);
-    if (pageType.isEmpty) {
-      collector.messages.add(ValidationMessage(
-        item: this,
-        msg: 'must define a non-empty pageType',
-      ));
-    }
-  }
-
-  doInit(InitWalkerParams params) {
-    route = params.name;
-    super.doInit(params);
-  }
-
-  List<dynamic> get children => [
-        content,
-        ...super.children,
-      ];
-
-  walk(List<ScriptVisitor> visitors) {
-    super.walk(visitors);
-    for (PSubContent entry in content) {
-      entry.walk(visitors);
-    }
-  }
-
-  String? get title => caption;
-
-  /// [dataProvider] is always
-  /// considered 'declared' by the page, if any level above it actually declares it.
-  /// This is because a page is the first level to be actually built into the Widget tree
-  bool get dataProviderIsDeclared =>
-      (dataProvider != null && !(dataProvider is PNoDataProvider));
-
-  /// [query] is always
-  /// considered 'declared' by the page, if any level above it actually declares it.
-  /// This is because a page is the first level to be actually built into the Widget tree
-  bool get queryIsDeclared => query != null;
-
-  String? get idAlternative => title;
-}
-
-// TODO add pages (PObject), query & conversionErrorMessages
-final PDocument pScriptSchema0 = PDocument(
-  documentType: PDocumentType.versioned,
-  fields: {
-    'nameLocale': PString(),
-    'name': PString(),
-    'version': PInteger(),
-    'locale': PString(),
-    'controlEdit': PString(),
-  },
-);
-
-enum PageType { standard }
-
-/// property || documentSelector must be non-null
-/// parts || sections must be non empty
-
-//
-
-class RoleVisitor implements ScriptVisitor {
-  final Set<String> roles = Set();
-
-  @override
-  step(Object entry) {
-    if (entry is PDocument) {
-      roles.addAll(entry.permissions.allRoles);
-    }
-  }
+  const Walkers({required this.initWalker, required this.parentWalker});
 }

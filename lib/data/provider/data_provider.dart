@@ -27,13 +27,13 @@ class PDataProvider extends PreceptItem {
   final PInstance instanceConfig;
   final Delegate defaultDelegate;
   final PGraphQL? graphQLDelegate;
-  final PRest? restDelegate;
+  final PRest restDelegate;
   final bool useAuthenticator;
 
   PDataProvider({
     this.useAuthenticator = false,
     this.graphQLDelegate,
-    this.restDelegate,
+    this.restDelegate=const PRest(),
     required this.instanceConfig,
     this.defaultDelegate = Delegate.rest,
     this.signInOptions = const PSignInOptions(),
@@ -45,7 +45,7 @@ class PDataProvider extends PreceptItem {
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     graphQLDelegate?.walk(visitors);
-    this.restDelegate?.walk(visitors);
+    this.restDelegate.walk(visitors);
   }
 
   factory PDataProvider.fromJson(Map<String, dynamic> json) =>
