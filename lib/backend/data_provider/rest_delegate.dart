@@ -15,10 +15,10 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/data/provider/rest_delegate.dart';
+import 'package:precept_script/data/select/field_selector.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/rest_query.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/rest_query.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late InstanceConfig instanceConfig;
@@ -85,7 +85,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
       data: firstResult,
       success: success,
       queryReturnType: QueryReturnType.futureItem,
-      path: queryConfig.documentSchema,
+      documentClass: queryConfig.documentSchema,
     );
   }
 
@@ -99,7 +99,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         instanceConfig, assembleScript(queryConfig, variables));
     return ReadResultList(
       data: transformResponseData(serverConnectResponse),
-      path: queryConfig.documentSchema,
+      documentClass: queryConfig.documentSchema,
       queryReturnType: QueryReturnType.futureList,
       success: true,
     );
@@ -113,14 +113,14 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Updating data provider');
-    final serverConnectResponse = await serverConnect.update(
-        instanceConfig, '$documentEndpoint/${documentId.path}', data);
+    final serverConnectResponse = await serverConnect.update(instanceConfig,
+        '$documentEndpoint/${documentId.documentClass}', documentId, data);
 
     return UpdateResult(
       data: transformResponseData(serverConnectResponse),
       success: true,
-      path: documentId.path,
-      itemId: documentId.itemId,
+      documentClass: documentId.documentClass,
+      objectId: documentId.objectId,
     );
   }
 
@@ -132,7 +132,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   }
 
   String documentUrl(DocumentId documentId) {
-    return '$documentEndpoint/${documentId.path}/${documentId.itemId}';
+    return '$documentEndpoint/${documentId.documentClass}/${documentId.objectId}';
   }
 
   String get documentEndpoint => instanceConfig.documentEndpoint;
@@ -150,33 +150,33 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     logType(this.runtimeType).d('Deleting document');
     final serverConnectResponse = await serverConnect.delete(
       instanceConfig,
-      '$documentEndpoint/${documentId.path}/${documentId.itemId}',
+      '$documentEndpoint/${documentId.documentClass}/${documentId.objectId}',
     );
     return DeleteResult(
-      path: documentId.path,
+      documentClass: documentId.documentClass,
       data: transformResponseData(serverConnectResponse),
       success: true,
-      itemId: documentId.itemId,
+      objectId: documentId.objectId,
     );
   }
 
   /// see [DataProvider.createDocument]
   @override
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
     logType(this.runtimeType).d('Creating new document');
     final serverConnectResponse = await serverConnect.create(
-        instanceConfig, '$documentEndpoint/$path', data);
+        instanceConfig, '$documentEndpoint/$documentClass', data);
 
     return CreateResult(
-      path: path,
+      documentClass: documentClass,
       data: transformResponseData(serverConnectResponse),
       success: true,
-      itemId: data[documentIdKey],
+      objectId: data[documentIdKey],
     );
   }
 
@@ -189,15 +189,14 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     logType(this.runtimeType).d('Reading document');
     final dio.Response response =
         await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers)).get(
-      '$documentEndpoint/${documentId.path}',
-      queryParameters: {'objectId': documentId.itemId},
+      '$documentEndpoint/${documentId.documentClass}/${documentId.objectId}',
     );
     if (response.statusCode == HttpStatus.ok) {
-      logType(this.runtimeType).d('Document created');
+      logType(this.runtimeType).d('Document read');
       return ReadResultItem(
         data: response.data,
         success: true,
-        path: documentId.path,
+        documentClass: documentId.documentClass,
         queryReturnType: QueryReturnType.futureItem,
       );
     }
@@ -233,13 +232,13 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
           data: data as List<Map<String, dynamic>>,
           success: true,
           queryReturnType: QueryReturnType.futureList,
-          path: 'function');
+          documentClass: 'function');
     } else {
       return ReadResultItem(
         success: true,
         data: data as Map<String, dynamic>,
         queryReturnType: QueryReturnType.futureItem,
-        path: 'function',
+        documentClass: 'function',
       );
     }
   }

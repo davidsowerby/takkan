@@ -1,8 +1,10 @@
 import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
+import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:precept_script/inject/inject.dart';
 
 /// A lookup facility for instances of [DataProvider] implementations.
 /// Provides an instance using the [find] method, from a supplied type name, defined in *precept.json*
@@ -15,12 +17,28 @@ import 'package:precept_script/data/provider/data_provider.dart';
 /// - the use of 'instanceName' is discouraged, although it is not clear why.
 ///
 /// [appConfig] is initialised during Precept start up
-class DataProviderLibrary {
+///
+/// injected via GetIt primarily for testing
+///
+abstract class DataProviderLibrary {
+  init(AppConfig appConfig);
+
+  DataProvider find({required PDataProvider providerConfig});
+
+  register({
+    required String type,
+    required DataProvider Function(PDataProvider) builder,
+  });
+
+  clear();
+}
+
+class DefaultDataProviderLibrary implements DataProviderLibrary {
   final Map<String, DataProvider Function(PDataProvider)> builders = Map();
   final Map<String, DataProvider> instances = Map();
   late AppConfig _appConfig;
 
-  DataProviderLibrary() : super();
+  DefaultDataProviderLibrary() : super();
 
   AppConfig get appConfig => _appConfig;
 
@@ -31,8 +49,10 @@ class DataProviderLibrary {
   /// Finds a previously cached, or creates a [DataProvider] instance appropriate to the
   /// type of provider (identified by [instanceConfig.type])
   ///
-  /// An instance of DataProvider is identified uniquely by [providerConfig.configSource],
-  /// thus allowing multiple instances of the same DataProvider type.
+  /// An instance of DataProvider is identified uniquely by [providerConfig.instanceConfig],
+  /// thus allowing multiple instances of the same DataProvider type.  This is
+  /// especially important as the DataProvider contains a [PreceptUser] object,
+  /// which differ from one instance to another.
   ///
   /// Requires that the [instanceConfig.type] has been registered using [register].
   /// This is usually done in your main.dart file, using for example, `Back4App.register()`
@@ -73,9 +93,10 @@ class DataProviderLibrary {
     throw PreceptException(msg);
   }
 
-  register(
-      {required String type,
-      required DataProvider Function(PDataProvider) builder}) {
+  register({
+    required String type,
+    required DataProvider Function(PDataProvider) builder,
+  }) {
     builders[type] = builder;
   }
 
@@ -86,6 +107,6 @@ class DataProviderLibrary {
   }
 }
 
-final DataProviderLibrary _dataProviderLibrary = DataProviderLibrary();
+final DataProviderLibrary _dataProviderLibrary = inject<DataProviderLibrary>();
 
 DataProviderLibrary get dataProviderLibrary => _dataProviderLibrary;

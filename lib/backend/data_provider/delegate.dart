@@ -3,9 +3,9 @@ import 'package:precept_backend/backend/app/app_config.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/rest_query.dart';
+import 'package:precept_script/data/select/field_selector.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/rest_query.dart';
 
 abstract class DataProviderDelegate<QUERY extends PQuery> {
   DataProvider get parent;
@@ -39,7 +39,7 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
 
   /// See [DataProvider.createDocument]
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),

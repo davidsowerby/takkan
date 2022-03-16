@@ -105,7 +105,7 @@ class GroupConfig extends BaseConfig with Appendage {
   }
 
   List<String> get stages => (data[AppConfig.keyStages] == null)
-      ? []
+      ? ['dev', 'test', 'qa', 'prod']
       : List.castFrom(data[AppConfig.keyStages]);
 
 

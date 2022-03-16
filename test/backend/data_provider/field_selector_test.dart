@@ -1,4 +1,4 @@
-import 'package:precept_script/query/field_selector.dart';
+import 'package:precept_script/data/select/field_selector.dart';
 import 'package:precept_script/schema/field/string.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:test/test.dart';

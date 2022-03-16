@@ -9,8 +9,8 @@ import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/data/provider/graphql_delegate.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/field_selector.dart';
+import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/schema/schema.dart';
 
 /// GraphQL implementations can vary considerably, and may need provider-specific implementations
@@ -111,7 +111,7 @@ class DefaultGraphQLDataProviderDelegate
     }
     return ReadResultList(
       success: true,
-      path: queryConfig.documentSchema,
+      documentClass: queryConfig.documentSchema,
       queryReturnType: QueryReturnType.futureList,
       data: results,
     );
@@ -134,7 +134,7 @@ class DefaultGraphQLDataProviderDelegate
   /// See [PDocument.createDocument]
   @override
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     required String documentIdKey,
     FieldSelector fieldSelector = const FieldSelector(),

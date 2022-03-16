@@ -9,9 +9,9 @@ import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/data/provider/rest_delegate.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/rest_query.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/rest_query.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/server_connect.dart';
@@ -135,7 +135,7 @@ void main() {
       provider.init(appConfig);
       // when
       final result = await provider.createDocument(
-        path: 'Person',
+        documentClass: 'Person',
         data: data,
         useDelegate: Delegate.rest,
       );
@@ -175,7 +175,7 @@ void main() {
       provider.init(appConfig);
       // when
       final result = await provider.updateDocument(
-        documentId: DocumentId(path: 'Person', itemId: objectId),
+        documentId: DocumentId(documentClass: 'Person', objectId: objectId),
         data: data,
         useDelegate: Delegate.rest,
       );
@@ -208,7 +208,7 @@ void main() {
       provider.init(appConfig);
       // when
       final result = await provider.deleteDocument(
-        documentId: DocumentId(path: 'Person', itemId: objectId),
+        documentId: DocumentId(documentClass: 'Person', objectId: objectId),
         useDelegate: Delegate.rest,
       );
       // then

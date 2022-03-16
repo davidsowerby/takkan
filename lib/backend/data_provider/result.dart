@@ -1,47 +1,50 @@
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/query.dart';
 
 abstract class QueryResults<DATA> {
   final DATA data;
   final bool success;
-  final String path;
+  final String documentClass;
   final QueryReturnType queryReturnType;
 
   const QueryResults({
     required this.data,
     required this.success,
-    required this.path,
+    required this.documentClass,
     required this.queryReturnType,
   });
 }
 
 class QueryResultItem extends QueryResults<Map<String, dynamic>> {
-  final String itemId;
+  final String objectId;
 
   const QueryResultItem({
-    required this.itemId,
+    required this.objectId,
     required Map<String, dynamic> data,
     required bool success,
-    required String path,
+    required String documentClass,
   }) : super(
-          path: path,
+          documentClass: documentClass,
           success: success,
           data: data,
           queryReturnType: QueryReturnType.futureItem,
         );
 
-  DocumentId get documentId => DocumentId(path: path, itemId: objectId);
-
-  String get objectId => itemId;
+  DocumentId get documentId =>
+      DocumentId(documentClass: documentClass, objectId: objectId);
 }
 
-class CreateResult extends QueryResultItem {
+class CreateResult extends UpdateResult {
   const CreateResult({
     required Map<String, dynamic> data,
     required bool success,
-    required String path,
-    required String itemId,
-  }) : super(data: data, success: success, path: path, itemId: itemId);
+    required String documentClass,
+    required String objectId,
+  }) : super(
+            data: data,
+            success: success,
+            documentClass: documentClass,
+            objectId: objectId);
 
   DateTime get createdAt => DateTime.parse(data['createdAt']);
 }
@@ -51,11 +54,11 @@ abstract class ReadResult<DATA> extends QueryResults<DATA> {
     required QueryReturnType queryReturnType,
     required DATA data,
     required bool success,
-    required String path,
+    required String documentClass,
   }) : super(
-          data: data,
+    data: data,
           success: success,
-          path: path,
+          documentClass: documentClass,
           queryReturnType: queryReturnType,
         );
 }
@@ -65,21 +68,22 @@ class ReadResultItem extends ReadResult<Map<String, dynamic>> {
     required Map<String, dynamic> data,
     required bool success,
     required QueryReturnType queryReturnType,
-    required String path,
+    required String documentClass,
   }) : super(
-          success: success,
+    success: success,
           data: data,
-          path: path,
+          documentClass: documentClass,
           queryReturnType: queryReturnType,
         );
 
-  DocumentId get documentId => DocumentId(path: path, itemId: objectId);
+  DocumentId get documentId =>
+      DocumentId(documentClass: documentClass, objectId: objectId);
 
   /// This relies on 'objectId' being included in all queries that return this result type.
   /// This is enforced in the DataProviderDelegate, to avoid a lot of
   /// repetitive checking.  Check for success before invoking
   ///
-  /// TODO: This will fail with non-back4app entities, especially public REST APIs
+  /// TODO: use DataProvider.itemIdKey
   String get objectId => data['objectId'] ?? '?';
 }
 
@@ -88,11 +92,11 @@ class ReadResultList extends ReadResult<List<Map<String, dynamic>>> {
     required List<Map<String, dynamic>> data,
     required bool success,
     required QueryReturnType queryReturnType,
-    required String path,
+    required String documentClass,
   }) : super(
-          success: success,
+    success: success,
           data: data,
-          path: path,
+          documentClass: documentClass,
           queryReturnType: queryReturnType,
         );
 
@@ -105,13 +109,13 @@ class UpdateResult extends QueryResultItem {
   const UpdateResult({
     required Map<String, dynamic> data,
     required bool success,
-    required String path,
-    required String itemId,
+    required String documentClass,
+    required String objectId,
   }) : super(
-          data: data,
+    data: data,
           success: success,
-          path: path,
-          itemId: itemId,
+          documentClass: documentClass,
+          objectId: objectId,
         );
 }
 
@@ -119,12 +123,12 @@ class DeleteResult extends QueryResultItem {
   const DeleteResult({
     required Map<String, dynamic> data,
     required bool success,
-    required String path,
-    required String itemId,
+    required String documentClass,
+    required String objectId,
   }) : super(
-          data: data,
+    data: data,
           success: success,
-          path: path,
-          itemId: itemId,
+          documentClass: documentClass,
+          objectId: objectId,
         );
 }

@@ -9,12 +9,13 @@ import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/exception.dart';
+import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/delegate.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/query/query.dart';
-import 'package:precept_script/query/rest_query.dart';
+import 'package:precept_script/data/select/field_selector.dart';
+import 'package:precept_script/data/select/query.dart';
+import 'package:precept_script/data/select/rest_query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -30,9 +31,9 @@ import 'package:precept_script/script/script.dart';
 ///
 /// However it is implemented, the delegate used should transparent to the app.
 ///
-/// An implementation of this interface must be registered with a call to [DataProviderLibrary.register]
+/// An implementation of this interface must be registered with a call to [DefaultDataProviderLibrary.register]
 ///
-/// Note that the [DataProviderLibrary] acts as a cache. Multiple instances of the same DataProvider
+/// Note that the [DefaultDataProviderLibrary] acts as a cache. Multiple instances of the same DataProvider
 /// class are identified by the [PInstance], but each such instance is cached to ensure
 /// consistency of state.
 ///
@@ -62,6 +63,9 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
     required PQuery queryConfig,
     required Map<String, dynamic> pageArguments,
   });
+
+  /// The property name for the field which provides a document's unique id
+  String get objectIdKey;
 
   /// Fetch 0..n items from the database, matching the [queryConfig]
   ///
@@ -137,14 +141,14 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// Subsequent updates, whether [DocumentType.standard] or [DocumentType.versioned],
   /// should be amended via a call to [updateDocument]
   ///
-  /// [path] is the equivalent of [DocumentId.path], so will be something like
+  /// [documentClass] is the equivalent of [DocumentId.documentClass], so will be something like
   ///  the class / table name used by the [DataProvider]
   ///
   /// There are occasions where it is necessary to explicitly select which delegate
   /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
   /// the [PDataProvider.defaultDelegate] is used.
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
@@ -204,14 +208,12 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   InstanceConfig get instanceConfig => _instanceConfig;
 
-  /// The key to look up the item id of a document
-  /// Back4App for example, uses 'objectId'
-  String get itemIdKey => 'objectId';
-
   Authenticator get authenticator {
     if (_authenticator == null) {
-      throw PreceptException(
-          "Authenticator not constructed, has 'createAuthenticator' been set?");
+      String msg =
+          'Authenticator not constructed, has \'createAuthenticator\' been set?';
+      logType(this.runtimeType).e(msg);
+      throw PreceptException(msg);
     }
     return _authenticator!;
   }
@@ -299,13 +301,13 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   /// See [DataProvider.createDocument]
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
-    return await _selectDelegate(useDelegate)
-        .createDocument(path: path, data: data, documentIdKey: itemIdKey);
+    return await _selectDelegate(useDelegate).createDocument(
+        documentClass: documentClass, data: data, documentIdKey: objectIdKey);
   }
 
   Future<ReadResult> executeFunction({
@@ -332,7 +334,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// Once a document has been created, it should be possible to create a unique id for it
   /// from its data, but the manner of doing so is implementation specific.
   DocumentId documentIdFromData(Map<String, dynamic> data) {
-    return DocumentId(path: 'unknown', itemId: 'unknown');
+    return DocumentId(documentClass: 'unknown', objectId: 'unknown');
   }
 
   /// Combines variable values from 3 possible sources. Order of precedence is:
@@ -446,6 +448,10 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   @override
   String get sessionTokenKey => 'X-Parse-Session-Token';
+
+  /// The property name for the field which provides a document's unique id
+  @override
+  String get objectIdKey => 'objectId';
 }
 
 /// When operating within a session, the addition of a session token is implementation specific
@@ -531,7 +537,7 @@ class NoDataProvider implements DataProvider {
 
   @override
   Future<CreateResult> createDocument({
-    required String path,
+    required String documentClass,
     required Map<String, dynamic> data,
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
@@ -582,4 +588,8 @@ class NoDataProvider implements DataProvider {
     // TODO: implement executeFunction
     throw UnimplementedError();
   }
+
+  @override
+  // TODO: implement objectIdKey
+  String get objectIdKey => throw UnimplementedError();
 }

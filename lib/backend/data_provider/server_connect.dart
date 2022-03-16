@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart' as dio;
 import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_script/data/provider/document_id.dart';
 
 /// A wrapper for a GraphQL / HttpClient, to enable mocking
 abstract class ServerConnect {}
@@ -20,6 +21,7 @@ abstract class RestServerConnect extends ServerConnect {
   Future<dio.Response> update(
     InstanceConfig instanceConfig,
     String relativeUrl,
+    DocumentId documentId,
     Map<String, dynamic> data,
   );
 
@@ -69,6 +71,7 @@ class DefaultRestServerConnect implements RestServerConnect {
   Future<dio.Response> update(
     InstanceConfig instanceConfig,
     String relativeUrl,
+    DocumentId documentId,
     Map<String, dynamic> data,
   ) async {
     final options = dio.BaseOptions(
@@ -77,7 +80,8 @@ class DefaultRestServerConnect implements RestServerConnect {
       validateStatus: (c) => c == 200,
     );
 
-    return await client(options).put(relativeUrl, data: data);
+    return await client(options)
+        .put('$relativeUrl/${documentId.objectId}', data: data);
   }
 
   Future<dio.Response> executeFunction(

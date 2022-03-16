@@ -56,8 +56,6 @@ void main() {
       // given
       final providerConfig = PDataProvider(
           instanceConfig: PInstance(group: 'myApp', instance: 'dev'));
-      final instanceConfig =
-          dataProviderLibrary.appConfig.instanceConfig(providerConfig);
       // when
       dataProviderLibrary.register(type: 'default', builder: _defaultBuilder);
       // then
@@ -74,9 +72,6 @@ void main() {
       final providerConfig2 = PDataProvider(
         instanceConfig: PInstance(group: 'refApp', instance: 'dev'),
       );
-
-      final instanceConfig1 =
-          dataProviderLibrary.appConfig.instanceConfig(providerConfig1);
 
       // when
       dataProviderLibrary.register(
