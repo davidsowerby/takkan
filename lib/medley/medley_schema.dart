@@ -16,6 +16,7 @@ final PSchema medleySchema0 = PSchema(
   version: PVersion(number: 0),
   documents: {
     'Person': PDocument(fields: {
+      'firstName': PString(),
       'age': PInteger(validations: [
         VInteger.greaterThan(0),
         VInteger.lessThan(100),
@@ -35,11 +36,14 @@ final PSchema medleySchema0 = PSchema(
 /// - Person.height : validation added
 /// - Person.siblings : validation removed
 /// - Person.first name : field added
+///
+/// TODO: require authentication
 final PSchema medleySchema1 = PSchema(
   name: 'medley',
   version: PVersion(number: 1, deprecated: [0]),
   documents: {
     'Person': PDocument(fields: {
+      'firstName': PString(),
       'age': PInteger(validations: [
         VInteger.greaterThan(0),
         VInteger.lessThan(128),
@@ -49,7 +53,22 @@ final PSchema medleySchema1 = PSchema(
         VInteger.lessThan(300),
       ]),
       'siblings': PInteger(validations: []),
-      'first name': PString(),
+    }),
+    'Issue': PDocument(fields: {
+      'title': PString(),
+      'description': PString(
+        validations: [
+          VString.longerThan(5),
+          VString.shorterThan(128),
+        ],
+      ),
+      'weight': PInteger(
+        validations: [
+          VInteger.greaterThan(0),
+          VInteger.lessThan(6),
+        ],
+      ),
+      'state': PString(),
     })
   },
 );
