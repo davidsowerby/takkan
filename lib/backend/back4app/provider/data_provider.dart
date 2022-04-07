@@ -15,7 +15,8 @@ class Back4AppDataProvider extends DefaultDataProvider<PDataProvider> {
         );
 
   DocumentId documentIdFromData(Map<String, dynamic> data) {
-    return DocumentId(path: data['__typename'], itemId: data['objectId']);
+    return DocumentId(
+        documentClass: data['__typename'], objectId: data['objectId']);
   }
 
   Future<Authenticator> createAuthenticator() async {

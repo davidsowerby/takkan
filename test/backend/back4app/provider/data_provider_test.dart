@@ -1,13 +1,16 @@
 import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
 import 'package:precept_backend/backend/app/app_config.dart';
+import 'package:precept_backend/backend/app/app_config_loader.dart';
 import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_backend/backend/data_provider/result.dart';
 import 'package:precept_medley_script/medley/medley_script.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
 
+/// Note: This uses the precept-dev instance of Back4App and therefore needs
+/// precept.json to be set up for it (but excluded from Git)
 void main() async {
   AppConfigFileLoader loader = AppConfigFileLoader();
   AppConfig appConfig = await loader.load();

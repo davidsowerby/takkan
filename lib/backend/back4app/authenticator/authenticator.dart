@@ -4,7 +4,7 @@ import 'package:precept_back4app_client/backend/back4app/provider/data_provider.
 import 'package:precept_backend/backend/user/authenticator.dart';
 import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/query.dart';
 
 class Back4AppAuthenticator
     extends Authenticator<PDataProvider, ParseUser, Back4AppDataProvider> {

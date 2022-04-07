@@ -1,7 +1,7 @@
 import 'package:precept_back4app_client/backend/back4app/provider/graphql_delegate.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/field_selector.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -46,7 +46,7 @@ void main() {
 }''';
       // when
       final actual = builder?.buildReadGQL(
-          DocumentId(path: 'PreceptScript', itemId: 'test'),
+          DocumentId(documentClass: 'PreceptScript', objectId: 'test'),
           FieldSelector(fields: ['locale']),
           pScriptSchema0);
       // then
@@ -67,7 +67,7 @@ void main() {
 }''';
       // when
       final actual = builder?.buildUpdateGQL(
-          DocumentId(path: 'PreceptScript', itemId: 'test'),
+          DocumentId(documentClass: 'PreceptScript', objectId: 'test'),
           FieldSelector(fields: ['locale']),
           pScriptSchema0);
       // then

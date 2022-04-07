@@ -23,8 +23,8 @@ class Back4AppRestDelegate extends DefaultRestDataProviderDelegate {
       return DeleteResult(
         data: response.data,
         success: true,
-        path: documentId.path,
-        itemId: documentId.itemId,
+        documentClass: documentId.documentClass,
+        objectId: documentId.objectId,
       );
     }
     throw APIException(

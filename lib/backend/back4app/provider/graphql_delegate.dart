@@ -5,8 +5,8 @@ import 'package:precept_backend/backend/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/util/string.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/query/field_selector.dart';
-import 'package:precept_script/query/query.dart';
+import 'package:precept_script/data/select/field_selector.dart';
+import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -49,8 +49,8 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     return UpdateResult(
       data: queryResult.data ?? {},
       success: true,
-      path: 'PreceptScript',
-      itemId: '??',
+      documentClass: 'PreceptScript',
+      objectId: '??',
     );
   }
 
@@ -104,100 +104,101 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     return ReadResultItem(
       data: candidate!['script'],
       success: true,
-      path: 'PreceptScript',
+      documentClass: 'PreceptScript',
       queryReturnType: QueryReturnType.futureItem,
     );
   }
 
-  @override
-  Future<ReadResultItem> readDocument({
-    required DocumentId documentId,
-    FieldSelector fieldSelector = const FieldSelector(),
-    FetchPolicy? fetchPolicy,
-  }) async {
-    final PDocument schema =
-        parent.documentSchema(documentSchemaName: documentId.path);
-    final builder = GraphQLScriptBuilder();
-    final script = builder.buildReadGQL(documentId, fieldSelector, schema);
-    final queryOptions = QueryOptions(
-      document: gql(script),
-      variables: {'id': documentId.itemId},
-      fetchPolicy: fetchPolicy,
-    );
-    final QueryResult response = await client.query(queryOptions);
-    final Map<String, dynamic> data = response.data?[builder.selectionSet];
-    data.remove('__typename');
-    return ReadResultItem(
-      success: false,
-      data: data,
-      path: documentId.path,
-      queryReturnType: QueryReturnType.futureItem,
-    );
-  }
+  // @override
+  // Future<ReadResultItem> readDocument({
+  //   required DocumentId documentId,
+  //   FieldSelector fieldSelector = const FieldSelector(),
+  //   FetchPolicy? fetchPolicy,
+  // }) async {
+  //   final PDocument schema =
+  //       parent.documentSchema(documentSchemaName: documentId.documentClass);
+  //   final builder = GraphQLScriptBuilder();
+  //   final script = builder.buildReadGQL(documentId, fieldSelector, schema);
+  //   final queryOptions = QueryOptions(
+  //     document: gql(script),
+  //     variables: {'id': documentId.objectId},
+  //     fetchPolicy: fetchPolicy,
+  //   );
+  //   final QueryResult response = await client.query(queryOptions);
+  //   final Map<String, dynamic> data = response.data?[builder.selectionSet];
+  //   data.remove('__typename');
+  //   return ReadResultItem(
+  //     success: false,
+  //     data: data,
+  //     documentClass: documentId.documentClass,
+  //     queryReturnType: QueryReturnType.futureItem,
+  //   );
+  // }
 
-  @override
-  assembleScript(
-      PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
-    // TODO: implement assembleScript
-    throw UnimplementedError();
-  }
+  // @override
+  // assembleScript(
+  //     PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
+  //   // TODO: implement assembleScript
+  //   throw UnimplementedError();
+  // }
 
-  @override
-  Future<CreateResult> createDocument({
-    required String path,
-    required Map<String, dynamic> data,
-    required String documentIdKey,
-    FieldSelector fieldSelector = const FieldSelector(),
-  }) async {
-    final PDocument schema = parent.documentSchema(documentSchemaName: path);
-    final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
-    final script = builder.buildCreateGQL(path, fieldSelector, schema);
-    final strippedData = Map<String, dynamic>.from(data);
-    strippedData.remove('id');
-    strippedData.remove('objectId');
-    final Map<String, dynamic> input = {'input': strippedData};
+  // @override
+  // Future<CreateResult> createDocument({
+  //   required String documentClass,
+  //   required Map<String, dynamic> data,
+  //   required String documentIdKey,
+  //   FieldSelector fieldSelector = const FieldSelector(),
+  // }) async {
+  //   final PDocument schema =
+  //       parent.documentSchema(documentSchemaName: documentClass);
+  //   final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
+  //   final script = builder.buildCreateGQL(documentClass, fieldSelector, schema);
+  //   final strippedData = Map<String, dynamic>.from(data);
+  //   strippedData.remove('id');
+  //   strippedData.remove('objectId');
+  //   final Map<String, dynamic> input = {'input': strippedData};
+  //
+  //   QueryResult queryResult = await _executeQuery(script, input);
+  //   if (queryResult.hasException) {
+  //     throw APIException(
+  //         message: queryResult.exception.toString(), statusCode: -1);
+  //   }
+  //   final Map<String, dynamic> returnedData =
+  //       queryResult.data![builder.methodName][builder.selectionSet];
+  //   return CreateResult(
+  //     data: returnedData,
+  //     success: true,
+  //     documentClass: documentClass,
+  //     objectId: returnedData['objectId'],
+  //   );
+  // }
 
-    QueryResult queryResult = await _executeQuery(script, input);
-    if (queryResult.hasException) {
-      throw APIException(
-          message: queryResult.exception.toString(), statusCode: -1);
-    }
-    final Map<String, dynamic> returnedData =
-        queryResult.data![builder.methodName][builder.selectionSet];
-    return CreateResult(
-      data: returnedData,
-      success: true,
-      path: path,
-      itemId: returnedData['objectId'],
-    );
-  }
-
-  @override
-  Future<UpdateResult> updateDocument({
-    required DocumentId documentId,
-    FieldSelector fieldSelector = const FieldSelector(),
-    required Map<String, dynamic> data,
-  }) async {
-    final PDocument schema =
-        parent.documentSchema(documentSchemaName: documentId.path);
-    final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
-    final script = builder.buildUpdateGQL(documentId, fieldSelector, schema);
-
-    data.remove('objectId');
-    final Map<String, dynamic> input = {
-      'input': {'id': documentId.itemId, 'fields': data}
-    };
-    QueryResult queryResult = await _executeQuery(script, input);
-    final Map<String, dynamic> returnedData =
-        queryResult.data![builder.methodName][builder.selectionSet];
-    returnedData.remove('__typename');
-    return UpdateResult(
-      success: true,
-      path: documentId.path,
-      data: returnedData,
-      itemId: documentId.itemId,
-    );
-  }
+  // @override
+  // Future<UpdateResult> updateDocument({
+  //   required DocumentId documentId,
+  //   FieldSelector fieldSelector = const FieldSelector(),
+  //   required Map<String, dynamic> data,
+  // }) async {
+  //   final PDocument schema =
+  //       parent.documentSchema(documentSchemaName: documentId.documentClass);
+  //   final GraphQLScriptBuilder builder = GraphQLScriptBuilder();
+  //   final script = builder.buildUpdateGQL(documentId, fieldSelector, schema);
+  //
+  //   data.remove('objectId');
+  //   final Map<String, dynamic> input = {
+  //     'input': {'id': documentId.objectId, 'fields': data}
+  //   };
+  //   QueryResult queryResult = await _executeQuery(script, input);
+  //   final Map<String, dynamic> returnedData =
+  //       queryResult.data![builder.methodName][builder.selectionSet];
+  //   returnedData.remove('__typename');
+  //   return UpdateResult(
+  //     success: true,
+  //     documentClass: documentId.documentClass,
+  //     data: returnedData,
+  //     objectId: documentId.objectId,
+  //   );
+  // }
 
   Future<QueryResult> _executeQuery(
       String script, Map<String, dynamic> variables,
@@ -341,8 +342,8 @@ class GraphQLScriptBuilder {
     PDocument schema,
   ) {
     StringBuffer buf = StringBuffer();
-    buf.writeln('query Get${documentId.path}(\$id:ID!) {');
-    selectionSet = decapitalize(documentId.path);
+    buf.writeln('query Get${documentId.documentClass}(\$id:ID!) {');
+    selectionSet = decapitalize(documentId.documentClass);
     methodName = selectionSet;
     buf.writeln('$selectionSet(id: \$id) {');
     addFields(buf, fieldSelector, schema, '');
@@ -358,9 +359,9 @@ class GraphQLScriptBuilder {
   ) {
     StringBuffer buf = StringBuffer();
     buf.writeln(
-        'mutation Update${documentId.path} (\$input: Update${documentId.path}Input!){');
-    selectionSet = decapitalize(documentId.path);
-    methodName = 'update${documentId.path}';
+        'mutation Update${documentId.documentClass} (\$input: Update${documentId.documentClass}Input!){');
+    selectionSet = decapitalize(documentId.documentClass);
+    methodName = 'update${documentId.documentClass}';
     buf.writeln('$methodName(input: \$input){');
     buf.writeln('$selectionSet{');
     addFields(buf, fieldSelector, schema, 'updatedAt');
