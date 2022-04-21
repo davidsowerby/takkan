@@ -1,5 +1,5 @@
-name: precept_medley_app
-description: Reference app for Precept
+name: takkan_medley_app
+description: Reference app for Takkan
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.15.1 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,14 +33,16 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  precept_client:
-    path: ../precept_client
-  precept_script:
-    path: ../precept_script
-  precept_backend:
-    path: ../precept_backend
-  precept_back4app_client:
-    path: ../precept_back4app_client
+  takkan_client:
+    path: ../takkan_client
+  takkan_script:
+    path: ../takkan_script
+  takkan_backend:
+    path: ../takkan_backend
+  takkan_back4app_client:
+    path: ../takkan_back4app_client
+  takkan_medley_script:
+    path: ../takkan_medley_script
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +67,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - precept.json
+    - takkan.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 
-import 'package:precept_client/app/app.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_medley_app/app/config/precept.dart';
-import 'package:precept_script/loader/loaders.dart';
+import 'package:takkan_medley_app/app/config/takkan.dart';
+import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:takkan_client/app/app.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_script/loader/loaders.dart';
 
 void main(List<String> args) async {
-  await precept.init(
-    commandLineArguments: args,
+
+  await takkan.init(
+    commandLineArguments: args=['stage=test'],
     loaders: [
-      DirectPreceptLoader(script: myScript),
+      DirectTakkanLoader(script: myScript),
     ],
   );
+  Back4App.register();
   final ThemeData theme = ThemeData(
     primarySwatch: Colors.green,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
-  runApp(PreceptApp(theme: theme));
+  runApp(TakkanApp(theme: theme));
 }
 
 class MyHomePage extends StatefulWidget {
