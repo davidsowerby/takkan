@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:precept_medley_script/medley/medley_script.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/example/kitchen_sink.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:test/test.dart';
@@ -25,7 +24,7 @@ void main() {
     tearDown(() {});
     test('script to JSON map and back', () async {
       // given
-      PScript script = kitchenSinkScript;
+      PScript script = medleyScript2;
 
       // when
       script.init();
@@ -34,14 +33,14 @@ void main() {
       PScript script2 = PScript.fromJson(jsonMap);
       final tracker = script2.init().initWalker.tracker;
 
-      expect(jsonMap['nameLocale'], 'Kitchen Sink:en_GB');
-      expect(script2.routes.length, 8);
+      expect(jsonMap['nameLocale'], 'Medley:en_GB');
+      expect(script2.routes.length, script.routes.length);
 
       expect(nullsInTracker(tracker), 0);
       final c0 = script2.routes['/'];
       expect(c0?.routeMap.keys, contains('/'));
 
-      expect(c0?.title, "Home Page");
+      expect(c0?.title, "Home");
       expect(c0?.children.length, 1);
 
       File original = File('/home/david/temp/original.json');
