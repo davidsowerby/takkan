@@ -1,9 +1,10 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_list.dart';
+import 'package:precept_script/data/select/data_item.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
+import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/list_view.dart';
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/text.dart';
@@ -12,7 +13,7 @@ import 'package:precept_script/script/version.dart';
 
 import 'medley_schema.dart';
 
-final List<PScript> medleyScript = [
+final List<Script> medleyScript = [
   medleyScript0,
   medleyScript1,
   medleyScript2,
@@ -21,57 +22,63 @@ final List<PScript> medleyScript = [
 /// Changes:
 /// - Authentication added (see [medleySchema1])
 /// - Validation changes (see [medleySchema1])
-final PScript medleyScript2 = PScript(
+final Script medleyScript2 = Script(
   name: 'Medley',
-  version: PVersion(number: 1, label: '0.0.1-draft'),
+  version: Version(number: 1, label: '0.0.1-draft'),
   schema: medleySchema[1],
-  dataProvider: PDataProvider(
-    instanceConfig: PInstance(group: 'main'),useAuthenticator: true,
+  dataProvider: DataProvider(
+    instanceConfig: AppInstance(group: 'main'),
+    useAuthenticator: true,
   ),
   pages: [
-    PPageStatic(caption: 'Home', routes: [
+    PageStatic(caption: 'Home', routes: [
       '/'
     ], children: [
-      PText(
-        readTraitName: PText.title,
-        staticData: 'Precept',
-      ),
-      PText(
-        readTraitName: PText.subtitle,
-        staticData: 'Proof of Concept',
-      ),
-      PText(
-        readTraitName: PText.strapText,
-        staticData: 'A brief introduction to faster Flutter development',
-      ),
-      PNavButton(
-        staticData: 'OK',
-        route: 'document/Issue/Top Issue',
-      ),
+      Group(children: [
+        Text(
+          readTraitName: Text.title,
+          staticData: 'Precept',
+        ),
+        Text(
+          readTraitName: Text.subtitle,
+          staticData: 'Proof of Concept',
+        ),
+        Text(
+          readTraitName: Text.strapText,
+          staticData: 'A brief introduction to faster Flutter development',
+        ),
+        NavButton(
+          staticData: 'OK',
+          route: 'document/Issue/Top Issue',
+        ),
+      ])
     ]),
-    PPage(controlEdit: ControlEdit.pagesOnly,
+    Page(
+      controlEdit: ControlEdit.pagesOnly,
       caption: 'Issue',
       documentClass: 'Issue',
-      dataSelectors: [PSingleById(objectId: 'JJoGIErtzn',tag: 'Top Issue')],
+      dataSelectors: [DataItemById(objectId: 'JJoGIErtzn', tag: 'Top Issue')],
       children: [
-        PText(
-          property: 'title',
-          caption: 'Title',
-        ),
-        PText(
-          property: 'description',
-          caption: 'Description',
-        ),
-        PText(
-          property: 'weight',
-          caption: 'Weight',
-        ),
+        Group(children: [
+          Text(
+            property: 'title',
+            caption: 'Title',
+          ),
+          Text(
+            property: 'description',
+            caption: 'Description',
+          ),
+          Text(
+            property: 'weight',
+            caption: 'Weight',
+          ),
+        ])
       ],
     ),
-    PPage(caption: 'Issues', dataSelectors: [
-      PMulti(caption: 'All Issues', tag: 'allIssues'),
+    Page(caption: 'Issues', dataSelectors: [
+      DataList(caption: 'All Issues', tag: 'allIssues'),
     ], children: [
-      PListView(
+      ListView(
         property: 'results',
         titleProperty: 'title',
         subtitleProperty: 'description',
@@ -79,44 +86,44 @@ final PScript medleyScript2 = PScript(
     ])
   ],
 );
-final PScript medleyScript1 = PScript(
+final Script medleyScript1 = Script(
   name: 'Medley',
-  version: PVersion(number: 1, label: '0.0.1-draft'),
+  version: Version(number: 1, label: '0.0.1-draft'),
   schema: medleySchema[0],
-  dataProvider: PDataProvider(
-    instanceConfig: PInstance(group: 'main', instance: 'dev'),
+  dataProvider: DataProvider(
+    instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    PPageStatic(caption: 'Home', routes: [
+    PageStatic(caption: 'Home', routes: [
       '/'
     ], children: [
-      PText(
-        readTraitName: PText.title,
+      Text(
+        readTraitName: Text.title,
         staticData: 'Precept',
       ),
-      PText(
-        readTraitName: PText.subtitle,
+      Text(
+        readTraitName: Text.subtitle,
         staticData: 'Proof of Concept',
       ),
-      PText(
-        readTraitName: PText.strapText,
+      Text(
+        readTraitName: Text.strapText,
         staticData: 'A brief introduction to faster Flutter development',
       ),
-      PNavButton(
+      NavButton(
         staticData: 'OK',
         route: 'person',
       ),
     ]),
-    PPageStatic(
+    PageStatic(
       caption: 'Person',
       routes: ['person'],
       children: [
-        PText(
+        Text(
           property: 'firstName',
           caption: 'First Name',
           staticData: 'Michael',
         ),
-        PText(
+        Text(
           property: 'age',
           caption: 'age',
           staticData: '17',
@@ -134,59 +141,59 @@ final PScript medleyScript1 = PScript(
 /// - age field,  caption is not specified, should take up property name
 ///
 ///
-final PScript medleyScript0 = PScript(
+final Script medleyScript0 = Script(
   name: 'Medley',
-  version: PVersion(number: 0, label: '0.0.0-draft'),
+  version: Version(number: 0, label: '0.0.0-draft'),
   schema: medleySchema[0],
-  dataProvider: PDataProvider(
-    instanceConfig: PInstance(group: 'main', instance: 'dev'),
+  dataProvider: DataProvider(
+    instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    PPageStatic(caption: 'Home', routes: [
+    PageStatic(caption: 'Home', routes: [
       '/'
     ], children: [
-      PText(
-        readTraitName: PText.title,
+      Text(
+        readTraitName: Text.title,
         staticData: 'Precept',
       ),
-      PText(
-        readTraitName: PText.subtitle,
+      Text(
+        readTraitName: Text.subtitle,
         staticData: 'Proof of Concept',
       ),
-      PText(
-        readTraitName: PText.strapText,
+      Text(
+        readTraitName: Text.strapText,
         staticData: 'A brief introduction to faster Flutter development',
       ),
-      PNavButton(
+      NavButton(
         staticData: 'OK',
         route: 'persons',
       ),
     ]),
-    PPageStatic(
+    PageStatic(
       caption: 'Person',
       routes: ['person'],
       children: [
-        PText(
+        Text(
           property: 'firstName',
           caption: 'First Name',
           staticData: 'Michael',
         ),
-        PText(
+        Text(
           property: 'age',
           caption: 'age',
           staticData: '17',
         ),
       ],
     ),
-    PPageStatic(caption: 'Person', routes: [
+    PageStatic(caption: 'Person', routes: [
       'persons'
     ], children: [
-      PText(
+      Text(
         property: 'firstName',
         caption: 'First Name',
         staticData: 'Michael',
       ),
-      PText(
+      Text(
         property: 'age',
         caption: 'age',
         staticData: '17',
