@@ -6,7 +6,7 @@ part of 'rest_query.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) => PRestQuery(
+RestQuery _$RestQueryFromJson(Map<String, dynamic> json) => RestQuery(
       path: json['path'] as String?,
       variables: json['variables'] as Map<String, dynamic>? ?? const {},
       propertyReferences: (json['propertyReferences'] as List<dynamic>?)
@@ -25,8 +25,7 @@ PRestQuery _$PRestQueryFromJson(Map<String, dynamic> json) => PRestQuery(
               QueryReturnType.futureList,
     );
 
-Map<String, dynamic> _$PRestQueryToJson(PRestQuery instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$RestQueryToJson(RestQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],

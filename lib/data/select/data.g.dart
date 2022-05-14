@@ -6,7 +6,7 @@ part of 'data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPageCustom _$PPageCustomFromJson(Map<String, dynamic> json) => PPageCustom(
+PageCustom _$PageCustomFromJson(Map<String, dynamic> json) => PageCustom(
       routes:
           (json['routes'] as List<dynamic>).map((e) => e as String).toList(),
       properties: json['properties'] as Map<String, dynamic>? ?? const {},
@@ -15,7 +15,7 @@ PPageCustom _$PPageCustomFromJson(Map<String, dynamic> json) => PPageCustom(
       caption: json['caption'] as String,
     );
 
-Map<String, dynamic> _$PPageCustomToJson(PPageCustom instance) =>
+Map<String, dynamic> _$PageCustomToJson(PageCustom instance) =>
     <String, dynamic>{
       'routes': instance.routes,
       'properties': instance.properties,

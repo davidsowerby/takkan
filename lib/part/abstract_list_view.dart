@@ -6,7 +6,7 @@ import 'package:precept_script/part/part.dart';
 /// will use these to get and display the data for an item
 ///
 /// [isQuery] should be set to true if the data displayed is directly from a data-select
-abstract class PAbstractListView extends PPart {
+abstract class AbstractListView extends Part {
   static const String defaultReadTrait = 'list-read-default';
   static const String defaultEditTrait = 'list-edit-default';
   static const String defaultItemReadTrait = 'list-item-read-default';
@@ -14,14 +14,13 @@ abstract class PAbstractListView extends PPart {
   final String titleProperty;
   final String subtitleProperty;
 
-
-  PAbstractListView({
+  AbstractListView({
     this.titleProperty = 'title',
     this.subtitleProperty = 'subtitle',
     bool readOnly = false,
     double? particleHeight,
     String? caption,
-    PHelp? help,
+    Help? help,
     String? staticData,
     String? property,
     String readTraitName = 'list-read-default',

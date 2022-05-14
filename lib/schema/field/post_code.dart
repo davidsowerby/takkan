@@ -8,25 +8,25 @@ import 'package:validators/validators.dart';
 part 'post_code.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PPostCode extends PField<PostCodeValidation, PostCode> {
+class FPostCode extends Field<PostCodeValidation, PostCode> {
   Type get modelType => PostCode;
 
-  PPostCode({
+  FPostCode({
     PostCode? defaultValue,
     List<PostCodeValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
         );
 
-  factory PPostCode.fromJson(Map<String, dynamic> json) =>
-      _$PPostCodeFromJson(json);
+  factory FPostCode.fromJson(Map<String, dynamic> json) =>
+      _$FPostCodeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PPostCodeToJson(this);
+  Map<String, dynamic> toJson() => _$FPostCodeToJson(this);
 }
 
 // TODO change this to the freezed method of VInteger / VString

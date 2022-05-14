@@ -8,25 +8,25 @@ part 'geo_point.g.dart';
 
 /// see [GeoPoint]
 @JsonSerializable(explicitToJson: true)
-class PGeoPoint extends PField<GeoPointValidation, GeoPoint> {
+class FGeoPoint extends Field<GeoPointValidation, GeoPoint> {
   Type get modelType => GeoPoint;
 
-  PGeoPoint({
+  FGeoPoint({
     GeoPoint? defaultValue,
     List<GeoPointValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    defaultValue: defaultValue,
+          defaultValue: defaultValue,
           validations: validations,
           required: required,
           readOnly: readOnly,
         );
 
-  factory PGeoPoint.fromJson(Map<String, dynamic> json) =>
-      _$PGeoPointFromJson(json);
+  factory FGeoPoint.fromJson(Map<String, dynamic> json) =>
+      _$FGeoPointFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGeoPointToJson(this);
+  Map<String, dynamic> toJson() => _$FGeoPointToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

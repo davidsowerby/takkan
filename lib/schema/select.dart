@@ -3,12 +3,12 @@ import 'package:precept_script/schema/field/field.dart';
 
 // part 'select.g.dart';
 
-abstract class PSelectField extends PField {
-  PSelectField({
+abstract class SelectField extends Field {
+  SelectField({
     IsReadOnly readOnly = IsReadOnly.inherited,
     required bool required,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           required: required,
         );
 }

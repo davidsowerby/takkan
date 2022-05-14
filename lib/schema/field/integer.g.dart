@@ -6,7 +6,7 @@ part of 'integer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PInteger _$PIntegerFromJson(Map<String, dynamic> json) => PInteger(
+FInteger _$FIntegerFromJson(Map<String, dynamic> json) => FInteger(
       defaultValue: json['defaultValue'] as int?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => VInteger.fromJson(e as Map<String, dynamic>))
@@ -15,7 +15,7 @@ PInteger _$PIntegerFromJson(Map<String, dynamic> json) => PInteger(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PIntegerToJson(PInteger instance) {
+Map<String, dynamic> _$FIntegerToJson(FInteger instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

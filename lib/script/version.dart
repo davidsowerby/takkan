@@ -1,23 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
 
 part 'version.g.dart';
 
-/// Used by [PScript] and [PSchema] to record current and deprecated versions
+/// Used by [Script] and [Schema] to record current and deprecated versions
 @JsonSerializable(explicitToJson: true)
-class PVersion {
+class Version {
   final int number;
   final String label;
   final List<int> deprecated;
 
-  const PVersion(
+  const Version(
       {required this.number, this.label = '', this.deprecated = const []});
 
-  factory PVersion.fromJson(Map<String, dynamic> json) =>
-      _$PVersionFromJson(json);
+  factory Version.fromJson(Map<String, dynamic> json) =>
+      _$VersionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PVersionToJson(this);
+  Map<String, dynamic> toJson() => _$VersionToJson(this);
 
   /// current version [number], combined with [deprecated]
   List<int> get activeVersions {

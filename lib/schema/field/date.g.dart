@@ -6,7 +6,7 @@ part of 'date.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PDate _$PDateFromJson(Map<String, dynamic> json) => PDate(
+FDate _$FDateFromJson(Map<String, dynamic> json) => FDate(
       defaultValue: json['defaultValue'] == null
           ? null
           : DateTime.parse(json['defaultValue'] as String),
@@ -17,7 +17,7 @@ PDate _$PDateFromJson(Map<String, dynamic> json) => PDate(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PDateToJson(PDate instance) {
+Map<String, dynamic> _$FDateToJson(FDate instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

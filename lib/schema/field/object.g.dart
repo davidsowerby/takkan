@@ -6,7 +6,7 @@ part of 'object.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PJsonObject _$PJsonObjectFromJson(Map<String, dynamic> json) => PJsonObject(
+FObject _$FObjectFromJson(Map<String, dynamic> json) => FObject(
       defaultValue: json['defaultValue'] as Map<String, dynamic>?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => ObjectValidation.fromJson(e as Map<String, dynamic>))
@@ -15,7 +15,7 @@ PJsonObject _$PJsonObjectFromJson(Map<String, dynamic> json) => PJsonObject(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PJsonObjectToJson(PJsonObject instance) {
+Map<String, dynamic> _$FObjectToJson(FObject instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

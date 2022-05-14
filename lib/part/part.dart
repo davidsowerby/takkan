@@ -9,7 +9,7 @@ import 'package:precept_script/validation/message.dart';
 
 part 'part.g.dart';
 
-/// Contained within a [PScript] a [PPart] describes a [Part], which presents the data for a single field.
+/// Contained within a [Script] a [Part] describes a [Part], which presents the data for a single field.
 ///
 /// A Part usually presents two different widgets, one for readOnly mode and one for edit mode.
 ///
@@ -28,16 +28,16 @@ part 'part.g.dart';
 /// [height] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 /// [isStatic] - returns true if [staticData] is non-null
 @JsonSerializable(explicitToJson: true)
-class PPart extends PContent {
+class Part extends Content {
   final bool readOnly;
   final String? staticData;
-  final PHelp? help;
+  final Help? help;
   final String? tooltip;
   final double? height;
   final String readTraitName;
   final String? editTraitName;
 
-  PPart(
+  Part(
       {String? caption,
       this.readOnly = false,
       this.height,
@@ -56,10 +56,10 @@ class PPart extends PContent {
           property: property,
         );
 
-  factory PPart.fromJson(Map<String, dynamic> json) => _$PPartFromJson(json);
+  factory Part.fromJson(Map<String, dynamic> json) => _$PartFromJson(json);
 
   @override
-  Map<String, dynamic> toJson() => _$PPartToJson(this);
+  Map<String, dynamic> toJson() => _$PartToJson(this);
 
   DebugNode get debugNode {
     final List<DebugNode> children = List.empty(growable: true);

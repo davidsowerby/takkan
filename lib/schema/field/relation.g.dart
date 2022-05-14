@@ -6,7 +6,7 @@ part of 'relation.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRelation _$PRelationFromJson(Map<String, dynamic> json) => PRelation(
+FRelation _$FRelationFromJson(Map<String, dynamic> json) => FRelation(
       defaultValue: json['defaultValue'] == null
           ? null
           : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
@@ -19,7 +19,7 @@ PRelation _$PRelationFromJson(Map<String, dynamic> json) => PRelation(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PRelationToJson(PRelation instance) {
+Map<String, dynamic> _$FRelationToJson(FRelation instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

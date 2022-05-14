@@ -6,7 +6,7 @@ part of 'post_code.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPostCode _$PPostCodeFromJson(Map<String, dynamic> json) => PPostCode(
+FPostCode _$FPostCodeFromJson(Map<String, dynamic> json) => FPostCode(
       defaultValue: json['defaultValue'] == null
           ? null
           : PostCode.fromJson(json['defaultValue'] as Map<String, dynamic>),
@@ -18,7 +18,7 @@ PPostCode _$PPostCodeFromJson(Map<String, dynamic> json) => PPostCode(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PPostCodeToJson(PPostCode instance) {
+Map<String, dynamic> _$FPostCodeToJson(FPostCode instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

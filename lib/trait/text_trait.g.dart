@@ -6,51 +6,50 @@ part of 'text_trait.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PTextTrait _$PTextTraitFromJson(Map<String, dynamic> json) => PTextTrait(
-      textStyle: $enumDecodeNullable(_$PTextStyleEnumMap, json['textStyle']) ??
-          PTextStyle.bodyText1,
-      textTheme: $enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']) ??
-          PTextTheme.cardCanvas,
-      textAlign: $enumDecodeNullable(_$PTextAlignEnumMap, json['textAlign']) ??
-          PTextAlign.start,
+TextTrait _$TextTraitFromJson(Map<String, dynamic> json) => TextTrait(
+      textStyle: $enumDecodeNullable(_$TextStyleEnumMap, json['textStyle']) ??
+          TextStyle.bodyText1,
+      textTheme: $enumDecodeNullable(_$TextThemeEnumMap, json['textTheme']) ??
+          TextTheme.cardCanvas,
+      textAlign: $enumDecodeNullable(_$TextAlignEnumMap, json['textAlign']) ??
+          TextAlign.start,
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PTextTraitToJson(PTextTrait instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TextTraitToJson(TextTrait instance) => <String, dynamic>{
       'caption': instance.caption,
-      'textStyle': _$PTextStyleEnumMap[instance.textStyle],
-      'textTheme': _$PTextThemeEnumMap[instance.textTheme],
-      'textAlign': _$PTextAlignEnumMap[instance.textAlign],
+      'textStyle': _$TextStyleEnumMap[instance.textStyle],
+      'textTheme': _$TextThemeEnumMap[instance.textTheme],
+      'textAlign': _$TextAlignEnumMap[instance.textAlign],
     };
 
-const _$PTextStyleEnumMap = {
-  PTextStyle.headline1: 'headline1',
-  PTextStyle.headline2: 'headline2',
-  PTextStyle.headline3: 'headline3',
-  PTextStyle.headline4: 'headline4',
-  PTextStyle.headline5: 'headline5',
-  PTextStyle.headline6: 'headline6',
-  PTextStyle.subtitle1: 'subtitle1',
-  PTextStyle.subtitle2: 'subtitle2',
-  PTextStyle.bodyText1: 'bodyText1',
-  PTextStyle.bodyText2: 'bodyText2',
-  PTextStyle.caption: 'caption',
-  PTextStyle.button: 'button',
-  PTextStyle.overline: 'overline',
+const _$TextStyleEnumMap = {
+  TextStyle.headline1: 'headline1',
+  TextStyle.headline2: 'headline2',
+  TextStyle.headline3: 'headline3',
+  TextStyle.headline4: 'headline4',
+  TextStyle.headline5: 'headline5',
+  TextStyle.headline6: 'headline6',
+  TextStyle.subtitle1: 'subtitle1',
+  TextStyle.subtitle2: 'subtitle2',
+  TextStyle.bodyText1: 'bodyText1',
+  TextStyle.bodyText2: 'bodyText2',
+  TextStyle.caption: 'caption',
+  TextStyle.button: 'button',
+  TextStyle.overline: 'overline',
 };
 
-const _$PTextThemeEnumMap = {
-  PTextTheme.cardCanvas: 'cardCanvas',
-  PTextTheme.primary: 'primary',
-  PTextTheme.accent: 'accent',
+const _$TextThemeEnumMap = {
+  TextTheme.cardCanvas: 'cardCanvas',
+  TextTheme.primary: 'primary',
+  TextTheme.accent: 'accent',
 };
 
-const _$PTextAlignEnumMap = {
-  PTextAlign.left: 'left',
-  PTextAlign.right: 'right',
-  PTextAlign.center: 'center',
-  PTextAlign.justify: 'justify',
-  PTextAlign.start: 'start',
-  PTextAlign.end: 'end',
+const _$TextAlignEnumMap = {
+  TextAlign.left: 'left',
+  TextAlign.right: 'right',
+  TextAlign.center: 'center',
+  TextAlign.justify: 'justify',
+  TextAlign.start: 'start',
+  TextAlign.end: 'end',
 };

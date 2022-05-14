@@ -6,24 +6,24 @@ part of 'text.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PText _$PTextFromJson(Map<String, dynamic> json) => PText(
+Text _$TextFromJson(Map<String, dynamic> json) => Text(
       caption: json['caption'] as String?,
       readOnly: json['readOnly'] as bool? ?? false,
       height: (json['height'] as num?)?.toDouble() ?? 60,
       property: json['property'] as String?,
       readTraitName: json['readTraitName'] as String? ?? 'text-read-default',
-      editTraitName: json['editTraitName'] as String? ?? 'PTextBox-default',
+      editTraitName: json['editTraitName'] as String? ?? 'TextBox-default',
       staticData: json['staticData'] as String?,
       help: json['help'] == null
           ? null
-          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+          : Help.fromJson(json['help'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
       tooltip: json['tooltip'] as String?,
     );
 
-Map<String, dynamic> _$PTextToJson(PText instance) => <String, dynamic>{
+Map<String, dynamic> _$TextToJson(Text instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,

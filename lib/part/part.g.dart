@@ -6,7 +6,7 @@ part of 'part.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPart _$PPartFromJson(Map<String, dynamic> json) => PPart(
+Part _$PartFromJson(Map<String, dynamic> json) => Part(
       caption: json['caption'] as String?,
       readOnly: json['readOnly'] as bool? ?? false,
       height: (json['height'] as num?)?.toDouble(),
@@ -16,14 +16,14 @@ PPart _$PPartFromJson(Map<String, dynamic> json) => PPart(
       staticData: json['staticData'] as String?,
       help: json['help'] == null
           ? null
-          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+          : Help.fromJson(json['help'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
       tooltip: json['tooltip'] as String?,
     );
 
-Map<String, dynamic> _$PPartToJson(PPart instance) => <String, dynamic>{
+Map<String, dynamic> _$PartToJson(Part instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,

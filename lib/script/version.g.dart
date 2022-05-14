@@ -6,7 +6,7 @@ part of 'version.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PVersion _$PVersionFromJson(Map<String, dynamic> json) => PVersion(
+Version _$VersionFromJson(Map<String, dynamic> json) => Version(
       number: json['number'] as int,
       label: json['label'] as String? ?? '',
       deprecated: (json['deprecated'] as List<dynamic>?)
@@ -15,7 +15,7 @@ PVersion _$PVersionFromJson(Map<String, dynamic> json) => PVersion(
           const [],
     );
 
-Map<String, dynamic> _$PVersionToJson(PVersion instance) => <String, dynamic>{
+Map<String, dynamic> _$VersionToJson(Version instance) => <String, dynamic>{
       'number': instance.number,
       'label': instance.label,
       'deprecated': instance.deprecated,

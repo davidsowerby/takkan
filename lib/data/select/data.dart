@@ -2,15 +2,15 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/panel/panel.dart';
 
 part 'data.g.dart';
 
 /// [pageLength] is the number of documents to be returned for each data-select 'page'
-/// Relevant ony to [PMulti], and just returns 1 from [PSingle]
+/// Relevant ony to [DataList], and just returns 1 from [DataItem]
 ///
 /// [caption] can be used in the display and is therefore subject to translation
 /// for multi-lingual apps, but [tag] is used in the construction of the route
@@ -27,10 +27,10 @@ part 'data.g.dart';
 ///
 /// These are:
 ///
-/// [isSingle]
-/// [isMulti]
+/// [isItem]
+/// [isList]
 /// [isStatic]
-abstract class PData {
+abstract class Data {
   String get tag;
 
   String? get caption;
@@ -39,26 +39,26 @@ abstract class PData {
 
   int get pageLength;
 
-  bool get isSingle;
+  bool get isItem;
 
-  bool get isMulti;
+  bool get isList;
 }
 
 /// [properties] is used to specify properties and values as required by the
 /// custom page implementation.  Note that the following getters will also need
 /// values assigned if the defaults are not correct for the intended use:
-/// - [isMulti], [isSingle], [isStatic], [pageLength]
+/// - [isList], [isItem], [isStatic], [pageLength]
 ///
 /// [routes] must contain at least one entry, but multiple routes may be specified
 @JsonSerializable(explicitToJson: true)
-class PPageCustom implements PData {
+class PageCustom implements Data {
   final List<String> routes;
   final Map<String, dynamic> properties;
   final String tag;
   final bool liveConnect;
   final String caption;
 
-  const PPageCustom({
+  const PageCustom({
     required this.routes,
     this.properties = const {},
     this.tag = 'default',
@@ -66,36 +66,32 @@ class PPageCustom implements PData {
     required this.caption,
   });
 
-  factory PPageCustom.fromJson(Map<String, dynamic> json) =>
-      _$PPageCustomFromJson(json);
+  factory PageCustom.fromJson(Map<String, dynamic> json) =>
+      _$PageCustomFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PPageCustomToJson(this);
-
-  @override
-  bool get isMulti => properties['isMulti'] ?? false;
+  Map<String, dynamic> toJson() => _$PageCustomToJson(this);
 
   @override
-  bool get isSingle => properties['isSingle'] ?? true;
+  bool get isList => properties['isMulti'] ?? false;
 
-
+  @override
+  bool get isItem => properties['isSingle'] ?? true;
 
   @override
   int get pageLength => properties['pageLength'] ?? 1;
 }
 
 
-/// Effectively just a marker.  This is the default value for the [PPage.dataSelectors]
-/// and [PPanel.dataSelectors] properties when their respective [PContent.property] is non-null.
-class PProperty implements PData {
-  const PProperty();
+/// Effectively just a marker.  This is the default value for the [Page.dataSelectors]
+/// and [Panel.dataSelectors] properties when their respective [Content.property] is non-null.
+class Property implements Data {
+  const Property();
 
   @override
-  bool get isMulti => false;
+  bool get isList => false;
 
   @override
-  bool get isSingle => false;
-
-
+  bool get isItem => false;
 
   @override
   int get pageLength => 0;
@@ -112,42 +108,42 @@ class PProperty implements PData {
 
 }
 
-class PDataListJsonConverter {
-  static List<PData> fromJson(List<dynamic>? json) {
+class DataListJsonConverter {
+  static List<Data> fromJson(List<dynamic>? json) {
     if (json == null) throw NullThrownError();
-    final List<PData> results = List.empty(growable: true);
+    final List<Data> results = List.empty(growable: true);
     for (Map<String, dynamic> entry in json) {
       final dataType = entry["-data-"];
       switch (dataType) {
-        case 'PSingle':
-          results.add(PSingle.fromJson(entry));
+        case 'DataItem':
+          results.add(DataItem.fromJson(entry));
           break;
-        case 'PSingleById':
-          results.add(PSingleById.fromJson(entry));
+        case 'DataItemById':
+          results.add(DataItemById.fromJson(entry));
           break;
-        case 'PSingleByFunction':
-          results.add(PSingleByFunction.fromJson(entry));
+        case 'DataItemByFunction':
+          results.add(DataItemByFunction.fromJson(entry));
           break;
-        case 'PSingleByFilter':
-          results.add(PSingleByFilter.fromJson(entry));
+        case 'DataItemByFilter':
+          results.add(DataItemByFilter.fromJson(entry));
           break;
-        case 'PSingleByGQL':
-          results.add(PSingleByGQL.fromJson(entry));
+        case 'DataItemByGQL':
+          results.add(DataItemByGQL.fromJson(entry));
           break;
-        case 'PMulti':
-          results.add(PMulti.fromJson(entry));
+        case 'DataList':
+          results.add(DataList.fromJson(entry));
           break;
-        case 'PMultiById':
-          results.add(PMultiById.fromJson(entry));
+        case 'DataListById':
+          results.add(DataListById.fromJson(entry));
           break;
-        case 'PMultiByFunction':
-          results.add(PMultiByFunction.fromJson(entry));
+        case 'DataListByFunction':
+          results.add(DataListByFunction.fromJson(entry));
           break;
-        case 'PMultiByFilter':
-          results.add(PMultiByFilter.fromJson(entry));
+        case 'DataListByFilter':
+          results.add(DataListByFilter.fromJson(entry));
           break;
-        case 'PMultiByGQL':
-          results.add(PMultiByGQL.fromJson(entry));
+        case 'DataListByGQL':
+          results.add(DataListByGQL.fromJson(entry));
           break;
 
         default:
@@ -158,46 +154,47 @@ class PDataListJsonConverter {
     return results;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PData> objectList) {
+  static List<Map<String, dynamic>> toJson(List<Data> objectList) {
     final List<Map<String, dynamic>> results = List.empty(growable: true);
-    for (PData entry in objectList) {
+    for (Data entry in objectList) {
       late Map<String, dynamic> jsonMap;
-      final type=entry.runtimeType;
+      final type = entry.runtimeType;
       switch (type) {
-        case PSingle:
-          jsonMap = (entry as PSingle).toJson();
+        case DataItem:
+          jsonMap = (entry as DataItem).toJson();
           break;
-        case PSingleById:
-          jsonMap = (entry as PSingleById).toJson();
+        case DataItemById:
+          jsonMap = (entry as DataItemById).toJson();
           break;
-        case PSingleByFunction:
-          jsonMap = (entry as PSingleByFunction).toJson();
+        case DataItemByFunction:
+          jsonMap = (entry as DataItemByFunction).toJson();
           break;
-        case PSingleByFilter:
-          jsonMap = (entry as PSingleByFilter).toJson();
+        case DataItemByFilter:
+          jsonMap = (entry as DataItemByFilter).toJson();
           break;
-        case PSingleByGQL:
-          jsonMap = (entry as PSingleByGQL).toJson();
+        case DataItemByGQL:
+          jsonMap = (entry as DataItemByGQL).toJson();
           break;
-        case PMulti:
-          jsonMap = (entry as PMulti).toJson();
+        case DataList:
+          jsonMap = (entry as DataList).toJson();
           break;
-        case PMultiById:
-          jsonMap = (entry as PMultiById).toJson();
+        case DataListById:
+          jsonMap = (entry as DataListById).toJson();
           break;
-        case PMultiByFunction:
-          jsonMap = (entry as PMultiByFunction).toJson();
+        case DataListByFunction:
+          jsonMap = (entry as DataListByFunction).toJson();
           break;
-        case PMultiByFilter:
-          jsonMap = (entry as PMultiByFilter).toJson();
+        case DataListByFilter:
+          jsonMap = (entry as DataListByFilter).toJson();
           break;
-        case PMultiByGQL:
-          jsonMap = (entry as PMultiByGQL).toJson();
+        case DataListByGQL:
+          jsonMap = (entry as DataListByGQL).toJson();
           break;
 
-        default : String msg='${type.toString()} is not recognised';
-        logName('PDataListJsonConverter').e(msg);
-        throw PreceptException(msg);
+        default:
+          String msg = '${type.toString()} is not recognised';
+          logName('PDataListJsonConverter').e(msg);
+          throw PreceptException(msg);
       }
 
       /// Will only need the replace if we use freezed again

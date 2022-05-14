@@ -7,41 +7,51 @@ part 'style.g.dart';
 ///
 /// [textTrait] selects a text style from the [Theme]
 /// [background] sets the background color of the container behind the text, using the current [Theme]
-/// [textTheme] relates to the background in use, see [PTextTheme],
+/// [textTheme] relates to the background in use, see [TextTheme],
 ///
-@JsonSerializable( explicitToJson: true)
-class PHeadingStyle {
-  final PTextTrait textTrait;
-  final PBorder border;
-  final PColor background;
-  final PTextTheme textTheme;
+@JsonSerializable(explicitToJson: true)
+class HeadingStyle {
+  final TextTrait textTrait;
+  final Border border;
+  final Color background;
+  final TextTheme textTheme;
   final double height;
   final double elevation;
 
-  const PHeadingStyle({
-    this.textTrait = const PTextTrait(textStyle: PTextStyle.subtitle1),
-    this.background = PColor.canvas,
-    this.textTheme = PTextTheme.cardCanvas,
+  const HeadingStyle({
+    this.textTrait = const TextTrait(textStyle: TextStyle.subtitle1),
+    this.background = Color.canvas,
+    this.textTheme = TextTheme.cardCanvas,
     this.height = 40,
     this.elevation = 20,
-    this.border=const PBorder(),
+    this.border = const Border(),
   });
 
-  factory PHeadingStyle.fromJson(Map<String, dynamic> json) => _$PHeadingStyleFromJson(json);
+  factory HeadingStyle.fromJson(Map<String, dynamic> json) =>
+      _$HeadingStyleFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PHeadingStyleToJson(this);
+  Map<String, dynamic> toJson() => _$HeadingStyleToJson(this);
 }
 
-
-/// - [PTextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
-/// - [PTextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
-/// - [PTextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
-/// - [PTextTheme.auto] is used to select one of the above depending on the background
+/// - [TextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
+/// - [TextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
+/// - [TextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
+/// - [TextTheme.auto] is used to select one of the above depending on the background
 ///
 
-enum PColor { primary, primaryLight, primaryDark, accent, canvas, card, highlight, hint, error }
+enum Color {
+  primary,
+  primaryLight,
+  primaryDark,
+  accent,
+  canvas,
+  card,
+  highlight,
+  hint,
+  error
+}
 
-enum PBorderShape {
+enum BorderShape {
   roundedRectangle,
   stadium,
   outlineInput,
@@ -58,75 +68,84 @@ enum PBorderShape {
 ///
 /// - [borderName] is the key used to look up the border from [BorderLibrary]
 ///
-/// See also [PBorderDetailed] to define a border from scratch
-@JsonSerializable( explicitToJson: true)
-class PBorder {
-  static const String roundedRectangleThinPrimary="roundedRectangleThinPrimary";
-  static const String roundedRectangleMediumPrimary="roundedRectangleMediumPrimary";
-  static const String roundedRectangleThickPrimary="roundedRectangleThickPrimary";
+/// See also [BorderDetailed] to define a border from scratch
+@JsonSerializable(explicitToJson: true)
+class Border {
+  static const String roundedRectangleThinPrimary =
+      "roundedRectangleThinPrimary";
+  static const String roundedRectangleMediumPrimary =
+      "roundedRectangleMediumPrimary";
+  static const String roundedRectangleThickPrimary =
+      "roundedRectangleThickPrimary";
   final String borderName;
 
-  const PBorder({this.borderName = 'roundedRectangleMediumPrimary'});
+  const Border({this.borderName = 'roundedRectangleMediumPrimary'});
 
-  factory PBorder.fromJson(Map<String, dynamic> json) => _$PBorderFromJson(json);
+  factory Border.fromJson(Map<String, dynamic> json) => _$BorderFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PBorderToJson(this);
+  Map<String, dynamic> toJson() => _$BorderToJson(this);
 }
 
-/// A detailed border definition.  See also [PBorder] for predefined borders.
+/// A detailed border definition.  See also [Border] for predefined borders.
 ///
 /// - [shape] selects the required shape, as defined by Flutter
-/// - [side] a single side is defined for all [shape]s except [PBorderShape.directional] and [PBorderShape.border]
-/// - [sideSet] is used only with [PBorderShape.directional] and [PBorderShape.border]
-/// - [gapPadding] is used only with [PBorderShape.outlineInput]
-@JsonSerializable( explicitToJson: true)
-class PBorderDetailed {
-  final PBorderShape shape;
-  final PBorderSide side;
-  final PBorderSideSet? sideSet;
+/// - [side] a single side is defined for all [shape]s except [BorderShape.directional] and [BorderShape.border]
+/// - [sideSet] is used only with [BorderShape.directional] and [BorderShape.border]
+/// - [gapPadding] is used only with [BorderShape.outlineInput]
+@JsonSerializable(explicitToJson: true)
+class BorderDetailed {
+  final BorderShape shape;
+  final BorderSide side;
+  final BorderSideSet? sideSet;
 
   final double gapPadding;
 
-  const PBorderDetailed(
-      {this.side = const PBorderSide(),
-      this.shape = PBorderShape.roundedRectangle,
+  const BorderDetailed(
+      {this.side = const BorderSide(),
+      this.shape = BorderShape.roundedRectangle,
       this.sideSet,
       this.gapPadding = 4.0});
 
-  factory PBorderDetailed.fromJson(Map<String, dynamic> json) => _$PBorderDetailedFromJson(json);
+  factory BorderDetailed.fromJson(Map<String, dynamic> json) =>
+      _$BorderDetailedFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PBorderDetailedToJson(this);
+  Map<String, dynamic> toJson() => _$BorderDetailedToJson(this);
 }
 
-@JsonSerializable( explicitToJson: true)
-class PBorderSideSet {
-  final PBorderSide top;
-  final PBorderSide left;
-  final PBorderSide right;
-  final PBorderSide bottom;
+@JsonSerializable(explicitToJson: true)
+class BorderSideSet {
+  final BorderSide top;
+  final BorderSide left;
+  final BorderSide right;
+  final BorderSide bottom;
 
-  const PBorderSideSet(
-      {this.top = const PBorderSide(),
-      this.left = const PBorderSide(),
-      this.right = const PBorderSide(),
-      this.bottom = const PBorderSide()});
+  const BorderSideSet(
+      {this.top = const BorderSide(),
+      this.left = const BorderSide(),
+      this.right = const BorderSide(),
+      this.bottom = const BorderSide()});
 
-  factory PBorderSideSet.fromJson(Map<String, dynamic> json) => _$PBorderSideSetFromJson(json);
+  factory BorderSideSet.fromJson(Map<String, dynamic> json) =>
+      _$BorderSideSetFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PBorderSideSetToJson(this);
+  Map<String, dynamic> toJson() => _$BorderSideSetToJson(this);
 }
 
-@JsonSerializable( explicitToJson: true)
-class PBorderSide {
-  final PColor color;
+@JsonSerializable(explicitToJson: true)
+class BorderSide {
+  final Color color;
   final double width;
-  final PBorderStyle style;
+  final BorderStyle style;
 
-  const PBorderSide({this.color = PColor.primary, this.width = 5, this.style = PBorderStyle.solid});
+  const BorderSide(
+      {this.color = Color.primary,
+      this.width = 5,
+      this.style = BorderStyle.solid});
 
-  factory PBorderSide.fromJson(Map<String, dynamic> json) => _$PBorderSideFromJson(json);
+  factory BorderSide.fromJson(Map<String, dynamic> json) =>
+      _$BorderSideFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PBorderSideToJson(this);
+  Map<String, dynamic> toJson() => _$BorderSideToJson(this);
 }
 
-enum PBorderStyle { solid, none }
+enum BorderStyle { solid, none }

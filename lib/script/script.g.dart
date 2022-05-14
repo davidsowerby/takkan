@@ -6,31 +6,31 @@ part of 'script.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PScript _$PScriptFromJson(Map<String, dynamic> json) => PScript(
+Script _$ScriptFromJson(Map<String, dynamic> json) => Script(
       conversionErrorMessages: json['conversionErrorMessages'] == null
           ? const ConversionErrorMessages(patterns: defaultConversionPatterns)
           : ConversionErrorMessages.fromJson(
               json['conversionErrorMessages'] as Map<String, dynamic>),
       pages: json['pages'] == null
           ? const []
-          : PPagesJsonConverter.fromJson(json['pages'] as List?),
+          : PagesJsonConverter.fromJson(json['pages'] as List?),
       name: json['name'] as String,
-      version: PVersion.fromJson(json['version'] as Map<String, dynamic>),
+      version: Version.fromJson(json['version'] as Map<String, dynamic>),
       locale: json['locale'] as String? ?? 'en_GB',
-      schema: PSchema.fromJson(json['schema'] as Map<String, dynamic>),
+      schema: Schema.fromJson(json['schema'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.firstLevelPanels,
     )..nameLocale = json['nameLocale'] as String?;
 
-Map<String, dynamic> _$PScriptToJson(PScript instance) => <String, dynamic>{
+Map<String, dynamic> _$ScriptToJson(Script instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'name': instance.name,
       'locale': instance.locale,
       'version': instance.version.toJson(),
       'nameLocale': instance.nameLocale,
       'schema': instance.schema.toJson(),
-      'pages': PPagesJsonConverter.toJson(instance.pages),
+      'pages': PagesJsonConverter.toJson(instance.pages),
       'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
     };
 

@@ -6,7 +6,7 @@ part of 'static_page.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPageStatic _$PPageStaticFromJson(Map<String, dynamic> json) => PPageStatic(
+PageStatic _$PageStaticFromJson(Map<String, dynamic> json) => PageStatic(
       routes: (json['routes'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -15,26 +15,26 @@ PPageStatic _$PPageStaticFromJson(Map<String, dynamic> json) => PPageStatic(
       pageType: json['pageType'] as String? ?? 'defaultPage',
       scrollable: json['scrollable'] as bool? ?? true,
       layout: json['layout'] == null
-          ? const PLayoutDistributedColumn()
-          : PLayoutJsonConverter.fromJson(
+          ? const LayoutDistributedColumn()
+          : LayoutJsonConverter.fromJson(
               json['layout'] as Map<String, dynamic>),
       children: json['children'] == null
           ? const []
-          : PContentConverter.fromJson(json['children'] as List),
+          : ContentConverter.fromJson(json['children'] as List),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
     );
 
-Map<String, dynamic> _$PPageStaticToJson(PPageStatic instance) =>
+Map<String, dynamic> _$PageStaticToJson(PageStatic instance) =>
     <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
-      'children': PContentConverter.toJson(instance.children),
+      'children': ContentConverter.toJson(instance.children),
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'routes': instance.routes,
-      'layout': PLayoutJsonConverter.toJson(instance.layout),
+      'layout': LayoutJsonConverter.toJson(instance.layout),
     };
 
 const _$ControlEditEnumMap = {

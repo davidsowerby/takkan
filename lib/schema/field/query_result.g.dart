@@ -6,11 +6,11 @@ part of 'query_result.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PQuerySchema _$PQuerySchemaFromJson(Map<String, dynamic> json) => PQuerySchema(
+FQuerySchema _$FQuerySchemaFromJson(Map<String, dynamic> json) => FQuerySchema(
       documentSchema: json['documentSchema'] as String,
     );
 
-Map<String, dynamic> _$PQuerySchemaToJson(PQuerySchema instance) =>
+Map<String, dynamic> _$FQuerySchemaToJson(FQuerySchema instance) =>
     <String, dynamic>{
       'documentSchema': instance.documentSchema,
     };

@@ -12,60 +12,60 @@ import 'package:precept_script/schema/field/post_code.dart';
 import 'package:precept_script/schema/field/relation.dart';
 import 'package:precept_script/schema/field/string.dart';
 
-class PSchemaFieldMapConverter
-    implements JsonConverter<Map<String, PField>, Map<String, dynamic>> {
-  const PSchemaFieldMapConverter();
+class SchemaFieldMapConverter
+    implements JsonConverter<Map<String, Field>, Map<String, dynamic>> {
+  const SchemaFieldMapConverter();
 
   @override
-  Map<String, PField> fromJson(Map<String, dynamic> json) {
-    Map<String, PField> outputMap = Map();
+  Map<String, Field> fromJson(Map<String, dynamic> json) {
+    Map<String, Field> outputMap = Map();
     for (var entry in json.entries) {
       if (entry.key != "-part-") {
-        outputMap[entry.key] = PFieldConverter().fromJson(entry.value);
+        outputMap[entry.key] = FieldConverter().fromJson(entry.value);
       }
     }
     return outputMap;
   }
 
   @override
-  Map<String, dynamic> toJson(Map<String, PField> partMap) {
+  Map<String, dynamic> toJson(Map<String, Field> partMap) {
     final outputMap = Map<String, dynamic>();
     for (var entry in partMap.entries) {
-      outputMap[entry.key] = PFieldConverter().toJson(entry.value);
+      outputMap[entry.key] = FieldConverter().toJson(entry.value);
     }
     return outputMap;
   }
 }
 
-class PFieldConverter implements JsonConverter<PField, Map<String, dynamic>> {
-  const PFieldConverter();
+class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
+  const FieldConverter();
 
   @override
-  PField fromJson(Map<String, dynamic> json) {
+  Field fromJson(Map<String, dynamic> json) {
     final elementType = json["-element-"];
     switch (elementType) {
-      case 'PBoolean':
-        return PBoolean.fromJson(json);
-      case 'PInteger':
-        return PInteger.fromJson(json);
-      case 'PString':
-        return PString.fromJson(json);
-      case 'PDate':
-        return PDate.fromJson(json);
-      case 'PDouble':
-        return PDouble.fromJson(json);
-      case 'PGeoPosition':
-        return PGeoPosition.fromJson(json);
+      case 'FBoolean':
+        return FBoolean.fromJson(json);
+      case 'FInteger':
+        return FInteger.fromJson(json);
+      case 'FString':
+        return FString.fromJson(json);
+      case 'FDate':
+        return FDate.fromJson(json);
+      case 'FDouble':
+        return FDouble.fromJson(json);
+      case 'FGeoPosition':
+        return FGeoPosition.fromJson(json);
       // case 'PGeoRegion':
       //   return PGeoRegion.fromJson(json);
-      case 'PGeoRegion':
-        return PGeoPosition.fromJson(json);
-      case 'PPointer':
-        return PPointer.fromJson(json);
-      case 'PRelation':
-        return PRelation.fromJson(json);
-      case 'PPostCode':
-        return PPostCode.fromJson(json);
+      case 'FGeoRegion':
+        return FGeoPosition.fromJson(json);
+      case 'FPointer':
+        return FPointer.fromJson(json);
+      case 'FRelation':
+        return FRelation.fromJson(json);
+      case 'FPostCode':
+        return FPostCode.fromJson(json);
 
       // case 'PListBoolean':
       //   return PListBoolean.fromJson(json);
@@ -85,7 +85,7 @@ class PFieldConverter implements JsonConverter<PField, Map<String, dynamic>> {
   }
 
   @override
-  Map<String, dynamic> toJson(PField object) {
+  Map<String, dynamic> toJson(Field object) {
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = object.toJson();
     jsonMap["-element-"] = type.toString();

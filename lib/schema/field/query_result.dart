@@ -6,28 +6,28 @@ import 'package:precept_script/schema/schema.dart';
 
 part 'query_result.g.dart';
 
-/// A [PQuerySchema] is very similar to a [PList], except there is no facility to specify
+/// A [FQuerySchema] is very similar to a [FList], except there is no facility to specify
 /// validations (as it is not appropriate to run validation on the results of a data-select)
 ///
-/// [documentSchema] is used to lookup the schema for the document(s) returned, from [PSchema.documents]
+/// [documentSchema] is used to lookup the schema for the document(s) returned, from [Schema.documents]
 ///
 /// [permissions] can be defined but usually permissions are set by the [documentSchema]
 @deprecated
 @JsonSerializable(explicitToJson: true)
-class PQuerySchema extends PField<ListValidation, List> {
+class FQuerySchema extends Field<ListValidation, List> {
   final String documentSchema;
 
-  PQuerySchema({
+  FQuerySchema({
     required this.documentSchema,
   }) : super(
-    required: false,
-    readOnly: IsReadOnly.yes,
-  );
+          required: false,
+          readOnly: IsReadOnly.yes,
+        );
 
-  factory PQuerySchema.fromJson(Map<String, dynamic> json) =>
-      _$PQuerySchemaFromJson(json);
+  factory FQuerySchema.fromJson(Map<String, dynamic> json) =>
+      _$FQuerySchemaFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PQuerySchemaToJson(this);
+  Map<String, dynamic> toJson() => _$FQuerySchemaToJson(this);
 
   @override
   Type get modelType => List;

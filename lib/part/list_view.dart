@@ -10,7 +10,7 @@ part 'list_view.g.dart';
 ///
 /// [isQuery] should be set to true if the data displayed is directly from a data-select
 @JsonSerializable(explicitToJson: true)
-class PListView extends PAbstractListView {
+class ListView extends AbstractListView {
   static const String defaultReadTrait = 'list-read-default';
   static const String defaultEditTrait = 'list-edit-default';
   static const String defaultItemReadTrait = 'list-item-read-default';
@@ -19,14 +19,14 @@ class PListView extends PAbstractListView {
   final String titleProperty;
   final String subtitleProperty;
 
-  PListView({
+  ListView({
     this.isQuery = false,
     this.titleProperty = 'title',
     this.subtitleProperty = 'subtitle',
     bool readOnly = false,
     double? particleHeight,
     String? caption,
-    PHelp? help,
+    Help? help,
     String? staticData,
     required String property,
     String readTraitName = 'list-read-default',
@@ -48,8 +48,8 @@ class PListView extends PAbstractListView {
           pid: pid,
         );
 
-  factory PListView.fromJson(Map<String, dynamic> json) =>
-      _$PListViewFromJson(json);
+  factory ListView.fromJson(Map<String, dynamic> json) =>
+      _$ListViewFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PListViewToJson(this);
+  Map<String, dynamic> toJson() => _$ListViewToJson(this);
 }

@@ -8,25 +8,25 @@ part 'object.g.dart';
 
 /// An embedded JSON object
 @JsonSerializable(explicitToJson: true)
-class PJsonObject extends PField<ObjectValidation, Map<String, dynamic>> {
+class FObject extends Field<ObjectValidation, Map<String, dynamic>> {
   Type get modelType => JsonObject;
 
-  PJsonObject({
+  FObject({
     Map<String, dynamic>? defaultValue,
     List<ObjectValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    defaultValue: defaultValue,
+          defaultValue: defaultValue,
           validations: validations,
           required: required,
           readOnly: readOnly,
         );
 
-  factory PJsonObject.fromJson(Map<String, dynamic> json) =>
-      _$PJsonObjectFromJson(json);
+  factory FObject.fromJson(Map<String, dynamic> json) =>
+      _$FObjectFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PJsonObjectToJson(this);
+  Map<String, dynamic> toJson() => _$FObjectToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

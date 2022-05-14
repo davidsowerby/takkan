@@ -6,10 +6,10 @@ import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
 class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
-  Future<PSchema> load(PSchemaSource source) async {
-    return PSchema(
+  Future<Schema> load(SchemaSource source) async {
+    return Schema(
       name: 'test',
-      version: PVersion(number: 0),
+      version: Version(number: 0),
     );
   }
 }

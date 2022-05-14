@@ -6,8 +6,7 @@ part of 'query.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) =>
-    PGraphQLQuery(
+GraphQLQuery _$GraphQLQueryFromJson(Map<String, dynamic> json) => GraphQLQuery(
       variables: json['variables'] as Map<String, dynamic>? ?? const {},
       propertyReferences: (json['propertyReferences'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -21,7 +20,7 @@ PGraphQLQuery _$PGraphQLQueryFromJson(Map<String, dynamic> json) =>
               QueryReturnType.futureItem,
     );
 
-Map<String, dynamic> _$PGraphQLQueryToJson(PGraphQLQuery instance) =>
+Map<String, dynamic> _$GraphQLQueryToJson(GraphQLQuery instance) =>
     <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
@@ -40,7 +39,7 @@ const _$QueryReturnTypeEnumMap = {
   QueryReturnType.streamDocument: 'streamDocument',
 };
 
-PPQuery _$PPQueryFromJson(Map<String, dynamic> json) => PPQuery(
+PQuery _$PQueryFromJson(Map<String, dynamic> json) => PQuery(
       fields: json['fields'] as String? ?? '',
       types: (json['types'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, e as String),
@@ -58,7 +57,7 @@ PPQuery _$PPQueryFromJson(Map<String, dynamic> json) => PPQuery(
               QueryReturnType.futureItem,
     );
 
-Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
+Map<String, dynamic> _$PQueryToJson(PQuery instance) => <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
       'returnType': _$QueryReturnTypeEnumMap[instance.returnType],
@@ -68,7 +67,7 @@ Map<String, dynamic> _$PPQueryToJson(PPQuery instance) => <String, dynamic>{
       'types': instance.types,
     };
 
-PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) => PGetDocument(
+GetDocument _$GetDocumentFromJson(Map<String, dynamic> json) => GetDocument(
       fieldSelector: json['fieldSelector'] == null
           ? const FieldSelector()
           : FieldSelector.fromJson(
@@ -84,7 +83,7 @@ PGetDocument _$PGetDocumentFromJson(Map<String, dynamic> json) => PGetDocument(
           const [],
     );
 
-Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
+Map<String, dynamic> _$GetDocumentToJson(GetDocument instance) =>
     <String, dynamic>{
       'variables': instance.variables,
       'propertyReferences': instance.propertyReferences,
@@ -94,7 +93,7 @@ Map<String, dynamic> _$PGetDocumentToJson(PGetDocument instance) =>
       'fieldSelector': instance.fieldSelector.toJson(),
     };
 
-PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) => PGetStream(
+GetStream _$GetStreamFromJson(Map<String, dynamic> json) => GetStream(
       queryName: json['queryName'] as String?,
       propertyReferences: (json['propertyReferences'] as List<dynamic>?)
               ?.map((e) => e as String)
@@ -104,8 +103,7 @@ PGetStream _$PGetStreamFromJson(Map<String, dynamic> json) => PGetStream(
           DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PGetStreamToJson(PGetStream instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$GetStreamToJson(GetStream instance) => <String, dynamic>{
       'propertyReferences': instance.propertyReferences,
       'queryName': instance.queryName,
       'documentId': instance.documentId.toJson(),

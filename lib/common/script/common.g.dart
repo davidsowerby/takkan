@@ -6,13 +6,13 @@ part of 'common.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PCommon _$PCommonFromJson(Map<String, dynamic> json) => PCommon(
+Common _$CommonFromJson(Map<String, dynamic> json) => Common(
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
     );
 
-Map<String, dynamic> _$PCommonToJson(PCommon instance) => <String, dynamic>{
+Map<String, dynamic> _$CommonToJson(Common instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
     };
 

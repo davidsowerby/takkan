@@ -6,10 +6,11 @@ part of 'error.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PError _$PErrorFromJson(Map<String, dynamic> json) => PError(
+Lamin8Error _$Lamin8ErrorFromJson(Map<String, dynamic> json) => Lamin8Error(
       message: json['message'] as String,
     );
 
-Map<String, dynamic> _$PErrorToJson(PError instance) => <String, dynamic>{
+Map<String, dynamic> _$Lamin8ErrorToJson(Lamin8Error instance) =>
+    <String, dynamic>{
       'message': instance.message,
     };

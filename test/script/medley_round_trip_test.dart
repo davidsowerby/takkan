@@ -23,13 +23,13 @@ void main() {
     tearDown(() {});
     test('script to JSON map and back', () async {
       // given
-      PScript script = medleyScript[0];
+      Script script = medleyScript[0];
 
       // when
       script.init();
       // then
       Map<String, dynamic> jsonMap = script.toJson();
-      PScript script2 = PScript.fromJson(jsonMap);
+      Script script2 = Script.fromJson(jsonMap);
       script2.init();
 
       expect(jsonMap['nameLocale'], 'Medley:en_GB');

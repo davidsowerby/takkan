@@ -2,13 +2,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'text_box.g.dart';
 
-@JsonSerializable( explicitToJson: true)
-class PTextBox {
-  static const String defaultTraitName = 'PTextBox-default';
+@JsonSerializable(explicitToJson: true)
+class TextBox {
+  static const String defaultTraitName = 'TextBox-default';
 
-  const PTextBox();
+  const TextBox();
 
-  factory PTextBox.fromJson(Map<String, dynamic> json) => _$PTextBoxFromJson(json);
+  factory TextBox.fromJson(Map<String, dynamic> json) =>
+      _$TextBoxFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PTextBoxToJson(this);
+  Map<String, dynamic> toJson() => _$TextBoxToJson(this);
 }

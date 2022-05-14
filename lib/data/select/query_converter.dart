@@ -4,42 +4,42 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/data/select/rest_query.dart';
 
-/// JSON converter for [PQuery] sub-classes
-class PQueryConverter implements JsonConverter<PQuery, Map<String, dynamic>> {
+/// JSON converter for [Query] sub-classes
+class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
   static final elementKey = '-type-';
 
-  const PQueryConverter();
+  const QueryConverter();
 
   @override
-  PQuery fromJson(Map<String, dynamic> json) {
+  Query fromJson(Map<String, dynamic> json) {
     final String? typeName = json[elementKey];
     json.remove(elementKey);
     switch (typeName) {
-      case 'PGetDocument':
-        return PGetDocument.fromJson(json);
-      case 'PGetStream':
-        return PGetStream.fromJson(json);
-      case 'PGraphQLQuery':
-        return PGraphQLQuery.fromJson(json);
-      case 'PRestQuery':
-        return PRestQuery.fromJson(json);
+      case 'GetDocument':
+        return GetDocument.fromJson(json);
+      case 'GetStream':
+        return GetStream.fromJson(json);
+      case 'GraphQLQuery':
+        return GraphQLQuery.fromJson(json);
+      case 'RestQuery':
+        return RestQuery.fromJson(json);
       default:
         String msg = 'Conversion required for $typeName';
-        logName('PQueryConverter').e(msg);
+        logName('QueryConverter').e(msg);
         throw PreceptException(msg);
     }
   }
 
   @override
-  Map<String, dynamic> toJson(PQuery object) {
+  Map<String, dynamic> toJson(Query object) {
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = Map();
     jsonMap[elementKey] = type.toString();
     switch (type) {
-      case PGetDocument:
-      case PGetStream:
-      case PGraphQLQuery:
-      case PRestQuery:
+      case GetDocument:
+      case GetStream:
+      case GraphQLQuery:
+      case RestQuery:
         {
           jsonMap.addAll(object.toJson());
           return jsonMap;

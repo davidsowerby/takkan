@@ -6,7 +6,7 @@ part of 'string.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PString _$PStringFromJson(Map<String, dynamic> json) => PString(
+FString _$FStringFromJson(Map<String, dynamic> json) => FString(
       defaultValue: json['defaultValue'] as String?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => VString.fromJson(e as Map<String, dynamic>))
@@ -15,7 +15,7 @@ PString _$PStringFromJson(Map<String, dynamic> json) => PString(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PStringToJson(PString instance) {
+Map<String, dynamic> _$FStringToJson(FString instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

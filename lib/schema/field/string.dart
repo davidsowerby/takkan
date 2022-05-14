@@ -8,25 +8,25 @@ part 'string.freezed.dart';
 part 'string.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PString extends PField<VString, String> {
+class FString extends Field<VString, String> {
   Type get modelType => String;
 
-  PString({
+  FString({
     String? defaultValue,
     List<VString> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           required: required,
           validations: validations,
           defaultValue: defaultValue,
         );
 
-  factory PString.fromJson(Map<String, dynamic> json) =>
-      _$PStringFromJson(json);
+  factory FString.fromJson(Map<String, dynamic> json) =>
+      _$FStringFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PStringToJson(this);
+  Map<String, dynamic> toJson() => _$FStringToJson(this);
 }
 
 @freezed

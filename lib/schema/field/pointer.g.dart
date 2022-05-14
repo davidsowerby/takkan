@@ -6,7 +6,7 @@ part of 'pointer.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPointer _$PPointerFromJson(Map<String, dynamic> json) => PPointer(
+FPointer _$FPointerFromJson(Map<String, dynamic> json) => FPointer(
       defaultValue: json['defaultValue'] == null
           ? null
           : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
@@ -19,7 +19,7 @@ PPointer _$PPointerFromJson(Map<String, dynamic> json) => PPointer(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PPointerToJson(PPointer instance) {
+Map<String, dynamic> _$FPointerToJson(FPointer instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

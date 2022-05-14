@@ -1,12 +1,11 @@
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/data/provider/document_id.dart';
+import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/list_view.dart';
 import 'package:precept_script/part/text.dart';
-import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -24,37 +23,38 @@ void main() {
 
     test('output', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'script',
-        version: PVersion(number: 0),
-        schema: PSchema(
-          version: PVersion(number: 0),
+        version: Version(number: 0),
+        schema: Schema(
+          version: Version(number: 0),
           name: 'schema',
-          documents: {'Person': PDocument(fields: {})},
+          documents: {'Person': Document(fields: {})},
           namedQueries: {
-            'A person': PGetDocument(
+            'A person': GetDocument(
               queryName: 'GetPerson',
               documentId: DocumentId(documentClass: 'x', objectId: 'x'),
               documentSchema: '',
             )
           },
         ),
-        schemaSource: PSchemaSource(group: 'x', instance: 'dev'),
+        schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
-          PPageStatic(routes: ['home'],
+          PageStatic(
+            routes: ['home'],
             id: 'Home',
             caption: 'Home',
             children: [
-              PText(caption: 'using caption'),
-              PText(),
-              PText(id: 'using id'),
-              PPanelStatic(
+              Text(caption: 'using caption'),
+              Text(),
+              Text(id: 'using id'),
+              PanelStatic(
                   caption: 'Top Panel',
-                  heading: PPanelHeading(),
+                  heading: PanelHeading(),
                   children: [
-                    PText(),
-                    PText(caption: 'with caption'),
-                    PListView(property: 'eggs', caption: 'Eggs')
+                    Text(),
+                    Text(caption: 'with caption'),
+                    ListView(property: 'eggs', caption: 'Eggs')
                   ])
             ],
           )
@@ -68,15 +68,15 @@ void main() {
         'script.schema',
         'script.schema.Person',
         'script.schema.GetPerson',
-        'script.PSchemaSource',
-        'script.PNoDataProvider',
+        'script.SchemaSource',
+        'script.NullDataProvider',
         'script.Home',
         'script.Home.using caption',
-        'script.Home.PText:1',
+        'script.Home.Text:1',
         'script.Home.using id',
         'script.Home.Top Panel',
-        'script.Home.Top Panel.PPanelHeading',
-        'script.Home.Top Panel.PText:0',
+        'script.Home.Top Panel.PanelHeading',
+        'script.Home.Top Panel.Text:0',
         'script.Home.Top Panel.with caption',
         'script.Home.Top Panel.Eggs',
       ]);
@@ -86,20 +86,20 @@ void main() {
 
       expect(walker.tracker, [
         'script',
-        'script.PSchema',
-        'script.PSchema.PDocument',
-        'script.PSchema.PGetDocument',
-        'script.PSchemaSource',
-        'script.PNoDataProvider',
+        'script.Schema',
+        'script.Schema.Document',
+        'script.Schema.GetDocument',
+        'script.SchemaSource',
+        'script.NullDataProvider',
         'script.Home',
-        'script.Home.PText:0',
-        'script.Home.PText:1',
+        'script.Home.Text:0',
+        'script.Home.Text:1',
         'script.Home.using id',
-        'script.Home.PPanelStatic:3',
-        'script.Home.PPanelStatic:3.PPanelHeading',
-        'script.Home.PPanelStatic:3.PText:0',
-        'script.Home.PPanelStatic:3.PText:1',
-        'script.Home.PPanelStatic:3.PListView:2'
+        'script.Home.PanelStatic:3',
+        'script.Home.PanelStatic:3.PanelHeading',
+        'script.Home.PanelStatic:3.Text:0',
+        'script.Home.PanelStatic:3.Text:1',
+        'script.Home.PanelStatic:3.ListView:2'
       ]);
     });
   });

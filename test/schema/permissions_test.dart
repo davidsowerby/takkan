@@ -13,7 +13,7 @@ void main() {
 
     test('default no permissions required', () {
       // given
-      final PPermissions permissions = PPermissions();
+      final Permissions permissions = Permissions();
       // when
 
       // then
@@ -30,8 +30,8 @@ void main() {
 
     test('RequiresAuth.all returns correctly', () {
       // given
-      final PPermissions permissions =
-          PPermissions(requiresAuthentication: [AccessMethod.all]);
+      final Permissions permissions =
+          Permissions(requiresAuthentication: [AccessMethod.all]);
       // when
 
       // then
@@ -49,7 +49,7 @@ void main() {
 
     test('role set, requiresAuthentication returns true', () {
       // given
-      final PPermissions permissions = PPermissions(
+      final Permissions permissions = Permissions(
         createRoles: ['boss'],
         readRoles: ['boss'],
         updateRoles: ['boss'],
@@ -73,7 +73,7 @@ void main() {
 
     test('PDocument has default permissions', () {
       // given
-      final PDocument document = PDocument(fields: const {});
+      final Document document = Document(fields: const {});
       // when
 
       // then
@@ -85,8 +85,8 @@ void main() {
 
     test('readRoles added to get, find, count', () {
       // given
-      final PDocument document = PDocument(
-          permissions: PPermissions(
+      final Document document = Document(
+          permissions: Permissions(
             readRoles: ['reader'],
             getRoles: ['getter'],
             findRoles: ['finder'],
@@ -106,8 +106,8 @@ void main() {
 
     test('writeRoles added to create, update, delete', () {
       // given
-      final PDocument document = PDocument(
-          permissions: PPermissions(
+      final Document document = Document(
+          permissions: Permissions(
               writeRoles: ['writer'],
               createRoles: ['creator'],
               updateRoles: ['updater'],

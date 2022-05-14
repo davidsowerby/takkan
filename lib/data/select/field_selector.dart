@@ -31,7 +31,7 @@ class FieldSelector {
     this.excludeFields = const [],
   });
 
-  List<String> selection(PDocument schema) {
+  List<String> selection(Document schema) {
     final List<String> s = List.empty(growable: true);
     if (allFields) {
       s.addAll(schema.fields.keys);

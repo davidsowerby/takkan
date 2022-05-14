@@ -1,10 +1,8 @@
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/data/select/data.dart';
 import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -22,12 +20,12 @@ void main() {
     });
     test('Insufficient components', () {
       // given
-      final script1 = PScript(
+      final script1 = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
       );
       // when
@@ -50,15 +48,15 @@ void main() {
       'Must have non-empty route',
       () {
         // given
-        final script = PScript(
+        final script = Script(
           name: 'test',
-          version: PVersion(number: 0),
-          schema: PSchema(
+          version: Version(number: 0),
+          schema: Schema(
             name: 'test',
-            version: PVersion(number: 0),
+            version: Version(number: 0),
           ),
           pages: [
-            PPageStatic(
+            PageStatic(
               caption: 'A page',
               routes: [''],
             ),
@@ -78,15 +76,15 @@ void main() {
   group('PPage validation 2', () {
     test('Must have non-empty pageType', () {
       // given
-      final component = PScript(
+      final component = Script(
         name: 'A script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ["/home"],
             caption: 'a Page title',
             pageType: '',
@@ -106,25 +104,25 @@ void main() {
 
     test('No errors', () {
       // given
-      final component = PScript(
+      final component = Script(
         name: 'a script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
-        dataProvider: PDataProvider(
-          instanceConfig: const PInstance(
+        dataProvider: DataProvider(
+          instanceConfig: const AppInstance(
             group: '',
             instance: '',
           ),
         ),
         pages: [
-          PPage(
+          Page(
             pageType: "mine",
             caption: "Wiggly",
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: '?',
                 objectId: 'x',
               )
@@ -143,32 +141,32 @@ void main() {
   group('PPanel validation', () {
     test('No errors', () {
       // given
-      final component = PScript(
+      final component = Script(
           name: 'A Script',
-          version: PVersion(number: 0),
-          schema: PSchema(
+          version: Version(number: 0),
+          schema: Schema(
             name: 'test',
-            version: PVersion(number: 0),
+            version: Version(number: 0),
           ),
-          dataProvider: PDataProvider(
-            instanceConfig: PInstance(
+          dataProvider: DataProvider(
+            instanceConfig: AppInstance(
               group: 'back4app',
               instance: 'dev',
             ),
           ),
           pages: [
-            PPage(
+            Page(
               pageType: "mine",
               caption: "Wiggly",
               dataSelectors: [
-                PSingleById(
+                DataItemById(
                   tag: '?',
                   objectId: 'x',
                   caption: 'Wiggly',
                 )
               ],
               children: [
-                PPanelStatic(),
+                PanelStatic(),
               ],
             ),
           ]);
@@ -181,20 +179,20 @@ void main() {
 
     test('any non-static PPanel must be able to access Query', () {
       // given
-      final withoutQueryOrDataProvider = PScript(
+      final withoutQueryOrDataProvider = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ["/home"],
             pageType: "mine",
             caption: "Wiggly",
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
               ),
             ],
@@ -202,53 +200,53 @@ void main() {
         ],
       );
 
-      final withoutQuery = PScript(
+      final withoutQuery = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
-        dataProvider: PDataProvider(
-          instanceConfig: PInstance(
+        dataProvider: DataProvider(
+          instanceConfig: AppInstance(
             group: 'back4app',
             instance: 'dev',
           ),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ["/home"],
             pageType: "mine",
             caption: "Wiggly",
-            children: [PPanelStatic(caption: 'panel1')],
+            children: [PanelStatic(caption: 'panel1')],
           ),
         ],
       );
 
-      final withQueryAndProvider = PScript(
+      final withQueryAndProvider = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
-        dataProvider: PDataProvider(
-          instanceConfig: PInstance(
+        dataProvider: DataProvider(
+          instanceConfig: AppInstance(
             group: 'back4app',
             instance: 'dev',
           ),
         ),
         pages: [
-          PPage(
+          Page(
             pageType: "mine",
             caption: "Wiggly",
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: 'fixed thing',
                 objectId: 'xx',
               )
             ],
-            children: [PPanelStatic(caption: 'panel1')],
+            children: [PanelStatic(caption: 'panel1')],
           ),
         ],
       );

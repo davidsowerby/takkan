@@ -6,22 +6,22 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'list.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PList extends PField<ListValidation, List> {
-  PList({
+class FList extends Field<ListValidation, List> {
+  FList({
     List<ListValidation> validations = const [],
     bool required = false,
     List? defaultValue,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
         );
 
-  factory PList.fromJson(Map<String, dynamic> json) => _$PListFromJson(json);
+  factory FList.fromJson(Map<String, dynamic> json) => _$FListFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PListToJson(this);
+  Map<String, dynamic> toJson() => _$FListToJson(this);
 
   @override
   Type get modelType => List;

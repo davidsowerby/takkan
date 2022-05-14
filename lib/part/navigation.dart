@@ -4,11 +4,11 @@ import 'package:precept_script/part/part.dart';
 part 'navigation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PNavButton extends PPart {
+class NavButton extends Part {
   static const defaultReadTrait = 'PNavButton-default';
   final String route;
 
-  PNavButton({
+  NavButton({
     bool readOnly = true,
     required this.route,
     String? caption,
@@ -21,7 +21,7 @@ class PNavButton extends PPart {
     final Map<String, dynamic> args = const {},
     String? pid,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           caption: caption,
           staticData: staticData,
           property: property,
@@ -31,22 +31,22 @@ class PNavButton extends PPart {
           id: pid,
         );
 
-  factory PNavButton.fromJson(Map<String, dynamic> json) =>
-      _$PNavButtonFromJson(json);
+  factory NavButton.fromJson(Map<String, dynamic> json) =>
+      _$NavButtonFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PNavButtonToJson(this);
+  Map<String, dynamic> toJson() => _$NavButtonToJson(this);
 }
 
 /// A simple way to specify a list of buttons which only route to another page
 /// [buttons] should be specified as a map, for example {'button text':'route'}
 @JsonSerializable(explicitToJson: true)
-class PNavButtonSet extends PPart {
+class NavButtonSet extends Part {
   static const defaultReadTrait = 'PNavButtonSet-default';
   final Map<String, String> buttons;
   final String buttonTraitName;
   final double? width;
 
-  PNavButtonSet({
+  NavButtonSet({
     required this.buttons,
     this.width,
     double height = 60,
@@ -54,14 +54,14 @@ class PNavButtonSet extends PPart {
     String readTraitName = 'PNavButtonSet-default',
     this.buttonTraitName = 'PNavButton-default',
   }) : super(
-    readOnly: true,
+          readOnly: true,
           height: height,
           readTraitName: readTraitName,
           id: pid,
         );
 
-  factory PNavButtonSet.fromJson(Map<String, dynamic> json) =>
-      _$PNavButtonSetFromJson(json);
+  factory NavButtonSet.fromJson(Map<String, dynamic> json) =>
+      _$NavButtonSetFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PNavButtonSetToJson(this);
+  Map<String, dynamic> toJson() => _$NavButtonSetToJson(this);
 }

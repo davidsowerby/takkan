@@ -14,42 +14,41 @@ import 'package:precept_script/trait/text_trait.dart';
 
 part 'static_panel.g.dart';
 
-/// [children], [documentClass], [cloudFunction] see [PPodBase]
+/// [children], [documentClass], [cloudFunction] see [PodBase]
 @JsonSerializable(explicitToJson: true)
-class PPanelStatic extends PPodBase implements PPanels {
+class PanelStatic extends PodBase implements Panels {
   @JsonKey(
-    fromJson: PContentConverter.fromJson,
-    toJson: PContentConverter.toJson,
+    fromJson: ContentConverter.fromJson,
+    toJson: ContentConverter.toJson,
   )
   @JsonKey(ignore: true)
-  PPanelHeading? _heading;
-  final PLayout layout;
+  PanelHeading? _heading;
+  final Layout layout;
   final bool openExpanded;
   final bool scrollable;
-  final PHelp? help;
-  final PPanelStyle panelStyle;
+  final Help? help;
+  final PanelStyle panelStyle;
   final Map<String, dynamic> pageArguments;
 
+  factory PanelStatic.fromJson(Map<String, dynamic> json) =>
+      _$PanelStaticFromJson(json);
 
+  Map<String, dynamic> toJson() => _$PanelStaticToJson(this);
 
-  factory PPanelStatic.fromJson(Map<String, dynamic> json) => _$PPanelStaticFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PPanelStaticToJson(this);
-
-  PPanelStatic({
+  PanelStatic({
     String? function,
     String? caption,
     String? documentClass,
     this.openExpanded = true,
-    List<PContent> children = const [],
+    List<Content> children = const [],
     this.pageArguments = const {},
-    this.layout = const PLayoutDistributedColumn(),
-    PPanelHeading? heading,
+    this.layout = const LayoutDistributedColumn(),
+    PanelHeading? heading,
     this.scrollable = false,
     this.help,
-    this.panelStyle = const PPanelStyle(),
-    PDataProvider? dataProvider,
-    PTextTrait textTrait = const PTextTrait(),
+    this.panelStyle = const PanelStyle(),
+    DataProvider? dataProvider,
+    TextTrait textTrait = const TextTrait(),
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
   })  : _heading = heading,
@@ -73,12 +72,12 @@ class PPanelStatic extends PPodBase implements PPanels {
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (heading != null) heading?.walk(visitors);
-    for (PContent entry in children) {
+    for (Content entry in children) {
       entry.walk(visitors);
     }
   }
 
-  PContent get baseConfig => this;
+  Content get baseConfig => this;
 
   DebugNode get debugNode {
     final List<DebugNode> subs = children.map((e) => e.debugNode).toList();
@@ -91,7 +90,7 @@ class PPanelStatic extends PPodBase implements PPanels {
     return DebugNode(this, subs);
   }
 
-  PPanelHeading? get heading => _heading;
+  PanelHeading? get heading => _heading;
 
   @override
   bool get isDataRoot => false;

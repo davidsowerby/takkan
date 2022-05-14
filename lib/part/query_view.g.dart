@@ -6,7 +6,7 @@ part of 'query_view.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
+QueryView _$QueryViewFromJson(Map<String, dynamic> json) => QueryView(
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
       height: (json['height'] as num?)?.toDouble() ?? 100,
@@ -14,7 +14,7 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
-          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+          : Help.fromJson(json['help'] as Map<String, dynamic>),
       pid: json['pid'] as String?,
       readOnly: json['readOnly'] as bool? ?? false,
       controlEdit:
@@ -26,8 +26,7 @@ PQueryView _$PQueryViewFromJson(Map<String, dynamic> json) => PQueryView(
           json['editTraitName'] as String? ?? 'queryView-edit-default',
     );
 
-Map<String, dynamic> _$PQueryViewToJson(PQueryView instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$QueryViewToJson(QueryView instance) => <String, dynamic>{
       'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,

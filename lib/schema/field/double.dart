@@ -6,25 +6,25 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'double.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PDouble extends PField<DoubleValidation, double> {
+class FDouble extends Field<DoubleValidation, double> {
   Type get modelType => double;
 
-  PDouble({
+  FDouble({
     double? defaultValue,
     List<DoubleValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    defaultValue: defaultValue,
+          defaultValue: defaultValue,
           required: required,
           validations: validations,
           readOnly: readOnly,
         );
 
-  factory PDouble.fromJson(Map<String, dynamic> json) =>
-      _$PDoubleFromJson(json);
+  factory FDouble.fromJson(Map<String, dynamic> json) =>
+      _$FDoubleFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDoubleToJson(this);
+  Map<String, dynamic> toJson() => _$FDoubleToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

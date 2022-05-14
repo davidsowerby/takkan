@@ -6,18 +6,18 @@ part of 'content.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PContent _$PContentFromJson(Map<String, dynamic> json) => PContent(
+Content _$ContentFromJson(Map<String, dynamic> json) => Content(
       caption: json['caption'] as String?,
       property: json['property'] as String?,
       listEntryConfig: json['listEntryConfig'] == null
           ? null
-          : PPanel.fromJson(json['listEntryConfig'] as Map<String, dynamic>),
+          : Panel.fromJson(json['listEntryConfig'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
     );
 
-Map<String, dynamic> _$PContentToJson(PContent instance) => <String, dynamic>{
+Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,

@@ -6,30 +6,29 @@ part of 'data_provider.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PDataProvider _$PDataProviderFromJson(Map<String, dynamic> json) =>
-    PDataProvider(
+DataProvider _$DataProviderFromJson(Map<String, dynamic> json) => DataProvider(
       useAuthenticator: json['useAuthenticator'] as bool? ?? false,
       graphQLDelegate: json['graphQLDelegate'] == null
           ? null
-          : PGraphQL.fromJson(json['graphQLDelegate'] as Map<String, dynamic>),
+          : GraphQL.fromJson(json['graphQLDelegate'] as Map<String, dynamic>),
       restDelegate: json['restDelegate'] == null
-          ? const PRest()
-          : PRest.fromJson(json['restDelegate'] as Map<String, dynamic>),
+          ? const Rest()
+          : Rest.fromJson(json['restDelegate'] as Map<String, dynamic>),
       instanceConfig:
-          PInstance.fromJson(json['instanceConfig'] as Map<String, dynamic>),
+          AppInstance.fromJson(json['instanceConfig'] as Map<String, dynamic>),
       defaultDelegate:
           $enumDecodeNullable(_$DelegateEnumMap, json['defaultDelegate']) ??
               Delegate.rest,
       signInOptions: json['signInOptions'] == null
-          ? const PSignInOptions()
-          : PSignInOptions.fromJson(
+          ? const SignInOptions()
+          : SignInOptions.fromJson(
               json['signInOptions'] as Map<String, dynamic>),
       signIn: json['signIn'] == null
-          ? const PSignIn()
-          : PSignIn.fromJson(json['signIn'] as Map<String, dynamic>),
+          ? const SignIn()
+          : SignIn.fromJson(json['signIn'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PDataProviderToJson(PDataProvider instance) =>
+Map<String, dynamic> _$DataProviderToJson(DataProvider instance) =>
     <String, dynamic>{
       'signInOptions': instance.signInOptions.toJson(),
       'signIn': instance.signIn.toJson(),
@@ -45,18 +44,19 @@ const _$DelegateEnumMap = {
   Delegate.rest: 'rest',
 };
 
-PInstance _$PInstanceFromJson(Map<String, dynamic> json) => PInstance(
+AppInstance _$AppInstanceFromJson(Map<String, dynamic> json) => AppInstance(
       group: json['group'] as String,
       instance: json['instance'] as String?,
     );
 
-Map<String, dynamic> _$PInstanceToJson(PInstance instance) => <String, dynamic>{
+Map<String, dynamic> _$AppInstanceToJson(AppInstance instance) =>
+    <String, dynamic>{
       'group': instance.group,
       'instance': instance.instance,
     };
 
-PNoDataProvider _$PNoDataProviderFromJson(Map<String, dynamic> json) =>
-    PNoDataProvider();
+NullDataProvider _$NullDataProviderFromJson(Map<String, dynamic> json) =>
+    NullDataProvider();
 
-Map<String, dynamic> _$PNoDataProviderToJson(PNoDataProvider instance) =>
+Map<String, dynamic> _$NullDataProviderToJson(NullDataProvider instance) =>
     <String, dynamic>{};

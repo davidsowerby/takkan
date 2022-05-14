@@ -6,21 +6,21 @@ import 'package:precept_script/part/abstract_list_view.dart';
 
 part 'query_view.g.dart';
 
-@JsonSerializable( explicitToJson: true)
-class PQueryView extends PAbstractListView {
+@JsonSerializable(explicitToJson: true)
+class QueryView extends AbstractListView {
   static const String defaultReadTrait = 'queryView-read-default';
   static const String defaultEditTrait = 'queryView-edit-default';
   static const String defaultItemReadTrait = 'queryView-item-read-default';
   static const String defaultItemEditTrait = 'queryView-item-edit-default';
 
-  PQueryView({
+  QueryView({
     String? queryName,
     String titleProperty = 'title',
     String subtitleProperty = 'subtitle',
     double height = 100,
     String? tooltip,
     String? caption,
-    PHelp? help,
+    Help? help,
     String? pid,
     bool readOnly = false,
     ControlEdit controlEdit = ControlEdit.inherited,
@@ -41,7 +41,8 @@ class PQueryView extends PAbstractListView {
           pid: pid,
         );
 
-  factory PQueryView.fromJson(Map<String, dynamic> json) => _$PQueryViewFromJson(json);
+  factory QueryView.fromJson(Map<String, dynamic> json) =>
+      _$QueryViewFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PQueryViewToJson(this);
+  Map<String, dynamic> toJson() => _$QueryViewToJson(this);
 }

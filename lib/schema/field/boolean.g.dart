@@ -6,7 +6,7 @@ part of 'boolean.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PBoolean _$PBooleanFromJson(Map<String, dynamic> json) => PBoolean(
+FBoolean _$FBooleanFromJson(Map<String, dynamic> json) => FBoolean(
       defaultValue: json['defaultValue'] as bool?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map(
@@ -16,7 +16,7 @@ PBoolean _$PBooleanFromJson(Map<String, dynamic> json) => PBoolean(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PBooleanToJson(PBoolean instance) {
+Map<String, dynamic> _$FBooleanToJson(FBoolean instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

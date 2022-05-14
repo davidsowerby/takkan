@@ -21,26 +21,25 @@ part 'data_provider.g.dart';
 /// which collaborates with this configuration) does not provide authentication
 ///
 @JsonSerializable(explicitToJson: true)
-class PDataProvider extends PreceptItem {
-  final PSignInOptions signInOptions;
-  final PSignIn signIn;
-  final PInstance instanceConfig;
+class DataProvider extends PreceptItem {
+  final SignInOptions signInOptions;
+  final SignIn signIn;
+  final AppInstance instanceConfig;
   final Delegate defaultDelegate;
-  final PGraphQL? graphQLDelegate;
-  final PRest restDelegate;
+  final GraphQL? graphQLDelegate;
+  final Rest restDelegate;
   final bool useAuthenticator;
 
-  PDataProvider({
+  DataProvider({
     this.useAuthenticator = false,
     this.graphQLDelegate,
-    this.restDelegate=const PRest(),
+    this.restDelegate = const Rest(),
     required this.instanceConfig,
     this.defaultDelegate = Delegate.rest,
-    this.signInOptions = const PSignInOptions(),
-    this.signIn = const PSignIn(),
+    this.signInOptions = const SignInOptions(),
+    this.signIn = const SignIn(),
     String? id,
   }) : super(id: id);
-
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -48,10 +47,10 @@ class PDataProvider extends PreceptItem {
     this.restDelegate.walk(visitors);
   }
 
-  factory PDataProvider.fromJson(Map<String, dynamic> json) =>
-      _$PDataProviderFromJson(json);
+  factory DataProvider.fromJson(Map<String, dynamic> json) =>
+      _$DataProviderFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDataProviderToJson(this);
+  Map<String, dynamic> toJson() => _$DataProviderToJson(this);
 }
 
 /// [group] and [instance] together define which part **precept.json** is used to
@@ -66,39 +65,39 @@ class PDataProvider extends PreceptItem {
 /// This makes the explicit declaration of [instance] redundant for staged situations,
 /// and is therefore nullable
 @JsonSerializable(explicitToJson: true)
-class PInstance {
+class AppInstance {
   final String group;
   final String? instance;
 
-  const PInstance({required this.group, this.instance});
+  const AppInstance({required this.group, this.instance});
 
   @override
   String toString() {
     return '$group:$instance';
   }
 
-  factory PInstance.fromJson(Map<String, dynamic> json) =>
-      _$PInstanceFromJson(json);
+  factory AppInstance.fromJson(Map<String, dynamic> json) =>
+      _$AppInstanceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PInstanceToJson(this);
+  Map<String, dynamic> toJson() => _$AppInstanceToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
-class PNoDataProvider extends PDataProvider {
-  PNoDataProvider({
-    PSchema? schema,
+class NullDataProvider extends DataProvider {
+  NullDataProvider({
+    Schema? schema,
   }) : super(
-    signInOptions: const PSignInOptions(),
-          signIn: const PSignIn(),
-          instanceConfig: PInstance(group: 'none', instance: 'none'),
+          signInOptions: const SignInOptions(),
+          signIn: const SignIn(),
+          instanceConfig: AppInstance(group: 'none', instance: 'none'),
         );
 
-  factory PNoDataProvider.fromJson(Map<String, dynamic> json) =>
-      _$PNoDataProviderFromJson(json);
+  factory NullDataProvider.fromJson(Map<String, dynamic> json) =>
+      _$NullDataProviderFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PNoDataProviderToJson(this);
+  Map<String, dynamic> toJson() => _$NullDataProviderToJson(this);
 }
 
 abstract class PreceptSchemaLoader {
-  Future<PSchema> load(PSchemaSource source);
+  Future<Schema> load(SchemaSource source);
 }

@@ -6,8 +6,8 @@ part of 'sign_in.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PSignInOptions _$PSignInOptionsFromJson(Map<String, dynamic> json) =>
-    PSignInOptions(
+SignInOptions _$SignInOptionsFromJson(Map<String, dynamic> json) =>
+    SignInOptions(
       pageTitle: json['pageTitle'] as String? ?? 'SignIn / Register',
       google: json['google'] as bool? ?? false,
       facebook: json['facebook'] as bool? ?? false,
@@ -17,7 +17,7 @@ PSignInOptions _$PSignInOptionsFromJson(Map<String, dynamic> json) =>
       email: json['email'] as bool? ?? true,
     );
 
-Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
+Map<String, dynamic> _$SignInOptionsToJson(SignInOptions instance) =>
     <String, dynamic>{
       'pageTitle': instance.pageTitle,
       'email': instance.email,
@@ -28,17 +28,17 @@ Map<String, dynamic> _$PSignInOptionsToJson(PSignInOptions instance) =>
       'gitHub': instance.gitHub,
     };
 
-PSignIn _$PSignInFromJson(Map<String, dynamic> json) => PSignIn(
+SignIn _$SignInFromJson(Map<String, dynamic> json) => SignIn(
       successRoute: json['successRoute'] as String? ?? '',
       failureRoute: json['failureRoute'] as String? ?? 'signInFail',
     );
 
-Map<String, dynamic> _$PSignInToJson(PSignIn instance) => <String, dynamic>{
+Map<String, dynamic> _$SignInToJson(SignIn instance) => <String, dynamic>{
       'successRoute': instance.successRoute,
       'failureRoute': instance.failureRoute,
     };
 
-PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
+EmailSignIn _$EmailSignInFromJson(Map<String, dynamic> json) => EmailSignIn(
       signInFailureMessage: json['signInFailureMessage'] as String? ??
           'Username or password incorrect',
       caption: json['caption'] as String? ?? 'Sign in with Email',
@@ -55,10 +55,10 @@ PEmailSignIn _$PEmailSignInFromJson(Map<String, dynamic> json) => PEmailSignIn(
       pid: json['pid'] as String?,
       help: json['help'] == null
           ? null
-          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+          : Help.fromJson(json['help'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PEmailSignInToJson(PEmailSignIn instance) =>
+Map<String, dynamic> _$EmailSignInToJson(EmailSignIn instance) =>
     <String, dynamic>{
       'pid': instance.pid,
       'caption': instance.caption,

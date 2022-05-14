@@ -6,7 +6,7 @@ part 'rest_delegate.g.dart';
 
 /// Config for a RestDataProviderDelegate used in [PDataProvider].
 ///
-/// See also [PGraphQL]
+/// See also [GraphQL]
 ///
 /// [documentEndpoint] is appended to the server url to point to the base url for documents.
 /// In Back4App, for example, this is '/classes'
@@ -18,10 +18,10 @@ part 'rest_delegate.g.dart';
 /// also be specified here if one delegate requires different keys to the other.
 /// Delegate and Provider header keys are merged before use
 @JsonSerializable(explicitToJson: true)
-class PRest extends PDataProviderDelegate {
+class Rest extends DataProviderDelegate {
   final String documentEndpoint;
 
-  const PRest({
+  const Rest({
     this.documentEndpoint = '/classes',
     bool checkHealthOnConnect = false,
     List<String> headerKeys = const [],
@@ -29,7 +29,7 @@ class PRest extends PDataProviderDelegate {
           checkHealthOnConnect: checkHealthOnConnect,
         );
 
-  factory PRest.fromJson(Map<String, dynamic> json) => _$PRestFromJson(json);
+  factory Rest.fromJson(Map<String, dynamic> json) => _$RestFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PRestToJson(this);
+  Map<String, dynamic> toJson() => _$RestToJson(this);
 }

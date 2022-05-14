@@ -6,24 +6,24 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'date.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PDate extends PField<DateValidation, DateTime> {
+class FDate extends Field<DateValidation, DateTime> {
   Type get modelType => DateTime;
 
-  PDate({
+  FDate({
     DateTime? defaultValue,
     List<DateValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    defaultValue: defaultValue,
+          defaultValue: defaultValue,
           validations: validations,
           required: required,
           readOnly: readOnly,
         );
 
-  factory PDate.fromJson(Map<String, dynamic> json) => _$PDateFromJson(json);
+  factory FDate.fromJson(Map<String, dynamic> json) => _$FDateFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PDateToJson(this);
+  Map<String, dynamic> toJson() => _$FDateToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

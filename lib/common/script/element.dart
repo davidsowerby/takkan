@@ -10,45 +10,45 @@ import 'package:precept_script/part/query_view.dart';
 import 'package:precept_script/part/text.dart';
 import 'package:precept_script/signin/sign_in.dart';
 
-class PContentConverter {
+class ContentConverter {
   static const elementKeyName = "-element-";
 
-  static List<PContent> fromJson(List<dynamic> json) {
-    List<PContent> list = List.empty(growable: true);
+  static List<Content> fromJson(List<dynamic> json) {
+    List<Content> list = List.empty(growable: true);
     for (var entry in json) {
       final elementType = entry[elementKeyName];
       final entryCopy = Map<String, dynamic>.from(entry);
       entryCopy.remove(elementKeyName);
       switch (elementType) {
-        case "PPanel":
-          list.add(PPanel.fromJson(entryCopy));
+        case "Panel":
+          list.add(Panel.fromJson(entryCopy));
           break;
-        case "PPanelStatic":
-          list.add(PPanelStatic.fromJson(entryCopy));
+        case "PanelStatic":
+          list.add(PanelStatic.fromJson(entryCopy));
           break;
-        case "PGroup":
-          list.add(PGroup.fromJson(entryCopy));
+        case "Group":
+          list.add(Group.fromJson(entryCopy));
           break;
-        case "PPart":
-          list.add(PPart.fromJson(entryCopy));
+        case "Part":
+          list.add(Part.fromJson(entryCopy));
           break;
-        case "PText":
-          list.add(PText.fromJson(entryCopy));
+        case "Text":
+          list.add(Text.fromJson(entryCopy));
           break;
-        case "PNavButton":
-          list.add(PNavButton.fromJson(entryCopy));
+        case "NavButton":
+          list.add(NavButton.fromJson(entryCopy));
           break;
-        case "PNavButtonSet":
-          list.add(PNavButtonSet.fromJson(entryCopy));
+        case "NavButtonSet":
+          list.add(NavButtonSet.fromJson(entryCopy));
           break;
-        case "PEmailSignIn":
-          list.add(PEmailSignIn.fromJson(entryCopy));
+        case "EmailSignIn":
+          list.add(EmailSignIn.fromJson(entryCopy));
           break;
-        case "PQueryView":
-          list.add(PQueryView.fromJson(entryCopy));
+        case "QueryView":
+          list.add(QueryView.fromJson(entryCopy));
           break;
-        case "PListView":
-          list.add(PListView.fromJson(entryCopy));
+        case "ListView":
+          list.add(ListView.fromJson(entryCopy));
           break;
 
         default:
@@ -61,7 +61,7 @@ class PContentConverter {
     return list;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PContent>? elementList) {
+  static List<Map<String, dynamic>> toJson(List<Content>? elementList) {
     final outputList = List<Map<String, dynamic>>.empty(growable: true);
     if (elementList == null) {
       return outputList;

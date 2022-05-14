@@ -9,14 +9,14 @@ part 'rest_query.g.dart';
 /// [path] is not usually required, certainly not for Back4App, and uses the
 /// [documentSchema], which is the document type defined within [PSchema.documents]
 ///
-/// [queryName] see [PQuery.queryName]
+/// [queryName] see [Query.queryName]
 @JsonSerializable(explicitToJson: true)
-class PRestQuery extends PQuery {
+class RestQuery extends Query {
   final bool paramsAsPath;
   final Map<String, String> params;
   final String? _path;
 
-  PRestQuery({
+  RestQuery({
     String? path,
     Map<String, dynamic> variables = const {},
     List<String> propertyReferences = const [],
@@ -36,8 +36,8 @@ class PRestQuery extends PQuery {
 
   String get path => _path ?? documentSchema;
 
-  factory PRestQuery.fromJson(Map<String, dynamic> json) =>
-      _$PRestQueryFromJson(json);
+  factory RestQuery.fromJson(Map<String, dynamic> json) =>
+      _$RestQueryFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PRestQueryToJson(this);
+  Map<String, dynamic> toJson() => _$RestQueryToJson(this);
 }

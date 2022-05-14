@@ -14,11 +14,11 @@ import 'package:precept_script/validation/message.dart';
 
 part 'static_page.g.dart';
 
-/// A [PPageStatic] defines a static presentation of a Page, as perceived by a user.
-/// It is mapped to a route in the *precept_client* PreceptRouter. See [PPage] for pages connecting
+/// A [PageStatic] defines a static presentation of a Page, as perceived by a user.
+/// It is mapped to a route in the *precept_client* PreceptRouter. See [Page] for pages connecting
 /// to data).
 ///
-/// A [PPageStatic] is static and requires no dynamic data.   [PPanel] instances in [children] may however define their own data connections.
+/// A [PageStatic] is static and requires no dynamic data.   [Panel] instances in [children] may however define their own data connections.
 ///
 /// The [PreceptRouter] uses routes to navigate to the appropriate page.
 ///
@@ -32,24 +32,24 @@ part 'static_page.g.dart';
 ///
 /// [pageType] may in future be used to look up from [PageLibrary] - not currently used
 ///
-/// -- Note: [PContentConverter] has to be imported for code generation
+/// -- Note: [ContentConverter] has to be imported for code generation
 @JsonSerializable(explicitToJson: true)
-class PPageStatic extends PPodBase implements PPages {
+class PageStatic extends PodBase implements Pages {
   final String pageType;
   final bool scrollable;
 
   final List<String> routes;
 
-  final PLayout layout;
+  final Layout layout;
 
-  PPageStatic({
+  PageStatic({
     this.routes = const [],
     String? caption,
     this.pageType = 'defaultPage',
     this.scrollable = true,
-    this.layout = const PLayoutDistributedColumn(),
-    List<PContent> children = const [],
-    PDataProvider? dataProvider,
+    this.layout = const LayoutDistributedColumn(),
+    List<Content> children = const [],
+    DataProvider? dataProvider,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
   }) : super(
@@ -61,12 +61,12 @@ class PPageStatic extends PPodBase implements PPages {
           layout: layout,
         );
 
-  factory PPageStatic.fromJson(Map<String, dynamic> json) =>
-      _$PPageStaticFromJson(json);
+  factory PageStatic.fromJson(Map<String, dynamic> json) =>
+      _$PageStaticFromJson(json);
 
-  PScript get parent => super.parent as PScript;
+  Script get parent => super.parent as Script;
 
-  PContent get baseConfig => this;
+  Content get baseConfig => this;
 
   bool get isDataRoot => documentClass != null;
 
@@ -79,7 +79,7 @@ class PPageStatic extends PPodBase implements PPages {
     return DebugNode(this, subs);
   }
 
-  Map<String, dynamic> toJson() => _$PPageStaticToJson(this);
+  Map<String, dynamic> toJson() => _$PageStaticToJson(this);
 
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
@@ -99,7 +99,7 @@ class PPageStatic extends PPodBase implements PPages {
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    for (PContent entry in children) {
+    for (Content entry in children) {
       entry.walk(visitors);
     }
   }
@@ -110,13 +110,13 @@ class PPageStatic extends PPodBase implements PPages {
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get dataProviderIsDeclared =>
-      (dataProvider != null && !(dataProvider is PNoDataProvider));
+      (dataProvider != null && !(dataProvider is NullDataProvider));
 
   String? get idAlternative => title;
 
-  Map<String, PContent> get contentAsMap {
-    final Map<String, PContent> map = Map();
-    for (PContent content in children) {
+  Map<String, Content> get contentAsMap {
+    final Map<String, Content> map = Map();
+    for (Content content in children) {
       if (content.property != null) {
         map[content.property!] = content;
       }
@@ -127,11 +127,11 @@ class PPageStatic extends PPodBase implements PPages {
   bool get isStatic => true;
 
   @override
-  Map<String, PPages> get routeMap {
-   final Map<String, PPages> map=Map();
-   for(String route in routes){
-     map[route]=this;
-   }
-   return map;
+  Map<String, Pages> get routeMap {
+    final Map<String, Pages> map = Map();
+    for (String route in routes) {
+      map[route] = this;
+    }
+    return map;
   }
 }

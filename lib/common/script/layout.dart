@@ -5,42 +5,28 @@ import 'package:precept_script/common/log.dart';
 part 'layout.g.dart';
 
 /// Reduces the area available to the parent compoent effectively creating whitespace
-/// around it.  Used by layouts [PLayout.padding] and individual parts.
+/// around it.  Used by layouts [Layout.padding] and individual parts.
 @JsonSerializable(explicitToJson: true)
-class PPadding {
+class Padding {
   final double left;
   final double top;
   final double bottom;
   final double right;
 
-  const PPadding(
+  const Padding(
       {this.left = 8.0, this.top = 8.0, this.bottom = 8.0, this.right = 8.0});
 
-  factory PPadding.fromJson(Map<String, dynamic> json) =>
-      _$PPaddingFromJson(json);
+  factory Padding.fromJson(Map<String, dynamic> json) =>
+      _$PaddingFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PPaddingToJson(this);
+  Map<String, dynamic> toJson() => _$PaddingToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true)
-class PMargins {
-  final double left;
-  final double top;
-  final double bottom;
-  final double right;
 
-  const PMargins(
-      {this.left = 8.0, this.top = 8.0, this.bottom = 8.0, this.right = 8.0});
-
-  factory PMargins.fromJson(Map<String, dynamic> json) =>
-      _$PMarginsFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PMarginsToJson(this);
-}
 
 /// Common interface for type safety
-abstract class PLayout {
-  PPadding get padding;
+abstract class Layout {
+  Padding get padding;
 
   double get preferredColumnWidth;
 }
@@ -50,43 +36,43 @@ abstract class PLayout {
 /// [preferredColumnWidth] tells the page layout algorithm what to use as as the target column width.  This
 /// applies to single and multi-column layouts.
 @JsonSerializable(explicitToJson: true)
-class PLayoutDistributedColumn implements PLayout {
-  final PPadding padding;
+class LayoutDistributedColumn implements Layout {
+  final Padding padding;
   final double preferredColumnWidth;
 
-  const PLayoutDistributedColumn(
-      {this.padding = const PPadding(), this.preferredColumnWidth = 360});
+  const LayoutDistributedColumn(
+      {this.padding = const Padding(), this.preferredColumnWidth = 360});
 
-  factory PLayoutDistributedColumn.fromJson(Map<String, dynamic> json) =>
-      _$PLayoutDistributedColumnFromJson(json);
+  factory LayoutDistributedColumn.fromJson(Map<String, dynamic> json) =>
+      _$LayoutDistributedColumnFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PLayoutDistributedColumnToJson(this);
+  Map<String, dynamic> toJson() => _$LayoutDistributedColumnToJson(this);
 }
 
-class PLayoutJsonConverter {
-  static PLayout fromJson(Map<String, dynamic> json) {
+class LayoutJsonConverter {
+  static Layout fromJson(Map<String, dynamic> json) {
     final dataType = json['-data-'];
     switch (dataType) {
       case null:
-      case 'PLayoutByColumn':
-      return PLayoutDistributedColumn.fromJson(json);
+      case 'LayoutDistributedColumn':
+        return LayoutDistributedColumn.fromJson(json);
       default:
-        final msg = 'PLayout type $dataType not recognised';
-        logName('PLayoutJsonConverter').e(msg);
+        final msg = 'Layout type $dataType not recognised';
+        logName('LayoutJsonConverter').e(msg);
         throw PreceptException(msg);
     }
   }
 
-  static Map<String, dynamic> toJson(PLayout object) {
+  static Map<String, dynamic> toJson(Layout object) {
     final type = object.runtimeType;
     Map<String, dynamic> jsonMap = {};
     switch (type) {
-      case PLayoutDistributedColumn:
-        jsonMap = (object as PLayoutDistributedColumn).toJson();
+      case LayoutDistributedColumn:
+        jsonMap = (object as LayoutDistributedColumn).toJson();
         return jsonMap;
       default:
-        String msg = 'PLayout type ${type.toString()} not recognised';
-        logName('PLayoutJsonConverter').e(msg);
+        String msg = 'Layout type ${type.toString()} not recognised';
+        logName('LayoutJsonConverter').e(msg);
         throw PreceptException(msg);
     }
   }

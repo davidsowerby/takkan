@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'multi.dart';
+part of 'data_list.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PMulti _$PMultiFromJson(Map<String, dynamic> json) => PMulti(
+DataList _$DataListFromJson(Map<String, dynamic> json) => DataList(
       liveConnect: json['liveConnect'] as bool? ?? false,
       tag: json['tag'] as String? ?? 'default',
       pageLength: json['pageLength'] as int? ?? 20,
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PMultiToJson(PMulti instance) => <String, dynamic>{
+Map<String, dynamic> _$DataListToJson(DataList instance) => <String, dynamic>{
       'liveConnect': instance.liveConnect,
       'pageLength': instance.pageLength,
       'tag': instance.tag,
       'caption': instance.caption,
     };
 
-PMultiById _$PMultiByIdFromJson(Map<String, dynamic> json) => PMultiById(
+DataListById _$DataListByIdFromJson(Map<String, dynamic> json) => DataListById(
       objectIds:
           (json['objectIds'] as List<dynamic>).map((e) => e as String).toList(),
       liveConnect: json['liveConnect'] as bool? ?? false,
@@ -29,7 +29,7 @@ PMultiById _$PMultiByIdFromJson(Map<String, dynamic> json) => PMultiById(
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PMultiByIdToJson(PMultiById instance) =>
+Map<String, dynamic> _$DataListByIdToJson(DataListById instance) =>
     <String, dynamic>{
       'objectIds': instance.objectIds,
       'liveConnect': instance.liveConnect,
@@ -38,8 +38,8 @@ Map<String, dynamic> _$PMultiByIdToJson(PMultiById instance) =>
       'pageLength': instance.pageLength,
     };
 
-PMultiByFunction _$PMultiByFunctionFromJson(Map<String, dynamic> json) =>
-    PMultiByFunction(
+DataListByFunction _$DataListByFunctionFromJson(Map<String, dynamic> json) =>
+    DataListByFunction(
       cloudFunctionName: json['cloudFunctionName'] as String,
       pageLength: json['pageLength'] as int? ?? 20,
       params: json['params'] as Map<String, dynamic>? ?? const {},
@@ -48,7 +48,7 @@ PMultiByFunction _$PMultiByFunctionFromJson(Map<String, dynamic> json) =>
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PMultiByFunctionToJson(PMultiByFunction instance) =>
+Map<String, dynamic> _$DataListByFunctionToJson(DataListByFunction instance) =>
     <String, dynamic>{
       'params': instance.params,
       'cloudFunctionName': instance.cloudFunctionName,
@@ -58,8 +58,8 @@ Map<String, dynamic> _$PMultiByFunctionToJson(PMultiByFunction instance) =>
       'pageLength': instance.pageLength,
     };
 
-PMultiByFilter _$PMultiByFilterFromJson(Map<String, dynamic> json) =>
-    PMultiByFilter(
+DataListByFilter _$DataListByFilterFromJson(Map<String, dynamic> json) =>
+    DataListByFilter(
       script: json['script'] as String,
       cloudFunctionName: json['cloudFunctionName'] as String?,
       liveConnect: json['liveConnect'] as bool? ?? false,
@@ -68,7 +68,7 @@ PMultiByFilter _$PMultiByFilterFromJson(Map<String, dynamic> json) =>
       pageLength: json['pageLength'] as int? ?? 20,
     );
 
-Map<String, dynamic> _$PMultiByFilterToJson(PMultiByFilter instance) =>
+Map<String, dynamic> _$DataListByFilterToJson(DataListByFilter instance) =>
     <String, dynamic>{
       'script': instance.script,
       'cloudFunctionName': instance.cloudFunctionName,
@@ -78,7 +78,8 @@ Map<String, dynamic> _$PMultiByFilterToJson(PMultiByFilter instance) =>
       'caption': instance.caption,
     };
 
-PMultiByGQL _$PMultiByGQLFromJson(Map<String, dynamic> json) => PMultiByGQL(
+DataListByGQL _$DataListByGQLFromJson(Map<String, dynamic> json) =>
+    DataListByGQL(
       script: json['script'] as String,
       liveConnect: json['liveConnect'] as bool? ?? false,
       tag: json['tag'] as String? ?? 'default',
@@ -86,7 +87,7 @@ PMultiByGQL _$PMultiByGQLFromJson(Map<String, dynamic> json) => PMultiByGQL(
       pageLength: json['pageLength'] as int? ?? 20,
     );
 
-Map<String, dynamic> _$PMultiByGQLToJson(PMultiByGQL instance) =>
+Map<String, dynamic> _$DataListByGQLToJson(DataListByGQL instance) =>
     <String, dynamic>{
       'script': instance.script,
       'liveConnect': instance.liveConnect,

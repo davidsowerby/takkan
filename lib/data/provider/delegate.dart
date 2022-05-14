@@ -1,10 +1,10 @@
 import 'package:precept_script/common/script/precept_item.dart';
 
 /// Common base class for delegates to PDataProvider
-abstract class PDataProviderDelegate with WalkTarget {
+abstract class DataProviderDelegate with WalkTarget {
   final bool checkHealthOnConnect;
 
-  const PDataProviderDelegate({
+  const DataProviderDelegate({
     this.checkHealthOnConnect = false,
   });
 }

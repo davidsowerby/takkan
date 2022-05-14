@@ -9,8 +9,8 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/data/converter/conversion_error_messages.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/page/page.dart';
 import 'package:precept_script/data/select/query_converter.dart';
+import 'package:precept_script/page/page.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/schema/validation/validation_error_messages.dart';
 import 'package:precept_script/script/version.dart';
@@ -62,20 +62,20 @@ part 'script.g.dart';
 ///
 
 @JsonSerializable(explicitToJson: true)
-@PQueryConverter()
-class PScript extends PCommon {
+@QueryConverter()
+class Script extends Common {
   final String name;
   final String locale;
-  final PVersion version;
+  final Version version;
   String? nameLocale;
-  final PSchema schema;
+  final Schema schema;
   @JsonKey(ignore: true)
-  final PSchemaSource? schemaSource;
+  final SchemaSource? schemaSource;
   @JsonKey(
-    toJson: PPagesJsonConverter.toJson,
-    fromJson: PPagesJsonConverter.fromJson,
+    toJson: PagesJsonConverter.toJson,
+    fromJson: PagesJsonConverter.fromJson,
   )
-  final List<PPages> pages;
+  final List<Pages> pages;
   final ConversionErrorMessages conversionErrorMessages;
   @JsonKey(ignore: true)
   final ValidationErrorMessages validationErrorMessages;
@@ -83,9 +83,9 @@ class PScript extends PCommon {
   List<ValidationMessage> _scriptValidationMessages =
       List.empty(growable: true);
 
-  Map<String, PPages> _routes = Map();
+  Map<String, Pages> _routes = Map();
 
-  PScript({
+  Script({
     this.conversionErrorMessages =
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
     this.validationErrorMessages = const ValidationErrorMessages(
@@ -96,22 +96,21 @@ class PScript extends PCommon {
     this.locale = 'en_GB',
     this.schemaSource,
     required this.schema,
-    PDataProvider? dataProvider,
+    DataProvider? dataProvider,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
   }) : super(
-          dataProviderConfig: dataProvider ?? PNoDataProvider(),
+    dataProviderConfig: dataProvider ?? NullDataProvider(),
           controlEdit: controlEdit,
         );
 
-  factory PScript.fromJson(Map<String, dynamic> json) =>
-      _$PScriptFromJson(json);
+  factory Script.fromJson(Map<String, dynamic> json) => _$ScriptFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PScriptToJson(this);
+  Map<String, dynamic> toJson() => _$ScriptToJson(this);
 
   String get debugId => name;
 
   @JsonKey(ignore: true)
-  Map<String, PPages> get routeMap => _routes;
+  Map<String, Pages> get routeMap => _routes;
 
   Set<String> get allRoles {
     final counter = RoleVisitor();
@@ -121,10 +120,10 @@ class PScript extends PCommon {
 
   // String get nameLocale => '$name:$locale';
 
-  static Future<PScript> readFromFile(File f) async {
+  static Future<Script> readFromFile(File f) async {
     final encoded = await f.readAsString();
     final jsonMap = json.decode(encoded);
-    return PScript.fromJson(jsonMap);
+    return Script.fromJson(jsonMap);
   }
 
   /// Validates the structure and content of the model
@@ -215,16 +214,15 @@ class PScript extends PCommon {
   }
 
   /// See [PreceptItem.subElements]
-  List<dynamic> get subElements =>
-      [
+  List<dynamic> get subElements => [
         schema,
         if (schemaSource != null) schemaSource,
         ...super.subElements,
         pages,
       ];
 
-  PDocument documentSchema({required String documentSchemaName}) {
-    final PDocument? documentSchema = schema.documents[documentSchemaName];
+  Document documentSchema({required String documentSchemaName}) {
+    final Document? documentSchema = schema.documents[documentSchemaName];
     if (documentSchema == null) {
       String msg = "document schema '$documentSchemaName' not found";
       logType(this.runtimeType).e(msg);
@@ -256,7 +254,7 @@ class PScript extends PCommon {
   }
 
   DebugNode get debugNode => DebugNode(this,
-      List.from(routes.entries.toList().map((e) => (e as PPage).debugNode)));
+      List.from(routes.entries.toList().map((e) => (e as Page).debugNode)));
 
   writeToFile(File f) async {
     final jsonMap = this.toJson();
@@ -267,12 +265,12 @@ class PScript extends PCommon {
   /// Creates a lookup list of all routes to pages, regardless of whether they are defined
   /// via [pages] or [routes]
   void _mergeRoutes() {
-    for (PPages page in pages) {
+    for (Pages page in pages) {
       _routes.addAll(page.routeMap);
     }
   }
 
-  Map<String, PPages> get routes => _routes;
+  Map<String, Pages> get routes => _routes;
 }
 
 class Walkers {

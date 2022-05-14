@@ -3,13 +3,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'error.g.dart';
 
-@JsonSerializable( explicitToJson: true)
-class PError {
+@JsonSerializable(explicitToJson: true)
+class Lamin8Error {
   final String message;
 
-  const PError({required this.message});
+  const Lamin8Error({required this.message});
 
-  factory PError.fromJson(Map<String, dynamic> json) => _$PErrorFromJson(json);
+  factory Lamin8Error.fromJson(Map<String, dynamic> json) =>
+      _$Lamin8ErrorFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PErrorToJson(this);
+  Map<String, dynamic> toJson() => _$Lamin8ErrorToJson(this);
 }

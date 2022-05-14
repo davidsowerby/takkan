@@ -1,58 +1,61 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:precept_script/data/select/data.dart';
+import 'package:precept_script/panel/panel.dart';
 
-part 'multi.g.dart';
+part 'data_list.g.dart';
 
-/// Defines how to retrieve a single document.
+/// Defines how to retrieve a list of 0..n documents.
 ///
-/// The default is to connect to the currently selected document (see DataRoot in *precept_client+).
-/// Selection to become the current document is made, for example, by  tapping an entry in list of documents from a data-select,
-/// use of a search panel etc.  Connection to a specific document can be made by specifying [objectId], or specifying a [cloudFunction]
-/// which returns exactly one document.
+/// The default [DataList] returns all instances of the parent [Pod.documentClass],
+/// which may not be a good idea if there are a lot of instances!
 ///
-/// If both are specified, [objectId] takes precedence over [cloudFunction]
+/// Other, restricted lists can be retrieved using:
+///
+/// - [DataListById]
+/// - [DataListByFunction]
+/// - [DataListByFilter]
+/// - [DataListByGQL]
 ///
 /// [liveConnect] If true, a Stream of data is expected (equivalent to a Back4App LiveQuery), rather than a Future
 ///
-/// NOTE: Only the [objectId] is required and not the full [DocumentId], because the document class is provided
-/// by the parent [PPod].
 
 @JsonSerializable(explicitToJson: true)
-class PMulti implements PData {
+class DataList implements Data {
   final bool liveConnect;
   final int pageLength;
 
-  bool get isSingle => false;
+  bool get isItem => false;
 
-  bool get isMulti => true;
+  bool get isList => true;
 
   bool get isStatic => false;
 
   final String tag;
   final String? caption;
 
-  const PMulti({
+  const DataList({
     this.liveConnect = false,
     this.tag = 'default',
     this.pageLength = 20,
     this.caption,
   });
 
-  factory PMulti.fromJson(Map<String, dynamic> json) => _$PMultiFromJson(json);
+  factory DataList.fromJson(Map<String, dynamic> json) =>
+      _$DataListFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PMultiToJson(this);
+  Map<String, dynamic> toJson() => _$DataListToJson(this);
 }
 
-/// A single document identified by a fixed [objectId]
+/// A list of documents identified by fixed [objectId]s
 @JsonSerializable(explicitToJson: true)
-class PMultiById implements PData {
+class DataListById implements Data {
   final List<String> objectIds;
   final bool liveConnect;
   final String tag;
   final String? caption;
   final int pageLength;
 
-  const PMultiById({
+  const DataListById({
     required this.objectIds,
     this.liveConnect = false,
     this.pageLength = 20,
@@ -61,21 +64,21 @@ class PMultiById implements PData {
   });
 
   @override
-  bool get isSingle => false;
+  bool get isItem => false;
 
   @override
-  bool get isMulti => true;
+  bool get isList => true;
 
-  factory PMultiById.fromJson(Map<String, dynamic> json) =>
-      _$PMultiByIdFromJson(json);
+  factory DataListById.fromJson(Map<String, dynamic> json) =>
+      _$DataListByIdFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PMultiByIdToJson(this);
+  Map<String, dynamic> toJson() => _$DataListByIdToJson(this);
 }
 
-/// A single document retrieved from a cloud function identified
+/// A list of documents retrieved from a cloud function identified
 /// by [cloudFunctionName]
 @JsonSerializable(explicitToJson: true)
-class PMultiByFunction implements PData {
+class DataListByFunction implements Data {
   final Map<String, dynamic> params;
   final String cloudFunctionName;
   final bool liveConnect;
@@ -83,7 +86,7 @@ class PMultiByFunction implements PData {
   final String? caption;
   final int pageLength;
 
-  const PMultiByFunction({
+  const DataListByFunction({
     required this.cloudFunctionName,
     this.pageLength = 20,
     this.params = const {},
@@ -93,15 +96,15 @@ class PMultiByFunction implements PData {
   });
 
   @override
-  bool get isSingle => false;
+  bool get isItem => false;
 
   @override
-  bool get isMulti => true;
+  bool get isList => true;
 
-  factory PMultiByFunction.fromJson(Map<String, dynamic> json) =>
-      _$PMultiByFunctionFromJson(json);
+  factory DataListByFunction.fromJson(Map<String, dynamic> json) =>
+      _$DataListByFunctionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PMultiByFunctionToJson(this);
+  Map<String, dynamic> toJson() => _$DataListByFunctionToJson(this);
 }
 
 /// [script] is a javascript-valid boolean statement, for example:
@@ -112,8 +115,10 @@ class PMultiByFunction implements PData {
 ///  generate a server-side Back4App cloud function.  In the latter case,
 ///  [cloudFunctionName] is used as the function name and must therefore be a
 ///  valid Javascript function name
+///
+/// The function must return a list.
 @JsonSerializable(explicitToJson: true)
-class PMultiByFilter implements PData {
+class DataListByFilter implements Data {
   final String script;
   final String? cloudFunctionName;
   final bool liveConnect;
@@ -121,55 +126,52 @@ class PMultiByFilter implements PData {
   final String tag;
   final String? caption;
 
-  const PMultiByFilter({
+  const DataListByFilter({
     required this.script,
     this.cloudFunctionName,
     this.liveConnect = false,
     this.tag = 'default',
     this.caption,
-    this.pageLength=20,
+    this.pageLength = 20,
   });
 
   @override
-  bool get isSingle => false;
+  bool get isItem => false;
 
   @override
-  bool get isMulti => true;
+  bool get isList => true;
 
+  factory DataListByFilter.fromJson(Map<String, dynamic> json) =>
+      _$DataListByFilterFromJson(json);
 
-
-  factory PMultiByFilter.fromJson(Map<String, dynamic> json) =>
-      _$PMultiByFilterFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PMultiByFilterToJson(this);
+  Map<String, dynamic> toJson() => _$DataListByFilterToJson(this);
 }
 
-/// [script] must be a valid GraphQL script which returns exactly one document
+/// [script] must be a valid GraphQL script which returns a list of 0..n documents
 @JsonSerializable(explicitToJson: true)
-class PMultiByGQL implements PData {
+class DataListByGQL implements Data {
   final String script;
   final bool liveConnect;
   final String tag;
   final String? caption;
   final int pageLength;
 
-  const PMultiByGQL({
+  const DataListByGQL({
     required this.script,
     this.liveConnect = false,
     this.tag = 'default',
     this.caption,
-    this.pageLength=20,
+    this.pageLength = 20,
   });
 
   @override
-  bool get isSingle => false;
+  bool get isItem => false;
 
   @override
-  bool get isMulti => true;
+  bool get isList => true;
 
+  factory DataListByGQL.fromJson(Map<String, dynamic> json) =>
+      _$DataListByGQLFromJson(json);
 
-  factory PMultiByGQL.fromJson(Map<String, dynamic> json) =>
-      _$PMultiByGQLFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PMultiByGQLToJson(this);
+  Map<String, dynamic> toJson() => _$DataListByGQLToJson(this);
 }

@@ -6,7 +6,7 @@ part of 'list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PList _$PListFromJson(Map<String, dynamic> json) => PList(
+FList _$FListFromJson(Map<String, dynamic> json) => FList(
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => ListValidation.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -15,7 +15,7 @@ PList _$PListFromJson(Map<String, dynamic> json) => PList(
       defaultValue: json['defaultValue'] as List<dynamic>?,
     );
 
-Map<String, dynamic> _$PListToJson(PList instance) {
+Map<String, dynamic> _$FListToJson(FList instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

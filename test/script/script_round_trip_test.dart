@@ -24,13 +24,13 @@ void main() {
     tearDown(() {});
     test('script to JSON map and back', () async {
       // given
-      PScript script = medleyScript2;
+      Script script = medleyScript2;
 
       // when
       script.init();
       // then
       Map<String, dynamic> jsonMap = script.toJson();
-      PScript script2 = PScript.fromJson(jsonMap);
+      Script script2 = Script.fromJson(jsonMap);
       final tracker = script2.init().initWalker.tracker;
 
       expect(jsonMap['nameLocale'], 'Medley:en_GB');
@@ -55,12 +55,12 @@ void main() {
       // given
       Directory tempDir = Directory.systemTemp;
       File f = File('${tempDir.path}/scriptOut.json');
-      PScript script = medleyScript2;
+      Script script = medleyScript2;
 
       // when
       script.init();
       await script.writeToFile(f);
-      final script2 = await PScript.readFromFile(f);
+      final script2 = await Script.readFromFile(f);
       script2.init();
       // then
 

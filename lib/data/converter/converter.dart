@@ -25,17 +25,17 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   /// Two stage validation.
   /// - Conversion validation from Form input data, for example, is String input a valid Integer.  The check
   /// carried out is defined by the [ModelViewConverter] itself, as it knows both the View and Model types
-  /// - Model, or value, validation - for example value is greater than 3.  This defined within a [PField] (part of [PSchema])
+  /// - Model, or value, validation - for example value is greater than 3.  This defined within a [Field] (part of [Schema])
   ///
   /// If conversion validation fails, returns the error message for that (model validation is not possible)
   /// If conversion validation succeeds, return result of model validation (which is an empty list
   /// if there are no validation errors)
-  List<String> validate(VIEW inputData, PField field, PScript pScript) {
+  List<String> validate(VIEW inputData, Field field, Script pScript) {
     final conversionValidation = viewModelValidate(inputData);
     if (conversionValidation) {
       return field.doValidation(viewToModel(inputData), pScript);
     } else {
-      final String key=this.runtimeType.toString();
+      final String key = this.runtimeType.toString();
       return [pScript.conversionErrorMessages.patterns[key] ?? 'unknown'];
     }
   }

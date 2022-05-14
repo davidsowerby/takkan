@@ -5,7 +5,7 @@ import 'package:precept_script/script/script.dart';
 part 'conversion_error_messages.g.dart';
 
 /// Holds error message patterns for [ModelViewConverter] implementations
-/// This will become part of [PScript]
+/// This will become part of [Script]
 @JsonSerializable( explicitToJson: true)
 class ConversionErrorMessages {
   final Map<String, String> patterns;

@@ -7,25 +7,26 @@ part 'list.g.dart';
 /// Display of a list's entries can be a tile or a panel.
 /// [itemConfigAsTile] eventually becomes a Flutter ListTile, and can only take two properties,
 /// whereas the [itemConfigAsPanel] can be any structure supported by a Precept Panel
-/// A [PNavTile] is a specialised form which also defines a route to navigate to when tapped.
+/// A [NavTile] is a specialised form which also defines a route to navigate to when tapped.
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
 /// level of granularity
 @JsonSerializable(explicitToJson: true)
-class PListRead extends PReadParticle {
-  final PListTile? itemConfigAsTile;
-  final PPanel? itemConfigAsPanel;
+class ListRead extends ReadParticle {
+  final ListTile? itemConfigAsTile;
+  final Panel? itemConfigAsPanel;
 
-  PListRead(
+  ListRead(
       {String styleName = 'default',
-        bool showCaption=false,
-        this.itemConfigAsTile,
-        this.itemConfigAsPanel})
+      bool showCaption = false,
+      this.itemConfigAsTile,
+      this.itemConfigAsPanel})
       : super(showCaption: showCaption, styleName: styleName);
 
-  factory PListRead.fromJson(Map<String, dynamic> json) => _$PListReadFromJson(json);
+  factory ListRead.fromJson(Map<String, dynamic> json) =>
+      _$ListReadFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PListReadToJson(this);
+  Map<String, dynamic> toJson() => _$ListReadToJson(this);
 
   @override
   Type get viewDataType => List;
@@ -34,52 +35,63 @@ class PListRead extends PReadParticle {
 /// Display of a list's entries can be a tile or a panel.
 /// [itemConfigAsTile] eventually becomes a Flutter ListTile, and can only take two properties,
 /// whereas the [itemConfigAsPanel] can be any structure supported by a Precept Panel
-/// A [PNavTile] is a specialised form which also defines a route to navigate to when tapped.
+/// A [NavTile] is a specialised form which also defines a route to navigate to when tapped.
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
 /// level of granularity
-@JsonSerializable( explicitToJson: true)
-class PListEdit  {
-  final PListTile? itemConfigAsTile;
-  final PPanel? itemConfigAsPanel;
-  PListEdit({String styleName = 'default', bool showCaption=false, this.itemConfigAsPanel, this.itemConfigAsTile});
+@JsonSerializable(explicitToJson: true)
+class ListEdit {
+  final ListTile? itemConfigAsTile;
+  final Panel? itemConfigAsPanel;
 
-  factory PListEdit.fromJson(Map<String, dynamic> json) => _$PListEditFromJson(json);
+  ListEdit(
+      {String styleName = 'default',
+      bool showCaption = false,
+      this.itemConfigAsPanel,
+      this.itemConfigAsTile});
 
-  Map<String, dynamic> toJson() => _$PListEditToJson(this);
+  factory ListEdit.fromJson(Map<String, dynamic> json) =>
+      _$ListEditFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ListEditToJson(this);
 
   Type get viewDataType => List;
 }
 
 /// Defines the property names to used to create a Flutter ListTile
-@JsonSerializable( explicitToJson: true)
-class PListTile {
+@JsonSerializable(explicitToJson: true)
+class ListTile {
   final String titleProperty;
   final String subTitleProperty;
 
-  const PListTile({this.titleProperty = 'title', this.subTitleProperty = 'subTitle',});
+  const ListTile({
+    this.titleProperty = 'title',
+    this.subTitleProperty = 'subTitle',
+  });
 
-  factory PListTile.fromJson(Map<String, dynamic> json) => _$PListTileFromJson(json);
+  factory ListTile.fromJson(Map<String, dynamic> json) =>
+      _$ListTileFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PListTileToJson(this);
+  Map<String, dynamic> toJson() => _$ListTileToJson(this);
 }
 
 /// Defines the property names to used to create a Flutter ListTile, and a [route] to navigate to
 /// when tapped
-@JsonSerializable( explicitToJson: true)
-class PNavTile extends PListTile {
+@JsonSerializable(explicitToJson: true)
+class NavTile extends ListTile {
   final String route;
 
-  PNavTile({
+  NavTile({
     required this.route,
     String titleProperty = 'title',
     String subTitleProperty = 'subTitle',
   }) : super(
-    titleProperty: titleProperty,
-    subTitleProperty: subTitleProperty,
-  );
+          titleProperty: titleProperty,
+          subTitleProperty: subTitleProperty,
+        );
 
-  factory PNavTile.fromJson(Map<String, dynamic> json) => _$PNavTileFromJson(json);
+  factory NavTile.fromJson(Map<String, dynamic> json) =>
+      _$NavTileFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PNavTileToJson(this);
+  Map<String, dynamic> toJson() => _$NavTileToJson(this);
 }

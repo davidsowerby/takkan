@@ -1,35 +1,38 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:precept_script/data/select/data.dart';
 
-part 'single.g.dart';
+part 'data_item.g.dart';
 
 /// Defines how to retrieve a single document.
 ///
-/// [PSingle] connects to the currently selected document (see DataRoot in *precept_client+).
-/// Selection of the current document is made, for example, by
-/// use of a search panel etc.
+/// The default [DataItem] connects to the currently selected document (see DocumentPage in *precept_client+).
+/// Selection of the current document is made, for example, by use of a search panel etc.
 ///
-/// See below for other options for selection, such as [PSingleById], [PSingleByFunction],
-/// [PSingleByFilter] and [PSingleByGQL]
+/// See below for other options for selection, such as [DataItemById], [DataItemByFunction],
+/// [DataItemByFilter] and [DataItemByGQL]
 @JsonSerializable(explicitToJson: true)
-class PSingle implements PData {
+class DataItem implements Data {
   final bool liveConnect;
 
-  bool get isSingle => true;
+  bool get isItem => true;
 
-  bool get isMulti => false;
+  bool get isList => false;
 
   bool get isStatic => false;
 
   final String tag;
   final String? caption;
 
-  const PSingle({this.liveConnect = false, this.tag = 'default',     this.caption,});
+  const DataItem({
+    this.liveConnect = false,
+    this.tag = 'default',
+    this.caption,
+  });
 
-  factory PSingle.fromJson(Map<String, dynamic> json) =>
-      _$PSingleFromJson(json);
+  factory DataItem.fromJson(Map<String, dynamic> json) =>
+      _$DataItemFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSingleToJson(this);
+  Map<String, dynamic> toJson() => _$DataItemToJson(this);
 
   @override
   int get pageLength => 1;
@@ -37,141 +40,134 @@ class PSingle implements PData {
 
 /// A single document identified by a fixed [objectId]
 @JsonSerializable(explicitToJson: true)
-class PSingleById implements PData {
+class DataItemById implements Data {
   final String objectId;
   final bool liveConnect;
   final String tag;
   final String? caption;
 
-  const PSingleById({
+  const DataItemById({
     required this.objectId,
     this.liveConnect = false,
-     this.caption,
+    this.caption,
     this.tag = 'default',
   });
 
   @override
-  bool get isSingle => true;
+  bool get isItem => true;
 
   @override
-  bool get isMulti => false;
-
+  bool get isList => false;
 
   @override
   int get pageLength => 1;
 
-  factory PSingleById.fromJson(Map<String, dynamic> json) =>
-      _$PSingleByIdFromJson(json);
+  factory DataItemById.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByIdFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSingleByIdToJson(this);
-
-
+  Map<String, dynamic> toJson() => _$DataItemByIdToJson(this);
 }
 
 /// A single document retrieved from a cloud function identified
 /// by [cloudFunctionName]
 @JsonSerializable(explicitToJson: true)
-class PSingleByFunction implements PData {
+class DataItemByFunction implements Data {
   final Map<String, dynamic> params;
   final String cloudFunctionName;
   final bool liveConnect;
   final String tag;
   final String? caption;
 
-
-  const PSingleByFunction({
+  const DataItemByFunction({
     required this.cloudFunctionName,
     this.params = const {},
     this.liveConnect = false,
     this.tag = 'default',
-     this.caption,
+    this.caption,
   });
 
   @override
-  bool get isSingle => true;
+  bool get isItem => true;
 
   @override
-  bool get isMulti => false;
-
+  bool get isList => false;
 
   @override
   int get pageLength => 1;
 
-  factory PSingleByFunction.fromJson(Map<String, dynamic> json) =>
-      _$PSingleByFunctionFromJson(json);
+  factory DataItemByFunction.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByFunctionFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSingleByFunctionToJson(this);
+  Map<String, dynamic> toJson() => _$DataItemByFunctionToJson(this);
 }
 
 /// [script] is a javascript-valid boolean statement, for example:
 ///
-/// - 'age >= 18 && isMember==true'
+/// - 'membership==234567'
 ///
 ///  This will be restructured if necessary, and passed via a REST API call, or
 ///  generate a server-side Back4App cloud function.  In the latter case,
 ///  [cloudFunctionName] is used as the function name and must therefore be a
 ///  valid Javascript function name
+///
+/// The function must return a single valid document
 @JsonSerializable(explicitToJson: true)
-class PSingleByFilter implements PData {
+class DataItemByFilter implements Data {
   final String script;
   final String? cloudFunctionName;
   final bool liveConnect;
   final String tag;
   final String? caption;
 
-  const PSingleByFilter({
+  const DataItemByFilter({
     required this.script,
     this.cloudFunctionName,
     this.liveConnect = false,
     this.tag = 'default',
-     this.caption,
+    this.caption,
   });
 
   @override
-  bool get isSingle => true;
+  bool get isItem => true;
 
   @override
-  bool get isMulti => false;
-
-
+  bool get isList => false;
 
   @override
   int get pageLength => 1;
 
-  factory PSingleByFilter.fromJson(Map<String, dynamic> json) =>
-      _$PSingleByFilterFromJson(json);
+  factory DataItemByFilter.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByFilterFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSingleByFilterToJson(this);
+  Map<String, dynamic> toJson() => _$DataItemByFilterToJson(this);
 }
 
 /// [script] must be a valid GraphQL script which returns exactly one document
 @JsonSerializable(explicitToJson: true)
-class PSingleByGQL implements PData {
+class DataItemByGQL implements Data {
   final String script;
   final bool liveConnect;
   final String tag;
   final String? caption;
 
-  const PSingleByGQL({
+  const DataItemByGQL({
     required this.script,
     this.liveConnect = false,
     this.tag = 'default',
-     this.caption,
+    this.caption,
   });
 
   @override
-  bool get isSingle => true;
+  bool get isItem => true;
 
   @override
-  bool get isMulti => false;
-
-
+  bool get isList => false;
 
   @override
   int get pageLength => 1;
 
-  factory PSingleByGQL.fromJson(Map<String, dynamic> json) =>
-      _$PSingleByGQLFromJson(json);
+  factory DataItemByGQL.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByGQLFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSingleByGQLToJson(this);
+  Map<String, dynamic> toJson() => _$DataItemByGQLToJson(this);
 }

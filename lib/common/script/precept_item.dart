@@ -7,7 +7,7 @@ import 'package:precept_script/validation/message.dart';
 
 part 'precept_item.g.dart';
 
-/// The whole of the [PScript] structure is a tree, with a single [PScript] instance at its root.
+/// The whole of the [Script] structure is a tree, with a single [Script] instance at its root.
 ///
 /// This [PreceptItem] is the base class for the major components of that tree.
 ///
@@ -16,7 +16,7 @@ part 'precept_item.g.dart';
 /// There are there types of id, used to support testing and debugging.
 ///
 /// The [uid] is a unique id within the scope of of a [parent]
-/// The [debugId] is a hierarchical 'path' id unique within the scope of a [PScript] instance.
+/// The [debugId] is a hierarchical 'path' id unique within the scope of a [Script] instance.
 /// The hierarchical nature of this key enables means any particular [PreceptItem]
 /// can be identified via its parent chain. This also becomes the Widget key of the
 /// item's associated Widget, especially useful for functional testing.
@@ -27,9 +27,9 @@ part 'precept_item.g.dart';
 /// That is unlikely unless there are two components with the same caption or name.
 ///
 /// - [_index] is the child index within a [_parent] where it is held in a list. Null if not used.
-/// - [script] is a reference back to the root [PScript] instance.
+/// - [script] is a reference back to the root [Script] instance.
 ///
-/// All properties except [_id] are generated during the [PScript.init] process
+/// All properties except [_id] are generated during the [Script.init] process
 /// The only persisted value is [_id] as all the others are generated.
 ///
 @JsonSerializable(explicitToJson: true)
@@ -44,7 +44,7 @@ class PreceptItem with WalkTarget {
   @JsonKey(ignore: true)
   int? _index;
   @JsonKey(ignore: true)
-  late PScript _script;
+  late Script _script;
 
   PreceptItem({
     String? id,
@@ -56,7 +56,7 @@ class PreceptItem with WalkTarget {
   Map<String, dynamic> toJson() => _$PreceptItemToJson(this);
 
   /// Used for Widget and Functional testing.  This also becomes the Widget key in [Page], [Part] and [Panel] instances
-  /// The [PScript.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
+  /// The [Script.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
   String? get debugId => _debugId;
 
   /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/precept1/precept_script/-/issues/21
@@ -64,7 +64,7 @@ class PreceptItem with WalkTarget {
 
   String? get pid => _id;
 
-  PScript get script => _script;
+  Script get script => _script;
 
   /// Defines those properties which represent child elements which require the
   /// [Walker] to visit.
@@ -72,7 +72,7 @@ class PreceptItem with WalkTarget {
   /// These have to be coded explicitly for each [PreceptItem] sub-class to enable
   /// the [Walker].
   ///
-  /// See [PCommon] for an example.
+  /// See [Common] for an example.
   ///
   /// Not all elements are [PreceptItem] sub-classes, hence the returned list is not
   /// typed.
@@ -227,7 +227,7 @@ class InitWalker extends Walker<InitWalkerParams, String> {
 }
 
 class SetParentWalkerParams extends WalkerParams {
-  final PScript script;
+  final Script script;
   final PreceptItem parent;
 
   const SetParentWalkerParams({

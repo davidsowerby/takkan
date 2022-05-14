@@ -6,46 +6,32 @@ part of 'layout.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPadding _$PPaddingFromJson(Map<String, dynamic> json) => PPadding(
+Padding _$PaddingFromJson(Map<String, dynamic> json) => Padding(
       left: (json['left'] as num?)?.toDouble() ?? 8.0,
       top: (json['top'] as num?)?.toDouble() ?? 8.0,
       bottom: (json['bottom'] as num?)?.toDouble() ?? 8.0,
       right: (json['right'] as num?)?.toDouble() ?? 8.0,
     );
 
-Map<String, dynamic> _$PPaddingToJson(PPadding instance) => <String, dynamic>{
+Map<String, dynamic> _$PaddingToJson(Padding instance) => <String, dynamic>{
       'left': instance.left,
       'top': instance.top,
       'bottom': instance.bottom,
       'right': instance.right,
     };
 
-PMargins _$PMarginsFromJson(Map<String, dynamic> json) => PMargins(
-      left: (json['left'] as num?)?.toDouble() ?? 8.0,
-      top: (json['top'] as num?)?.toDouble() ?? 8.0,
-      bottom: (json['bottom'] as num?)?.toDouble() ?? 8.0,
-      right: (json['right'] as num?)?.toDouble() ?? 8.0,
-    );
-
-Map<String, dynamic> _$PMarginsToJson(PMargins instance) => <String, dynamic>{
-      'left': instance.left,
-      'top': instance.top,
-      'bottom': instance.bottom,
-      'right': instance.right,
-    };
-
-PLayoutDistributedColumn _$PLayoutDistributedColumnFromJson(
+LayoutDistributedColumn _$LayoutDistributedColumnFromJson(
         Map<String, dynamic> json) =>
-    PLayoutDistributedColumn(
+    LayoutDistributedColumn(
       padding: json['padding'] == null
-          ? const PPadding()
-          : PPadding.fromJson(json['padding'] as Map<String, dynamic>),
+          ? const Padding()
+          : Padding.fromJson(json['padding'] as Map<String, dynamic>),
       preferredColumnWidth:
           (json['preferredColumnWidth'] as num?)?.toDouble() ?? 360,
     );
 
-Map<String, dynamic> _$PLayoutDistributedColumnToJson(
-        PLayoutDistributedColumn instance) =>
+Map<String, dynamic> _$LayoutDistributedColumnToJson(
+        LayoutDistributedColumn instance) =>
     <String, dynamic>{
       'padding': instance.padding.toJson(),
       'preferredColumnWidth': instance.preferredColumnWidth,

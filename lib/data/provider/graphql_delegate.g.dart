@@ -6,12 +6,12 @@ part of 'graphql_delegate.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGraphQL _$PGraphQLFromJson(Map<String, dynamic> json) => PGraphQL(
+GraphQL _$GraphQLFromJson(Map<String, dynamic> json) => GraphQL(
       graphqlEndpoint: json['graphqlEndpoint'] as String? ?? '/graphql',
       checkHealthOnConnect: json['checkHealthOnConnect'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PGraphQLToJson(PGraphQL instance) => <String, dynamic>{
+Map<String, dynamic> _$GraphQLToJson(GraphQL instance) => <String, dynamic>{
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'graphqlEndpoint': instance.graphqlEndpoint,
     };

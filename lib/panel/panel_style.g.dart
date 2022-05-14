@@ -6,12 +6,12 @@ part of 'panel_style.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPanelStyle _$PPanelStyleFromJson(Map<String, dynamic> json) => PPanelStyle(
+PanelStyle _$PanelStyleFromJson(Map<String, dynamic> json) => PanelStyle(
       expandable: json['expandable'] as bool? ?? true,
       openExpanded: json['openExpanded'] as bool? ?? true,
     );
 
-Map<String, dynamic> _$PPanelStyleToJson(PPanelStyle instance) =>
+Map<String, dynamic> _$PanelStyleToJson(PanelStyle instance) =>
     <String, dynamic>{
       'expandable': instance.expandable,
       'openExpanded': instance.openExpanded,

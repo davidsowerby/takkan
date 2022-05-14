@@ -1,5 +1,5 @@
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/schema/schema.dart';
@@ -19,49 +19,51 @@ void main() {
 
     test('autoRoute', () {
       // given
-      PScript s = PScript(
+      Script s = Script(
         name: 'test',
-        version: PVersion(number: 0),
-        schema: PSchema(
-          version: PVersion(number: 0),
+        version: Version(number: 0),
+        schema: Schema(
+          version: Version(number: 0),
           name: 'test',
         ),
         pages: [
-          PPage(
+          Page(
             documentClass: 'Person',
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              PSingle(caption: '?'),
+              DataItem(caption: '?'),
             ],
           ),
-          PPage(
+          Page(
             documentClass: 'Person',
             tag: 'shortForm',
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              PSingle(),
+              DataItem(),
             ],
           ),
-          PPage(
-            documentClass: 'Person',
-            dataSelectors: [PMulti(),],
-          ),
-          PPage(
+          Page(
             documentClass: 'Person',
             dataSelectors: [
-              PMultiByFilter(
+              DataList(),
+            ],
+          ),
+          Page(
+            documentClass: 'Person',
+            dataSelectors: [
+              DataListByFilter(
                 tag: 'members',
                 script: 'member==true',
               )
             ],
           ),
-          PPageStatic(
+          PageStatic(
             routes: ['static page'],
           )
         ],

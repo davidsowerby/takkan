@@ -8,25 +8,25 @@ part 'integer.freezed.dart';
 part 'integer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PInteger extends PField<VInteger, int> {
+class FInteger extends Field<VInteger, int> {
   Type get modelType => int;
 
-  PInteger({
+  FInteger({
     int? defaultValue,
     List<VInteger> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           required: required,
           validations: validations,
           defaultValue: defaultValue,
         );
 
-  factory PInteger.fromJson(Map<String, dynamic> json) =>
-      _$PIntegerFromJson(json);
+  factory FInteger.fromJson(Map<String, dynamic> json) =>
+      _$FIntegerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PIntegerToJson(this);
+  Map<String, dynamic> toJson() => _$FIntegerToJson(this);
 }
 
 @freezed

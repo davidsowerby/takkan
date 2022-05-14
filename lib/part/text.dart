@@ -6,7 +6,7 @@ import 'package:precept_script/part/part.dart';
 part 'text.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PText extends PPart {
+class Text extends Part {
   static const String defaultReadTrait = 'text-read-default';
   static const String heading1 = 'text-heading-1';
   static const String heading2 = 'text-heading-2';
@@ -17,15 +17,15 @@ class PText extends PPart {
   static const String body = 'text-body';
   static const String errorText = 'text-error';
 
-  PText(
+  Text(
       {String? caption,
       bool readOnly = false,
       double height = 60,
       String? property,
       String readTraitName = 'text-read-default',
-      String editTraitName = 'PTextBox-default',
+      String editTraitName = 'TextBox-default',
       String? staticData,
-      PHelp? help,
+      Help? help,
       ControlEdit controlEdit = ControlEdit.inherited,
       String? id,
       String? tooltip})
@@ -43,7 +43,7 @@ class PText extends PPart {
           tooltip: tooltip,
         );
 
-  factory PText.fromJson(Map<String, dynamic> json) => _$PTextFromJson(json);
+  factory Text.fromJson(Map<String, dynamic> json) => _$TextFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PTextToJson(this);
+  Map<String, dynamic> toJson() => _$TextToJson(this);
 }

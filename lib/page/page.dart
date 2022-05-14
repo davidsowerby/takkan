@@ -9,8 +9,8 @@ import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/schema/field/integer.dart';
@@ -21,14 +21,14 @@ import 'package:precept_script/validation/message.dart';
 
 part 'page.g.dart';
 
-/// A [PPage] defines the presentation of a Page, as perceived by a user.  It is
+/// A [Page] defines the presentation of a Page, as perceived by a user.  It is
 /// mapped to a route in the *precept_client* PreceptRouter, and connects to dynamic data.
 ///
-/// For static pages see [PPageStatic].
+/// For static pages see [PageStatic].
 ///
-/// A [PPage] contains [children] of type [PPanel] and [PPart] which define the detail
-/// of the presentation, and in conjunction with the [PSchema] manages connection
-/// to data, validation and permissions.  It can also contain further [PPage]
+/// A [Page] contains [children] of type [Panel] and [PPart] which define the detail
+/// of the presentation, and in conjunction with the [Schema] manages connection
+/// to data, validation and permissions.  It can also contain further [Page]
 /// instances which are not children in the presentation sense, but are children
 /// in the sense of data connection.
 ///
@@ -44,30 +44,30 @@ part 'page.g.dart';
 ///
 /// - The most common case is for the the page to use dynamic data, and be the
 /// start point, or root, for presentation of an instance of [documentClass].
-/// Its [children] usually then present elements of that data, but [PPanel]
+/// Its [children] usually then present elements of that data, but [Panel]
 /// instances may connect to their own data. To the user, this looks like the
 /// page is displaying data of multiple document classes, and potentially also
-/// multiple data providers. [documentClass] references a [PDocument] defined
-/// within [PSchema] to provide validation and permissions, while [dataSelectors] defines
+/// multiple data providers. [documentClass] references a [Document] defined
+/// within [Schema] to provide validation and permissions, while [dataSelectors] defines
 /// how to retrieve the data.
 ///
 /// For dynamic data, the method of selecting data is specified in one or more
 /// [dataSelectors].  Having multiple selectors allows, for example, a single
-/// [PPage] to be declared for 'Open Issues', 'Closed Issues', 'My Issues'
+/// [Page] to be declared for 'Open Issues', 'Closed Issues', 'My Issues'
 ///
-/// - [PSingle] specifies a single document instance
-/// - [PMulti] specifies 0..n instances, therefore a list
+/// - [DataItem] specifies a single document instance
+/// - [DataList] specifies 0..n instances, therefore a list
 ///
-/// [PSingle] and [PMulti] have a number of variations to enable different data
+/// [DataItem] and [DataList] have a number of variations to enable different data
 /// selection methods.
 ///
 /// If different representations of the same [documentClass] are required then
-/// multiple [PPage]s must be defined and differentiated by [tag].
+/// multiple [Page]s must be defined and differentiated by [tag].
 ///
 /// The [PreceptRouter] uses routes to navigate to the appropriate page.
 ///
 /// For a static page, [PStatic.route] requires a developer defined specific
-/// route.  For a dynamic page,[PSingle] and [PMulti] are used to automatically
+/// route.  For a dynamic page,[DataItem] and [DataList] are used to automatically
 /// generate routes in the following structure:
 ///
 /// - individual documents: document/[documentClass]/{dataSelector.tag}/{page.tag}
@@ -86,38 +86,38 @@ part 'page.g.dart';
 ///
 /// [pageType] may in future be used to look up from [PageLibrary] - not currently used
 ///
-/// -- Note: [PContentConverter] has to be imported for code generation
+/// -- Note: [ContentConverter] has to be imported for code generation
 @JsonSerializable(explicitToJson: true)
-class PPage extends PPodBase implements PPages {
+class Page extends PodBase implements Pages {
   final String pageType;
   final bool scrollable;
   final String? tag;
 
   @JsonKey(
-    fromJson: PDataListJsonConverter.fromJson,
-    toJson: PDataListJsonConverter.toJson,
+    fromJson: DataListJsonConverter.fromJson,
+    toJson: DataListJsonConverter.toJson,
   )
-  final List<PData> dataSelectors;
+  final List<Data> dataSelectors;
   @JsonKey(
-    toJson: PLayoutJsonConverter.toJson,
-    fromJson: PLayoutJsonConverter.fromJson,
+    toJson: LayoutJsonConverter.toJson,
+    fromJson: LayoutJsonConverter.fromJson,
   )
-  final PLayout layout;
+  final Layout layout;
 
-  PPage({
+  Page({
     this.tag,
     String? documentClass,
     String? caption,
-    PPanel? listEntryConfig,
+    Panel? listEntryConfig,
     this.pageType = 'defaultPage',
     this.scrollable = true,
-    this.layout = const PLayoutDistributedColumn(),
-    List<PContent> children = const [],
-    PDataProvider? dataProvider,
+    this.layout = const LayoutDistributedColumn(),
+    List<Content> children = const [],
+    DataProvider? dataProvider,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
     String? property,
-    this.dataSelectors = const [const PProperty()],
+    this.dataSelectors = const [const Property()],
   }) : super(
           id: id,
           dataProvider: dataProvider,
@@ -130,13 +130,13 @@ class PPage extends PPodBase implements PPages {
           layout: layout,
         );
 
-  factory PPage.fromJson(Map<String, dynamic> json) => _$PPageFromJson(json);
+  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
 
-  PScript get parent => super.parent as PScript;
+  Script get parent => super.parent as Script;
 
   bool get isStatic => false;
 
-  PContent get baseConfig => this;
+  Content get baseConfig => this;
 
   bool get isDataRoot => documentClass != null;
 
@@ -149,7 +149,7 @@ class PPage extends PPodBase implements PPages {
     return DebugNode(this, subs);
   }
 
-  Map<String, dynamic> toJson() => _$PPageToJson(this);
+  Map<String, dynamic> toJson() => _$PageToJson(this);
 
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
@@ -161,10 +161,10 @@ class PPage extends PPodBase implements PPages {
     }
   }
 
-  Map<String, PPages> get routeMap {
-    final Map<String, PPages> map = Map();
-    for (PData selector in dataSelectors) {
-      final prefix = (selector.isSingle) ? 'document' : 'documents';
+  Map<String, Pages> get routeMap {
+    final Map<String, Pages> map = Map();
+    for (Data selector in dataSelectors) {
+      final prefix = (selector.isItem) ? 'document' : 'documents';
       final route = '$prefix/$documentClass/${selector.tag}';
       if (tag == null) {
         map[route] = this;
@@ -183,7 +183,7 @@ class PPage extends PPodBase implements PPages {
 
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    for (PContent entry in children) {
+    for (Content entry in children) {
       entry.walk(visitors);
     }
   }
@@ -194,13 +194,13 @@ class PPage extends PPodBase implements PPages {
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
   bool get dataProviderIsDeclared =>
-      (dataProvider != null && !(dataProvider is PNoDataProvider));
+      (dataProvider != null && !(dataProvider is NullDataProvider));
 
   String? get idAlternative => title;
 
-  Map<String, PContent> get contentAsMap {
-    final Map<String, PContent> map = Map();
-    for (PContent content in children) {
+  Map<String, Content> get contentAsMap {
+    final Map<String, Content> map = Map();
+    for (Content content in children) {
       if (content.property != null) {
         map[content.property!] = content;
       }
@@ -210,14 +210,14 @@ class PPage extends PPodBase implements PPages {
 }
 
 // TODO add pages (PObject), data-select & conversionErrorMessages
-final PDocument pScriptSchema0 = PDocument(
-  documentType: PDocumentType.versioned,
+final Document pScriptSchema0 = Document(
+  documentType: DocumentType.versioned,
   fields: {
-    'nameLocale': PString(),
-    'name': PString(),
-    'version': PInteger(),
-    'locale': PString(),
-    'controlEdit': PString(),
+    'nameLocale': FString(),
+    'name': FString(),
+    'version': FInteger(),
+    'locale': FString(),
+    'controlEdit': FString(),
   },
 );
 
@@ -233,36 +233,36 @@ class RoleVisitor implements ScriptVisitor {
 
   @override
   step(Object entry) {
-    if (entry is PDocument) {
+    if (entry is Document) {
       roles.addAll(entry.permissions.allRoles);
     }
   }
 }
 
-abstract class PPages {
-  Map<String, PPages> get routeMap;
+abstract class Pages {
+  Map<String, Pages> get routeMap;
 
-  List<PContent> get children;
+  List<Content> get children;
 
-  Map<String, PContent> get contentAsMap;
+  Map<String, Content> get contentAsMap;
 
   String? get title;
 
   bool get isStatic;
 }
 
-class PPagesJsonConverter {
-  static List<PPages> fromJson(List<dynamic>? json) {
+class PagesJsonConverter {
+  static List<Pages> fromJson(List<dynamic>? json) {
     if (json == null) throw NullThrownError();
-    final List<PPages> results = List.empty(growable: true);
+    final List<Pages> results = List.empty(growable: true);
     for (Map<String, dynamic> entry in json) {
       final dataType = entry["-data-"];
       switch (dataType) {
-        case 'PPage':
-          results.add(PPage.fromJson(entry));
+        case 'Page':
+          results.add(Page.fromJson(entry));
           break;
-        case 'PPageStatic':
-          results.add(PPageStatic.fromJson(entry));
+        case 'PageStatic':
+          results.add(PageStatic.fromJson(entry));
           break;
 
         default:
@@ -273,16 +273,16 @@ class PPagesJsonConverter {
     return results;
   }
 
-  static List<Map<String, dynamic>> toJson(List<PPages> objectList) {
+  static List<Map<String, dynamic>> toJson(List<Pages> objectList) {
     final List<Map<String, dynamic>> results = List.empty(growable: true);
-    for (PPages entry in objectList) {
+    for (Pages entry in objectList) {
       late Map<String, dynamic> jsonMap;
       switch (entry.runtimeType) {
-        case PPage:
-          jsonMap = (entry as PPage).toJson();
+        case Page:
+          jsonMap = (entry as Page).toJson();
           break;
-        case PPageStatic:
-          jsonMap = (entry as PPageStatic).toJson();
+        case PageStatic:
+          jsonMap = (entry as PageStatic).toJson();
           break;
       }
 

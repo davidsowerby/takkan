@@ -21,8 +21,8 @@ void main() {
       // given
 
       // when
-      PNavButtonSet a = PNavButtonSet(buttons: {});
-      PNavButtonSet b = PNavButtonSet.fromJson(a.toJson());
+      NavButtonSet a = NavButtonSet(buttons: {});
+      NavButtonSet b = NavButtonSet.fromJson(a.toJson());
       // then
       expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
@@ -31,17 +31,17 @@ void main() {
       // given
 
       // when
-      PQueryView a = PQueryView();
-      PQueryView b = PQueryView.fromJson(a.toJson());
+      QueryView a = QueryView();
+      QueryView b = QueryView.fromJson(a.toJson());
       // then
       // expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
     });
-    test('caption from PText', () {
+    test('caption from Text', () {
       // given
       medleyScript0.init();
       // when
-      PText pText = medleyScript0.routes['/']?.children[0] as PText;
+      Text pText = medleyScript0.routes['/']?.children[0] as Text;
       // then
 
       expect(pText.caption, isNull);

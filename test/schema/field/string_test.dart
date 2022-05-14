@@ -16,17 +16,17 @@ void main() {
 
     test('validate', () {
       // given
-      PScript script = PScript(
+      Script script = Script(
         name: 'A script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
       );
       // script.init();
 
-      final PString field = PString(
+      final FString field = FString(
         validations: [
           VString.longerThan(3),
           VString.shorterThan(6),

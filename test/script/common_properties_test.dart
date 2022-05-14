@@ -1,12 +1,9 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/data/select/data.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -30,25 +27,26 @@ void main() {
 
     test('correct inherit / overrule', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'test',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
-        dataProvider: PDataProvider(
-          instanceConfig: const PInstance(group: '', instance: ''),
+        dataProvider: DataProvider(
+          instanceConfig: const AppInstance(group: '', instance: ''),
         ),
         pages: [
-          PPageStatic(routes: ['/'],
+          PageStatic(
+            routes: ['/'],
             caption: 'A Page',
             controlEdit: ControlEdit.thisAndBelow,
             children: [
-              PPanelStatic(
+              PanelStatic(
                 controlEdit: ControlEdit.noEdit,
                 children: [
-                  PPart(readTraitName: 'default'),
+                  Part(readTraitName: 'default'),
                 ],
               ),
             ],
@@ -58,9 +56,9 @@ void main() {
       // when
       script.init();
       // then
-      final page = script.routes['/'] as PPageStatic;
-      final panel = page.children[0] as PPanelStatic;
-      final part = panel.children[0] as PPart;
+      final page = script.routes['/'] as PageStatic;
+      final panel = page.children[0] as PanelStatic;
+      final part = panel.children[0] as Part;
 
       expect(page.dataProvider, isNotNull);
       expect(page.controlEdit, ControlEdit.thisAndBelow);
@@ -79,22 +77,22 @@ void main() {
 
     test('defaults, unset', () {
       // given
-      final script = PScript(
+      final script = Script(
           name: 'test',
-          version: PVersion(number: 0),
-          schema: PSchema(
+          version: Version(number: 0),
+          schema: Schema(
             name: 'test',
-            version: PVersion(number: 0),
+            version: Version(number: 0),
           ),
-          dataProvider: PNoDataProvider(),
+          dataProvider: NullDataProvider(),
           pages: [
-            PPageStatic(
+            PageStatic(
               routes: ['/test'],
               caption: 'A Page',
               children: [
-                PPanelStatic(
+                PanelStatic(
                   children: [
-                    PPart(
+                    Part(
                       readTraitName: 'default',
                       property: '',
                     ),
@@ -107,22 +105,22 @@ void main() {
 
       script.init();
       // then
-      final page = script.routes['/test'] as PPageStatic;
-      final panel = page.children[0] as PPanelStatic;
-      final part = panel.children[0] as PPart;
+      final page = script.routes['/test'] as PageStatic;
+      final panel = page.children[0] as PanelStatic;
+      final part = panel.children[0] as Part;
 
       expect(page.isStatic, true);
-      expect(page.dataProvider, isA<PNoDataProvider>());
+      expect(page.dataProvider, isA<NullDataProvider>());
       expect(page.controlEdit, ControlEdit.inherited);
       expect(page.dataProviderIsDeclared, false);
 
       expect(panel.isStatic, true);
-      expect(page.dataProvider, isA<PNoDataProvider>());
+      expect(page.dataProvider, isA<NullDataProvider>());
       expect(panel.controlEdit, ControlEdit.inherited);
       expect(panel.isDataRoot, false);
       expect(panel.dataProviderIsDeclared, false);
 
-      expect(page.dataProvider, isA<PNoDataProvider>());
+      expect(page.dataProvider, isA<NullDataProvider>());
       expect(part.controlEdit, ControlEdit.inherited);
       expect(part.dataProviderIsDeclared, false);
     });

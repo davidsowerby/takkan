@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/data/select/query_converter.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:test/test.dart';
 
 import '../fixtures.dart';
@@ -24,7 +24,7 @@ void main() {
 
     test('round trip, PDocumentGet', () {
       // given
-      PGetDocument g = PGetDocument(
+      GetDocument g = GetDocument(
         documentId: DocumentId(
           documentClass: "user/prefs",
           objectId: "23",
@@ -32,8 +32,8 @@ void main() {
         documentSchema: 'Document',
       );
       // when
-      final Map<String, dynamic> j = PQueryConverter().toJson(g);
-      final mirror = PQueryConverter().fromJson(j);
+      final Map<String, dynamic> j = QueryConverter().toJson(g);
+      final mirror = QueryConverter().fromJson(j);
       // then
 
       expect(json.encode(g), json.encode(mirror));

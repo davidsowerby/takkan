@@ -6,109 +6,108 @@ part of 'style.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PHeadingStyle _$PHeadingStyleFromJson(Map<String, dynamic> json) =>
-    PHeadingStyle(
+HeadingStyle _$HeadingStyleFromJson(Map<String, dynamic> json) => HeadingStyle(
       textTrait: json['textTrait'] == null
-          ? const PTextTrait(textStyle: PTextStyle.subtitle1)
-          : PTextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
-      background: $enumDecodeNullable(_$PColorEnumMap, json['background']) ??
-          PColor.canvas,
-      textTheme: $enumDecodeNullable(_$PTextThemeEnumMap, json['textTheme']) ??
-          PTextTheme.cardCanvas,
+          ? const TextTrait(textStyle: TextStyle.subtitle1)
+          : TextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
+      background: $enumDecodeNullable(_$ColorEnumMap, json['background']) ??
+          Color.canvas,
+      textTheme: $enumDecodeNullable(_$TextThemeEnumMap, json['textTheme']) ??
+          TextTheme.cardCanvas,
       height: (json['height'] as num?)?.toDouble() ?? 40,
       elevation: (json['elevation'] as num?)?.toDouble() ?? 20,
       border: json['border'] == null
-          ? const PBorder()
-          : PBorder.fromJson(json['border'] as Map<String, dynamic>),
+          ? const Border()
+          : Border.fromJson(json['border'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PHeadingStyleToJson(PHeadingStyle instance) =>
+Map<String, dynamic> _$HeadingStyleToJson(HeadingStyle instance) =>
     <String, dynamic>{
       'textTrait': instance.textTrait.toJson(),
       'border': instance.border.toJson(),
-      'background': _$PColorEnumMap[instance.background],
-      'textTheme': _$PTextThemeEnumMap[instance.textTheme],
+      'background': _$ColorEnumMap[instance.background],
+      'textTheme': _$TextThemeEnumMap[instance.textTheme],
       'height': instance.height,
       'elevation': instance.elevation,
     };
 
-const _$PColorEnumMap = {
-  PColor.primary: 'primary',
-  PColor.primaryLight: 'primaryLight',
-  PColor.primaryDark: 'primaryDark',
-  PColor.accent: 'accent',
-  PColor.canvas: 'canvas',
-  PColor.card: 'card',
-  PColor.highlight: 'highlight',
-  PColor.hint: 'hint',
-  PColor.error: 'error',
+const _$ColorEnumMap = {
+  Color.primary: 'primary',
+  Color.primaryLight: 'primaryLight',
+  Color.primaryDark: 'primaryDark',
+  Color.accent: 'accent',
+  Color.canvas: 'canvas',
+  Color.card: 'card',
+  Color.highlight: 'highlight',
+  Color.hint: 'hint',
+  Color.error: 'error',
 };
 
-const _$PTextThemeEnumMap = {
-  PTextTheme.cardCanvas: 'cardCanvas',
-  PTextTheme.primary: 'primary',
-  PTextTheme.accent: 'accent',
+const _$TextThemeEnumMap = {
+  TextTheme.cardCanvas: 'cardCanvas',
+  TextTheme.primary: 'primary',
+  TextTheme.accent: 'accent',
 };
 
-PBorder _$PBorderFromJson(Map<String, dynamic> json) => PBorder(
+Border _$BorderFromJson(Map<String, dynamic> json) => Border(
       borderName:
           json['borderName'] as String? ?? 'roundedRectangleMediumPrimary',
     );
 
-Map<String, dynamic> _$PBorderToJson(PBorder instance) => <String, dynamic>{
+Map<String, dynamic> _$BorderToJson(Border instance) => <String, dynamic>{
       'borderName': instance.borderName,
     };
 
-PBorderDetailed _$PBorderDetailedFromJson(Map<String, dynamic> json) =>
-    PBorderDetailed(
+BorderDetailed _$BorderDetailedFromJson(Map<String, dynamic> json) =>
+    BorderDetailed(
       side: json['side'] == null
-          ? const PBorderSide()
-          : PBorderSide.fromJson(json['side'] as Map<String, dynamic>),
-      shape: $enumDecodeNullable(_$PBorderShapeEnumMap, json['shape']) ??
-          PBorderShape.roundedRectangle,
+          ? const BorderSide()
+          : BorderSide.fromJson(json['side'] as Map<String, dynamic>),
+      shape: $enumDecodeNullable(_$BorderShapeEnumMap, json['shape']) ??
+          BorderShape.roundedRectangle,
       sideSet: json['sideSet'] == null
           ? null
-          : PBorderSideSet.fromJson(json['sideSet'] as Map<String, dynamic>),
+          : BorderSideSet.fromJson(json['sideSet'] as Map<String, dynamic>),
       gapPadding: (json['gapPadding'] as num?)?.toDouble() ?? 4.0,
     );
 
-Map<String, dynamic> _$PBorderDetailedToJson(PBorderDetailed instance) =>
+Map<String, dynamic> _$BorderDetailedToJson(BorderDetailed instance) =>
     <String, dynamic>{
-      'shape': _$PBorderShapeEnumMap[instance.shape],
+      'shape': _$BorderShapeEnumMap[instance.shape],
       'side': instance.side.toJson(),
       'sideSet': instance.sideSet?.toJson(),
       'gapPadding': instance.gapPadding,
     };
 
-const _$PBorderShapeEnumMap = {
-  PBorderShape.roundedRectangle: 'roundedRectangle',
-  PBorderShape.stadium: 'stadium',
-  PBorderShape.outlineInput: 'outlineInput',
-  PBorderShape.continuousRectangle: 'continuousRectangle',
-  PBorderShape.circle: 'circle',
-  PBorderShape.directional: 'directional',
-  PBorderShape.underlineInput: 'underlineInput',
-  PBorderShape.border: 'border',
-  PBorderShape.beveledRectangle: 'beveledRectangle',
+const _$BorderShapeEnumMap = {
+  BorderShape.roundedRectangle: 'roundedRectangle',
+  BorderShape.stadium: 'stadium',
+  BorderShape.outlineInput: 'outlineInput',
+  BorderShape.continuousRectangle: 'continuousRectangle',
+  BorderShape.circle: 'circle',
+  BorderShape.directional: 'directional',
+  BorderShape.underlineInput: 'underlineInput',
+  BorderShape.border: 'border',
+  BorderShape.beveledRectangle: 'beveledRectangle',
 };
 
-PBorderSideSet _$PBorderSideSetFromJson(Map<String, dynamic> json) =>
-    PBorderSideSet(
+BorderSideSet _$BorderSideSetFromJson(Map<String, dynamic> json) =>
+    BorderSideSet(
       top: json['top'] == null
-          ? const PBorderSide()
-          : PBorderSide.fromJson(json['top'] as Map<String, dynamic>),
+          ? const BorderSide()
+          : BorderSide.fromJson(json['top'] as Map<String, dynamic>),
       left: json['left'] == null
-          ? const PBorderSide()
-          : PBorderSide.fromJson(json['left'] as Map<String, dynamic>),
+          ? const BorderSide()
+          : BorderSide.fromJson(json['left'] as Map<String, dynamic>),
       right: json['right'] == null
-          ? const PBorderSide()
-          : PBorderSide.fromJson(json['right'] as Map<String, dynamic>),
+          ? const BorderSide()
+          : BorderSide.fromJson(json['right'] as Map<String, dynamic>),
       bottom: json['bottom'] == null
-          ? const PBorderSide()
-          : PBorderSide.fromJson(json['bottom'] as Map<String, dynamic>),
+          ? const BorderSide()
+          : BorderSide.fromJson(json['bottom'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PBorderSideSetToJson(PBorderSideSet instance) =>
+Map<String, dynamic> _$BorderSideSetToJson(BorderSideSet instance) =>
     <String, dynamic>{
       'top': instance.top.toJson(),
       'left': instance.left.toJson(),
@@ -116,22 +115,22 @@ Map<String, dynamic> _$PBorderSideSetToJson(PBorderSideSet instance) =>
       'bottom': instance.bottom.toJson(),
     };
 
-PBorderSide _$PBorderSideFromJson(Map<String, dynamic> json) => PBorderSide(
+BorderSide _$BorderSideFromJson(Map<String, dynamic> json) => BorderSide(
       color:
-          $enumDecodeNullable(_$PColorEnumMap, json['color']) ?? PColor.primary,
+          $enumDecodeNullable(_$ColorEnumMap, json['color']) ?? Color.primary,
       width: (json['width'] as num?)?.toDouble() ?? 5,
-      style: $enumDecodeNullable(_$PBorderStyleEnumMap, json['style']) ??
-          PBorderStyle.solid,
+      style: $enumDecodeNullable(_$BorderStyleEnumMap, json['style']) ??
+          BorderStyle.solid,
     );
 
-Map<String, dynamic> _$PBorderSideToJson(PBorderSide instance) =>
+Map<String, dynamic> _$BorderSideToJson(BorderSide instance) =>
     <String, dynamic>{
-      'color': _$PColorEnumMap[instance.color],
+      'color': _$ColorEnumMap[instance.color],
       'width': instance.width,
-      'style': _$PBorderStyleEnumMap[instance.style],
+      'style': _$BorderStyleEnumMap[instance.style],
     };
 
-const _$PBorderStyleEnumMap = {
-  PBorderStyle.solid: 'solid',
-  PBorderStyle.none: 'none',
+const _$BorderStyleEnumMap = {
+  BorderStyle.solid: 'solid',
+  BorderStyle.none: 'none',
 };

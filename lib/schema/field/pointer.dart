@@ -7,27 +7,27 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'pointer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PPointer extends PField<PointerValidation, Pointer> {
+class FPointer extends Field<PointerValidation, Pointer> {
   Type get modelType => Pointer;
   final String targetClass;
 
-  PPointer({
+  FPointer({
     Pointer? defaultValue,
     required this.targetClass,
     List<PointerValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
         );
 
-  factory PPointer.fromJson(Map<String, dynamic> json) =>
-      _$PPointerFromJson(json);
+  factory FPointer.fromJson(Map<String, dynamic> json) =>
+      _$FPointerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PPointerToJson(this);
+  Map<String, dynamic> toJson() => _$FPointerToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

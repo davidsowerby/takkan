@@ -6,7 +6,7 @@ part of 'geo_point.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGeoPoint _$PGeoPointFromJson(Map<String, dynamic> json) => PGeoPoint(
+FGeoPoint _$FGeoPointFromJson(Map<String, dynamic> json) => FGeoPoint(
       defaultValue: json['defaultValue'] == null
           ? null
           : GeoPoint.fromJson(json['defaultValue'] as Map<String, dynamic>),
@@ -18,7 +18,7 @@ PGeoPoint _$PGeoPointFromJson(Map<String, dynamic> json) => PGeoPoint(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PGeoPointToJson(PGeoPoint instance) {
+Map<String, dynamic> _$FGeoPointToJson(FGeoPoint instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

@@ -5,9 +5,9 @@ import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/precept_item.dart';
 import 'package:precept_script/common/util/visitor.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/page/page.dart';
 import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/data/select/query_converter.dart';
+import 'package:precept_script/page/page.dart';
 import 'package:precept_script/schema/field/field.dart';
 import 'package:precept_script/schema/json/json_converter.dart';
 import 'package:precept_script/script/version.dart';
@@ -17,10 +17,10 @@ part 'schema.g.dart';
 /// The root for a backend-agnostic definition of a data structure, including data types, validation, permissions
 /// and relationships.
 ///
-/// A [PSchema] is associated with a [PDataProvider] instance.  The [name] must be unique
-/// within a [PSchema] instance, but has no other constraint.
+/// A [Schema] is associated with a [DataProvider] instance.  The [name] must be unique
+/// within a [Schema] instance, but has no other constraint.
 ///
-/// [PSchema] provides a definition for use by Precept, but could also be used to create a backend schema.
+/// [Schema] provides a definition for use by Precept, but could also be used to create a backend schema.
 /// If it is used that way, the interpretation of it is a matter for a SchemaInterpreter implementation
 /// within the backend-specific library.
 ///
@@ -42,15 +42,15 @@ part 'schema.g.dart';
 ///
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-@PQueryConverter()
-class PSchema extends PSchemaElement {
+@QueryConverter()
+class Schema extends SchemaElement {
   final String name;
-  final Map<String, PDocument> _documents;
-  final Map<String, PQuery> namedQueries;
-  final PVersion version;
+  final Map<String, Document> _documents;
+  final Map<String, Query> namedQueries;
+  final Version version;
 
-  PSchema(
-      {Map<String, PDocument> documents = const {},
+  Schema(
+      {Map<String, Document> documents = const {},
       bool readOnly = false,
       required this.name,
       required this.version,
@@ -58,15 +58,14 @@ class PSchema extends PSchemaElement {
       : _documents = documents,
         super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
 
-  factory PSchema.fromJson(Map<String, dynamic> json) =>
-      _$PSchemaFromJson(json);
+  factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSchemaToJson(this);
+  Map<String, dynamic> toJson() => _$SchemaToJson(this);
 
   @JsonKey(ignore: true)
-  PSchemaElement get parent => NullSchemaElement();
+  SchemaElement get parent => NullSchemaElement();
 
-  Map<String, PDocument> get documents => _documents;
+  Map<String, Document> get documents => _documents;
 
   @JsonKey(ignore: true)
   IsReadOnly get isReadOnly => _isReadOnly;
@@ -89,7 +88,7 @@ class PSchema extends PSchemaElement {
     });
   }
 
-  PDocument document(String key) {
+  Document document(String key) {
     final doc = _documents[key];
     if (doc == null) {
       String msg =
@@ -119,12 +118,12 @@ class PSchema extends PSchemaElement {
 /// PDocument(fields: [PString(name: 'title')])
 ///
 /// which for longer declarations is a bit more readable
-abstract class PSchemaElement extends PreceptItem {
+abstract class SchemaElement extends PreceptItem {
   String? _name;
 
   final IsReadOnly _isReadOnly;
 
-  PSchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
+  SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
       : _isReadOnly = readOnly;
 
   Map<String, dynamic> toJson();
@@ -140,7 +139,7 @@ abstract class PSchemaElement extends PreceptItem {
   String get name => _name!;
 
   @JsonKey(ignore: true)
-  PSchemaElement get parent => super.parent as PSchemaElement;
+  SchemaElement get parent => super.parent as SchemaElement;
 
   IsReadOnly _readOnlyState() {
     return (_isReadOnly == IsReadOnly.inherited)
@@ -173,7 +172,7 @@ abstract class PSchemaElement extends PreceptItem {
 ///
 ///
 @JsonSerializable(explicitToJson: true)
-class PPermissions with WalkTarget {
+class Permissions with WalkTarget {
   final List<AccessMethod> _requiresAuthentication;
   final List<AccessMethod> isPublic;
 
@@ -190,7 +189,7 @@ class PPermissions with WalkTarget {
 
   final List<String> addFieldRoles;
 
-  const PPermissions({
+  const Permissions({
     this.isPublic = const [],
     List<AccessMethod> requiresAuthentication = const [],
     this.readRoles = const [],
@@ -258,10 +257,10 @@ class PPermissions with WalkTarget {
     return list;
   }
 
-  factory PPermissions.fromJson(Map<String, dynamic> json) =>
-      _$PPermissionsFromJson(json);
+  factory Permissions.fromJson(Map<String, dynamic> json) =>
+      _$PermissionsFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PPermissionsToJson(this);
+  Map<String, dynamic> toJson() => _$PermissionsToJson(this);
 
   bool get requiresGetAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
@@ -322,27 +321,26 @@ enum AccessMethod {
 /// later
 ///
 /// Implementation of these rules is managed by [DataProvider]
-enum PDocumentType { standard, versioned }
+enum DocumentType { standard, versioned }
 
 /// Schema for a 'Class' in Back4App, 'Document' in Firebase
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-@PSchemaFieldMapConverter()
-class PDocument extends PSchemaElement {
-  final PPermissions permissions;
-  final PDocumentType documentType;
-  final Map<String, PField> fields;
+@SchemaFieldMapConverter()
+class Document extends SchemaElement {
+  final Permissions permissions;
+  final DocumentType documentType;
+  final Map<String, Field> fields;
 
-  PDocument({
+  Document({
     required this.fields,
-    this.documentType = PDocumentType.standard,
-    this.permissions = const PPermissions(),
+    this.documentType = DocumentType.standard,
+    this.permissions = const Permissions(),
   }) : super();
 
+  factory Document.fromJson(Map<String, dynamic> json) =>
+      _$DocumentFromJson(json);
 
-  factory PDocument.fromJson(Map<String, dynamic> json) =>
-      _$PDocumentFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PDocumentToJson(this);
+  Map<String, dynamic> toJson() => _$DocumentToJson(this);
 
   @override
   doInit(InitWalkerParams params) {
@@ -385,19 +383,19 @@ class PDocument extends PSchemaElement {
 /// [group] relates to the first level within *precept.json*
 /// [instance] relates to the second level within *precept.json*
 @JsonSerializable(explicitToJson: true)
-class PSchemaSource extends PreceptItem {
+class SchemaSource extends PreceptItem {
   final String group;
   final String instance;
 
-  PSchemaSource({
+  SchemaSource({
     required this.group,
     required this.instance,
     String? id,
     int version = 0,
   }) : super(id: id);
 
-  factory PSchemaSource.fromJson(Map<String, dynamic> json) =>
-      _$PSchemaSourceFromJson(json);
+  factory SchemaSource.fromJson(Map<String, dynamic> json) =>
+      _$SchemaSourceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PSchemaSourceToJson(this);
+  Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);
 }

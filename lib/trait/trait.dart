@@ -3,9 +3,8 @@
 // part 'trait.g.dart';
 
 // @JsonSerializable( explicitToJson: true)
-abstract class PTrait {
+abstract class Trait {
   final String? caption;
 
-  const PTrait({this.caption});
-
+  const Trait({this.caption});
 }

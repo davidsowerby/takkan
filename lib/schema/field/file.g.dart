@@ -6,7 +6,7 @@ part of 'file.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PFile _$PFileFromJson(Map<String, dynamic> json) => PFile(
+FFile _$FFileFromJson(Map<String, dynamic> json) => FFile(
       defaultValue: json['defaultValue'] as String?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => FileValidation.fromJson(e as Map<String, dynamic>))
@@ -15,7 +15,7 @@ PFile _$PFileFromJson(Map<String, dynamic> json) => PFile(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PFileToJson(PFile instance) {
+Map<String, dynamic> _$FFileToJson(FFile instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

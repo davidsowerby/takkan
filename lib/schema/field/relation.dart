@@ -7,27 +7,27 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'relation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PRelation extends PField<RelationValidation, Relation> {
+class FRelation extends Field<RelationValidation, Relation> {
   Type get modelType => Relation;
   final String targetClass;
 
-  PRelation({
+  FRelation({
     Relation? defaultValue,
     required this.targetClass,
     List<RelationValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
         );
 
-  factory PRelation.fromJson(Map<String, dynamic> json) =>
-      _$PRelationFromJson(json);
+  factory FRelation.fromJson(Map<String, dynamic> json) =>
+      _$FRelationFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PRelationToJson(this);
+  Map<String, dynamic> toJson() => _$FRelationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

@@ -1,16 +1,15 @@
-abstract class PParticle {
+abstract class Particle {
   final String styleName;
   final bool showCaption;
 
-  const PParticle({this.styleName = 'default', this.showCaption = true});
+  const Particle({this.styleName = 'default', this.showCaption = true});
 
   Type get viewDataType;
 }
 
-abstract class PReadParticle extends PParticle {
-  const PReadParticle({String styleName = 'default', bool showCaption = true})
+abstract class ReadParticle extends Particle {
+  const ReadParticle({String styleName = 'default', bool showCaption = true})
       : super(styleName: styleName, showCaption: showCaption);
 
   Map<String, dynamic> toJson();
 }
-

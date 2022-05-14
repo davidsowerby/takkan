@@ -8,14 +8,14 @@ import 'package:precept_script/schema/validation/validator.dart';
 part 'file.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class PFile extends PField<FileValidation, String> {
-  PFile({
+class FFile extends Field<FileValidation, String> {
+  FFile({
     String? defaultValue,
     List<FileValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    defaultValue: defaultValue,
+          defaultValue: defaultValue,
           validations: validations,
           required: required,
           readOnly: readOnly,
@@ -23,9 +23,9 @@ class PFile extends PField<FileValidation, String> {
 
   Type get modelType => File;
 
-  factory PFile.fromJson(Map<String, dynamic> json) => _$PFileFromJson(json);
+  factory FFile.fromJson(Map<String, dynamic> json) => _$FFileFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PFileToJson(this);
+  Map<String, dynamic> toJson() => _$FFileToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

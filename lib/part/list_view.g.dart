@@ -6,7 +6,7 @@ part of 'list_view.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
+ListView _$ListViewFromJson(Map<String, dynamic> json) => ListView(
       isQuery: json['isQuery'] as bool? ?? false,
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
@@ -14,7 +14,7 @@ PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
-          : PHelp.fromJson(json['help'] as Map<String, dynamic>),
+          : Help.fromJson(json['help'] as Map<String, dynamic>),
       staticData: json['staticData'] as String?,
       property: json['property'] as String,
       readTraitName: json['readTraitName'] as String? ?? 'list-read-default',
@@ -26,7 +26,7 @@ PListView _$PListViewFromJson(Map<String, dynamic> json) => PListView(
       pid: json['pid'] as String?,
     );
 
-Map<String, dynamic> _$PListViewToJson(PListView instance) => <String, dynamic>{
+Map<String, dynamic> _$ListViewToJson(ListView instance) => <String, dynamic>{
       'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,

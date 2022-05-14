@@ -1,31 +1,31 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'single.dart';
+part of 'data_item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PSingle _$PSingleFromJson(Map<String, dynamic> json) => PSingle(
+DataItem _$DataItemFromJson(Map<String, dynamic> json) => DataItem(
       liveConnect: json['liveConnect'] as bool? ?? false,
       tag: json['tag'] as String? ?? 'default',
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PSingleToJson(PSingle instance) => <String, dynamic>{
+Map<String, dynamic> _$DataItemToJson(DataItem instance) => <String, dynamic>{
       'liveConnect': instance.liveConnect,
       'tag': instance.tag,
       'caption': instance.caption,
     };
 
-PSingleById _$PSingleByIdFromJson(Map<String, dynamic> json) => PSingleById(
+DataItemById _$DataItemByIdFromJson(Map<String, dynamic> json) => DataItemById(
       objectId: json['objectId'] as String,
       liveConnect: json['liveConnect'] as bool? ?? false,
       caption: json['caption'] as String?,
       tag: json['tag'] as String? ?? 'default',
     );
 
-Map<String, dynamic> _$PSingleByIdToJson(PSingleById instance) =>
+Map<String, dynamic> _$DataItemByIdToJson(DataItemById instance) =>
     <String, dynamic>{
       'objectId': instance.objectId,
       'liveConnect': instance.liveConnect,
@@ -33,8 +33,8 @@ Map<String, dynamic> _$PSingleByIdToJson(PSingleById instance) =>
       'caption': instance.caption,
     };
 
-PSingleByFunction _$PSingleByFunctionFromJson(Map<String, dynamic> json) =>
-    PSingleByFunction(
+DataItemByFunction _$DataItemByFunctionFromJson(Map<String, dynamic> json) =>
+    DataItemByFunction(
       cloudFunctionName: json['cloudFunctionName'] as String,
       params: json['params'] as Map<String, dynamic>? ?? const {},
       liveConnect: json['liveConnect'] as bool? ?? false,
@@ -42,7 +42,7 @@ PSingleByFunction _$PSingleByFunctionFromJson(Map<String, dynamic> json) =>
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PSingleByFunctionToJson(PSingleByFunction instance) =>
+Map<String, dynamic> _$DataItemByFunctionToJson(DataItemByFunction instance) =>
     <String, dynamic>{
       'params': instance.params,
       'cloudFunctionName': instance.cloudFunctionName,
@@ -51,8 +51,8 @@ Map<String, dynamic> _$PSingleByFunctionToJson(PSingleByFunction instance) =>
       'caption': instance.caption,
     };
 
-PSingleByFilter _$PSingleByFilterFromJson(Map<String, dynamic> json) =>
-    PSingleByFilter(
+DataItemByFilter _$DataItemByFilterFromJson(Map<String, dynamic> json) =>
+    DataItemByFilter(
       script: json['script'] as String,
       cloudFunctionName: json['cloudFunctionName'] as String?,
       liveConnect: json['liveConnect'] as bool? ?? false,
@@ -60,7 +60,7 @@ PSingleByFilter _$PSingleByFilterFromJson(Map<String, dynamic> json) =>
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PSingleByFilterToJson(PSingleByFilter instance) =>
+Map<String, dynamic> _$DataItemByFilterToJson(DataItemByFilter instance) =>
     <String, dynamic>{
       'script': instance.script,
       'cloudFunctionName': instance.cloudFunctionName,
@@ -69,14 +69,15 @@ Map<String, dynamic> _$PSingleByFilterToJson(PSingleByFilter instance) =>
       'caption': instance.caption,
     };
 
-PSingleByGQL _$PSingleByGQLFromJson(Map<String, dynamic> json) => PSingleByGQL(
+DataItemByGQL _$DataItemByGQLFromJson(Map<String, dynamic> json) =>
+    DataItemByGQL(
       script: json['script'] as String,
       liveConnect: json['liveConnect'] as bool? ?? false,
       tag: json['tag'] as String? ?? 'default',
       caption: json['caption'] as String?,
     );
 
-Map<String, dynamic> _$PSingleByGQLToJson(PSingleByGQL instance) =>
+Map<String, dynamic> _$DataItemByGQLToJson(DataItemByGQL instance) =>
     <String, dynamic>{
       'script': instance.script,
       'liveConnect': instance.liveConnect,

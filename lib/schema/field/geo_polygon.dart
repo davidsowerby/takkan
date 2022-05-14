@@ -8,25 +8,25 @@ part 'geo_polygon.g.dart';
 
 /// see [GeoPolygon]
 @JsonSerializable(explicitToJson: true)
-class PGeoPolygon extends PField<GeoPolygonValidation, GeoPolygon> {
+class FGeoPolygon extends Field<GeoPolygonValidation, GeoPolygon> {
   Type get modelType => GeoPolygon;
 
-  PGeoPolygon({
+  FGeoPolygon({
     GeoPolygon? defaultValue,
     List<GeoPolygonValidation> validations = const [],
     bool required = false,
     IsReadOnly readOnly = IsReadOnly.inherited,
   }) : super(
-    readOnly: readOnly,
+          readOnly: readOnly,
           defaultValue: defaultValue,
           required: required,
           validations: validations,
         );
 
-  factory PGeoPolygon.fromJson(Map<String, dynamic> json) =>
-      _$PGeoPolygonFromJson(json);
+  factory FGeoPolygon.fromJson(Map<String, dynamic> json) =>
+      _$FGeoPolygonFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PGeoPolygonToJson(this);
+  Map<String, dynamic> toJson() => _$FGeoPolygonToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)

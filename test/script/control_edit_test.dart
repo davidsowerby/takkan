@@ -1,12 +1,9 @@
 import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/panel/static_panel.dart';
 import 'package:precept_script/part/part.dart';
-import 'package:precept_script/data/select/data.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 import 'package:precept_script/script/version.dart';
@@ -30,32 +27,32 @@ void main() {
 
     test('defaults', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'A page',
             // ignore: missing_required_param
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanelStatic(
+                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  PanelStatic(
                     caption: 'panel11',
                     children: [
-                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              PPart(
+              Part(
                   readTraitName: 'default',
                   property: '',
                   caption: 'page-part1'),
@@ -64,12 +61,12 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
       // then
@@ -92,33 +89,33 @@ void main() {
 
     test('panelsOnly with Part override', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'A page',
             // ignore: missing_required_param
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanelStatic(
+                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  PanelStatic(
                     caption: 'panel11',
                     children: [
-                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              PPart(
+              Part(
                   readTraitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
@@ -128,12 +125,12 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
       // then
@@ -149,32 +146,32 @@ void main() {
 
     test('firstLevelPanels with Part override', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanelStatic(
+                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  PanelStatic(
                     caption: 'panel11',
                     children: [
-                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              PPart(
+              Part(
                   readTraitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
@@ -184,12 +181,12 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
 
@@ -206,43 +203,43 @@ void main() {
 
     test('thisOnly does nothing if too high', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'A page',
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanelStatic(
+                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  PanelStatic(
                     caption: 'panel11',
                     children: [
-                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              PPart(readTraitName: 'part', caption: 'page-part1'),
+              Part(readTraitName: 'part', caption: 'page-part1'),
             ],
           ),
         ],
       );
       script.init();
 
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
 
@@ -259,34 +256,34 @@ void main() {
 
     test('thisAndBelow with negation', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'A page',
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(readTraitName: 'part', caption: 'panel1-part1'),
-                  PPanelStatic(
+                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  PanelStatic(
                     controlEdit: ControlEdit.noEdit,
                     caption: 'panel11',
                     children: [
-                      PPart(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(readTraitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              PPart(
+              Part(
                   readTraitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
@@ -295,12 +292,12 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
       // then
@@ -316,31 +313,31 @@ void main() {
 
     test('partsOnly, single branch', () {
       // given
-      final script = PScript(
+      final script = Script(
         name: 'A Script',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
         controlEdit: ControlEdit.inherited,
         pages: [
-          PPageStatic(
+          PageStatic(
             routes: ['/home'],
             caption: 'A page',
             children: [
-              PPanelStatic(
+              PanelStatic(
                 caption: 'panel1',
                 children: [
-                  PPart(
+                  Part(
                       readTraitName: 'default',
                       property: '',
                       caption: 'panel1-part1'),
-                  PPanelStatic(
+                  PanelStatic(
                     controlEdit: ControlEdit.partsOnly,
                     caption: 'panel11',
                     children: [
-                      PPart(
+                      Part(
                           readTraitName: 'default',
                           property: '',
                           caption: 'panel11-part1')
@@ -348,7 +345,7 @@ void main() {
                   ),
                 ],
               ),
-              PPart(
+              Part(
                   readTraitName: 'default',
                   property: '',
                   caption: 'page-part1'),
@@ -357,12 +354,12 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PPageStatic;
-      final panel1 = page.children[0] as PPanelStatic;
-      final panel11 = panel1.children[1] as PPanelStatic;
-      final panel1Part1 = panel1.children[0] as PPart;
-      final panel11Part1 = panel11.children[0] as PPart;
-      final pagePart = page.children[1] as PPart;
+      final page = script.routes['/home'] as PageStatic;
+      final panel1 = page.children[0] as PanelStatic;
+      final panel11 = panel1.children[1] as PanelStatic;
+      final panel1Part1 = panel1.children[0] as Part;
+      final panel11Part1 = panel11.children[0] as Part;
+      final pagePart = page.children[1] as Part;
 
       // when
       // then

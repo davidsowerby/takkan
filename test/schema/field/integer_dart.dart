@@ -59,15 +59,15 @@ void main() {
 
     test('field', () {
       // given
-      final PScript script = PScript(
+      final Script script = Script(
         name: 'test',
-        version: PVersion(number: 0),
-        schema: PSchema(
+        version: Version(number: 0),
+        schema: Schema(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
         ),
       );
-      final field = PInteger(validations: [
+      final field = FInteger(validations: [
         VInteger.greaterThan(5),
         VInteger.lessThan(10),
       ]);

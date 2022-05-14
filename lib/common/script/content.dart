@@ -9,16 +9,16 @@ part 'content.g.dart';
 
 /// Common sub-class for all the content, whether Page, Panel or Part
 @JsonSerializable(explicitToJson: true)
-class PContent extends PCommon {
+class Content extends Common {
   String? caption;
   final String? property;
-  final PPanel? listEntryConfig;
+  final Panel? listEntryConfig;
 
-  PContent({
+  Content({
     this.caption,
     this.property,
     this.listEntryConfig,
-    PDataProvider? dataProvider,
+    DataProvider? dataProvider,
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
   }) : super(
@@ -54,7 +54,7 @@ class PContent extends PCommon {
           ValidationMessage(
             item: this,
             msg:
-            'is not static, but there is no editControl set in this or its parent chain',
+                'is not static, but there is no editControl set in this or its parent chain',
           ),
         );
       }
@@ -64,8 +64,8 @@ class PContent extends PCommon {
   @override
   String? get idAlternative => caption;
 
-  factory PContent.fromJson(Map<String, dynamic> json) =>
-      _$PContentFromJson(json);
+  factory Content.fromJson(Map<String, dynamic> json) =>
+      _$ContentFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PContentToJson(this);
+  Map<String, dynamic> toJson() => _$ContentToJson(this);
 }

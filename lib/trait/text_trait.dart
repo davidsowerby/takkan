@@ -4,31 +4,32 @@ import 'package:precept_script/trait/trait.dart';
 
 part 'text_trait.g.dart';
 
-/// Used only if the Trait library is set up remotely (that is, using [PScript])
+/// Used only if the Trait library is set up remotely (that is, using [Script])
 /// Brings together various aspects of styling for text
 /// - [textStyle] is an enum representation of Flutter's TextStyle
 /// - [textTheme] is an enum representation of Flutter's TextTheme, and in this context indicates the
 /// background behind this text
-@JsonSerializable( explicitToJson: true)
-class PTextTrait extends PTrait {
-  final PTextStyle textStyle;
-  final PTextTheme textTheme;
-  final PTextAlign textAlign;
+@JsonSerializable(explicitToJson: true)
+class TextTrait extends Trait {
+  final TextStyle textStyle;
+  final TextTheme textTheme;
+  final TextAlign textAlign;
 
-  const PTextTrait(
-      {this.textStyle = PTextStyle.bodyText1,
-      this.textTheme = PTextTheme.cardCanvas,
-      this.textAlign = PTextAlign.start,
+  const TextTrait(
+      {this.textStyle = TextStyle.bodyText1,
+      this.textTheme = TextTheme.cardCanvas,
+      this.textAlign = TextAlign.start,
       String? caption})
       : super(caption: caption);
 
-  factory PTextTrait.fromJson(Map<String, dynamic> json) => _$PTextTraitFromJson(json);
+  factory TextTrait.fromJson(Map<String, dynamic> json) =>
+      _$TextTraitFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PTextTraitToJson(this);
+  Map<String, dynamic> toJson() => _$TextTraitToJson(this);
 }
 
 /// Enum representation of Flutter's TextStyle constants
-enum PTextStyle {
+enum TextStyle {
   headline1,
   headline2,
   headline3,
@@ -45,14 +46,14 @@ enum PTextStyle {
 }
 
 /// - Used to select the appropriate text theme depending on the background
-/// - [PTextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
-/// - [PTextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
-/// - [PTextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
-enum PTextTheme { cardCanvas, primary, accent }
+/// - [TextTheme.cardCanvas] relates to [ThemeData.textTheme], used when background is a Card or Canvas
+/// - [TextTheme.primary] relates to [ThemeData.primaryTextTheme], used when background is the primary color
+/// - [TextTheme.accent] relates to [ThemeData.accentTextTheme], used when background is the accent color
+enum TextTheme { cardCanvas, primary, accent }
 
 /// This is a direct copy of Flutter's TextAlign, but is used to avoid introducing a direct
 /// dependency on Flutter
-enum PTextAlign {
+enum TextAlign {
   /// Align the text on the left edge of the container.
   left,
 

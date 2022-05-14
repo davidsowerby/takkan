@@ -6,7 +6,7 @@ part of 'geo_polygon.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PGeoPolygon _$PGeoPolygonFromJson(Map<String, dynamic> json) => PGeoPolygon(
+FGeoPolygon _$FGeoPolygonFromJson(Map<String, dynamic> json) => FGeoPolygon(
       defaultValue: json['defaultValue'] == null
           ? null
           : GeoPolygon.fromJson(json['defaultValue'] as Map<String, dynamic>),
@@ -18,7 +18,7 @@ PGeoPolygon _$PGeoPolygonFromJson(Map<String, dynamic> json) => PGeoPolygon(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PGeoPolygonToJson(PGeoPolygon instance) {
+Map<String, dynamic> _$FGeoPolygonToJson(FGeoPolygon instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

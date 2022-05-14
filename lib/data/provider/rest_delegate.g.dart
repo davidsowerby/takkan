@@ -6,12 +6,12 @@ part of 'rest_delegate.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PRest _$PRestFromJson(Map<String, dynamic> json) => PRest(
+Rest _$RestFromJson(Map<String, dynamic> json) => Rest(
       documentEndpoint: json['documentEndpoint'] as String? ?? '/classes',
       checkHealthOnConnect: json['checkHealthOnConnect'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PRestToJson(PRest instance) => <String, dynamic>{
+Map<String, dynamic> _$RestToJson(Rest instance) => <String, dynamic>{
       'checkHealthOnConnect': instance.checkHealthOnConnect,
       'documentEndpoint': instance.documentEndpoint,
     };

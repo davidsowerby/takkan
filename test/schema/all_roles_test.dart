@@ -9,28 +9,28 @@ void main() {
     test('combined', () {
       // given
       final schema =
-          PSchema(name: '', version: PVersion(number: 0), documents: {
-        'doc1': PDocument(
-          permissions: PPermissions(
+          Schema(name: '', version: Version(number: 0), documents: {
+        'doc1': Document(
+          permissions: Permissions(
             getRoles: ['doc1-get'],
             readRoles: ['doc1-read', 'admin'],
           ),
           fields: {},
         ),
-        'doc2': PDocument(
-          permissions: PPermissions(
+            'doc2': Document(
+              permissions: Permissions(
             readRoles: ['doc1-read', 'doc2-read'],
             updateRoles: ['admin'],
           ),
           fields: {},
         ),
       });
-      final script = PScript(
+      final script = Script(
           name: 'test',
-          version: PVersion(number: 0),
+          version: Version(number: 0),
           schema: schema,
-          dataProvider: PDataProvider(
-              instanceConfig: PInstance(instance: 'x', group: 'x')));
+          dataProvider: DataProvider(
+              instanceConfig: AppInstance(instance: 'x', group: 'x')));
       script.init();
       final expected = ['doc1-get', 'doc1-read', 'admin', 'doc2-read'];
       // when

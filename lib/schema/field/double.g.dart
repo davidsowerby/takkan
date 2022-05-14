@@ -6,7 +6,7 @@ part of 'double.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PDouble _$PDoubleFromJson(Map<String, dynamic> json) => PDouble(
+FDouble _$FDoubleFromJson(Map<String, dynamic> json) => FDouble(
       defaultValue: (json['defaultValue'] as num?)?.toDouble(),
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => DoubleValidation.fromJson(e as Map<String, dynamic>))
@@ -15,7 +15,7 @@ PDouble _$PDoubleFromJson(Map<String, dynamic> json) => PDouble(
       required: json['required'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$PDoubleToJson(PDouble instance) {
+Map<String, dynamic> _$FDoubleToJson(FDouble instance) {
   final val = <String, dynamic>{
     'validations': instance.validations.map((e) => e.toJson()).toList(),
     'required': instance.required,

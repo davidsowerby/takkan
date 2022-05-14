@@ -6,41 +6,41 @@ part of 'page.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PPage _$PPageFromJson(Map<String, dynamic> json) => PPage(
+Page _$PageFromJson(Map<String, dynamic> json) => Page(
       tag: json['tag'] as String?,
       caption: json['caption'] as String?,
       listEntryConfig: json['listEntryConfig'] == null
           ? null
-          : PPanel.fromJson(json['listEntryConfig'] as Map<String, dynamic>),
+          : Panel.fromJson(json['listEntryConfig'] as Map<String, dynamic>),
       pageType: json['pageType'] as String? ?? 'defaultPage',
       scrollable: json['scrollable'] as bool? ?? true,
       layout: json['layout'] == null
-          ? const PLayoutDistributedColumn()
-          : PLayoutJsonConverter.fromJson(
+          ? const LayoutDistributedColumn()
+          : LayoutJsonConverter.fromJson(
               json['layout'] as Map<String, dynamic>),
       children: json['children'] == null
           ? const []
-          : PContentConverter.fromJson(json['children'] as List),
+          : ContentConverter.fromJson(json['children'] as List),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
       property: json['property'] as String?,
       dataSelectors: json['dataSelectors'] == null
-          ? const [const PProperty()]
-          : PDataListJsonConverter.fromJson(json['dataSelectors'] as List?),
+          ? const [const Property()]
+          : DataListJsonConverter.fromJson(json['dataSelectors'] as List?),
     );
 
-Map<String, dynamic> _$PPageToJson(PPage instance) => <String, dynamic>{
+Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),
-      'children': PContentConverter.toJson(instance.children),
+      'children': ContentConverter.toJson(instance.children),
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'tag': instance.tag,
-      'dataSelectors': PDataListJsonConverter.toJson(instance.dataSelectors),
-      'layout': PLayoutJsonConverter.toJson(instance.layout),
+      'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),
+      'layout': LayoutJsonConverter.toJson(instance.layout),
     };
 
 const _$ControlEditEnumMap = {
