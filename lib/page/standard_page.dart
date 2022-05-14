@@ -4,6 +4,7 @@ import 'package:precept_backend/backend/data_provider/data_provider.dart';
 import 'package:precept_client/app/precept.dart';
 import 'package:precept_client/common/action/action_icon.dart';
 import 'package:precept_client/common/content/pod_state.dart';
+import 'package:precept_client/convert/script.dart';
 import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/page/layout/layout.dart';
 import 'package:precept_script/page/page.dart';
@@ -101,14 +102,9 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
       {required List<Widget> children,
       required Size screenSize,
       required PPod config}) {
-    final margins = (config as PPage).layout.margins;
+    final padding = (config as PPage).layout.padding;
     return Padding(
-      padding: EdgeInsets.only(
-        top: margins.top,
-        bottom: margins.bottom,
-        left: margins.left,
-        right: margins.right,
-      ),
+      padding: padding.edgeInsets(),
       child: distributeWidgets(
           screenSize: screenSize,
           preferredColumnWidth: widget.config.layout.preferredColumnWidth,

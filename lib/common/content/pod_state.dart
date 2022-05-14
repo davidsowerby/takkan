@@ -14,7 +14,6 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_client/pod/data_root.dart';
 import 'package:precept_client/user/user_state.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -319,7 +318,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
       required Size screenSize,
       required PPod config});
 
-  addUserState({required Widget widget, required PCommon config}) {
+  addUserState({required Widget widget, required PPod config}) {
     if (config.dataProviderIsDeclared) {
       return ChangeNotifierProvider<UserState>(
           create: (_) => UserState(cache.dataProvider.authenticator),

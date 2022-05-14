@@ -110,13 +110,13 @@ class DocumentListPageState extends PodState<DocumentListPage>
       {required List<Widget> children,
       required Size screenSize,
       required PPod config}) {
-    final margins = (config as PPage).layout.margins;
+    final padding = (config as PPage).layout.padding;
     return Padding(
       padding: EdgeInsets.only(
-        top: margins.top,
-        bottom: margins.bottom,
-        left: margins.left,
-        right: margins.right,
+        top: padding.top,
+        bottom: padding.bottom,
+        left: padding.left,
+        right: padding.right,
       ),
       child: distributeWidgets(
           screenSize: screenSize,

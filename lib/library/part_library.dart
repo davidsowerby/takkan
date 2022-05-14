@@ -44,7 +44,7 @@ class PartLibrary {
   /// Builds and returns a [Part] from the current [partConfig].  Particle instances are created,
   /// and configured according to the [theme].  This allows the [Part] to be configured once on construction,
   /// rather than repeatedly as it would be if configuration were during the [Part.build] method.
-  Part partBuilder({
+  Widget partBuilder({
     required PPart partConfig,
     required ThemeData theme,
     required DataContext dataContext,
@@ -94,10 +94,13 @@ class PartLibrary {
       pageArguments: pageArguments,
     );
 
-    return Part(
-      readParticle: readParticle,
-      editParticle: editParticle,
-      config: partConfig,
+    return Container(
+      height: partConfig.height,
+      child: Part(
+        readParticle: readParticle,
+        editParticle: editParticle,
+        config: partConfig,
+      ),
     );
   }
 

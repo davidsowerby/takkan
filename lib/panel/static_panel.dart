@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/pod/pod_builder.dart';
 
 /// A panel which displays only static data, and therefore requires no connections to
 /// dynamic data.

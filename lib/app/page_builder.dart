@@ -13,6 +13,7 @@ import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/data/select/data.dart';
 import 'package:precept_script/data/select/multi.dart';
 import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/page/page.dart';
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
@@ -30,6 +31,12 @@ abstract class PageBuilder {
     required PScript script,
     required DocumentCache cache,
   });
+
+  Widget createChild(
+      {required DataContext dataContext,
+      required PContent p,
+      required DataBinding parentBinding,
+      required ThemeData theme});
 }
 
 class DefaultPageBuilder implements PageBuilder {
@@ -67,13 +74,9 @@ class DefaultPageBuilder implements PageBuilder {
     final dataContext = StaticDataContext(
       parentDataContext: NullDataContext(),
     );
+    final pageBuilder = inject<PageBuilder>();
     final pageWidget = StaticPage(
-      children: createChildren(
-        children: pageConfig.children,
-        parentBinding: parentBinding,
-        theme: theme,
-        dataContext: dataContext,
-      ),
+      pageBuilder: pageBuilder,
       config: pageCfg,
       dataContext: dataContext,
       route: route,
@@ -139,6 +142,33 @@ class DefaultPageBuilder implements PageBuilder {
     }
 
     throw UnimplementedError();
+  }
+
+  Widget createChild(
+      {required DataContext dataContext,
+      required PContent p,
+      required DataBinding parentBinding,
+      required ThemeData theme}) {
+    /// Using switch stops from detecting PPart sub-classes
+    if (p is PPanel) {
+      final panel = panelBuilder(
+        config: p,
+        parentDataContext: dataContext,
+        parentBinding: parentBinding,
+        theme: theme,
+      );
+      return panel;
+    } else if (p is PPart) {
+      final part = partLibrary.partBuilder(
+        partConfig: p,
+        dataContext: dataContext,
+        parentBinding: parentBinding,
+        pageArguments: const {},
+        theme: theme,
+      );
+      return part;
+    }
+    throw PreceptException('Unrecognised content');
   }
 
   Widget panelExpansion(
@@ -213,9 +243,11 @@ class DefaultPageBuilder implements PageBuilder {
 
     final DataContext dataContext =
         DefaultDataContext(classCache: cache.getClassCache(config: pageConfig));
+    final pageBuilder = inject<PageBuilder>();
     final pageWidget = (dataSelector.isSingle)
         ? DocumentPage(
             dataContext: dataContext,
+            pageBuilder: pageBuilder,
             pageArguments: pageArguments,
             config: pageConfig,
             objectId:

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:precept_client/app/page_builder.dart';
+import 'package:precept_client/data/cache_entry.dart';
 import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/data/document_cache.dart';
 import 'package:precept_client/page/layout/layout_wrapper.dart';
@@ -14,17 +16,17 @@ import 'package:precept_script/page/static_page.dart';
 /// Currently assumes no authentication for a static page, which is wrong:
 /// https://gitlab.com/precept1/precept_design/-/issues/21
 class StaticPage extends StatelessWidget {
-  final List<Widget> children;
   final PPageStatic config;
   final DataContext dataContext;
   final String route;
+  final PageBuilder pageBuilder;
 
   const StaticPage({
     Key? key,
-    required this.children,
     required this.route,
     required this.config,
     required this.dataContext,
+    required this.pageBuilder,
   }) : super(key: key);
 
   @override
@@ -43,7 +45,9 @@ class StaticPage extends StatelessWidget {
       ),
       body: LayoutWrapper(
         config: config,
-        children: children,
+        dataContext: dataContext,
+        parentBinding: NullDataBinding(),
+        pageBuilder: pageBuilder,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:precept_client/app/page_builder.dart';
 import 'package:precept_client/binding/map_binding.dart';
 import 'package:precept_client/common/component/edit_save_cancel.dart';
 import 'package:precept_client/data/cache_entry.dart';
@@ -53,10 +54,12 @@ class DocumentPage extends StatefulWidget {
   final Map<String, dynamic> pageArguments;
   final String? objectId;
   final String route;
+  final PageBuilder pageBuilder;
 
   const DocumentPage({
     Key? key,
     required this.config,
+    required this.pageBuilder,
     this.objectId,
     required this.dataContext,
     required this.route,
@@ -115,6 +118,7 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
               dataContext: widget.dataContext,
               config: widget.config,
               parentBinding: dataBinding,
+              pageBuilder: widget.pageBuilder,
             ),
           ),
         ),
