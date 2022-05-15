@@ -14,9 +14,9 @@ import 'package:test/test.dart';
 void main() async {
   AppConfigFileLoader loader = AppConfigFileLoader();
   AppConfig appConfig = await loader.load();
-  late PScript script;
+  late Script script;
   group('Provider CRUD', () {
-    DataProvider? provider;
+    IDataProvider? provider;
     setUpAll(() async {
       script = medleyScript[0];
       script.init();
@@ -154,9 +154,9 @@ const String fetchAllScripts = r'''query GetPreceptScripts {
   }
 }''';
 
-deleteAllScripts(DataProvider? provider, PDocument scriptSchema) async {
+deleteAllScripts(IDataProvider? provider, Document scriptSchema) async {
   final ReadResultList result = await provider!.fetchList(
-      queryConfig: PGraphQLQuery(
+      queryConfig: GraphQLQuery(
         queryName: 'deleteAllScripts',
         documentSchema: 'PScript',
         queryScript: fetchAllScripts,

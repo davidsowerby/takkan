@@ -9,7 +9,7 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 
 class Back4AppRestDelegate extends DefaultRestDataProviderDelegate {
-  Back4AppRestDelegate(DataProvider parent) : super(parent);
+  Back4AppRestDelegate(IDataProvider parent) : super(parent);
 
   @override
   Future<DeleteResult> deleteDocument({required DocumentId documentId}) async {

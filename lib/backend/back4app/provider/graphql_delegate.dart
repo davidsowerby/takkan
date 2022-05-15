@@ -17,7 +17,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   /// to increment the version before saving
   /// 'nameLocale' value is created to use as a filter, combining script name and Locale
   Future<UpdateResult> uploadPreceptScript({
-    required PScript script,
+    required Script script,
     required String locale,
     bool incrementVersion = false,
   }) async {
@@ -70,7 +70,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
       'nameLocale': '$name:${locale.toString()}'
     };
     ReadResultList result = await fetchList(
-      PGraphQLQuery(
+      GraphQLQuery(
           queryName: 'laterScripts',
           queryScript: laterScripts,
           documentSchema: 'PScript'),
@@ -321,7 +321,7 @@ class GraphQLScriptBuilder {
   String buildCreateGQL(
     String path,
     FieldSelector fieldSelector,
-    PDocument schema,
+    Document schema,
   ) {
     StringBuffer buf = StringBuffer();
     buf.writeln('mutation Create$path(\$input: Create${path}FieldsInput){');
@@ -339,7 +339,7 @@ class GraphQLScriptBuilder {
   String buildReadGQL(
     DocumentId documentId,
     FieldSelector fieldSelector,
-    PDocument schema,
+    Document schema,
   ) {
     StringBuffer buf = StringBuffer();
     buf.writeln('query Get${documentId.documentClass}(\$id:ID!) {');
@@ -355,7 +355,7 @@ class GraphQLScriptBuilder {
   String buildUpdateGQL(
     DocumentId documentId,
     FieldSelector fieldSelector,
-    PDocument schema,
+    Document schema,
   ) {
     StringBuffer buf = StringBuffer();
     buf.writeln(
@@ -371,7 +371,7 @@ class GraphQLScriptBuilder {
     return buf.toString();
   }
 
-  addFields(StringBuffer buf, FieldSelector fieldSelector, PDocument schema,
+  addFields(StringBuffer buf, FieldSelector fieldSelector, Document schema,
       String defaultSelection) {
     final fields = fieldSelector.selection(schema);
     if (defaultSelection.isNotEmpty) {

@@ -18,13 +18,13 @@ class Back4AppScriptHandler implements ScriptHandler {
   }
 
   @override
-  Future<bool> saveSchema({required PSchema script}) {
+  Future<bool> saveSchema({required Schema script}) {
     // TODO: implement saveSchema
     throw UnimplementedError();
   }
 
   @override
-  Future<bool> saveScript({required PScript script}) {
+  Future<bool> saveScript({required Script script}) {
     // TODO: implement saveScript
     throw UnimplementedError();
   }

@@ -7,7 +7,7 @@ import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/select/query.dart';
 
 class Back4AppAuthenticator
-    extends Authenticator<PDataProvider, ParseUser, Back4AppDataProvider> {
+    extends Authenticator<DataProvider, ParseUser, Back4AppDataProvider> {
   late Parse parse;
   late Back4AppDataProvider parent;
 
@@ -109,7 +109,7 @@ class Back4AppAuthenticator
 
   @override
   Future<List<String>> loadUserRoles() async {
-    PGraphQLQuery query = PGraphQLQuery(
+    GraphQLQuery query = GraphQLQuery(
       queryName: 'userRoles',
       queryScript: userRolesScript,
       returnType: QueryReturnType.futureList,
