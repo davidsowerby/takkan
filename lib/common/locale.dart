@@ -8,7 +8,7 @@ abstract class LocaleReader {
 class DefaultLocaleReader implements LocaleReader {
   @override
   Locale systemLocale({void Function()? localeChangeListener}) {
-    final WidgetsBinding inst=WidgetsBinding.instance!;
+    final WidgetsBinding inst = WidgetsBinding.instance;
     final window = inst.window;
     final locale = window.locale;
     if (localeChangeListener != null) {

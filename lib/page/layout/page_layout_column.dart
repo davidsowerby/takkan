@@ -8,8 +8,8 @@ import 'package:precept_script/common/script/layout.dart';
 import 'package:precept_script/panel/panel.dart';
 
 class LayoutDistributedColumn implements PageLayout {
-  final PPod podConfig;
-  final PLayout layoutConfig;
+  final Pod podConfig;
+  final Layout layoutConfig;
   final DataContext dataContext;
   final DataBinding parentBinding;
   final ThemeData theme;
@@ -41,7 +41,7 @@ class LayoutDistributedColumn implements PageLayout {
     );
 
     final List<Container> columns = List.empty(growable: true);
-    final List<List<PContent>> distributedContent = List.empty(growable: true);
+    final List<List<Content>> distributedContent = List.empty(growable: true);
     int numCols = dim.numberOfColumns;
     for (int k = 0; k < numCols; k++) {
       distributedContent.add(List.empty(growable: true));
@@ -51,8 +51,8 @@ class LayoutDistributedColumn implements PageLayout {
     /// grouping together any held in a PGroup
     for (int k = 0; k < widgets.length; k++) {
       final col = k % numCols;
-      if (widgets[k] is PGroup) {
-        final PGroup group = widgets[k] as PGroup;
+      if (widgets[k] is Group) {
+        final Group group = widgets[k] as Group;
         distributedContent[col].addAll(group.children);
       } else {
         distributedContent[col].add(widgets[k]);

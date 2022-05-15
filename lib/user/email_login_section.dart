@@ -17,10 +17,10 @@ class EmailLoginSection extends StatefulWidget {
   final String passwordHint;
   final String successRoute;
   final String failureRoute;
-  final DataProvider dataProvider;
+  final IDataProvider dataProvider;
 
   const EmailLoginSection({
-    Key? key=const Key('EmailLoginSection'),
+    Key? key = const Key('EmailLoginSection'),
     this.passwordHint = "Enter your password",
     required this.successRoute,
     required this.failureRoute,
@@ -115,7 +115,8 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     }
   }
 
-  usernameSection(DataProvider dataProvider, UserState userState, double columnWidth) {
+  usernameSection(
+      IDataProvider dataProvider, UserState userState, double columnWidth) {
     return Column(
       children: <Widget>[
         Container(
@@ -124,7 +125,9 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
             key: keys(widget.key, ['emailField']),
             controller: emailController,
             decoration: InputDecoration(
-                prefixIcon: Icon(Icons.email), labelText: "email", border: OutlineInputBorder()),
+                prefixIcon: Icon(Icons.email),
+                labelText: "email",
+                border: OutlineInputBorder()),
           ),
         ),
         Padding(
@@ -145,10 +148,11 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     });
   }
 
-  passwordSection(DataProvider dataProvider, double columnWidth) {
+  passwordSection(IDataProvider dataProvider, double columnWidth) {
     return Container(
       width: columnWidth,
-      child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      child:
+          Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         Padding(
           padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
           child: Container(
@@ -194,29 +198,30 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     );
   }
 
-  registrationAcknowledged(DataProvider dataProvider) async {
+  registrationAcknowledged(IDataProvider dataProvider) async {
     await dataProvider.authenticator.registrationAcknowledged();
     Navigator.pushNamed(context, widget.successRoute);
   }
 
   /// Submits credentials for email log in.  A failed login automatically registers a new account (email and password are validated before submission).
   /// This does mean that an account could be incorrectly created
-  submitCredentials(BuildContext context, DataProvider dataProvider) async {
+  submitCredentials(BuildContext context, IDataProvider dataProvider) async {
     AuthenticationResult result = await dataProvider.authenticator
-        .signInByEmail(username: emailController.text, password: passwordController.text);
+        .signInByEmail(
+            username: emailController.text, password: passwordController.text);
     if (result.success) {
       /// Remove the sign in pages from Navigator history
       Navigator.of(context).popUntil(_notSignInRoute);
       Navigator.of(context).pushNamed(widget.successRoute);
-    }else{
+    } else {
       logType(this.runtimeType).d("login unsuccessful");
     }
   }
 
-  forgottenPassword(DataProvider dataProvider) {
+  forgottenPassword(IDataProvider dataProvider) {
     throw UnimplementedError('Forgotten password not implemented');
   }
-  
+
   bool _notSignInRoute(Route route){
     String? routePath=route.settings.name;
     return (routePath==null) ? true : !routePath.toLowerCase().contains('signin');

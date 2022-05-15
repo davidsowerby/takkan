@@ -9,7 +9,7 @@ import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
 
 /// Provides the context of a connection from data in the [DocumentCache] to a [PreceptPage] or
-/// [Panel].
+/// [PanelWidget].
 ///
 /// The data itself is provided via a [CacheEntry]
 ///
@@ -19,11 +19,11 @@ import 'package:precept_script/script/script.dart';
 ///
 
 abstract class DataContext {
-  DataProvider get dataProvider;
+  IDataProvider get dataProvider;
 
   DocumentClassCache get classCache;
 
-  PDocument get documentSchema;
+  Document get documentSchema;
 }
 
 /// A standard [DataContext] pointing back to the relevant [DocumentClassCache]
@@ -34,14 +34,14 @@ class DefaultDataContext implements DataContext {
     required this.classCache,
   });
 
-  DataProvider get dataProvider => classCache.dataProvider;
+  IDataProvider get dataProvider => classCache.dataProvider;
 
-  PDocument get documentSchema => classCache.documentSchema;
+  Document get documentSchema => classCache.documentSchema;
 }
 
 
 /// An implementation to enable the use of a non-null [DataContext] property
-/// in [PreceptPage] and [Panel].
+/// in [PreceptPage] and [PanelWidget].
 class NullDataContext implements DataContext {
   const NullDataContext();
 
@@ -53,23 +53,22 @@ class NullDataContext implements DataContext {
   }
 
   @override
-  DataProvider<PDataProvider> get dataProvider => throwException();
-
+  IDataProvider<DataProvider> get dataProvider => throwException();
 
   @override
-  PDocument get documentSchema => throwException();
+  Document get documentSchema => throwException();
 
   @override
   DocumentClassCache get classCache => throwException();
 }
 
-/// A [PreceptPage] or [Panel] which uses only static data is allocated
+/// A [PreceptPage] or [PanelWidget] which uses only static data is allocated
 /// a [StaticDataContext].  This could be part way through a chain of connectors,
 /// in which case the [StaticDataContext] becomes transparent, and access to dynamic data
 /// is via [parent].
 ///
 /// If, however, there is no root above this, any attempt to access a root will
-/// throw an exception.  This should not happen if the [PScript] has been successfully
+/// throw an exception.  This should not happen if the [Script] has been successfully
 /// validated
 class StaticDataContext implements DataContext {
   final DataContext parentDataContext;
@@ -78,17 +77,17 @@ class StaticDataContext implements DataContext {
 
   throwException() {
     String msg =
-        'This is a StaticDataContext, and if its parent is a NullDataContext will throw an exception if you attempt to access dynamic data.  Check that your PScript validates successfully.  If it does, please raise an issue';
+        'This is a StaticDataContext, and if its parent is a NullDataContext will throw an exception if you attempt to access dynamic data.  Check that your Script validates successfully.  If it does, please raise an issue';
     logType(this.runtimeType).e(msg);
     throw PreceptException(msg);
   }
 
   @override
-  DataProvider<PDataProvider> get dataProvider =>
+  IDataProvider<DataProvider> get dataProvider =>
       parentDataContext.dataProvider;
 
   @override
-  PDocument get documentSchema => parentDataContext.documentSchema;
+  Document get documentSchema => parentDataContext.documentSchema;
 
   @override
   DocumentClassCache get classCache => parentDataContext.classCache;

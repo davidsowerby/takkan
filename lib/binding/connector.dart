@@ -15,7 +15,7 @@ import 'package:precept_script/schema/field/string.dart';
 class ModelConnector<MODEL, VIEW> {
   final Binding<MODEL> binding;
   final ModelViewConverter<MODEL, VIEW> converter;
-  final PField fieldSchema;
+  final Field fieldSchema;
 
   ModelConnector(
       {required this.binding,
@@ -25,7 +25,9 @@ class ModelConnector<MODEL, VIEW> {
   /// It is generally better to keep the default settings of the Binding for consistency - using [readFromModel] is therefore
   /// preferred.  Use this method only if you specifically need to override the Binding settings
   VIEW readFromModelOverridingDefaults(
-      {MODEL? defaultValue, bool allowNullReturn = false, bool createIfAbsent = true}) {
+      {MODEL? defaultValue,
+      bool allowNullReturn = false,
+      bool createIfAbsent = true}) {
     final model = binding.read(
         defaultValue: defaultValue,
         allowNullReturn: allowNullReturn,
@@ -64,9 +66,10 @@ class StaticConnector extends ModelConnector<String, String> {
             binding: StringBinding.private(
               property: 'not used',
               firstLevelKey: 'x',
-              parent: ListBinding.private(firstLevelKey: 'x', property: 'not used'),
+              parent:
+                  ListBinding.private(firstLevelKey: 'x', property: 'not used'),
             ),
-            fieldSchema: PString());
+            fieldSchema: FString());
 
   @override
   String readFromModel() {

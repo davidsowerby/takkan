@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 abstract class PodState<T extends StatefulWidget> extends State<T>
     {
       bool needsAuthentication = false;
-  final PPod config;
+  final Pod config;
   final DataContext parentDataContext;
   final Map<String, dynamic> pageArguments;
   bool dataIsReady = false;
@@ -52,7 +52,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
 
       // bool get hasModelBinding => !(dataContext.isStatic);
 
-  DataProvider get dataProvider => cache.dataProvider;
+  IDataProvider get dataProvider => cache.dataProvider;
 
   _completeContextSetup() {
     /// This is a completely static page or panel, no dynamic data is used,
@@ -103,7 +103,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
           cache.dataProvider.authenticator.isAuthenticated;
       needsAuthentication = requiresAuth && !userAuthenticated;
       if (needsAuthentication) {
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, 'signIn', arguments: {
             'returnRoute': route,
             'signInConfig': cache.dataProvider.config.signInOptions,
@@ -238,8 +238,8 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   //   );
   // }
 
-  Widget streamBuilder(
-      DataProvider backend, MutableDocument temporaryDocument) {
+      Widget streamBuilder(
+      IDataProvider backend, MutableDocument temporaryDocument) {
     // return StreamBuilder<Data>(
     //     stream: backend.getStream(documentId: null),
     //     initialData: Data(data: {}),
@@ -284,20 +284,20 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   Widget buildSubContent({
     required ThemeData theme,
     required DataContext dataContext,
-    required PPod config,
+    required Pod config,
     required Map<String, dynamic> pageArguments,
   }) {
     final List<Widget> children = List.empty(growable: true);
     for (var element in config.children) {
       late Widget child;
-      if (element is PPanel) {
-        child = Panel(
+      if (element is Panel) {
+        child = PanelWidget(
           config: element,
           pageArguments: pageArguments,
           dataContext: dataContext,
         );
       }
-      if (element is PPart) {
+      if (element is Part) {
         child = partLibrary.partBuilder(
             partConfig: element,
             theme: theme,
@@ -313,12 +313,12 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
     return layout(children: children, screenSize: screenSize, config: config);
   }
 
-  Widget layout(
+      Widget layout(
       {required List<Widget> children,
       required Size screenSize,
-      required PPod config});
+      required Pod config});
 
-  addUserState({required Widget widget, required PPod config}) {
+  addUserState({required Widget widget, required Pod config}) {
     if (config.dataProviderIsDeclared) {
       return ChangeNotifierProvider<UserState>(
           create: (_) => UserState(cache.dataProvider.authenticator),
@@ -331,7 +331,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
   /// see [_canEdit]
-  Widget addEditControl({required Widget widget, required PContent config}) {
+      Widget addEditControl({required Widget widget, required Content config}) {
     if (config.isStatic) {
       return widget;
     }
@@ -342,7 +342,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
         : widget;
   }
 
-      /// Returns false if the [dataContext.documentSchema] is read only.
+  /// Returns false if the [dataContext.documentSchema] is read only.
   ///
   /// If the schema requires user authentication for update,and the user has not authenticated
   /// returns false.
@@ -400,14 +400,14 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
 
 /// From DataRoot - use for PodState??
 
-// /// Returns true if a [PSingle] has a fixed or selected objectId, enabling it
+// /// Returns true if a [DataItem] has a fixed or selected objectId, enabling it
 // /// to query for data.  Put simply it knows which data it should be looking for.
 // ///
 // /// False is returned when a a selected id is expected, but nbo selection has
 // /// yet been made.
 // bool get isActive {
 //   final pData = config.data;
-//   if (pData is PSingle) {
+//   if (pData is DataItem) {
 //     return (pData.objectId != null) || (_currentSelectionId != null);
 //   }
 //   return false;
@@ -415,7 +415,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
 //
 // String get activeId {
 //   if (isActive) {
-//     final PSingle single = config.data as PSingle;
+//     final DataItem single = config.data as DataItem;
 //     return single.objectId ?? _currentSelectionId!;
 //   }
 //   throw PreceptException(

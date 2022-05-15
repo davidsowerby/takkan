@@ -13,8 +13,8 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/data/provider/document_id.dart';
 import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/schema/schema.dart';
 
@@ -47,7 +47,7 @@ class DocumentCache {
   ///
   /// If there is no [DocumentClassCache], one is created
   DocumentClassCache getClassCache({
-    required PPod config,
+    required Pod config,
   }) {
     if (config.documentClass == null) {
       throw PreceptException(
@@ -66,7 +66,7 @@ class DocumentCache {
     return classCache;
   }
 
-  DataProvider _lookupDataProvider(PDataProvider? config) {
+  IDataProvider _lookupDataProvider(DataProvider? config) {
     if (config != null) {
       return dataProviderLibrary.find(providerConfig: config);
     }
@@ -101,8 +101,8 @@ class DocumentCache {
   /// [requester] is usually a [PodState], so either a [PreceptPage] or [Panel]
   DataContext dataContext({
     required DataContext parentDataContext,
-    required PPod config,
-    required PData dataSelector,
+    required Pod config,
+    required Data dataSelector,
   }) {
     if (parentDataContext is NullDataContext) {
       if (config.isStatic) {
@@ -119,7 +119,7 @@ class DocumentCache {
       //   );
       // }
       throw PreceptException(
-          'A ${config.runtimeType.toString()} requires a data root above it in the PScript');
+          'A ${config.runtimeType.toString()} requires a data root above it in the Script');
     }
     // if (contentContainer.isStatic) {}
     // final PData pData = contentContainer.data!;
@@ -128,8 +128,8 @@ class DocumentCache {
 }
 
 /// Holds all the cached documents for a particular [documentClass], as specified
-/// in a [PSchema].  After [init] has been called, [documentSchema] is populated
-/// from [PSchema].
+/// in a [Schema].  After [init] has been called, [documentSchema] is populated
+/// from [Schema].
 ///
 /// [dataProvider] describes the source (usually a cloud provider)
 /// of the data.
@@ -143,8 +143,8 @@ class DocumentCache {
 /// data for those objectIds is actually held in [_cache]
 ///
 class DocumentClassCache {
-  late PDocument documentSchema;
-  final DataProvider dataProvider;
+  late Document documentSchema;
+  final IDataProvider dataProvider;
   final Map<String, CacheEntry> _cache = Map();
   final QueryResultsCache queryResults = QueryResultsCache();
   final String documentClass;
@@ -200,7 +200,7 @@ class DocumentClassCache {
     throw PreceptException('Unsuccessful read'); // TODO: handle properly
   }
 
-  PDocument _lookupDocumentSchema(String? documentClass) {
+  Document _lookupDocumentSchema(String? documentClass) {
     if (documentClass != null) {
       final schema = script.schema.documents[documentClass];
       if (schema != null) return schema;
@@ -219,32 +219,32 @@ class DocumentClassCache {
     _cache[dataProvider.objectIdKey] = cacheEntry;
   }
 
-  Map<String, dynamic>? fromCacheOnly({required PData dataSpec}) {
-    final expectSingle = dataSpec is PSingle;
+  Map<String, dynamic>? fromCacheOnly({required Data dataSpec}) {
+    final expectSingle = dataSpec is DataItem;
     if (expectSingle) {
-      final PSingle pSingle = dataSpec as PSingle;
+      final DataItem pSingle = dataSpec as DataItem;
       return _documentFromCache(pSingle);
     } else {
-      final PMulti pMulti = dataSpec as PMulti;
+      final DataList pMulti = dataSpec as DataList;
       return _listFromCache(pMulti);
     }
   }
 
-  Map<String, dynamic>? _listFromCache(PMulti pMulti) {
+  Map<String, dynamic>? _listFromCache(DataList pMulti) {
     return null;
   }
 
-  Map<String, dynamic>? _documentFromCache(PSingle pSingle) {
+  Map<String, dynamic>? _documentFromCache(DataItem pSingle) {
     return null;
   }
 
   /// Assumes static data has already been dealt with by [DocumentCache]
   ///
   /// Returns an appropriately configured [DataContext] based on
-  /// [PPod.data] of [pod].
+  /// [Pod.data] of [pod].
   // DataContext dataConnector({
   //   required DataContext parentDataConnector,
-  //   required PPod config,
+  //   required Pod config,
   //   required PData dataSelector,
   // }) {
   //   if (dataSelector.isSingle) {
@@ -263,8 +263,8 @@ class DocumentClassCache {
 
   DataContext _singleDataConnector({
     required DataContext parentDataConnector,
-    required PPod config,
-    required PData dataConfig,
+    required Pod config,
+    required Data dataConfig,
   }) {
     // if (config.isDataRoot) {
     //   return dataRoot(config, listener);
@@ -274,7 +274,7 @@ class DocumentClassCache {
 
   // DataContext _multiDataConnector({
   //   required DataContext parentDataConnector,
-  //   required PPod config,
+  //   required Pod config,
   //   required PData dataConfig,
   // }) {
   //   /// TODO: replace - this is just getting rid of compile errors

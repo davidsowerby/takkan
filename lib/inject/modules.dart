@@ -41,9 +41,9 @@ libraryInjectionBindings() {
 
 routerInjectionBindings() {
   getIt.registerFactory<PreceptRouterConfig>(() => PreceptRouterConfig());
-  getIt.registerFactoryParam<SignInPage, PSignInOptions, int>(
+  getIt.registerFactoryParam<SignInPage, SignInOptions, int>(
       (param1, param2) => DefaultSignInPage(
-            dataProvider: param1 as DataProvider,
+            dataProvider: param1 as IDataProvider,
             pageArguments: param2 as Map<String, dynamic>,
           ));
   getIt.registerFactory<PageBuilder>(() => DefaultPageBuilder());

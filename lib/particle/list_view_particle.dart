@@ -4,19 +4,18 @@ import 'package:precept_client/common/component/nav/nav_tile.dart';
 import 'package:precept_client/page/edit_state.dart';
 import 'package:precept_client/trait/list.dart';
 import 'package:precept_script/part/abstract_list_view.dart';
-import 'package:precept_script/part/list_view.dart';
+import 'package:precept_script/part/list_view.dart' as ListViewConfig;
 import 'package:precept_script/schema/schema.dart';
 import 'package:provider/provider.dart';
 
 mixin ListViewParticleBuilder {
-  Widget modelBuilder(BuildContext context, PAbstractListView config, int index,
-      List<Map<String, dynamic>> data, PDocument documentSchema) {
+  Widget modelBuilder(BuildContext context, AbstractListView config, int index,
+      List<Map<String, dynamic>> data, Document documentSchema) {
     final dataItem = data[index];
     return _navTileBuilder(dataItem, config, documentSchema);
   }
 
-  Widget _listTileBuilder(
-      Map<String, dynamic> entry, PAbstractListView config) {
+  Widget _listTileBuilder(Map<String, dynamic> entry, AbstractListView config) {
     return ListTile(
       title: Text(entry[config.titleProperty]),
       subtitle: Text(
@@ -25,8 +24,8 @@ mixin ListViewParticleBuilder {
     );
   }
 
-  Widget _navTileBuilder(Map<String, dynamic> entry, PAbstractListView config,
-      PDocument documentSchema) {
+  Widget _navTileBuilder(Map<String, dynamic> entry, AbstractListView config,
+      Document documentSchema) {
 // TODO: this Back4App specific
     final String path = documentSchema.name;
     final String objectId = entry['objectId']!;
@@ -50,10 +49,10 @@ mixin ListViewParticleBuilder {
 /// for example, to a [TextParticle] which uses a Text and TextBox respectively.
 class ListViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final ListViewTrait trait;
-  final PListView config;
+  final ListViewConfig.ListView config;
   final ModelConnector connector;
   final bool readOnly;
-  final PDocument schema;
+  final Document schema;
 
   const ListViewParticle({
     required this.trait,

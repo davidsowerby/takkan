@@ -8,17 +8,17 @@ import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/trait_library.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
-import 'package:precept_script/part/text.dart';
+import 'package:precept_script/part/text.dart' as TextConfig;
 import 'package:precept_script/signin/sign_in.dart';
 
-class EmailSignIn extends StatelessWidget {
+class EmailSignInWidget extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
-  final PEmailSignIn config;
+  final EmailSignIn config;
   final DataContext dataContext;
 
-  EmailSignIn({Key? key, required this.config, required this.dataContext})
+  EmailSignInWidget({Key? key, required this.config, required this.dataContext})
       : super(key: key);
 
   @override
@@ -133,9 +133,8 @@ class EmailSignIn extends StatelessWidget {
   }
 
   Widget failureMessage(ThemeData theme ){
-
-    final TextTrait trait=traitLibrary.findParticleTrait(
-        theme: theme, traitName: PText.errorText) as TextTrait;
+    final TextTrait trait = traitLibrary.findParticleTrait(
+        theme: theme, traitName: TextConfig.Text.errorText) as TextTrait;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(

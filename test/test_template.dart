@@ -4,11 +4,11 @@ import 'package:precept_client/library/border_library.dart';
 import 'package:precept_client/library/library.dart';
 import 'package:precept_client/library/theme_lookup.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/text.dart';
+import 'package:precept_script/part/text.dart' as TextConfig;
 import 'package:precept_script/schema/field/date.dart';
 import 'package:precept_script/schema/field/double.dart';
 import 'package:precept_script/schema/field/geo_position.dart';
@@ -24,69 +24,69 @@ import 'helper/mock.dart';
 
 initialData(String instanceName) {}
 
-final validationSchema = PSchema(
+final validationSchema = Schema(
   name: 'kitchenSink',
   documents: {
-    'Account': PDocument(
+    'Account': Document(
       fields: {
-        'objectId': PString(),
-        'accountNumber': PString(),
-        'category': PString(),
-        'recordDate': PDate(),
-        // 'customer': PDocument(
+        'objectId': FString(),
+        'accountNumber': FString(),
+        'category': FString(),
+        'recordDate': FDate(),
+        // 'customer': Document(
         //   fields: {
-        //     'firstName': PString(),
-        //     'lastName': PString(),
-        //     'age': PInteger(),
+        //     'firstName': FString(),
+        //     'lastName': FString(),
+        //     'age': FInteger(),
         //   },
         // ),
-        'address': PPointer(targetClass: '_User'),
+        'address': FPointer(targetClass: '_User'),
         // 'notifications': PSelectBoolean(),
-        'linkedAccounts': PRelation(targetClass: '_User'),
-        'joinDate': PDate(),
-        'average': PDouble(),
+        'linkedAccounts': FRelation(targetClass: '_User'),
+        'joinDate': FDate(),
+        'average': FDouble(),
         // 'colourChoices': PSelectString(),
-        'successRate': PDouble(),
+        'successRate': FDouble(),
       },
     ),
-    'Address': PDocument(
+    'Address': Document(
       fields: {
-        'firstLine': PString(),
-        'secondLine': PString(),
+        'firstLine': FString(),
+        'secondLine': FString(),
         // 'country': PSelectString(),
-        'location': PGeoPosition(),
+        'location': FGeoPosition(),
         // 'region': PGeoRegion(),
-        'postCode': PPostCode(),
+        'postCode': FPostCode(),
       },
     ),
   },
-  version: PVersion(number: 0),
+  version: Version(number: 0),
 );
 
-final PScript kitchenSinkValidation = PScript(
+final Script kitchenSinkValidation = Script(
   name: 'data validation test',
-  dataProvider: PDataProvider(
-    instanceConfig: PInstance(group: 'fake', instance: 'fake'),
+  dataProvider: DataProvider(
+    instanceConfig: AppInstance(group: 'fake', instance: 'fake'),
   ),
   pages: [
-    PPageStatic(
+    PageStatic(
       routes: ['/test'],
       pageType: Library.simpleKey,
       caption: 'Page 1',
       children: [
-        PText(caption: 'Part 1', staticData: 'Part 1'),
-        PPanel(
+        TextConfig.Text(caption: 'Part 1', staticData: 'Part 1'),
+        Panel(
           dataSelectors: [
-            PSingleById(
+            DataItemById(
               objectId: 'wVdGK8TDXR',
               tag: 'fixed thing',
             ),
           ],
           caption: 'Panel 2',
           property: '',
-          heading: PPanelHeading(),
+          heading: PanelHeading(),
           children: [
-            PText(
+            TextConfig.Text(
               property: 'category',
               id: 'Part 2-1-2',
             ),
@@ -96,7 +96,7 @@ final PScript kitchenSinkValidation = PScript(
     ),
   ],
   schema: validationSchema,
-  version: PVersion(number: 0),
+  version: Version(number: 0),
 );
 
 /// See [developer guide]()

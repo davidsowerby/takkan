@@ -23,15 +23,15 @@
 // import '../helper/mock.dart';
 //
 // /// Had to make precept.loaders public.  This test requires the lookup of
-// /// PDocument from documentClass, and that uses the rootModel of Precept.
+// /// Document from documentClass, and that uses the rootModel of Precept.
 // void main() {
 //   group('Document Cache', () {
-//     late PScript script;
+//     late Script script;
 //     late DocumentCache cache;
 //     late DataContext parentConnector;
 //     late DataProvider dataProvider = MockDataProvider();
 //     final mockDataProviderLibrary = MockDataProviderLibrary();
-//     final PData dataSelector = PSingle();
+//     final PData dataSelector = DataItem();
 //
 //     /// TODO: how do we really select this?
 //     setUpAll(() {});
@@ -39,15 +39,15 @@
 //     tearDownAll(() {});
 //
 //     setUp(() {
-//       script = PScript(
+//       script = Script(
 //         name: 'test',
-//         version: PVersion(number: 0),
+//         version: Version(number: 0),
 //         dataProvider: PDataProvider(
 //             instanceConfig: PInstance(group: 'test', instance: 'dev')),
-//         schema: PSchema(
-//           version: PVersion(number: 0),
+//         schema: Schema(
+//           version: Version(number: 0),
 //           name: 'test',
-//           documents: {'Person': PDocument(fields: {})},
+//           documents: {'Person': Document(fields: {})},
 //         ),
 //         pages: [],
 //       );
@@ -92,7 +92,7 @@
 //           final page = PPage(
 //             documentClass: 'Person',
 //             dataSelectors: [
-//               PSingleById(
+//               DataItemById(
 //                 tag: 'fixed',
 //                 objectId: 'xxx',
 //               ),
@@ -130,7 +130,7 @@
 //           final page = PPage(
 //             documentClass: 'Person',
 //             dataSelectors: [
-//               PSingle(),
+//               DataItem(),
 //             ],
 //           );
 //           script.routes['test'] = page;

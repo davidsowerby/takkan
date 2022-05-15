@@ -1,9 +1,9 @@
 /// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchensink.html#static-page)
 ///
 
-// final PScript kitchenSink00 = PScript(
+// final Script kitchenSink00 = Script(
 //   name: 'script00',
-//   version: PVersion(number: 0),
+//   version: Version(number: 0),
 //   routes: {
 //     '/test': PPage(
 //       pageType: Library.simpleKey,
@@ -18,7 +18,7 @@
 //               caption: 'Panel 2-1',
 //               heading: PPanelHeading(),
 //               content: [
-//                 PPart(
+//                 Part(
 //                     readTraitName: PText.defaultReadTrait,
 //                     caption: 'Part 2-1-1',
 //                     staticData: 'Part 2-1-1'),
@@ -28,14 +28,14 @@
 //                 ),
 //               ],
 //             ),
-//             PPart(
+//             Part(
 //                 readTraitName: PText.defaultReadTrait,
 //                 caption: 'Part 2-2',
 //                 staticData: 'Part 2-2'),
 //             PText(id: 'Part 2-3', staticData: 'Part 2-3'),
 //           ],
 //         ),
-//         PPart(
+//         Part(
 //             readTraitName: PText.defaultReadTrait,
 //             caption: 'Part 3',
 //             staticData: 'Part 3'),
@@ -62,7 +62,7 @@
 //
 //     testWidgets('All ', (WidgetTester tester) async {
 //       // given
-//       final PScript script = KitchenSinkTest().init(
+//       final Script script = KitchenSinkTest().init(
 //         script: kitchenSink00,
 //         useCaptionsAsIds: true,
 //         appConfig: MockAppConfig(),

@@ -32,9 +32,9 @@ class MockAppConfig extends Mock implements AppConfig {}
 
 class MockDocumentRoot extends Mock implements DocumentRoot {}
 
-class MockPDocument extends Mock implements PDocument {}
+class MockDocument extends Mock implements Document {}
 
-class MockDataProvider extends Mock implements DataProvider {}
+class MockDataProvider extends Mock implements IDataProvider {}
 
 class MockDataProviderLibrary extends Mock implements DataProviderLibrary {}
 
@@ -57,16 +57,16 @@ class MockUpdateResult extends Mock implements UpdateResult {}
 class MockReadResultItem extends Mock implements ReadResultItem {}
 
 class MockDataContextWithParams implements DataContext {
-  final DataProvider dataProvider;
+  final IDataProvider dataProvider;
   final DocumentClassCache classCache;
-  final PDocument documentSchema;
+  final Document documentSchema;
 
   MockDataContextWithParams({
-    DataProvider? dataProvider,
+    IDataProvider? dataProvider,
     DocumentClassCache? classCache,
-    PDocument? documentSchema,
+    Document? documentSchema,
   })  : dataProvider = dataProvider ?? MockDataProvider(),
-        documentSchema = documentSchema ?? MockPDocument(),
+        documentSchema = documentSchema ?? MockDocument(),
         classCache = classCache ?? MockDocumentClassCache();
 }
 
@@ -80,4 +80,6 @@ class FakeDocumentId extends Fake implements DocumentId {}
 
 // class MockUserState extends Mock implements UserState{}
 // ignore: must_be_immutable
-class MockPanel extends Mock with Diagnosticable implements Widget, Panel {}
+class MockPanel extends Mock
+    with Diagnosticable
+    implements Widget, PanelWidget {}

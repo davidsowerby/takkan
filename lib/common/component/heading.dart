@@ -22,8 +22,8 @@ import 'package:provider/provider.dart';
 /// - [dataContext] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
 class Heading extends StatefulWidget {
   final String headingText;
-  final PHeadingStyle headingStyle;
-  final PHelp? help;
+  final HeadingStyle headingStyle;
+  final Help? help;
   final Widget Function(bool) expandedContent;
   final bool expandable;
   final bool openExpanded;
@@ -34,7 +34,7 @@ class Heading extends StatefulWidget {
   final List<Function(BuildContext)> onBeforeSave;
   final List<Function(BuildContext)> onAfterSave;
   final bool showEditSave;
-  final PPanelHeading config;
+  final PanelHeading config;
   final DataContext? dataContext;
   final DocumentRoot documentRoot;
 
@@ -44,7 +44,7 @@ class Heading extends StatefulWidget {
     this.headingText = 'Heading',
     this.help,
     this.dataContext,
-    this.headingStyle = const PHeadingStyle(),
+    this.headingStyle = const HeadingStyle(),
     this.openExpanded = true,
     required this.expandedContent,
     this.expandable = true,
@@ -75,7 +75,7 @@ class _HeadingState extends State<Heading> with Interpolator {
 
   @override
   Widget build(BuildContext context) {
-    final PPanels panelConfig = widget.config.parent as PPanels;
+    final Panels panelConfig = widget.config.parent as Panels;
     bool editMode = false;
     bool editable = false;
 
@@ -179,7 +179,7 @@ class HeadingExpandCloseAction extends ActionIcon {
 }
 
 class HelpButton extends ActionIcon with Interpolator {
-  final PHelp help;
+  final Help help;
 
   const HelpButton({
     Key? key,

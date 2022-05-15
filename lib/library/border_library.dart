@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/trait/style.dart';
+import 'package:precept_script/trait/style.dart' as ConfigStyle;
 
 // TODO: think about iteration order, it could be used to 'overwrite' previous declarations
 class BorderLibrary {
@@ -10,14 +10,16 @@ class BorderLibrary {
   const BorderLibrary({required this.modules});
 
   /// Iterates through [modules] to find the [border], throws exception if none found
-  ShapeBorder find({required ThemeData theme, required PBorder border}) {
+  ShapeBorder find(
+      {required ThemeData theme, required ConfigStyle.Border border}) {
     for (var module in modules) {
       final result = module.find(theme: theme, border: border);
       if (result != null) {
         return result;
       }
     }
-    throw PreceptException("Border ${border.borderName} not found in the BorderLibrary");
+    throw PreceptException(
+        "Border ${border.borderName} not found in the BorderLibrary");
   }
 }
 
@@ -25,21 +27,23 @@ abstract class BorderLibraryModule {
   const BorderLibraryModule();
 
   /// Returns the border for [borderName] or null if not found
-  ShapeBorder? find({required ThemeData theme, required PBorder border});
+  ShapeBorder? find(
+      {required ThemeData theme, required ConfigStyle.Border border});
 }
 
 class PreceptBorderLibraryModule extends BorderLibraryModule {
   PreceptBorderLibraryModule() : super();
 
   @override
-  ShapeBorder? find({required ThemeData theme, required PBorder border}) {
+  ShapeBorder? find(
+      {required ThemeData theme, required ConfigStyle.Border border}) {
     switch (border.borderName) {
-      case PBorder.roundedRectangleThinPrimary:
-        return _roundedRectangle(theme:theme, lineThickness: 1.0);
-      case PBorder.roundedRectangleMediumPrimary:
-        return _roundedRectangle(theme:theme, lineThickness: 3.0);
-      case PBorder.roundedRectangleThickPrimary:
-        return _roundedRectangle(theme:theme, lineThickness: 5.0);
+      case ConfigStyle.Border.roundedRectangleThinPrimary:
+        return _roundedRectangle(theme: theme, lineThickness: 1.0);
+      case ConfigStyle.Border.roundedRectangleMediumPrimary:
+        return _roundedRectangle(theme: theme, lineThickness: 3.0);
+      case ConfigStyle.Border.roundedRectangleThickPrimary:
+        return _roundedRectangle(theme: theme, lineThickness: 5.0);
       default:
         return null;
     }

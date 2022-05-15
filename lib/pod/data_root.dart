@@ -16,7 +16,7 @@ import 'package:precept_script/schema/schema.dart';
 /// It holds a [MutableDocument] to facilitate editing.
 ///
 /// Precept potentially creates a number of [Form] instances on one page, as each
-/// [Panel] may have its own.  This class holds the [GlobalKey] for each, in [formKeys],
+/// [PanelWidget] may have its own.  This class holds the [GlobalKey] for each, in [formKeys],
 /// so Form content can be flushed to the [_mutableDocument] prior to saving it.
 ///
 /// As part of that process, validation is carried out as defined by [documentSchema].
@@ -73,9 +73,9 @@ class DocumentRoot implements CacheListener {
     // classCache.requestDocument(dataRoot: this, objectId: objectId);
   }
 
-  PDocument get documentSchema => classCache.documentSchema;
+  Document get documentSchema => classCache.documentSchema;
 
-  DataProvider get dataProvider => classCache.dataProvider;
+  IDataProvider get dataProvider => classCache.dataProvider;
 
   ModelBinding get modelBinding => _mutableDocument.rootBinding;
 

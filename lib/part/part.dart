@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 enum DisplayType { text, datePicker }
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
-/// A [Part] combines field level data with the manner in which it is displayed.  It uses an [EditState]
+/// A [PartWidget] combines field level data with the manner in which it is displayed.  It uses an [EditState]
 /// instance (from the widget tree above) to determine whether it is in edit or read mode.
 ///
 /// Data is connected directly to the Particles during the process of creating them,
@@ -30,16 +30,16 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// the current edit state.  In other words, it takes care of its own presentation when in either edit or read mode.
 /// The particle is stored in [readParticle]
 ///
-/// [config] is a [PPart] instance, which is contained within a [PScript].
+/// [config] is a [Part] instance, which is contained within a [Script].
 
 ///
-class Part extends StatelessWidget {
-  final PPart config;
+class PartWidget extends StatelessWidget {
+  final Part config;
   final Widget readParticle;
   final Widget? editParticle;
   final bool singleParticle;
 
-  const Part({
+  const PartWidget({
     Key? key,
     this.singleParticle = false,
     required this.config,

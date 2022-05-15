@@ -7,11 +7,11 @@ import 'package:precept_client/common/content/pod_state.dart';
 import 'package:precept_client/convert/script.dart';
 import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/page/layout/layout.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:precept_script/panel/panel.dart';
 
 class PreceptPage extends StatefulWidget {
-  final PPage config;
+  final PageConfig.Page config;
   final DataContext parentDataContext;
   final Map<String, dynamic> pageArguments;
 
@@ -40,8 +40,8 @@ class PreceptPage extends StatefulWidget {
 
 class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
   PreceptPageState({
-    required PPage config,
-    DataProvider? dataProvider,
+    required PageConfig.Page config,
+    IDataProvider? dataProvider,
     required DataContext dataContext,
     Map<String, dynamic> pageArguments = const {},
   }) : super(
@@ -101,8 +101,8 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
   Widget layout(
       {required List<Widget> children,
       required Size screenSize,
-      required PPod config}) {
-    final padding = (config as PPage).layout.padding;
+      required Pod config}) {
+    final padding = (config as PageConfig.Page).layout.padding;
     return Padding(
       padding: padding.edgeInsets(),
       child: distributeWidgets(

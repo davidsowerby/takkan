@@ -6,81 +6,85 @@ import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_client/trait/query.dart';
 import 'package:precept_client/trait/text.dart';
 import 'package:precept_client/trait/text_box.dart';
-import 'package:precept_script/part/list_view.dart';
+import 'package:precept_script/part/list_view.dart' as ListViewConfig;
 import 'package:precept_script/part/navigation.dart';
 import 'package:precept_script/part/query_view.dart';
-import 'package:precept_script/part/text.dart';
-import 'package:precept_script/particle/text_box.dart';
+import 'package:precept_script/part/text.dart' as TextConfig;
+import 'package:precept_script/particle/text_box.dart' as TextBoxConfig;
 import 'package:precept_script/signin/sign_in.dart';
-import 'package:precept_script/trait/text_trait.dart';
+import 'package:precept_script/trait/text_trait.dart' as TextTraitConfig;
 
 class TraitLibrary {
   Trait findParticleTrait(
       {required ThemeData theme,
       required String traitName,
-      PTextTheme textBackground = PTextTheme.cardCanvas}) {
+      TextTraitConfig.TextTheme textBackground =
+          TextTraitConfig.TextTheme.cardCanvas}) {
     switch (traitName) {
-      case PEmailSignIn.defaultTrait:
+      case EmailSignIn.defaultTrait:
         return EmailSignInTrait();
 
-      case PText.title:
+      case TextConfig.Text.title:
         final textTheme = _lookupTextTheme(theme, textBackground);
 
-        return TextTrait(alignment: AlignmentDirectional.center,
+        return TextTrait(
+          alignment: AlignmentDirectional.center,
           textStyle: textTheme.headline3!,
           textAlign: TextAlign.center,
           textTheme: textTheme,
         );
-      case PText.subtitle:
+      case TextConfig.Text.subtitle:
         final textTheme = _lookupTextTheme(theme, textBackground);
-        return TextTrait(alignment: AlignmentDirectional.center,
+        return TextTrait(
+          alignment: AlignmentDirectional.center,
           textStyle: textTheme.headline5!,
           textAlign: TextAlign.center,
           textTheme: textTheme,
         );
-      case PText.strapText:
+      case TextConfig.Text.strapText:
         final textTheme = _lookupTextTheme(theme, textBackground);
-        return TextTrait(alignment: AlignmentDirectional.center,
+        return TextTrait(
+          alignment: AlignmentDirectional.center,
           textStyle: textTheme.bodyText1!.copyWith(fontStyle: FontStyle.italic),
           textAlign: TextAlign.center,
           textTheme: textTheme,
         );
-      case PText.heading1:
+      case TextConfig.Text.heading1:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline4!,
           textAlign: TextAlign.start,
           textTheme: textTheme,
         );
-      case PText.heading2:
+      case TextConfig.Text.heading2:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline5!,
           textAlign: TextAlign.start,
           textTheme: textTheme,
         );
-      case PText.heading3:
+      case TextConfig.Text.heading3:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.headline6!,
           textAlign: TextAlign.start,
           textTheme: textTheme,
         );
-      case PText.body:
+      case TextConfig.Text.body:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.bodyText1!,
           textAlign: TextAlign.left,
           textTheme: textTheme,
         );
-      case PText.defaultReadTrait:
+      case TextConfig.Text.defaultReadTrait:
         final textTheme = _lookupTextTheme(theme, textBackground);
         return TextTrait(
           textStyle: textTheme.bodyText1!,
           textAlign: TextAlign.left,
           textTheme: textTheme,
         );
-      case PText.errorText:
+      case TextConfig.Text.errorText:
         final textTheme = theme.textTheme;
         return TextTrait(
           textStyle: textTheme.bodyText1!.copyWith(color: Colors.red),
@@ -88,27 +92,27 @@ class TraitLibrary {
           textTheme: textTheme,
         );
 
-      case PNavButton.defaultReadTrait:
+      case NavButton.defaultReadTrait:
         return NavButtonTrait();
-      case PNavButtonSet.defaultReadTrait:
+      case NavButtonSet.defaultReadTrait:
         return NavButtonSetTrait();
-      case PTextBox.defaultTraitName:
+      case TextBoxConfig.TextBox.defaultTraitName:
         return TextBoxTrait();
-      case PListView.defaultReadTrait:
+      case ListViewConfig.ListView.defaultReadTrait:
         return ListViewReadTrait();
-      case PListView.defaultEditTrait:
+      case ListViewConfig.ListView.defaultEditTrait:
         return ListViewEditTrait();
-      case PListView.defaultItemReadTrait:
+      case ListViewConfig.ListView.defaultItemReadTrait:
         return ListItemReadTrait();
-      case PListView.defaultItemEditTrait:
+      case ListViewConfig.ListView.defaultItemEditTrait:
         return ListItemEditTrait();
-      case PQueryView.defaultReadTrait:
+      case QueryView.defaultReadTrait:
         return QueryViewReadTrait();
-      case PQueryView.defaultEditTrait:
+      case QueryView.defaultEditTrait:
         return QueryViewEditTrait();
-      case PQueryView.defaultItemReadTrait:
+      case QueryView.defaultItemReadTrait:
         return QueryItemReadTrait();
-      case PQueryView.defaultItemEditTrait:
+      case QueryView.defaultItemEditTrait:
         return QueryItemEditTrait();
       default:
         return NoTrait(viewDataType: String, traitName: traitName);
@@ -116,13 +120,14 @@ class TraitLibrary {
   }
 }
 
-TextTheme _lookupTextTheme(ThemeData theme, PTextTheme background) {
+TextTheme _lookupTextTheme(
+    ThemeData theme, TextTraitConfig.TextTheme background) {
   switch (background) {
-    case PTextTheme.cardCanvas:
+    case TextTraitConfig.TextTheme.cardCanvas:
       return theme.textTheme;
-    case PTextTheme.primary:
+    case TextTraitConfig.TextTheme.primary:
       return theme.primaryTextTheme;
-    case PTextTheme.accent:
+    case TextTraitConfig.TextTheme.accent:
       return theme.accentTextTheme;
   }
 }

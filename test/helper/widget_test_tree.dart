@@ -23,9 +23,10 @@ class WidgetTestTree {
   final int pages;
   final int panels;
   final int parts;
-  final PScript script;
+  final Script script;
 
-  WidgetTestTree(this.script, this.widgets, {this.pages = 1, this.panels = 2, this.parts = 6}) {
+  WidgetTestTree(this.script, this.widgets,
+      {this.pages = 1, this.panels = 2, this.parts = 6}) {
     _scan();
   }
 
@@ -43,11 +44,11 @@ class WidgetTestTree {
         _pageIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
-      } else if (widget is Panel) {
+      } else if (widget is PanelWidget) {
         _panelIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
-      } else if (widget is Part) {
+      } else if (widget is PartWidget) {
         _partIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
@@ -70,8 +71,8 @@ class WidgetTestTree {
       }
       // TODO: this is a bit fragile, would need new types adding
       if (widgets[index] is PreceptPage) break;
-      if (widgets[index] is Panel) break;
-      if (widgets[index] is Part) break;
+      if (widgets[index] is PanelWidget) break;
+      if (widgets[index] is PartWidget) break;
       index--;
     }
     return -1;
@@ -131,8 +132,10 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  PScript init(
-      {required PScript script, bool useCaptionsAsIds = true, required AppConfig appConfig}) {
+  Script init(
+      {required Script script,
+      bool useCaptionsAsIds = true,
+      required AppConfig appConfig}) {
     preceptDefaultInjectionBindings();
     partLibrary.init();
     dataProviderLibrary.register(

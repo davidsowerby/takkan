@@ -13,7 +13,7 @@ class EmailSignInPage extends StatelessWidget {
   final String successRoute;
   final String failureRoute;
   final Map<String, dynamic> pageArguments;
-  final DataProvider dataProvider;
+  final IDataProvider dataProvider;
 
   const EmailSignInPage({
     required this.successRoute,

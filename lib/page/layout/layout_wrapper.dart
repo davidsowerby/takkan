@@ -7,7 +7,7 @@ import 'package:precept_client/page/layout/page_layout_column.dart';
 import 'package:precept_script/panel/panel.dart';
 
 class LayoutWrapper extends StatelessWidget {
-  final PPod config;
+  final Pod config;
   final DataBinding parentBinding;
   final DataContext dataContext;
   final PageBuilder pageBuilder;

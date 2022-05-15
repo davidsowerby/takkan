@@ -59,17 +59,17 @@ void main() {
 //           MockUserDiscardChangesPrompt();
 //       late UserDeleteDocumentPrompt confirmDeletePrompt =
 //           MockUserDeleteDocumentPrompt();
-//       final documentSchema = PDocument(fields: {});
+//       final documentSchema = Document(fields: {});
 //       dataProvider = MockDataProvider();
 //       when(() => dataProvider.objectIdKey).thenReturn('objectId');
 //
-//       /// easier to use a script, and init, to set up PDocument
-//       final script = PScript(
+//       /// easier to use a script, and init, to set up Document
+//       final script = Script(
 //         name: 'test',
-//         version: PVersion(number: 0),
-//         schema: PSchema(
+//         version: Version(number: 0),
+//         schema: Schema(
 //             name: 'test',
-//             version: PVersion(number: 0),
+//             version: Version(number: 0),
 //             documents: {'Person': documentSchema}),
 //       );
 //       final config = PPage(documentClass: 'Person', content: []);

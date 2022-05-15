@@ -9,7 +9,7 @@ import '../helper/mock.dart';
 
 void main() {
   DataContext mockDataContext = MockDataContextWithParams(
-    documentSchema: PDocument(fields: {}),
+    documentSchema: Document(fields: {}),
   );
   ModelBinding modelBinding = MockModelBinding();
   group(

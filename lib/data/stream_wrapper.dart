@@ -6,7 +6,7 @@ import 'package:precept_client/page/layout/layout_wrapper.dart';
 import 'package:precept_script/panel/panel.dart';
 
 class StreamWrapper extends StatelessWidget {
-  final PPod config;
+  final Pod config;
   final DataContext dataContext;
   final CacheEntry cacheEntry;
   final DataBinding parentBinding;

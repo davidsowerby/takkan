@@ -15,7 +15,7 @@ import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
 import 'package:precept_script/loader/assembler.dart';
 import 'package:precept_script/loader/loaders.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:precept_script/part/part.dart';
 import 'package:precept_script/script/script.dart';
 
@@ -30,15 +30,14 @@ import 'package:precept_script/script/script.dart';
 ///
 /// [init] must be called before the app is run
 class Precept {
-  late PScript _rootModel;
+  late Script _rootModel;
   late Map<String, dynamic> _jsonConfig;
   bool _isReady = false;
   final List<Function()> _readyListeners = List.empty(growable: true);
   final List<Function()> _scriptReloadListeners = List.empty(growable: true);
   final bool useDefaultDataProvider;
   late List<PreceptLoader> _loaders;
-  late Map<Type, Widget Function(PPart, ModelConnector)>
-      _particleLibraryEntries;
+  late Map<Type, Widget Function(Part, ModelConnector)> _particleLibraryEntries;
   late List<String> commandLineArguments;
   final DocumentCache cache = DocumentCache();
 
@@ -47,8 +46,8 @@ class Precept {
   init({
     required List<String> commandLineArguments,
     bool includePreceptDefaults = true,
-    Map<String, Widget Function(PPage)> pageLibraryEntries = const {},
-    Map<Type, Widget Function(PPart, ModelConnector)> particleLibraryEntries =
+    Map<String, Widget Function(PageConfig.Page)> pageLibraryEntries = const {},
+    Map<Type, Widget Function(Part, ModelConnector)> particleLibraryEntries =
         const {},
     List<PreceptLoader> loaders = const [],
     List<void Function()> injectionBindings = const [],
@@ -106,20 +105,20 @@ class Precept {
     _scriptReloadListeners.add(listener);
   }
 
-  /// Walks the PScript to find any declared [PSchemaSource] instances, and calls them to be loaded,
+  /// Walks the Script to find any declared [SchemaSource] instances, and calls them to be loaded,
   /// if they are not already loaded
   Future<bool> _loadSchemas() async {
     final visitor = DataProviderVisitor();
     _rootModel.walk([visitor]);
-    final List<PDataProvider> requireLoading = List.empty(growable: true);
+    final List<DataProvider> requireLoading = List.empty(growable: true);
 
     /// select those which have no schema, for loading
-    for (PDataProvider provider in visitor.dataProviders) {
+    for (DataProvider provider in visitor.dataProviders) {
       requireLoading.add(provider);
     }
 
     if (requireLoading.length > 0) {
-      for (PDataProvider provider in requireLoading) {
+      for (DataProvider provider in requireLoading) {
         RestPreceptLoader loader = RestPreceptLoader();
       }
     }
@@ -162,15 +161,15 @@ final Precept _precept = Precept();
 
 Precept get precept => _precept;
 
-PScript script = _precept._rootModel;
+Script script = _precept._rootModel;
 
 /// When used with [script.walk] returns all [PDataProvider] instances
 class DataProviderVisitor implements ScriptVisitor {
-  List<PDataProvider> dataProviders = List.empty(growable: true);
+  List<DataProvider> dataProviders = List.empty(growable: true);
 
   @override
   step(Object entry) {
-    if (entry is PDataProvider) {
+    if (entry is DataProvider) {
       dataProviders.add(entry);
     }
   }

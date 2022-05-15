@@ -15,8 +15,8 @@ import 'package:precept_client/pod/data_root.dart';
 import 'package:precept_client/pod/document_root.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/select/single.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:provider/provider.dart';
 
 /// Represents a page displaying a single document.
@@ -41,7 +41,7 @@ import 'package:provider/provider.dart';
 /// [route] is passed from the [PreceptRouter] during page constructions
 ///
 /// [objectId] is only known on initial construction when this page is from a route based on
-/// [PSingleById].  From then on, the objectId may be changed, usually by user action.
+/// [DataItemById].  From then on, the objectId may be changed, usually by user action.
 ///
 /// page layout is handled by a nested instance of [LayoutWrapper]
 ///
@@ -49,7 +49,7 @@ import 'package:provider/provider.dart';
 /// producing this page.  Note that [RouteSettings.arguments] is an Object, but [pageArguments] requires
 /// a Map<String,dynamic>
 class DocumentPage extends StatefulWidget {
-  final PPage config;
+  final PageConfig.Page config;
   final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
   final String? objectId;
@@ -139,7 +139,7 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
   /// see [_canEdit]
   Widget optionalEditControl(
-      {required Widget widget, required PContent config}) {
+      {required Widget widget, required Content config}) {
     if (config.isStatic) {
       return widget;
     }
@@ -162,7 +162,7 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
           widget.dataContext.dataProvider.authenticator.isAuthenticated;
       needsAuthentication = requiresAuth && !userAuthenticated;
       if (needsAuthentication) {
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) {
           Navigator.pushNamed(context, 'signIn', arguments: {
             'returnRoute': widget.route,
             'signInConfig':

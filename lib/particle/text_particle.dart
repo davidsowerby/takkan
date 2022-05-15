@@ -7,11 +7,16 @@ import 'package:precept_script/part/part.dart';
 
 class TextParticle extends StatelessWidget  {
   final TextTrait trait;
-  final PPart partConfig;
+  final Part partConfig;
 
   final ModelConnector connector;
 
-  const TextParticle({Key? key, required this.trait, required this.connector, required this.partConfig}) : super(key: key);
+  const TextParticle(
+      {Key? key,
+      required this.trait,
+      required this.connector,
+      required this.partConfig})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

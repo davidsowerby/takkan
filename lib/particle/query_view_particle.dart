@@ -9,10 +9,10 @@ import 'package:provider/provider.dart';
 
 class QueryViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final QueryViewTrait trait;
-  final PQueryView config;
+  final QueryView config;
   final ModelConnector connector;
   final bool readOnly;
-  final PDocument schema;
+  final Document schema;
 
   const QueryViewParticle({
     required this.trait,

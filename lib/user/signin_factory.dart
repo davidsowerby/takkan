@@ -5,7 +5,7 @@ import 'package:precept_client/user/email_signin_page.dart';
 abstract class SignInFactory {
   SignInPage signInPage({
     required Map<String, dynamic> pageArguments,
-    required DataProvider dataProvider,
+    required IDataProvider dataProvider,
   });
 }
 
@@ -13,7 +13,7 @@ class DefaultSignInFactory implements SignInFactory {
   @override
   SignInPage signInPage({
     required Map<String, dynamic> pageArguments,
-    required DataProvider dataProvider,
+    required IDataProvider dataProvider,
   }) {
     return DefaultSignInPage(pageArguments: pageArguments, dataProvider: dataProvider);
   }
@@ -21,7 +21,7 @@ class DefaultSignInFactory implements SignInFactory {
 
 abstract class EmailSignInFactory {
   EmailSignInPage emailSignInPage({
-    required DataProvider dataProvider,
+    required IDataProvider dataProvider,
     required String successRoute,
     required String failureRoute,
     required Map<String, dynamic> pageArguments,
@@ -31,7 +31,7 @@ abstract class EmailSignInFactory {
 class DefaultEmailSignInFactory implements EmailSignInFactory {
   @override
   EmailSignInPage emailSignInPage({
-    required DataProvider dataProvider,
+    required IDataProvider dataProvider,
     required String successRoute,
     required String failureRoute,
     required Map<String, dynamic> pageArguments,

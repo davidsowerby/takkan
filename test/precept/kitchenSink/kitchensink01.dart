@@ -1,9 +1,9 @@
 /// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchenSink.html#static-page-with-overrides)
 ///
 
-// final PScript kitchenSink01 = PScript(
+// final Script kitchenSink01 = Script(
 //   name: 'script01',
-//   version: PVersion(number: 0),
+//   version: Version(number: 0),
 //   routes: {
 //     'test': PPage(
 //       pageType: Library.simpleKey,
@@ -26,19 +26,19 @@
 //               dataProvider: PDataProvider(
 //                 instanceConfig: PInstance(group: 'fake', instance: 'mock'),
 //               ),
-//               data: PSingle(
+//               data: DataItem(
 //                 objectId: 'objectId1',
 //               ),
 //               controlEdit: ControlEdit.thisOnly,
 //               property: '',
 //               content: [
-//                 PPart(
+//                 Part(
 //                   readTraitName: PText.defaultReadTrait,
 //                   property: 'firstName',
 //                   caption: 'Part 1-3-1',
 //                   staticData: 'Part 1-3-1',
 //                 ),
-//                 PPart(
+//                 Part(
 //                   readTraitName: PText.defaultReadTrait,
 //                   property: 'lastName',
 //                   caption: 'Part 1-3-2',
@@ -48,12 +48,12 @@
 //             ),
 //           ],
 //         ),
-//         PPart(
+//         Part(
 //             readTraitName: PText.defaultReadTrait,
 //             id: 'Part 2',
 //             staticData: 'Part 2',
 //             caption: 'Part 2'),
-//         PPart(
+//         Part(
 //             readTraitName: PText.defaultReadTrait,
 //             id: 'Part 3',
 //             staticData: 'Part 3',
@@ -64,14 +64,14 @@
 //   schema: kitchenSinkSchema01,
 // );
 //
-// final PSchema kitchenSinkSchema01 = PSchema(
-//   version: PVersion(number: 0),
+// final Schema kitchenSinkSchema01 = Schema(
+//   version: Version(number: 0),
 //   name: 'schema01',
 //   documents: {
-//     'Account': PDocument(
+//     'Account': Document(
 //       fields: {
-//         'firstName': PString(),
-//         'lastName': PString(),
+//         'firstName': FString(),
+//         'lastName': FString(),
 //       },
 //     ),
 //   },
@@ -96,7 +96,7 @@
 //
 //     testWidgets('All ', (WidgetTester tester) async {
 //       // given
-//       final PScript script = KitchenSinkTest().init(
+//       final Script script = KitchenSinkTest().init(
 //         script: kitchenSink01,
 //         useCaptionsAsIds: true,
 //         appConfig: MockAppConfig(),

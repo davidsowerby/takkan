@@ -5,13 +5,13 @@ import 'package:precept_client/common/component/nav/nav_button.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_script/part/navigation.dart';
 
-class NavButtonSet extends StatelessWidget {
-  final PNavButtonSet config;
+class NavButtonSetWidget extends StatelessWidget {
+  final NavButtonSet config;
   final NavButtonSetTrait trait;
   final NavButtonTrait buttonTrait;
   final Map<String, dynamic> pageArguments;
 
-  const NavButtonSet(
+  const NavButtonSetWidget(
       {Key? key,
       required this.config,
       this.buttonTrait = const NavButtonTrait(),
@@ -23,9 +23,9 @@ class NavButtonSet extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Widget> children = List.empty(growable: true);
     config.buttons.forEach((key, value) {
-      final PNavButton config = PNavButton(route: value, staticData: key);
+      final NavButton config = NavButton(route: value, staticData: key);
       final ModelConnector connector = StaticConnector(key);
-      final child = NavButton(
+      final child = NavButtonWidget(
         pageArguments: pageArguments,
         connector: connector,
         partConfig: config,

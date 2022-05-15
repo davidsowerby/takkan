@@ -5,14 +5,14 @@ import 'package:precept_script/signin/sign_in.dart';
 /// This is just used as an interface so that users can define their own implementations through
 /// GetIt
 abstract class SignInPage extends StatelessWidget {
-  DataProvider get dataProvider;
+  IDataProvider get dataProvider;
 
   Map<String, dynamic> get pageArguments;
 }
 
 class DefaultSignInPage extends StatelessWidget implements SignInPage {
   final Map<String, dynamic> pageArguments;
-  final DataProvider dataProvider;
+  final IDataProvider dataProvider;
 
   const DefaultSignInPage({
     Key? key,
@@ -22,19 +22,20 @@ class DefaultSignInPage extends StatelessWidget implements SignInPage {
 
   @override
   Widget build(BuildContext context) {
-  final PSignInOptions signInOptions=dataProvider.config.signInOptions;
+    final SignInOptions signInOptions = dataProvider.config.signInOptions;
     return Scaffold(
       appBar: AppBar(
         title: Text(signInOptions.pageTitle),
       ),
       body: ListView(
-        children: _optionButtons(context,signInOptions),
+        children: _optionButtons(context, signInOptions),
       ),
     );
   }
 
   /// TODO: https://gitlab.com/precept1/precept_client/-/issues/30
-  List<Widget> _optionButtons(BuildContext context,PSignInOptions signInOptions) {
+  List<Widget> _optionButtons(
+      BuildContext context, SignInOptions signInOptions) {
     final List<Widget> list = List.empty(growable: true);
     if (signInOptions.email) {
       list.add(

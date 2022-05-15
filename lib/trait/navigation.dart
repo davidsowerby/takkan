@@ -16,8 +16,8 @@ class NavButtonSetTrait extends Trait {
   final double? height;
 
   const NavButtonSetTrait({
-    this.buttonTraitName = PNavButton.defaultReadTrait,
-    this.width=150,
+    this.buttonTraitName = NavButton.defaultReadTrait,
+    this.width = 150,
     this.height,
     AlignmentGeometry alignment = AlignmentDirectional.centerStart,
   }) : super(alignment: alignment);

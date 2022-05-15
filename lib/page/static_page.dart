@@ -16,7 +16,7 @@ import 'package:precept_script/page/static_page.dart';
 /// Currently assumes no authentication for a static page, which is wrong:
 /// https://gitlab.com/precept1/precept_design/-/issues/21
 class StaticPage extends StatelessWidget {
-  final PPageStatic config;
+  final PageStatic config;
   final DataContext dataContext;
   final String route;
   final PageBuilder pageBuilder;

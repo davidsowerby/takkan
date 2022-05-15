@@ -7,9 +7,9 @@ import 'package:precept_client/library/part_library.dart';
 import 'package:precept_client/page/document_list_page.dart';
 import 'package:precept_client/page/document_page.dart';
 import 'package:precept_client/page/static_page.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/schema/schema.dart';
 import 'package:precept_script/script/script.dart';
@@ -22,68 +22,68 @@ void main() {
   PartLibrary partLibrary = MockPartLibrary();
   DocumentCache cache = MockDocumentCache();
   late PageBuilder builder;
-  late PScript script;
+  late Script script;
   registerFallbackValue(NullDataContext());
-  registerFallbackValue(PSingleById(objectId: 'x'));
-  registerFallbackValue(PSingle());
+  registerFallbackValue(DataItemById(objectId: 'x'));
+  registerFallbackValue(DataItem());
   group('PageBuilder', () {
     setUpAll(() {});
 
     tearDownAll(() {});
 
     setUp(() {
-      script = PScript(
+      script = Script(
         name: 'test',
-        version: PVersion(number: 0),
-        schema: PSchema(
-          version: PVersion(number: 0),
+        version: Version(number: 0),
+        schema: Schema(
+          version: Version(number: 0),
           name: 'test',
-          documents: {'Person': PDocument(fields: {})},
+          documents: {'Person': Document(fields: {})},
         ),
         pages: [
-          PPage(
+          PageConfig.Page(
             documentClass: 'Person',
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              PSingle(),
+              DataItem(),
             ],
           ),
-          PPage(
+          PageConfig.Page(
             documentClass: 'Person',
             tag: 'shortForm',
             dataSelectors: [
-              PSingleById(
+              DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              PSingle(),
+              DataItem(),
             ],
           ),
-          PPage(
+          PageConfig.Page(
             documentClass: 'Person',
             dataSelectors: [
-              PMulti(),
+              DataList(),
             ],
           ),
-          PPage(
+          PageConfig.Page(
             documentClass: 'Person',
             dataSelectors: [
-              PMultiByFilter(
+              DataListByFilter(
                 tag: 'members',
                 script: 'member==true',
               )
             ],
           ),
-          PPageStatic(
+          PageStatic(
             routes: ['static page'],
           ),
-          PPage(
+          PageConfig.Page(
             documentClass: 'Person',
             dataSelectors: [
-              PMultiById(
+              DataListById(
                 tag: 'specialMembers',
                 objectIds: ['xxx', 'yyy'],
               )
@@ -117,13 +117,13 @@ void main() {
       final StaticPage page = p as StaticPage;
       expect(page.route, 'static page');
     });
-    test('single page, tagged PSingleById', () {
+    test('single page, tagged DataItemById', () {
       // given
-      final pageConfig = script.pages[0] as PPage;
+      final pageConfig = script.pages[0] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingleById>(
+          dataSelector: any<DataItemById>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
@@ -142,17 +142,17 @@ void main() {
       expect(p, isA<DocumentPage>());
       final DocumentPage page = p as DocumentPage;
       expect(page.config, pageConfig);
-      expect(
-          page.objectId, (pageConfig.dataSelectors[0] as PSingleById).objectId);
+      expect(page.objectId,
+          (pageConfig.dataSelectors[0] as DataItemById).objectId);
       expect(page.route, 'document/Person/MyObject');
     });
-    test('single page, untagged PSingle', () {
+    test('single page, untagged DataItem', () {
       // given
-      final pageConfig = script.pages[0] as PPage;
+      final pageConfig = script.pages[0] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingle>(
+          dataSelector: any<DataItem>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
@@ -174,13 +174,13 @@ void main() {
       expect(page.objectId, isNull);
       expect(page.route, 'document/Person/default');
     });
-    test('single page, tagged PSingleById, tagged Page', () {
+    test('single page, tagged DataItemById, tagged Page', () {
       // given
-      final pageConfig = script.pages[1] as PPage;
+      final pageConfig = script.pages[1] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingleById>(
+          dataSelector: any<DataItemById>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
@@ -199,17 +199,17 @@ void main() {
       expect(p, isA<DocumentPage>());
       final DocumentPage page = p as DocumentPage;
       expect(page.config, pageConfig);
-      expect(
-          page.objectId, (pageConfig.dataSelectors[0] as PSingleById).objectId);
+      expect(page.objectId,
+          (pageConfig.dataSelectors[0] as DataItemById).objectId);
       expect(page.route, 'document/Person/MyObject/shortForm');
     });
-    test('single page, untagged PSingle tagged Page', () {
+    test('single page, untagged DataItem tagged Page', () {
       // given
-      final pageConfig = script.pages[1] as PPage;
+      final pageConfig = script.pages[1] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingle>(
+          dataSelector: any<DataItem>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
@@ -233,11 +233,11 @@ void main() {
     });
     test('multi page, untagged PMulti', () {
       // given
-      final pageConfig = script.pages[2] as PPage;
+      final pageConfig = script.pages[2] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingle>(
+          dataSelector: any<DataItem>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
@@ -260,11 +260,11 @@ void main() {
     });
     test('multi page, tagged PMulti', () {
       // given
-      final pageConfig = script.pages[5] as PPage;
+      final pageConfig = script.pages[5] as PageConfig.Page;
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
-          dataSelector: any<PSingle>(
+          dataSelector: any<DataItem>(
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(

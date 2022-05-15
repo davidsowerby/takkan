@@ -6,18 +6,18 @@ import 'package:precept_client/data/data_source.dart';
 import 'package:precept_client/page/document_page.dart';
 import 'package:precept_client/page/layout/layout.dart';
 import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:precept_script/panel/panel.dart';
 
 /// This could be used directly, but is generally used only by Precept to generate
-/// pages automatically from [PScript]
+/// pages automatically from [Script]
 ///
 /// Represents a page displaying 0..n pages of document class [config.documentClass]
 ///
 /// To display a single of document, use [DocumentPage]
 ///
 class DocumentListPage extends StatefulWidget {
-  final PPage config;
+  final PageConfig.Page config;
   final Map<String, dynamic> pageArguments;
   final DataContext dataContext;
   final String route;
@@ -49,8 +49,8 @@ class DocumentListPage extends StatefulWidget {
 class DocumentListPageState extends PodState<DocumentListPage>
     with DisplayColumns {
   DocumentListPageState({
-    required PPage config,
-    DataProvider? dataProvider,
+    required PageConfig.Page config,
+    IDataProvider? dataProvider,
     Map<String, dynamic> pageArguments = const {},
   }) : super(
     parentDataContext: NullDataContext(),
@@ -109,8 +109,8 @@ class DocumentListPageState extends PodState<DocumentListPage>
   Widget layout(
       {required List<Widget> children,
       required Size screenSize,
-      required PPod config}) {
-    final padding = (config as PPage).layout.padding;
+      required Pod config}) {
+    final padding = (config as PageConfig.Page).layout.padding;
     return Padding(
       padding: EdgeInsets.only(
         top: padding.top,

@@ -5,9 +5,10 @@ import 'package:precept_script/common/script/help.dart';
 /// Text styled as a caption
 class Caption extends StatelessWidget {
   final String text;
-  final PHelp? help;
+  final Help? help;
 
-  const Caption({Key? key, required this.text,required this.help}) : super(key: key);
+  const Caption({Key? key, required this.text, required this.help})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,6 @@ import 'package:precept_client/panel/panel.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/error.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/page.dart';
 import 'package:precept_script/script/script.dart';
 
 import '../library/part_library.dart';
@@ -31,9 +30,9 @@ import '../library/part_library.dart';
 ///       onGenerateRoute: router.generateRoute,
 ///     );
 ///
-/// Pages are defined by [PScript].
+/// Pages are defined by [Script].
 ///
-/// For automatically generated routes (those from the [PScript.pages] collection)
+/// For automatically generated routes (those from the [Script.pages] collection)
 /// follow certain conventions and the developer should ensure that
 /// any routes they define do not conflict with these:
 ///
@@ -43,7 +42,7 @@ import '../library/part_library.dart';
 ///
 /// For example: document/Person/xx001s76c
 ///
-/// The page may also contain [Panel]s which connect to other documents, so to the user,
+/// The page may also contain [PanelWidget]s which connect to other documents, so to the user,
 /// there may be more than one document actually presented.
 ///
 ///
@@ -120,7 +119,7 @@ class PreceptRouter {
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
     final page = PreceptDefaultErrorPage(
-        config: PError(
+        config: Lamin8Error(
             message:
                 "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
     return MaterialPageRoute(builder: (_) => page);
@@ -130,7 +129,7 @@ class PreceptRouter {
       String pageType, RouteSettings settings) {
     final route = settings.name;
     final errorPageWidget = PreceptDefaultErrorPage(
-      config: PError(
+      config: Lamin8Error(
           message:
               "Page '$pageType' has not been defined in the PageLibrary, but was requested by route: '$route'"),
     ); // TODO message should come from Precept

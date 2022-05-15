@@ -10,13 +10,13 @@ import 'package:provider/provider.dart';
 ///
 /// [dataContext] provides access to data and associated functions
 ///
-/// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [Panel]
-class Panel extends StatefulWidget {
-  final PPanel config;
+/// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [PanelWidget]
+class PanelWidget extends StatefulWidget {
+  final Panel config;
   final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
 
-  const Panel({
+  const PanelWidget({
     Key? key,
     required this.config,
     required this.dataContext,
@@ -24,8 +24,8 @@ class Panel extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  PanelState createState() => PanelState(
-    config: config,
+  PanelWidgetState createState() => PanelWidgetState(
+        config: config,
         pageArguments: pageArguments,
         parentDataContext: dataContext,
       );
@@ -34,7 +34,7 @@ class Panel extends StatefulWidget {
 ///
 
 ///
-/// A [Panel] always relates to a single document, which is obtained via the [cache].
+/// A [PanelWidget] always relates to a single document, which is obtained via the [cache].
 ///
 /// [DocumentCache] has a [DocumentClassCache] for each document class [cache]
 /// is an instance of [DocumentClassCache], and contains the [dataProvider]
@@ -42,16 +42,16 @@ class Panel extends StatefulWidget {
 ///
 /// Selection of the appropriate document class is determined by [config.documentClass].
 ///
-/// The [DataProvider] is mostly used to access the [PreceptUser] object it contains.
-class PanelState extends PodState<Panel> {
+/// The [IDataProvider] is mostly used to access the [PreceptUser] object it contains.
+class PanelWidgetState extends PodState<PanelWidget> {
   final formKey = GlobalKey<FormState>();
 
-  PanelState(
-      {required PPanel config,
+  PanelWidgetState(
+      {required Panel config,
       required DataContext parentDataContext,
       required Map<String, dynamic> pageArguments})
       : super(
-    config: config,
+          config: config,
           pageArguments: pageArguments,
           parentDataContext: parentDataContext,
         );
@@ -99,7 +99,7 @@ class PanelState extends PodState<Panel> {
   Widget layout(
       {required List<Widget> children,
       required Size screenSize,
-      required PPod config}) {
+      required Pod config}) {
     final Widget wrapped = (widget.config.scrollable)
         ? ListView(
             children: children,

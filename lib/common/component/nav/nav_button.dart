@@ -3,18 +3,19 @@ import 'package:precept_client/binding/connector.dart';
 import 'package:precept_client/trait/navigation.dart';
 import 'package:precept_script/part/navigation.dart';
 
-class NavButton extends StatelessWidget  {
-  final PNavButton partConfig;
+class NavButtonWidget extends StatelessWidget {
+  final NavButton partConfig;
   final ModelConnector connector;
   final NavButtonTrait trait;
   final Map<String, dynamic> pageArguments;
-final bool containedInSet;
-  NavButton({
+  final bool containedInSet;
+
+  NavButtonWidget({
     Key? key,
-    this.containedInSet=false,
+    this.containedInSet = false,
     required this.partConfig,
     required this.connector,
-    this.trait=const NavButtonTrait(),
+    this.trait = const NavButtonTrait(),
     this.pageArguments = const {},
   }) : super(key: key);
 

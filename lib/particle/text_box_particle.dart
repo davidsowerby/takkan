@@ -6,11 +6,14 @@ import 'package:precept_script/part/part.dart';
 
 class TextBoxParticle extends StatelessWidget {
   final TextBoxTrait trait;
-  final PPart partConfig;
+  final Part partConfig;
   final ModelConnector connector;
 
   const TextBoxParticle(
-      {Key? key, required this.partConfig, required this.connector, required this.trait});
+      {Key? key,
+      required this.partConfig,
+      required this.connector,
+      required this.trait});
 
   @override
   Widget build(BuildContext context) {

@@ -11,10 +11,10 @@ import 'package:precept_script/common/exception.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/common/script/content.dart';
 import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/multi.dart';
-import 'package:precept_script/data/select/single.dart';
+import 'package:precept_script/data/select/data_item.dart';
+import 'package:precept_script/data/select/data_list.dart';
 import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/page.dart';
+import 'package:precept_script/page/page.dart' as PageConfig;
 import 'package:precept_script/page/static_page.dart';
 import 'package:precept_script/panel/panel.dart';
 import 'package:precept_script/part/part.dart';
@@ -28,13 +28,13 @@ abstract class PageBuilder {
     required BuildContext context,
     required DataBinding parentBinding,
     required PartLibrary partLibrary,
-    required PScript script,
+    required Script script,
     required DocumentCache cache,
   });
 
   Widget createChild(
       {required DataContext dataContext,
-      required PContent p,
+      required Content p,
       required DataBinding parentBinding,
       required ThemeData theme});
 }
@@ -48,7 +48,7 @@ class DefaultPageBuilder implements PageBuilder {
     required BuildContext context,
     required DataBinding parentBinding,
     required PartLibrary partLibrary,
-    required PScript script,
+    required Script script,
     required DocumentCache cache,
   }) {
     final s = route.split('/');
@@ -63,13 +63,13 @@ class DefaultPageBuilder implements PageBuilder {
     BuildContext context,
     Map<String, dynamic> pageArguments,
     DataBinding parentBinding,
-    PScript script,
+    Script script,
   ) {
     final pageConfig = script.routes[route];
     if (pageConfig == null) {
       return null;
     }
-    final PPageStatic pageCfg = pageConfig as PPageStatic;
+    final PageStatic pageCfg = pageConfig as PageStatic;
     final theme = Theme.of(context);
     final dataContext = StaticDataContext(
       parentDataContext: NullDataContext(),
@@ -90,14 +90,14 @@ class DefaultPageBuilder implements PageBuilder {
 
   List<Widget> createChildren(
       {required DataContext dataContext,
-      required List<PContent> children,
+      required List<Content> children,
       required DataBinding parentBinding,
       required ThemeData theme}) {
     final output = List<Widget>.empty(growable: true);
 
-    /// Using switch stops from detecting PPart sub-classes
-    for (PContent p in children) {
-      if (p is PPanel) {
+    /// Using switch stops from detecting Part sub-classes
+    for (Content p in children) {
+      if (p is Panel) {
         final panel = panelBuilder(
           config: p,
           parentDataContext: dataContext,
@@ -105,7 +105,7 @@ class DefaultPageBuilder implements PageBuilder {
           theme: theme,
         );
         output.add(panel);
-      } else if (p is PPart) {
+      } else if (p is Part) {
         final part = partLibrary.partBuilder(
           partConfig: p,
           dataContext: dataContext,
@@ -120,7 +120,7 @@ class DefaultPageBuilder implements PageBuilder {
   }
 
   Widget panelBuilder({
-    required PPanel config,
+    required Panel config,
     required DataContext parentDataContext,
     required DataBinding parentBinding,
     required ThemeData theme,
@@ -146,11 +146,11 @@ class DefaultPageBuilder implements PageBuilder {
 
   Widget createChild(
       {required DataContext dataContext,
-      required PContent p,
+      required Content p,
       required DataBinding parentBinding,
       required ThemeData theme}) {
-    /// Using switch stops from detecting PPart sub-classes
-    if (p is PPanel) {
+    /// Using switch stops from detecting Part sub-classes
+    if (p is Panel) {
       final panel = panelBuilder(
         config: p,
         parentDataContext: dataContext,
@@ -158,7 +158,7 @@ class DefaultPageBuilder implements PageBuilder {
         theme: theme,
       );
       return panel;
-    } else if (p is PPart) {
+    } else if (p is Part) {
       final part = partLibrary.partBuilder(
         partConfig: p,
         dataContext: dataContext,
@@ -172,7 +172,7 @@ class DefaultPageBuilder implements PageBuilder {
   }
 
   Widget panelExpansion(
-      {required PPanel config, required List<Widget> content}) {
+      {required Panel config, required List<Widget> content}) {
     return config.panelStyle.expandable
         ? ExpansionTile(
             title: Text(config.caption ?? ''),
@@ -202,18 +202,18 @@ class DefaultPageBuilder implements PageBuilder {
     List<String> routeSegments,
     BuildContext context,
     Map<String, dynamic> pageArguments,
-    PScript script,
+    Script script,
     DocumentCache cache,
   ) {
     final documentClassName = routeSegments[1];
     final routeOnly = '${routeSegments[0]}/${routeSegments[1]}';
 
     /// Cast should be safe, as auto routes only generated from PPage
-    PPage? pageConfig = script.routes[route] as PPage?;
+    PageConfig.Page? pageConfig = script.routes[route] as PageConfig.Page?;
     if (pageConfig == null) {
       return null;
     }
-    PData dataSelector = PSingle();
+    Data dataSelector = DataItem();
 
     /// this gets replaced
     if (routeSegments.length > 2) {
@@ -233,7 +233,7 @@ class DefaultPageBuilder implements PageBuilder {
       dataSelector = found.first;
     }
 
-    PDocument? documentSchema = script.schema.documents[documentClassName];
+    Document? documentSchema = script.schema.documents[documentClassName];
     if (documentSchema == null) {
       String msg =
           "document schema '$documentSchema' has not been declared in the schema, but has been allocated a route";
@@ -244,14 +244,14 @@ class DefaultPageBuilder implements PageBuilder {
     final DataContext dataContext =
         DefaultDataContext(classCache: cache.getClassCache(config: pageConfig));
     final pageBuilder = inject<PageBuilder>();
-    final pageWidget = (dataSelector.isSingle)
+    final pageWidget = (dataSelector.isItem)
         ? DocumentPage(
             dataContext: dataContext,
             pageBuilder: pageBuilder,
             pageArguments: pageArguments,
             config: pageConfig,
             objectId:
-                (dataSelector is PSingleById) ? dataSelector.objectId : null,
+                (dataSelector is DataItemById) ? dataSelector.objectId : null,
             route: route,
           )
         : DocumentListPage(
@@ -264,7 +264,7 @@ class DefaultPageBuilder implements PageBuilder {
             config: pageConfig,
             route: route,
             objectIds:
-                (dataSelector is PMultiById) ? dataSelector.objectIds : null,
+                (dataSelector is DataListById) ? dataSelector.objectIds : null,
           );
     return constructRoute(
       routeOnly,
