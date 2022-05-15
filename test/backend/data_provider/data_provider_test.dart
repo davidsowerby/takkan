@@ -32,11 +32,11 @@ void main() {
 
     test('init, no authenticator', () async {
       // given
-      PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        graphQLDelegate: PGraphQL(),
+      DataProvider config = DataProvider(
+        instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: GraphQL(),
         useAuthenticator: false,
-        restDelegate: PRest(),
+        restDelegate: Rest(),
       );
       DefaultDataProvider dp = TestDataProvider1(
         config: config,
@@ -54,10 +54,10 @@ void main() {
 
     test('init, with authenticator', () async {
       // given
-      PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        graphQLDelegate: PGraphQL(),
-        restDelegate: PRest(),
+      DataProvider config = DataProvider(
+        instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: GraphQL(),
+        restDelegate: Rest(),
         useAuthenticator: true,
       );
       TestDataProvider2 dp = TestDataProvider2(
@@ -74,9 +74,9 @@ void main() {
 
     test('call RestDelegate without specifying it', () async {
       // given
-      PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        graphQLDelegate: PGraphQL(),
+      DataProvider config = DataProvider(
+        instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: GraphQL(),
       );
       DefaultDataProvider dp = TestDataProvider2(
         config: config,
@@ -91,9 +91,9 @@ void main() {
     });
     test('call GraphQLDelegate without specifying it', () async {
       // given
-      PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        restDelegate: PRest(),
+      DataProvider config = DataProvider(
+        instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        restDelegate: Rest(),
       );
       DefaultDataProvider dp = TestDataProvider2(
         config: config,
@@ -109,9 +109,9 @@ void main() {
     test('require RestDelegate without providing construction function',
         () async {
       // given
-      PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        restDelegate: PRest(),
+          DataProvider config = DataProvider(
+            instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        restDelegate: Rest(),
         useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(
@@ -128,9 +128,9 @@ void main() {
     test('require GraphQLDelegate without providing construction function',
         () async {
       // given
-          PDataProvider config = PDataProvider(
-        instanceConfig: PInstance(group: 'b', instance: 'a'),
-        graphQLDelegate: PGraphQL(),
+          DataProvider config = DataProvider(
+        instanceConfig: AppInstance(group: 'b', instance: 'a'),
+        graphQLDelegate: GraphQL(),
         useAuthenticator: true,
       );
       DefaultDataProvider dp = TestDataProvider1(config: config);
@@ -144,8 +144,8 @@ void main() {
   });
 }
 
-class TestDataProvider1 extends DefaultDataProvider<PDataProvider> {
-  TestDataProvider1({required PDataProvider config}) : super(config: config);
+class TestDataProvider1 extends DefaultDataProvider<DataProvider> {
+  TestDataProvider1({required DataProvider config}) : super(config: config);
 
   RestDataProviderDelegate createRestDelegate() {
     return MockRestDelegate();
@@ -156,8 +156,8 @@ class TestDataProvider1 extends DefaultDataProvider<PDataProvider> {
   }
 }
 
-class TestDataProvider2 extends DefaultDataProvider<PDataProvider> {
-  TestDataProvider2({required PDataProvider config}) : super(config: config);
+class TestDataProvider2 extends DefaultDataProvider<DataProvider> {
+  TestDataProvider2({required DataProvider config}) : super(config: config);
 
   Future<Authenticator> createAuthenticator() async {
     final auth = MockAuthenticator();

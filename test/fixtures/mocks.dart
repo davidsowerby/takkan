@@ -22,4 +22,4 @@ MockRestDelegate createMockRestDelegate() {
   return MockRestDelegate();
 }
 
-class MockPDataProvider extends Mock implements PDataProvider {}
+class MockDataProvider extends Mock implements DataProvider {}

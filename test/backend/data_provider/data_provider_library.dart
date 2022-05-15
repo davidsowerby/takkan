@@ -47,15 +47,15 @@ void main() {
 
       // when
       final actual =
-          dataProviderLibrary.find(providerConfig: PNoDataProvider());
+          dataProviderLibrary.find(providerConfig: NullDataProvider());
       // then
 
       expect(actual, isA<NoDataProvider>());
     });
     test('register and retrieve', () {
       // given
-      final providerConfig = PDataProvider(
-          instanceConfig: PInstance(group: 'myApp', instance: 'dev'));
+      final providerConfig = DataProvider(
+          instanceConfig: AppInstance(group: 'myApp', instance: 'dev'));
       // when
       dataProviderLibrary.register(type: 'default', builder: _defaultBuilder);
       // then
@@ -66,11 +66,11 @@ void main() {
     });
     test('Multiple instances of same type', () {
       // given
-      final providerConfig1 = PDataProvider(
-        instanceConfig: PInstance(group: 'myApp', instance: 'dev'),
+      final providerConfig1 = DataProvider(
+        instanceConfig: AppInstance(group: 'myApp', instance: 'dev'),
       );
-      final providerConfig2 = PDataProvider(
-        instanceConfig: PInstance(group: 'refApp', instance: 'dev'),
+      final providerConfig2 = DataProvider(
+        instanceConfig: AppInstance(group: 'refApp', instance: 'dev'),
       );
 
       // when
@@ -97,17 +97,17 @@ void main() {
     });
     test('Multiple instances, multiple types', () {
       // given
-      final providerConfig1 = PDataProvider(
-        instanceConfig: PInstance(group: 'myApp', instance: 'dev'),
+      final providerConfig1 = DataProvider(
+        instanceConfig: AppInstance(group: 'myApp', instance: 'dev'),
       );
-      final providerConfig2 = PDataProvider(
-        instanceConfig: PInstance(group: 'refApp', instance: 'dev'),
+      final providerConfig2 = DataProvider(
+        instanceConfig: AppInstance(group: 'refApp', instance: 'dev'),
       );
-      final providerConfig3 = PDataProvider(
-        instanceConfig: PInstance(group: 'other', instance: 'public'),
+      final providerConfig3 = DataProvider(
+        instanceConfig: AppInstance(group: 'other', instance: 'public'),
       );
-      final providerConfig4 = PDataProvider(
-        instanceConfig: PInstance(group: 'other', instance: 'private'),
+      final providerConfig4 = DataProvider(
+        instanceConfig: AppInstance(group: 'other', instance: 'private'),
       );
       // when
       dataProviderLibrary.register(
@@ -145,8 +145,8 @@ void main() {
     test('unregistered', () {
       // given
       dataProviderLibrary.clear();
-      final providerConfig = PDataProvider(
-          instanceConfig: PInstance(group: 'myApp', instance: 'dev'));
+      final providerConfig = DataProvider(
+          instanceConfig: AppInstance(group: 'myApp', instance: 'dev'));
 
       // when
 
@@ -157,14 +157,14 @@ void main() {
   });
 }
 
-DataProvider<PDataProvider> _defaultBuilder(PDataProvider config) {
+IDataProvider<DataProvider> _defaultBuilder(DataProvider config) {
   return DefaultDataProvider(config: config);
 }
 
-OtherDataProvider _otherBuilder(PDataProvider config) {
+OtherDataProvider _otherBuilder(DataProvider config) {
   return OtherDataProvider(config: config);
 }
 
-class OtherDataProvider extends DefaultDataProvider<PDataProvider> {
-  OtherDataProvider({required PDataProvider config}) : super(config: config);
+class OtherDataProvider extends DefaultDataProvider<DataProvider> {
+  OtherDataProvider({required DataProvider config}) : super(config: config);
 }

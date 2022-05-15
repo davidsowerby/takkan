@@ -50,15 +50,15 @@ void main() {
           }
         },
       );
-      final MockPDataProvider mockDpValid = MockPDataProvider();
-      final MockPDataProvider mockDpInvalidInstance = MockPDataProvider();
-      final MockPDataProvider mockDpInvalidGroup = MockPDataProvider();
+      final MockDataProvider mockDpValid = MockDataProvider();
+      final MockDataProvider mockDpInvalidInstance = MockDataProvider();
+      final MockDataProvider mockDpInvalidGroup = MockDataProvider();
       when(() => mockDpValid.instanceConfig)
-          .thenReturn(PInstance(group: 'group1', instance: 'instance1'));
+          .thenReturn(AppInstance(group: 'group1', instance: 'instance1'));
       when(() => mockDpInvalidInstance.instanceConfig)
-          .thenReturn(PInstance(group: 'group1', instance: 'instance2'));
+          .thenReturn(AppInstance(group: 'group1', instance: 'instance2'));
       when(() => mockDpInvalidGroup.instanceConfig)
-          .thenReturn(PInstance(group: 'group2', instance: 'instance1'));
+          .thenReturn(AppInstance(group: 'group2', instance: 'instance1'));
 
       // when
 

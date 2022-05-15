@@ -7,20 +7,20 @@ import 'package:precept_script/data/select/field_selector.dart';
 import 'package:precept_script/data/select/query.dart';
 import 'package:precept_script/data/select/rest_query.dart';
 
-abstract class DataProviderDelegate<QUERY extends PQuery> {
-  DataProvider get parent;
+abstract class IDataProviderDelegate<QUERY extends Query> {
+  IDataProvider get parent;
 
-  init(InstanceConfig instanceConfig, DataProvider parent);
+  init(InstanceConfig instanceConfig, IDataProvider parent);
 
-  /// See [DataProvider.fetchItem]
+  /// See [IDataProvider.fetchItem]
   Future<ReadResultItem> fetchItem(
       QUERY queryConfig, Map<String, dynamic> variables);
 
-  /// See [DataProvider.fetchList]
+  /// See [IDataProvider.fetchList]
   Future<ReadResultList> fetchList(
       QUERY queryConfig, Map<String, dynamic> variables);
 
-  /// See [DataProvider.updateDocument]
+  /// See [IDataProvider.updateDocument]
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     required Map<String, dynamic> data,
@@ -34,10 +34,10 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
   Future<ReadResultItem> latestScript(
       {required String locale, required int fromVersion, required String name});
 
-  /// See [DataProvider.deleteDocument]
+  /// See [IDataProvider.deleteDocument]
   Future<DeleteResult> deleteDocument({required DocumentId documentId});
 
-  /// See [DataProvider.createDocument]
+  /// See [IDataProvider.createDocument]
   Future<CreateResult> createDocument({
     required String documentClass,
     required Map<String, dynamic> data,
@@ -54,11 +54,11 @@ abstract class DataProviderDelegate<QUERY extends PQuery> {
 
 /// Defined as an interface to enable injection of alternative implementations
 abstract class RestDataProviderDelegate
-    implements DataProviderDelegate<PRestQuery> {
+    implements IDataProviderDelegate<RestQuery> {
   Future<ReadResult> executeFunction(
       {required String functionName, Map<String, dynamic> params = const {}});
 }
 
 /// Defined as an interface to enable injection of alternative implementations
 abstract class GraphQLDataProviderDelegate
-    implements DataProviderDelegate<PGraphQLQuery> {}
+    implements IDataProviderDelegate<GraphQLQuery> {}

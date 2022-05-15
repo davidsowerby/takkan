@@ -52,13 +52,13 @@ class AppConfig extends BaseConfig with Appendage {
     }
   }
 
-  InstanceConfig instanceConfig(PDataProvider providerConfig) {
+  InstanceConfig instanceConfig(DataProvider providerConfig) {
     final g = group(providerConfig.instanceConfig.group);
     final instanceName =
         (g.staged) ? currentStage : providerConfig.instanceConfig.instance;
     if (instanceName == null) {
       String msg =
-          'Either a current stage must be set from precept.json or PDataProvider must define an instance name';
+          'Either a current stage must be set from precept.json or DataProvider must define an instance name';
       logType(this.runtimeType).e(msg);
       throw PreceptException(msg);
     }

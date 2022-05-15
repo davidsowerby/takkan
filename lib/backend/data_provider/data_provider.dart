@@ -34,21 +34,21 @@ import 'package:precept_script/script/script.dart';
 /// An implementation of this interface must be registered with a call to [DefaultDataProviderLibrary.register]
 ///
 /// Note that the [DefaultDataProviderLibrary] acts as a cache. Multiple instances of the same DataProvider
-/// class are identified by the [PInstance], but each such instance is cached to ensure
+/// class are identified by the [AppInstance], but each such instance is cached to ensure
 /// consistency of state.
 ///
-/// In addition to CRUD calls, a [DataProvider] provides a backend-specific [Authenticator]
+/// In addition to CRUD calls, a [IDataProvider] provides a backend-specific [Authenticator]
 /// implementation, for use where a user is required to authenticate for a particular data provider.
 /// The [Authenticator] also contains a [UserState] object for this data provider, holding
 /// basic user information and authentication status.
 ///
-/// This means that a client app can log in as a different user for each [DataProvider]
+/// This means that a client app can log in as a different user for each [IDataProvider]
 /// it uses.
 ///
 /// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
 ///
 
-abstract class DataProvider<CONFIG extends PDataProvider> {
+abstract class IDataProvider<CONFIG extends DataProvider> {
   init(AppConfig appConfig);
 
   CONFIG get config;
@@ -60,7 +60,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// [ReadResult.success] is false if there is not exactly one result
   Future<ReadResultItem> fetchItem({
-    required PQuery queryConfig,
+    required Query queryConfig,
     required Map<String, dynamic> pageArguments,
   });
 
@@ -71,7 +71,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// [ReadResult.success] is false the query fails
   Future<ReadResultList> fetchList({
-    required PQuery queryConfig,
+    required Query queryConfig,
     required Map<String, dynamic> pageArguments,
   });
 
@@ -85,7 +85,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// There are occasions where it is necessary to explicitly select which delegate
   /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [PDataProvider.defaultDelegate] is used.
+  /// the [DataProvider.defaultDelegate] is used.
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     FieldSelector fieldSelector = const FieldSelector(),
@@ -104,7 +104,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// There are occasions where it is necessary to explicitly select which delegate
   /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [PDataProvider.defaultDelegate] is used.
+  /// the [DataProvider.defaultDelegate] is used.
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
     Delegate? useDelegate,
@@ -125,7 +125,7 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   ///
   /// There are occasions where it is necessary to explicitly select which delegate
   /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [PDataProvider.defaultDelegate] is used.
+  /// the [DataProvider.defaultDelegate] is used.
   ///
   /// throws an [APIException] if the document is not found
   Future<ReadResultItem> readDocument({
@@ -142,11 +142,11 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// should be amended via a call to [updateDocument]
   ///
   /// [documentClass] is the equivalent of [DocumentId.documentClass], so will be something like
-  ///  the class / table name used by the [DataProvider]
+  ///  the class / table name used by the [IDataProvider]
   ///
   /// There are occasions where it is necessary to explicitly select which delegate
   /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [PDataProvider.defaultDelegate] is used.
+  /// the [DataProvider.defaultDelegate] is used.
   Future<CreateResult> createDocument({
     required String documentClass,
     required Map<String, dynamic> data,
@@ -163,9 +163,9 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// the one with the most recent 'updatedAt' field is returned
   ///
   /// If required, [useDelegate] may select a specific delegate, otherwise it will
-  /// default to [PDataProvider.defaultDelegate]
+  /// default to [DataProvider.defaultDelegate]
   ///
-  Future<PScript> latestScript({
+  Future<Script> latestScript({
     required String locale,
     required int fromVersion,
     required String name,
@@ -185,15 +185,15 @@ abstract class DataProvider<CONFIG extends PDataProvider> {
   /// returns a user instance created with [PreceptUser.unknownUser]
   PreceptUser get user;
 
-  PDocument documentSchema({required String documentSchemaName});
+  Document documentSchema({required String documentSchemaName});
 
   /// The HTTP header key for the session token
   String get sessionTokenKey;
 }
 
 /// Routes all calls to the [graphQLDelegate]
-class DefaultDataProvider<CONFIG extends PDataProvider>
-    implements DataProvider<CONFIG> {
+class DefaultDataProvider<CONFIG extends DataProvider>
+    implements IDataProvider<CONFIG> {
   final CONFIG config;
   Authenticator? _authenticator;
   RestDataProviderDelegate? _restDelegate;
@@ -258,7 +258,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   SignInStatus get authStatus => authenticator.status;
 
-  DataProviderDelegate get defaultDelegate {
+  IDataProviderDelegate get defaultDelegate {
     switch (config.defaultDelegate) {
       case Delegate.graphQl:
         return graphQLDelegate;
@@ -267,9 +267,9 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     }
   }
 
-  /// see [DataProvider.fetchItem]
+  /// see [IDataProvider.fetchItem]
   Future<ReadResultItem> fetchItem({
-    required PQuery queryConfig,
+    required Query queryConfig,
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
@@ -280,7 +280,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
   /// Returns a Future of a list of one or more document instances
   Future<ReadResultList> fetchList({
-    required PQuery queryConfig,
+    required Query queryConfig,
     required Map<String, dynamic> pageArguments,
   }) async {
     final Map<String, dynamic> variables =
@@ -299,7 +299,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     throw UnimplementedError();
   }
 
-  /// See [DataProvider.createDocument]
+  /// See [IDataProvider.createDocument]
   Future<CreateResult> createDocument({
     required String documentClass,
     required Map<String, dynamic> data,
@@ -320,7 +320,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
     );
   }
 
-  /// See [DataProvider.updateDocument]
+  /// See [IDataProvider.updateDocument]
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     Delegate? useDelegate,
@@ -343,7 +343,8 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
   /// 1. Values passed as [pageArguments]
   @protected
-  Map<String, dynamic> combineVariables(PQuery query, Map<String, dynamic> pageArguments) {
+  Map<String, dynamic> combineVariables(
+      Query query, Map<String, dynamic> pageArguments) {
     final variables = Map<String, dynamic>();
     final propertyVariables = _buildPropertyVariables(query.propertyReferences);
     variables.addAll(pageArguments);
@@ -358,19 +359,20 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
   @override
-  Future<PScript> latestScript({required String locale,
-    required int fromVersion,
-    Delegate? useDelegate,
-    required String name}) async {
+  Future<Script> latestScript(
+      {required String locale,
+      required int fromVersion,
+      Delegate? useDelegate,
+      required String name}) async {
     final ReadResultItem result = await _selectDelegate(useDelegate)
         .latestScript(locale: locale, fromVersion: fromVersion, name: name);
-    return PScript.fromJson(result.data);
+    return Script.fromJson(result.data);
   }
 
   /// If the [restDelegate] available, calls it to delete the document,
   /// otherwise call the [graphQLDelegate] to execute the delete.
   ///
-  /// see [DataProvider.deleteDocument]
+  /// see [IDataProvider.deleteDocument]
   @override
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
@@ -381,7 +383,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
   }
 
   ///
-  /// see [DataProvider.readDocument]
+  /// see [IDataProvider.readDocument]
   @override
   Future<ReadResultItem> readDocument({
     required DocumentId documentId,
@@ -393,34 +395,34 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
         .readDocument(documentId: documentId);
   }
 
-  PDocument documentSchema({required String documentSchemaName}) {
+  Document documentSchema({required String documentSchemaName}) {
     return config.script.documentSchema(documentSchemaName: documentSchemaName);
   }
 
-  DataProviderDelegate _delegateFromQueryType({
-    required PQuery queryConfig,
+  IDataProviderDelegate _delegateFromQueryType({
+    required Query queryConfig,
   }) {
-    if (queryConfig is PGraphQLQuery) {
+    if (queryConfig is GraphQLQuery) {
       if (_graphQLDelegate != null) {
         return graphQLDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in DataProvider');
       }
     }
-    if (queryConfig is PRestQuery) {
+    if (queryConfig is RestQuery) {
       if (_restDelegate != null) {
         return restDelegate;
       } else {
         throw PreceptException(
-            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in PDataProvider');
+            'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in DataProvider');
       }
     }
     throw PreceptException(
         'No delegate available to support a ${queryConfig.runtimeType.toString()}');
   }
 
-  DataProviderDelegate _selectDelegate(Delegate? selectedDelegate) {
+  IDataProviderDelegate _selectDelegate(Delegate? selectedDelegate) {
     final Delegate selection = selectedDelegate ?? config.defaultDelegate;
     switch (selection) {
       case Delegate.graphQl:
@@ -463,7 +465,7 @@ class DefaultDataProvider<CONFIG extends PDataProvider>
 
 ///
 
-class NoDataProvider implements DataProvider {
+class NoDataProvider implements IDataProvider {
   static const String msg =
       'A NoDataProvider represents a condition where no data provider is available, and invoking this method is an error condition';
 
@@ -471,7 +473,7 @@ class NoDataProvider implements DataProvider {
 
   AppConfig get appConfig => throw PreceptException(msg);
 
-  DataProviderDelegate<PQuery> get authenticatorDelegate =>
+  IDataProviderDelegate<Query> get authenticatorDelegate =>
       throw PreceptException(msg);
 
   GraphQLDataProviderDelegate get graphQLDelegate =>
@@ -481,10 +483,10 @@ class NoDataProvider implements DataProvider {
 
   SignInStatus get authStatus => throw PreceptException(msg);
 
-  Authenticator<PDataProvider, dynamic, NoDataProvider> get authenticator =>
+  Authenticator<DataProvider, dynamic, NoDataProvider> get authenticator =>
       throw PreceptException(msg);
 
-  PDataProvider get config => throw PreceptException(msg);
+  DataProvider get config => throw PreceptException(msg);
 
   Future<Stream<Map<String, dynamic>>> connectItem() {
     throw PreceptException(msg);
@@ -502,16 +504,16 @@ class NoDataProvider implements DataProvider {
     throw PreceptException(msg);
   }
 
-  /// See [DataProvider.fetchItem]
+  /// See [IDataProvider.fetchItem]
   Future<ReadResultItem> fetchItem(
-      {required PQuery queryConfig,
+      {required Query queryConfig,
       required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
   }
 
-  /// See [DataProvider.fetchList]
+  /// See [IDataProvider.fetchList]
   Future<ReadResultList> fetchList(
-      {required PQuery queryConfig,
+      {required Query queryConfig,
       required Map<String, dynamic> pageArguments}) {
     throw PreceptException(msg);
   }
@@ -527,7 +529,7 @@ class NoDataProvider implements DataProvider {
   String get sessionTokenKey => 'X-Parse-Session-Token';
 
   @override
-  Future<PScript> latestScript(
+  Future<Script> latestScript(
       {required String locale,
       required int fromVersion,
       Delegate? useDelegate,
@@ -573,12 +575,12 @@ class NoDataProvider implements DataProvider {
     throw PreceptException(msg);
   }
 
-  PDocument documentSchemaFromQuery({required String querySchemaName}) {
+  Document documentSchemaFromQuery({required String querySchemaName}) {
     throw PreceptException(msg);
   }
 
   @override
-  PDocument documentSchema({required String documentSchemaName}) {
+  Document documentSchema({required String documentSchemaName}) {
     throw PreceptException(msg);
   }
 

@@ -18,12 +18,12 @@ import 'package:precept_script/schema/schema.dart';
 class DefaultGraphQLDataProviderDelegate
     implements GraphQLDataProviderDelegate {
   late GraphQLClient _client;
-  late DataProvider parent;
+  late IDataProvider parent;
 
   DefaultGraphQLDataProviderDelegate();
 
   @override
-  init(InstanceConfig instanceConfig, DataProvider parent) async {
+  init(InstanceConfig instanceConfig, IDataProvider parent) async {
     this.parent = parent;
     if (parent.config.graphQLDelegate == null) {
       throw PreceptException(
@@ -50,8 +50,8 @@ class DefaultGraphQLDataProviderDelegate
   Authenticator get authenticator =>
       parent.authenticator; // safe only after init called
 
-  PGraphQL get config =>
-      parent.config.graphQLDelegate as PGraphQL; // safe only after init called
+  GraphQL get config =>
+      parent.config.graphQLDelegate as GraphQL; // safe only after init called
 
   @override
   setSessionToken(String token) {
@@ -68,7 +68,7 @@ class DefaultGraphQLDataProviderDelegate
 
   @override
   String assembleScript(
-      PGraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
+      GraphQLQuery queryConfig, Map<String, dynamic> pageArguments) {
     return queryConfig.queryScript;
   }
 
@@ -81,14 +81,14 @@ class DefaultGraphQLDataProviderDelegate
 
   @override
   Future<ReadResultItem> fetchItem(
-      PGraphQLQuery queryConfig, Map<String, dynamic> variables) {
+      GraphQLQuery queryConfig, Map<String, dynamic> variables) {
     // TODO: implement executeQuery
     throw UnimplementedError();
   }
 
   @override
   Future<ReadResultList> fetchList(
-      PGraphQLQuery queryConfig, Map<String, dynamic> variables) async {
+      GraphQLQuery queryConfig, Map<String, dynamic> variables) async {
     final queryOptions = QueryOptions(
         document: gql(queryConfig.queryScript), variables: variables);
     final QueryResult response = await _client.query(queryOptions);
@@ -117,7 +117,7 @@ class DefaultGraphQLDataProviderDelegate
     );
   }
 
-  /// See [PDocument.updateDocument]
+  /// See [Document.updateDocument]
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
     required Map<String, dynamic> data,
@@ -131,7 +131,7 @@ class DefaultGraphQLDataProviderDelegate
     throw UnimplementedError();
   }
 
-  /// See [PDocument.createDocument]
+  /// See [Document.createDocument]
   @override
   Future<CreateResult> createDocument({
     required String documentClass,

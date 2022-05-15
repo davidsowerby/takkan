@@ -6,14 +6,14 @@ import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 import 'package:precept_script/inject/inject.dart';
 
-/// A lookup facility for instances of [DataProvider] implementations.
+/// A lookup facility for instances of [IDataProvider] implementations.
 /// Provides an instance using the [find] method, from a supplied type name, defined in *precept.json*
 ///
-/// Also acts as a cache, as most [DataProvider] implementations are stateful and should be retained once
+/// Also acts as a cache, as most [IDataProvider] implementations are stateful and should be retained once
 /// connected
 ///
 /// Note: The original plan was to use GetIt for this, but there are a couple of obstacles to that approach:
-/// - the GetIt.registerFactory signature is type based, and does not fit for returning a DataProvider instance from a PDataProvider
+/// - the GetIt.registerFactory signature is type based, and does not fit for returning a DataProvider instance from a DataProvider
 /// - the use of 'instanceName' is discouraged, although it is not clear why.
 ///
 /// [appConfig] is initialised during Precept start up
@@ -23,19 +23,19 @@ import 'package:precept_script/inject/inject.dart';
 abstract class DataProviderLibrary {
   init(AppConfig appConfig);
 
-  DataProvider find({required PDataProvider providerConfig});
+  IDataProvider find({required DataProvider providerConfig});
 
   register({
     required String type,
-    required DataProvider Function(PDataProvider) builder,
+    required IDataProvider Function(DataProvider) builder,
   });
 
   clear();
 }
 
 class DefaultDataProviderLibrary implements DataProviderLibrary {
-  final Map<String, DataProvider Function(PDataProvider)> builders = Map();
-  final Map<String, DataProvider> instances = Map();
+  final Map<String, IDataProvider Function(DataProvider)> builders = Map();
+  final Map<String, IDataProvider> instances = Map();
   late AppConfig _appConfig;
 
   DefaultDataProviderLibrary() : super();
@@ -46,7 +46,7 @@ class DefaultDataProviderLibrary implements DataProviderLibrary {
     this._appConfig = appConfig;
   }
 
-  /// Finds a previously cached, or creates a [DataProvider] instance appropriate to the
+  /// Finds a previously cached, or creates a [IDataProvider] instance appropriate to the
   /// type of provider (identified by [instanceConfig.type])
   ///
   /// An instance of DataProvider is identified uniquely by [providerConfig.instanceConfig],
@@ -61,8 +61,8 @@ class DefaultDataProviderLibrary implements DataProviderLibrary {
   /// representation of precept.json.
   ///
   /// Throws a [PreceptException] if a builder for this config has not been registered
-  DataProvider find({required PDataProvider providerConfig}) {
-    if (providerConfig is PNoDataProvider) {
+  IDataProvider find({required DataProvider providerConfig}) {
+    if (providerConfig is NullDataProvider) {
       logType(this.runtimeType).d("Returning a NoDataProvider");
       return NoDataProvider();
     }
@@ -95,7 +95,7 @@ class DefaultDataProviderLibrary implements DataProviderLibrary {
 
   register({
     required String type,
-    required DataProvider Function(PDataProvider) builder,
+    required IDataProvider Function(DataProvider) builder,
   }) {
     builders[type] = builder;
   }

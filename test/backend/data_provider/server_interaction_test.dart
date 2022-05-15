@@ -19,12 +19,12 @@ import '../../fixtures/server_connect.dart';
 void main() {
   late Dio dio;
   late DioAdapter dioAdapter;
-  PDataProvider config = PDataProvider(
-    instanceConfig: PInstance(
+  DataProvider config = DataProvider(
+    instanceConfig: AppInstance(
       group: 'group',
       instance: 'instance',
     ),
-    restDelegate: PRest(),
+    restDelegate: Rest(),
   );
   group('Positive tests', () {
     const baseUrl = 'https://example.com';
@@ -66,7 +66,7 @@ void main() {
       provider.init(appConfig);
       // when
       final result = await provider.fetchList(
-          queryConfig: PRestQuery(queryName: 'items', documentSchema: 'Person'),
+          queryConfig: RestQuery(queryName: 'items', documentSchema: 'Person'),
           pageArguments: {});
       // then
 
@@ -99,7 +99,7 @@ void main() {
       provider.init(appConfig);
       // when
       final result = await provider.fetchItem(
-          queryConfig: PRestQuery(queryName: 'items', documentSchema: 'Person'),
+          queryConfig: RestQuery(queryName: 'items', documentSchema: 'Person'),
           pageArguments: {});
       // then
 

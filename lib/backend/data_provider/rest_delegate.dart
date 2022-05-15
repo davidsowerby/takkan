@@ -22,7 +22,7 @@ import 'package:precept_script/inject/inject.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late InstanceConfig instanceConfig;
-  late DataProvider parent;
+  late IDataProvider parent;
   late RestServerConnect serverConnect;
 
   DefaultRestDataProviderDelegate(
@@ -30,7 +30,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   );
 
   @override
-  init(InstanceConfig instanceConfig, DataProvider parent) async {
+  init(InstanceConfig instanceConfig, IDataProvider parent) async {
     this.parent = parent;
     this.instanceConfig = instanceConfig;
     if (parent.config.restDelegate == null) {
@@ -51,13 +51,11 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   Authenticator get authenticator =>
       parent.authenticator; // safe only after init called
 
-  PRest get config =>
-      parent.config.restDelegate as PRest; // safe only after init called
+  Rest get config => parent.config.restDelegate;
 
   /// TODO: For REST this should be called assembleURL
   @override
-  String assembleScript(
-      PRestQuery queryConfig, Map<String, dynamic> variables) {
+  String assembleScript(RestQuery queryConfig, Map<String, dynamic> variables) {
     final StringBuffer buf = StringBuffer(instanceConfig.documentEndpoint);
     buf.write('/');
     buf.write(queryConfig.path);
@@ -76,7 +74,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
 
   @override
   Future<ReadResultItem> fetchItem(
-      PRestQuery queryConfig, Map<String, dynamic> variables) async {
+      RestQuery queryConfig, Map<String, dynamic> variables) async {
     final results = await fetchList(queryConfig, variables);
     final firstResult =
         (results.isNotEmpty) ? results.data[0] : <String, dynamic>{};
@@ -92,7 +90,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   /// Default content type is JSON
   @override
   Future<ReadResultList> fetchList(
-    PRestQuery queryConfig,
+    RestQuery queryConfig,
     Map<String, dynamic> variables,
   ) async {
     final serverConnectResponse = await serverConnect.fetch(
@@ -105,7 +103,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     );
   }
 
-  /// See [PDataProvider.updateDocument]
+  /// See [DataProvider.updateDocument]
   @override
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
@@ -160,7 +158,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     );
   }
 
-  /// see [DataProvider.createDocument]
+  /// see [IDataProvider.createDocument]
   @override
   Future<CreateResult> createDocument({
     required String documentClass,

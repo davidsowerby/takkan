@@ -4,7 +4,8 @@ import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 
-class NoAuthenticator extends Authenticator<PDataProvider,PreceptUser,NoDataProvider> {
+class NoAuthenticator
+    extends Authenticator<DataProvider, PreceptUser, NoDataProvider> {
   final String msg =
       'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
 

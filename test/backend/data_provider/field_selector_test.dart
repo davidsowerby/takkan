@@ -15,7 +15,7 @@ void main() {
 
     test('directly specified', () {
       // given
-      PDocument schema = PDocument(fields: {'c': PString()});
+      Document schema = Document(fields: {'c': FString()});
       final selector = FieldSelector(fields: const ['a', 'b']);
       // when
       final selection = selector.selection(schema);
@@ -26,7 +26,7 @@ void main() {
 
     test('all fields true, direct fields ignored', () {
       // given
-      PDocument schema = PDocument(fields: {'c': PString(), 'd': PString()});
+      Document schema = Document(fields: {'c': FString(), 'd': FString()});
       final selector = FieldSelector(
         fields: const ['a', 'b'],
         allFields: true,
@@ -39,7 +39,7 @@ void main() {
     });
     test('all fields except excluded', () {
       // given
-      PDocument schema = PDocument(fields: {'c': PString(), 'd': PString()});
+      Document schema = Document(fields: {'c': FString(), 'd': FString()});
       final selector = FieldSelector(
         excludeFields: const ['c'],
         allFields: true,
@@ -52,7 +52,7 @@ void main() {
     });
     test('all fields plus meta, except excluded', () {
       // given
-      PDocument schema = PDocument(fields: {'c': PString(), 'd': PString()});
+      Document schema = Document(fields: {'c': FString(), 'd': FString()});
       final selector = FieldSelector(
         excludeFields: const ['c'],
         includeMetaFields: true,
@@ -66,7 +66,7 @@ void main() {
     });
     test('all fields plus meta, except excluded one meta excluded', () {
       // given
-      PDocument schema = PDocument(fields: {'c': PString(), 'd': PString()});
+      Document schema = Document(fields: {'c': FString(), 'd': FString()});
       final selector = FieldSelector(
         excludeFields: const ['c', 'updatedAt'],
         includeMetaFields: true,

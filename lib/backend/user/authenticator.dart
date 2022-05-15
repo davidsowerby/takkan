@@ -4,8 +4,8 @@ import 'package:precept_backend/backend/user/precept_user.dart';
 import 'package:precept_script/common/log.dart';
 import 'package:precept_script/data/provider/data_provider.dart';
 
-abstract class Authenticator<T extends PDataProvider, USER,
-    D extends DataProvider> {
+abstract class Authenticator<T extends DataProvider, USER,
+    D extends IDataProvider> {
   late D parent;
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners =
