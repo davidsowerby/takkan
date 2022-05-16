@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/list.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/list.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 part 'query_result.g.dart';
 

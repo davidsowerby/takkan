@@ -11,23 +11,22 @@ ListView _$ListViewFromJson(Map<String, dynamic> json) => ListView(
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
       readOnly: json['readOnly'] as bool? ?? false,
+      height: (json['height'] as num?)?.toDouble(),
       caption: json['caption'] as String?,
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
       staticData: json['staticData'] as String?,
-      property: json['property'] as String,
+      property: json['property'] as String?,
       readTraitName: json['readTraitName'] as String? ?? 'list-read-default',
       editTraitName: json['editTraitName'] as String? ?? 'list-edit-default',
       tooltip: json['tooltip'] as String?,
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      pid: json['pid'] as String?,
     );
 
 Map<String, dynamic> _$ListViewToJson(ListView instance) => <String, dynamic>{
-      'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'property': instance.property,
@@ -35,6 +34,7 @@ Map<String, dynamic> _$ListViewToJson(ListView instance) => <String, dynamic>{
       'staticData': instance.staticData,
       'help': instance.help?.toJson(),
       'tooltip': instance.tooltip,
+      'height': instance.height,
       'readTraitName': instance.readTraitName,
       'editTraitName': instance.editTraitName,
       'isQuery': instance.isQuery,

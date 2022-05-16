@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/particle/particle.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/particle/particle.dart';
 
 part 'list.g.dart';
 
@@ -17,15 +17,15 @@ class ListRead extends ReadParticle {
   final Panel? itemConfigAsPanel;
 
   ListRead(
-      {String styleName = 'default',
-      bool showCaption = false,
+      {super. styleName = 'default',
+     super.showCaption = false,
       this.itemConfigAsTile,
-      this.itemConfigAsPanel})
-      : super(showCaption: showCaption, styleName: styleName);
+      this.itemConfigAsPanel});
 
   factory ListRead.fromJson(Map<String, dynamic> json) =>
       _$ListReadFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ListReadToJson(this);
 
   @override
@@ -83,15 +83,12 @@ class NavTile extends ListTile {
 
   NavTile({
     required this.route,
-    String titleProperty = 'title',
-    String subTitleProperty = 'subTitle',
-  }) : super(
-          titleProperty: titleProperty,
-          subTitleProperty: subTitleProperty,
-        );
-
+    super. titleProperty = 'title',
+    super. subTitleProperty = 'subTitle',
+  }) ;
   factory NavTile.fromJson(Map<String, dynamic> json) =>
       _$NavTileFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NavTileToJson(this);
 }

@@ -1,24 +1,18 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/delegate.dart';
-import 'package:precept_script/data/provider/graphql_delegate.dart';
-import 'package:precept_script/data/provider/rest_delegate.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/signin/sign_in.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/data/provider/delegate.dart';
+import 'package:takkan_script/data/provider/graphql_delegate.dart';
+import 'package:takkan_script/data/provider/rest_delegate.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/signin/sign_in.dart';
 
 part 'data_provider.g.dart';
 
-/// Either [schema] or [schemaSource] can be set.
-///
-/// [schema] can be set directly during development, [schemaSource] is required for production use.
-///
-/// If [schema] is not set, it is loaded on demand from the configuration specified by [schemaSource]
-/// The presence of [schema] should therefore be tested before using it.
-///
 /// If users need to be authenticated for this Data Provider,  [useAuthenticator]
-/// should be true.  The default is false, because the DefaultDataProvider (which
-/// which collaborates with this configuration) does not provide authentication
+/// should be true.  The default is false, because the DefaultDataProvider in
+/// the lamin8_client package, which which collaborates with this configuration,
+/// does not provide authentication
 ///
 @JsonSerializable(explicitToJson: true)
 class DataProvider extends PreceptItem {
@@ -38,18 +32,20 @@ class DataProvider extends PreceptItem {
     this.defaultDelegate = Delegate.rest,
     this.signInOptions = const SignInOptions(),
     this.signIn = const SignIn(),
-    String? id,
-  }) : super(id: id);
+    super. id,
+  }) ;
 
+  @override
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     graphQLDelegate?.walk(visitors);
-    this.restDelegate.walk(visitors);
+    restDelegate.walk(visitors);
   }
 
   factory DataProvider.fromJson(Map<String, dynamic> json) =>
       _$DataProviderFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$DataProviderToJson(this);
 }
 
@@ -95,6 +91,7 @@ class NullDataProvider extends DataProvider {
   factory NullDataProvider.fromJson(Map<String, dynamic> json) =>
       _$NullDataProviderFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NullDataProviderToJson(this);
 }
 

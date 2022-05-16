@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/rest_query.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/rest_query.dart';
 
 /// JSON converter for [Query] sub-classes
 class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {

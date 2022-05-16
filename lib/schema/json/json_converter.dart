@@ -1,16 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/field/boolean.dart';
-import 'package:precept_script/schema/field/date.dart';
-import 'package:precept_script/schema/field/double.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/geo_position.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/pointer.dart';
-import 'package:precept_script/schema/field/post_code.dart';
-import 'package:precept_script/schema/field/relation.dart';
-import 'package:precept_script/schema/field/string.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/schema/field/boolean.dart';
+import 'package:takkan_script/schema/field/date.dart';
+import 'package:takkan_script/schema/field/double.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/geo_position.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/pointer.dart';
+import 'package:takkan_script/schema/field/post_code.dart';
+import 'package:takkan_script/schema/field/relation.dart';
+import 'package:takkan_script/schema/field/string.dart';
 
 class SchemaFieldMapConverter
     implements JsonConverter<Map<String, Field>, Map<String, dynamic>> {
@@ -79,7 +79,7 @@ class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
 
       default:
         final msg = "SchemaElement type $elementType not recognised";
-        logType(this.runtimeType).e(msg);
+        logType(runtimeType).e(msg);
         throw SchemaException(msg);
     }
   }

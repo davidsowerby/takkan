@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_script/part/part.dart';
 
 part 'navigation.g.dart';
 
@@ -9,31 +9,22 @@ class NavButton extends Part {
   final String route;
 
   NavButton({
-    bool readOnly = true,
+    super. readOnly = true,
     required this.route,
-    String? caption,
-    bool showCaption = false,
-    String readTraitName = 'PNavButton-default',
-    String editTraitName = 'PNavButton-default',
-    double height = 100,
-    String? property,
-    String staticData = '',
+    super. caption,
+    super. readTraitName = 'PNavButton-default',
+    super. editTraitName = 'PNavButton-default',
+    super. height = 100,
+    super. property,
+    super. staticData = '',
     final Map<String, dynamic> args = const {},
-    String? pid,
-  }) : super(
-          readOnly: readOnly,
-          caption: caption,
-          staticData: staticData,
-          property: property,
-          height: height,
-          readTraitName: readTraitName,
-          editTraitName: editTraitName,
-          id: pid,
-        );
+    super. id,
+  }) ;
 
   factory NavButton.fromJson(Map<String, dynamic> json) =>
       _$NavButtonFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NavButtonToJson(this);
 }
 
@@ -63,5 +54,6 @@ class NavButtonSet extends Part {
   factory NavButtonSet.fromJson(Map<String, dynamic> json) =>
       _$NavButtonSetFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NavButtonSetToJson(this);
 }

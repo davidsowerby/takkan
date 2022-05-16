@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:precept_medley_script/medley/medley_script.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
 
 import '../fixtures.dart';

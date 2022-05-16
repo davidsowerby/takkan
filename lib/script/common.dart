@@ -1,17 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/query_converter.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/static_panel.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/trait/text_trait.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/query_converter.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/panel/static_panel.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/trait/text_trait.dart';
 
 part 'common.g.dart';
 
@@ -80,26 +80,25 @@ class Common extends PreceptItem {
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @protected
-  DataProvider? _dataProvider;
+  final DataProvider? _dataProvider;
   @JsonKey(ignore: true)
-  Query? _query;
+  final Query? _query;
 
   Common({
-    DataProvider? dataProviderConfig,
+    DataProvider? dataProvider,
     Query? query,
     TextTrait? textTrait,
     this.controlEdit = ControlEdit.inherited,
     Schema? schema,
-    String? id,
-  })  : _dataProvider = dataProviderConfig,
-        _query = query,
-        super(id: id);
+    super. id,
+  })  : _dataProvider = dataProvider,
+        _query = query;
 
   bool get hasEditControl => _hasEditControl;
 
   bool get inheritedEditControl {
     Common p = parent;
-    while (!(p is NullPreceptItem)) {
+    while (p is! NullPreceptItem) {
       if (p.hasEditControl) {
         return true;
       }
@@ -115,18 +114,20 @@ class Common extends PreceptItem {
   bool get dataProviderIsDeclared => (_dataProvider != null);
 
 
+  @override
   @JsonKey(ignore: true)
   Common get parent => super.parent as Common;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [Script] level
+  @override
   doInit(InitWalkerParams params) {
     super.doInit(params);
     PreceptItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
-    while (!(p is NullPreceptItem)) {
+    while (p is! NullPreceptItem) {
       final Common p1 = p as Common;
       if (p1.controlEdit != ControlEdit.inherited) {
         inherited = p1.controlEdit;
@@ -138,6 +139,7 @@ class Common extends PreceptItem {
   }
 
   /// See [PreceptItem.subElements]
+  @override
   List<dynamic> get subElements => [
         if (_query != null) _query,
         if (_dataProvider != null) _dataProvider,

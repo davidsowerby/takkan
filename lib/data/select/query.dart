@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
 
 part 'query.g.dart';
 
@@ -17,7 +17,7 @@ part 'query.g.dart';
 /// [fields] is a comma separated list of field names you want values to be returned
 /// for, and applies only to GraphQL queries.  REST queries always return all fields.
 /// There is an outstanding issue to automatically generate this list for GraphQL
-/// queries. https://gitlab.com/precept1/precept_script/-/issues/2
+/// queries. https://gitlab.com/precept1/takkan_script/-/issues/2
 ///
 /// [propertyReferences] allow linking the data-select variables dynamically to other data accessible to the data-select.
 /// The reference is relative to the [parentBinding] of the [PreceptPage], [Panel] or [Part] holding the data-select.
@@ -53,6 +53,7 @@ abstract class Query extends PreceptItem {
 
   /// For queries, property property to lookup its data (data-select results) in local storage
 
+  @override
   String get idAlternative => queryName;
 }
 
@@ -70,7 +71,7 @@ abstract class Query extends PreceptItem {
 /// GraphQL syntax gets lost during interpolation by Dart.
 ///
 /// [table]and [documentSchema] have to be specified, but it is intended that it will be automatically derived
-/// from the [script].  See  https://gitlab.com/precept1/precept_script/-/issues/5
+/// from the [script].  See  https://gitlab.com/precept1/takkan_script/-/issues/5
 @JsonSerializable(explicitToJson: true)
 class GraphQLQuery extends Query {
   final String queryScript;
@@ -93,6 +94,7 @@ class GraphQLQuery extends Query {
   factory GraphQLQuery.fromJson(Map<String, dynamic> json) =>
       _$GraphQLQueryFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$GraphQLQueryToJson(this);
 }
 
@@ -135,6 +137,7 @@ class PQuery extends GraphQLQuery {
 
   factory PQuery.fromJson(Map<String, dynamic> json) => _$PQueryFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PQueryToJson(this);
 }
 
@@ -144,28 +147,24 @@ class PQuery extends GraphQLQuery {
 @JsonSerializable(explicitToJson: true)
 class GetDocument extends Query {
   final DocumentId documentId;
-  final String documentSchema;
   final FieldSelector fieldSelector;
 
   GetDocument({
     this.fieldSelector = const FieldSelector(),
     required this.documentId,
-    required this.documentSchema,
     String? queryName,
-    Map<String, dynamic> variables = const {},
-    List<String> propertyReferences = const [],
-    Map<String, dynamic> params = const {},
+    super. variables = const {},
+    super.propertyReferences = const [],
   }) : super(
           queryName: queryName ?? 'get${documentId.fullReference}',
           documentSchema: documentId.documentClass,
-          propertyReferences: propertyReferences,
-          variables: variables,
           returnType: QueryReturnType.futureDocument,
         );
 
   factory GetDocument.fromJson(Map<String, dynamic> json) =>
       _$GetDocumentFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$GetDocumentToJson(this);
 
   String get table => documentId.documentClass;
@@ -180,7 +179,6 @@ class GetStream extends Query {
     Map<String, dynamic> arguments = const {},
     List<String> propertyReferences = const [],
     required this.documentId,
-    Map<String, dynamic> params = const {},
   }) : super(
           propertyReferences: propertyReferences,
           documentSchema: documentId.documentClass,
@@ -193,6 +191,7 @@ class GetStream extends Query {
   factory GetStream.fromJson(Map<String, dynamic> json) =>
       _$GetStreamFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$GetStreamToJson(this);
 }
 

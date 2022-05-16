@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/panel/panel.dart';
 
 part 'data_list.g.dart';
 
@@ -21,16 +21,22 @@ part 'data_list.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class DataList implements Data {
+  @override
   final bool liveConnect;
+  @override
   final int pageLength;
 
+  @override
   bool get isItem => false;
 
+  @override
   bool get isList => true;
 
   bool get isStatic => false;
 
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataList({
@@ -50,9 +56,13 @@ class DataList implements Data {
 @JsonSerializable(explicitToJson: true)
 class DataListById implements Data {
   final List<String> objectIds;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
+  @override
   final int pageLength;
 
   const DataListById({
@@ -81,9 +91,13 @@ class DataListById implements Data {
 class DataListByFunction implements Data {
   final Map<String, dynamic> params;
   final String cloudFunctionName;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
+  @override
   final int pageLength;
 
   const DataListByFunction({
@@ -121,9 +135,13 @@ class DataListByFunction implements Data {
 class DataListByFilter implements Data {
   final String script;
   final String? cloudFunctionName;
+  @override
   final bool liveConnect;
+  @override
   final int pageLength;
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataListByFilter({
@@ -151,9 +169,13 @@ class DataListByFilter implements Data {
 @JsonSerializable(explicitToJson: true)
 class DataListByGQL implements Data {
   final String script;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
+  @override
   final int pageLength;
 
   const DataListByGQL({

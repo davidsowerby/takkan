@@ -31,10 +31,10 @@ Map<String, dynamic> _$PageStaticToJson(PageStatic instance) =>
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'children': ContentConverter.toJson(instance.children),
+      'layout': LayoutJsonConverter.toJson(instance.layout),
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'routes': instance.routes,
-      'layout': LayoutJsonConverter.toJson(instance.layout),
     };
 
 const _$ControlEditEnumMap = {

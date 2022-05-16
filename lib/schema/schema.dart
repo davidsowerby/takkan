@@ -1,16 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/query_converter.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/json/json_converter.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/query_converter.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/json/json_converter.dart';
+import 'package:takkan_script/script/version.dart';
 
 part 'schema.g.dart';
 
@@ -44,6 +44,7 @@ part 'schema.g.dart';
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 @QueryConverter()
 class Schema extends SchemaElement {
+  @override
   final String name;
   final Map<String, Document> _documents;
   final Map<String, Query> namedQueries;
@@ -60,8 +61,10 @@ class Schema extends SchemaElement {
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$SchemaToJson(this);
 
+  @override
   @JsonKey(ignore: true)
   SchemaElement get parent => NullSchemaElement();
 
@@ -70,8 +73,10 @@ class Schema extends SchemaElement {
   @JsonKey(ignore: true)
   IsReadOnly get isReadOnly => _isReadOnly;
 
+  @override
   List<dynamic> get subElements => [_documents, namedQueries];
 
+  @override
   doInit(InitWalkerParams params) {
     _name = name;
     super.doInit(params);
@@ -126,8 +131,10 @@ abstract class SchemaElement extends PreceptItem {
   SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
       : _isReadOnly = readOnly;
 
+  @override
   Map<String, dynamic> toJson();
 
+  @override
   doInit(InitWalkerParams params) {
     _name = params.name;
     super.doInit(params);
@@ -138,6 +145,7 @@ abstract class SchemaElement extends PreceptItem {
 
   String get name => _name!;
 
+  @override
   @JsonKey(ignore: true)
   SchemaElement get parent => super.parent as SchemaElement;
 
@@ -147,6 +155,7 @@ abstract class SchemaElement extends PreceptItem {
         : _isReadOnly;
   }
 
+  @override
   String get idAlternative => name;
 }
 
@@ -340,6 +349,7 @@ class Document extends SchemaElement {
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
 
   @override
@@ -390,12 +400,12 @@ class SchemaSource extends PreceptItem {
   SchemaSource({
     required this.group,
     required this.instance,
-    String? id,
-    int version = 0,
-  }) : super(id: id);
+    super. id,
+  }) ;
 
   factory SchemaSource.fromJson(Map<String, dynamic> json) =>
       _$SchemaSourceFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);
 }

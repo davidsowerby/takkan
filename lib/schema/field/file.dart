@@ -1,36 +1,35 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 
 part 'file.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FFile extends Field<FileValidation, String> {
   FFile({
-    String? defaultValue,
-    List<FileValidation> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          defaultValue: defaultValue,
-          validations: validations,
-          required: required,
-          readOnly: readOnly,
-        );
+    super. defaultValue,
+    super.validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
+  @override
   Type get modelType => File;
 
   factory FFile.fromJson(Map<String, dynamic> json) => _$FFileFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FFileToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class FileValidation implements ModelValidation<ValidateFile, String> {
+  @override
   final ValidateFile method;
+  @override
   final bool? param;
 
   const FileValidation({required this.method, this.param});

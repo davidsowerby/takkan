@@ -2,19 +2,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/data/converter/conversion_error_messages.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/query_converter.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/validation/validation_error_messages.dart';
-import 'package:precept_script/script/version.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/data/converter/conversion_error_messages.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/query_converter.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/schema/validation/validation_error_messages.dart';
+import 'package:takkan_script/script/version.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'script.g.dart';
 
@@ -99,14 +99,16 @@ class Script extends Common {
     DataProvider? dataProvider,
     ControlEdit controlEdit = ControlEdit.firstLevelPanels,
   }) : super(
-    dataProviderConfig: dataProvider ?? NullDataProvider(),
+    dataProvider: dataProvider ?? NullDataProvider(),
           controlEdit: controlEdit,
         );
 
   factory Script.fromJson(Map<String, dynamic> json) => _$ScriptFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ScriptToJson(this);
 
+  @override
   String get debugId => name;
 
   @JsonKey(ignore: true)
@@ -149,16 +151,17 @@ class Script extends Common {
       if (throwOnFail && _scriptValidationMessages.isNotEmpty) {
         throw PreceptException(buf.toString());
       } else {
-        logType(this.runtimeType).i(buf.toString());
+        logType(runtimeType).i(buf.toString());
       }
     }
 
     return _scriptValidationMessages;
   }
 
+  @override
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
-    if (routes.length == 0) {
+    if (routes.isEmpty) {
       collector.messages.add(
           ValidationMessage(item: this, msg: "must contain at least one page"));
     } else {
@@ -214,6 +217,7 @@ class Script extends Common {
   }
 
   /// See [PreceptItem.subElements]
+  @override
   List<dynamic> get subElements => [
         schema,
         if (schemaSource != null) schemaSource,
@@ -225,16 +229,17 @@ class Script extends Common {
     final Document? documentSchema = schema.documents[documentSchemaName];
     if (documentSchema == null) {
       String msg = "document schema '$documentSchemaName' not found";
-      logType(this.runtimeType).e(msg);
+      logType(runtimeType).e(msg);
       throw PreceptException(msg);
     }
     return documentSchema;
   }
 
-  bool get failed => _scriptValidationMessages.length > 0;
+  bool get failed => _scriptValidationMessages.isNotEmpty;
 
-  bool get passed => _scriptValidationMessages.length == 0;
+  bool get passed => _scriptValidationMessages.isEmpty;
 
+  @override
   String get idAlternative => name;
 
   validationOutput() {
@@ -253,11 +258,12 @@ class Script extends Common {
     print(buf.toString());
   }
 
+  @override
   DebugNode get debugNode => DebugNode(this,
       List.from(routes.entries.toList().map((e) => (e as Page).debugNode)));
 
   writeToFile(File f) async {
-    final jsonMap = this.toJson();
+    final jsonMap = toJson();
     final encoded = json.encode(jsonMap);
     await f.writeAsString(encoded);
   }

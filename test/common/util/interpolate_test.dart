@@ -1,4 +1,4 @@
-import 'package:precept_script/common/util/interpolate.dart';
+import 'package:takkan_script/util/interpolate.dart';
 import 'package:test/test.dart';
 
 void main() {

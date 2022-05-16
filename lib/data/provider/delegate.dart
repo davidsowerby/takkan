@@ -1,4 +1,4 @@
-import 'package:precept_script/common/script/precept_item.dart';
+import 'package:takkan_script/script/precept_item.dart';
 
 /// Common base class for delegates to PDataProvider
 abstract class DataProviderDelegate with WalkTarget {

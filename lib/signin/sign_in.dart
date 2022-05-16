@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/part/part.dart';
 
 part 'sign_in.g.dart';
 
@@ -66,7 +66,7 @@ class EmailSignIn extends Part {
 
   EmailSignIn({
     this.signInFailureMessage = 'Username or password incorrect',
-    String caption = 'Sign in with Email',
+    super. caption = 'Sign in with Email',
     this.checkingCredentialsMessage = 'Checking Credentials',
     this.emailCaption = 'email',
     this.usernameCaption = 'username',
@@ -74,21 +74,19 @@ class EmailSignIn extends Part {
     this.submitCaption = 'Submit',
     this.successRoute = '',
     this.failureRoute = 'signInFail',
-    String readTraitName = 'EmailSignIn-default',
-    String? pid,
+    super. readTraitName = 'EmailSignIn-default',
+    super. id,
     Help? help,
   }) : super(
     help: help,
           readOnly: true,
           staticData: '',
-          readTraitName: readTraitName,
           controlEdit: ControlEdit.noEdit,
-          caption: caption,
-          id: pid,
         );
 
   factory EmailSignIn.fromJson(Map<String, dynamic> json) =>
       _$EmailSignInFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$EmailSignInToJson(this);
 }

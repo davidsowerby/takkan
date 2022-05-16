@@ -1,6 +1,6 @@
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
 import 'package:validators/validators.dart';
 
 /// Function class to read dropdown selection list from a data source
@@ -35,7 +35,7 @@ abstract class ModelViewConverter<MODEL, VIEW> {
     if (conversionValidation) {
       return field.doValidation(viewToModel(inputData), pScript);
     } else {
-      final String key = this.runtimeType.toString();
+      final String key = runtimeType.toString();
       return [pScript.conversionErrorMessages.patterns[key] ?? 'unknown'];
     }
   }

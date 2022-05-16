@@ -7,10 +7,10 @@ part of 'pointer.dart';
 // **************************************************************************
 
 FPointer _$FPointerFromJson(Map<String, dynamic> json) => FPointer(
+      targetClass: json['targetClass'] as String,
       defaultValue: json['defaultValue'] == null
           ? null
           : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
-      targetClass: json['targetClass'] as String,
       validations: (json['validations'] as List<dynamic>?)
               ?.map(
                   (e) => PointerValidation.fromJson(e as Map<String, dynamic>))

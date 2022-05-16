@@ -12,7 +12,7 @@ part of 'integer.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 VInteger _$VIntegerFromJson(Map<String, dynamic> json) {
   switch (json['runtimeType']) {
@@ -28,33 +28,8 @@ VInteger _$VIntegerFromJson(Map<String, dynamic> json) {
 }
 
 /// @nodoc
-class _$VIntegerTearOff {
-  const _$VIntegerTearOff();
-
-  _$IntegerGreaterThan greaterThan(int threshold) {
-    return _$IntegerGreaterThan(
-      threshold,
-    );
-  }
-
-  _$IntegerLessThan lessThan(int threshold) {
-    return _$IntegerLessThan(
-      threshold,
-    );
-  }
-
-  VInteger fromJson(Map<String, Object?> json) {
-    return VInteger.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $VInteger = _$VIntegerTearOff();
-
-/// @nodoc
 mixin _$VInteger {
   int get threshold => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int threshold) greaterThan,
@@ -128,31 +103,31 @@ class _$VIntegerCopyWithImpl<$Res> implements $VIntegerCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$$IntegerGreaterThanCopyWith<$Res>
+abstract class _$$_$IntegerGreaterThanCopyWith<$Res>
     implements $VIntegerCopyWith<$Res> {
-  factory _$$IntegerGreaterThanCopyWith(_$IntegerGreaterThan value,
-          $Res Function(_$IntegerGreaterThan) then) =
-      __$$IntegerGreaterThanCopyWithImpl<$Res>;
+  factory _$$_$IntegerGreaterThanCopyWith(_$_$IntegerGreaterThan value,
+          $Res Function(_$_$IntegerGreaterThan) then) =
+      __$$_$IntegerGreaterThanCopyWithImpl<$Res>;
   @override
   $Res call({int threshold});
 }
 
 /// @nodoc
-class __$$IntegerGreaterThanCopyWithImpl<$Res>
+class __$$_$IntegerGreaterThanCopyWithImpl<$Res>
     extends _$VIntegerCopyWithImpl<$Res>
-    implements _$$IntegerGreaterThanCopyWith<$Res> {
-  __$$IntegerGreaterThanCopyWithImpl(
-      _$IntegerGreaterThan _value, $Res Function(_$IntegerGreaterThan) _then)
-      : super(_value, (v) => _then(v as _$IntegerGreaterThan));
+    implements _$$_$IntegerGreaterThanCopyWith<$Res> {
+  __$$_$IntegerGreaterThanCopyWithImpl(_$_$IntegerGreaterThan _value,
+      $Res Function(_$_$IntegerGreaterThan) _then)
+      : super(_value, (v) => _then(v as _$_$IntegerGreaterThan));
 
   @override
-  _$IntegerGreaterThan get _value => super._value as _$IntegerGreaterThan;
+  _$_$IntegerGreaterThan get _value => super._value as _$_$IntegerGreaterThan;
 
   @override
   $Res call({
     Object? threshold = freezed,
   }) {
-    return _then(_$IntegerGreaterThan(
+    return _then(_$_$IntegerGreaterThan(
       threshold == freezed
           ? _value.threshold
           : threshold // ignore: cast_nullable_to_non_nullable
@@ -164,7 +139,7 @@ class __$$IntegerGreaterThanCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_$IntegerGreaterThan implements _$IntegerGreaterThan {
-  const _$_$IntegerGreaterThan(this.threshold, {String? $type})
+  const _$_$IntegerGreaterThan(this.threshold, {final String? $type})
       : $type = $type ?? 'greaterThan';
 
   factory _$_$IntegerGreaterThan.fromJson(Map<String, dynamic> json) =>
@@ -185,18 +160,19 @@ class _$_$IntegerGreaterThan implements _$IntegerGreaterThan {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$IntegerGreaterThan &&
+            other is _$_$IntegerGreaterThan &&
             const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
-  _$$IntegerGreaterThanCopyWith<_$IntegerGreaterThan> get copyWith =>
-      __$$IntegerGreaterThanCopyWithImpl<_$IntegerGreaterThan>(
+  _$$_$IntegerGreaterThanCopyWith<_$_$IntegerGreaterThan> get copyWith =>
+      __$$_$IntegerGreaterThanCopyWithImpl<_$_$IntegerGreaterThan>(
           this, _$identity);
 
   @override
@@ -268,44 +244,46 @@ class _$_$IntegerGreaterThan implements _$IntegerGreaterThan {
 }
 
 abstract class _$IntegerGreaterThan implements VInteger {
-  const factory _$IntegerGreaterThan(int threshold) = _$_$IntegerGreaterThan;
+  const factory _$IntegerGreaterThan(final int threshold) =
+      _$_$IntegerGreaterThan;
 
   factory _$IntegerGreaterThan.fromJson(Map<String, dynamic> json) =
       _$_$IntegerGreaterThan.fromJson;
 
   @override
-  int get threshold;
+  int get threshold => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$$IntegerGreaterThanCopyWith<_$IntegerGreaterThan> get copyWith =>
+  _$$_$IntegerGreaterThanCopyWith<_$_$IntegerGreaterThan> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$IntegerLessThanCopyWith<$Res>
+abstract class _$$_$IntegerLessThanCopyWith<$Res>
     implements $VIntegerCopyWith<$Res> {
-  factory _$$IntegerLessThanCopyWith(
-          _$IntegerLessThan value, $Res Function(_$IntegerLessThan) then) =
-      __$$IntegerLessThanCopyWithImpl<$Res>;
+  factory _$$_$IntegerLessThanCopyWith(
+          _$_$IntegerLessThan value, $Res Function(_$_$IntegerLessThan) then) =
+      __$$_$IntegerLessThanCopyWithImpl<$Res>;
   @override
   $Res call({int threshold});
 }
 
 /// @nodoc
-class __$$IntegerLessThanCopyWithImpl<$Res> extends _$VIntegerCopyWithImpl<$Res>
-    implements _$$IntegerLessThanCopyWith<$Res> {
-  __$$IntegerLessThanCopyWithImpl(
-      _$IntegerLessThan _value, $Res Function(_$IntegerLessThan) _then)
-      : super(_value, (v) => _then(v as _$IntegerLessThan));
+class __$$_$IntegerLessThanCopyWithImpl<$Res>
+    extends _$VIntegerCopyWithImpl<$Res>
+    implements _$$_$IntegerLessThanCopyWith<$Res> {
+  __$$_$IntegerLessThanCopyWithImpl(
+      _$_$IntegerLessThan _value, $Res Function(_$_$IntegerLessThan) _then)
+      : super(_value, (v) => _then(v as _$_$IntegerLessThan));
 
   @override
-  _$IntegerLessThan get _value => super._value as _$IntegerLessThan;
+  _$_$IntegerLessThan get _value => super._value as _$_$IntegerLessThan;
 
   @override
   $Res call({
     Object? threshold = freezed,
   }) {
-    return _then(_$IntegerLessThan(
+    return _then(_$_$IntegerLessThan(
       threshold == freezed
           ? _value.threshold
           : threshold // ignore: cast_nullable_to_non_nullable
@@ -317,7 +295,7 @@ class __$$IntegerLessThanCopyWithImpl<$Res> extends _$VIntegerCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_$IntegerLessThan implements _$IntegerLessThan {
-  const _$_$IntegerLessThan(this.threshold, {String? $type})
+  const _$_$IntegerLessThan(this.threshold, {final String? $type})
       : $type = $type ?? 'lessThan';
 
   factory _$_$IntegerLessThan.fromJson(Map<String, dynamic> json) =>
@@ -338,18 +316,19 @@ class _$_$IntegerLessThan implements _$IntegerLessThan {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$IntegerLessThan &&
+            other is _$_$IntegerLessThan &&
             const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
-  _$$IntegerLessThanCopyWith<_$IntegerLessThan> get copyWith =>
-      __$$IntegerLessThanCopyWithImpl<_$IntegerLessThan>(this, _$identity);
+  _$$_$IntegerLessThanCopyWith<_$_$IntegerLessThan> get copyWith =>
+      __$$_$IntegerLessThanCopyWithImpl<_$_$IntegerLessThan>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -420,15 +399,15 @@ class _$_$IntegerLessThan implements _$IntegerLessThan {
 }
 
 abstract class _$IntegerLessThan implements VInteger {
-  const factory _$IntegerLessThan(int threshold) = _$_$IntegerLessThan;
+  const factory _$IntegerLessThan(final int threshold) = _$_$IntegerLessThan;
 
   factory _$IntegerLessThan.fromJson(Map<String, dynamic> json) =
       _$_$IntegerLessThan.fromJson;
 
   @override
-  int get threshold;
+  int get threshold => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$$IntegerLessThanCopyWith<_$IntegerLessThan> get copyWith =>
+  _$$_$IntegerLessThanCopyWith<_$_$IntegerLessThan> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -15,11 +15,9 @@ NavButton _$NavButtonFromJson(Map<String, dynamic> json) => NavButton(
       height: (json['height'] as num?)?.toDouble() ?? 100,
       property: json['property'] as String?,
       staticData: json['staticData'] as String? ?? '',
-      pid: json['pid'] as String?,
     );
 
 Map<String, dynamic> _$NavButtonToJson(NavButton instance) => <String, dynamic>{
-      'pid': instance.pid,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,

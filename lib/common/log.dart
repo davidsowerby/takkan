@@ -5,7 +5,7 @@ Logger logType(Type type) {
 }
 
 /// This is a fudge to get around web page freezing with SimplePrinter.
-// TODO: set this when running in web https://gitlab.com/precept1/precept_script/-/issues/14
+// TODO: set this when running in web https://gitlab.com/precept1/takkan_script/-/issues/14
 bool webEnvironment = false;
 
 /// [SimplePrinter] causes web page to freeze

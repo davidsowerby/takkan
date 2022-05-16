@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'precept_item.g.dart';
 
@@ -59,7 +59,7 @@ class PreceptItem with WalkTarget {
   /// The [Script.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
   String? get debugId => _debugId;
 
-  /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/precept1/precept_script/-/issues/21
+  /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/precept1/takkan_script/-/issues/21
   PreceptItem get parent => _parent;
 
   String? get pid => _id;
@@ -102,7 +102,7 @@ class PreceptItem with WalkTarget {
 
       /// if we still don't have a uid, generate one
       if (uid == null || uid?.length == 0) {
-        final type = this.runtimeType.toString();
+        final type = runtimeType.toString();
         final String indexStr = (_index == null) ? '' : _index.toString();
         final separator = (_index == null) ? '' : ':';
         uid = '$type$separator$indexStr';
@@ -120,6 +120,7 @@ class PreceptItem with WalkTarget {
 
   /// Walks through all instances of [PreceptItem] or its sub-classes held within this item.
   /// At each instance, the each of the [visitors] [ScriptVisitor.step] is invoked
+  @override
   walk(List<ScriptVisitor> visitors) {
     final collector = VisitorWalkerParams(visitors: visitors);
     final walker = VisitorWalker();

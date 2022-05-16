@@ -1,14 +1,14 @@
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/static_panel.dart';
-import 'package:precept_script/part/list_view.dart';
-import 'package:precept_script/part/text.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/panel/static_panel.dart';
+import 'package:takkan_script/part/list_view.dart';
+import 'package:takkan_script/part/text.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -34,7 +34,6 @@ void main() {
             'A person': GetDocument(
               queryName: 'GetPerson',
               documentId: DocumentId(documentClass: 'x', objectId: 'x'),
-              documentSchema: '',
             )
           },
         ),

@@ -1,16 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/element.dart';
-import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/element.dart';
+import 'package:takkan_script/script/layout.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'static_page.g.dart';
 
@@ -28,7 +28,7 @@ part 'static_page.g.dart';
 /// or 'documents/'
 ///
 /// A list of all routes generated and defined will be available during script
-/// validation, see https://gitlab.com/precept1/precept_script/-/issues/28
+/// validation, see https://gitlab.com/precept1/takkan_script/-/issues/28
 ///
 /// [pageType] may in future be used to look up from [PageLibrary] - not currently used
 ///
@@ -40,36 +40,31 @@ class PageStatic extends PodBase implements Pages {
 
   final List<String> routes;
 
-  final Layout layout;
 
   PageStatic({
     this.routes = const [],
-    String? caption,
+    super.caption,
     this.pageType = 'defaultPage',
     this.scrollable = true,
-    this.layout = const LayoutDistributedColumn(),
-    List<Content> children = const [],
-    DataProvider? dataProvider,
-    ControlEdit controlEdit = ControlEdit.inherited,
-    String? id,
-  }) : super(
-          id: id,
-          dataProvider: dataProvider,
-          controlEdit: controlEdit,
-          caption: caption,
-          children: children,
-          layout: layout,
-        );
+    super.layout = const LayoutDistributedColumn(),
+    super.children = const [],
+    super.dataProvider,
+    super. controlEdit = ControlEdit.inherited,
+    super.id,
+  }) ;
 
   factory PageStatic.fromJson(Map<String, dynamic> json) =>
       _$PageStaticFromJson(json);
 
+  @override
   Script get parent => super.parent as Script;
 
   Content get baseConfig => this;
 
+  @override
   bool get isDataRoot => documentClass != null;
 
+  @override
   DebugNode get debugNode {
     final List<DebugNode> subs = children.map((e) => e.debugNode).toList();
     if (dataProviderIsDeclared) {
@@ -79,8 +74,10 @@ class PageStatic extends PodBase implements Pages {
     return DebugNode(this, subs);
   }
 
+  @override
   Map<String, dynamic> toJson() => _$PageStaticToJson(this);
 
+  @override
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
     if (pageType.isEmpty) {
@@ -92,11 +89,13 @@ class PageStatic extends PodBase implements Pages {
   }
 
   /// See [PreceptItem.subElements]
+  @override
   List<dynamic> get subElements => [
         children,
         ...super.subElements,
       ];
 
+  @override
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     for (Content entry in children) {
@@ -104,16 +103,20 @@ class PageStatic extends PodBase implements Pages {
     }
   }
 
+  @override
   String? get title => caption;
 
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
+  @override
   bool get dataProviderIsDeclared =>
-      (dataProvider != null && !(dataProvider is NullDataProvider));
+      (dataProvider != null && (dataProvider is! NullDataProvider));
 
+  @override
   String? get idAlternative => title;
 
+  @override
   Map<String, Content> get contentAsMap {
     final Map<String, Content> map = Map();
     for (Content content in children) {
@@ -124,6 +127,7 @@ class PageStatic extends PodBase implements Pages {
     return map;
   }
 
+  @override
   bool get isStatic => true;
 
   @override

@@ -1,35 +1,34 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 
 part 'boolean.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FBoolean extends Field<BooleanValidation, bool> {
   FBoolean({
-    bool? defaultValue,
-    List<BooleanValidation> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          defaultValue: defaultValue,
-          validations: validations,
-          required: required,
-          readOnly: readOnly,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
+  @override
   Type get modelType => bool;
 
   factory FBoolean.fromJson(Map<String, dynamic> json) =>
       _$FBooleanFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FBooleanToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class BooleanValidation implements ModelValidation<ValidateBoolean, bool> {
+  @override
   final ValidateBoolean method;
+  @override
   final bool? param;
 
   const BooleanValidation({required this.method, this.param});

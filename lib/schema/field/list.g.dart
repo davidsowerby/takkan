@@ -7,12 +7,12 @@ part of 'list.dart';
 // **************************************************************************
 
 FList _$FListFromJson(Map<String, dynamic> json) => FList(
+      defaultValue: json['defaultValue'] as List<dynamic>?,
       validations: (json['validations'] as List<dynamic>?)
               ?.map((e) => ListValidation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       required: json['required'] as bool? ?? false,
-      defaultValue: json['defaultValue'] as List<dynamic>?,
     );
 
 Map<String, dynamic> _$FListToJson(FList instance) {

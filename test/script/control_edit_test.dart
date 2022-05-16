@@ -1,12 +1,12 @@
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/static_panel.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/static_panel.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 import '../fixtures.dart';

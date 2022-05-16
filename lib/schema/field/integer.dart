@@ -1,31 +1,28 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/validation/result.dart';
-import 'package:precept_script/validation/validate.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/validation/result.dart';
+import 'package:takkan_script/validation/validate.dart';
 
 part 'integer.freezed.dart';
 part 'integer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FInteger extends Field<VInteger, int> {
+  @override
   Type get modelType => int;
 
   FInteger({
-    int? defaultValue,
-    List<VInteger> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          required: required,
-          validations: validations,
-          defaultValue: defaultValue,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  });
 
   factory FInteger.fromJson(Map<String, dynamic> json) =>
       _$FIntegerFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FIntegerToJson(this);
 }
 

@@ -1,26 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 
 part 'list.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FList extends Field<ListValidation, List> {
   FList({
-    List<ListValidation> validations = const [],
-    bool required = false,
-    List? defaultValue,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          defaultValue: defaultValue,
-          required: required,
-          validations: validations,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
   factory FList.fromJson(Map<String, dynamic> json) => _$FListFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FListToJson(this);
 
   @override
@@ -31,7 +27,9 @@ enum ValidateList { containsLessThan, containsMoreThan }
 
 @JsonSerializable(explicitToJson: true)
 class ListValidation implements ModelValidation<ValidateList, List> {
+  @override
   final ValidateList method;
+  @override
   final int param;
 
   const ListValidation({required this.method, this.param = 0});

@@ -1,39 +1,38 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/object/relation.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/object/relation.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 
 part 'relation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FRelation extends Field<RelationValidation, Relation> {
+  @override
   Type get modelType => Relation;
   final String targetClass;
 
   FRelation({
-    Relation? defaultValue,
     required this.targetClass,
-    List<RelationValidation> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          defaultValue: defaultValue,
-          required: required,
-          validations: validations,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
   factory FRelation.fromJson(Map<String, dynamic> json) =>
       _$FRelationFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FRelationToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class RelationValidation
     implements ModelValidation<ValidateRelation, Relation> {
+  @override
   final ValidateRelation method;
+  @override
   final Relation? param;
 
   const RelationValidation({required this.method, this.param});

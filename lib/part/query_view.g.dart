@@ -15,7 +15,6 @@ QueryView _$QueryViewFromJson(Map<String, dynamic> json) => QueryView(
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
-      pid: json['pid'] as String?,
       readOnly: json['readOnly'] as bool? ?? false,
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
@@ -27,7 +26,6 @@ QueryView _$QueryViewFromJson(Map<String, dynamic> json) => QueryView(
     );
 
 Map<String, dynamic> _$QueryViewToJson(QueryView instance) => <String, dynamic>{
-      'pid': instance.pid,
       'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
       'caption': instance.caption,
       'readOnly': instance.readOnly,

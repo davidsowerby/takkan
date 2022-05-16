@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/trait/trait.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/trait/trait.dart';
 
 part 'text_trait.g.dart';
 
@@ -19,8 +19,7 @@ class TextTrait extends Trait {
       {this.textStyle = TextStyle.bodyText1,
       this.textTheme = TextTheme.cardCanvas,
       this.textAlign = TextAlign.start,
-      String? caption})
-      : super(caption: caption);
+      super.caption});
 
   factory TextTrait.fromJson(Map<String, dynamic> json) =>
       _$TextTraitFromJson(json);

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/part/part.dart';
 
 part 'text.g.dart';
 
@@ -45,5 +45,6 @@ class Text extends Part {
 
   factory Text.fromJson(Map<String, dynamic> json) => _$TextFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$TextToJson(this);
 }

@@ -1,16 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/element.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/panel_style.dart';
-import 'package:precept_script/trait/text_trait.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/element.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/script/layout.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/panel/panel_style.dart';
+import 'package:takkan_script/trait/text_trait.dart';
 
 part 'static_panel.g.dart';
 
@@ -23,7 +22,6 @@ class PanelStatic extends PodBase implements Panels {
   )
   @JsonKey(ignore: true)
   PanelHeading? _heading;
-  final Layout layout;
   final bool openExpanded;
   final bool scrollable;
   final Help? help;
@@ -33,42 +31,36 @@ class PanelStatic extends PodBase implements Panels {
   factory PanelStatic.fromJson(Map<String, dynamic> json) =>
       _$PanelStaticFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$PanelStaticToJson(this);
 
   PanelStatic({
     String? function,
-    String? caption,
-    String? documentClass,
+    super.caption,
+    super.documentClass,
     this.openExpanded = true,
-    List<Content> children = const [],
+    super.children = const [],
     this.pageArguments = const {},
-    this.layout = const LayoutDistributedColumn(),
+    super.layout = const LayoutDistributedColumn(),
     PanelHeading? heading,
     this.scrollable = false,
     this.help,
     this.panelStyle = const PanelStyle(),
-    DataProvider? dataProvider,
+    super.dataProvider,
     TextTrait textTrait = const TextTrait(),
-    ControlEdit controlEdit = ControlEdit.inherited,
-    String? id,
-  })  : _heading = heading,
-        super(
-          id: id,
-          dataProvider: dataProvider,
-          controlEdit: controlEdit,
-          caption: caption,
-          children: children,
-          documentClass: documentClass,
-          layout: layout,
-        );
+    super.controlEdit = ControlEdit.inherited,
+    super.id,
+  }) : _heading = heading;
 
   /// See [PreceptItem.subElements]
+  @override
   List<dynamic> get subElements => [
         if (heading != null) heading,
         children,
         ...super.subElements,
       ];
 
+  @override
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     if (heading != null) heading?.walk(visitors);
@@ -79,6 +71,7 @@ class PanelStatic extends PodBase implements Panels {
 
   Content get baseConfig => this;
 
+  @override
   DebugNode get debugNode {
     final List<DebugNode> subs = children.map((e) => e.debugNode).toList();
     if (dataProviderIsDeclared) {
@@ -94,10 +87,7 @@ class PanelStatic extends PodBase implements Panels {
 
   @override
   bool get isDataRoot => false;
-   bool get isStatic => true;
+
+  @override
+  bool get isStatic => true;
 }
-
-
-
-
-

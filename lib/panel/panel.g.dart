@@ -9,7 +9,7 @@ part of 'panel.dart';
 Panel _$PanelFromJson(Map<String, dynamic> json) => Panel(
       caption: json['caption'] as String?,
       dataSelectors: json['dataSelectors'] == null
-          ? const [const Property()]
+          ? const [Property()]
           : DataListJsonConverter.fromJson(json['dataSelectors'] as List?),
       listEntryConfig: json['listEntryConfig'] == null
           ? null
@@ -45,8 +45,8 @@ Map<String, dynamic> _$PanelToJson(Panel instance) => <String, dynamic>{
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),
       'children': ContentConverter.toJson(instance.children),
-      'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),
       'layout': LayoutJsonConverter.toJson(instance.layout),
+      'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),
       'openExpanded': instance.openExpanded,
       'scrollable': instance.scrollable,
       'help': instance.help?.toJson(),

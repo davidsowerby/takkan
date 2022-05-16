@@ -36,11 +36,11 @@ Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),
       'children': ContentConverter.toJson(instance.children),
+      'layout': LayoutJsonConverter.toJson(instance.layout),
       'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'tag': instance.tag,
       'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),
-      'layout': LayoutJsonConverter.toJson(instance.layout),
     };
 
 const _$ControlEditEnumMap = {

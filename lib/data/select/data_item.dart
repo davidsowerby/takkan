@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:precept_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data.dart';
 
 part 'data_item.g.dart';
 
@@ -12,15 +12,20 @@ part 'data_item.g.dart';
 /// [DataItemByFilter] and [DataItemByGQL]
 @JsonSerializable(explicitToJson: true)
 class DataItem implements Data {
+  @override
   final bool liveConnect;
 
+  @override
   bool get isItem => true;
 
+  @override
   bool get isList => false;
 
   bool get isStatic => false;
 
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataItem({
@@ -42,8 +47,11 @@ class DataItem implements Data {
 @JsonSerializable(explicitToJson: true)
 class DataItemById implements Data {
   final String objectId;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataItemById({
@@ -74,8 +82,11 @@ class DataItemById implements Data {
 class DataItemByFunction implements Data {
   final Map<String, dynamic> params;
   final String cloudFunctionName;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataItemByFunction({
@@ -115,8 +126,11 @@ class DataItemByFunction implements Data {
 class DataItemByFilter implements Data {
   final String script;
   final String? cloudFunctionName;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataItemByFilter({
@@ -146,8 +160,11 @@ class DataItemByFilter implements Data {
 @JsonSerializable(explicitToJson: true)
 class DataItemByGQL implements Data {
   final String script;
+  @override
   final bool liveConnect;
+  @override
   final String tag;
+  @override
   final String? caption;
 
   const DataItemByGQL({

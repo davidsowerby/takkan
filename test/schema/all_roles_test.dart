@@ -1,7 +1,7 @@
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {

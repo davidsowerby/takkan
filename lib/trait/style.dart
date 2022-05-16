@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/trait/text_trait.dart';
+import 'package:takkan_script/trait/text_trait.dart';
 
 part 'style.g.dart';
 

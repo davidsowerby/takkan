@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_script/data/converter/conversion_error_messages.dart';
+import 'package:takkan_script/data/converter/conversion_error_messages.dart';
 import 'package:test/test.dart';
 
 void main() {

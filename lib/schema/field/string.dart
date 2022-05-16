@@ -1,31 +1,28 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/validation/result.dart';
-import 'package:precept_script/validation/validate.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/validation/result.dart';
+import 'package:takkan_script/validation/validate.dart';
 
 part 'string.freezed.dart';
 part 'string.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FString extends Field<VString, String> {
+  @override
   Type get modelType => String;
 
   FString({
-    String? defaultValue,
-    List<VString> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          required: required,
-          validations: validations,
-          defaultValue: defaultValue,
-        );
+    super.defaultValue,
+    super.validations = const [],
+    super.required = false,
+    super.readOnly = IsReadOnly.inherited,
+  }) ;
 
   factory FString.fromJson(Map<String, dynamic> json) =>
       _$FStringFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FStringToJson(this);
 }
 

@@ -1,4 +1,4 @@
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_script/script/script.dart';
 
 /// Common interface to load a Precept instance from any source
 abstract class PreceptLoader {

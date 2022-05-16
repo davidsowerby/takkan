@@ -1,11 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/panel/panel.dart';
 
 part 'data.g.dart';
 
@@ -54,8 +54,11 @@ abstract class Data {
 class PageCustom implements Data {
   final List<String> routes;
   final Map<String, dynamic> properties;
+  @override
   final String tag;
+  @override
   final bool liveConnect;
+  @override
   final String caption;
 
   const PageCustom({

@@ -1,12 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/util/interpolate.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/result.dart';
-import 'package:precept_script/validation/validate.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/util/interpolate.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/validation/result.dart';
+import 'package:takkan_script/validation/validate.dart';
 
 /// [VAL] is the validator type for example, [IntegerValidation]
 /// [MODEL] is the data type of the model attribute represented
@@ -23,8 +22,8 @@ abstract class Field<VAL, MODEL> extends SchemaElement {
     this.validations = const [],
     required this.required,
     this.defaultValue,
-    required IsReadOnly readOnly,
-  }) : super(readOnly: readOnly);
+    required super. readOnly,
+  }) ;
 
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> doValidation(MODEL value, Script pScript) {

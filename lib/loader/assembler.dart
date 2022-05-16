@@ -1,25 +1,25 @@
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/converter/conversion_error_messages.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/loader/loaders.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/schema/validation/validation_error_messages.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/converter/conversion_error_messages.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/loader/loaders.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/schema/validation/validation_error_messages.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 
 class ScriptAssembler {
   /// Loads all requested [Script], and merges them into a single [_rootModel]
   Future<Script> assemble({required List<PreceptLoader> loaders}) async {
-    logType(this.runtimeType).d("Loading models");
+    logType(runtimeType).d("Loading models");
     List<Future<Script>> modelFutures = List.empty(growable: true);
     for (PreceptLoader loader in loaders) {
       modelFutures.add(loader.load());
     }
     final m = await Future.wait(modelFutures);
-    logType(this.runtimeType).d("All models loaded");
+    logType(runtimeType).d("All models loaded");
     if (m.length > 1) {
       return _mergeModels(m);
     } else {

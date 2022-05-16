@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/data/converter/converter.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_script/data/converter/converter.dart';
+import 'package:takkan_script/script/script.dart';
 
 part 'conversion_error_messages.g.dart';
 
@@ -18,7 +18,7 @@ class ConversionErrorMessages {
   Map<String, dynamic> toJson() => _$ConversionErrorMessagesToJson(this);
 }
 
-const Map<String, String> defaultConversionPatterns = const {
+const Map<String, String> defaultConversionPatterns =  {
   'IntStringConverter': 'must be a whole number',
   'DoubleStringConverter': 'must be a number',
 };

@@ -1,38 +1,37 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/object/geo.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/object/geo.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 
 part 'geo_polygon.g.dart';
 
 /// see [GeoPolygon]
 @JsonSerializable(explicitToJson: true)
 class FGeoPolygon extends Field<GeoPolygonValidation, GeoPolygon> {
+  @override
   Type get modelType => GeoPolygon;
 
   FGeoPolygon({
-    GeoPolygon? defaultValue,
-    List<GeoPolygonValidation> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          defaultValue: defaultValue,
-          required: required,
-          validations: validations,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
   factory FGeoPolygon.fromJson(Map<String, dynamic> json) =>
       _$FGeoPolygonFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FGeoPolygonToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class GeoPolygonValidation
     implements ModelValidation<ValidateGeoPoint, GeoPoint> {
+  @override
   final ValidateGeoPoint method;
+  @override
   final GeoPoint? param;
 
   const GeoPolygonValidation({required this.method, this.param});

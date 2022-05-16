@@ -52,7 +52,6 @@ EmailSignIn _$EmailSignInFromJson(Map<String, dynamic> json) => EmailSignIn(
       successRoute: json['successRoute'] as String? ?? '',
       failureRoute: json['failureRoute'] as String? ?? 'signInFail',
       readTraitName: json['readTraitName'] as String? ?? 'EmailSignIn-default',
-      pid: json['pid'] as String?,
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
@@ -60,7 +59,6 @@ EmailSignIn _$EmailSignInFromJson(Map<String, dynamic> json) => EmailSignIn(
 
 Map<String, dynamic> _$EmailSignInToJson(EmailSignIn instance) =>
     <String, dynamic>{
-      'pid': instance.pid,
       'caption': instance.caption,
       'help': instance.help?.toJson(),
       'readTraitName': instance.readTraitName,

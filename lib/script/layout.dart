@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
 
 part 'layout.g.dart';
 
@@ -37,7 +37,9 @@ abstract class Layout {
 /// applies to single and multi-column layouts.
 @JsonSerializable(explicitToJson: true)
 class LayoutDistributedColumn implements Layout {
+  @override
   final Padding padding;
+  @override
   final double preferredColumnWidth;
 
   const LayoutDistributedColumn(

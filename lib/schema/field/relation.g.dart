@@ -7,10 +7,10 @@ part of 'relation.dart';
 // **************************************************************************
 
 FRelation _$FRelationFromJson(Map<String, dynamic> json) => FRelation(
+      targetClass: json['targetClass'] as String,
       defaultValue: json['defaultValue'] == null
           ? null
           : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
-      targetClass: json['targetClass'] as String,
       validations: (json['validations'] as List<dynamic>?)
               ?.map(
                   (e) => RelationValidation.fromJson(e as Map<String, dynamic>))

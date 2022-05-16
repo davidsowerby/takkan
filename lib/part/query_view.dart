@@ -1,8 +1,7 @@
-
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/part/abstract_list_view.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/part/abstract_list_view.dart';
 
 part 'query_view.g.dart';
 
@@ -15,34 +14,24 @@ class QueryView extends AbstractListView {
 
   QueryView({
     String? queryName,
-    String titleProperty = 'title',
-    String subtitleProperty = 'subtitle',
-    double height = 100,
-    String? tooltip,
-    String? caption,
-    Help? help,
-    String? pid,
-    bool readOnly = false,
-    ControlEdit controlEdit = ControlEdit.inherited,
-    String readTraitName = 'queryView-read-default',
-    String editTraitName = 'queryView-edit-default',
+    super.titleProperty = 'title',
+    super.subtitleProperty = 'subtitle',
+    super.height = 100,
+    super.tooltip,
+    super.caption,
+    super.help,
+    super.id,
+    super.readOnly = false,
+    super.controlEdit = ControlEdit.inherited,
+    super.readTraitName = 'queryView-read-default',
+    super.editTraitName = 'queryView-edit-default',
   }) : super(
           property: queryName,
-          titleProperty: titleProperty,
-          subtitleProperty: subtitleProperty,
-          particleHeight: height,
-          tooltip: tooltip,
-          caption: caption,
-          help: help,
-          readOnly: readOnly,
-          controlEdit: controlEdit,
-          readTraitName: readTraitName,
-          editTraitName: editTraitName,
-          pid: pid,
         );
 
   factory QueryView.fromJson(Map<String, dynamic> json) =>
       _$QueryViewFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$QueryViewToJson(this);
 }

@@ -1,31 +1,28 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/object/post_code.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/validation/validator.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/object/post_code.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/validation/validator.dart';
 import 'package:validators/validators.dart';
 
 part 'post_code.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FPostCode extends Field<PostCodeValidation, PostCode> {
+  @override
   Type get modelType => PostCode;
 
   FPostCode({
-    PostCode? defaultValue,
-    List<PostCodeValidation> validations = const [],
-    bool required = false,
-    IsReadOnly readOnly = IsReadOnly.inherited,
-  }) : super(
-          readOnly: readOnly,
-          defaultValue: defaultValue,
-          required: required,
-          validations: validations,
-        );
+    super.defaultValue,
+    super. validations = const [],
+    super. required = false,
+    super. readOnly = IsReadOnly.inherited,
+  }) ;
 
   factory FPostCode.fromJson(Map<String, dynamic> json) =>
       _$FPostCodeFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$FPostCodeToJson(this);
 }
 
@@ -33,7 +30,9 @@ class FPostCode extends Field<PostCodeValidation, PostCode> {
 @JsonSerializable(explicitToJson: true)
 class PostCodeValidation
     implements ModelValidation<ValidatePostCode, PostCode> {
+  @override
   final ValidatePostCode method;
+  @override
   final PostCode? param;
 
   const PostCodeValidation({required this.method, this.param});

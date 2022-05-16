@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/part/part.dart';
 
 class PartConverter implements JsonConverter<Part, Map<String, dynamic>> {
   const PartConverter();

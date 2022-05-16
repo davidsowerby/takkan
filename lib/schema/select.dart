@@ -1,16 +1,13 @@
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/schema/field/field.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/schema/field/field.dart';
 
 // part 'select.g.dart';
 
 abstract class SelectField extends Field {
   SelectField({
-    IsReadOnly readOnly = IsReadOnly.inherited,
-    required bool required,
-  }) : super(
-          readOnly: readOnly,
-          required: required,
-        );
+    super. readOnly = IsReadOnly.inherited,
+    required super. required,
+  });
 }
 
 // @JsonSerializable( explicitToJson: true)

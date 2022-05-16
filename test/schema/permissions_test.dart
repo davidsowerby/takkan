@@ -1,4 +1,4 @@
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_script/schema/schema.dart';
 import 'package:test/test.dart';
 
 void main() {

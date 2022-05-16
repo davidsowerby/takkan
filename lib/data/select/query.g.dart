@@ -74,7 +74,6 @@ GetDocument _$GetDocumentFromJson(Map<String, dynamic> json) => GetDocument(
               json['fieldSelector'] as Map<String, dynamic>),
       documentId:
           DocumentId.fromJson(json['documentId'] as Map<String, dynamic>),
-      documentSchema: json['documentSchema'] as String,
       queryName: json['queryName'] as String?,
       variables: json['variables'] as Map<String, dynamic>? ?? const {},
       propertyReferences: (json['propertyReferences'] as List<dynamic>?)
@@ -89,7 +88,6 @@ Map<String, dynamic> _$GetDocumentToJson(GetDocument instance) =>
       'propertyReferences': instance.propertyReferences,
       'queryName': instance.queryName,
       'documentId': instance.documentId.toJson(),
-      'documentSchema': instance.documentSchema,
       'fieldSelector': instance.fieldSelector.toJson(),
     };
 

@@ -1,10 +1,10 @@
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {

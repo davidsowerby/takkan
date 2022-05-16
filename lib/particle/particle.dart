@@ -8,8 +8,10 @@ abstract class Particle {
 }
 
 abstract class ReadParticle extends Particle {
-  const ReadParticle({String styleName = 'default', bool showCaption = true})
-      : super(styleName: styleName, showCaption: showCaption);
+  const ReadParticle({
+    super.styleName = 'default',
+    super.showCaption = true,
+  });
 
   Map<String, dynamic> toJson();
 }

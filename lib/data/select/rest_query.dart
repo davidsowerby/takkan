@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/data/select/query.dart';
+import 'package:takkan_script/data/select/query.dart';
 
 part 'rest_query.g.dart';
 
@@ -39,5 +39,6 @@ class RestQuery extends Query {
   factory RestQuery.fromJson(Map<String, dynamic> json) =>
       _$RestQueryFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$RestQueryToJson(this);
 }

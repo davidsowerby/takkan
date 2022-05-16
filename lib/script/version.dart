@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 part 'version.g.dart';
 

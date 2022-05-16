@@ -1,5 +1,5 @@
 
-import 'package:precept_script/common/script/precept_item.dart';
+import 'package:takkan_script/script/precept_item.dart';
 
 class DebugNode {
   final PreceptItem item;
@@ -21,7 +21,7 @@ class DebugNode {
   bool hasDebugId(String debugId) => item.debugId == debugId;
 
   DebugNode? nodeWithId(String debugId) {
-    if (this.hasDebugId(debugId)) {
+    if (hasDebugId(debugId)) {
       return this;
     }
     for (DebugNode child in children) {

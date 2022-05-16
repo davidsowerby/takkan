@@ -1,8 +1,8 @@
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/validation/result.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/validation/result.dart';
 
 abstract class V {
   Map<String, dynamic> toJson();

@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'content.g.dart';
 
@@ -22,7 +22,7 @@ class Content extends Common {
     ControlEdit controlEdit = ControlEdit.inherited,
     String? id,
   }) : super(
-          dataProviderConfig: dataProvider,
+          dataProvider: dataProvider,
           controlEdit: controlEdit,
           id: id,
         );
@@ -37,6 +37,7 @@ class Content extends Common {
     }
   }
 
+  @override
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
     if (isStatic) {
@@ -67,5 +68,6 @@ class Content extends Common {
   factory Content.fromJson(Map<String, dynamic> json) =>
       _$ContentFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$ContentToJson(this);
 }

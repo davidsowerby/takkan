@@ -1,14 +1,14 @@
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/panel/static_panel.dart';
-import 'package:precept_script/part/list_view.dart';
-import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/part/query_view.dart';
-import 'package:precept_script/part/text.dart';
-import 'package:precept_script/signin/sign_in.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/panel/static_panel.dart';
+import 'package:takkan_script/part/list_view.dart';
+import 'package:takkan_script/part/navigation.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/part/query_view.dart';
+import 'package:takkan_script/part/text.dart';
+import 'package:takkan_script/signin/sign_in.dart';
 
 class ContentConverter {
   static const elementKeyName = "-element-";

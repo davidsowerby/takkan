@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'part.g.dart';
 
@@ -38,23 +38,17 @@ class Part extends Content {
   final String? editTraitName;
 
   Part(
-      {String? caption,
+      {super.caption,
       this.readOnly = false,
       this.height,
-      String? property,
+      super.property,
       this.readTraitName = '?',
       this.editTraitName = '?',
       this.staticData,
       this.help,
-      ControlEdit controlEdit = ControlEdit.inherited,
-      String? id,
-      this.tooltip})
-      : super(
-          id: id,
-          controlEdit: controlEdit,
-          caption: caption,
-          property: property,
-        );
+      super.controlEdit = ControlEdit.inherited,
+      super.id,
+      this.tooltip});
 
   factory Part.fromJson(Map<String, dynamic> json) => _$PartFromJson(json);
 

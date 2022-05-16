@@ -12,7 +12,7 @@ part of 'string.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more informations: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 VString _$VStringFromJson(Map<String, dynamic> json) {
   switch (json['runtimeType']) {
@@ -28,33 +28,8 @@ VString _$VStringFromJson(Map<String, dynamic> json) {
 }
 
 /// @nodoc
-class _$VStringTearOff {
-  const _$VStringTearOff();
-
-  _$StringGreaterThan longerThan(int threshold) {
-    return _$StringGreaterThan(
-      threshold,
-    );
-  }
-
-  _$StringLessThan shorterThan(int threshold) {
-    return _$StringLessThan(
-      threshold,
-    );
-  }
-
-  VString fromJson(Map<String, Object?> json) {
-    return VString.fromJson(json);
-  }
-}
-
-/// @nodoc
-const $VString = _$VStringTearOff();
-
-/// @nodoc
 mixin _$VString {
   int get threshold => throw _privateConstructorUsedError;
-
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int threshold) longerThan,
@@ -127,31 +102,31 @@ class _$VStringCopyWithImpl<$Res> implements $VStringCopyWith<$Res> {
 }
 
 /// @nodoc
-abstract class _$$StringGreaterThanCopyWith<$Res>
+abstract class _$$_$StringGreaterThanCopyWith<$Res>
     implements $VStringCopyWith<$Res> {
-  factory _$$StringGreaterThanCopyWith(
-          _$StringGreaterThan value, $Res Function(_$StringGreaterThan) then) =
-      __$$StringGreaterThanCopyWithImpl<$Res>;
+  factory _$$_$StringGreaterThanCopyWith(_$_$StringGreaterThan value,
+          $Res Function(_$_$StringGreaterThan) then) =
+      __$$_$StringGreaterThanCopyWithImpl<$Res>;
   @override
   $Res call({int threshold});
 }
 
 /// @nodoc
-class __$$StringGreaterThanCopyWithImpl<$Res>
+class __$$_$StringGreaterThanCopyWithImpl<$Res>
     extends _$VStringCopyWithImpl<$Res>
-    implements _$$StringGreaterThanCopyWith<$Res> {
-  __$$StringGreaterThanCopyWithImpl(
-      _$StringGreaterThan _value, $Res Function(_$StringGreaterThan) _then)
-      : super(_value, (v) => _then(v as _$StringGreaterThan));
+    implements _$$_$StringGreaterThanCopyWith<$Res> {
+  __$$_$StringGreaterThanCopyWithImpl(
+      _$_$StringGreaterThan _value, $Res Function(_$_$StringGreaterThan) _then)
+      : super(_value, (v) => _then(v as _$_$StringGreaterThan));
 
   @override
-  _$StringGreaterThan get _value => super._value as _$StringGreaterThan;
+  _$_$StringGreaterThan get _value => super._value as _$_$StringGreaterThan;
 
   @override
   $Res call({
     Object? threshold = freezed,
   }) {
-    return _then(_$StringGreaterThan(
+    return _then(_$_$StringGreaterThan(
       threshold == freezed
           ? _value.threshold
           : threshold // ignore: cast_nullable_to_non_nullable
@@ -163,7 +138,7 @@ class __$$StringGreaterThanCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_$StringGreaterThan implements _$StringGreaterThan {
-  const _$_$StringGreaterThan(this.threshold, {String? $type})
+  const _$_$StringGreaterThan(this.threshold, {final String? $type})
       : $type = $type ?? 'longerThan';
 
   factory _$_$StringGreaterThan.fromJson(Map<String, dynamic> json) =>
@@ -184,18 +159,20 @@ class _$_$StringGreaterThan implements _$StringGreaterThan {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StringGreaterThan &&
+            other is _$_$StringGreaterThan &&
             const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
-  _$$StringGreaterThanCopyWith<_$StringGreaterThan> get copyWith =>
-      __$$StringGreaterThanCopyWithImpl<_$StringGreaterThan>(this, _$identity);
+  _$$_$StringGreaterThanCopyWith<_$_$StringGreaterThan> get copyWith =>
+      __$$_$StringGreaterThanCopyWithImpl<_$_$StringGreaterThan>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -266,44 +243,45 @@ class _$_$StringGreaterThan implements _$StringGreaterThan {
 }
 
 abstract class _$StringGreaterThan implements VString {
-  const factory _$StringGreaterThan(int threshold) = _$_$StringGreaterThan;
+  const factory _$StringGreaterThan(final int threshold) =
+      _$_$StringGreaterThan;
 
   factory _$StringGreaterThan.fromJson(Map<String, dynamic> json) =
       _$_$StringGreaterThan.fromJson;
 
   @override
-  int get threshold;
+  int get threshold => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$$StringGreaterThanCopyWith<_$StringGreaterThan> get copyWith =>
+  _$$_$StringGreaterThanCopyWith<_$_$StringGreaterThan> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$StringLessThanCopyWith<$Res>
+abstract class _$$_$StringLessThanCopyWith<$Res>
     implements $VStringCopyWith<$Res> {
-  factory _$$StringLessThanCopyWith(
-          _$StringLessThan value, $Res Function(_$StringLessThan) then) =
-      __$$StringLessThanCopyWithImpl<$Res>;
+  factory _$$_$StringLessThanCopyWith(
+          _$_$StringLessThan value, $Res Function(_$_$StringLessThan) then) =
+      __$$_$StringLessThanCopyWithImpl<$Res>;
   @override
   $Res call({int threshold});
 }
 
 /// @nodoc
-class __$$StringLessThanCopyWithImpl<$Res> extends _$VStringCopyWithImpl<$Res>
-    implements _$$StringLessThanCopyWith<$Res> {
-  __$$StringLessThanCopyWithImpl(
-      _$StringLessThan _value, $Res Function(_$StringLessThan) _then)
-      : super(_value, (v) => _then(v as _$StringLessThan));
+class __$$_$StringLessThanCopyWithImpl<$Res> extends _$VStringCopyWithImpl<$Res>
+    implements _$$_$StringLessThanCopyWith<$Res> {
+  __$$_$StringLessThanCopyWithImpl(
+      _$_$StringLessThan _value, $Res Function(_$_$StringLessThan) _then)
+      : super(_value, (v) => _then(v as _$_$StringLessThan));
 
   @override
-  _$StringLessThan get _value => super._value as _$StringLessThan;
+  _$_$StringLessThan get _value => super._value as _$_$StringLessThan;
 
   @override
   $Res call({
     Object? threshold = freezed,
   }) {
-    return _then(_$StringLessThan(
+    return _then(_$_$StringLessThan(
       threshold == freezed
           ? _value.threshold
           : threshold // ignore: cast_nullable_to_non_nullable
@@ -315,7 +293,7 @@ class __$$StringLessThanCopyWithImpl<$Res> extends _$VStringCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_$StringLessThan implements _$StringLessThan {
-  const _$_$StringLessThan(this.threshold, {String? $type})
+  const _$_$StringLessThan(this.threshold, {final String? $type})
       : $type = $type ?? 'shorterThan';
 
   factory _$_$StringLessThan.fromJson(Map<String, dynamic> json) =>
@@ -336,18 +314,19 @@ class _$_$StringLessThan implements _$StringLessThan {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$StringLessThan &&
+            other is _$_$StringLessThan &&
             const DeepCollectionEquality().equals(other.threshold, threshold));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, const DeepCollectionEquality().hash(threshold));
 
   @JsonKey(ignore: true)
   @override
-  _$$StringLessThanCopyWith<_$StringLessThan> get copyWith =>
-      __$$StringLessThanCopyWithImpl<_$StringLessThan>(this, _$identity);
+  _$$_$StringLessThanCopyWith<_$_$StringLessThan> get copyWith =>
+      __$$_$StringLessThanCopyWithImpl<_$_$StringLessThan>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -418,15 +397,15 @@ class _$_$StringLessThan implements _$StringLessThan {
 }
 
 abstract class _$StringLessThan implements VString {
-  const factory _$StringLessThan(int threshold) = _$_$StringLessThan;
+  const factory _$StringLessThan(final int threshold) = _$_$StringLessThan;
 
   factory _$StringLessThan.fromJson(Map<String, dynamic> json) =
       _$_$StringLessThan.fromJson;
 
   @override
-  int get threshold;
+  int get threshold => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
-  _$$StringLessThanCopyWith<_$StringLessThan> get copyWith =>
+  _$$_$StringLessThanCopyWith<_$_$StringLessThan> get copyWith =>
       throw _privateConstructorUsedError;
 }

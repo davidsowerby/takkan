@@ -1,23 +1,23 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:precept_script/common/debug.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/element.dart';
-import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/common/script/precept_item.dart';
-import 'package:precept_script/common/util/visitor.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/validation/message.dart';
+import 'package:takkan_script/common/debug.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/element.dart';
+import 'package:takkan_script/script/layout.dart';
+import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/util/visitor.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/validation/message.dart';
 
 part 'page.g.dart';
 
@@ -79,7 +79,7 @@ part 'page.g.dart';
 /// - document/[documentClass]/{dataSelector.tag
 ///
 /// A list of all routes generated and defined will be available during script
-/// validation, see https://gitlab.com/precept1/precept_script/-/issues/28
+/// validation, see https://gitlab.com/precept1/takkan_script/-/issues/28
 ///
 /// For a list of documents, [children] will often comprise a single [PNavTile],
 /// to enable tapping to select a single document
@@ -98,48 +98,37 @@ class Page extends PodBase implements Pages {
     toJson: DataListJsonConverter.toJson,
   )
   final List<Data> dataSelectors;
-  @JsonKey(
-    toJson: LayoutJsonConverter.toJson,
-    fromJson: LayoutJsonConverter.fromJson,
-  )
-  final Layout layout;
 
   Page({
     this.tag,
-    String? documentClass,
-    String? caption,
-    Panel? listEntryConfig,
+    super.documentClass,
+    super.caption,
+    super.listEntryConfig,
     this.pageType = 'defaultPage',
     this.scrollable = true,
-    this.layout = const LayoutDistributedColumn(),
-    List<Content> children = const [],
-    DataProvider? dataProvider,
-    ControlEdit controlEdit = ControlEdit.inherited,
-    String? id,
-    String? property,
+    super.layout = const LayoutDistributedColumn(),
+    super.children = const [],
+    super.dataProvider,
+    super. controlEdit = ControlEdit.inherited,
+   super. id,
+    super. property,
     this.dataSelectors = const [const Property()],
-  }) : super(
-          id: id,
-          dataProvider: dataProvider,
-          controlEdit: controlEdit,
-          caption: caption,
-          property: property,
-          children: children,
-          documentClass: documentClass,
-          listEntryConfig: listEntryConfig,
-          layout: layout,
-        );
+  }) ;
 
   factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
 
+  @override
   Script get parent => super.parent as Script;
 
+  @override
   bool get isStatic => false;
 
   Content get baseConfig => this;
 
+  @override
   bool get isDataRoot => documentClass != null;
 
+  @override
   DebugNode get debugNode {
     final List<DebugNode> subs = children.map((e) => e.debugNode).toList();
     if (dataProviderIsDeclared) {
@@ -149,8 +138,10 @@ class Page extends PodBase implements Pages {
     return DebugNode(this, subs);
   }
 
+  @override
   Map<String, dynamic> toJson() => _$PageToJson(this);
 
+  @override
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
     if (pageType.isEmpty) {
@@ -161,6 +152,7 @@ class Page extends PodBase implements Pages {
     }
   }
 
+  @override
   Map<String, Pages> get routeMap {
     final Map<String, Pages> map = Map();
     for (Data selector in dataSelectors) {
@@ -176,11 +168,13 @@ class Page extends PodBase implements Pages {
   }
 
   /// See [PreceptItem.subElements]
+  @override
   List<dynamic> get subElements => [
         children,
         ...super.subElements,
       ];
 
+  @override
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     for (Content entry in children) {
@@ -188,16 +182,20 @@ class Page extends PodBase implements Pages {
     }
   }
 
+  @override
   String? get title => caption;
 
   /// [dataProvider] is always
   /// considered 'declared' by the page, if any level above it actually declares it.
   /// This is because a page is the first level to be actually built into the Widget tree
+  @override
   bool get dataProviderIsDeclared =>
       (dataProvider != null && !(dataProvider is NullDataProvider));
 
+  @override
   String? get idAlternative => title;
 
+  @override
   Map<String, Content> get contentAsMap {
     final Map<String, Content> map = Map();
     for (Content content in children) {
