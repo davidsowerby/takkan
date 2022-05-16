@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/connector.dart';
+import 'package:takkan_client/binding/connector.dart';
 
 /// If specified, [onChange] is called after the widget state has been updated to the model
 class CheckboxStateful extends StatefulWidget {
   final ModelConnector connector;
   final Function(bool?)? onChange;
 
-  const CheckboxStateful({Key? key,required this.connector, this.onChange})
-      : super(key: key);
+  const CheckboxStateful({super.key, required this.connector, this.onChange});
 
   @override
   _CheckboxStatefulState createState() => _CheckboxStatefulState();

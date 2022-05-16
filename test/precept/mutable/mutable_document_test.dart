@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/inject/inject.dart';
 
 import '../../helper/listener.dart';
 

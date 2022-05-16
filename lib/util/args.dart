@@ -1,4 +1,4 @@
-/// This should be in a utils package somewhere, it is used in precept_server_code_generator and precept_dev_app
+/// This should be in a utils package somewhere, it is used in takkan_server_code_generator and takkan_dev_app
 class Args {
   final Map<String, String> mappedArgs = {};
   final List<String> missingKeys = List.empty(growable: true);

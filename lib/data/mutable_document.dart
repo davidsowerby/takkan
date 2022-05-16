@@ -3,9 +3,9 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
 
 enum ChangeType { update, remove, add, clear, createNew }
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/common/component/nav/nav_button.dart';
-import 'package:precept_client/trait/navigation.dart';
-import 'package:precept_script/part/navigation.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/common/component/nav/nav_button.dart';
+import 'package:takkan_client/trait/navigation.dart';
+import 'package:takkan_script/part/navigation.dart';
 
 class NavButtonSetWidget extends StatelessWidget {
   final NavButtonSet config;

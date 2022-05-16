@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/common/content/pod_state.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/page/document_page.dart';
-import 'package:precept_client/page/layout/layout.dart';
-import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_script/page/page.dart' as PageConfig;
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_client/common/content/pod_state.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/page/document_page.dart';
+import 'package:takkan_client/page/layout/layout.dart';
+import 'package:takkan_client/page/standard_page.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_script/page/page.dart' as PageConfig;
+import 'package:takkan_script/panel/panel.dart';
 
-/// This could be used directly, but is generally used only by Precept to generate
+/// This could be used directly, but is generally used only by Takkan to generate
 /// pages automatically from [Script]
 ///
 /// Represents a page displaying 0..n pages of document class [config.documentClass]
@@ -67,7 +67,7 @@ class DocumentListPageState extends PodState<DocumentListPage>
     return Scaffold(
       appBar: AppBar(
         actions: [
-          PreceptRefreshButton(),
+          TakkanRefreshButton(),
           IconButton(
             icon: Icon(FontAwesomeIcons.signOutAlt),
             onPressed: () => _doSignOut(context),
@@ -105,7 +105,7 @@ class DocumentListPageState extends PodState<DocumentListPage>
   /// - Add margin to each column as specified in [config.layout]
   ///
   /// This needs to be expanded to support more sophisticated layout options
-  /// See https://gitlab.com/precept1/precept_client/-/issues/37
+  /// See https://gitlab.com/takkan_/takkan_client/-/issues/37
   Widget layout(
       {required List<Widget> children,
       required Size screenSize,

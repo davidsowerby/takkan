@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_script/data/converter/converter.dart';
+import 'package:takkan_script/data/converter/converter.dart';
 
 void main() {
   group('PassThrough', () {

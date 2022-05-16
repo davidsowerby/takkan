@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_script/signin/sign_in.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_script/signin/sign_in.dart';
 
 /// This is just used as an interface so that users can define their own implementations through
 /// GetIt
@@ -33,7 +33,7 @@ class DefaultSignInPage extends StatelessWidget implements SignInPage {
     );
   }
 
-  /// TODO: https://gitlab.com/precept1/precept_client/-/issues/30
+  /// TODO: https://gitlab.com/takkan_/takkan_client/-/issues/30
   List<Widget> _optionButtons(
       BuildContext context, SignInOptions signInOptions) {
     final List<Widget> list = List.empty(growable: true);

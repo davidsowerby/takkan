@@ -1,4 +1,4 @@
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_script/inject/inject.dart';
 
 /// This uses the [injector] to enable testing - replacing [Toast] with a Mock via the injector
 snackToast({required String text}) {

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:precept_client/app/page_builder.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/common/component/edit_save_cancel.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/stream_wrapper.dart';
-import 'package:precept_client/page/document_list_page.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/page/layout/layout_wrapper.dart';
-import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_client/pod/data_root.dart';
-import 'package:precept_client/pod/document_root.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/page/page.dart' as PageConfig;
+import 'package:takkan_client/app/page_builder.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/common/component/edit_save_cancel.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/stream_wrapper.dart';
+import 'package:takkan_client/page/document_list_page.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/page/layout/layout_wrapper.dart';
+import 'package:takkan_client/page/standard_page.dart';
+import 'package:takkan_client/pod/data_root.dart';
+import 'package:takkan_client/pod/document_root.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/page/page.dart' as PageConfig;
+import 'package:takkan_script/script/content.dart';
 
 /// Represents a page displaying a single document.
 ///
-/// This could be used directly, but is generally used only by Precept to generate
+/// This could be used directly, but is generally used only by Takkan to generate
 /// pages automatically from [PScript]
 ///
 /// The document is identified by the combination of [dataContext.documentClass]
@@ -38,7 +38,7 @@ import 'package:provider/provider.dart';
 /// [dataContext] encapsulates the link to data in the [DocumentCache].  As a [DocumentRoot]
 /// it contains a copy of the original data to enable editing.
 ///
-/// [route] is passed from the [PreceptRouter] during page constructions
+/// [route] is passed from the [TakkanRouter] during page constructions
 ///
 /// [objectId] is only known on initial construction when this page is from a route based on
 /// [DataItemById].  From then on, the objectId may be changed, usually by user action.
@@ -102,7 +102,7 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
         widget: Scaffold(
           appBar: AppBar(
             actions: [
-              PreceptRefreshButton(),
+              TakkanRefreshButton(),
               EditSaveCancel(),
               IconButton(
                 icon: Icon(FontAwesomeIcons.signOutAlt),

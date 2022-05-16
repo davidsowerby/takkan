@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/trait/trait_library.dart';
+import 'package:takkan_client/trait/trait_library.dart';
 
 class TextTrait extends Trait {
   final TextStyle textStyle;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:precept_script/common/script/error.dart';
+import 'package:takkan_script/script/error.dart';
 
-class PreceptDefaultErrorPage extends StatelessWidget {
-  final Lamin8Error config;
+class TakkanDefaultErrorPage extends StatelessWidget {
+  final TakkanError config;
 
-  const PreceptDefaultErrorPage({required this.config, Key? key})
+  const TakkanDefaultErrorPage({required this.config, Key? key})
       : super(key: key);
 
   @override

@@ -1,8 +1,8 @@
-import 'package:precept_client/binding/list_binding.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/common/script/constants.dart';
+import 'package:takkan_client/binding/list_binding.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/common/exceptions.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/script/constants.dart';
 
 /// [T] is model
 /// All the static constructors ensure that the [editHost] and [firstLevelKey] are propagated down the document tree.

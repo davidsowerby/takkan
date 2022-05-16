@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/common/toast.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/panel/panel.dart';
-import 'package:precept_client/pod/data_root.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/common/toast.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/pod/data_root.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 class MockBuildContext extends Mock implements BuildContext {
   @override

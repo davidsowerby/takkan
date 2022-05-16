@@ -1,21 +1,21 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_client/panel/panel.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 /// The data root for a single document.
 ///
 /// It holds a [MutableDocument] to facilitate editing.
 ///
-/// Precept potentially creates a number of [Form] instances on one page, as each
+/// Takkan potentially creates a number of [Form] instances on one page, as each
 /// [PanelWidget] may have its own.  This class holds the [GlobalKey] for each, in [formKeys],
 /// so Form content can be flushed to the [_mutableDocument] prior to saving it.
 ///

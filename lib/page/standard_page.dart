@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/action/action_icon.dart';
-import 'package:precept_client/common/content/pod_state.dart';
-import 'package:precept_client/convert/script.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/page/layout/layout.dart';
-import 'package:precept_script/page/page.dart' as PageConfig;
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_client/common/action/action_icon.dart';
+import 'package:takkan_client/common/content/pod_state.dart';
+import 'package:takkan_client/convert/script.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/page/layout/layout.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_script/page/page.dart' as PageConfig;
+import 'package:takkan_script/panel/panel.dart';
 
-class PreceptPage extends StatefulWidget {
+class TakkanPage extends StatefulWidget {
   final PageConfig.Page config;
   final DataContext parentDataContext;
   final Map<String, dynamic> pageArguments;
@@ -22,7 +22,7 @@ class PreceptPage extends StatefulWidget {
   /// producing this page.  Note that [RouteSettings.arguments] is an Object, but [pageArguments] requires
   /// a Map<String,dynamic>
   ///
-  const PreceptPage({
+  const TakkanPage({
     Key? key,
     required this.config,
     DataContext? parentDataContext,
@@ -31,15 +31,15 @@ class PreceptPage extends StatefulWidget {
         super(key: key);
 
   @override
-  PreceptPageState createState() => PreceptPageState(
+  TakkanPageState createState() => TakkanPageState(
     config: config,
         pageArguments: pageArguments,
         dataContext: parentDataContext,
       );
 }
 
-class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
-  PreceptPageState({
+class TakkanPageState extends PodState<TakkanPage> with DisplayColumns {
+  TakkanPageState({
     required PageConfig.Page config,
     IDataProvider? dataProvider,
     required DataContext dataContext,
@@ -59,7 +59,7 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          PreceptRefreshButton(),
+          TakkanRefreshButton(),
           IconButton(
             icon: Icon(FontAwesomeIcons.signOutAlt),
             onPressed: () => _doSignOut(context),
@@ -97,7 +97,7 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
   /// - Add margin to each column as specified in [config.layout]
   ///
   /// This needs to be expanded to support more sophisticated layout options
-  /// See https://gitlab.com/precept1/precept_client/-/issues/37
+  /// See https://gitlab.com/takkan_/takkan_client/-/issues/37
   Widget layout(
       {required List<Widget> children,
       required Size screenSize,
@@ -113,13 +113,13 @@ class PreceptPageState extends PodState<PreceptPage> with DisplayColumns {
   }
 }
 
-class PreceptRefreshButton extends ActionIcon {
+class TakkanRefreshButton extends ActionIcon {
   @override
   void doAction(BuildContext context) {
-    precept.reload();
+    takkan.reload();
   }
 
-  const PreceptRefreshButton({
+  const TakkanRefreshButton({
     Key? key,
     IconData icon = Icons.update,
     List<Function(BuildContext)> onBefore = const [],

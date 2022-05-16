@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_client/pod/document_root.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_client/pod/document_root.dart';
+import 'package:takkan_script/common/log.dart';
 
 /// [readMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
 /// [canEdit] reflects whether the [readMode] status can be changed, and typically enables / disables the display of an 'edit' icon

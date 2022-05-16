@@ -1,9 +1,9 @@
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/constants.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/binding/string_binding.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/constants.dart';
 
 /// [T] is the data type of the list items
 class ListBinding<T> extends CollectionBinding<List<T>> {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/app/page_builder.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/page/layout/layout_wrapper.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/common/script/layout.dart';
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_client/app/page_builder.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/page/layout/layout_wrapper.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/layout.dart';
 
 class LayoutDistributedColumn implements PageLayout {
   final Pod podConfig;

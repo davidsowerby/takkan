@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_client/common/component/key_assist.dart';
+import 'package:takkan_client/common/component/key_assist.dart';
 
 /// Not a Toast (use BotToast for that) - this is a widget within the tree structure of the page
 class MessagePanel extends StatelessWidget {

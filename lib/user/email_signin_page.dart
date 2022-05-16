@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/user/email_login_section.dart';
-import 'package:precept_client/user/user_state.dart';
+import 'package:takkan_client/user/email_login_section.dart';
+import 'package:takkan_client/user/user_state.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 
 class EmailSignInPage extends StatelessWidget {
   static const String emailHintText =

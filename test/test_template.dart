@@ -1,24 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_client/library/border_library.dart';
-import 'package:precept_client/library/library.dart';
-import 'package:precept_client/library/theme_lookup.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/text.dart' as TextConfig;
-import 'package:precept_script/schema/field/date.dart';
-import 'package:precept_script/schema/field/double.dart';
-import 'package:precept_script/schema/field/geo_position.dart';
-import 'package:precept_script/schema/field/pointer.dart';
-import 'package:precept_script/schema/field/post_code.dart';
-import 'package:precept_script/schema/field/relation.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_client/library/border_library.dart';
+import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/library/theme_lookup.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/part/text.dart' as TextConfig;
+import 'package:takkan_script/schema/field/date.dart';
+import 'package:takkan_script/schema/field/double.dart';
+import 'package:takkan_script/schema/field/geo_position.dart';
+import 'package:takkan_script/schema/field/pointer.dart';
+import 'package:takkan_script/schema/field/post_code.dart';
+import 'package:takkan_script/schema/field/relation.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 
 import 'helper/mock.dart';
 
@@ -108,7 +108,7 @@ void main() {
       getIt.reset();
       getIt.registerFactory<ThemeLookup>(() => DefaultThemeLookup());
       getIt.registerSingleton<BorderLibrary>(
-          BorderLibrary(modules: [PreceptBorderLibraryModule()]));
+          BorderLibrary(modules: [TakkanBorderLibraryModule()]));
     });
 
     tearDownAll(() {});
@@ -123,7 +123,7 @@ void main() {
     //   // given
     //   // when
     //   final app = MaterialApp(
-    //       home: PreceptPage(
+    //       home: TakkanPage(
     //     config: kitchenSinkValidation.routes['/test']!, dataConnector: null,
     //   ));
     //

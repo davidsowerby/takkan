@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/list_binding.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/list_binding.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/binding/string_binding.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/inject/inject.dart';
 
 import '../../helper/catcher.dart';
 import '../../helper/listener.dart';

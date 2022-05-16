@@ -1,7 +1,7 @@
 import 'package:test/test.dart';
 
 void main() {
-  group('PreceptRouter', () {
+  group('TakkanRouter', () {
     setUpAll(() {});
 
     tearDownAll(() {});

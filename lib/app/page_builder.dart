@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/page/document_list_page.dart';
-import 'package:precept_client/page/document_page.dart';
-import 'package:precept_client/page/static_page.dart';
-import 'package:precept_client/panel/static_panel.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/page/page.dart' as PageConfig;
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/page/document_list_page.dart';
+import 'package:takkan_client/page/document_page.dart';
+import 'package:takkan_client/page/static_page.dart';
+import 'package:takkan_client/panel/static_panel.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/page/page.dart' as PageConfig;
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/content.dart';
+import 'package:takkan_script/script/script.dart';
 
 abstract class PageBuilder {
   Route<dynamic>? buildPage({
@@ -168,7 +168,7 @@ class DefaultPageBuilder implements PageBuilder {
       );
       return part;
     }
-    throw PreceptException('Unrecognised content');
+    throw TakkanException('Unrecognised content');
   }
 
   Widget panelExpansion(
@@ -223,12 +223,12 @@ class DefaultPageBuilder implements PageBuilder {
       if (found.isEmpty) {
         String msg = 'Data selector tag \'$selectorTag\'not found';
         logType(this.runtimeType).e(msg);
-        throw PreceptException(msg);
+        throw TakkanException(msg);
       }
       if (found.length > 1) {
         String msg = 'Duplicate data selector tag \'$selectorTag\' found';
         logType(this.runtimeType).e(msg);
-        throw PreceptException(msg);
+        throw TakkanException(msg);
       }
       dataSelector = found.first;
     }
@@ -238,7 +238,7 @@ class DefaultPageBuilder implements PageBuilder {
       String msg =
           "document schema '$documentSchema' has not been declared in the schema, but has been allocated a route";
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
 
     final DataContext dataContext =

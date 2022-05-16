@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:precept_backend/backend/data.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/panel/panel.dart';
-import 'package:precept_client/pod/data_root.dart';
-import 'package:precept_client/user/user_state.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/content.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/pod/data_root.dart';
+import 'package:takkan_client/user/user_state.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_backend/backend/data.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/script/content.dart';
 
-abstract class PodState<T extends StatefulWidget> extends State<T>
-    {
-      bool needsAuthentication = false;
+abstract class PodState<T extends StatefulWidget> extends State<T> {
+  bool needsAuthentication = false;
   final Pod config;
   final DataContext parentDataContext;
   final Map<String, dynamic> pageArguments;
@@ -44,8 +43,8 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   @override
   void initState() {
     super.initState();
-    precept.addReadyListener(_onPreceptReady);
-    precept.addScriptReloadListener(_onScriptReload);
+    takkan.addReadyListener(_onTakkanReady);
+    takkan.addScriptReloadListener(_onScriptReload);
     _completeContextSetup();
     _checkAuthentication('route');
   }
@@ -65,7 +64,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
       );
       return;
     }
-    cache = precept.cache.getClassCache(config: config);
+    cache = takkan.cache.getClassCache(config: config);
 
     if (config.isDataRoot) {
       _activeId = 'fake-object-id';
@@ -116,8 +115,8 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   }
 
   /// TODO: add to PodListener
-  /// Trigger a refresh once Precept fully loaded
-  _onPreceptReady() {
+  /// Trigger a refresh once Takkan fully loaded
+  _onTakkanReady() {
     setState(() {});
   }
 
@@ -145,8 +144,8 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
       return buildContent(theme);
     }
 
-    /// Make sure we don't start before Precept has finished init
-    if (precept.isReady) {
+    /// Make sure we don't start before Takkan has finished init
+    if (takkan.isReady) {
       /// The data may not be ready yet
       if (dataIsReady) {
         buildSubContent(
@@ -170,7 +169,7 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
   //     return _loadData(
   //         context, theme, futureData, _classCache!.updateMutableDocument);
   //   }
-  //   throw PreceptException('Data cannot be loaded without a DataStore');
+  //   throw TakkanException('Data cannot be loaded without a DataStore');
   // }
 
   /// Loads data into [_classCache], using a Future, and returns a Widget produced by [buildContent]
@@ -418,10 +417,10 @@ abstract class PodState<T extends StatefulWidget> extends State<T>
 //     final DataItem single = config.data as DataItem;
 //     return single.objectId ?? _currentSelectionId!;
 //   }
-//   throw PreceptException(
+//   throw TakkanException(
 //       'Must be active to have an activeId.  Check isActive first');
 // }
-/// [dataProvider] is used primarily to give access to the [PreceptUser] object
+/// [dataProvider] is used primarily to give access to the [TakkanUser] object
 /// it contains
 ///
 /// [documentSchema] provides the structure, permissions and validation for the document.

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/app/router.dart';
+import 'package:takkan_client/app/router.dart';
 
 
-class PreceptApp extends StatelessWidget {
+class TakkanApp extends StatelessWidget {
   final ThemeData theme;
 
-  const PreceptApp({Key? key,required this.theme}) : super(key: key);
-  
+  const TakkanApp({super.key, required this.theme});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Precept',
+      title: 'Takkan',
       theme: theme,
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
       initialRoute: '/',

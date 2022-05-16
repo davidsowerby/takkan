@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/common/component/nav/nav_tile.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/trait/list.dart';
-import 'package:precept_script/part/abstract_list_view.dart';
-import 'package:precept_script/part/list_view.dart' as ListViewConfig;
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/common/component/nav/nav_tile.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/trait/list.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/part/abstract_list_view.dart';
+import 'package:takkan_script/part/list_view.dart' as ListViewConfig;
+import 'package:takkan_script/schema/schema.dart';
 
 mixin ListViewParticleBuilder {
   Widget modelBuilder(BuildContext context, AbstractListView config, int index,

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/part/part.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/page/edit_state.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/part/part.dart';
+import 'package:takkan_script/script/script.dart';
 
 enum DisplayType { text, datePicker }
+
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
 /// A [PartWidget] combines field level data with the manner in which it is displayed.  It uses an [EditState]
@@ -58,7 +59,7 @@ class PartWidget extends StatelessWidget {
     if (editParticle != null) {
       return (editState.readMode) ? readParticle : editParticle!;
     } else {
-      throw PreceptException('EditParticle must not be null at this point');
+      throw TakkanException('EditParticle must not be null at this point');
     }
   }
 }

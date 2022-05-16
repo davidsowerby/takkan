@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_script/common/script/help.dart';
+import 'package:takkan_client/common/component/heading.dart';
+import 'package:takkan_script/script/help.dart';
 
 /// Text styled as a caption
 class Caption extends StatelessWidget {
   final String text;
   final Help? help;
 
-  const Caption({Key? key, required this.text, required this.help})
-      : super(key: key);
+  const Caption({super.key, required this.text, required this.help});
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,4 @@
-/// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchensink.html#static-page)
+/// See [developer guide](https://takkan.org/developer-guide/kitchensink.html#static-page)
 ///
 
 // final Script kitchenSink00 = Script(
@@ -69,7 +69,7 @@
 //       );
 //       // when
 //       final widgetTree = MaterialApp(
-//           home: PreceptPage(
+//           home: TakkanPage(
 //         config: script.routes['/test']!, dataConnector: null,
 //       ));
 //       await tester.pumpWidget(widgetTree);
@@ -80,9 +80,9 @@
 //       // expect(testTree.elementHasPanelState(pageId), isFalse);
 //       expect(testTree.elementHasEditState(pageId), isFalse);
 //       expect(
-//           testTree.elementHasDataBinding(pageId, PreceptPage, tester), isFalse);
+//           testTree.elementHasDataBinding(pageId, TakkanPage, tester), isFalse);
 //       expect(
-//           testTree.elementHasDataStore(pageId, PreceptPage, tester), isFalse);
+//           testTree.elementHasDataStore(pageId, TakkanPage, tester), isFalse);
 //
 //       final panel2Id = 'script00./test.Panel 2';
 //       expect(testTree.elementHasEditState(panel2Id), isFalse);

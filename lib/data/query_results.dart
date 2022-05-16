@@ -1,5 +1,5 @@
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_script/common/exception.dart';
 
 /// Holds all the query results for a [DocumentClassCache] instance.
 ///
@@ -59,7 +59,7 @@ class QueryResultsSet {
     if (_data.containsKey(_selectedPage)) {
       return _data[_selectedPage]!;
     }
-    throw PreceptException('There is no page $_selectedPage');
+    throw TakkanException('There is no page $_selectedPage');
   }
 
   QueryResultsPage get nextPage {
@@ -68,7 +68,7 @@ class QueryResultsSet {
       selectPage(targetPage);
       return _data[targetPage]!;
     }
-    throw PreceptException('There is no page $targetPage');
+    throw TakkanException('There is no page $targetPage');
   }
 
   QueryResultsPage get previousPage {
@@ -77,7 +77,7 @@ class QueryResultsSet {
       selectPage(targetPage);
       return _data[targetPage]!;
     }
-    throw PreceptException('There is no page $targetPage');
+    throw TakkanException('There is no page $targetPage');
   }
 }
 

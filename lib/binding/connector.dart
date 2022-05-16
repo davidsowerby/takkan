@@ -1,12 +1,12 @@
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/list_binding.dart';
-import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/converter/converter.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/string.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/list_binding.dart';
+import 'package:takkan_client/binding/string_binding.dart';
+import 'package:takkan_client/common/exceptions.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/data/converter/converter.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/string.dart';
 
 /// Connects a Field Widget to its data source, using a [ModelViewConverter] to provide conversion where needed.
 /// For structural simplicity, if the data type of the Field is the same as the data type in the data source,
@@ -33,7 +33,7 @@ class ModelConnector<MODEL, VIEW> {
         allowNullReturn: allowNullReturn,
         createIfAbsent: createIfAbsent);
     if (model != null) return converter.modelToView(model);
-    throw PreceptException('Model cannot be null');
+    throw TakkanException('Model cannot be null');
   }
 
   /// Flutter validation requires that a null is returned if there are no validation errors.
@@ -47,7 +47,7 @@ class ModelConnector<MODEL, VIEW> {
   VIEW readFromModel() {
     final model = binding.read();
     if (model != null) return converter.modelToView(model);
-    throw PreceptException('Model cannot be null');
+    throw TakkanException('Model cannot be null');
   }
 
   writeToModel(VIEW value) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:precept_client/app/page_builder.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/page/layout/layout_wrapper.dart';
-import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_script/page/static_page.dart';
+import 'package:takkan_client/app/page_builder.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/page/layout/layout_wrapper.dart';
+import 'package:takkan_client/page/standard_page.dart';
+import 'package:takkan_script/page/static_page.dart';
 
 /// A page displaying only static data, and therefore requiring no connection
 /// to the [DocumentCache] for dynamic data.
@@ -14,7 +14,7 @@ import 'package:precept_script/page/static_page.dart';
 /// It does still need [dataContext] to access authentication and user information
 ///
 /// Currently assumes no authentication for a static page, which is wrong:
-/// https://gitlab.com/precept1/precept_design/-/issues/21
+/// https://gitlab.com/takkan_/takkan_design/-/issues/21
 class StaticPage extends StatelessWidget {
   final PageStatic config;
   final DataContext dataContext;
@@ -34,7 +34,7 @@ class StaticPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          PreceptRefreshButton(),
+          TakkanRefreshButton(),
           if (_canSignIn)
             IconButton(
               icon: Icon(FontAwesomeIcons.signOutAlt),

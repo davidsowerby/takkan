@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/common/component/email_sign_in.dart';
-import 'package:precept_client/common/component/nav/nav_button.dart';
-import 'package:precept_client/common/component/nav/nav_buttonset.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/part/part.dart';
-import 'package:precept_client/particle/list_view_particle.dart';
-import 'package:precept_client/particle/query_view_particle.dart';
-import 'package:precept_client/particle/text_box_particle.dart';
-import 'package:precept_client/particle/text_particle.dart';
-import 'package:precept_client/trait/email_signin.dart';
-import 'package:precept_client/trait/list.dart';
-import 'package:precept_client/trait/navigation.dart';
-import 'package:precept_client/trait/query.dart';
-import 'package:precept_client/trait/text.dart';
-import 'package:precept_client/trait/text_box.dart';
-import 'package:precept_client/trait/trait_library.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/converter/converter.dart';
-import 'package:precept_script/part/list_view.dart' as ListViewConfig;
-import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/part.dart' as PartConfig;
-import 'package:precept_script/part/query_view.dart';
-import 'package:precept_script/schema/field/field.dart';
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/list.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/signin/sign_in.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/common/component/email_sign_in.dart';
+import 'package:takkan_client/common/component/nav/nav_button.dart';
+import 'package:takkan_client/common/component/nav/nav_buttonset.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/part/part.dart';
+import 'package:takkan_client/particle/list_view_particle.dart';
+import 'package:takkan_client/particle/query_view_particle.dart';
+import 'package:takkan_client/particle/text_box_particle.dart';
+import 'package:takkan_client/particle/text_particle.dart';
+import 'package:takkan_client/trait/email_signin.dart';
+import 'package:takkan_client/trait/list.dart';
+import 'package:takkan_client/trait/navigation.dart';
+import 'package:takkan_client/trait/query.dart';
+import 'package:takkan_client/trait/text.dart';
+import 'package:takkan_client/trait/text_box.dart';
+import 'package:takkan_client/trait/trait_library.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/converter/converter.dart';
+import 'package:takkan_script/part/list_view.dart' as ListViewConfig;
+import 'package:takkan_script/part/navigation.dart';
+import 'package:takkan_script/part/part.dart' as PartConfig;
+import 'package:takkan_script/part/query_view.dart';
+import 'package:takkan_script/schema/field/field.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/list.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/signin/sign_in.dart';
 
 PartLibrary _partLibrary = PartLibrary();
 
@@ -110,7 +110,7 @@ class PartLibrary {
   /// If there are duplicate keys, later additions will override earlier
   /// Defaults are loaded first, so to replace, define another with the key 'default'
   /// There should be no need to call this directly, init for all libraries is carried out in
-  /// a call to [Precept.init] which should be before your runApp statement
+  /// a call to [Takkan.init] which should be before your runApp statement
   init({Map<Type, Widget Function(PartConfig.Part, ModelConnector)>? entries}) {
     // TODO
   }
@@ -194,7 +194,7 @@ class PartLibrary {
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   Type viewDataTypeFor(Type particleType) {
@@ -214,7 +214,7 @@ class PartLibrary {
     }
     String msg = "No entry is defined for $particleType in $runtimeType";
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   Widget findParticle({
@@ -278,7 +278,7 @@ class ConnectorFactory {
       String msg =
           'No schema found for property ${config.property}, have you forgotten to add it to Schema?';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     final binding = _binding(
       parentBinding: parentBinding,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/trait/text.dart';
-import 'package:precept_client/widget/caption.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/trait/text.dart';
+import 'package:takkan_client/widget/caption.dart';
+import 'package:takkan_script/part/part.dart';
 
 class TextParticle extends StatelessWidget  {
   final TextTrait trait;

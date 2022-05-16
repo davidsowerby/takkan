@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_client/inject/modules.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/page/standard_page.dart';
-import 'package:precept_client/panel/panel.dart';
-import 'package:precept_client/part/part.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_client/inject/modules.dart';
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/page/standard_page.dart';
+import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/part/part.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/script.dart';
 
 import './exception.dart';
 import 'mock.dart';
@@ -40,7 +40,7 @@ class WidgetTestTree {
   _scan() {
     int index = 0;
     for (Widget widget in widgets) {
-      if (widget is PreceptPage) {
+      if (widget is TakkanPage) {
         _pageIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
@@ -70,7 +70,7 @@ class WidgetTestTree {
         return index;
       }
       // TODO: this is a bit fragile, would need new types adding
-      if (widgets[index] is PreceptPage) break;
+      if (widgets[index] is TakkanPage) break;
       if (widgets[index] is PanelWidget) break;
       if (widgets[index] is PartWidget) break;
       index--;
@@ -136,7 +136,7 @@ class KitchenSinkTest {
       {required Script script,
       bool useCaptionsAsIds = true,
       required AppConfig appConfig}) {
-    preceptDefaultInjectionBindings();
+    takkanDefaultInjectionBindings();
     partLibrary.init();
     dataProviderLibrary.register(
         type: 'mock', builder: (dp) => MockDataProvider());

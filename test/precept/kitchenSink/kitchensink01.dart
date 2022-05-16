@@ -1,4 +1,4 @@
-/// See [developer guide](https://www.preceptblog.co.uk/developer-guide/kitchenSink.html#static-page-with-overrides)
+/// See [developer guide](https://takkan.org/developer-guide/kitchenSink.html#static-page-with-overrides)
 ///
 
 // final Script kitchenSink01 = Script(
@@ -104,7 +104,7 @@
 //       script.init();
 //       // when
 //       final widgetTree = MaterialApp(
-//           home: PreceptPage(
+//           home: TakkanPage(
 //         config: script.routes['test']!, dataConnector: null,
 //       ));
 //       await tester.pumpWidget(widgetTree);
@@ -117,9 +117,9 @@
 //       final pageId = 'script01.test';
 //       expect(testTree.elementHasEditState(pageId), isFalse);
 //       expect(
-//           testTree.elementHasDataBinding(pageId, PreceptPage, tester), isFalse);
+//           testTree.elementHasDataBinding(pageId, TakkanPage, tester), isFalse);
 //       expect(
-//           testTree.elementHasDataStore(pageId, PreceptPage, tester), isFalse);
+//           testTree.elementHasDataStore(pageId, TakkanPage, tester), isFalse);
 //
 //       final panel1Id = 'script01.test.Panel 1';
 //       expect(testTree.elementHasEditState(panel1Id), isFalse);
@@ -133,10 +133,10 @@
 //
 //       final part2Id = 'script01.test.Part 2';
 //       expect(testTree.elementHasEditState(part2Id), isFalse);
-//       expect(testTree.elementHasDataBinding(part2Id, PreceptPage, tester),
+//       expect(testTree.elementHasDataBinding(part2Id, TakkanPage, tester),
 //           isFalse);
 //       expect(
-//           testTree.elementHasDataStore(part2Id, PreceptPage, tester), isFalse);
+//           testTree.elementHasDataStore(part2Id, TakkanPage, tester), isFalse);
 //
 //       final part3Id = 'script01.test.Part 3';
 //       expect(testTree.elementHasEditState(part3Id), isFalse);

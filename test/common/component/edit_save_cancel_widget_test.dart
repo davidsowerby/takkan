@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_client/common/component/edit_save_cancel.dart';
-import 'package:precept_client/common/component/key_assist.dart';
-import 'package:precept_client/page/edit_state.dart';
+import 'package:takkan_client/common/component/edit_save_cancel.dart';
+import 'package:takkan_client/common/component/key_assist.dart';
+import 'package:takkan_client/page/edit_state.dart';
 import 'package:provider/provider.dart';
 
 import '../../helper/mock.dart';

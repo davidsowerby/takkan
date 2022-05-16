@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/data/document_cache.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/document_cache.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
 
 abstract class CacheEntry {
   Map<String, dynamic> get data;
@@ -222,7 +222,7 @@ class NullCacheEntry implements CacheEntry {
       'This class represents a null.  A real CacheEntry must ne provided';
 
   throwException() {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -259,7 +259,7 @@ class NullCacheEntry implements CacheEntry {
 
   @override
   EditCacheEntry makeEditable() {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override

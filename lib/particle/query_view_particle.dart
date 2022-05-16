@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/particle/list_view_particle.dart';
-import 'package:precept_client/trait/query.dart';
-import 'package:precept_script/part/query_view.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/particle/list_view_particle.dart';
+import 'package:takkan_client/trait/query.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/part/query_view.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 class QueryViewParticle extends StatelessWidget with ListViewParticleBuilder {
   final QueryViewTrait trait;

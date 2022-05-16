@@ -1,6 +1,6 @@
-import 'package:precept_client/binding/map_binding.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_script/common/exception.dart';
 import 'package:validators/validators.dart';
 
 final int backlash = '\\'.codeUnits.single;
@@ -31,7 +31,7 @@ String interpolate(String source, DataContext dataContext,
       if (braced) start++;
       final int end = _findEnd(source, braced, start);
       if (braced && !(source[end] == '}')) {
-        throw PreceptException("Closing '}' missing");
+        throw TakkanException("Closing '}' missing");
       }
       final expanded =
           _expandFrom(source, start, end, dataContext, modelBinding, variables);

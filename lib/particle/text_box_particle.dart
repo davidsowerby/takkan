@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/binding/connector.dart';
-import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/trait/text_box.dart';
-import 'package:precept_script/part/part.dart';
+import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/common/component/heading.dart';
+import 'package:takkan_client/trait/text_box.dart';
+import 'package:takkan_script/part/part.dart';
 
 class TextBoxParticle extends StatelessWidget {
   final TextBoxTrait trait;

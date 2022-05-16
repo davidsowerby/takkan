@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/data/data_source.dart';
+import 'package:takkan_client/data/data_source.dart';
 
 /// A panel which displays only static data, and therefore requires no connections to
 /// dynamic data.

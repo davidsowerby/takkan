@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/library/part_library.dart';
-import 'package:precept_client/trait/email_signin.dart';
-import 'package:precept_client/trait/list.dart';
-import 'package:precept_client/trait/navigation.dart';
-import 'package:precept_client/trait/query.dart';
-import 'package:precept_client/trait/text.dart';
-import 'package:precept_client/trait/text_box.dart';
-import 'package:precept_script/part/list_view.dart' as ListViewConfig;
-import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/query_view.dart';
-import 'package:precept_script/part/text.dart' as TextConfig;
-import 'package:precept_script/particle/text_box.dart' as TextBoxConfig;
-import 'package:precept_script/signin/sign_in.dart';
-import 'package:precept_script/trait/text_trait.dart' as TextTraitConfig;
+import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/trait/email_signin.dart';
+import 'package:takkan_client/trait/list.dart';
+import 'package:takkan_client/trait/navigation.dart';
+import 'package:takkan_client/trait/query.dart';
+import 'package:takkan_client/trait/text.dart';
+import 'package:takkan_client/trait/text_box.dart';
+import 'package:takkan_script/part/list_view.dart' as ListViewConfig;
+import 'package:takkan_script/part/navigation.dart';
+import 'package:takkan_script/part/query_view.dart';
+import 'package:takkan_script/part/text.dart' as TextConfig;
+import 'package:takkan_script/particle/text_box.dart' as TextBoxConfig;
+import 'package:takkan_script/signin/sign_in.dart';
+import 'package:takkan_script/trait/text_trait.dart' as TextTraitConfig;
 
 class TraitLibrary {
   Trait findParticleTrait(

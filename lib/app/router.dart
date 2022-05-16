@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/app/page_builder.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/page/error_page.dart';
-import 'package:precept_client/panel/panel.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/error.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_client/app/page_builder.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/page/error_page.dart';
+import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/script/error.dart';
+import 'package:takkan_script/script/script.dart';
 
 import '../library/part_library.dart';
 
@@ -63,7 +63,7 @@ import '../library/part_library.dart';
 /// TODO: There needs to be something similar for the use of cloud functions to return a single document or list of documents
 /// TODO: Filtered lists could generate cloud code
 ///
-class PreceptRouter {
+class TakkanRouter {
   String? _preSignInRoute;
   final PageBuilder pageBuilder;
 
@@ -72,7 +72,7 @@ class PreceptRouter {
   late List<RouteGenerator> _routersBefore;
   late List<RouteGenerator> _routersAfter;
 
-  PreceptRouter() : pageBuilder = inject<PageBuilder>();
+  TakkanRouter() : pageBuilder = inject<PageBuilder>();
 
   init({
     required List<RouteGenerator> routersBefore,
@@ -86,7 +86,7 @@ class PreceptRouter {
   /// is found, or an error page [Route] if no match is found.
   ///
   /// Multiple routers are supported, and can be accessed before and after this
-  /// router.  This is to allow Precept to co-exist with other methods of
+  /// router.  This is to allow Takkan to co-exist with other methods of
   /// generating pages
   ///
   /// Using [settings.name] as the route, routers from [_routersBefore] are
@@ -118,21 +118,21 @@ class PreceptRouter {
   }
 
   MaterialPageRoute _routeNotRecognised(RouteSettings settings) {
-    final page = PreceptDefaultErrorPage(
-        config: Lamin8Error(
+    final page = TakkanDefaultErrorPage(
+        config: TakkanError(
             message:
-                "Route '${settings.name}' is not recognised")); // TODO message should come from Precept
+                "Route '${settings.name}' is not recognised")); // TODO message should come from Takkan
     return MaterialPageRoute(builder: (_) => page);
   }
 
   MaterialPageRoute _pageTypeNotRecognised(
       String pageType, RouteSettings settings) {
     final route = settings.name;
-    final errorPageWidget = PreceptDefaultErrorPage(
-      config: Lamin8Error(
+    final errorPageWidget = TakkanDefaultErrorPage(
+      config: TakkanError(
           message:
               "Page '$pageType' has not been defined in the PageLibrary, but was requested by route: '$route'"),
-    ); // TODO message should come from Precept
+    ); // TODO message should come from Takkan
     return MaterialPageRoute(builder: (_) => errorPageWidget);
   }
 
@@ -170,7 +170,7 @@ class PreceptRouter {
       pageArguments: pageArguments,
       route: settings.name!,
       script: script,
-      cache: precept.cache,
+      cache: takkan.cache,
       partLibrary: partLibrary,
       parentBinding: NullDataBinding(),
       context: context,
@@ -187,18 +187,18 @@ class PreceptRouter {
   }
 }
 
-/// Provides a way to modify the options for the [PreceptRouter].
-/// Injected during [PreceptRouter] construction
+/// Provides a way to modify the options for the [TakkanRouter].
+/// Injected during [TakkanRouter] construction
 
-class PreceptRouterConfig {
-  final bool preceptFirst;
+class TakkanRouterConfig {
+  final bool takkanFirst;
   final Function(RouteSettings settings)? alternateRouter;
 
-  const PreceptRouterConfig({this.preceptFirst = true, this.alternateRouter});
+  const TakkanRouterConfig({this.takkanFirst = true, this.alternateRouter});
 }
 
-final PreceptRouter _router = PreceptRouter();
+final TakkanRouter _router = TakkanRouter();
 
-PreceptRouter get router => _router;
+TakkanRouter get router => _router;
 
 typedef RouteGenerator(RouteSettings settings, BuildContext context);

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/library/border_library.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/trait/style.dart' as StyleConfig;
-import 'package:precept_script/trait/text_trait.dart' as TextTraitConfig;
+import 'package:takkan_client/library/border_library.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/trait/style.dart' as StyleConfig;
+import 'package:takkan_script/trait/text_trait.dart' as TextTraitConfig;
 
 /// A utility class to enable (decode) the serialization of of a Flutter [TextStyle].  It is assumed
 /// that a [Theme] is being used.
 abstract class ThemeLookup {
-  /// Returns a Flutter [Color] from a Precept [PColor].  A [PColor] is used as a
+  /// Returns a Flutter [Color] from a Takkan [PColor].  A [PColor] is used as a
   /// proxy to 'serialize' a [Color] within a [Script]
   Color color({required ThemeData theme, required StyleConfig.Color pColor});
 
-  /// Returns a Flutter [TextStyle] from a Precept [PTextStyle].  A [PTextStyle] is used as a
+  /// Returns a Flutter [TextStyle] from a Takkan [PTextStyle].  A [PTextStyle] is used as a
   /// proxy to 'serialize' a [TextStyle] within a [Script]
   TextStyle textStyle(
       {required ThemeData theme, required TextTraitConfig.TextStyle style});
@@ -36,7 +36,8 @@ class DefaultThemeLookup implements ThemeLookup {
       case StyleConfig.Color.card:
         return theme.cardColor;
       default:
-        throw PreceptException("Option ${pColor}for background is not recognised");
+        throw TakkanException(
+            "Option ${pColor}for background is not recognised");
     }
   }
 
@@ -86,7 +87,7 @@ class DefaultThemeLookup implements ThemeLookup {
         break;
     }
     if (ts != null) return ts;
-    throw PreceptException('Theme TextStyle cannot be null');
+    throw TakkanException('Theme TextStyle cannot be null');
   }
 
   ShapeBorder border(
@@ -146,7 +147,7 @@ class DefaultThemeLookup implements ThemeLookup {
 
   BorderRadius _borderRadius({required StyleConfig.BorderDetailed border}) {
     logType(this.runtimeType).w(
-        "_borderRadius not implemented, just returns a default value"); // TODO  https://gitlab.com/precept1/precept-client/-/issues/6
+        "_borderRadius not implemented, just returns a default value"); // TODO  https://gitlab.com/takkan_/takkan-client/-/issues/6
     return BorderRadius.all(Radius.circular(5));
   }
 }

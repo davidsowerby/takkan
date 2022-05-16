@@ -57,7 +57,7 @@
 // /// Returns true if successful
 // ///
 // /// Could do a better job of background loading, see open issue:
-// /// https://gitlab.com/precept1/precept_client/-/issues/109
+// /// https://gitlab.com/takkan_/takkan_client/-/issues/109
 // Future<bool> readDocument({required String objectId}) async {
 //   if (!(await _canDiscardChanges(false))) {
 //     return false;

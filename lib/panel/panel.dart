@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/common/component/heading.dart';
-import 'package:precept_client/common/content/pod_state.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_client/common/component/heading.dart';
+import 'package:takkan_client/common/content/pod_state.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/page/edit_state.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_client/page/standard_page.dart';
+import 'package:takkan_script/panel/panel.dart';
 
 ///
 /// [dataContext] provides access to data and associated functions
 ///
-/// [pageArguments] are variable values passed through the page 'url' to the parent [PreceptPage] of this [PanelWidget]
+/// [pageArguments] are variable values passed through the page 'url' to the parent [TakkanPage] of this [PanelWidget]
 class PanelWidget extends StatefulWidget {
   final Panel config;
   final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
 
   const PanelWidget({
-    Key? key,
+    super.key,
     required this.config,
     required this.dataContext,
     this.pageArguments = const {},
-  }) : super(key: key);
+  });
 
   @override
   PanelWidgetState createState() => PanelWidgetState(
@@ -42,7 +43,7 @@ class PanelWidget extends StatefulWidget {
 ///
 /// Selection of the appropriate document class is determined by [config.documentClass].
 ///
-/// The [IDataProvider] is mostly used to access the [PreceptUser] object it contains.
+/// The [IDataProvider] is mostly used to access the [TakkanUser] object it contains.
 class PanelWidgetState extends PodState<PanelWidget> {
   final formKey = GlobalKey<FormState>();
 

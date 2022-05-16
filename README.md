@@ -1,6 +1,6 @@
-# Precept
+# Takkan
 
-In development, but a number of concepts working.  [Detailed status](https://www.preceptblog.co.uk/status.html) updated regularly. 
+In development, but a number of concepts working.  [Detailed status](https://takkan.org/status.html) updated regularly. 
 
 ## Key Features
 
@@ -19,7 +19,7 @@ In development, but a number of concepts working.  [Detailed status](https://www
 
 ## Documentation
 
-Full documentation is being developed [here](https://www.preceptblog.co.uk/).
+Full documentation is being developed [here](https://takkan.org/).
 
 
 ## Build

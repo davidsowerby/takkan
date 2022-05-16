@@ -1,6 +1,6 @@
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/common/script/constants.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/script/constants.dart';
 
 class StringBinding extends Binding<String> {
   const StringBinding.private(

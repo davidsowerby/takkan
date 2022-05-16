@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_client/app/router.dart';
-import 'package:precept_client/common/component/key_assist.dart';
-import 'package:precept_client/common/component/message_panel.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/trait/text.dart';
-import 'package:precept_client/trait/trait_library.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/part/text.dart' as TextConfig;
-import 'package:precept_script/signin/sign_in.dart';
+import 'package:takkan_client/app/router.dart';
+import 'package:takkan_client/common/component/key_assist.dart';
+import 'package:takkan_client/common/component/message_panel.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/trait/text.dart';
+import 'package:takkan_client/trait/trait_library.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/part/text.dart' as TextConfig;
+import 'package:takkan_script/signin/sign_in.dart';
 
 class EmailSignInWidget extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
@@ -18,8 +18,8 @@ class EmailSignInWidget extends StatelessWidget {
   final EmailSignIn config;
   final DataContext dataContext;
 
-  EmailSignInWidget({Key? key, required this.config, required this.dataContext})
-      : super(key: key);
+  EmailSignInWidget(
+      {super.key, required this.config, required this.dataContext});
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,8 @@ class EmailSignInWidget extends StatelessWidget {
       case SignInStatus.Registration_Failed:
       case SignInStatus.Registration_Removed:
       case SignInStatus.User_Not_Known:
-        throw PreceptException('Should not be here ...  should have gone to another route');
+        throw TakkanException(
+            'Should not be here ...  should have gone to another route');
     }
   }
 

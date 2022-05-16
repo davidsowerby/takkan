@@ -24,15 +24,15 @@ void main() {
 
 // import 'package:flutter_test/flutter_test.dart';
 // import 'package:mocktail/mocktail.dart';
-// import 'package:precept_backend/backend/data_provider/data_provider.dart';
-// import 'package:precept_backend/backend/data_provider/result.dart';
-// import 'package:precept_client/data/document_cache.dart';
-// import 'package:precept_script/data/provider/document_id.dart';
-// import 'package:precept_script/inject/inject.dart';
-// import 'package:precept_script/query/query.dart';
-// import 'package:precept_script/schema/schema.dart';
-// import 'package:precept_script/script/script.dart';
-// import 'package:precept_script/script/version.dart';
+// import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+// import 'package:takkan_backend/backend/data_provider/result.dart';
+// import 'package:takkan_client/data/document_cache.dart';
+// import 'package:takkan_script/data/provider/document_id.dart';
+// import 'package:takkan_script/inject/inject.dart';
+// import 'package:takkan_script/query/query.dart';
+// import 'package:takkan_script/schema/schema.dart';
+// import 'package:takkan_script/script/script.dart';
+// import 'package:takkan_script/script/version.dart';
 //
 // import '../helper/listener.dart';
 // import '../helper/mock.dart';

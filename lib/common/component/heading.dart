@@ -1,19 +1,19 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_client/common/action/action_icon.dart';
-import 'package:precept_client/common/component/edit_save_cancel.dart';
-import 'package:precept_client/common/component/key_assist.dart';
-import 'package:precept_client/common/locale.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/library/border_library.dart';
-import 'package:precept_client/library/theme_lookup.dart';
-import 'package:precept_client/page/edit_state.dart';
-import 'package:precept_client/pod/data_root.dart';
-import 'package:precept_script/common/script/help.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/trait/style.dart';
+import 'package:takkan_client/common/action/action_icon.dart';
+import 'package:takkan_client/common/component/edit_save_cancel.dart';
+import 'package:takkan_client/common/component/key_assist.dart';
+import 'package:takkan_client/common/locale.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/library/border_library.dart';
+import 'package:takkan_client/library/theme_lookup.dart';
+import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/pod/data_root.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/script/help.dart';
+import 'package:takkan_script/trait/style.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
 /// - [actionButtons], if present, are placed before the 'expand' widget

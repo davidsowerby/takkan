@@ -1,9 +1,9 @@
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/binding/list_binding.dart';
-import 'package:precept_client/binding/string_binding.dart';
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_script/common/script/constants.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/binding/list_binding.dart';
+import 'package:takkan_client/binding/string_binding.dart';
+import 'package:takkan_client/common/exceptions.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_script/script/constants.dart';
 
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
   const MapBinding.private(

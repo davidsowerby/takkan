@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/inject/inject.dart';
-import 'package:precept_script/trait/style.dart' as ConfigStyle;
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/trait/style.dart' as ConfigStyle;
 
 // TODO: think about iteration order, it could be used to 'overwrite' previous declarations
 class BorderLibrary {
@@ -18,7 +18,7 @@ class BorderLibrary {
         return result;
       }
     }
-    throw PreceptException(
+    throw TakkanException(
         "Border ${border.borderName} not found in the BorderLibrary");
   }
 }
@@ -31,8 +31,8 @@ abstract class BorderLibraryModule {
       {required ThemeData theme, required ConfigStyle.Border border});
 }
 
-class PreceptBorderLibraryModule extends BorderLibraryModule {
-  PreceptBorderLibraryModule() : super();
+class TakkanBorderLibraryModule extends BorderLibraryModule {
+  TakkanBorderLibraryModule() : super();
 
   @override
   ShapeBorder? find(

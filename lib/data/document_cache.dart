@@ -1,30 +1,30 @@
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_client/app/precept.dart';
-import 'package:precept_client/common/content/pod_state.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/data/mutable_document.dart';
-import 'package:precept_client/data/query_results.dart';
-import 'package:precept_client/pod/data_root.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/data.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_client/common/content/pod_state.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/data/mutable_document.dart';
+import 'package:takkan_client/data/query_results.dart';
+import 'package:takkan_client/pod/data_root.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 /// A document based cache.
 ///
-/// It controls all interactions with [DataProvider] (within Precept) instances
+/// It controls all interactions with [DataProvider] (within Takkan) instances
 /// to ensure the cache remains consistent.  Direct use of a [DataProvider]
 /// instance is generally discouraged, but there are some valid use cases for doing so.
 ///
-///  When [PodState] is building [PreceptPage] or [Panel], unless it is
+///  When [PodState] is building [TakkanPage] or [Panel], unless it is
 ///  using only static data, it requests a [DocumentRoot] from this cache.
 ///
 /// The cache keeps track of which [PodState] is using which [DocumentRoot], and
@@ -50,7 +50,7 @@ class DocumentCache {
     required Pod config,
   }) {
     if (config.documentClass == null) {
-      throw PreceptException(
+      throw TakkanException(
           'config.documentClass cannot be null.  Have you run script.validate()?');
     }
     final documentClass = config.documentClass!;
@@ -72,7 +72,7 @@ class DocumentCache {
     }
     String msg = 'Cannot look up a dataProvider class';
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   /// TODO: This would cause the loss of consumer list. Needs to be smarter
@@ -98,7 +98,7 @@ class DocumentCache {
   /// |                     | root   | DataRoot from PData.  New branch                                         |
   /// |                     | other  | DefaultDataConnector, root from parent, binding from parent modelBinding |
   ///
-  /// [requester] is usually a [PodState], so either a [PreceptPage] or [Panel]
+  /// [requester] is usually a [PodState], so either a [TakkanPage] or [Panel]
   DataContext dataContext({
     required DataContext parentDataContext,
     required Pod config,
@@ -118,7 +118,7 @@ class DocumentCache {
       //     config: config,
       //   );
       // }
-      throw PreceptException(
+      throw TakkanException(
           'A ${config.runtimeType.toString()} requires a data root above it in the Script');
     }
     // if (contentContainer.isStatic) {}
@@ -197,7 +197,7 @@ class DocumentClassCache {
         }
       }
     }
-    throw PreceptException('Unsuccessful read'); // TODO: handle properly
+    throw TakkanException('Unsuccessful read'); // TODO: handle properly
   }
 
   Document _lookupDocumentSchema(String? documentClass) {
@@ -206,11 +206,11 @@ class DocumentClassCache {
       if (schema != null) return schema;
       String msg = 'Schema is not defined for document class $documentClass';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     String msg = 'Cannot look up a null document class';
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   /// TODO: use this to set up consumers
@@ -308,7 +308,7 @@ class DocumentClassCache {
   /// if necessary.
   ///
   ///
-  /// This approach may be sub-optimal, see: https://gitlab.com/precept1/precept_client/-/issues/115
+  /// This approach may be sub-optimal, see: https://gitlab.com/takkan_/takkan_client/-/issues/115
   Future<EditCacheEntry> requestDocument({required String objectId}) async {
     final CacheEntry? existingEntry = _cache[objectId];
     final EditCacheEntry editable;

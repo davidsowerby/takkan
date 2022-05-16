@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
 
 class UserState with ChangeNotifier {
   final Authenticator authenticator;

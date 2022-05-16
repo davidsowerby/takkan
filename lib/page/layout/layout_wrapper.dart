@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:precept_client/app/page_builder.dart';
-import 'package:precept_client/convert/script.dart';
-import 'package:precept_client/data/cache_entry.dart';
-import 'package:precept_client/data/data_source.dart';
-import 'package:precept_client/page/layout/page_layout_column.dart';
-import 'package:precept_script/panel/panel.dart';
+import 'package:takkan_client/app/page_builder.dart';
+import 'package:takkan_client/convert/script.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/page/layout/page_layout_column.dart';
+import 'package:takkan_script/panel/panel.dart';
 
 class LayoutWrapper extends StatelessWidget {
   final Pod config;

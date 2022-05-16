@@ -1,14 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_client/common/component/key_assist.dart';
-import 'package:precept_client/common/component/message_panel.dart';
-import 'package:precept_client/common/component/text.dart';
-import 'package:precept_client/page/layout/layout.dart';
-import 'package:precept_client/user/user_state.dart';
-import 'package:precept_script/common/log.dart';
+import 'package:takkan_client/common/component/key_assist.dart';
+import 'package:takkan_client/common/component/message_panel.dart';
+import 'package:takkan_client/common/component/text.dart';
+import 'package:takkan_client/page/layout/layout.dart';
+import 'package:takkan_client/user/user_state.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_script/common/log.dart';
 
 const String createPasswordText =
     "If this is a new account, create a password of at least 8 characters, containing at least one letter, one capital letter and one number";

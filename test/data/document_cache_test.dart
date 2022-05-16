@@ -1,29 +1,29 @@
 // import 'package:mocktail/mocktail.dart';
-// import 'package:precept_backend/backend/data_provider/data_provider.dart';
-// import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-// import 'package:precept_backend/backend/data_provider/result.dart';
-// import 'package:precept_client/app/precept.dart';
-// import 'package:precept_client/data/data_root.dart';
-// import 'package:precept_client/data/data_source.dart';
-// import 'package:precept_client/data/document_cache.dart';
-// import 'package:precept_script/data/provider/data_provider.dart';
-// import 'package:precept_script/data/provider/document_id.dart';
-// import 'package:precept_script/data/select/data.dart';
-// import 'package:precept_script/data/select/query.dart';
-// import 'package:precept_script/data/select/single.dart';
-// import 'package:precept_script/inject/inject.dart';
-// import 'package:precept_script/loader/loaders.dart';
-// import 'package:precept_script/page/page.dart';
-// import 'package:precept_script/page/static_page.dart';
-// import 'package:precept_script/schema/schema.dart';
-// import 'package:precept_script/script/script.dart';
-// import 'package:precept_script/script/version.dart';
+// import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+// import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+// import 'package:takkan_backend/backend/data_provider/result.dart';
+// import 'package:takkan_client/app/takkan.dart';
+// import 'package:takkan_client/data/data_root.dart';
+// import 'package:takkan_client/data/data_source.dart';
+// import 'package:takkan_client/data/document_cache.dart';
+// import 'package:takkan_script/data/provider/data_provider.dart';
+// import 'package:takkan_script/data/provider/document_id.dart';
+// import 'package:takkan_script/data/select/data.dart';
+// import 'package:takkan_script/data/select/query.dart';
+// import 'package:takkan_script/data/select/single.dart';
+// import 'package:takkan_script/inject/inject.dart';
+// import 'package:takkan_script/loader/loaders.dart';
+// import 'package:takkan_script/page/page.dart';
+// import 'package:takkan_script/page/static_page.dart';
+// import 'package:takkan_script/schema/schema.dart';
+// import 'package:takkan_script/script/script.dart';
+// import 'package:takkan_script/script/version.dart';
 // import 'package:test/test.dart';
 //
 // import '../helper/mock.dart';
 //
-// /// Had to make precept.loaders public.  This test requires the lookup of
-// /// Document from documentClass, and that uses the rootModel of Precept.
+// /// Had to make takkan.loaders public.  This test requires the lookup of
+// /// Document from documentClass, and that uses the rootModel of Takkan.
 // void main() {
 //   group('Document Cache', () {
 //     late Script script;
@@ -51,7 +51,7 @@
 //         ),
 //         pages: [],
 //       );
-//       precept.loadScripts([DirectPreceptLoader(script: script)]);
+//       takkan.loadScripts([DirectTakkanLoader(script: script)]);
 //     });
 //
 //     tearDown(() {});
@@ -88,7 +88,7 @@
 //         });
 //         test('connection request is root with objectId', () async {
 //           // given
-//           precept.cache.flush();
+//           takkan.cache.flush();
 //           final page = PPage(
 //             documentClass: 'Person',
 //             dataSelectors: [
@@ -126,7 +126,7 @@
 //         });
 //         test('connection request is root with selectionId', () async {
 //           // given
-//           precept.cache.flush();
+//           takkan.cache.flush();
 //           final page = PPage(
 //             documentClass: 'Person',
 //             dataSelectors: [

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:precept_client/binding/binding.dart';
-import 'package:precept_client/common/exceptions.dart';
-import 'package:precept_script/common/exception.dart';
+import 'package:takkan_client/binding/binding.dart';
+import 'package:takkan_client/common/exceptions.dart';
+import 'package:takkan_script/common/exception.dart';
 
 Matcher throwsBindingException = throwsA(isA<BindingException>());
-Matcher throwsConfigurationException =throwsA(isA<ConfigurationException>());
-Matcher throwsPreceptException = throwsA(isA<PreceptException>());
+Matcher throwsConfigurationException = throwsA(isA<ConfigurationException>());
+Matcher throwsTakkanException = throwsA(isA<TakkanException>());

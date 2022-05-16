@@ -1,6 +1,6 @@
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_client/page/signin_page.dart';
-import 'package:precept_client/user/email_signin_page.dart';
+import 'package:takkan_client/page/signin_page.dart';
+import 'package:takkan_client/user/email_signin_page.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 
 abstract class SignInFactory {
   SignInPage signInPage({
