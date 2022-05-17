@@ -82,7 +82,7 @@ From a Takkan point of view, it is something which would be retrieved from a dat
 
 A `PField` is an abstract class representing a "database" field, and also includes a `FPointer` which declares a relationship with one or more other documents.
  
-It is used by a Takkan Script Particle [PParticle](takkan-script.md#particle).
+It is used by a Takkan Script Particle [Particle](takkan-script.md#particle).
 
 
 ### Implementations

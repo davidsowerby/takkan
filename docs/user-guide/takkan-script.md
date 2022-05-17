@@ -31,11 +31,11 @@ The  "Widget" column shows the associated Widget provided by Takkan, where there
 | Widget   | Definition                                | Description                                                                                                            |  Widget |
 |----------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---|
 |          | Takkan  [:point_right:](#precept)                             | A singleton holding a merged collection of `Script`, potentially using multiple data sources and backends    | n/a  |
-|          | Script [:point_right:](#pscript) | A collection of PPages and routes                                                               | n/a  |
-| Page     | PPage [:point_right:](#page)                                | The outer layout of what the user perceives as a page, identified by route                     | TakkanPage     |
-| Panel    | PPanel [:point_right:](#panel)                              | A nestable, arbitrary area of a Page,                               | Panel  |
-| Part     | PPart [:point_right:](#part)                                 | Relates to a database field, representing a read / edit pair of Particles | Part  |
-| Particle | PParticle [:point_right:](#particle)                         | Defines the attributes of a single read or edit Widget                                              | Particle  |
+|          | Script [:point_right:](#pscript) | A collection of Pages and routes                                                               | n/a  |
+| Page     | Page [:point_right:](#page)                                | The outer layout of what the user perceives as a page, identified by route                     | TakkanPage     |
+| Panel    | Panel [:point_right:](#panel)                              | A nestable, arbitrary area of a Page,                               | Panel  |
+| Part     | Part [:point_right:](#part)                                 | Relates to a database field, representing a read / edit pair of Particles | Part  |
+| Particle | Particle [:point_right:](#particle)                         | Defines the attributes of a single read or edit Widget                                              | Particle  |
 
 
 Combined with the [Schema](takkan-schema.md), the overall structure is depicted below.  
@@ -71,7 +71,7 @@ To be clear, in this context we mean:
 - **dynamic** data is data that is taken from a `Query`, and subject to  permissions, may be changed.
 - **static** data is defined as part of the `Script`. Here we are talking about things like descriptive text, notices and images that do not change as a result of a change to data.
 
-Takkan defines static data within a `PPart` , and can therefore be changed remotely by [updating](script-management.md) `Script`.
+Takkan defines static data within a `Part` , and can therefore be changed remotely by [updating](script-management.md) `Script`.
 
 ## Takkan
 
@@ -105,7 +105,7 @@ Multiple scripts may be combined into one `Takkan` instance, but there must be a
 
 Each `Script` is loaded by an implementation of `TakkanLoader`, typically from the app's primary backend, but it can be from anywhere.
 
-A `Script` must contain at least one `PPage`.
+A `Script` must contain at least one `Page`.
 
 A call to `Script.init()` must be made before using it. 
 
@@ -114,7 +114,7 @@ A call to `Script.validate()` will check the script for inconsistencies. This au
 
 ## Page
 
-A 'route' is a map key for a specific `PPage`.  A route is generally shown as something like */user/home*, but that structure is entirely optional - a path is just a String, with no expectations of structure, so it can be anything you want.
+A 'route' is a map key for a specific `Page`.  A route is generally shown as something like */user/home*, but that structure is entirely optional - a path is just a String, with no expectations of structure, so it can be anything you want.
 
 A `TakkanPage` is a representation of what the end user might perceive as a page.  It is typically represented by a Widget containing a Flutter `Scaffold`.
 
@@ -126,18 +126,18 @@ You can create your own [custom pages](./page-types.md#custom-pages).  [:thinkin
 Where you do not want to use Takkan to construct a page, simply [use your router](partial-use.md#alternate-router) alongside `TakkanRouter`. 
 :::
 
-`PPage` or one of its descendants defines the configuration of the page.
+`Page` or one of its descendants defines the configuration of the page.
 
 The process of building from a `Script` configuration is described in the [Widget Tree](./widget-tree.md) section. 
 
-The **content** of a `PPage` is defined by a collection of `PPanel` and / or `PPart`. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
+The **content** of a `Page` is defined by a collection of `Panel` and / or `Part`. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
 
 
 ## Panel
 
 A `Panel` is an arbitrary section of a [page](#page). 
 
-The **content** of a `Panel` is defined by a collection of `PPanel` and / or `PPart`, meaning that Panels can be nested.
+The **content** of a `Panel` is defined by a collection of `Panel` and / or `Part`, meaning that Panels can be nested.
 
  
 
@@ -145,13 +145,13 @@ The **content** of a `Panel` is defined by a collection of `PPanel` and / or `PP
 
 A Part relates to a data field, but declares a `PReadParticle`, and optionally a `PEditParticle`.  
 
-`PPart` contains some attributes common to both read and edit `PParticle`s, for example **showCaption** and **caption**.
+`Part` contains some attributes common to both read and edit `Particle`s, for example **showCaption** and **caption**.
  
-If a `PPart` is declared as read only, it need only declare the **read** property with a `PPartParticle`.
+If a `Part` is declared as read only, it need only declare the **read** property with a `PartParticle`.
  
-`PPart` may also be static, in which case it uses 'data' from the script.  It is therefore read only.
+`Part` may also be static, in which case it uses 'data' from the script.  It is therefore read only.
 
-When `PPart` is constructed as a `Part` Widget, if it not read only it also has an `EditState` placed above it in the Widget Tree.
+When `Part` is constructed as a `Part` Widget, if it not read only it also has an `EditState` placed above it in the Widget Tree.
 
 The `EditState` controls the current edit mode, and may also further inhibit editing if the user does not have permissions.
 
@@ -168,7 +168,7 @@ There are a number of implementations of `Particle`, which are named according t
 
 The most common, for example, is `TextParticle` to display a `Text` Widget, and `TextBoxParticle` to edit text.
 
-A further example might be where a `PPart` declares a `TextParticle` to display an integer, but a `SpinnerParticle` to
+A further example might be where a `Part` declares a `TextParticle` to display an integer, but a `SpinnerParticle` to
 edit.
 
 You can just use pre-defined Particles or define your own and register them with the [ParticleLibrary](./libraries.md#particle-library).

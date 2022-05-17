@@ -9,11 +9,11 @@ Bits of text that have been moved but might just come in handy
 
 The part of the Widget tree produced by Takkan follows the structure of `Script`.
   
-`PPage`, `PPanel`, `PPart` and `PParticle` become instances of `TakkanPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
+`Page`, `Panel`, `Part` and `Particle` become instances of `TakkanPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
 
 `TakkanPage`, `Panel`, `Part` and `Particle` are known as 'Content' widgets.
 
-The page is built using the `TakkanRouter`, responding to the route mapped to the `PPage`.
+The page is built using the `TakkanRouter`, responding to the route mapped to the `Page`.
 
 The page content is built as Panels or Parts as defined by the `Script`, with Panels being nestable.
 

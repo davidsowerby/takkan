@@ -13,11 +13,11 @@ We'll look at how Takkan uses the Widget tree from two perspectives:
 
 The structure of the presentational aspect of the Widget tree follows the structure of `Script`.
   
-`PPage`, `PPanel`, `PPart` and `PParticle` become instances of `TakkanPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
+`Page`, `Panel`, `Part` and `Particle` become instances of `TakkanPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
 
 `TakkanPage`, `Panel`, `Part` and `Particle` are known as 'Content' widgets.
 
-The page is built using the `TakkanRouter`, responding to the route defined in the `PRoute` containing the `PPage`.
+The page is built using the `TakkanRouter`, responding to the route defined in the `PRoute` containing the `Page`.
 
 The page content is built as Panels or Parts as defined by the `Script`, with Panels being nestable.
 
@@ -44,7 +44,7 @@ This is always a `NoDataBinding` in a page, and actually superfluous except for 
 
 The Page state, however, contains a `Query` and another `DataBinding`.  
 
-This is created in response to a `PQuery` being declared in the associated `PPage`. 
+This is created in response to a `PQuery` being declared in the associated `Page`. 
 
 The `PQuery` defines how to retrieve data from its associated backend, defined by `DataProvider` - essentially it is a query.
 

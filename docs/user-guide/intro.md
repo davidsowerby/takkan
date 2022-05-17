@@ -51,16 +51,16 @@ This reduces the amount of translation needed on the client, although interpolat
 
 ## Pages, Panels and Parts
 
-`Script` defines `PPage` instances.  A `PPage` instance contains `PPanel` and `PPart` instances.  A `PPanel` may contain further `PPanel` instances, or `PPart` instances.
+`Script` defines `Page` instances.  A `Page` instance contains `Panel` and `Part` instances.  A `Panel` may contain further `Panel` instances, or `Part` instances.
 
-A `PPart` is simply a pair of Widgets, one for reading and one for editing data.  This supports the generation of automatic [Edit-Save-Cancel](edit-save-cancel.md) logic. 
+A `Part` is simply a pair of Widgets, one for reading and one for editing data.  This supports the generation of automatic [Edit-Save-Cancel](edit-save-cancel.md) logic. 
 
 
 ## The Build Process
 
 `Script` defines pages mapped to routes (where a route is just a String identifier).  The route may be generated automatically from the data being displayed, or explicitly declared as a route-page mapping.
 
-When a `TakkanPage` is constructed it assembles its Panels and Parts as defined by `Script`.  In doing so, it also creates [data bindings](data-bindings.md) from the resultant Widgets to the data held in the [DocumentCache](document-cache.md).  The bindings also trigger any [validation](validation.md) defined by `Schema`.
+When a page is constructed it assembles its Panels and Parts as defined by `Script`.  In doing so, it also creates [data bindings](data-bindings.md) from the resultant Widgets to the data held in the [DocumentCache](document-cache.md).  The bindings also trigger any [validation](validation.md) defined by `Schema`.
 
 The data is identified by the `DataProvider` and `Schema` associated with the page.  
 

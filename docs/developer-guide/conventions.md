@@ -19,7 +19,7 @@ PageLibrary get pageLibrary=> _pageLibrary;
 
 ### With Replacement
 
-If we want the developer to be able to replace an implementation, then there are two steps:
+If we want the developer to provide an alternative implementation, then there are two steps:
 
 Define in a function called during injector initialisation:
 

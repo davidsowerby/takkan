@@ -120,7 +120,7 @@ final myScript = Script(
   name: 'Tutorial',
   version: const PVersion(number: 0),
   routes: {
-    '/': PPage(
+    '/': Page(
       title: 'Home Page',
       content: [
         PText(
@@ -201,7 +201,7 @@ import 'package:takkan_script/part/navigation.dart';
 final myScript = Script(
   name: 'Tutorial',
   routes: {
-    '/': PPage(
+    '/': Page(
       title: 'Home Page',
       content: [
         PText(
@@ -257,7 +257,7 @@ import 'package:takkan_script/script/script.dart';
 final myScript = Script(
   name: 'Tutorial',
   routes: {
-    '/': PPage(
+    '/': Page(
       title: 'Home Page',
       content: [
         PText(
@@ -282,8 +282,8 @@ final myScript = Script(
         ),
       ],
     ),
-    'chooseList': PPage(
-      layout: PPageLayout(margins: PMargins(top: 50)),
+    'chooseList': Page(
+      layout: PageLayout(margins: PMargins(top: 50)),
       title: 'Select List to View',
       content: [
         PNavButtonSet(

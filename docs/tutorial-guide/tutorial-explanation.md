@@ -79,7 +79,7 @@ import 'package:takkan_script/part/text.dart';
 final myScript = Script(
   name: 'Tutorial',
   pages: {
-    '/': PPage(
+    '/': Page(
       title: 'Home Page',
       content: [
         PText(
@@ -120,7 +120,7 @@ Takkan application could be defined in a modular way.
 
 A Takkan app is a collection of pages, each mapped to a 'route'.
 
-Our route '/' is mapped to a `PPage` page definition. The route can be any valid string.
+Our route '/' is mapped to a `Page` page definition. The route can be any valid string.
 
 #### page title
 
@@ -131,13 +131,13 @@ Again obvious, and is displayed at the top of the page.
 Page content is the definition of what is to be displayed within the page. In our example so far,
 these are a `PText` and a `PNavButton`.
 
-These are both instances of `PPart`, but we will come back to that later. For the moment, just
+These are both instances of `Part`, but we will come back to that later. For the moment, just
 remember that all of these elements prefixed with 'P' are interpreted by Takkan into an equivalent
-Widget - for example a `PPart` becomes a `Part` Widget.
+Widget - for example a `Part` becomes a `Part` Widget.
 
 ##### PText element
 
-Most `PPart` types, including `PText`, support a read and an edit mode, potentially using completely
+Most `Part` types, including `PText`, support a read and an edit mode, potentially using completely
 different Widgets. There is also an associated 'traitName'  (think 'styleName' - it would have been
 called 'style' but Flutter already uses that term a lot). In this case it is the trait
 name `PText.title`.
