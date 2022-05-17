@@ -1,6 +1,6 @@
 # Medley
 
-Medley is a reference application which attempts cover every permutation of build options available through [Script](../user-guide/precept-script.md) and [Schema](../user-guide/precept-schema.md).
+Medley is a reference application which attempts cover every permutation of build options available through [Script](../user-guide/takkan-script.md) and [Schema](../user-guide/precept-schema.md).
 
 Medley is in the *takkan_medley* package.
 

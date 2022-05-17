@@ -298,4 +298,4 @@ If you already know something like Guice or Dagger, the concepts are very simila
 
 :::
 
-- create an empty file *precept.json* in the project root
+- create an empty file *takkan.json* in the project root

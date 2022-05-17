@@ -35,4 +35,4 @@ The table below illustrates typical usage.
 
 If these are not sufficient you can create your own `Page` type (as opposed to `PPage`) and [register](./libraries.md#registering-with-a-library) them with the [PageLibrary](./libraries.md)
 
-You can then extend `PPage` (if you need to) to configure your design. [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24) 
+You can then extend `PPage` (if you need to) to configure your design. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24) 

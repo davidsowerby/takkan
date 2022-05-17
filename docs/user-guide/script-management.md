@@ -22,7 +22,7 @@ The conventional approach to localisation is to translate on the client, which i
 
 Takkan takes a different approach, and expects the translation to be done server-side. [Interpolation](#interpolation), being dynamic, still has to be carried out on the client.
 
-This is particularly relevant to any [static](precept-script.md#dynamic-vs-static-data) data defined by a `Script`.
+This is particularly relevant to any [static](takkan-script.md#dynamic-vs-static-data) data defined by a `Script`.
 
 
 ## Remote Update

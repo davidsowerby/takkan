@@ -2,7 +2,7 @@
 
 Takkan naturally follows the Widget tree structure Flutter uses. It also uses the [Provider](https://pub.dev/packages/provider) package to manage some shared state.
 
-The diagram below gives an illustration of a couple of scenarios of how the configuration of a [Script](./precept-script.md) affects the Widget tree content.
+The diagram below gives an illustration of a couple of scenarios of how the configuration of a [Script](takkan-script.md) affects the Widget tree content.
 
 We'll look at how Takkan uses the Widget tree from two perspectives:
  
@@ -72,7 +72,7 @@ This process actually happens in the `ParticleLibrary`, as this is where the `Pa
 
 Referring again to the [diagram](#diagram), you will see an `EditState` placed above 'Panel 2-1', 'Part 2-2-1' and 'Part 2-2-2'. 
 
-These are positioned by the [inherited property](./precept-script.md#inherited-properties) **controlEdit**, which provides a flexible way to define which Content elements can change the current edit status.
+These are positioned by the [inherited property](takkan-script.md#inherited-properties) **controlEdit**, which provides a flexible way to define which Content elements can change the current edit status.
 
 A `Part` finds the nearest `EditState` above it to determine which Particle to use.
 

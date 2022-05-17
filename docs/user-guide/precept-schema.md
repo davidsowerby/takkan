@@ -4,7 +4,7 @@
 
 The Takkan Schema describes the data structure, data types, validation and permissions of the application.  
 
-In conjunction with the [Takkan Script](precept-script.md) it provides information to support:
+In conjunction with the [Takkan Script](takkan-script.md) it provides information to support:
 
 - selection of display dependent ondata type,
 - show / hide controls depending on user access rights
@@ -25,7 +25,7 @@ The terminology used by the Schema is incredibly simple, and it is up to an impl
 | PField    | Abstract, database field, sub-classed for different data types |                                                                                                  | Field     | Field |
 
 
-When combined with the [Takkan Script](./precept-script.md), the overall structure depicted in the diagram below:
+When combined with the [Takkan Script](takkan-script.md), the overall structure depicted in the diagram below:
 
 :::tip Note
 This does not show all Widgets, just those immediately relevant to the script and the schema.
@@ -35,7 +35,7 @@ For more on Widgets, see the [Widget Tree](./widget-tree.md)
 ::: 
 
 
-![overview diagram](../images/precept-overview.svg)
+![overview diagram](../images/takkan-overview.svg)
 
 ## Implementation
 
@@ -54,7 +54,7 @@ When a `PPointer` has more than one target is becomes equivalent to a Back4App (
 
 ## Version Control
 
-[Script](./precept-script.md) and `Schema` are version numbered to help ensure consistency.
+[Script](takkan-script.md) and `Schema` are version numbered to help ensure consistency.
 
 A version is a simple incrementing integer.
 
@@ -66,7 +66,7 @@ Multiple schema JSON files can be loaded via the `Takkan` instance. There needs 
 
 A `PDocument` (the schema for a specific document type) is declared within a `PQuery`, and merged into a single `Schema` by `Takkan`.
 
-There are options to allow pre-loading or on-demand loading. [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/25)
+There are options to allow pre-loading or on-demand loading. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/25)
 
 Each `PDocument` is loaded by an implementation of `TakkanLoader`, typically from the app's primary backend, but it can be from anywhere.
 
@@ -75,14 +75,14 @@ Each `PDocument` is loaded by an implementation of `TakkanLoader`, typically fro
 
 This is the equivalent of, and represented by a nestable JSON document, regardless of how simple or complex it is.  
 
-From a Takkan point of view, it is something which would be retrieved from a data source to display as a [Page](./precept-script.md#page), [Panel](./precept-script.md#panel) or [Part](./precept-script.md#part).
+From a Takkan point of view, it is something which would be retrieved from a data source to display as a [Page](takkan-script.md#page), [Panel](takkan-script.md#panel) or [Part](takkan-script.md#part).
 
 
 ## PField
 
 A `PField` is an abstract class representing a "database" field, and also includes a `PPointer` which declares a relationship with one or more other documents.
  
-It is used by a Takkan Script Particle [PParticle](./precept-script.md#particle).
+It is used by a Takkan Script Particle [PParticle](takkan-script.md#particle).
 
 
 ### Implementations

@@ -103,7 +103,7 @@ This runs a higher risk of hitting a [bottleneck](#bottleneck), plus of course i
 
 For a major structural change, there may be some data reorganisation required as well.  This really can only be achieved by closing access to the app for a 'maintenance window'.
 
-At the moment there is no Precep support for this, but there is an [open issue](https://gitlab.com/precept1/takkan_design/-/issues/6) to consider it.  
+At the moment there is no Precep support for this, but there is an [open issue](https://gitlab.com/takkan/takkan_design/-/issues/6) to consider it.  
 
 #### Bottleneck
 There is the risk of a bottleneck with potentially every client trying to download a schema update at the same time.
@@ -115,7 +115,7 @@ Potential mitigation includes:
 - Storing the application schema on a different Back4App instance (or even somewhere else altogether) to reduce the bottleneck.
 - "diffing" schema changes, so only the changes need to be downloaded, reducing network load.
 
-There is an [open issue](https://gitlab.com/precept1/takkan_design/-/issues/7) to consider these.
+There is an [open issue](https://gitlab.com/takkan/takkan_design/-/issues/7) to consider these.
 
 ### Web
 

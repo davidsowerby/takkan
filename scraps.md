@@ -34,7 +34,7 @@ Both `Script` and `Schema` provide a JSON representation, and can be loaded from
 
 This does not help much with Web development but is primarily aimed at mobile apps, where users are typically unreliable in keeping their apps up to date.
 
-Updating is managed either by server notification, or polling from the client. [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/10)
+Updating is managed either by server notification, or polling from the client. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/10)
 
   
 

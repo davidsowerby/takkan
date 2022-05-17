@@ -14,9 +14,9 @@ The result is something (currently at Proof of Concept stage) which I believe su
 Takkan aims to reduce development time, in these broad areas:
 
 1. by automating a substantial amount of the work currently needed to bind Widgets to data,
-1. by providing device aware layouts that simplify the construction of pages in a consistent way across an application,
-1. by providing Traits (basically styles, but with some behavioural attributes), which enable consistent appearance and behaviour across an application.
-1. by defining a schema, which can be used to control presentation epedning on data type and user permissions, and generate server side validation code. 
+1. by providing adaptive layouts and widgets that simplify the construction of pages in a consistent way across an application,
+1. by providing Traits (basically styles, but with some behavioural attributes), which enable adaptive, consistent appearance and behaviour across an application.
+1. by defining a schema, to control user permissions, client side and (generated) server side validation code. 
 
 Equally important, none of these features actually prevent a developer from direct access to Flutter's immense range of features.
 
@@ -38,7 +38,7 @@ Tap ![status](images/status.svg) to see the current status, or :point_right: to 
 
 For each feature, tap the ![status](images/status.svg) icon for the latest status, or :point_right: for more detail.
 
-1. Takkan uses a script (`Script`) to defined the presentation of Widgets.[![status](images/status.svg)](status.md#script)[:point_right:](user-guide/precept-script.md)
+1. Takkan uses a script (`Script`) to defined the presentation of Widgets.[![status](images/status.svg)](status.md#script)[:point_right:](user-guide/takkan-script.md)
 1. Traits (similar to styles) are provided to simplify consistent presentation.[![status](images/status.svg)](status.md#traits) [:point_right:](user-guide/traits.md)
 1. Various layout schemes are provided[![status](images/status.svg)](status.md#layouts) [:point_right:](user-guide/layouts.md)
 1. A schema (`Schema`) defines data structure, roles and permissions.[![status](images/status.svg)](status.md#schema) [:point_right:](user-guide/layouts.md)
@@ -58,7 +58,7 @@ For each feature, tap the ![status](images/status.svg) icon for the latest statu
 :::tip Feedback
 There is a lot more work to do, but I would love to hear your opinion - is this project something you might use when it reaches production ready status?
 
-Even better, is it something you would like to contribute to? Whatever your view, I really would be grateful for feedback -  just raise an issue (preferably with a 'feedback' label) in the [takkan_client](https://gitlab.com/precept1/takkan_client) project.
+Even better, is it something you would like to contribute to? Could be an Adaptive Advocate? Whatever your view, I really would be grateful for feedback -  just raise an issue (preferably with a 'feedback' label) in the [takkan_client](https://gitlab.com/takkan/takkan_design/-/issues) project.
 :::
 
 ## Monitoring Progress
@@ -67,6 +67,6 @@ Sources:
 
 - [status page](./status.md)
 - [blog](../../blog)
-- [issues](https://gitlab.com/precept1/takkan_client)
+- [issues](https://gitlab.com/takkan/takkan_client)
 
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A configuration file *precept.json* must be defined in your project root.
+A configuration file *takkan.json* must be defined in your project root.
 
 The file is a three level configuration file:
 
@@ -38,7 +38,7 @@ In addition to the keys / values given below, you can provide your own and acces
 precept.getConfig()
 ```  
 
-There is an [open issue](https://gitlab.com/precept1/takkan_client/-/issues/89) for this to return an [AppConfig] instance, it currently provides a JSON object.
+There is an [open issue](https://gitlab.com/takkan/takkan_client/-/issues/89) for this to return an [AppConfig] instance, it currently provides a JSON object.
 
 ### Inherited Properties
 
@@ -135,7 +135,7 @@ Some points to note from this example:
 
 Within the 'headers' section, two are used by Takkan for Back4App instances.
 
-Other headers can be added to *precept.json* and will be passed with all API calls:
+Other headers can be added to *takkan.json* and will be passed with all API calls:
 
 | key                    | notes              |
 |------------------------|--------------------|

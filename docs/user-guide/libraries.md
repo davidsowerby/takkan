@@ -1,6 +1,6 @@
 # Libraries
 
-Takkan uses a number of libraries to look up items defined in a [TakkanScript](./precept-script.md).
+Takkan uses a number of libraries to look up items defined in a [TakkanScript](takkan-script.md).
 
 They are all structured in the same way, but contain different types of elements.
 

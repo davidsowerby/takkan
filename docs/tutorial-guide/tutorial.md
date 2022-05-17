@@ -50,9 +50,9 @@ This will provide a copy of the default sample Flutter application, which we wil
 
 ## Set up Takkan on Client
 
-### Create precept.json
+### Create takkan.json
 
-- Create an [application configuration file](../user-guide/app-configuration.md), *precept.json* in the project root.
+- Create an [application configuration file](../user-guide/app-configuration.md), *takkan.json* in the project root.
 - Copy the App Id and Client Key from your Back4App instance, and place into the JSON structure below.
 
 
@@ -70,7 +70,7 @@ This will provide a copy of the default sample Flutter application, which we wil
 }
 ```
 
-- Add *precept.json* to .gitignore (We do not want to commit keys to the repository)
+- Add *takkan.json* to .gitignore (We do not want to commit keys to the repository)
 
 ### Takkan dependencies
 
@@ -98,7 +98,7 @@ This will provide a copy of the default sample Flutter application, which we wil
 with:
 ```yaml
   assets:
-    - precept.json
+    - takkan.json
 ```
 
 - Run 'pub get'
@@ -352,9 +352,9 @@ We need a Takkan `PDataProvider` to support the query, and an 'openIssues' route
 
 <<< docs/tutorial/step04/issue.dart
 
-- Update *precept.json* with the keys from your Back4App instance:
+- Update *takkan.json* with the keys from your Back4App instance:
 
-<<< docs/tutorial/step04/precept.json
+<<< docs/tutorial/step04/takkan.json
 
 :arrow_forward:
 

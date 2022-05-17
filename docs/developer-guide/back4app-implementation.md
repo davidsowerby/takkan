@@ -73,7 +73,7 @@ Refer to the Tutorial for detailed steps to [create an app](../tutorial-guide/tu
 
 :::tip Note
 
-There is an [outstanding issue](https://gitlab.com/precept1/takkan_back4app_client/-/issues/7) to look at restructuring the *takkan_back4app_backend* package.
+There is an [outstanding issue](https://gitlab.com/takkan/takkan_back4app_client/-/issues/7) to look at restructuring the *takkan_back4app_backend* package.
 :::
 
 

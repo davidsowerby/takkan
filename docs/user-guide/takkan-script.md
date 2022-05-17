@@ -15,7 +15,7 @@ Although `Schema` is used to limit access to data in the client, this is mainly 
  
 It is better to work on the simple premise that nothing from a client can be trusted, and therefore, validation and access control must be provided by the server - but that's true for any client.
 
-To help with this, a Back4App server-side schema can be generated from `Schema`.  [![task](../images/idea.svg)](https://gitlab.com/precept1/takkan_back4app_backend/-/issues/4) 
+To help with this, a Back4App server-side schema can be generated from `Schema`.  [![task](../images/idea.svg)](https://gitlab.com/takkan/takkan_back4app_backend/-/issues/4) 
 
 :::
 
@@ -48,7 +48,7 @@ For more on Widgets, see the [Widget Tree](./widget-tree.md)
 
 ::: 
 
-![overview diagram](../images/precept-overview.svg)
+![overview diagram](../images/takkan-overview.svg)
 
 ## The Takkan Process
 
@@ -120,7 +120,7 @@ A `TakkanPage` is a representation of what the end user might perceive as a page
 
 A page displays the elements such as header bars, FAB, footers etc, plus its **children**.
 
-You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
+You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
 
 :::tip
 Where you do not want to use Takkan to construct a page, simply [use your router](partial-use.md#alternate-router) alongside `TakkanRouter`. 
@@ -130,7 +130,7 @@ Where you do not want to use Takkan to construct a page, simply [use your router
 
 The process of building from a `Script` configuration is described in the [Widget Tree](./widget-tree.md) section. 
 
-The **content** of a `PPage` is defined by a collection of `PPanel` and / or `PPart`. [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
+The **content** of a `PPage` is defined by a collection of `PPanel` and / or `PPart`. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
 
 
 ## Panel
@@ -188,7 +188,7 @@ but we believe it is better to define them in a JSON configuration file held as 
 
 Although the keys could still be decompiled from the app, this approach is better than declaring them openly. 
 
-#### precept.json
+#### takkan.json
 
 The example below shows the keys and URLs for 4 instances of Back4App (not real keys of course!) and a REST data provider.  
 
