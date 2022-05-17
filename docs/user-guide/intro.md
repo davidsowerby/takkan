@@ -62,7 +62,7 @@ A `PPart` is simply a pair of Widgets, one for reading and one for editing data.
 
 When a `TakkanPage` is constructed it assembles its Panels and Parts as defined by `Script`.  In doing so, it also creates [data bindings](data-bindings.md) from the resultant Widgets to the data held in the [DocumentCache](document-cache.md).  The bindings also trigger any [validation](validation.md) defined by `Schema`.
 
-The data is identified by the `PDataProvider` and `Schema` associated with the page.  
+The data is identified by the `DataProvider` and `Schema` associated with the page.  
 
 
 ## Use with non-Takkan pages

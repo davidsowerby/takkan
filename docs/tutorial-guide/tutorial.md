@@ -330,7 +330,7 @@ We will use Takkan to generate the Back4App schema and populate some test data.
 
 ### Set up Takkan to display data
 
-We need a Takkan `PDataProvider` to support the query, and an 'openIssues' route to display it.
+We need a Takkan `DataProvider` to support the query, and an 'openIssues' route to display it.
 
 - Update *takkan.dart* to be:
 

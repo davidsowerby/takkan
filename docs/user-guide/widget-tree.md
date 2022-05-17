@@ -46,7 +46,7 @@ The Page state, however, contains a `Query` and another `DataBinding`.
 
 This is created in response to a `PQuery` being declared in the associated `PPage`. 
 
-The `PQuery` defines how to retrieve data from its associated backend, defined by `PDataProvider` - essentially it is a query.
+The `PQuery` defines how to retrieve data from its associated backend, defined by `DataProvider` - essentially it is a query.
 
 `Query` copies this data into a `TemporaryDocument`, so that the data can be edited if required, and returns an appropriate `FutureBuilder` or `StreamBuilder`.
 

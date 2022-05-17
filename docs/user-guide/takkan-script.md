@@ -4,7 +4,7 @@
 
 The Takkan Script, `Script`, defines the presentation of any pages supplied by Takkan.
  
-It contains one or more [PDataProvider](data-providers.md) instance, which  in turn contain [Schema](takkan-schema.md) instances, to connect presentation to data.
+It contains one or more [DataProvider](data-providers.md) instance, which  in turn contain [Schema](takkan-schema.md) instances, to connect presentation to data.
 
 It also uses the [Schema](takkan-schema.md) to define validation, and user permissions. Takkan uses these permissions to decide whether or not to enable editing / viewing of data.
 
@@ -91,7 +91,7 @@ In effect, this means a value set in a higher level will apply to all lower leve
 
 This is intended to reduce the amount of manual configuration required.
 
-A [PDataProvider](#dataprovider), for example, is often defined high up the tree, because a system will often use one data source for much of its operation.
+A [DataProvider](#dataprovider), for example, is often defined high up the tree, because a system will often use one data source for much of its operation.
 
 Some `PCommon` properties are not actually used at all levels.
 
@@ -176,10 +176,10 @@ You can just use pre-defined Particles or define your own and register them with
 
 ## DataProvider
 
-Configured by `PDataProvider` this defines the backend system to use - there may be more than one in a Takkan system.  
+Configured by `DataProvider` this defines the backend system to use - there may be more than one in a Takkan system.  
 For example, most of the data may come from, say, Back4App, but the app may also use one or more public REST APIs for supplementary data. 
 
-`PDataProvider` declares the [schema](takkan-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the [Particle](#particle)).
+`DataProvider` declares the [schema](takkan-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the [Particle](#particle)).
 
 ### Configuration File
 
@@ -234,9 +234,9 @@ There must always be 2 levels of definition.
 
 ## Query
 
-A `PQuery`, in conjunction with a `PDataProvider`, sources the data to be displayed and / or edited.
+A `PQuery`, in conjunction with a `DataProvider`, sources the data to be displayed and / or edited.
 
-The query refers back to the closest `PDataProvider` above it in the tree.
+The query refers back to the closest `DataProvider` above it in the tree.
 
 A `PQuery` implementation falls into one of these broad categories:
 

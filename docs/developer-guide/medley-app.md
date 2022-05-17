@@ -47,7 +47,7 @@ It probably does not reflect a real app!
 
 The terminology here is that of the `Schema` structure - primarily it is documents and fields.
 
-How it is interpreted for the target 'database' depends on the `BackendDelegate` in use.  That depends on the **backendType** property of `PDataProvider`.
+How it is interpreted for the target 'database' depends on the `BackendDelegate` in use.  That depends on the **backendType** property of `DataProvider`.
 
 
 ### Account Document
