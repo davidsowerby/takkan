@@ -30,4 +30,4 @@ The table below illustrates typical usage.
 
 If these are not sufficient you can create your own `Page` type (as opposed to `DocumentPage`) and [register](./libraries.md#registering-with-a-library) them with the [PageLibrary](./libraries.md)
 
-You can then extend `Page` in *takkan_script* (if you need to) to configure your design. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24) 
+You can then extend `Page` in *takkan_script* (if you need to) to configure your design. [:thinking:](https://gitlab.com/takkan/takkan-client/-/issues/24) 

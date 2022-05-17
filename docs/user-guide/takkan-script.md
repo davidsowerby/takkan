@@ -30,7 +30,7 @@ The  "Widget" column shows the associated Widget provided by Takkan, where there
 
 | Widget   | Definition                                | Description                                                                                                            |  Widget |
 |----------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---|
-|          | Takkan  [:point_right:](#precept)                             | A singleton holding a merged collection of `Script`, potentially using multiple data sources and backends    | n/a  |
+|          | Takkan  [:point_right:](#takkan)                             | A singleton holding a merged collection of `Script`, potentially using multiple data sources and backends    | n/a  |
 |          | Script [:point_right:](#pscript) | A collection of Pages and routes                                                               | n/a  |
 | Page     | Page [:point_right:](#page)                                | The outer layout of what the user perceives as a page, identified by route                     | TakkanPage     |
 | Panel    | Panel [:point_right:](#panel)                              | A nestable, arbitrary area of a Page,                               | Panel  |
@@ -120,7 +120,7 @@ A `TakkanPage` is a representation of what the end user might perceive as a page
 
 A page displays the elements such as header bars, FAB, footers etc, plus its **children**.
 
-You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
+You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/takkan/takkan-client/-/issues/24)
 
 :::tip
 Where you do not want to use Takkan to construct a page, simply [use your router](partial-use.md#alternate-router) alongside `TakkanRouter`. 
@@ -130,7 +130,7 @@ Where you do not want to use Takkan to construct a page, simply [use your router
 
 The process of building from a `Script` configuration is described in the [Widget Tree](./widget-tree.md) section. 
 
-The **content** of a `Page` is defined by a collection of `Panel` and / or `Part`. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/24)
+The **content** of a `Page` is defined by a collection of `Panel` and / or `Part`. [:thinking:](https://gitlab.com/takkan/takkan-client/-/issues/24)
 
 
 ## Panel

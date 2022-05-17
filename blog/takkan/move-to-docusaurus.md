@@ -4,7 +4,7 @@ title: Move from VuePress to Docusaurus
 description: Experience of the process of moving existing markdown documentation from VuePress to Docusaurus 
 authors: david
 date: 2021-09-22
-tags: [documentation, docusaurus, precept]
+tags: [documentation, docusaurus, takkan]
 ---
 
 # VuePress to Docusaurus

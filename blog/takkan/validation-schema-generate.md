@@ -4,7 +4,7 @@ title: Validation and Schema Generation
 description: Improved validation, automatic Back4App schema generation
 authors: david
 date: 2021-10-12
-tags: [precept, freezed, validation, back4app]
+tags: [takkan, freezed, validation, back4app]
 ---
 
 ## Validations

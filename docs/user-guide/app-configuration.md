@@ -20,7 +20,7 @@ Internally the levels are represented by
 - `GroupConfig`
 - `InstanceConfig`
 
-AppConfig can be accessed from the global variable `precept`. 
+AppConfig can be accessed from the global variable `takkan`. 
 
 ## Inherited properties
 
@@ -32,10 +32,10 @@ This file defines parameter values for such things as client and application key
 
 It is loaded into a `AppConfig` instance during application start up.
 
-In addition to the keys / values given below, you can provide your own and access the config in code with a call to global variable `precept`:
+In addition to the keys / values given below, you can provide your own and access the config in code with a call to global variable `takkan`:
 
 ``` dart
-precept.getConfig()
+takkan.getConfig()
 ```  
 
 There is an [open issue](https://gitlab.com/takkan/takkan_client/-/issues/89) for this to return an [AppConfig] instance, it currently provides a JSON object.

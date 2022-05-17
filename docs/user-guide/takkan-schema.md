@@ -66,7 +66,7 @@ Multiple schema JSON files can be loaded via the `Takkan` instance. There needs 
 
 A `Document` (the schema for a specific document type) is declared within a `PQuery`, and merged into a single `Schema` by `Takkan`.
 
-There are options to allow pre-loading or on-demand loading. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/25)
+There are options to allow pre-loading or on-demand loading. [:thinking:](https://gitlab.com/takkan/takkan-client/-/issues/25)
 
 Each `Document` is loaded by an implementation of `TakkanLoader`, typically from the app's primary backend, but it can be from anywhere.
 

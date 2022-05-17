@@ -340,7 +340,7 @@ We need a Takkan `DataProvider` to support the query, and an 'openIssues' route 
 
 ?????????
 
-- Update *main.dart* to register Back4App **after** precept.init
+- Update *main.dart* to register Back4App **after** takkan.init
 
 <<< docs/tutorial/step04/main.dart{9-9}
 
