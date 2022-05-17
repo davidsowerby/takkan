@@ -31,3 +31,24 @@ This command generates static content into the `build` directory and can be serv
 
 f6127f
 30aa5b
+
+## Error
+
+```
+error @docusaurus/core@2.0.0-beta.14: The engine "node" is incompatible with this module. Expected version ">=14". Got "12.20.1"
+error Found incompatible module.
+
+```
+
+```
+node -v 
+
+```
+
+To get current node version..  If not correct,
+
+```
+nvm install v16.14.0
+```
+
+or whichever version is required
