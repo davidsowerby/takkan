@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
 
 /// A wrapper for a GraphQL / HttpClient, to enable mocking
 abstract class ServerConnect {}

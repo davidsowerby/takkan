@@ -182,7 +182,7 @@ packages:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "2.0.3"
   frontend_server_client:
     dependency: transitive
     description:
@@ -322,21 +322,21 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "4.5.0"
   json_serializable:
     dependency: "direct dev"
     description:
       name: json_serializable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.4"
+    version: "6.2.0"
   logger:
     dependency: transitive
     description:
       name: logger
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   logging:
     dependency: transitive
     description:
@@ -414,13 +414,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
-  precept_script:
-    dependency: "direct main"
-    description:
-      path: "../precept_script"
-      relative: true
-    source: path
-    version: "0.0.1"
   pub_semver:
     dependency: transitive
     description:
@@ -533,6 +526,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  takkan_script:
+    dependency: "direct main"
+    description:
+      path: "../takkan_script"
+      relative: true
+    source: path
+    version: "0.0.1"
   term_glyph:
     dependency: transitive
     description:
@@ -625,4 +625,4 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.14.0 <3.0.0"
+  dart: ">=2.17.0 <3.0.0"

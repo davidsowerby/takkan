@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:precept_backend/backend/data_provider/server_connect.dart';
+import 'package:takkan_backend/backend/data_provider/server_connect.dart';
 
 class MockRestServerConnect extends DefaultRestServerConnect {
   final dio.Dio dioClient;

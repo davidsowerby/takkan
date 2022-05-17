@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
 
 class MockAuthenticator extends Mock implements Authenticator {}
 

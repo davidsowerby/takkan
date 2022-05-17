@@ -1,13 +1,13 @@
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/inject/inject.dart';
 
 /// A lookup facility for instances of [IDataProvider] implementations.
-/// Provides an instance using the [find] method, from a supplied type name, defined in *precept.json*
+/// Provides an instance using the [find] method, from a supplied type name, defined in *takkan.json*
 ///
 /// Also acts as a cache, as most [IDataProvider] implementations are stateful and should be retained once
 /// connected
@@ -16,7 +16,7 @@ import 'package:precept_script/inject/inject.dart';
 /// - the GetIt.registerFactory signature is type based, and does not fit for returning a DataProvider instance from a DataProvider
 /// - the use of 'instanceName' is discouraged, although it is not clear why.
 ///
-/// [appConfig] is initialised during Precept start up
+/// [appConfig] is initialised during Takkan start up
 ///
 /// injected via GetIt primarily for testing
 ///
@@ -51,16 +51,16 @@ class DefaultDataProviderLibrary implements DataProviderLibrary {
   ///
   /// An instance of DataProvider is identified uniquely by [providerConfig.instanceConfig],
   /// thus allowing multiple instances of the same DataProvider type.  This is
-  /// especially important as the DataProvider contains a [PreceptUser] object,
+  /// especially important as the DataProvider contains a [TakkanUser] object,
   /// which differ from one instance to another.
   ///
   /// Requires that the [instanceConfig.type] has been registered using [register].
   /// This is usually done in your main.dart file, using for example, `Back4App.register()`
   ///
   /// Note: The [instanceConfig] is retrieved from [AppConfig], which is the in-app
-  /// representation of precept.json.
+  /// representation of takkan.json.
   ///
-  /// Throws a [PreceptException] if a builder for this config has not been registered
+  /// Throws a [TakkanException] if a builder for this config has not been registered
   IDataProvider find({required DataProvider providerConfig}) {
     if (providerConfig is NullDataProvider) {
       logType(this.runtimeType).d("Returning a NoDataProvider");
@@ -90,7 +90,7 @@ class DefaultDataProviderLibrary implements DataProviderLibrary {
     String msg =
         "No entry is defined for ${instanceConfig.type} in $runtimeType.\n  Have you forgotten to call register() for your DataProvider in your 'main.dart'?";
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   register({

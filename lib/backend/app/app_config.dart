@@ -1,25 +1,25 @@
 import 'dart:io';
 
-import 'package:precept_backend/backend/data_provider/constants.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/script/constants.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/constants.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/script/constants.dart';
 
-/// A wrapper for the JSON application configuration held in *precept.json*
-/// The entire contents of *precept.json* are loaded through the constructor.
+/// A wrapper for the JSON application configuration held in *takkan.json*
+/// The entire contents of *takkan.json* are loaded through the constructor.
 ///
 /// The configuration for a specific backend instance can be accessed via [instanceConfig]
 /// All property values can be accessed directly from [data]
 ///
 /// Headers for HTTP / GraphQL clients can be obtained from [headers], assuming
-/// of course that they have been declared in *precept.json*
+/// of course that they have been declared in *takkan.json*
 ///
 /// Many properties are 'inherited', which means they can be defined at
 /// app, group or instance level.  An inherited property value is valid for all lower
 /// levels, unless overridden at a lower level:
 ///
-/// See https://preceptblog.co.uk/docs/user-guide/app-configuration
+/// See https://takkan.org/docs/user-guide/app-configuration
 class AppConfig extends BaseConfig with Appendage {
   static const String keyGroup = 'group';
   static const String keyInstance = 'instance';
@@ -58,9 +58,9 @@ class AppConfig extends BaseConfig with Appendage {
         (g.staged) ? currentStage : providerConfig.instanceConfig.instance;
     if (instanceName == null) {
       String msg =
-          'Either a current stage must be set from precept.json or DataProvider must define an instance name';
+          'Either a current stage must be set from takkan.json or DataProvider must define an instance name';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     final i = g.instance(instanceName);
     return i;
@@ -70,9 +70,9 @@ class AppConfig extends BaseConfig with Appendage {
     final group = _groups[groupName];
     if (group == null) {
       String msg =
-          'File precept.json in project root does not define a group \'${groupName}\'';
+          'File takkan.json in project root does not define a group \'${groupName}\'';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     return group;
   }
@@ -116,9 +116,9 @@ class GroupConfig extends BaseConfig with Appendage {
 
     if (instanceConfig == null) {
       String msg =
-          'File precept.json in project root does not define an instance \'${instanceName}\' in group \'${name}\'';
+          'File takkan.json in project root does not define an instance \'${instanceName}\' in group \'${name}\'';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     return instanceConfig;
   }
@@ -153,7 +153,7 @@ class InstanceConfig extends BaseConfig with Appendage {
   /// These are typically API Keys, Client Keys etc, and required for HTTP/GraphQL client
   /// initialisation.
   ///
-  /// The header keys must be declared in *precept.json* exactly as they are to be used
+  /// The header keys must be declared in *takkan.json* exactly as they are to be used
   ///
   /// This seems unnecessarily complicated just to get a Map<String,String> from a
   /// Map<String,dynamic> but was the only way I found to get around Dart's typing

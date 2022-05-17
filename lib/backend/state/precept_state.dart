@@ -1,7 +1,7 @@
-class PreceptState {
+class TakkanState {
   final Map<String, dynamic> state;
 
-  const PreceptState(this.state);
+  const TakkanState(this.state);
 
   String get artifact => state['artifact'];
 
@@ -14,6 +14,6 @@ class PreceptState {
   DateTime? get nextActivation => state['nextActivation'];
 }
 
-class PreceptStateHistory extends PreceptState {
-  const PreceptStateHistory(Map<String, dynamic> state) : super(state);
+class TakkanStateHistory extends TakkanState {
+  const TakkanStateHistory(Map<String, dynamic> state) : super(state);
 }

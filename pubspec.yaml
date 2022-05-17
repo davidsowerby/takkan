@@ -1,19 +1,18 @@
-name: precept_backend
-description: Common declarations for Precept backend implementations
+name: takkan_backend
+description: Common declarations for Takkan backend implementations
 version: 0.0.1
-author: David Sowerby
-homepage: https://www.preceptblog.co.uk/
+homepage: https://takkan.org/
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   dio: ^4.0.0
   graphql: ^5.0.0
   json_annotation: ^4.4.0
   meta: ^1.7.0
-  precept_script:
-    path: ../precept_script
+  takkan_script:
+    path: ../takkan_script
 
 dev_dependencies:
   test:

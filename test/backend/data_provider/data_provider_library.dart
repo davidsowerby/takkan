@@ -1,8 +1,8 @@
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -152,7 +152,7 @@ void main() {
 
       // then
       expect(() => dataProviderLibrary.find(providerConfig: providerConfig),
-          throwsA(isA<PreceptException>()));
+          throwsA(isA<TakkanException>()));
     });
   });
 }

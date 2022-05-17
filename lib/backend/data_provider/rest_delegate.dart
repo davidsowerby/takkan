@@ -2,23 +2,23 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_backend/backend/data_provider/server_connect.dart';
-import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/provider/rest_delegate.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/rest_query.dart';
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_backend/backend/data_provider/server_connect.dart';
+import 'package:takkan_backend/backend/exception.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/provider/rest_delegate.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/rest_query.dart';
+import 'package:takkan_script/inject/inject.dart';
 
 class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late InstanceConfig instanceConfig;
@@ -36,7 +36,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     if (parent.config.restDelegate == null) {
       String msg = 'RestDelegate cannot be used without configuration';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     serverConnect = inject<RestServerConnect>();
   }
@@ -47,7 +47,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     throw UnimplementedError();
   }
 
-  PreceptUser get user => parent.user; // safe only after init called
+  TakkanUser get user => parent.user; // safe only after init called
   Authenticator get authenticator =>
       parent.authenticator; // safe only after init called
 
@@ -126,7 +126,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     String msg =
         "An implementation specific dedicated 'createAuthenticator' method is required for a RestDataProviderDelegate to support authentication";
     logType(this.runtimeType).e(msg);
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   String documentUrl(DocumentId documentId) {
@@ -213,7 +213,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     if (response.data is Map) {
       return Map<String, dynamic>.from(response.data);
     }
-    throw PreceptException('Not a map or list');
+    throw TakkanException('Not a map or list');
   }
 
   @override

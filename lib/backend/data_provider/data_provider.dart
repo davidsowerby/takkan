@@ -1,23 +1,23 @@
 import 'package:graphql/client.dart';
 import 'package:meta/meta.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/data_provider/rest_delegate.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/delegate.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/rest_query.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/data_provider/rest_delegate.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_backend/backend/exception.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/delegate.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/rest_query.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
 
 /// The layer between the client and server.
 ///
@@ -178,12 +178,12 @@ abstract class IDataProvider<CONFIG extends DataProvider> {
 
   /// The roles held by the user currently logged in to this provider.
   ///
-  /// This will currently fail if no user logged in see https://gitlab.com/precept1/precept_backend/-/issues/9
+  /// This will currently fail if no user logged in see https://gitlab.com/takkan/takkan_backend/-/issues/9
   List<String> get userRoles;
 
   /// The currently identified user of this provider.  If no user is signed in,
-  /// returns a user instance created with [PreceptUser.unknownUser]
-  PreceptUser get user;
+  /// returns a user instance created with [TakkanUser.unknownUser]
+  TakkanUser get user;
 
   Document documentSchema({required String documentSchemaName});
 
@@ -213,7 +213,7 @@ class DefaultDataProvider<CONFIG extends DataProvider>
       String msg =
           'Authenticator not constructed, has \'createAuthenticator\' been set?';
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     return _authenticator!;
   }
@@ -222,7 +222,7 @@ class DefaultDataProvider<CONFIG extends DataProvider>
     if (_restDelegate != null) {
       return _restDelegate!;
     }
-    throw PreceptException(
+    throw TakkanException(
         'You have used a PRestQuery but no REST delegate Make sure you have set config.restQLDelegate');
   }
 
@@ -230,7 +230,7 @@ class DefaultDataProvider<CONFIG extends DataProvider>
     if (_graphQLDelegate != null) {
       return _graphQLDelegate!;
     }
-    throw PreceptException(
+    throw TakkanException(
         'No GraphQL delegate has been constructed.  Make sure you have set config.graphQLDelegate');
   }
 
@@ -254,7 +254,7 @@ class DefaultDataProvider<CONFIG extends DataProvider>
     }
   }
 
-  PreceptUser get user => authenticator.user;
+  TakkanUser get user => authenticator.user;
 
   SignInStatus get authStatus => authenticator.status;
 
@@ -406,7 +406,7 @@ class DefaultDataProvider<CONFIG extends DataProvider>
       if (_graphQLDelegate != null) {
         return graphQLDelegate;
       } else {
-        throw PreceptException(
+        throw TakkanException(
             'In order to use a ${queryConfig.runtimeType.toString()}, a graphQLDelegate must be specified in DataProvider');
       }
     }
@@ -414,11 +414,11 @@ class DefaultDataProvider<CONFIG extends DataProvider>
       if (_restDelegate != null) {
         return restDelegate;
       } else {
-        throw PreceptException(
+        throw TakkanException(
             'In order to use a ${queryConfig.runtimeType.toString()}, a restDelegate must be specified in DataProvider');
       }
     }
-    throw PreceptException(
+    throw TakkanException(
         'No delegate available to support a ${queryConfig.runtimeType.toString()}');
   }
 
@@ -435,12 +435,12 @@ class DefaultDataProvider<CONFIG extends DataProvider>
   /// ============ Provided by sub-class implementations ==========================================
 
   Future<Authenticator> createAuthenticator() {
-    throw PreceptException(
+    throw TakkanException(
         'Config specifies the use of authentication, but createAuthenticator has not been implemented');
   }
 
   GraphQLDataProviderDelegate createGraphQLDelegate() {
-    throw PreceptException(
+    throw TakkanException(
         'Config specifies the use of GraphQLDelegate, but createGraphQLDelegate has not been implemented');
   }
 
@@ -471,60 +471,59 @@ class NoDataProvider implements IDataProvider {
 
   const NoDataProvider();
 
-  AppConfig get appConfig => throw PreceptException(msg);
+  AppConfig get appConfig => throw TakkanException(msg);
 
   IDataProviderDelegate<Query> get authenticatorDelegate =>
-      throw PreceptException(msg);
+      throw TakkanException(msg);
 
-  GraphQLDataProviderDelegate get graphQLDelegate =>
-      throw PreceptException(msg);
+  GraphQLDataProviderDelegate get graphQLDelegate => throw TakkanException(msg);
 
-  RestDataProviderDelegate get restDelegate => throw PreceptException(msg);
+  RestDataProviderDelegate get restDelegate => throw TakkanException(msg);
 
-  SignInStatus get authStatus => throw PreceptException(msg);
+  SignInStatus get authStatus => throw TakkanException(msg);
 
   Authenticator<DataProvider, dynamic, NoDataProvider> get authenticator =>
-      throw PreceptException(msg);
+      throw TakkanException(msg);
 
-  DataProvider get config => throw PreceptException(msg);
+  DataProvider get config => throw TakkanException(msg);
 
   Future<Stream<Map<String, dynamic>>> connectItem() {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   Future<Stream<List<Map<String, dynamic>>>> connectList() {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   createAuthenticator() {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   DocumentId documentIdFromData(Map<String, dynamic> data) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   /// See [IDataProvider.fetchItem]
   Future<ReadResultItem> fetchItem(
       {required Query queryConfig,
       required Map<String, dynamic> pageArguments}) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   /// See [IDataProvider.fetchList]
   Future<ReadResultList> fetchList(
       {required Query queryConfig,
       required Map<String, dynamic> pageArguments}) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   init(AppConfig appConfig) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
-  PreceptUser get user => throw PreceptException(msg);
+  TakkanUser get user => throw TakkanException(msg);
 
-  List<String> get userRoles => throw PreceptException(msg);
+  List<String> get userRoles => throw TakkanException(msg);
 
   String get sessionTokenKey => 'X-Parse-Session-Token';
 
@@ -534,7 +533,7 @@ class NoDataProvider implements IDataProvider {
       required int fromVersion,
       Delegate? useDelegate,
       required String name}) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -544,7 +543,7 @@ class NoDataProvider implements IDataProvider {
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -552,7 +551,7 @@ class NoDataProvider implements IDataProvider {
     required DocumentId documentId,
     Delegate? useDelegate,
   }) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -562,7 +561,7 @@ class NoDataProvider implements IDataProvider {
     FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -572,16 +571,16 @@ class NoDataProvider implements IDataProvider {
     FetchPolicy? fetchPolicy,
     Delegate? useDelegate,
   }) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   Document documentSchemaFromQuery({required String querySchemaName}) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override
   Document documentSchema({required String documentSchemaName}) {
-    throw PreceptException(msg);
+    throw TakkanException(msg);
   }
 
   @override

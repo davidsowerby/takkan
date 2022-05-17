@@ -1,11 +1,11 @@
-class PreceptUser {
+class TakkanUser {
   final Map<String, dynamic> data;
 
-  PreceptUser.fromJson(this.data) {
+  TakkanUser.fromJson(this.data) {
     data['unknown'] = false;
   }
 
-  PreceptUser.unknownUser() : data = const {} {
+  TakkanUser.unknownUser() : data = const {} {
     unknown = true;
   }
 

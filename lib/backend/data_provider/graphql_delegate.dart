@@ -1,20 +1,20 @@
 import 'package:graphql/client.dart';
 import "package:http/http.dart" as http;
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/provider/graphql_delegate.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/schema/schema.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/provider/graphql_delegate.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/schema/schema.dart';
 
 /// GraphQL implementations can vary considerably, and may need provider-specific implementations
-/// See the 'precept-back4app' package for an example
+/// See the 'takkan-back4app' package for an example
 class DefaultGraphQLDataProviderDelegate
     implements GraphQLDataProviderDelegate {
   late GraphQLClient _client;
@@ -26,7 +26,7 @@ class DefaultGraphQLDataProviderDelegate
   init(InstanceConfig instanceConfig, IDataProvider parent) async {
     this.parent = parent;
     if (parent.config.graphQLDelegate == null) {
-      throw PreceptException(
+      throw TakkanException(
           'GraphQLDelegate cannot be used without configuration');
     }
 
@@ -45,7 +45,7 @@ class DefaultGraphQLDataProviderDelegate
 
   GraphQLClient get client => _client;
 
-  PreceptUser get user => parent.user; // safe only after init called
+  TakkanUser get user => parent.user; // safe only after init called
 
   Authenticator get authenticator =>
       parent.authenticator; // safe only after init called
@@ -60,8 +60,7 @@ class DefaultGraphQLDataProviderDelegate
       if (user.sessionToken != null) {
         link.defaultHeaders[parent.sessionTokenKey] = user.sessionToken!;
       } else {
-        throw PreceptException(
-            'Session token should not be null at this stage');
+        throw TakkanException('Session token should not be null at this stage');
       }
     }
   }
@@ -102,7 +101,7 @@ class DefaultGraphQLDataProviderDelegate
     }
 
     if (rawData == null) {
-      throw PreceptException('data is missing');
+      throw TakkanException('data is missing');
     }
     final List edges = rawData['edges'];
     final List<Map<String, dynamic>> results = List.empty(growable: true);

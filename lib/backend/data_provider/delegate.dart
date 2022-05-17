@@ -1,11 +1,11 @@
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/rest_query.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/rest_query.dart';
 
 abstract class IDataProviderDelegate<QUERY extends Query> {
   IDataProvider get parent;

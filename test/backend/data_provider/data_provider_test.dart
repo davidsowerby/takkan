@@ -1,11 +1,11 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/graphql_delegate.dart';
-import 'package:precept_script/data/provider/rest_delegate.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/graphql_delegate.dart';
+import 'package:takkan_script/data/provider/rest_delegate.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';
@@ -47,7 +47,7 @@ void main() {
 
       expect(dp.restDelegate, isNotNull);
       expect(dp.graphQLDelegate, isNotNull);
-      expect(() => dp.authenticator, throwsPreceptException);
+      expect(() => dp.authenticator, throwsTakkanException);
       verify(() => dp.restDelegate.init(any(), dp)).called(1);
       verify(() => dp.graphQLDelegate.init(any(), dp)).called(1);
     });
@@ -87,7 +87,7 @@ void main() {
       // then
 
       expect(dp.graphQLDelegate, isNotNull);
-      expect(() => dp.restDelegate, throwsPreceptException);
+      expect(() => dp.restDelegate, throwsTakkanException);
     });
     test('call GraphQLDelegate without specifying it', () async {
       // given
@@ -103,7 +103,7 @@ void main() {
       // then
 
       expect(dp.restDelegate, isNotNull);
-      expect(() => dp.graphQLDelegate, throwsPreceptException);
+      expect(() => dp.graphQLDelegate, throwsTakkanException);
     });
 
     test('require RestDelegate without providing construction function',
@@ -122,7 +122,7 @@ void main() {
       // then
       expect(() async {
         await dp.init(appConfig);
-      }, throwsPreceptException);
+      }, throwsTakkanException);
     });
 
     test('require GraphQLDelegate without providing construction function',
@@ -139,7 +139,7 @@ void main() {
       // then
       expect(() async {
         await dp.init(appConfig);
-      }, throwsPreceptException);
+      }, throwsTakkanException);
     });
   });
 }

@@ -1,34 +1,34 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_script/common/exception.dart';
-import 'package:precept_script/common/script/constants.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/script/constants.dart';
 
-/// The default is to hold app configuration in a file *precept.json* in the project root.
+/// The default is to hold app configuration in a file *takkan.json* in the project root.
 ///
-/// Except for testing, any deviation from this convention is discouraged, as Precept
+/// Except for testing, any deviation from this convention is discouraged, as Takkan
 /// assumes that is where the configuration is.
 ///
 /// It is therefore usually unnecessary to specify [fileName], except when testing
 ///
 ///
 /// If loading through a Flutter client, this loader will not work, use the
-/// JSONAssetLoader in the *precept_client* package instead
+/// JSONAssetLoader in the *takkan_client* package instead
 class AppConfigFileLoader {
   final String? fileName;
 
   const AppConfigFileLoader({this.fileName});
 
-  /// If [returnEmptyIfAbsent] is true, a missing *precept.json* returns an empty
-  /// [AppConfig] - if false, a [PreceptException] is thrown if no *precept.json*
+  /// If [returnEmptyIfAbsent] is true, a missing *takkan.json* returns an empty
+  /// [AppConfig] - if false, a [TakkanException] is thrown if no *takkan.json*
   /// exists in [fileName]
   Future<AppConfig> load({
     String currentStage = notSet,
     bool returnEmptyIfAbsent = false,
   }) async {
     final f = (fileName == null)
-        ? File('${Directory.current.path}/precept.json')
+        ? File('${Directory.current.path}/takkan.json')
         : File(fileName!);
     if (!f.existsSync()) {
       if (returnEmptyIfAbsent) {
@@ -37,7 +37,7 @@ class AppConfigFileLoader {
           data: Map(),
         );
       } else {
-        throw PreceptException('There is no file at ${f.path}');
+        throw TakkanException('There is no file at ${f.path}');
       }
     }
     final content = f.readAsStringSync();

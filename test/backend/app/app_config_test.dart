@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/app/app_config_loader.dart';
-import 'package:precept_backend/backend/data_provider/constants.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/app/app_config_loader.dart';
+import 'package:takkan_backend/backend/data_provider/constants.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';
@@ -66,9 +66,9 @@ void main() {
 
       expect(appConfig.instanceConfig(mockDpValid), isA<InstanceConfig>());
       expect(() => appConfig.instanceConfig(mockDpInvalidInstance),
-          throwsPreceptException);
+          throwsTakkanException);
       expect(() => appConfig.instanceConfig(mockDpInvalidGroup),
-          throwsPreceptException);
+          throwsTakkanException);
     });
     test('instanceConfig, default values', () {
       // given
@@ -112,7 +112,7 @@ void main() {
 
       // when
       final appConfig = await AppConfigFileLoader(
-              fileName: 'test/backend/app/sample-precept.json')
+              fileName: 'test/backend/app/sample-takkan.json')
           .load(currentStage: 'dev');
       // then
 

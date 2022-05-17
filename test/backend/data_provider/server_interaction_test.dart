@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/server_connect.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/delegate.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/provider/rest_delegate.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/data/select/rest_query.dart';
-import 'package:precept_script/inject/inject.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/server_connect.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/delegate.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/provider/rest_delegate.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/data/select/rest_query.dart';
+import 'package:takkan_script/inject/inject.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/server_connect.dart';

@@ -1,5 +1,5 @@
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/query.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/query.dart';
 
 abstract class QueryResults<DATA> {
   final DATA data;

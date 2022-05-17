@@ -1,16 +1,16 @@
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
 
 class NoAuthenticator
-    extends Authenticator<DataProvider, PreceptUser, NoDataProvider> {
+    extends Authenticator<DataProvider, TakkanUser, NoDataProvider> {
   final String msg =
       'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
 
   @override
-  Future<bool> doDeRegister(PreceptUser user) {
+  Future<bool> doDeRegister(TakkanUser user) {
     throw UnimplementedError(msg);
   }
 
@@ -21,7 +21,7 @@ class NoAuthenticator
   }
 
   @override
-  Future<bool> doRequestPasswordReset(PreceptUser user) {
+  Future<bool> doRequestPasswordReset(TakkanUser user) {
     throw UnimplementedError(msg);
   }
 
@@ -32,7 +32,7 @@ class NoAuthenticator
   }
 
   @override
-  Future<bool> doUpdateUser(PreceptUser user) {
+  Future<bool> doUpdateUser(TakkanUser user) {
     throw UnimplementedError(msg);
   }
 
@@ -42,12 +42,12 @@ class NoAuthenticator
   }
 
   @override
-  PreceptUser preceptUserFromNative(nativeUser) {
+  TakkanUser takkanUserFromNative(nativeUser) {
     throw UnimplementedError();
   }
 
   @override
-  preceptUserToNative(PreceptUser preceptUser) {
+  takkanUserToNative(TakkanUser takkanUser) {
     throw UnimplementedError();
   }
 
