@@ -1,11 +1,10 @@
-name: precept_back4app_client
-description: Client-side Precept pacage for use with Back4App
+name: takkan_back4app_client
+description: Client-side Takkan pacage for use with Back4App
 version: 0.0.1
-author: David Sowerby
-homepage: https://www.preceptblog.co.uk/
+homepage: https://www.takkan.org
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   parse_server_sdk: ^3.1.0
@@ -13,10 +12,10 @@ dependencies:
   json_annotation: ^4.4.0
   process_runner: ^4.1.2
   meta: ^1.7.0
-  precept_script:
-    path: ../precept_script
-  precept_backend:
-    path: ../precept_backend
+  takkan_script:
+    path: ../takkan_script
+  takkan_backend:
+    path: ../takkan_backend
 
 
 
@@ -25,8 +24,8 @@ dev_dependencies:
   build_runner:
   mockito: ^5.0.7
   json_serializable: ^6.1.4
-  precept_medley_script:
-    path: ../precept_medley_script
+  takkan_medley_script:
+    path: ../takkan_medley_script
 
 
 # For information on the generic Dart part of this file, see the

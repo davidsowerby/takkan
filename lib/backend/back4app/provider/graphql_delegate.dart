@@ -1,14 +1,14 @@
 import 'package:graphql/client.dart';
-import 'package:precept_backend/backend/data_provider/graphql_delegate.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/common/util/string.dart';
-import 'package:precept_script/data/provider/document_id.dart';
-import 'package:precept_script/data/select/field_selector.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_backend/backend/data_provider/graphql_delegate.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_backend/backend/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/field_selector.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/util/string.dart';
 
 class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   Back4AppGraphQLDelegate() : super();
@@ -16,7 +16,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
   /// Creates a database row containing [script] and it associated fields.  Set [incrementVersion]
   /// to increment the version before saving
   /// 'nameLocale' value is created to use as a filter, combining script name and Locale
-  Future<UpdateResult> uploadPreceptScript({
+  Future<UpdateResult> uploadTakkanScript({
     required Script script,
     required String locale,
     bool incrementVersion = false,
@@ -40,7 +40,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     };
     QueryResult queryResult = await client.query(
       QueryOptions(
-          document: gql(createPreceptScriptMutation), variables: value),
+          document: gql(createTakkanScriptMutation), variables: value),
     );
     if (queryResult.hasException) {
       throw APIException(
@@ -49,7 +49,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     return UpdateResult(
       data: queryResult.data ?? {},
       success: true,
-      documentClass: 'PreceptScript',
+      documentClass: 'TakkanScript',
       objectId: '??',
     );
   }
@@ -104,7 +104,7 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
     return ReadResultItem(
       data: candidate!['script'],
       success: true,
-      documentClass: 'PreceptScript',
+      documentClass: 'TakkanScript',
       queryReturnType: QueryReturnType.futureItem,
     );
   }
@@ -247,10 +247,10 @@ class Back4AppGraphQLDelegate extends DefaultGraphQLDataProviderDelegate {
 
 }
 
-String createPreceptScriptMutation = '''
-      mutation CreatePreceptScript(\$input: CreatePreceptScriptFieldsInput){
-        createPreceptScript(input: {fields: \$input}){
-          preceptScript{
+String createTakkanScriptMutation = '''
+      mutation CreateTakkanScript(\$input: CreateTakkanScriptFieldsInput){
+        createTakkanScript(input: {fields: \$input}){
+          takkanScript{
             name,
             locale,
             script,
@@ -263,7 +263,7 @@ String createPreceptScriptMutation = '''
 
 String laterScripts =
     r'''query LaterScripts ($target: Float!, $nameLocale: String!){
-  preceptScripts(where: { version: {greaterThanOrEqualTo: $target} AND: {nameLocale:{equalTo:$nameLocale}}    }) {
+  takkanScripts(where: { version: {greaterThanOrEqualTo: $target} AND: {nameLocale:{equalTo:$nameLocale}}    }) {
     count
     edges {
       node {

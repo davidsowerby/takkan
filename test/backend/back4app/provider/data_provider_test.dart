@@ -1,16 +1,16 @@
-import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
-import 'package:precept_backend/backend/app/app_config.dart';
-import 'package:precept_backend/backend/app/app_config_loader.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_medley_script/medley/medley_script.dart';
-import 'package:precept_script/data/select/query.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/script.dart';
+import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/app/app_config_loader.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_script/data/select/query.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
 
-/// Note: This uses the precept-dev instance of Back4App and therefore needs
-/// precept.json to be set up for it (but excluded from Git)
+/// Note: This uses the takkan-dev instance of Back4App and therefore needs
+/// takkan.json to be set up for it (but excluded from Git)
 void main() async {
   AppConfigFileLoader loader = AppConfigFileLoader();
   AppConfig appConfig = await loader.load();
@@ -26,7 +26,7 @@ void main() async {
 
     tearDownAll(() {});
 
-    /// clear the PreceptScript table
+    /// clear the TakkanScript table
     setUp(() async {
       // await deleteAllScripts(provider, scriptSchema);
     });
@@ -39,7 +39,7 @@ void main() async {
       //   // when
       //   final CreateResult createResult = await provider!.createDocument(
       //     data: s.toJson(),
-      //     path: 'PreceptScript',
+      //     path: 'TakkanScript',
       //     fieldSelector: FieldSelector(fields: ['createdAt']),
       //   );
       //   // then
@@ -90,44 +90,44 @@ void main() async {
     //
     //     myScript.init();
     //     final UpdateResult result = await provider!
-    //         .uploadPreceptScript(script: myScript, locale: Locale('en', 'US'));
+    //         .uploadTakkanScript(script: myScript, locale: Locale('en', 'US'));
     //     // then
-    //     expect(result.data['createPreceptScript'], isNotNull);
+    //     expect(result.data['createTakkanScript'], isNotNull);
     //     expect(
-    //         result.data['createPreceptScript']?['preceptScript']?['version'], 0);
+    //         result.data['createTakkanScript']?['takkanScript']?['version'], 0);
     //     expect(
-    //         result.data['createPreceptScript']?['preceptScript']?['script']
+    //         result.data['createTakkanScript']?['takkanScript']?['script']
     //             ?['version'],
     //         0);
     //
     //     // when
-    //     final UpdateResult result2 = await provider!.uploadPreceptScript(
+    //     final UpdateResult result2 = await provider!.uploadTakkanScript(
     //         script: myScript, locale: Locale('en', 'US'), incrementVersion: true);
     //
-    //     expect(result2.data['createPreceptScript'], isNotNull);
+    //     expect(result2.data['createTakkanScript'], isNotNull);
     //     expect(
-    //         result2.data['createPreceptScript']?['preceptScript']?['version'], 1);
+    //         result2.data['createTakkanScript']?['takkanScript']?['version'], 1);
     //     expect(
-    //         result2.data['createPreceptScript']?['preceptScript']?['script']
+    //         result2.data['createTakkanScript']?['takkanScript']?['script']
     //             ?['version'],
     //         1);
     //   });
     //
     //   test('latest versions', () async {
     //     // given we load a v0, v1 and 2 x v2
-    //     await provider!.uploadPreceptScript(
+    //     await provider!.uploadTakkanScript(
     //         script: myScript,
     //         locale: Locale('en', 'US'),
     //         incrementVersion: false);
-    //     UpdateResult result = await provider!.uploadPreceptScript(
+    //     UpdateResult result = await provider!.uploadTakkanScript(
     //         script: myScript, locale: Locale('en', 'US'), incrementVersion: true);
     //     final myScript1 = PScript.fromJson(result.data);
-    //     result = await provider!.uploadPreceptScript(
+    //     result = await provider!.uploadTakkanScript(
     //         script: myScript1,
     //         locale: Locale('en', 'US'),
     //         incrementVersion: true);
     //     final myScript2 = PScript.fromJson(result.data);
-    //     result = await provider!.uploadPreceptScript(
+    //     result = await provider!.uploadTakkanScript(
     //         script: myScript2,
     //         locale: Locale('en', 'US'),
     //         incrementVersion: false);
@@ -143,8 +143,8 @@ void main() async {
   });
 }
 
-const String fetchAllScripts = r'''query GetPreceptScripts {
-  preceptScripts {
+const String fetchAllScripts = r'''query GetTakkanScripts {
+  takkanScripts {
     edges {
       node{
         objectId

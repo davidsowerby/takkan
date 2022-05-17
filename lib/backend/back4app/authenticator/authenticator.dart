@@ -1,10 +1,10 @@
 import 'package:meta/meta.dart';
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/data_provider.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_backend/backend/user/precept_user.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/query.dart';
+import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/query.dart';
 
 class Back4AppAuthenticator
     extends Authenticator<DataProvider, ParseUser, Back4AppDataProvider> {
@@ -33,13 +33,13 @@ class Back4AppAuthenticator
     this.nativeUser = nativeUser;
     final ParseResponse authResult = await nativeUser.login();
     if (authResult.success) {
-      final updatedUser = preceptUserFromNative(nativeUser);
+      final updatedUser = takkanUserFromNative(nativeUser);
       return AuthenticationResult(success: true, user: updatedUser);
     } else {
       return AuthenticationResult(
         success: false,
         message: authResult.error?.message ?? 'Unknown',
-        user: PreceptUser.unknownUser(),
+        user: TakkanUser.unknownUser(),
         errorCode: authResult.error?.code ?? -999,
       );
     }
@@ -50,7 +50,7 @@ class Back4AppAuthenticator
   }
 
   @override
-  Future<bool> doDeRegister(PreceptUser user) {
+  Future<bool> doDeRegister(TakkanUser user) {
     // TODO: implement doDeRegister
     throw UnimplementedError();
   }
@@ -61,7 +61,7 @@ class Back4AppAuthenticator
       {required String username, required String password}) async {
     final nativeUser = ParseUser(username, password, username);
     final ParseResponse authResult = await nativeUser.signUp();
-    final updatedUser = preceptUserFromNative(nativeUser);
+    final updatedUser = takkanUserFromNative(nativeUser);
     this.nativeUser = nativeUser;
     if (authResult.success) {
       return AuthenticationResult(success: true, user: updatedUser);
@@ -69,42 +69,42 @@ class Back4AppAuthenticator
       final errorCode = authResult.error?.code ?? -999;
       if (errorCode == 101) {
         return AuthenticationResult(
-            success: false, errorCode: -1, user: PreceptUser.unknownUser());
+            success: false, errorCode: -1, user: TakkanUser.unknownUser());
       }
       return AuthenticationResult(
           success: false,
           message: authResult.error?.message ?? 'Unknown',
-          user: PreceptUser.unknownUser());
+          user: TakkanUser.unknownUser());
     }
   }
 
   @override
-  Future<bool> doRequestPasswordReset(PreceptUser user) async {
-    final nativeUser = preceptUserToNative(user);
+  Future<bool> doRequestPasswordReset(TakkanUser user) async {
+    final nativeUser = takkanUserToNative(user);
     final result = await nativeUser.requestPasswordReset();
     this.nativeUser = nativeUser;
     return result.success;
   }
 
   @override
-  Future<bool> doUpdateUser(PreceptUser user) {
+  Future<bool> doUpdateUser(TakkanUser user) {
     // TODO: implement doUpdateUser
     throw UnimplementedError();
   }
 
   @override
-  PreceptUser preceptUserFromNative(ParseUser? nativeUser) {
+  TakkanUser takkanUserFromNative(ParseUser? nativeUser) {
     if (nativeUser == null) {
-      return PreceptUser.unknownUser();
+      return TakkanUser.unknownUser();
     }
     // ignore: invalid_use_of_protected_member
     final Map<String, dynamic> json = nativeUser.toJson();
-    return PreceptUser.fromJson(json);
+    return TakkanUser.fromJson(json);
   }
 
   @override
-  ParseUser preceptUserToNative(PreceptUser preceptUser) {
-    return ParseUser(preceptUser.userName, '?', preceptUser.email);
+  ParseUser takkanUserToNative(TakkanUser takkanUser) {
+    return ParseUser(takkanUser.userName, '?', takkanUser.email);
   }
 
   @override

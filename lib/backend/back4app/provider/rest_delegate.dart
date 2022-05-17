@@ -1,12 +1,12 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/rest_delegate.dart';
-import 'package:precept_backend/backend/data_provider/result.dart';
-import 'package:precept_backend/backend/exception.dart';
-import 'package:precept_script/common/log.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/rest_delegate.dart';
+import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_backend/backend/exception.dart';
+import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
 
 class Back4AppRestDelegate extends DefaultRestDataProviderDelegate {
   Back4AppRestDelegate(IDataProvider parent) : super(parent);
@@ -14,7 +14,8 @@ class Back4AppRestDelegate extends DefaultRestDataProviderDelegate {
   @override
   Future<DeleteResult> deleteDocument({required DocumentId documentId}) async {
     final String doc = documentUrl(documentId);
-    final dio.Response response = await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers))
+    final dio.Response response =
+        await dio.Dio(dio.BaseOptions(headers: instanceConfig.headers))
             .delete(doc);
 
     if (response.statusCode == HttpStatus.ok) {

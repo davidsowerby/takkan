@@ -1,18 +1,18 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
-import 'package:precept_back4app_client/backend/back4app/authenticator/authenticator.dart';
-import 'package:precept_back4app_client/backend/back4app/provider/graphql_delegate.dart';
-import 'package:precept_backend/backend/data_provider/data_provider.dart';
-import 'package:precept_backend/backend/data_provider/data_provider_library.dart';
-import 'package:precept_backend/backend/data_provider/delegate.dart';
-import 'package:precept_backend/backend/user/authenticator.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/provider/document_id.dart';
+import 'package:takkan_back4app_client/backend/back4app/authenticator/authenticator.dart';
+import 'package:takkan_back4app_client/backend/back4app/provider/graphql_delegate.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
+import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/provider/document_id.dart';
 
 class Back4AppDataProvider extends DefaultDataProvider<DataProvider> {
   Back4AppDataProvider({required DataProvider config})
       : super(
-          config: config,
-        );
+    config: config,
+  );
 
   DocumentId documentIdFromData(Map<String, dynamic> data) {
     return DocumentId(
