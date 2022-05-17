@@ -1,6 +1,6 @@
 # Medley
 
-Medley is a reference application which attempts cover every permutation of build options available through [Script](../user-guide/takkan-script.md) and [Schema](../user-guide/precept-schema.md).
+Medley is a reference application which attempts cover every permutation of build options available through [Script](../user-guide/takkan-script.md) and [Schema](../user-guide/takkan-schema.md).
 
 Medley is in the *takkan_medley* package.
 
@@ -56,7 +56,7 @@ How it is interpreted for the target 'database' depends on the `BackendDelegate`
 |------------------|-----------------|---------------------------------------------------|------------------|-------------------|
 | id               | PString         | none                                              | customer, admin  | admin             |
 | recordDate       | PDate           | none                                              | customer, admin  | system            |
-| customer         | PDocument       | required                                          | customer, admin  | customer          |
+| customer         | Document       | required                                          | customer, admin  | customer          |
 | address          | PPointer        | only one target                                   | customer, admin  | customer          |
 | notifications*   | PSelectBoolean  | offers can only be true >= 30 days after joinDate | customer, admin  | customer          |
 | linkedAccounts   | PPointer        |                                                   | customer, admin  | customer, admin   |

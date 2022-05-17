@@ -15,7 +15,7 @@ With the help of the [freezed](https://pub.dev/packages/freezed) package, field 
 
 ``` dart {7-10}
 final schema = Schema(name: 'kitchenSink', documents: {
-  'Account': PDocument(
+  'Account': Document(
     fields: {
       'category': PString(
         validations: [

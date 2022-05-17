@@ -38,10 +38,10 @@ Tap ![status](images/status.svg) to see the current status, or :point_right: to 
 
 For each feature, tap the ![status](images/status.svg) icon for the latest status, or :point_right: for more detail.
 
-1. Takkan uses a script (`Script`) to defined the presentation of Widgets.[![status](images/status.svg)](status.md#script)[:point_right:](user-guide/takkan-script.md)
+1. Takkan uses a script (`Script`) to define the presentation of Widgets.[![status](images/status.svg)](status.md#script)[:point_right:](user-guide/takkan-script.md)
 1. Traits (similar to styles) are provided to simplify consistent presentation.[![status](images/status.svg)](status.md#traits) [:point_right:](user-guide/traits.md)
 1. Various layout schemes are provided[![status](images/status.svg)](status.md#layouts) [:point_right:](user-guide/layouts.md)
-1. A schema (`Schema`) defines data structure, roles and permissions.[![status](images/status.svg)](status.md#schema) [:point_right:](user-guide/layouts.md)
+1. A schema (`Schema`) defines data structure, roles and permissions.[![status](images/status.svg)](status.md#schema) [:point_right:](user-guide/takkan-schema.md)
 1. Data bindings are created automatically, converting data type between model and presentation as needed.[![status](images/status.svg)](status.md#data-bindings) [:point_right:](./user-guide/data-bindings.md)
 1. The Edit / Save / Cancel logic is generated automatically (unless an item is read only).[![status](images/status.svg)](status.md#edit-save-cancel) [:point_right:](./user-guide/edit-save-cancel.md)
 1. Roles defined by the `Schema` are used to hide / show widgets / pages as appropriate. [![status](images/status.svg)](status.md#roles-control-display) [:point_right:](./user-guide/roles-control-display.md)

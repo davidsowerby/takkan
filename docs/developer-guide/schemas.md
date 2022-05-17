@@ -2,7 +2,7 @@
 
 The application schema, defined by instances of `Schema` are an integral part of Takkan.  
 
-Although multiple instances of `Schema` may be used to define an application, they are merged into one collection of `PDocument`s to form the application schema. 
+Although multiple instances of `Schema` may be used to define an application, they are merged into one collection of `Document`s to form the application schema. 
 
 There are multiple elements which need to be kept in sync to ensure consistency:
 
@@ -130,7 +130,7 @@ Back4App is the only [implementation](back4app-implementation.md#server-side-fra
                                                                                              
 ## Testing
 
-Use Back4App instance *precept-framework-test*
+Use Back4App instance *takkan-framework-test*
 
 ### Steps
 

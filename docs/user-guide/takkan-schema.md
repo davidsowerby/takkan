@@ -21,7 +21,7 @@ The terminology used by the Schema is incredibly simple, and it is up to an impl
 | Term      | Description                                                    |
 |-----------|----------------------------------------------------------------|
 | Schema   | A schema definition                                            |
-| PDocument | Equivalent to a JSON document                                  |
+| Document | Equivalent to a JSON document                                  |
 | PField    | Abstract, database field, sub-classed for different data types |                                                                                                  | Field     | Field |
 
 
@@ -64,14 +64,14 @@ The schema is provided by the *takkan_script* package, as shown in the [dependen
 
 Multiple schema JSON files can be loaded via the `Takkan` instance. There needs to be at least one schema, unless the app is completely static.
 
-A `PDocument` (the schema for a specific document type) is declared within a `PQuery`, and merged into a single `Schema` by `Takkan`.
+A `Document` (the schema for a specific document type) is declared within a `PQuery`, and merged into a single `Schema` by `Takkan`.
 
 There are options to allow pre-loading or on-demand loading. [:thinking:](https://gitlab.com/takkan/precept-client/-/issues/25)
 
-Each `PDocument` is loaded by an implementation of `TakkanLoader`, typically from the app's primary backend, but it can be from anywhere.
+Each `Document` is loaded by an implementation of `TakkanLoader`, typically from the app's primary backend, but it can be from anywhere.
 
 
-## PDocument
+## Document
 
 This is the equivalent of, and represented by a nestable JSON document, regardless of how simple or complex it is.  
 

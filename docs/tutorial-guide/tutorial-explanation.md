@@ -66,8 +66,8 @@ We'll construct the equivalent of a "Hello World" app, and then explain how it h
 
 - delete the test file *widget_test.dart*
 - create folder *lib/app/config*
-- create file *lib/app/config/precept.dart*
-- paste the following into *lib/app/config/precept.dart*:
+- create file *lib/app/config/takkan.dart*
+- paste the following into *lib/app/config/takkan.dart*:
 
 ```dart
 import 'package:takkan_script/common/script/common.dart';
@@ -104,7 +104,7 @@ final myScript = Script(
 ### Explanation
 
 Takkan uses a `Script` object to define what is displayed. This is what is defined in the *
-precept.dart* file.
+takkan.dart* file.
 
 In practice, this definition expected to be retrieved from a remote server somewhere, as a JSON
 file, but during early development stages, it is simpler to use the `Script` object directly.
@@ -249,7 +249,7 @@ Note The `Script` and `Schema` definitions do not have to be separated, it just 
 bit easier to manage
 :::
 
-- paste the following into *precept.dart*
+- paste the following into *takkan.dart*
 
 ```dart
 
@@ -272,7 +272,7 @@ directly from their declaration.
 
 ``` dart
 void main() async {
-  await precept.init(
+  await takkan.init(
     loaders: [
       DirectTakkanLoader(script: myScript),
     ],

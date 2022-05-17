@@ -107,7 +107,7 @@ with:
 ## Step 01 - Hello World
 
 - delete the test file *widget_test.dart*
-- create a file *lib/app/config/precept.dart* containing:
+- create a file *lib/app/config/takkan.dart* containing:
 
 ```dart
 import 'package:takkan_script/common/script/common.dart';
@@ -153,11 +153,11 @@ This script is what will define our application.
 import 'package:flutter/material.dart';
 import 'package:takkan_client/app/app.dart';
 import 'package:takkan_client/app/loader.dart';
-import 'package:takkan_client/app/precept.dart';
-import 'package:takkan_tutorial/app/config/precept.dart';
+import 'package:takkan_client/app/takkan.dart';
+import 'package:takkan_tutorial/app/config/takkan.dart';
 
 void main() async {
-  await precept.init(
+  await takkan.init(
     loaders: [
       DirectTakkanLoader(script: myScript),
     ],
@@ -189,7 +189,7 @@ void main() async {
 
 ## Step 02 - Styling text
 
-- Update *precept.dart* to show text element with different traits, and add a `PNavButton`
+- Update *takkan.dart* to show text element with different traits, and add a `PNavButton`
 
 ```dart {18-32}
 import 'package:takkan_script/common/script/common.dart';
@@ -245,7 +245,7 @@ A simple page construct for users to choose where to go.
 
 Route 'chooseList' added, with `PNavButtonSet` providing list of routes for user to select.
 
-- Update *precept.dart* to:
+- Update *takkan.dart* to:
 
 ```dart {35-48}
 import 'package:takkan_script/common/script/common.dart';
@@ -332,15 +332,15 @@ We will use Takkan to generate the Back4App schema and populate some test data.
 
 We need a Takkan `PDataProvider` to support the query, and an 'openIssues' route to display it.
 
-- Update *precept.dart* to be:
+- Update *takkan.dart* to be:
 
-<<< docs/tutorial/step04/precept.dart{16-22,63-84}
+<<< docs/tutorial/step04/takkan.dart{16-22,63-84}
 
 - Install the **takkan_back4app** package:
 
 ?????????
 
-- Update *main.dart* to register Back4App **before** precept.init
+- Update *main.dart* to register Back4App **after** precept.init
 
 <<< docs/tutorial/step04/main.dart{9-9}
 
@@ -366,6 +366,6 @@ route, which we have not yet defined.
 
 ## Step 05 - Authentication and Permissions
 
-- Update *precept.dart* to:
+- Update *takkan.dart* to:
 
 [![Boo](images/notes.svg)](tutorial-explanation.md#step-04---page-with-query)

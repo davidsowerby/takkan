@@ -4,9 +4,9 @@
 
 The Takkan Script, `Script`, defines the presentation of any pages supplied by Takkan.
  
-It contains one or more [PDataProvider](data-providers.md) instance, which  in turn contain [Schema](precept-schema.md) instances, to connect presentation to data.
+It contains one or more [PDataProvider](data-providers.md) instance, which  in turn contain [Schema](takkan-schema.md) instances, to connect presentation to data.
 
-It also uses the [Schema](precept-schema.md) to define validation, and user permissions. Takkan uses these permissions to decide whether or not to enable editing / viewing of data.
+It also uses the [Schema](takkan-schema.md) to define validation, and user permissions. Takkan uses these permissions to decide whether or not to enable editing / viewing of data.
 
 
 :::caution
@@ -38,7 +38,7 @@ The  "Widget" column shows the associated Widget provided by Takkan, where there
 | Particle | PParticle [:point_right:](#particle)                         | Defines the attributes of a single read or edit Widget                                              | Particle  |
 
 
-Combined with the [Schema](./precept-schema.md), the overall structure is depicted below.  
+Combined with the [Schema](takkan-schema.md), the overall structure is depicted below.  
 
 
 :::tip Note
@@ -60,7 +60,7 @@ From [Page](#page) downwards it is about producing Widgets, and that process is 
 
 ## Version Control
 
-`Script` and [Schema](./precept-schema.md) are version numbered to help ensure consistency, especially when you may have users with different versions.
+`Script` and [Schema](takkan-schema.md) are version numbered to help ensure consistency, especially when you may have users with different versions.
 
 A version is a simple incrementing integer.
 
@@ -155,7 +155,7 @@ When `PPart` is constructed as a `Part` Widget, if it not read only it also has 
 
 The `EditState` controls the current edit mode, and may also further inhibit editing if the user does not have permissions.
 
-The `Part` references its nearest [Query](#query), which in turn contains a reference to the [schema](./precept-schema.md)
+The `Part` references its nearest [Query](#query), which in turn contains a reference to the [schema](takkan-schema.md)
 
 The schema is used to support model-to-view type conversion and validation.
 
@@ -179,7 +179,7 @@ You can just use pre-defined Particles or define your own and register them with
 Configured by `PDataProvider` this defines the backend system to use - there may be more than one in a Takkan system.  
 For example, most of the data may come from, say, Back4App, but the app may also use one or more public REST APIs for supplementary data. 
 
-`PDataProvider` declares the [schema](./precept-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the [Particle](#particle)).
+`PDataProvider` declares the [schema](takkan-schema.md) to use, which supports type conversion and validation between data and the presentation layer (the [Particle](#particle)).
 
 ### Configuration File
 
