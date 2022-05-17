@@ -4,7 +4,7 @@ import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/element.dart';
 import 'package:takkan_script/script/layout.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/page/page.dart';
@@ -15,12 +15,12 @@ import 'package:takkan_script/validation/message.dart';
 part 'static_page.g.dart';
 
 /// A [PageStatic] defines a static presentation of a Page, as perceived by a user.
-/// It is mapped to a route in the *precept_client* PreceptRouter. See [Page] for pages connecting
+/// It is mapped to a route in the *takkan_client* TakkanRouter. See [Page] for pages connecting
 /// to data).
 ///
 /// A [PageStatic] is static and requires no dynamic data.   [Panel] instances in [children] may however define their own data connections.
 ///
-/// The [PreceptRouter] uses routes to navigate to the appropriate page.
+/// The [TakkanRouter] uses routes to navigate to the appropriate page.
 ///
 /// [routes] must define at least one route to associate with a {PPageStatic] instance
 ///
@@ -28,7 +28,7 @@ part 'static_page.g.dart';
 /// or 'documents/'
 ///
 /// A list of all routes generated and defined will be available during script
-/// validation, see https://gitlab.com/precept1/takkan_script/-/issues/28
+/// validation, see https://gitlab.com/takkan/takkan_script/-/issues/28
 ///
 /// [pageType] may in future be used to look up from [PageLibrary] - not currently used
 ///
@@ -88,7 +88,7 @@ class PageStatic extends PodBase implements Pages {
     }
   }
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         children,

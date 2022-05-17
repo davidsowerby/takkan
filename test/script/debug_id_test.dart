@@ -1,4 +1,4 @@
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/data/select/query.dart';
 import 'package:takkan_script/page/static_page.dart';

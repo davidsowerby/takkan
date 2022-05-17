@@ -5,7 +5,7 @@ import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/element.dart';
 import 'package:takkan_script/script/help.dart';
 import 'package:takkan_script/script/layout.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data.dart';
@@ -61,7 +61,7 @@ class Panel extends PodBase implements Panels {
     super.id,
   }) : _heading = heading;
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         if (heading != null) heading,
@@ -102,7 +102,7 @@ class Panel extends PodBase implements Panels {
 }
 
 @JsonSerializable(explicitToJson: true)
-class PanelHeading extends PreceptItem {
+class PanelHeading extends TakkanItem {
   final bool expandable;
   final bool canEdit;
   final Help? help;
@@ -126,7 +126,7 @@ class PanelHeading extends PreceptItem {
   PodBase get parent => super.parent as PodBase;
 }
 
-/// A Pod is a generic term for a Precept construct that contains children.
+/// A Pod is a generic term for a Takkan construct that contains children.
 ///
 /// Implementations include [Panel], [Page] and [Group].  The name is chosen
 /// mainly to avoid a clash with Flutter's Container

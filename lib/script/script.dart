@@ -6,7 +6,7 @@ import 'package:takkan_script/common/debug.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/converter/conversion_error_messages.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/query_converter.dart';
@@ -18,7 +18,7 @@ import 'package:takkan_script/validation/message.dart';
 
 part 'script.g.dart';
 
-/// The heart of Precept, this structure describes the the Widgets to use and their layout.
+/// The heart of Takkan, this structure describes the the Widgets to use and their layout.
 /// It also contains a reference to the [schema] to use.
 ///
 /// [name] must be unique within the scope of where the script will be used.
@@ -28,19 +28,19 @@ part 'script.g.dart';
 /// [nameLocale] is generated automatically and should not be set directly
 /// [version] is a combination of an incrementing integer and a tag or label for use
 /// by the developer.  It is imperative that this version is maintained correctly,
-/// so that Precept version control can work correctly
+/// so that Takkan version control can work correctly
 /// [schema] describes the data in use, along with validation and permissions.  As
 /// an alternative to specifying the schema directly, [schemaSource] can be used to
 /// load the schema during application start.
 ///
 /// Pages are defined by a combination of [pages] and [routes].  Most pages can
-/// be declared in [pages] without the need to explicitly define a route.  Precept
+/// be declared in [pages] without the need to explicitly define a route.  Takkan
 /// then constructs the route from the document class and objectId, being displayed
-/// and the [PreceptRouter] will display the page correctly. A similar approach is
+/// and the [TakkanRouter] will display the page correctly. A similar approach is
 /// taken for pages based on a list of a document class. Static pages (that is,
 /// pages which do not directly use dynamic data) need to be explicitly declared
 /// in routes, as a route-page pair. You may also use [routes] for custom pages,
-/// or just because you want to!  The [PreceptRouter] first checks for the existence
+/// or just because you want to!  The [TakkanRouter] first checks for the existence
 /// of an entry in [routes], and if none is found, uses a default route.
 ///
 /// Note that if you want two different pages for the same document class, one of them
@@ -57,8 +57,8 @@ part 'script.g.dart';
 /// - [validationErrorMessages] TODO
 /// - [_scriptValidationMessages] are collected during the [validate] process
 ///
-/// See also the [overview](https://preceptblog.co.uk/docs/user-guide/intro) of the User Guide,
-/// and the [detailed description](https://preceptblog.co.uk/docs/user-guide/precept-script) of PScript
+/// See also the [overview](https://takkanblog.co.uk/docs/user-guide/intro) of the User Guide,
+/// and the [detailed description](https://takkanblog.co.uk/docs/user-guide/takkan-script) of PScript
 ///
 
 @JsonSerializable(explicitToJson: true)
@@ -129,7 +129,7 @@ class Script extends Common {
   }
 
   /// Validates the structure and content of the model
-  /// If there are validation errors, throws a [PreceptException] if [throwOnFail] is true otherwise
+  /// If there are validation errors, throws a [TakkanException] if [throwOnFail] is true otherwise
   /// returns the list of validation messages
   List<ValidationMessage> validate(
       {bool throwOnFail = false,
@@ -149,7 +149,7 @@ class Script extends Common {
         buf.writeln('No validation errors found in PScript $name');
       }
       if (throwOnFail && _scriptValidationMessages.isNotEmpty) {
-        throw PreceptException(buf.toString());
+        throw TakkanException(buf.toString());
       } else {
         logType(runtimeType).i(buf.toString());
       }
@@ -176,7 +176,7 @@ class Script extends Common {
   ///
   /// This is a two stage process.
   /// 1.  the [parent] and [script] properties are set.
-  /// 1.  [doInit] is called for each [PreceptItem}
+  /// 1.  [doInit] is called for each [TakkanItem}
   ///
   /// Both stages cascade down to the [subElements].
   ///
@@ -185,13 +185,13 @@ class Script extends Common {
   /// without making the order of [subElements] critical.
   ///
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
-  /// by each class) is treated as the [id].  See [PreceptItem.doInit] for the processing of ids, and
-  /// each see the [doInit] call for each [PreceptItem} type for which property, if any, is used.
+  /// by each class) is treated as the [id].  See [TakkanItem.doInit] for the processing of ids, and
+  /// each see the [doInit] call for each [TakkanItem} type for which property, if any, is used.
   Walkers init({bool useCaptionsAsIds = true}) {
     final parentWalker = SetParentWalker();
     final parentParams = SetParentWalkerParams(
       script: this,
-      parent: NullPreceptItem(),
+      parent: NullTakkanItem(),
     );
     parentWalker.walk(this, parentParams);
 
@@ -216,7 +216,7 @@ class Script extends Common {
     _mergeRoutes();
   }
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         schema,
@@ -230,7 +230,7 @@ class Script extends Common {
     if (documentSchema == null) {
       String msg = "document schema '$documentSchemaName' not found";
       logType(runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     return documentSchema;
   }

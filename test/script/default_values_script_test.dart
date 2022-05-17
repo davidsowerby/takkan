@@ -1,4 +1,4 @@
-import 'package:precept_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/medley/medley_script.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/query_view.dart';
 import 'package:takkan_script/part/text.dart';

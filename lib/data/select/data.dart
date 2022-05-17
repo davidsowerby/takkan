@@ -151,7 +151,7 @@ class DataListJsonConverter {
 
         default:
           print("data type $dataType not recognised");
-          throw PreceptException("data type $dataType not recognised");
+          throw TakkanException("data type $dataType not recognised");
       }
     }
     return results;
@@ -197,7 +197,7 @@ class DataListJsonConverter {
         default:
           String msg = '${type.toString()} is not recognised';
           logName('PDataListJsonConverter').e(msg);
-          throw PreceptException(msg);
+          throw TakkanException(msg);
       }
 
       /// Will only need the replace if we use freezed again

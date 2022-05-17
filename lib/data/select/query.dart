@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/precept_item.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
 import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/script/script.dart';
 
 part 'query.g.dart';
@@ -17,13 +17,13 @@ part 'query.g.dart';
 /// [fields] is a comma separated list of field names you want values to be returned
 /// for, and applies only to GraphQL queries.  REST queries always return all fields.
 /// There is an outstanding issue to automatically generate this list for GraphQL
-/// queries. https://gitlab.com/precept1/takkan_script/-/issues/2
+/// queries. https://gitlab.com/takkan/takkan_script/-/issues/2
 ///
 /// [propertyReferences] allow linking the data-select variables dynamically to other data accessible to the data-select.
-/// The reference is relative to the [parentBinding] of the [PreceptPage], [Panel] or [Part] holding the data-select.
+/// The reference is relative to the [parentBinding] of the [TakkanPage], [Panel] or [Part] holding the data-select.
 ///
 /// [variables] are also passed to data-select variables, and take the form of key-value pairs.  They may be defined
-/// as part of the [Script] if the data-select is 'fixed', or originate in the [RouteSettings] passed to the [PreceptPage].
+/// as part of the [Script] if the data-select is 'fixed', or originate in the [RouteSettings] passed to the [TakkanPage].
 ///
 /// There are potentially therefore 3 sources of variables, which are combined into a single map in this order.
 /// Thus, any duplicated keys will have the value provided by the lowest on this list:
@@ -36,7 +36,7 @@ part 'query.g.dart';
 /// will take precedence
 ///
 ///
-abstract class Query extends PreceptItem {
+abstract class Query extends TakkanItem {
   final Map<String, dynamic> variables;
   final List<String> propertyReferences;
   final QueryReturnType returnType;
@@ -59,7 +59,7 @@ abstract class Query extends PreceptItem {
 
 /// A 'pure' GraphQL data-select.  [script] must contain a complete GraphQL script
 /// Variable values can be added directly with [variables] or can be looked up from the [propertyReferences].
-/// Both can be specified.  When used within the Precept client, variables are combined with those
+/// Both can be specified.  When used within the Takkan client, variables are combined with those
 /// passed as page arguments.  They are combined in the following order of precedence:
 ///
 /// 1. [Query.variables]
@@ -71,7 +71,7 @@ abstract class Query extends PreceptItem {
 /// GraphQL syntax gets lost during interpolation by Dart.
 ///
 /// [table]and [documentSchema] have to be specified, but it is intended that it will be automatically derived
-/// from the [script].  See  https://gitlab.com/precept1/takkan_script/-/issues/5
+/// from the [script].  See  https://gitlab.com/takkan/takkan_script/-/issues/5
 @JsonSerializable(explicitToJson: true)
 class GraphQLQuery extends Query {
   final String queryScript;
@@ -105,7 +105,7 @@ class GraphQLQuery extends Query {
 /// [table] is a general term to describe a table-like classification of data.  In Back4App this is the equivalent of 'Class'
 ///
 /// Variable values can be added directly with [variables] or can be looked up from the [propertyReferences].
-/// Both can be specified.  When used within the Precept client, variables are combined with those
+/// Both can be specified.  When used within the Takkan client, variables are combined with those
 /// passed as page arguments.  They are combined in the following order of precedence:
 ///
 /// 1. [Query.variables]

@@ -5,19 +5,19 @@ import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/validation/message.dart';
 
-part 'precept_item.g.dart';
+part 'takkan_item.g.dart';
 
 /// The whole of the [Script] structure is a tree, with a single [Script] instance at its root.
 ///
-/// This [PreceptItem] is the base class for the major components of that tree.
+/// This [TakkanItem] is the base class for the major components of that tree.
 ///
-/// [parent] is the parent [PreceptItem].
+/// [parent] is the parent [TakkanItem].
 ///
 /// There are there types of id, used to support testing and debugging.
 ///
 /// The [uid] is a unique id within the scope of of a [parent]
 /// The [debugId] is a hierarchical 'path' id unique within the scope of a [Script] instance.
-/// The hierarchical nature of this key enables means any particular [PreceptItem]
+/// The hierarchical nature of this key enables means any particular [TakkanItem]
 /// can be identified via its parent chain. This also becomes the Widget key of the
 /// item's associated Widget, especially useful for functional testing.
 ///
@@ -33,34 +33,34 @@ part 'precept_item.g.dart';
 /// The only persisted value is [_id] as all the others are generated.
 ///
 @JsonSerializable(explicitToJson: true)
-class PreceptItem with WalkTarget {
+class TakkanItem with WalkTarget {
   final String? _id;
   @JsonKey(ignore: true)
   String? uid;
   @JsonKey(ignore: true)
   String? _debugId;
   @JsonKey(ignore: true)
-  late PreceptItem _parent;
+  late TakkanItem _parent;
   @JsonKey(ignore: true)
   int? _index;
   @JsonKey(ignore: true)
   late Script _script;
 
-  PreceptItem({
+  TakkanItem({
     String? id,
   }) : _id = id;
 
-  factory PreceptItem.fromJson(Map<String, dynamic> json) =>
-      _$PreceptItemFromJson(json);
+  factory TakkanItem.fromJson(Map<String, dynamic> json) =>
+      _$TakkanItemFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PreceptItemToJson(this);
+  Map<String, dynamic> toJson() => _$TakkanItemToJson(this);
 
   /// Used for Widget and Functional testing.  This also becomes the Widget key in [Page], [Part] and [Panel] instances
   /// The [Script.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
   String? get debugId => _debugId;
 
-  /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/precept1/takkan_script/-/issues/21
-  PreceptItem get parent => _parent;
+  /// Would be better if we could check whether parent set by calling init, see https://gitlab.com/takkan/takkan_script/-/issues/21
+  TakkanItem get parent => _parent;
 
   String? get pid => _id;
 
@@ -69,12 +69,12 @@ class PreceptItem with WalkTarget {
   /// Defines those properties which represent child elements which require the
   /// [Walker] to visit.
   ///
-  /// These have to be coded explicitly for each [PreceptItem] sub-class to enable
+  /// These have to be coded explicitly for each [TakkanItem] sub-class to enable
   /// the [Walker].
   ///
   /// See [Common] for an example.
   ///
-  /// Not all elements are [PreceptItem] sub-classes, hence the returned list is not
+  /// Not all elements are [TakkanItem] sub-classes, hence the returned list is not
   /// typed.
   List<dynamic> get subElements => [];
 
@@ -111,14 +111,14 @@ class PreceptItem with WalkTarget {
 
     /// construct hierarchical debugId
     /// PScript cannot call on parent - it does not have one
-    if (parent is NullPreceptItem) {
+    if (parent is NullTakkanItem) {
       _debugId = uid;
     } else {
       _debugId = "${_parent.debugId}.$uid";
     }
   }
 
-  /// Walks through all instances of [PreceptItem] or its sub-classes held within this item.
+  /// Walks through all instances of [TakkanItem] or its sub-classes held within this item.
   /// At each instance, the each of the [visitors] [ScriptVisitor.step] is invoked
   @override
   walk(List<ScriptVisitor> visitors) {
@@ -153,7 +153,7 @@ abstract class WalkerParams {
 abstract class Walker<PARAMS extends WalkerParams, TRACK> {
   final List<TRACK> tracker = List.empty(growable: true);
 
-  walk(PreceptItem root, PARAMS params) {
+  walk(TakkanItem root, PARAMS params) {
     final itemResult = _processItem(root, params);
     if (itemResult is List) {
       tracker.addAll(List<TRACK>.from(itemResult));
@@ -163,17 +163,17 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
     cascade(root, params);
   }
 
-  TRACK _processItem(PreceptItem root, PARAMS params);
+  TRACK _processItem(TakkanItem root, PARAMS params);
 
-  void cascade(PreceptItem item, PARAMS params) {
+  void cascade(TakkanItem item, PARAMS params) {
     for (Object child in item.subElements) {
-      if (child is PreceptItem) {
+      if (child is TakkanItem) {
         walk(child, childParams(item, params));
       } else {
         if (child is List) {
           int count = 0;
           for (Object entry in child) {
-            if (entry is PreceptItem) {
+            if (entry is TakkanItem) {
               walk(entry, childParams(item, params, index: count));
             }
             count++;
@@ -181,7 +181,7 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
         } else {
           if (child is Map) {
             for (MapEntry entry in child.entries) {
-              if (entry.value is PreceptItem) {
+              if (entry.value is TakkanItem) {
                 walk(entry.value, childParams(item, params, name: entry.key));
               }
             }
@@ -193,7 +193,7 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
 
   /// Override this if you need to modify the params as they are passed down the tree.
   /// See [InitWalker] for an example.
-  PARAMS childParams(PreceptItem root, PARAMS params,
+  PARAMS childParams(TakkanItem root, PARAMS params,
       {int? index, String? name}) {
     return params;
   }
@@ -211,13 +211,13 @@ class InitWalkerParams extends WalkerParams {
 
 class InitWalker extends Walker<InitWalkerParams, String> {
   @override
-  String _processItem(PreceptItem item, InitWalkerParams params) {
+  String _processItem(TakkanItem item, InitWalkerParams params) {
     item.doInit(params);
     return item.debugId!;
   }
 
   @override
-  InitWalkerParams childParams(PreceptItem parentItem, InitWalkerParams params,
+  InitWalkerParams childParams(TakkanItem parentItem, InitWalkerParams params,
       {int? index, String? name}) {
     return InitWalkerParams(
       name: name,
@@ -229,7 +229,7 @@ class InitWalker extends Walker<InitWalkerParams, String> {
 
 class SetParentWalkerParams extends WalkerParams {
   final Script script;
-  final PreceptItem parent;
+  final TakkanItem parent;
 
   const SetParentWalkerParams({
     required this.script,
@@ -239,14 +239,14 @@ class SetParentWalkerParams extends WalkerParams {
 
 class SetParentWalker extends Walker<SetParentWalkerParams, String> {
   @override
-  String _processItem(PreceptItem item, SetParentWalkerParams params) {
+  String _processItem(TakkanItem item, SetParentWalkerParams params) {
     item.setParent(params);
     return item.runtimeType.toString();
   }
 
   @override
   SetParentWalkerParams childParams(
-      PreceptItem parentItem, SetParentWalkerParams params,
+      TakkanItem parentItem, SetParentWalkerParams params,
       {int? index, String? name}) {
     return SetParentWalkerParams(
       script: params.script,
@@ -257,7 +257,7 @@ class SetParentWalker extends Walker<SetParentWalkerParams, String> {
 
 class VisitorWalker extends Walker<VisitorWalkerParams, String> {
   @override
-  String _processItem(PreceptItem root, VisitorWalkerParams params) {
+  String _processItem(TakkanItem root, VisitorWalkerParams params) {
     for (ScriptVisitor visitor in params.visitors) {
       visitor.step(root);
     }
@@ -267,7 +267,7 @@ class VisitorWalker extends Walker<VisitorWalkerParams, String> {
 
 class ValidationWalker extends Walker<ValidationWalkerCollector, int> {
   @override
-  int _processItem(PreceptItem root, ValidationWalkerCollector params) {
+  int _processItem(TakkanItem root, ValidationWalkerCollector params) {
     root.doValidate(params);
     return params.messages.length;
   }

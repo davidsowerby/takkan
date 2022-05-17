@@ -17,7 +17,7 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<PreceptSchemaLoader>(() => FakePreceptSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
 
     tearDown(() {});

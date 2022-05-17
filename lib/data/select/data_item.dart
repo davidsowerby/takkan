@@ -5,7 +5,7 @@ part 'data_item.g.dart';
 
 /// Defines how to retrieve a single document.
 ///
-/// The default [DataItem] connects to the currently selected document (see DocumentPage in *precept_client+).
+/// The default [DataItem] connects to the currently selected document (see DocumentPage in *takkan_client+).
 /// Selection of the current document is made, for example, by use of a search panel etc.
 ///
 /// See below for other options for selection, such as [DataItemById], [DataItemByFunction],

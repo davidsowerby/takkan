@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/query.dart';
@@ -20,7 +20,7 @@ part 'schema.g.dart';
 /// A [Schema] is associated with a [DataProvider] instance.  The [name] must be unique
 /// within a [Schema] instance, but has no other constraint.
 ///
-/// [Schema] provides a definition for use by Precept, but could also be used to create a backend schema.
+/// [Schema] provides a definition for use by Takkan, but could also be used to create a backend schema.
 /// If it is used that way, the interpretation of it is a matter for a SchemaInterpreter implementation
 /// within the backend-specific library.
 ///
@@ -99,7 +99,7 @@ class Schema extends SchemaElement {
       String msg =
           "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
       logType(this.runtimeType).e(msg);
-      throw PreceptException(msg);
+      throw TakkanException(msg);
     }
     return doc;
   }
@@ -123,7 +123,7 @@ class Schema extends SchemaElement {
 /// PDocument(fields: [PString(name: 'title')])
 ///
 /// which for longer declarations is a bit more readable
-abstract class SchemaElement extends PreceptItem {
+abstract class SchemaElement extends TakkanItem {
   String? _name;
 
   final IsReadOnly _isReadOnly;
@@ -387,13 +387,13 @@ class Document extends SchemaElement {
       permissions.methodIsPublic(method);
 }
 
-/// Defines where to retrieve a schema from.  It references the *precept.json* file used to configure
+/// Defines where to retrieve a schema from.  It references the *takkan.json* file used to configure
 /// the application.
 ///
-/// [group] relates to the first level within *precept.json*
-/// [instance] relates to the second level within *precept.json*
+/// [group] relates to the first level within *takkan.json*
+/// [instance] relates to the second level within *takkan.json*
 @JsonSerializable(explicitToJson: true)
-class SchemaSource extends PreceptItem {
+class SchemaSource extends TakkanItem {
   final String group;
   final String instance;
 

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/query.dart';
 import 'package:takkan_script/data/select/query_converter.dart';
@@ -38,7 +38,7 @@ enum ControlEdit {
 /// Holds common properties for every level of a [Script], and its main purpose is to reduce manual configuration.
 ///
 /// With the exception of [controlEdit] and[documentId] (described below), these properties are used to construct companion Widgets
-/// in the [Widget Tree](https://www.preceptblog.co.uk/user-guide/widget-tree.html) as part of the build process.
+/// in the [Widget Tree](https://www.takkanblog.co.uk/user-guide/widget-tree.html) as part of the build process.
 /// In conjunction with Flutter and Provider, the resulting Widgets work on the basis of 'inheritance' - that is,
 /// a higher level setting is used by all lower levels, unless overridden by a lower level setting.
 ///
@@ -63,7 +63,7 @@ enum ControlEdit {
 /// as easy as possible to specify what is wanted.  [hasEditControl] is computed during [Script.init]
 /// from the combination of [controlEdit] settings at different levels, and determines whether
 /// a [Page], [Panel] or [Part] can trigger an edit.  It also determines whether there is an associated [EditState] as shown in
-/// the [User Guide](https://www.preceptblog.co.uk/user-guide/widget-tree.html)
+/// the [User Guide](https://www.takkanblog.co.uk/user-guide/widget-tree.html)
 ///
 /// - [documentId] combined with [objectId] are used to identify the item during validation, where no caption or title is defined.  It is also
 /// used as a key in the corresponding, constructed Widget to aid functional testing.
@@ -76,7 +76,7 @@ enum ControlEdit {
 ///
 @JsonSerializable(explicitToJson: true)
 @QueryConverter()
-class Common extends PreceptItem {
+class Common extends TakkanItem {
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @protected
@@ -98,7 +98,7 @@ class Common extends PreceptItem {
 
   bool get inheritedEditControl {
     Common p = parent;
-    while (p is! NullPreceptItem) {
+    while (p is! NullTakkanItem) {
       if (p.hasEditControl) {
         return true;
       }
@@ -124,10 +124,10 @@ class Common extends PreceptItem {
   @override
   doInit(InitWalkerParams params) {
     super.doInit(params);
-    PreceptItem p = parent;
+    TakkanItem p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
-    while (p is! NullPreceptItem) {
+    while (p is! NullTakkanItem) {
       final Common p1 = p as Common;
       if (p1.controlEdit != ControlEdit.inherited) {
         inherited = p1.controlEdit;
@@ -138,7 +138,7 @@ class Common extends PreceptItem {
     setupControlEdit(inherited);
   }
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         if (_query != null) _query,
@@ -203,8 +203,8 @@ class Common extends PreceptItem {
   }
 }
 
-class NullPreceptItem extends Common {
-  NullPreceptItem() : super();
+class NullTakkanItem extends Common {
+  NullTakkanItem() : super();
 }
 
 class NullSchemaElement extends SchemaElement {

@@ -15,8 +15,8 @@ void main() {
   group('PScript validation', () {
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<PreceptSchemaLoader>(
-          () => FakePreceptSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(
+          () => FakeTakkanSchemaLoader());
     });
     test('Insufficient components', () {
       // given
@@ -41,8 +41,8 @@ void main() {
   group('PPage validation 1', () {
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<PreceptSchemaLoader>(
-          () => FakePreceptSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(
+          () => FakeTakkanSchemaLoader());
     });
     test(
       'Must have non-empty route',
@@ -91,8 +91,8 @@ void main() {
           ),
         ],
       );
-      getIt.registerFactory<PreceptSchemaLoader>(
-          () => FakePreceptSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(
+          () => FakeTakkanSchemaLoader());
       // when
       final messages = component.validate();
       // then

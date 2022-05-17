@@ -1,10 +1,10 @@
-# precept_script
+# takkan_script
 
-Defines and validates a Precept script
+Defines and validates a Takkan script
 
 ## Usage
 
-Useful only with [Precept](https://www.preceptblog.co.uk/) as far as I know !
+Useful only with [Takkan](https://www.takkan.org/) as far as I know !
 
 
 ## Build

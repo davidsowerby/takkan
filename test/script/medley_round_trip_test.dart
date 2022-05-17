@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:precept_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/medley/medley_script.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/script.dart';
@@ -16,8 +16,8 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<PreceptSchemaLoader>(
-          () => FakePreceptSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(
+          () => FakeTakkanSchemaLoader());
     });
 
     tearDown(() {});

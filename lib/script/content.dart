@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/validation/message.dart';

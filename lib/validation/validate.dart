@@ -17,7 +17,7 @@ VResult validate(V v, dynamic value) {
   }
   String msg = '${v.runtimeType} is missing';
   logName('validate in validate.dart').e(msg);
-  throw PreceptException(msg);
+  throw TakkanException(msg);
 }
 
 VResultRef validationRef(V v) {
@@ -29,5 +29,5 @@ VResultRef validationRef(V v) {
   }
   String msg = '${v.runtimeType} is missing';
   logName('validationRef in validate.dart').e(msg);
-  throw PreceptException(msg);
+  throw TakkanException(msg);
 }

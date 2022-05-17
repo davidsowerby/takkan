@@ -1,4 +1,4 @@
-import 'package:precept_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/medley/medley_script.dart';
 import 'package:test/test.dart';
 
 void main() {

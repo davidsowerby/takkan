@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'precept_item.dart';
+part of 'takkan_item.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PreceptItem _$PreceptItemFromJson(Map<String, dynamic> json) => PreceptItem();
+TakkanItem _$TakkanItemFromJson(Map<String, dynamic> json) => TakkanItem();
 
-Map<String, dynamic> _$PreceptItemToJson(PreceptItem instance) =>
+Map<String, dynamic> _$TakkanItemToJson(TakkanItem instance) =>
     <String, dynamic>{};

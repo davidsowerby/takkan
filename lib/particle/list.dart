@@ -6,7 +6,7 @@ part 'list.g.dart';
 
 /// Display of a list's entries can be a tile or a panel.
 /// [itemConfigAsTile] eventually becomes a Flutter ListTile, and can only take two properties,
-/// whereas the [itemConfigAsPanel] can be any structure supported by a Precept Panel
+/// whereas the [itemConfigAsPanel] can be any structure supported by a Takkan Panel
 /// A [NavTile] is a specialised form which also defines a route to navigate to when tapped.
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest
@@ -34,7 +34,7 @@ class ListRead extends ReadParticle {
 
 /// Display of a list's entries can be a tile or a panel.
 /// [itemConfigAsTile] eventually becomes a Flutter ListTile, and can only take two properties,
-/// whereas the [itemConfigAsPanel] can be any structure supported by a Precept Panel
+/// whereas the [itemConfigAsPanel] can be any structure supported by a Takkan Panel
 /// A [NavTile] is a specialised form which also defines a route to navigate to when tapped.
 ///
 /// Using a List is the only occasion that a Particle contains a Panel, normally it is at the lowest

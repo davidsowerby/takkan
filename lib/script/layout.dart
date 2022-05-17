@@ -61,7 +61,7 @@ class LayoutJsonConverter {
       default:
         final msg = 'Layout type $dataType not recognised';
         logName('LayoutJsonConverter').e(msg);
-        throw PreceptException(msg);
+        throw TakkanException(msg);
     }
   }
 
@@ -75,7 +75,7 @@ class LayoutJsonConverter {
       default:
         String msg = 'Layout type ${type.toString()} not recognised';
         logName('LayoutJsonConverter').e(msg);
-        throw PreceptException(msg);
+        throw TakkanException(msg);
     }
   }
 }

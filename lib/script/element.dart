@@ -55,7 +55,7 @@ class ContentConverter {
           final msg =
               "JSON conversion has not been implemented for $elementType";
           logType(Object().runtimeType).e(msg);
-          throw PreceptException(msg);
+          throw TakkanException(msg);
       }
     }
     return list;

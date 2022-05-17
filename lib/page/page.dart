@@ -5,7 +5,7 @@ import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/element.dart';
 import 'package:takkan_script/script/layout.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data.dart';
@@ -22,7 +22,7 @@ import 'package:takkan_script/validation/message.dart';
 part 'page.g.dart';
 
 /// A [Page] defines the presentation of a Page, as perceived by a user.  It is
-/// mapped to a route in the *precept_client* PreceptRouter, and connects to dynamic data.
+/// mapped to a route in the *takkan_client* TakkanRouter, and connects to dynamic data.
 ///
 /// For static pages see [PageStatic].
 ///
@@ -64,7 +64,7 @@ part 'page.g.dart';
 /// If different representations of the same [documentClass] are required then
 /// multiple [Page]s must be defined and differentiated by [tag].
 ///
-/// The [PreceptRouter] uses routes to navigate to the appropriate page.
+/// The [TakkanRouter] uses routes to navigate to the appropriate page.
 ///
 /// For a static page, [PStatic.route] requires a developer defined specific
 /// route.  For a dynamic page,[DataItem] and [DataList] are used to automatically
@@ -79,7 +79,7 @@ part 'page.g.dart';
 /// - document/[documentClass]/{dataSelector.tag
 ///
 /// A list of all routes generated and defined will be available during script
-/// validation, see https://gitlab.com/precept1/takkan_script/-/issues/28
+/// validation, see https://gitlab.com/takkan/takkan_script/-/issues/28
 ///
 /// For a list of documents, [children] will often comprise a single [PNavTile],
 /// to enable tapping to select a single document
@@ -167,7 +167,7 @@ class Page extends PodBase implements Pages {
     return map;
   }
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         children,
@@ -265,7 +265,7 @@ class PagesJsonConverter {
 
         default:
           print("data type $dataType not recognised");
-          throw PreceptException("data type $dataType not recognised");
+          throw TakkanException("data type $dataType not recognised");
       }
     }
     return results;

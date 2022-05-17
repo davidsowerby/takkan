@@ -5,7 +5,7 @@ import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/element.dart';
 import 'package:takkan_script/script/help.dart';
 import 'package:takkan_script/script/layout.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/panel_style.dart';
@@ -52,7 +52,7 @@ class PanelStatic extends PodBase implements Panels {
     super.id,
   }) : _heading = heading;
 
-  /// See [PreceptItem.subElements]
+  /// See [TakkanItem.subElements]
   @override
   List<dynamic> get subElements => [
         if (heading != null) heading,

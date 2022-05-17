@@ -1,8 +1,8 @@
 
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 
 class DebugNode {
-  final PreceptItem item;
+  final TakkanItem item;
   final List<DebugNode> children;
   DebugNode? parent;
 

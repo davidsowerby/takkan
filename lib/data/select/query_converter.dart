@@ -26,7 +26,7 @@ class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
       default:
         String msg = 'Conversion required for $typeName';
         logName('QueryConverter').e(msg);
-        throw PreceptException(msg);
+        throw TakkanException(msg);
     }
   }
 
@@ -45,7 +45,7 @@ class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
           return jsonMap;
         }
       default:
-        throw PreceptException("Conversion required for $type");
+        throw TakkanException("Conversion required for $type");
     }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/delegate.dart';
 import 'package:takkan_script/data/provider/graphql_delegate.dart';
@@ -15,7 +15,7 @@ part 'data_provider.g.dart';
 /// does not provide authentication
 ///
 @JsonSerializable(explicitToJson: true)
-class DataProvider extends PreceptItem {
+class DataProvider extends TakkanItem {
   final SignInOptions signInOptions;
   final SignIn signIn;
   final AppInstance instanceConfig;
@@ -49,13 +49,13 @@ class DataProvider extends PreceptItem {
   Map<String, dynamic> toJson() => _$DataProviderToJson(this);
 }
 
-/// [group] and [instance] together define which part **precept.json** is used to
+/// [group] and [instance] together define which part **takkan.json** is used to
 /// configure a [DataProvider] connection
 ///
 /// Any [group], but typically that used for the main app database, may choose to
 /// treat its instances as stages - for example,'dev', 'test', 'qa' and 'prod'.
 ///
-/// A [group] is then declared as 'staged' in *precept.json* (refer to precept_backend AppConfig)
+/// A [group] is then declared as 'staged' in *takkan.json* (refer to takkan_backend AppConfig)
 /// A 'staged' group has the current stage set by the app main.dart or command line invocation.
 ///
 /// This makes the explicit declaration of [instance] redundant for staged situations,
@@ -95,6 +95,6 @@ class NullDataProvider extends DataProvider {
   Map<String, dynamic> toJson() => _$NullDataProviderToJson(this);
 }
 
-abstract class PreceptSchemaLoader {
+abstract class TakkanSchemaLoader {
   Future<Schema> load(SchemaSource source);
 }

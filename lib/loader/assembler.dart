@@ -12,10 +12,10 @@ import 'package:takkan_script/script/version.dart';
 
 class ScriptAssembler {
   /// Loads all requested [Script], and merges them into a single [_rootModel]
-  Future<Script> assemble({required List<PreceptLoader> loaders}) async {
+  Future<Script> assemble({required List<TakkanLoader> loaders}) async {
     logType(runtimeType).d("Loading models");
     List<Future<Script>> modelFutures = List.empty(growable: true);
-    for (PreceptLoader loader in loaders) {
+    for (TakkanLoader loader in loaders) {
       modelFutures.add(loader.load());
     }
     final m = await Future.wait(modelFutures);

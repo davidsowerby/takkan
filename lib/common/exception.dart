@@ -1,7 +1,7 @@
-class PreceptException implements Exception {
+class TakkanException implements Exception {
   final String msg;
 
-  const PreceptException(this.msg);
+  const TakkanException(this.msg);
 
   String errMsg() => msg;
 }

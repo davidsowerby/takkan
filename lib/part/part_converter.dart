@@ -12,7 +12,7 @@ class PartConverter implements JsonConverter<Part, Map<String, dynamic>> {
       case "PPart":
         return Part.fromJson(json);
       default:
-        throw PreceptException("part type $partType not recognised");
+        throw TakkanException("part type $partType not recognised");
     }
   }
 

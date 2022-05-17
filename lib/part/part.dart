@@ -3,7 +3,7 @@ import 'package:takkan_script/common/debug.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/help.dart';
-import 'package:takkan_script/script/precept_item.dart';
+import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/validation/message.dart';
 
@@ -16,15 +16,15 @@ part 'part.g.dart';
 /// More sophisticated Parts may present further widgets depending on configuration.
 ///
 ///
-/// [T] is the data type as held by the database. Type conversion is handled automatically within the *precept_client* package
+/// [T] is the data type as held by the database. Type conversion is handled automatically within the *takkan_client* package
 ///
-/// [staticData] - if not null, the part is considered static and [isStatic] will return true.   See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation).
+/// [staticData] - if not null, the part is considered static and [isStatic] will return true.   See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation).
 /// Takes precedence over [property].  This can be useful sometimes to temporarily display something while developing before data is available.
 /// [property] - the property to look up in order to get the data value.  This connects a data binding to the [EditState] immediately above the [Part] Widget associated with this configuration.
-/// [caption] - the text to display as a caption.  See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [caption] - the text to display as a caption.  See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation)
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [EditState] immediately above it.
-/// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
-/// [tooltip] - tooltip text. See [Localisation](https://www.preceptblog.co.uk/user-guide/precept-model.html#localisation)
+/// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation)
+/// [tooltip] - tooltip text. See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation)
 /// [height] - is set here because both read and edit particles need to be the same height to avoid display 'jumping' when switching between read and edit modes.
 /// [isStatic] - returns true if [staticData] is non-null
 @JsonSerializable(explicitToJson: true)

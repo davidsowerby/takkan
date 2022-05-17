@@ -5,7 +5,7 @@ import 'package:takkan_script/script/version.dart';
 import 'package:test/fake.dart';
 import 'package:test/test.dart';
 
-class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
+class FakeTakkanSchemaLoader extends Fake implements TakkanSchemaLoader {
   @override
   Future<Schema> load(SchemaSource source) async {
     return Schema(
@@ -15,4 +15,4 @@ class FakePreceptSchemaLoader extends Fake implements PreceptSchemaLoader {
   }
 }
 
-Matcher throwsPreceptException = throwsA(isA<PreceptException>());
+Matcher throwsTakkanException = throwsA(isA<TakkanException>());
