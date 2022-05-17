@@ -31,10 +31,10 @@ The  "Widget" column shows the associated Widget provided by Precept, where ther
 | Widget   | Definition                                | Description                                                                                                            |  Widget |
 |----------|---------------------------------------|----------------------------------------------------------------------------------------------------------------------------|---|
 |          | Precept  [:point_right:](#precept)                             | A singleton holding a merged collection of `PScript`, potentially using multiple data sources and backends    | n/a  |
-|          | PScript [:point_right:](#pscript) | A collection of PPages, identified by route                                                               | n/a  |
+|          | PScript [:point_right:](#pscript) | A collection of PPages and routes                                                               | n/a  |
 | Page     | PPage [:point_right:](#page)                                | The outer layout of what the user perceives as a page, identified by route                     | PreceptPage     |
 | Panel    | PPanel [:point_right:](#panel)                              | A nestable, arbitrary area of a Page,                               | Panel  |
-| Part     | PPart [:point_right:](#part)                                 | Relates to a database field but may declare multiple read / edit Particles | Part  |
+| Part     | PPart [:point_right:](#part)                                 | Relates to a database field, representing a read / edit pair of Particles | Part  |
 | Particle | PParticle [:point_right:](#particle)                         | Defines the attributes of a single read or edit Widget                                              | Particle  |
 
 
@@ -118,7 +118,7 @@ A 'route' is a map key for a specific `PPage`.  A route is generally shown as so
 
 A `PreceptPage` is a representation of what the end user might perceive as a page.  It is typically represented by a Widget containing a Flutter `Scaffold`.
 
-A page displays the elements such as header bars, FAB, footers etc, plus its **content**.
+A page displays the elements such as header bars, FAB, footers etc, plus its **children**.
 
 You can create your own [custom pages](./page-types.md#custom-pages).  [:thinking:](https://gitlab.com/precept1/precept-client/-/issues/24)
 
@@ -249,7 +249,7 @@ See the code documentation for `PQuery` for a detailed list of calls available.
 
 ## Example
 
-A good example of the script structure is the [Kitchen Sink](../developer-guide/kitchenSink.md) we use for testing.
+A good example of the script structure is the [Kitchen Sink](../developer-guide/medley-app.md) we use for testing.
 
 
 

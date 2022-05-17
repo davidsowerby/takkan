@@ -1,8 +1,39 @@
-# Kitchen Sink
+# Medley
 
-This is a Precept model which attempts cover every permutation of build options available through [PScript](../user-guide/precept-script.md) and [PSchema](../user-guide/precept-schema.md).
+Medley is a reference application which attempts cover every permutation of build options available through [PScript](../user-guide/precept-script.md) and [PSchema](../user-guide/precept-schema.md).
 
-All widget tests and functional tests are run against the 'kitchen sink', defined by a  `PScript` and `PSchema`.
+Medley is in the *precept_medley* package.
+
+It attempts to be realistic to a point, but the emphasis is on using every feature of Precept so that it can be tested.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:::danger
+
+Everything below this needs checking / re-writing
+
+:::
+
+
+
+
+
+
+
+
+
+
 
 There are diagrams describing different test [scenarios](#scenarios), with an associated test file.
 

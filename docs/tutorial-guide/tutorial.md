@@ -37,6 +37,9 @@ In Android Studio,
 
 This will provide a copy of the default sample Flutter application, which we will modify later.
 
+:arrow_forward: Run the app
+
+:white_check_mark:  Make sure it works.
 
 ## Prepare Server
 
@@ -55,13 +58,13 @@ This will provide a copy of the default sample Flutter application, which we wil
 
 ```json
 {
-  "MyApp": {
+  "main": {
+    "type": "back4app",
     "dev": {
       "headers": {
         "X-Parse-Application-Id": "your App Id",
         "X-Parse-Client-Key": "Your Client Key"
-      },
-      "type": "back4app"
+      }
     }
   }
 }
@@ -98,72 +101,53 @@ with:
     - precept.json
 ```
 
+- Run 'pub get'
 
-### Precept Code
-
-In *lib/main.dart*, replace:
-
-```dart
-void main() {
-  runApp(const MyApp());
-}
-```
-
-with:
-
-```dart
-import 'package:precept_back4app_client/backend/back4app/dataProvider/dataProvider.dart';
-import 'package:precept_client/app/app.dart';
-import 'package:precept_client/app/loader.dart';
-import 'package:precept_client/app/precept.dart';
-
-void main() async {
-  Back4App.register();
-  await precept.init(
-    loaders: [
-      DirectPreceptLoader(script: myScript),
-    ],
-  );
-  final ThemeData theme = ThemeData(
-    primarySwatch: Colors.green,
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-  );
-  runApp(PreceptApp(theme: theme));
-}
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:arrow_forward: Run the app
-
-:white_check_mark:  Make sure it works.
-
-## Install the Package
-
-// TODO
 
 ## Step 01 - Hello World
 
-- Completely replace the contents of *main.dart* with:
+- delete the test file *widget_test.dart*
+- create a file *lib/app/config/precept.dart* containing:
+
+```dart
+import 'package:precept_script/common/script/common.dart';
+import 'package:precept_script/schema/schema.dart';
+import 'package:precept_script/script/script.dart';
+import 'package:precept_script/part/text.dart';
+import 'package:precept_script/script/version.dart';
+
+final myScript = PScript(
+  name: 'Tutorial',
+  version: const PVersion(number: 0),
+  routes: {
+    '/': PPage(
+      title: 'Home Page',
+      content: [
+        PText(
+          readTraitName: PText.title,
+          isStatic: IsStatic.yes,
+          staticData: 'Precept',
+        ),
+      ],
+    ),
+  },
+  schema: PSchema(
+    name: 'Tutorial Schema',
+    version: const PVersion(number: 0),
+  ),
+);
+
+```
+This script is what will define our application.
+
+<details>
+  <summary>Explanation</summary>
+  <div>
+    <div>Our first page will have purely static data, so we do not need a schema yet</div>
+  </div>
+</details>
+
+- In *main.dart*, leave `MyHomePage` as it is but replace the `main()` method and `MyApp` with:
 
 ```dart
 import 'package:flutter/material.dart';
@@ -187,41 +171,6 @@ void main() async {
 
 ```
 
-- delete the test file *widget_test.dart*
-- create folder *lib/app/config*
-- create file *lib/app/config/precept.dart*
-- create a *precept.json* in project root, containing just empty braces:
-
-```json
-{}
-```
-
-
-
-- paste the following into *lib/app/config/precept.dart*:
-
-```dart
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/part/text.dart';
-
-
-final myScript = PScript(
-  name: 'Tutorial',
-  routes: {
-    '/': PPage(
-      title: 'Home Page',
-      content: [
-        PText(
-          readTraitName: PText.title,
-          isStatic: IsStatic.yes,
-          staticData: 'Precept',
-        ),
-      ],
-    ),
-  },
-);
-```
 
 :arrow_forward:
 

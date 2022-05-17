@@ -53,21 +53,21 @@ This reduces the amount of translation needed on the client, although interpolat
 
 `PScript` defines `PPage` instances.  A `PPage` instance contains `PPanel` and `PPart` instances.  A `PPanel` may contain further `PPanel` instances, or `PPart` instances.
 
-A `PPart` is simply a combination of two Widgets, one for reading and one for editing data.  This supports the generation of automatic [Edit-Save-Cancel](edit-save-cancel.md) logic. 
+A `PPart` is simply a pair of Widgets, one for reading and one for editing data.  This supports the generation of automatic [Edit-Save-Cancel](edit-save-cancel.md) logic. 
 
 
 ## The Build Process
 
-`PScript` defines pages mapped to routes (where a route is just a String identifier).
+`PScript` defines pages mapped to routes (where a route is just a String identifier).  The route may be generated automatically from the data being displayed, or explicitly declared as a route-page mapping.
 
-When a `PreceptPage` is constructed it assembles its Panels and Parts as defined by `PScript`.  In doing so, it also creates [data bindings](data-bindings.md) from the resultant Widgets to the data itself.  The bindings also trigger any [validation](validation.md) defined by `PSchema`.
+When a `PreceptPage` is constructed it assembles its Panels and Parts as defined by `PScript`.  In doing so, it also creates [data bindings](data-bindings.md) from the resultant Widgets to the data held in the [DocumentCache](document-cache.md).  The bindings also trigger any [validation](validation.md) defined by `PSchema`.
 
 The data is identified by the `PDataProvider` and `PSchema` associated with the page.  
 
 
 ## Use with non-Precept pages
 
-One of Precept's primary objectives is not to get in the way of the developer wanting to Flutter directly.
+One of Precept's primary objectives is not to get in the way of the developer wanting to use Flutter directly.
 
 Precept offers two ways of merge Precept and non-Precept parts of an app.
 
