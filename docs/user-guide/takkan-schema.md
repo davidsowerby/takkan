@@ -45,11 +45,11 @@ Takkan itself does not care how or where the data is stored, provided it comes b
 
 `PField` comes in a number of different implementations, representing different data types.
 
-An additional `PField` type is `PPointer`, which describes a relationship to one or more other `PDcouments`, using `DocumentId`s
+An additional `PField` type is `FPointer`, which describes a relationship to one or more other `PDcouments`, using `DocumentId`s
  
 This covers 1-n relationships, while a nested document can of course only be 1-1.
 
-When a `PPointer` has more than one target is becomes equivalent to a Back4App (Parse Server) Relation, but it is up to the `BackendDelegate` implementation to determine that.
+When a `FPointer` has more than one target is becomes equivalent to a Back4App (Parse Server) Relation, but it is up to the `BackendDelegate` implementation to determine that.
 
 
 ## Version Control
@@ -80,7 +80,7 @@ From a Takkan point of view, it is something which would be retrieved from a dat
 
 ## PField
 
-A `PField` is an abstract class representing a "database" field, and also includes a `PPointer` which declares a relationship with one or more other documents.
+A `PField` is an abstract class representing a "database" field, and also includes a `FPointer` which declares a relationship with one or more other documents.
  
 It is used by a Takkan Script Particle [PParticle](takkan-script.md#particle).
 
@@ -89,8 +89,8 @@ It is used by a Takkan Script Particle [PParticle](takkan-script.md#particle).
 
 There are 3 broad categories of `PField`:
 
-- Simple field, for example `PInteger`, `PString` - the usual primitive types, plus some additional types, including `PPointer`, `PGeoPosition`
-- List field, for example `PListInteger`, `PListBoolean`.  These cover all the simple fields, plus there is a specific implementation of `PGeoRegion`, which a list of `PPosition` but considered to make up a geographic region.
-- Select field, for example `PSelectString`.  This defines one or more values to be picked from a set of options.  Currently this requires the options to be declared in the `Script`
+- Simple field, for example `FInteger`, `FString` - the usual primitive types, plus some additional types, including `FPointer`, `PGeoPosition`
+- List field, for example `PListInteger`, `PListBoolean`.  These cover all the simple fields, plus there is a specific implementation of `FGeoRegion`, which a list of `FPosition` but considered to make up a geographic region.
+- Select field, for example `FSelectString`.  This defines one or more values to be picked from a set of options.  Currently this requires the options to be declared in the `Script`
 
 

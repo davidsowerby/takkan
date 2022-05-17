@@ -54,16 +54,16 @@ How it is interpreted for the target 'database' depends on the `BackendDelegate`
 
 | Column           | PField Type     | Validation                                        | Read Permissions | Write permissions |
 |------------------|-----------------|---------------------------------------------------|------------------|-------------------|
-| id               | PString         | none                                              | customer, admin  | admin             |
-| recordDate       | PDate           | none                                              | customer, admin  | system            |
-| customer         | Document       | required                                          | customer, admin  | customer          |
-| address          | PPointer        | only one target                                   | customer, admin  | customer          |
-| notifications*   | PSelectBoolean  | offers can only be true >= 30 days after joinDate | customer, admin  | customer          |
-| linkedAccounts   | PPointer        |                                                   | customer, admin  | customer, admin   |
-| joinDate         | PDate           | required, later or equal to recordDate            | customer, admin  | admin             |
-| average          | PDouble         | >0                                                | admin            | admin             |
-| colourChoices**  | PSelectString   |>= 3, <=6 choices, all different, hex String       | customer, admin  | customer          |
-| successRate      | PDouble         | 0-1 inclusive (displayed as %)                    | admin            | admin             |
+| id               | FString         | none                                              | customer, admin  | admin             |
+| recordDate       | FDate           | none                                              | customer, admin  | system            |
+| customer         | FObject         | required                                          | customer, admin  | customer          |
+| address          | FPointer        | only one target                                   | customer, admin  | customer          |
+| notifications*   | FSelectBoolean  | offers can only be true >= 30 days after joinDate | customer, admin  | customer          |
+| linkedAccounts   | FPointer        |                                                   | customer, admin  | customer, admin   |
+| joinDate         | FDate           | required, later or equal to recordDate            | customer, admin  | admin             |
+| average          | FDouble         | >0                                                | admin            | admin             |
+| colourChoices**  | FSelectString   |>= 3, <=6 choices, all different, hex String       | customer, admin  | customer          |
+| successRate      | FDouble         | 0-1 inclusive (displayed as %)                    | admin            | admin             |
 
 
 - \* notifications options: offers, changes, events:
@@ -73,21 +73,21 @@ How it is interpreted for the target 'database' depends on the `BackendDelegate`
 
 | Column    | PField Type | Validation | Read Permissions | Write permissions |
 |-----------|------------|------------|------------------|-------------------|
-| firstName | PString    | required   | customer, admin  | customer          |
-| lastName  | PString    | required   | customer, admin  | customer          |
-| age       | PInteger   | >=18       | customer, admin  | customer          |
+| firstName | FString    | required   | customer, admin  | customer          |
+| lastName  | FString    | required   | customer, admin  | customer          |
+| age       | FInteger   | >=18       | customer, admin  | customer          |
 
 
 ### Address Document
 
 | Column     | PField Type       | Validation                 | Read Permissions | Write permissions |
 |------------|------------------|----------------------------|------------------|-------------------|
-| firstLine  | PString          | min 2 characters           | customer, admin  | customer          |
-| secondLine | PString          | min 3 characters           | customer, admin  | customer          |
-| postCode   | PString          | valid for selected country | customer, admin  | customer          |
-| country    | PSelectString    |                            | customer, admin  | customer          |
-| location   | PPosition        |                            | customer, admin  | customer          |
-| region     | PGeoRegion       |                            | customer         | system            |
+| firstLine  | FString          | min 2 characters           | customer, admin  | customer          |
+| secondLine | FString          | min 3 characters           | customer, admin  | customer          |
+| postCode   | FString          | valid for selected country | customer, admin  | customer          |
+| country    | FSelectString    |                            | customer, admin  | customer          |
+| location   | FPosition        |                            | customer, admin  | customer          |
+| region     | FGeoRegion       |                            | customer         | system            |
  
 ## Legend
 

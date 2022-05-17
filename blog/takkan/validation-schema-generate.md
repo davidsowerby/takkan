@@ -17,7 +17,7 @@ With the help of the [freezed](https://pub.dev/packages/freezed) package, field 
 final schema = Schema(name: 'kitchenSink', documents: {
   'Account': Document(
     fields: {
-      'category': PString(
+      'category': FString(
         validations: [
           VString.longerThan(2),
           VString.shorterThan(5),
