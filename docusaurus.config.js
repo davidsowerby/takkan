@@ -5,15 +5,15 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 // noinspection JSAnnotator
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 (module.exports = {
-  title: 'Precept',
-  tagline: 'Application Framework for Flutter',
-  url: 'https://preceptblog.co.uk',
+  title: 'Takkan',
+  tagline: 'Rapid Application Framework for Flutter',
+  url: 'https://takkan.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/precept-logo-small.png',
-  organizationName: 'precept1', // Usually your GitHub org/user name.
-  projectName: 'precept_client', // Usually your repo name.
+  favicon: 'img/takkan-logo-small.png',
+  organizationName: 'takkan', // Usually your GitHub org/user name.
+  projectName: 'takkan', // Usually your repo name.
   plugins:['remark-code-import'],
 
   presets: [
@@ -24,13 +24,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://gitlab.com/precept1/precept_docs/-/edit/master/',
+          editUrl: 'https://gitlab.com/takkan/takkan_docs/-/edit/master/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            'https://gitlab.com/precept1/precept_docs/-/edit/master/',
+          editUrl: 'https://gitlab.com/takkan/takkan_docs/-/edit/master/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -43,10 +42,10 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Precept',
+        title: 'Takkan',
         logo: {
-          alt: 'Precept Logo',
-          src: 'img/precept-logo-small.png',
+          alt: 'Takkan Logo',
+          src: 'img/takkan-logo-small.png',
         },
         items: [
           {
@@ -81,7 +80,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://gitlab.com/precept1/precept_docs/',
+            href: 'https://gitlab.com/takkan/takkan_docs/',
             label: 'GitLab',
             position: 'right',
           },
@@ -120,7 +119,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
             items: [
               {
                 label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/precept',
+                href: 'https://stackoverflow.com/questions/tagged/takkan',
               },
             ],
           },
@@ -133,12 +132,12 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
               },
               {
                 label: 'GitLab',
-                href: 'https://gitlab.com/precept1/precept_docs',
+                href: 'https://gitlab.com/takkan/takkan_docs',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} Precept, Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Takkan, Built with Docusaurus.`,
       },
       prism: {
         additionalLanguages: ['dart'],

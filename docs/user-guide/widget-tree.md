@@ -1,25 +1,25 @@
 # Widget Tree
 
-Precept naturally follows the Widget tree structure Flutter uses. It also uses the [Provider](https://pub.dev/packages/provider) package to manage some shared state.
+Takkan naturally follows the Widget tree structure Flutter uses. It also uses the [Provider](https://pub.dev/packages/provider) package to manage some shared state.
 
-The diagram below gives an illustration of a couple of scenarios of how the configuration of a [PScript](./precept-script.md) affects the Widget tree content.
+The diagram below gives an illustration of a couple of scenarios of how the configuration of a [Script](./precept-script.md) affects the Widget tree content.
 
-We'll look at how Precept uses the Widget tree from two perspectives:
+We'll look at how Takkan uses the Widget tree from two perspectives:
  
-- the presentation (`PScript`) part, 
-- the data / schema / validation aspect (`PSchema`)
+- the presentation (`Script`) part, 
+- the data / schema / validation aspect (`Schema`)
 
 ## Presentation
 
-The structure of the presentational aspect of the Widget tree follows the structure of `PScript`.
+The structure of the presentational aspect of the Widget tree follows the structure of `Script`.
   
-`PPage`, `PPanel`, `PPart` and `PParticle` become instances of `PreceptPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
+`PPage`, `PPanel`, `PPart` and `PParticle` become instances of `TakkanPage`, `Panel`, `Part` and `Particle` respectively, shown in the [diagram](#diagram) below.
 
-`PreceptPage`, `Panel`, `Part` and `Particle` are known as 'Content' widgets.
+`TakkanPage`, `Panel`, `Part` and `Particle` are known as 'Content' widgets.
 
-The page is built using the `PreceptRouter`, responding to the route defined in the `PRoute` containing the `PPage`.
+The page is built using the `TakkanRouter`, responding to the route defined in the `PRoute` containing the `PPage`.
 
-The page content is built as Panels or Parts as defined by the `PScript`, with Panels being nestable.
+The page content is built as Panels or Parts as defined by the `Script`, with Panels being nestable.
 
 The rest of the build just occurs through the normal Flutter Widget **build** method.
 
@@ -34,7 +34,7 @@ Particle types are looked up from the `ParticleLibrary`, which also allows you t
 
 ## Data
 
-Note that `PreceptPage`, `Panel` and `Part` are stateful, and known as collectively as 'Content'.
+Note that `TakkanPage`, `Panel` and `Part` are stateful, and known as collectively as 'Content'.
 
 ### Getting the Data
 
@@ -54,7 +54,7 @@ While waiting for data to arrive, `Query` returns a 'waiting' widget to return, 
 
 A `RootDataBinding`, which is connected to the `TemporaryDocument`, is created alongside the `Query`.
 
-Data then flows down through the tree - each Content widget holds a 'parentBinding' in its widget, and then creates a child binding in its state, using the property specificed in the relevant element of the `PScript`.  
+Data then flows down through the tree - each Content widget holds a 'parentBinding' in its widget, and then creates a child binding in its state, using the property specificed in the relevant element of the `Script`.  
 
 Thus, data is connected from the `Query` through a chain of `DataBinding` instances, until it reaches a `Part`.
 

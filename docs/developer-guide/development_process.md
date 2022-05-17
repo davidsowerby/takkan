@@ -1,17 +1,17 @@
 # Development Process 
 
-There are quite a few moving parts in Precept. In order to keep these parts synchronised, these are the broad principles  to follow: 
+There are quite a few moving parts in Takkan. In order to keep these parts synchronised, these are the broad principles  to follow: 
 
 ## Reference App
-A reference application called [Medley](medley-app.md), in *precept_medley*, provides multiple versions of an app and attempts to cover as many features as possible. 
+A reference application called [Medley](medley-app.md), in *takkan_medley_app*, provides multiple versions of an app and attempts to cover as many features as possible. 
 
-It uses a `PScript` and `PSchema` defined as top level properties `medleyScript` and `medleySchema` respectively for use in testing wherever required.
+It uses a `Script` and `Schema` defined as top level properties `medleyScript` and `medleySchema` respectively for use in testing wherever required.
 
 The Medley app, script and schema should be the first choice for testing where possible. 
 
 ## Development Process
 
-If we imagine that the purpose of Precept was to produce the Medley app, we simply use a process that mirrors what we would expect a developer to use to developing their own app based on Precept.
+If we imagine that the purpose of Takkan was to produce the Medley app, we simply use a process that mirrors what we would expect a developer to use to developing their own app based on Takkan.
 
 This has the obvious advantage that we can also test the process, and document it for other developers to use.
 

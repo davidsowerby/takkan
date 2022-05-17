@@ -17,7 +17,7 @@ const FeatureList = [
     Svg: require('../../static/img/focus.svg').default,
     description: (
       <>
-        Generate your Bck4App backend schema automatically from the client schema - no mis-matches!
+        Generate your Back4App schema and server side validation automatically from the client schema - no mis-matches!
       </>
     ),
   },

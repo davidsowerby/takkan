@@ -9,12 +9,12 @@ tags: [precept, freezed, validation, back4app]
 
 ## Validations
 
-Part of the challenge with Precept is to make sure that defining an application remains simple, and clear.
+Part of the challenge with Takkan is to make sure that defining an application remains simple, and clear.
 
 With the help of the [freezed](https://pub.dev/packages/freezed) package, field validations are now defined clearly, for example:
 
 ``` dart {7-10}
-final schema = PSchema(name: 'kitchenSink', documents: {
+final schema = Schema(name: 'kitchenSink', documents: {
   'Account': PDocument(
     fields: {
       'category': PString(
@@ -32,7 +32,7 @@ final schema = PSchema(name: 'kitchenSink', documents: {
 
 ## Back4App Schema
 
-I am using the term 'schema' loosely here.  The intention is that Precept automates the process of setting up the backend of an application from the same definition provided for the front end.
+I am using the term 'schema' loosely here.  The intention is that Takkan automates the process of setting up the backend of an application from the same definition provided for the front end.
 
 This means generating a real Back4App schema, but also requires the generation of Javascript validation code for the `beforeSave` methods of Back4App classes.
 

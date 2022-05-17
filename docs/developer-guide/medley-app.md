@@ -1,10 +1,10 @@
 # Medley
 
-Medley is a reference application which attempts cover every permutation of build options available through [PScript](../user-guide/precept-script.md) and [PSchema](../user-guide/precept-schema.md).
+Medley is a reference application which attempts cover every permutation of build options available through [Script](../user-guide/precept-script.md) and [Schema](../user-guide/precept-schema.md).
 
-Medley is in the *precept_medley* package.
+Medley is in the *takkan_medley* package.
 
-It attempts to be realistic to a point, but the emphasis is on using every feature of Precept so that it can be tested.
+It attempts to be realistic to a point, but the emphasis is on using every feature of Takkan so that it can be tested.
 
 
 
@@ -41,11 +41,11 @@ Every diagram uses the conventions shown in the [legend](#legend).
 
 ## Data Schema
 
-This is used to exercise as many features of Precept as we can think of.  
+This is used to exercise as many features of Takkan as we can think of.  
 
 It probably does not reflect a real app!
 
-The terminology here is that of the `PSchema` structure - primarily it is documents and fields.
+The terminology here is that of the `Schema` structure - primarily it is documents and fields.
 
 How it is interpreted for the target 'database' depends on the `BackendDelegate` in use.  That depends on the **backendType** property of `PDataProvider`.
 
@@ -121,7 +121,7 @@ The Page is static, but some lower levels are overridden to be dynamic.
 
 ### Page Controls Edit with Overrides
 
-Edit controls (usually a :pencil:) only appear at the level specified in the `PScript`.
+Edit controls (usually a :pencil:) only appear at the level specified in the `Script`.
 
 This is set by the **controlEdit** property, which also causes an `EditState` to be added to the Widget tree.
 

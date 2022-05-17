@@ -1,6 +1,6 @@
 # Page Types
 
-Precept provides several page configuration types, and these will cover most circumstances when used with `PreceptPage`
+Takkan provides several page configuration types, and these will cover most circumstances when used with `TakkanPage`
 
 The table below illustrates typical usage.
 
@@ -17,7 +17,7 @@ The table below illustrates typical usage.
 - The page can be divided into [panels](#panel), each with an optional, collapsible heading
 - Edit / Save / Cancel functionality is provided
 - Panels can be put into edit mode separately, or all at the same time
-- Precept takes care of passing edited data back to the data source.  
+- Takkan takes care of passing edited data back to the data source.  
 
 ## PListPage
 

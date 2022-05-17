@@ -38,7 +38,7 @@ In addition to the keys / values given below, you can provide your own and acces
 precept.getConfig()
 ```  
 
-There is an [open issue](https://gitlab.com/precept1/precept_client/-/issues/89) for this to return an [AppConfig] instance, it currently provides a JSON object.
+There is an [open issue](https://gitlab.com/precept1/takkan_client/-/issues/89) for this to return an [AppConfig] instance, it currently provides a JSON object.
 
 ### Inherited Properties
 
@@ -74,7 +74,7 @@ There is an [open issue](https://gitlab.com/precept1/precept_client/-/issues/89)
 
 Very often, the group for your main application you will have multiple instances, or stages, typically something like 'dev', 'test', 'qa' and 'prod'.
 
-Precept does provide some support for managing these stages.  Once declared as shown below, the current stage can be set by command line parameter when launching a Precept app, for example, 'stage=test'
+Takkan does provide some support for managing these stages.  Once declared as shown below, the current stage can be set by command line parameter when launching a Takkan app, for example, 'stage=test'
 
 The default current stage is the last item declared in 'stages', in this example, 'prod'.
 
@@ -133,7 +133,7 @@ Some points to note from this example:
 - the public REST, restcountries instance just declares a documentEndpoint.  For generic REST APIs that is all that is required
 - A 'headers' section must be defined within an instance even if empty.
 
-Within the 'headers' section, two are used by Precept for Back4App instances.
+Within the 'headers' section, two are used by Takkan for Back4App instances.
 
 Other headers can be added to *precept.json* and will be passed with all API calls:
 

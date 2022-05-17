@@ -2,9 +2,9 @@
 
 ## Client Side
 
-Code: *precept_back4app_client* package.
+Code: *takkan_back4app_client* package.
 
-Contains implementations for [DataProvider](data-providers.md) and `PDataProvider`.
+Contains implementations for [DataProvider](data-providers.md) and `DataProvider`.
 
 See the [Tutorial](../tutorial-guide/tutorial.md) for a step by step application starter.
 
@@ -20,11 +20,11 @@ This helps keep code changes secure and controlled.
 
 There are two packages used for this:
 
-*precept_dev_app* is currently CLI only, but may have a GUI added later.  
+*takkan_dev_app* is currently CLI only, but may have a GUI added later.  
 
-It allows the developer to select a target project, then takes a copy of *precept_server_code_generator*, inserts the `PScript` and `PSchema` definitions from the target project, forming a new, temporary project which actually generates the server javascript.
+It allows the developer to select a target project, then takes a copy of *takkan_server_code_generator*, inserts the `Script` and `Schema` definitions from the target project, forming a new, temporary project which actually generates the server javascript.
 
-This apparently convoluted method enables `PScript` and `PSchema`:
+This apparently convoluted method enables `Script` and `Schema`:
  
  - to be defined in code, 
  - downloaded from somewhere
@@ -33,19 +33,19 @@ This apparently convoluted method enables `PScript` and `PSchema`:
  
 :::tip Note
 
-Only `PSchema` is actually used for code generation, but`PScript` instances mat also require combining and storing
+Only `Schema` is actually used for code generation, but`Script` instances may also require combining and storing
 :::   
 
 
 ## Server Side
 
-Code: Javascript with Dart tests, *precept_back4app_server* package.
+Code: Javascript with Dart tests, *takkan_back4app_server* package.
 
 There are two aspects to the server side.
 
-- Every Back4App instance used for Precept needs to have the [framework](#framework) set up.
+- Every Back4App instance used for Takkan needs to have the [framework](#framework) set up.
 
-- A Back4App instance may also be used as a [script store](#script-and-schema-store) to store `PScript` and `PSchema` instances. 
+- A Back4App instance may also be used as a [script store](#script-and-schema-store) to store `Script` and `Schema` instances. 
 
 ### Framework
 
@@ -54,17 +54,17 @@ The Back4App server-side implementation provides a simple framework, comprising 
 This supports the use of a single schema for both client and server side, through the use of [server side schema generation](#server-side-schema-generation).
 
 :::tip Note
-There is a slight difference in terminology here - for Back4App, every instance is an 'app'.  For Precept, an app may have a dev, test, qa and prod instance (for example),
+There is a slight difference in terminology here - for Back4App, every instance is an 'app'.  For Takkan, an app may have a dev, test, qa and prod instance (for example),
 each of which would be a separate Back4App 'app'.
 :::
 
 #### Initialise Instance
 
-Every instance used with a Precept client needs to be initialised, a two step process:
+Every instance used with a Takkan client needs to be initialised, a two step process:
 
 1. the framework code must be deployed to the Back4App instance.  
 
-1. the Cloud function **initPrecept** is invoked to create the Back4App [Classes](#classes) used to manage Schema versions.
+1. the Cloud function **initTakkan** is invoked to create the Back4App [Classes](#classes) used to manage Schema versions.
 
 Refer to the Tutorial for detailed steps to [create an app](../tutorial-guide/tutorial.md).
 
@@ -73,13 +73,13 @@ Refer to the Tutorial for detailed steps to [create an app](../tutorial-guide/tu
 
 :::tip Note
 
-There is an [outstanding issue](https://gitlab.com/precept1/precept_back4app_client/-/issues/7) to look at restructuring the *precept_back4app_backend* package.
+There is an [outstanding issue](https://gitlab.com/precept1/takkan_back4app_client/-/issues/7) to look at restructuring the *takkan_back4app_backend* package.
 :::
 
 
 ### Script and Schema store
 
-Cloud Function **initScriptStore** prepares Back4App to store version controlled instances of `PScript` and `PSchema`.
+Cloud Function **initScriptStore** prepares Back4App to store version controlled instances of `Script` and `Schema`.
  
 It needs to be invoked only on the Back4App instance that will be used to store them., which may or may not be the instance being used to hold its data.
 
