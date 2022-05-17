@@ -1,15 +1,15 @@
-import 'package:precept_script/common/script/common.dart';
-import 'package:precept_script/data/provider/data_provider.dart';
-import 'package:precept_script/data/select/data_list.dart';
-import 'package:precept_script/data/select/data_item.dart';
-import 'package:precept_script/page/page.dart';
-import 'package:precept_script/page/static_page.dart';
-import 'package:precept_script/panel/panel.dart';
-import 'package:precept_script/part/list_view.dart';
-import 'package:precept_script/part/navigation.dart';
-import 'package:precept_script/part/text.dart';
-import 'package:precept_script/script/script.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/script/common.dart';
+import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/page/page.dart';
+import 'package:takkan_script/page/static_page.dart';
+import 'package:takkan_script/panel/panel.dart';
+import 'package:takkan_script/part/list_view.dart';
+import 'package:takkan_script/part/navigation.dart';
+import 'package:takkan_script/part/text.dart';
+import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/version.dart';
 
 import 'medley_schema.dart';
 
@@ -37,7 +37,7 @@ final Script medleyScript2 = Script(
       Group(children: [
         Text(
           readTraitName: Text.title,
-          staticData: 'Precept',
+          staticData: 'Takkan',
         ),
         Text(
           readTraitName: Text.subtitle,
@@ -99,7 +99,7 @@ final Script medleyScript1 = Script(
     ], children: [
       Text(
         readTraitName: Text.title,
-        staticData: 'Precept',
+        staticData: 'Takkan',
       ),
       Text(
         readTraitName: Text.subtitle,
@@ -154,7 +154,7 @@ final Script medleyScript0 = Script(
     ], children: [
       Text(
         readTraitName: Text.title,
-        staticData: 'Precept',
+        staticData: 'Takkan',
       ),
       Text(
         readTraitName: Text.subtitle,

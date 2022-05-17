@@ -1,7 +1,7 @@
-import 'package:precept_script/schema/field/integer.dart';
-import 'package:precept_script/schema/field/string.dart';
-import 'package:precept_script/schema/schema.dart';
-import 'package:precept_script/script/version.dart';
+import 'package:takkan_script/schema/field/integer.dart';
+import 'package:takkan_script/schema/field/string.dart';
+import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_script/script/version.dart';
 
 /// There are a lot of versions here.  It is structured this way to try and cover
 /// all the permutations of changes which can occur between one version and another.

@@ -1,15 +1,14 @@
-name: precept_medley_script
-description: Common declarations for Precept backend implementations
+name: takkan_medley_script
+description: Versioned script for testing and demonstrasting Takkan
 version: 0.0.1
-author: David Sowerby
-homepage: https://www.preceptblog.co.uk/
+homepage: https://www.takkan.org/
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
-  precept_script:
-    path: ../precept_script
+  takkan_script:
+    path: ../takkan_script
 
 dev_dependencies:
 

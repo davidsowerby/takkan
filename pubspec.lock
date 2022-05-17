@@ -21,7 +21,7 @@ packages:
       name: freezed_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "2.0.3"
   get_it:
     dependency: transitive
     description:
@@ -35,7 +35,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.0"
+    version: "4.5.0"
   logger:
     dependency: transitive
     description:
@@ -50,13 +50,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
-  precept_script:
+  takkan_script:
     dependency: "direct main"
     description:
-      path: "../precept_script"
+      path: "../takkan_script"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   validators:
     dependency: transitive
     description:
@@ -65,4 +65,4 @@ packages:
     source: hosted
     version: "3.0.0"
 sdks:
-  dart: ">=2.14.0 <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
