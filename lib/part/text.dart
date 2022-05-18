@@ -18,30 +18,17 @@ class Text extends Part {
   static const String errorText = 'text-error';
 
   Text(
-      {String? caption,
-      bool readOnly = false,
-      double height = 60,
-      String? property,
-      String readTraitName = 'text-read-default',
-      String editTraitName = 'TextBox-default',
-      String? staticData,
-      Help? help,
-      ControlEdit controlEdit = ControlEdit.inherited,
-      String? id,
-      String? tooltip})
-      : super(
-          readOnly: readOnly,
-          readTraitName: readTraitName,
-          height: height,
-          property: property,
-          editTraitName: editTraitName,
-          controlEdit: controlEdit,
-          staticData: staticData,
-          caption: caption,
-          help: help,
-          id: id,
-          tooltip: tooltip,
-        );
+      {super.caption,
+      super.readOnly = false,
+      super.height = 60,
+      super.property,
+      super.readTraitName = 'text-read-default',
+      super.editTraitName = 'TextBox-default',
+      super.staticData,
+      super.help,
+      super.controlEdit = ControlEdit.inherited,
+      super.id,
+      super.tooltip});
 
   factory Text.fromJson(Map<String, dynamic> json) => _$TextFromJson(json);
 
