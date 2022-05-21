@@ -1,12 +1,12 @@
 # Schema Management
 
-The application schema, defined by instances of `PSchema` are an integral part of Precept.  
+The application schema, defined by instances of `Schema` are an integral part of Takkan.  
 
-Although multiple instances of `PSchema` may be used to define an application, they are merged into one collection of `PDocument`s to form the application schema. 
+Although multiple instances of `Schema` may be used to define an application, they are merged into one collection of `Document`s to form the application schema. 
 
 There are multiple elements which need to be kept in sync to ensure consistency:
 
-1. `PSchema` itself drives client side presentation and validation, enabling view and edit according to data type and user roles.    
+1. `Schema` itself drives client side presentation and validation, enabling view and edit according to data type and user roles.    
 1. As any client code is inherently insecure, server side validation code double checks data validation before saving.
 1. Server side code creates and updates the Back4App server schema to create or modify Classes.
 
@@ -21,18 +21,18 @@ There are two major components to the application schema:
 
 Inevitably, a schema will need to change as an application is developed or extended.  
 
-Each `PSchema` holds a version number - a simple incrementing integer.  It also optionally contains a label which may be something like '2.12.2-alpha'
+Each `Schema` holds a version number - a simple incrementing integer.  It also optionally contains a label which may be something like '2.12.2-alpha'
 
 ### Validation Code
 
-The concept used by Precept is straightforward:
+The concept used by Takkan is straightforward:
 
 - Server validation code is generated with a switch statement, using a case for each version of schema supported.
 - Only one version is considered 'current'
 - Any number of versions may be 'deprecated'
 - all other versions are considered 'invalid'
 
-These are defined within the generated code, from the current and previous versions of `PSchema`. Version status (of both script and schema) can be accessed by a call to server function 'versionStatus'.
+These are defined within the generated code, from the current and previous versions of `Schema`. Version status (of both script and schema) can be accessed by a call to server function 'versionStatus'.
 
 The current version from the client is included with all calls to the server. This allows 3 different responses:
 
@@ -103,7 +103,7 @@ This runs a higher risk of hitting a [bottleneck](#bottleneck), plus of course i
 
 For a major structural change, there may be some data reorganisation required as well.  This really can only be achieved by closing access to the app for a 'maintenance window'.
 
-At the moment there is no Precep support for this, but there is an [open issue](https://gitlab.com/precept1/precept_design/-/issues/6) to consider it.  
+At the moment there is no Precep support for this, but there is an [open issue](https://gitlab.com/takkan/takkan_design/-/issues/6) to consider it.  
 
 #### Bottleneck
 There is the risk of a bottleneck with potentially every client trying to download a schema update at the same time.
@@ -115,7 +115,7 @@ Potential mitigation includes:
 - Storing the application schema on a different Back4App instance (or even somewhere else altogether) to reduce the bottleneck.
 - "diffing" schema changes, so only the changes need to be downloaded, reducing network load.
 
-There is an [open issue](https://gitlab.com/precept1/precept_design/-/issues/7) to consider these.
+There is an [open issue](https://gitlab.com/takkan/takkan_design/-/issues/7) to consider these.
 
 ### Web
 
@@ -130,7 +130,7 @@ Back4App is the only [implementation](back4app-implementation.md#server-side-fra
                                                                                              
 ## Testing
 
-Use Back4App instance *precept-framework-test*
+Use Back4App instance *takkan-framework-test*
 
 ### Steps
 
@@ -139,14 +139,14 @@ TBD
 ### Process Test:
 
 1. Prepare server 
-1. Upload PScript with PSchema
+1. Upload Script with Schema
 1. Activate script and schema version as immediate
 1. Start up a client
 1. Ensure client loads the script and schema
-1. Upload an updated PSchema
+1. Upload an updated Schema
 1. Activate schema short while ahead (say 5 seconds)
 1. After 5 seconds, check that client is using revised schema
-1. Upload an updated PScript
+1. Upload an updated Script
 1. Activate script short while ahead (say 5 seconds)
 1. After 5 seconds, check that client is using revised script
 

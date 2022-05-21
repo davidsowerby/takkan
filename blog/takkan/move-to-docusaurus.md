@@ -4,12 +4,12 @@ title: Move from VuePress to Docusaurus
 description: Experience of the process of moving existing markdown documentation from VuePress to Docusaurus 
 authors: david
 date: 2021-09-22
-tags: [documentation, docusaurus, precept]
+tags: [documentation, docusaurus, takkan]
 ---
 
 # VuePress to Docusaurus
 
-I decided to move Precept's documentation from VuePress to Docusaurus.
+I decided to move Takkan's documentation from VuePress to Docusaurus.
 
 I guess the first question would be - why move, what's wrong with VuePress?
 
@@ -33,7 +33,7 @@ It could not be much simpler really:
 
 1. Created a new source project, using the [Docusaurus Getting Started](https://docusaurus.io/docs) notes.
 2. Copy the docs across.
-3. [Add 'Dart'](#adding-dart) to the code block languages (Precept is a Flutter project)
+3. [Add 'Dart'](#adding-dart) to the code block languages (Takkan is a Flutter project)
 
 ## Publishing
 

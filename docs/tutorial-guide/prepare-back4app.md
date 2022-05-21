@@ -1,6 +1,6 @@
 # Prepare Back4App
 
-Precept uses some server side code for application management, and once you start developing an app, server side code can also be generated for validation.
+Takkan uses some server side code for application management, and once you start developing an app, server side code can also be generated for validation.
 
 To set all this up, there are a number of steps to follow.  (If you already use Back4App, it is likely that you have already done step 1).
 
@@ -11,9 +11,9 @@ There are more steps here than is ideal, and hopefully this will be simplified a
 1. Install the Back4App CLI
 1. Create a new Back4App app
 1. Create a Flutter app
-1. Initialise Precept locally (this prepares Precept server side code for deployment)
+1. Initialise Takkan locally (this prepares Takkan server side code for deployment)
 1. Deploy code to Back4App
-1. Initialise Precept remote (server side).  This invokes a Cloud Code function created at step 3 and deployed at step 4.
+1. Initialise Takkan remote (server side).  This invokes a Cloud Code function created at step 3 and deployed at step 4.
 
 
 ## Steps
@@ -26,7 +26,7 @@ There are more steps here than is ideal, and hopefully this will be simplified a
 ### Create a new Back4App app
 
 :::tip Note
-There is a slight difference in terminology here - for Back4App, every instance is an 'app'.  For Precept, an app may have a dev, test, qa and prod instance (for example),
+There is a slight difference in terminology here - for Back4App, every instance is an 'app'.  For Takkan, an app may have a dev, test, qa and prod instance (for example),
 each of which would be a separate Back4App 'app'.
 :::
 

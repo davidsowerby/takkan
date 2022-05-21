@@ -10,6 +10,6 @@ There are 2 parts to the Tutorial:
 
 **Early Stage Development**
 
-Precept is at Proof of Concept stage, and it has bugs and missing functionality. It is hoped that
+Takkan is at Proof of Concept stage, and it has bugs and missing functionality. It is hoped that
 this tutorial and accompanying video will generate enough interest to push the project forward even faster to remedy these limitations.
 :::
