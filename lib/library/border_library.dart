@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/trait/style.dart' as ConfigStyle;
 
@@ -18,8 +19,9 @@ class BorderLibrary {
         return result;
       }
     }
-    throw TakkanException(
-        "Border ${border.borderName} not found in the BorderLibrary");
+    String msg = 'Border ${border.borderName} not found in the BorderLibrary';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 }
 
@@ -49,14 +51,17 @@ class TakkanBorderLibraryModule extends BorderLibraryModule {
     }
   }
 
-  RoundedRectangleBorder _roundedRectangle({required ThemeData theme, required double lineThickness}){
+  RoundedRectangleBorder _roundedRectangle(
+      {required ThemeData theme, required double lineThickness}) {
     return RoundedRectangleBorder(
-        side: BorderSide(style: BorderStyle.solid, width: lineThickness, color: theme.primaryColor),
+        side: BorderSide(
+            style: BorderStyle.solid,
+            width: lineThickness,
+            color: theme.primaryColor),
         borderRadius: BorderRadius.all(
           Radius.circular(20),
         ));
   }
 }
-
 
 BorderLibrary get borderLibrary => inject<BorderLibrary>();

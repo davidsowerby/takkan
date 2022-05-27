@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
@@ -222,6 +222,7 @@ class NullCacheEntry implements CacheEntry {
       'This class represents a null.  A real CacheEntry must ne provided';
 
   throwException() {
+    logType(this.runtimeType).e(msg);
     throw TakkanException(msg);
   }
 
@@ -259,6 +260,7 @@ class NullCacheEntry implements CacheEntry {
 
   @override
   EditCacheEntry makeEditable() {
+    logType(this.runtimeType).e(msg);
     throw TakkanException(msg);
   }
 

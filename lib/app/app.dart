@@ -13,7 +13,7 @@ class TakkanApp extends StatelessWidget {
       title: 'Takkan',
       theme: theme,
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: '/',
+      initialRoute: 'static/home',
       onGenerateRoute: (routeSettings) => router.generateRoute(routeSettings, context),
     );
   }

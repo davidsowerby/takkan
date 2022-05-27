@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:takkan_client/binding/binding.dart';
-import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/binding/binding.dart';
+import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/data/mutable_document.dart';
-import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
 import 'package:takkan_script/common/log.dart';

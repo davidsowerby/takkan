@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:takkan_client/app/router.dart';
-import 'package:takkan_client/binding/connector.dart';
+import 'package:takkan_client/data/binding/connector.dart';
 import 'package:takkan_client/config/asset_loader.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/inject/modules.dart';
-import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/util/args.dart';
+import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/common/args.dart';
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
@@ -78,7 +78,7 @@ class Takkan {
 
   _doAfterLoad() async {
     await _loadSchemas();
-    partLibrary.init(entries: _particleLibraryEntries);
+    library.init(entries: _particleLibraryEntries);
 
     final stage = extractCurrentStage(commandLineArguments);
     dataProviderLibrary.init(AppConfig(data: _jsonConfig, currentStage: stage));

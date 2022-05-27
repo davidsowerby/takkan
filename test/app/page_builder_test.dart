@@ -3,14 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:takkan_client/app/page_builder.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/page/document_list_page.dart';
-import 'package:takkan_client/page/document_page.dart';
-import 'package:takkan_client/page/static_page.dart';
+import 'package:takkan_client/pod/page/document_list_page.dart';
+import 'package:takkan_client/pod/page/document_page.dart';
+import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/version.dart';
@@ -19,7 +17,6 @@ import 'package:test/test.dart';
 import '../helper/mock.dart';
 
 void main() {
-  PartLibrary partLibrary = MockPartLibrary();
   DocumentCache cache = MockDocumentCache();
   late PageBuilder builder;
   late Script script;
@@ -77,8 +74,8 @@ void main() {
               )
             ],
           ),
-          PageStatic(
-            routes: ['static page'],
+          PageConfig.Page(
+            dataSelectors: [NoData(tag: 'static page')],
           ),
           PageConfig.Page(
             documentClass: 'Person',
@@ -97,29 +94,10 @@ void main() {
 
     tearDown(() {});
 
-    test('static page', () {
-      // given
-      // when
-      MaterialPageRoute? r = builder.buildPage(
-        route: 'static page',
-        pageArguments: const {},
-        context: MockBuildContext(),
-        parentBinding: MockDataBinding(),
-        partLibrary: partLibrary,
-        script: script,
-        cache: cache,
-      ) as MaterialPageRoute?;
-      // then
 
-      expect(r, isNotNull);
-      final p = r!.buildContent(MockBuildContext());
-      expect(p, isA<StaticPage>());
-      final StaticPage page = p as StaticPage;
-      expect(page.route, 'static page');
-    });
     test('single page, tagged DataItemById', () {
       // given
-      final pageConfig = script.pages[0] as PageConfig.Page;
+      final pageConfig = script.pages[0];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -133,7 +111,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 
@@ -148,7 +125,7 @@ void main() {
     });
     test('single page, untagged DataItem', () {
       // given
-      final pageConfig = script.pages[0] as PageConfig.Page;
+      final pageConfig = script.pages[0];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -162,7 +139,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 
@@ -176,7 +152,7 @@ void main() {
     });
     test('single page, tagged DataItemById, tagged Page', () {
       // given
-      final pageConfig = script.pages[1] as PageConfig.Page;
+      final pageConfig = script.pages[1];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -190,7 +166,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 
@@ -205,7 +180,7 @@ void main() {
     });
     test('single page, untagged DataItem tagged Page', () {
       // given
-      final pageConfig = script.pages[1] as PageConfig.Page;
+      final pageConfig = script.pages[1];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -219,7 +194,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 
@@ -233,7 +207,7 @@ void main() {
     });
     test('multi page, untagged PMulti', () {
       // given
-      final pageConfig = script.pages[2] as PageConfig.Page;
+      final pageConfig = script.pages[2];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -247,7 +221,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 
@@ -260,7 +233,7 @@ void main() {
     });
     test('multi page, tagged PMulti', () {
       // given
-      final pageConfig = script.pages[5] as PageConfig.Page;
+      final pageConfig = script.pages[5];
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -274,7 +247,6 @@ void main() {
         parentBinding: MockDataBinding(),
         script: script,
         cache: cache,
-        partLibrary: partLibrary,
       ) as MaterialPageRoute?;
       // then
 

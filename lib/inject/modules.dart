@@ -4,8 +4,7 @@ import 'package:takkan_client/common/locale.dart';
 import 'package:takkan_client/common/toast.dart';
 import 'package:takkan_client/config/asset_loader.dart';
 import 'package:takkan_client/library/border_library.dart';
-import 'package:takkan_client/library/theme_lookup.dart';
-import 'package:takkan_client/page/signin_page.dart';
+import 'package:takkan_client/pod/page/signin_page.dart';
 import 'package:takkan_client/user/signin_factory.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
@@ -17,7 +16,6 @@ void takkanDefaultInjectionBindings() {
   commonInjectionBindings();
   libraryInjectionBindings();
   routerInjectionBindings();
-  themeInjectionBindings();
   persistenceInjectionBindings();
 }
 
@@ -50,7 +48,4 @@ routerInjectionBindings() {
   // getIt.registerSingleton<TakkanRouter>(TakkanRouter());
 }
 
-themeInjectionBindings() {
-  getIt.registerSingleton<ThemeLookup>(DefaultThemeLookup());
-  // getIt.registerFactory<RouteLocatorSet>(() => RouteLocatorSet(locators: null));
-}
+

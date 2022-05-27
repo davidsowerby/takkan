@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/page/document_list_page.dart';
-import 'package:takkan_client/page/document_page.dart';
-import 'package:takkan_client/page/static_page.dart';
-import 'package:takkan_client/panel/static_panel.dart';
+import 'package:takkan_client/pod/page/static_page.dart';
+import 'package:takkan_client/pod/panel/static_panel.dart';
+import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/pod/page/document_list_page.dart';
+import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/select/data.dart';
@@ -14,7 +14,6 @@ import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -27,16 +26,17 @@ abstract class PageBuilder {
     required Map<String, dynamic> pageArguments,
     required BuildContext context,
     required DataBinding parentBinding,
-    required PartLibrary partLibrary,
     required Script script,
     required DocumentCache cache,
   });
 
-  Widget createChild(
-      {required DataContext dataContext,
-      required Content p,
-      required DataBinding parentBinding,
-      required ThemeData theme});
+  Widget createChild({
+    required DataContext dataContext,
+    required Content p,
+    required DataBinding parentBinding,
+    required ThemeData theme,
+    required Map<String, dynamic> pageArguments,
+  });
 }
 
 class DefaultPageBuilder implements PageBuilder {
@@ -47,7 +47,6 @@ class DefaultPageBuilder implements PageBuilder {
     required Map<String, dynamic> pageArguments,
     required BuildContext context,
     required DataBinding parentBinding,
-    required PartLibrary partLibrary,
     required Script script,
     required DocumentCache cache,
   }) {
@@ -69,8 +68,7 @@ class DefaultPageBuilder implements PageBuilder {
     if (pageConfig == null) {
       return null;
     }
-    final PageStatic pageCfg = pageConfig as PageStatic;
-    final theme = Theme.of(context);
+    final PageConfig.Page pageCfg = pageConfig;
     final dataContext = StaticDataContext(
       parentDataContext: NullDataContext(),
     );
@@ -80,6 +78,7 @@ class DefaultPageBuilder implements PageBuilder {
       config: pageCfg,
       dataContext: dataContext,
       route: route,
+      pageArguments: pageArguments,
     );
     return constructRoute(
       route,
@@ -88,11 +87,13 @@ class DefaultPageBuilder implements PageBuilder {
     );
   }
 
-  List<Widget> createChildren(
-      {required DataContext dataContext,
-      required List<Content> children,
-      required DataBinding parentBinding,
-      required ThemeData theme}) {
+  List<Widget> createChildren({
+    required DataContext dataContext,
+    required List<Content> children,
+    required DataBinding parentBinding,
+    required ThemeData theme,
+    required Map<String, dynamic> pageArguments,
+  }) {
     final output = List<Widget>.empty(growable: true);
 
     /// Using switch stops from detecting Part sub-classes
@@ -103,15 +104,16 @@ class DefaultPageBuilder implements PageBuilder {
           parentDataContext: dataContext,
           parentBinding: parentBinding,
           theme: theme,
+          pageArguments: pageArguments,
         );
         output.add(panel);
       } else if (p is Part) {
-        final part = partLibrary.partBuilder(
-          partConfig: p,
-          dataContext: dataContext,
-          pageArguments: const {},
+        final part = library.constructPart(
+          config: p,
           theme: theme,
-          parentBinding: parentBinding,
+          parentDataBinding: parentBinding,
+          dataContext: dataContext,
+          pageArguments: pageArguments,
         );
         output.add(part);
       }
@@ -124,6 +126,7 @@ class DefaultPageBuilder implements PageBuilder {
     required DataContext parentDataContext,
     required DataBinding parentBinding,
     required ThemeData theme,
+    required Map<String, dynamic> pageArguments,
   }) {
     if (config.isStatic) {
       final widget = StaticPanel(
@@ -134,6 +137,7 @@ class DefaultPageBuilder implements PageBuilder {
             theme: theme,
             dataContext: parentDataContext,
             children: config.children,
+            pageArguments: pageArguments,
           ),
         ),
         parentDataContext: parentDataContext,
@@ -144,11 +148,13 @@ class DefaultPageBuilder implements PageBuilder {
     throw UnimplementedError();
   }
 
-  Widget createChild(
-      {required DataContext dataContext,
-      required Content p,
-      required DataBinding parentBinding,
-      required ThemeData theme}) {
+  Widget createChild({
+    required DataContext dataContext,
+    required Content p,
+    required DataBinding parentBinding,
+    required ThemeData theme,
+    required Map<String, dynamic> pageArguments,
+  }) {
     /// Using switch stops from detecting Part sub-classes
     if (p is Panel) {
       final panel = panelBuilder(
@@ -156,19 +162,22 @@ class DefaultPageBuilder implements PageBuilder {
         parentDataContext: dataContext,
         parentBinding: parentBinding,
         theme: theme,
+        pageArguments: pageArguments,
       );
       return panel;
     } else if (p is Part) {
-      final part = partLibrary.partBuilder(
-        partConfig: p,
-        dataContext: dataContext,
-        parentBinding: parentBinding,
-        pageArguments: const {},
+      final part = library.constructPart(
+        config: p,
         theme: theme,
+        parentDataBinding: parentBinding,
+        dataContext: dataContext,
+        pageArguments: pageArguments,
       );
       return part;
     }
-    throw TakkanException('Unrecognised content');
+    String msg='Unrecognised content';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 
   Widget panelExpansion(
@@ -209,7 +218,7 @@ class DefaultPageBuilder implements PageBuilder {
     final routeOnly = '${routeSegments[0]}/${routeSegments[1]}';
 
     /// Cast should be safe, as auto routes only generated from PPage
-    PageConfig.Page? pageConfig = script.routes[route] as PageConfig.Page?;
+    PageConfig.Page? pageConfig = script.routes[route];
     if (pageConfig == null) {
       return null;
     }

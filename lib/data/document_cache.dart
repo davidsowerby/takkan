@@ -1,5 +1,5 @@
 import 'package:takkan_client/app/takkan.dart';
-import 'package:takkan_client/common/content/pod_state.dart';
+import 'package:takkan_client/pod/pod_state.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/mutable_document.dart';
@@ -50,8 +50,10 @@ class DocumentCache {
     required Pod config,
   }) {
     if (config.documentClass == null) {
-      throw TakkanException(
-          'config.documentClass cannot be null.  Have you run script.validate()?');
+      String msg =
+          'config.documentClass cannot be null.  Have you run script.validate()?';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
     }
     final documentClass = config.documentClass!;
 
@@ -118,8 +120,10 @@ class DocumentCache {
       //     config: config,
       //   );
       // }
-      throw TakkanException(
-          'A ${config.runtimeType.toString()} requires a data root above it in the Script');
+      String msg =
+          'A ${config.runtimeType.toString()} requires a data root above it in the Script';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
     }
     // if (contentContainer.isStatic) {}
     // final PData pData = contentContainer.data!;
@@ -197,7 +201,9 @@ class DocumentClassCache {
         }
       }
     }
-    throw TakkanException('Unsuccessful read'); // TODO: handle properly
+    String msg='Unsuccessful read';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg); // TODO: handle properly
   }
 
   Document _lookupDocumentSchema(String? documentClass) {
@@ -222,7 +228,7 @@ class DocumentClassCache {
   Map<String, dynamic>? fromCacheOnly({required Data dataSpec}) {
     final expectSingle = dataSpec is DataItem;
     if (expectSingle) {
-      final DataItem pSingle = dataSpec as DataItem;
+      final DataItem pSingle = dataSpec;
       return _documentFromCache(pSingle);
     } else {
       final DataList pMulti = dataSpec as DataList;

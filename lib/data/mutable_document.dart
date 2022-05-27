@@ -3,7 +3,7 @@ import 'dart:collection';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:takkan_client/binding/map_binding.dart';
+import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 

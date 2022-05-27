@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:takkan_client/data/cache_entry.dart';
-import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/pod/page/edit_state.dart';
 
 mixin DocRoot {
   CacheEntry cacheEntry = NullCacheEntry();

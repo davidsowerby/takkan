@@ -1,4 +1,4 @@
-import 'package:takkan_client/page/signin_page.dart';
+import 'package:takkan_client/pod/page/signin_page.dart';
 import 'package:takkan_client/user/email_signin_page.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 

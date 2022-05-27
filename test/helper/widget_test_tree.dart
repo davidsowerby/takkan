@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:takkan_client/inject/modules.dart';
-import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/page/edit_state.dart';
-import 'package:takkan_client/page/standard_page.dart';
-import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/pod/page/edit_state.dart';
+import 'package:takkan_client/pod/page/standard_page.dart';
+import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_client/part/part.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_backend/backend/app/app_config.dart';
@@ -48,7 +48,7 @@ class WidgetTestTree {
         _panelIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
-      } else if (widget is PartWidget) {
+      } else if (widget is ParticleSwitch) {
         _partIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
@@ -72,7 +72,7 @@ class WidgetTestTree {
       // TODO: this is a bit fragile, would need new types adding
       if (widgets[index] is TakkanPage) break;
       if (widgets[index] is PanelWidget) break;
-      if (widgets[index] is PartWidget) break;
+      if (widgets[index] is ParticleSwitch) break;
       index--;
     }
     return -1;
@@ -137,7 +137,7 @@ class KitchenSinkTest {
       bool useCaptionsAsIds = true,
       required AppConfig appConfig}) {
     takkanDefaultInjectionBindings();
-    partLibrary.init();
+    library.init();
     dataProviderLibrary.register(
         type: 'mock', builder: (dp) => MockDataProvider());
     dataProviderLibrary.init(appConfig);

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/common/on_color.dart';
+import 'package:takkan_client/data/cache_entry.dart';
+import 'package:takkan_client/data/data_source.dart';
+import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/part/trait.dart';
+import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/script/script.dart';
 
@@ -10,13 +15,14 @@ enum DisplayType { text, datePicker }
 
 enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 
-/// A [PartWidget] combines field level data with the manner in which it is displayed.  It uses an [EditState]
+/// A [ParticleSwitch] combines field level data with the manner in which it is displayed.  It uses an [EditState]
 /// instance (from the widget tree above) to determine whether it is in edit or read mode.
 ///
 /// Data is connected directly to the Particles during the process of creating them,
-/// see [PartLibrary.partBuilder]
+/// see [Library.constructPart]
 ///
-/// All the Part does is select which one to display,
+/// Implementations of Part determine which particles to use, along with configuration
+/// from its associated Trait.  A Part implementation also provides a suitable builder.
 ///
 /// The default situation (where [singleParticle] is false), uses two particles (just Widgets),
 /// one for read mode and one for edit mode.  For example, a Text Widget is used for reading text,
@@ -32,15 +38,14 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// The particle is stored in [readParticle]
 ///
 /// [config] is a [Part] instance, which is contained within a [Script].
-
 ///
-class PartWidget extends StatelessWidget {
+class ParticleSwitch extends StatelessWidget {
   final Part config;
   final Widget readParticle;
   final Widget? editParticle;
   final bool singleParticle;
 
-  const PartWidget({
+  const ParticleSwitch({
     Key? key,
     this.singleParticle = false,
     required this.config,
@@ -59,7 +64,19 @@ class PartWidget extends StatelessWidget {
     if (editParticle != null) {
       return (editState.readMode) ? readParticle : editParticle!;
     } else {
-      throw TakkanException('EditParticle must not be null at this point');
+      String msg='EditParticle must not be null at this point';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
     }
   }
 }
+
+abstract class PartBuilder<P extends Part,T extends StatelessWidget>{
+  T createPart({    required P config,
+    required ThemeData theme,
+    required DataContext dataContext,
+    required DataBinding parentDataBinding,
+    OnColor onColor = OnColor.surface,});
+}
+
+

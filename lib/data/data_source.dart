@@ -1,6 +1,6 @@
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_client/page/standard_page.dart';
-import 'package:takkan_client/panel/panel.dart';
+import 'package:takkan_client/pod/page/standard_page.dart';
+import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';

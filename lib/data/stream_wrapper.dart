@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/app/page_builder.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/page/layout/layout_wrapper.dart';
+import 'package:takkan_client/pod/layout/layout_wrapper.dart';
 import 'package:takkan_script/panel/panel.dart';
 
 class StreamWrapper extends StatelessWidget {
@@ -11,6 +11,7 @@ class StreamWrapper extends StatelessWidget {
   final CacheEntry cacheEntry;
   final DataBinding parentBinding;
   final PageBuilder pageBuilder;
+  final Map<String, dynamic> pageArguments;
 
   const StreamWrapper({
     Key? key,
@@ -19,6 +20,7 @@ class StreamWrapper extends StatelessWidget {
     required this.config,
     required this.parentBinding,
     required this.pageBuilder,
+    required this.pageArguments,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class StreamWrapper extends StatelessWidget {
           parentBinding: parentBinding,
           dataContext: dataContext,
           pageBuilder: pageBuilder,
+          pageArguments: pageArguments,
         );
       },
     );

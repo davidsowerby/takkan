@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/component/message_panel.dart';
 import 'package:takkan_client/common/component/text.dart';
-import 'package:takkan_client/page/layout/layout.dart';
+import 'package:takkan_client/pod/layout/layout.dart';
 import 'package:takkan_client/user/user_state.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';

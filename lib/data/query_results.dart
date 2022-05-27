@@ -1,5 +1,6 @@
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/common/log.dart';
 
 /// Holds all the query results for a [DocumentClassCache] instance.
 ///
@@ -59,7 +60,9 @@ class QueryResultsSet {
     if (_data.containsKey(_selectedPage)) {
       return _data[_selectedPage]!;
     }
-    throw TakkanException('There is no page $_selectedPage');
+    String msg = 'There is no page $_selectedPage';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 
   QueryResultsPage get nextPage {
@@ -68,7 +71,9 @@ class QueryResultsSet {
       selectPage(targetPage);
       return _data[targetPage]!;
     }
-    throw TakkanException('There is no page $targetPage');
+    String msg='There is no page $targetPage';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 
   QueryResultsPage get previousPage {
@@ -77,7 +82,9 @@ class QueryResultsSet {
       selectPage(targetPage);
       return _data[targetPage]!;
     }
-    throw TakkanException('There is no page $targetPage');
+    String msg='There is no page $targetPage';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 }
 

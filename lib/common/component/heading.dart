@@ -6,8 +6,7 @@ import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/locale.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/library/border_library.dart';
-import 'package:takkan_client/library/theme_lookup.dart';
-import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/data_root.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_script/inject/inject.dart';
@@ -64,13 +63,11 @@ class Heading extends StatefulWidget {
 
 class _HeadingState extends State<Heading> with Interpolator {
   late bool expanded;
-  late ThemeLookup themeLookup;
 
   @override
   void initState() {
     super.initState();
     expanded = widget.openExpanded;
-    themeLookup = inject<ThemeLookup>();
   }
 
   @override
@@ -105,20 +102,14 @@ class _HeadingState extends State<Heading> with Interpolator {
             onTap: () => _toggleExpanded(context),
             child: Container(
               height: widget.headingStyle.height,
-              color: themeLookup.color(
-                theme: theme,
-                pColor: widget.headingStyle.background,
-              ),
+              color: theme.colorScheme.onBackground,
               child: Row(
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: Text(
                       widget.headingText,
-                      style: themeLookup.textStyle(
-                        theme: theme,
-                        style: widget.headingStyle.textTrait.textStyle,
-                      ),
+                      style: theme.textTheme.bodyMedium!,
                     ),
                   ),
                   if (widget.help != null)

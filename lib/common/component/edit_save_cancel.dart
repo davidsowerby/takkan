@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:takkan_client/common/component/key_assist.dart';
-import 'package:takkan_client/page/edit_state.dart';
+import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
 
 class EditSaveCancel extends StatelessWidget {

@@ -3,12 +3,9 @@ import 'package:takkan_client/app/router.dart';
 import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/component/message_panel.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/trait/text.dart';
-import 'package:takkan_client/trait/trait_library.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/part/text.dart' as TextConfig;
 import 'package:takkan_script/signin/sign_in.dart';
 
 class EmailSignInWidget extends StatelessWidget {
@@ -73,8 +70,8 @@ class EmailSignInWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              if (status == SignInStatus.Authentication_Failed) failureMessage(theme),
-
+              if (status == SignInStatus.Authentication_Failed)
+                failureMessage(theme),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ElevatedButton(
@@ -93,8 +90,10 @@ class EmailSignInWidget extends StatelessWidget {
       case SignInStatus.Registration_Failed:
       case SignInStatus.Registration_Removed:
       case SignInStatus.User_Not_Known:
-        throw TakkanException(
-            'Should not be here ...  should have gone to another route');
+        String msg =
+            'Should not be here ...  should have gone to another route';
+        logType(this.runtimeType).e(msg);
+        throw TakkanException(msg);
     }
   }
 
@@ -119,8 +118,8 @@ class EmailSignInWidget extends StatelessWidget {
       Navigator.of(context).pop();
       final nextRoute = (config.successRoute == '')
           ? (router.preSignInRoute == null)
-          ? '/'
-          : router.preSignInRoute
+              ? '/'
+              : router.preSignInRoute
           : config.successRoute;
       Navigator.of(context).pushNamed(nextRoute!);
     } else {
@@ -130,18 +129,17 @@ class EmailSignInWidget extends StatelessWidget {
 
   bool _notSignInRoute(Route route) {
     String? routePath = route.settings.name;
-    return (routePath == null) ? true : !routePath.toLowerCase().contains('signin');
+    return (routePath == null)
+        ? true
+        : !routePath.toLowerCase().contains('signin');
   }
 
-  Widget failureMessage(ThemeData theme ){
-    final TextTrait trait = traitLibrary.findParticleTrait(
-        theme: theme, traitName: TextConfig.Text.errorText) as TextTrait;
+  Widget failureMessage(ThemeData theme) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
         config.signInFailureMessage,
-        style: trait.textStyle,
-        textAlign: trait.textAlign,
+        style: theme.textTheme.labelMedium?.copyWith(color: theme.errorColor),
       ),
     );
   }
