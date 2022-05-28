@@ -189,6 +189,9 @@ abstract class IDataProvider<CONFIG extends DataProvider> {
 
   /// The HTTP header key for the session token
   String get sessionTokenKey;
+
+  bool get userIsAuthenticated;
+  bool get userIsNotAuthenticated;
 }
 
 /// Routes all calls to the [graphQLDelegate]
@@ -255,6 +258,8 @@ class DefaultDataProvider<CONFIG extends DataProvider>
   }
 
   TakkanUser get user => authenticator.user;
+  bool get userIsAuthenticated => authenticator.isAuthenticated;
+  bool get userIsNotAuthenticated => authenticator.isNotAuthenticated;
 
   SignInStatus get authStatus => authenticator.status;
 
@@ -593,4 +598,12 @@ class NoDataProvider implements IDataProvider {
   @override
   // TODO: implement objectIdKey
   String get objectIdKey => throw UnimplementedError();
+
+  @override
+  // TODO: implement userIsAuthenticated
+  bool get userIsAuthenticated => throw UnimplementedError();
+
+  @override
+  // TODO: implement userIsNotAuthenticated
+  bool get userIsNotAuthenticated => throw UnimplementedError();
 }

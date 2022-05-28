@@ -50,6 +50,7 @@ abstract class Authenticator<T extends DataProvider, USER,
   }
 
   bool get isAuthenticated => _status == SignInStatus.Authenticated;
+  bool get isNotAuthenticated => !isAuthenticated;
 
   @protected
   doSignOut();
