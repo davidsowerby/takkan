@@ -11,8 +11,7 @@ Part _$PartFromJson(Map<String, dynamic> json) => Part(
       readOnly: json['readOnly'] as bool? ?? false,
       height: (json['height'] as num?)?.toDouble(),
       property: json['property'] as String?,
-      readTraitName: json['readTraitName'] as String? ?? '?',
-      editTraitName: json['editTraitName'] as String? ?? '?',
+      traitName: json['traitName'] as String,
       staticData: json['staticData'] as String?,
       help: json['help'] == null
           ? null
@@ -32,8 +31,7 @@ Map<String, dynamic> _$PartToJson(Part instance) => <String, dynamic>{
       'help': instance.help?.toJson(),
       'tooltip': instance.tooltip,
       'height': instance.height,
-      'readTraitName': instance.readTraitName,
-      'editTraitName': instance.editTraitName,
+      'traitName': instance.traitName,
     };
 
 const _$ControlEditEnumMap = {

@@ -19,10 +19,7 @@ QueryView _$QueryViewFromJson(Map<String, dynamic> json) => QueryView(
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
-      readTraitName:
-          json['readTraitName'] as String? ?? 'queryView-read-default',
-      editTraitName:
-          json['editTraitName'] as String? ?? 'queryView-edit-default',
+      traitName: json['traitName'] as String,
     );
 
 Map<String, dynamic> _$QueryViewToJson(QueryView instance) => <String, dynamic>{
@@ -32,8 +29,7 @@ Map<String, dynamic> _$QueryViewToJson(QueryView instance) => <String, dynamic>{
       'help': instance.help?.toJson(),
       'tooltip': instance.tooltip,
       'height': instance.height,
-      'readTraitName': instance.readTraitName,
-      'editTraitName': instance.editTraitName,
+      'traitName': instance.traitName,
       'titleProperty': instance.titleProperty,
       'subtitleProperty': instance.subtitleProperty,
     };

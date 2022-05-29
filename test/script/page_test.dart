@@ -1,7 +1,7 @@
+import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/version.dart';
@@ -63,8 +63,8 @@ void main() {
               )
             ],
           ),
-          PageStatic(
-            routes: ['static page'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
           )
         ],
       );
@@ -79,7 +79,7 @@ void main() {
       expect(s.routeMap.containsKey('document/Person/default/shortForm'), isTrue);
       expect(s.routeMap.containsKey('document/Person/default'), isTrue);
       expect(s.routeMap.containsKey('documents/Person/default'), isTrue);
-      expect(s.routeMap.containsKey('static page'), isTrue);
+      expect(s.routeMap.containsKey('static/home'), isTrue);
       expect(s.routeMap.containsKey('documents/Person/members'), isTrue);
 
       expect (s.pages[0].isStatic,isFalse);

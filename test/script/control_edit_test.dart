@@ -1,7 +1,8 @@
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -19,8 +20,7 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
 
     tearDown(() {});
@@ -35,25 +35,25 @@ void main() {
           version: Version(number: 0),
         ),
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
             caption: 'A page',
+            dataSelectors: [NoData(tag: 'home')],
             // ignore: missing_required_param
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
-                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  Part(traitName: 'part', caption: 'panel1-part1'),
                   PanelStatic(
                     caption: 'panel11',
                     children: [
-                      Part(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(traitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
               Part(
-                  readTraitName: 'default',
+                  traitName: 'default',
                   property: '',
                   caption: 'page-part1'),
             ],
@@ -61,7 +61,7 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home'] as Page;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -98,25 +98,25 @@ void main() {
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'A page',
             // ignore: missing_required_param
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
-                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  Part(traitName: 'part', caption: 'panel1-part1'),
                   PanelStatic(
                     caption: 'panel11',
                     children: [
-                      Part(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(traitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
               Part(
-                  readTraitName: 'part',
+                  traitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
             ],
@@ -125,7 +125,7 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home'] as Page;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -154,25 +154,25 @@ void main() {
           version: Version(number: 0),
         ),
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
-                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  Part(traitName: 'part', caption: 'panel1-part1'),
                   PanelStatic(
                     caption: 'panel11',
                     children: [
-                      Part(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(traitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
               Part(
-                  readTraitName: 'part',
+                  traitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
             ],
@@ -181,7 +181,7 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home']! ;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -211,30 +211,30 @@ void main() {
           version: Version(number: 0),
         ),
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
-                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  Part(traitName: 'part', caption: 'panel1-part1'),
                   PanelStatic(
                     caption: 'panel11',
                     children: [
-                      Part(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(traitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
-              Part(readTraitName: 'part', caption: 'page-part1'),
+              Part(traitName: 'part', caption: 'page-part1'),
             ],
           ),
         ],
       );
       script.init();
 
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home'] !;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -266,25 +266,25 @@ void main() {
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
-                  Part(readTraitName: 'part', caption: 'panel1-part1'),
+                  Part(traitName: 'part', caption: 'panel1-part1'),
                   PanelStatic(
                     controlEdit: ControlEdit.noEdit,
                     caption: 'panel11',
                     children: [
-                      Part(readTraitName: 'part', caption: 'panel11-part1')
+                      Part(traitName: 'part', caption: 'panel11-part1')
                     ],
                   ),
                 ],
               ),
               Part(
-                  readTraitName: 'part',
+                  traitName: 'part',
                   caption: 'page-part1',
                   controlEdit: ControlEdit.thisOnly),
             ],
@@ -292,7 +292,7 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home'] !;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -322,15 +322,15 @@ void main() {
         ),
         controlEdit: ControlEdit.inherited,
         pages: [
-          PageStatic(
-            routes: ['/home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(
                 caption: 'panel1',
                 children: [
                   Part(
-                      readTraitName: 'default',
+                      traitName: 'default',
                       property: '',
                       caption: 'panel1-part1'),
                   PanelStatic(
@@ -338,7 +338,7 @@ void main() {
                     caption: 'panel11',
                     children: [
                       Part(
-                          readTraitName: 'default',
+                          traitName: 'default',
                           property: '',
                           caption: 'panel11-part1')
                     ],
@@ -346,7 +346,7 @@ void main() {
                 ],
               ),
               Part(
-                  readTraitName: 'default',
+                  traitName: 'default',
                   property: '',
                   caption: 'page-part1'),
             ],
@@ -354,7 +354,7 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['/home'] as PageStatic;
+      final page = script.routes['static/home'] !;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;

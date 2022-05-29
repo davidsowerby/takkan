@@ -33,7 +33,7 @@ class VResultRef {
       required this.javaScript,
       required this.toJson});
 
-  String get name => toJson['runtimeType'];
+  String get name => toJson['runtimeType'] as String;
 
   Map<String, dynamic> get params {
     Map<String, dynamic> copy = Map.from(toJson);

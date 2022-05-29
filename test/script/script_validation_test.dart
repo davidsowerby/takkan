@@ -1,8 +1,8 @@
 import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
@@ -56,9 +56,9 @@ void main() {
             version: Version(number: 0),
           ),
           pages: [
-            PageStatic(
+            Page(
               caption: 'A page',
-              routes: [''],
+              dataSelectors: [NoData(tag: 'home')],
             ),
           ],
         ); // ignore: missing_required_param
@@ -84,10 +84,9 @@ void main() {
           version: Version(number: 0),
         ),
         pages: [
-          PageStatic(
-            routes: ["/home"],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: 'a Page title',
-            pageType: '',
           ),
         ],
       );
@@ -119,7 +118,6 @@ void main() {
         ),
         pages: [
           Page(
-            pageType: "mine",
             caption: "Wiggly",
             dataSelectors: [
               DataItemById(
@@ -156,7 +154,6 @@ void main() {
           ),
           pages: [
             Page(
-              pageType: "mine",
               caption: "Wiggly",
               dataSelectors: [
                 DataItemById(
@@ -187,9 +184,8 @@ void main() {
           version: Version(number: 0),
         ),
         pages: [
-          PageStatic(
-            routes: ["/home"],
-            pageType: "mine",
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: "Wiggly",
             children: [
               PanelStatic(
@@ -214,9 +210,8 @@ void main() {
           ),
         ),
         pages: [
-          PageStatic(
-            routes: ["/home"],
-            pageType: "mine",
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             caption: "Wiggly",
             children: [PanelStatic(caption: 'panel1')],
           ),
@@ -238,7 +233,6 @@ void main() {
         ),
         pages: [
           Page(
-            pageType: "mine",
             caption: "Wiggly",
             dataSelectors: [
               DataItemById(

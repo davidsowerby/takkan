@@ -74,7 +74,7 @@ class Schema extends SchemaElement {
   IsReadOnly get isReadOnly => _isReadOnly;
 
   @override
-  List<dynamic> get subElements => [_documents, namedQueries];
+  List<Object> get subElements => [_documents, namedQueries];
 
   @override
   doInit(InitWalkerParams params) {
@@ -135,7 +135,7 @@ abstract class SchemaElement extends TakkanItem {
   Map<String, dynamic> toJson();
 
   @override
-  doInit(InitWalkerParams params) {
+  void doInit(InitWalkerParams params) {
     _name = params.name;
     super.doInit(params);
   }

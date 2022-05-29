@@ -1,7 +1,8 @@
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -38,15 +39,15 @@ void main() {
           instanceConfig: const AppInstance(group: '', instance: ''),
         ),
         pages: [
-          PageStatic(
-            routes: ['/'],
+          Page(
             caption: 'A Page',
+            dataSelectors: [NoData(tag: 'home')],
             controlEdit: ControlEdit.thisAndBelow,
             children: [
               PanelStatic(
                 controlEdit: ControlEdit.noEdit,
                 children: [
-                  Part(readTraitName: 'default'),
+                  Part(traitName: 'default'),
                 ],
               ),
             ],
@@ -56,7 +57,7 @@ void main() {
       // when
       script.init();
       // then
-      final page = script.routes['/'] as PageStatic;
+      final page = script.routes['static/home'] as Page;
       final panel = page.children[0] as PanelStatic;
       final part = panel.children[0] as Part;
 
@@ -86,14 +87,14 @@ void main() {
           ),
           dataProvider: NullDataProvider(),
           pages: [
-            PageStatic(
-              routes: ['/test'],
+            Page(
               caption: 'A Page',
+              dataSelectors: [NoData(tag: 'test')],
               children: [
                 PanelStatic(
                   children: [
                     Part(
-                      readTraitName: 'default',
+                      traitName: 'default',
                       property: '',
                     ),
                   ],
@@ -105,7 +106,7 @@ void main() {
 
       script.init();
       // then
-      final page = script.routes['/test'] as PageStatic;
+      final page = script.routes['static/test'] as Page;
       final panel = page.children[0] as PanelStatic;
       final part = panel.children[0] as Part;
 

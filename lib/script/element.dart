@@ -1,59 +1,90 @@
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/script/content.dart';
-import 'package:takkan_script/panel/panel.dart';
-import 'package:takkan_script/panel/static_panel.dart';
-import 'package:takkan_script/part/list_view.dart';
-import 'package:takkan_script/part/navigation.dart';
-import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/part/query_view.dart';
-import 'package:takkan_script/part/text.dart';
-import 'package:takkan_script/signin/sign_in.dart';
+import '../common/constants.dart';
+import '../common/exception.dart';
+import '../common/log.dart';
+import '../panel/panel.dart';
+import '../panel/static_panel.dart';
+import '../part/list_view.dart';
+import '../part/navigation.dart';
+import '../part/part.dart';
+import '../part/query_view.dart';
+import '../part/text.dart';
+import '../signin/sign_in.dart';
+import 'content.dart';
 
+// ignore: avoid_classes_with_only_static_members
 class ContentConverter {
-  static const elementKeyName = "-element-";
-
-  static List<Content> fromJson(List<dynamic> json) {
-    List<Content> list = List.empty(growable: true);
-    for (var entry in json) {
-      final elementType = entry[elementKeyName];
+  static List<Content> fromJson(List<dynamic> input) {
+    final List<Map<String,dynamic>> json = List.castFrom(input);
+    final List<Content> list = List.empty(growable: true);
+    for (final entry in json) {
+      final elementType = entry[jsonClassKey];
       final entryCopy = Map<String, dynamic>.from(entry);
-      entryCopy.remove(elementKeyName);
+      entryCopy.remove(jsonClassKey);
       switch (elementType) {
-        case "Panel":
+        case 'Panel':
           list.add(Panel.fromJson(entryCopy));
           break;
-        case "PanelStatic":
+        case 'PanelStatic':
           list.add(PanelStatic.fromJson(entryCopy));
           break;
-        case "Group":
+        case 'Group':
           list.add(Group.fromJson(entryCopy));
           break;
-        case "Part":
+        case 'Part':
           list.add(Part.fromJson(entryCopy));
           break;
-        case "Text":
+        case 'Text':
           list.add(Text.fromJson(entryCopy));
           break;
-        case "NavButton":
+        case 'NavButton':
           list.add(NavButton.fromJson(entryCopy));
           break;
-        case "NavButtonSet":
+        case 'NavButtonSet':
           list.add(NavButtonSet.fromJson(entryCopy));
           break;
-        case "EmailSignIn":
+        case 'EmailSignIn':
           list.add(EmailSignIn.fromJson(entryCopy));
           break;
-        case "QueryView":
+        case 'QueryView':
           list.add(QueryView.fromJson(entryCopy));
           break;
-        case "ListView":
+        case 'ListView':
           list.add(ListView.fromJson(entryCopy));
+          break;
+        case 'Heading1':
+          list.add(Heading1.fromJson(entryCopy));
+          break;
+        case 'Heading2':
+          list.add(Heading2.fromJson(entryCopy));
+          break;
+        case 'Heading3':
+          list.add(Heading3.fromJson(entryCopy));
+          break;
+        case 'Heading4':
+          list.add(Heading4.fromJson(entryCopy));
+          break;
+        case 'Heading5':
+          list.add(Heading5.fromJson(entryCopy));
+          break;
+        case 'BodyText1':
+          list.add(BodyText1.fromJson(entryCopy));
+          break;
+        case 'BodyText2':
+          list.add(BodyText2.fromJson(entryCopy));
+          break;
+        case 'Title':
+          list.add(Title.fromJson(entryCopy));
+          break;
+        case 'Subtitle':
+          list.add(Subtitle.fromJson(entryCopy));
+          break;
+        case 'StrapLine':
+          list.add(Subtitle2.fromJson(entryCopy));
           break;
 
         default:
           final msg =
-              "JSON conversion has not been implemented for $elementType";
+              'JSON conversion has not been implemented for $elementType';
           logType(Object().runtimeType).e(msg);
           throw TakkanException(msg);
       }
@@ -68,7 +99,7 @@ class ContentConverter {
     }
     for (var entry in elementList) {
       final Map<String, dynamic> outputMap = Map();
-      outputMap[elementKeyName] = entry.runtimeType.toString();
+      outputMap[jsonClassKey] = entry.runtimeType.toString();
       outputMap.addAll(entry.toJson());
       outputList.add(outputMap);
     }

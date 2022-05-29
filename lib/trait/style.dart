@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/trait/text_trait.dart';
 
 part 'style.g.dart';
 
@@ -11,17 +10,9 @@ part 'style.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class HeadingStyle {
-  final TextTrait textTrait;
-  final Border border;
-  final Color background;
-  final TextTheme textTheme;
-  final double height;
-  final double elevation;
 
   const HeadingStyle({
-    this.textTrait = const TextTrait(textStyle: TextStyle.subtitle1),
     this.background = Color.canvas,
-    this.textTheme = TextTheme.cardCanvas,
     this.height = 40,
     this.elevation = 20,
     this.border = const Border(),
@@ -29,6 +20,10 @@ class HeadingStyle {
 
   factory HeadingStyle.fromJson(Map<String, dynamic> json) =>
       _$HeadingStyleFromJson(json);
+  final Border border;
+  final Color background;
+  final double height;
+  final double elevation;
 
   Map<String, dynamic> toJson() => _$HeadingStyleToJson(this);
 }
@@ -39,6 +34,7 @@ class HeadingStyle {
 /// - [TextTheme.auto] is used to select one of the above depending on the background
 ///
 
+/// TODO: These should be removed in favour of client-side Traits
 enum Color {
   primary,
   primaryLight,
@@ -71,6 +67,10 @@ enum BorderShape {
 /// See also [BorderDetailed] to define a border from scratch
 @JsonSerializable(explicitToJson: true)
 class Border {
+
+  const Border({this.borderName = 'roundedRectangleMediumPrimary'});
+
+  factory Border.fromJson(Map<String, dynamic> json) => _$BorderFromJson(json);
   static const String roundedRectangleThinPrimary =
       "roundedRectangleThinPrimary";
   static const String roundedRectangleMediumPrimary =
@@ -78,10 +78,6 @@ class Border {
   static const String roundedRectangleThickPrimary =
       "roundedRectangleThickPrimary";
   final String borderName;
-
-  const Border({this.borderName = 'roundedRectangleMediumPrimary'});
-
-  factory Border.fromJson(Map<String, dynamic> json) => _$BorderFromJson(json);
 
   Map<String, dynamic> toJson() => _$BorderToJson(this);
 }
@@ -94,11 +90,6 @@ class Border {
 /// - [gapPadding] is used only with [BorderShape.outlineInput]
 @JsonSerializable(explicitToJson: true)
 class BorderDetailed {
-  final BorderShape shape;
-  final BorderSide side;
-  final BorderSideSet? sideSet;
-
-  final double gapPadding;
 
   const BorderDetailed(
       {this.side = const BorderSide(),
@@ -108,16 +99,17 @@ class BorderDetailed {
 
   factory BorderDetailed.fromJson(Map<String, dynamic> json) =>
       _$BorderDetailedFromJson(json);
+  final BorderShape shape;
+  final BorderSide side;
+  final BorderSideSet? sideSet;
+
+  final double gapPadding;
 
   Map<String, dynamic> toJson() => _$BorderDetailedToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class BorderSideSet {
-  final BorderSide top;
-  final BorderSide left;
-  final BorderSide right;
-  final BorderSide bottom;
 
   const BorderSideSet(
       {this.top = const BorderSide(),
@@ -127,15 +119,16 @@ class BorderSideSet {
 
   factory BorderSideSet.fromJson(Map<String, dynamic> json) =>
       _$BorderSideSetFromJson(json);
+  final BorderSide top;
+  final BorderSide left;
+  final BorderSide right;
+  final BorderSide bottom;
 
   Map<String, dynamic> toJson() => _$BorderSideSetToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class BorderSide {
-  final Color color;
-  final double width;
-  final BorderStyle style;
 
   const BorderSide(
       {this.color = Color.primary,
@@ -144,6 +137,9 @@ class BorderSide {
 
   factory BorderSide.fromJson(Map<String, dynamic> json) =>
       _$BorderSideFromJson(json);
+  final Color color;
+  final double width;
+  final BorderStyle style;
 
   Map<String, dynamic> toJson() => _$BorderSideToJson(this);
 }

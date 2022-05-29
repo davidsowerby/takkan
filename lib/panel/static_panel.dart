@@ -1,21 +1,40 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/debug.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/content.dart';
-import 'package:takkan_script/script/element.dart';
-import 'package:takkan_script/script/help.dart';
-import 'package:takkan_script/script/layout.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/util/visitor.dart';
-import 'package:takkan_script/panel/panel.dart';
-import 'package:takkan_script/panel/panel_style.dart';
-import 'package:takkan_script/trait/text_trait.dart';
+
+import '../common/debug.dart';
+import '../script/common.dart';
+import '../script/content.dart';
+import '../script/element.dart';
+import '../script/help.dart';
+import '../script/layout.dart';
+import '../script/takkan_item.dart';
+import '../util/visitor.dart';
+import 'panel.dart';
+import 'panel_style.dart';
 
 part 'static_panel.g.dart';
 
 /// [children], [documentClass], [cloudFunction] see [PodBase]
 @JsonSerializable(explicitToJson: true)
 class PanelStatic extends PodBase implements Panels {
+
+  PanelStatic({
+    super.caption,
+    super.documentClass,
+    this.openExpanded = true,
+    super.children = const [],
+    this.pageArguments = const {},
+    super.layout = const LayoutDistributedColumn(),
+    PanelHeading? heading,
+    this.scrollable = false,
+    this.help,
+    this.panelStyle = const PanelStyle(),
+    super.dataProvider,
+    super.controlEdit = ControlEdit.inherited,
+    super.id,
+  }) : _heading = heading;
+
+  factory PanelStatic.fromJson(Map<String, dynamic> json) =>
+      _$PanelStaticFromJson(json);
   @JsonKey(
     fromJson: ContentConverter.fromJson,
     toJson: ContentConverter.toJson,
@@ -28,43 +47,24 @@ class PanelStatic extends PodBase implements Panels {
   final PanelStyle panelStyle;
   final Map<String, dynamic> pageArguments;
 
-  factory PanelStatic.fromJson(Map<String, dynamic> json) =>
-      _$PanelStaticFromJson(json);
-
   @override
   Map<String, dynamic> toJson() => _$PanelStaticToJson(this);
 
-  PanelStatic({
-    String? function,
-    super.caption,
-    super.documentClass,
-    this.openExpanded = true,
-    super.children = const [],
-    this.pageArguments = const {},
-    super.layout = const LayoutDistributedColumn(),
-    PanelHeading? heading,
-    this.scrollable = false,
-    this.help,
-    this.panelStyle = const PanelStyle(),
-    super.dataProvider,
-    TextTrait textTrait = const TextTrait(),
-    super.controlEdit = ControlEdit.inherited,
-    super.id,
-  }) : _heading = heading;
-
   /// See [TakkanItem.subElements]
   @override
-  List<dynamic> get subElements => [
-        if (heading != null) heading,
+  List<Object> get subElements => [
+        if (heading != null) heading!,
         children,
         ...super.subElements,
       ];
 
   @override
-  walk(List<ScriptVisitor> visitors) {
+  void walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    if (heading != null) heading?.walk(visitors);
-    for (Content entry in children) {
+    if (heading != null) {
+      heading?.walk(visitors);
+    }
+    for (final Content entry in children) {
       entry.walk(visitors);
     }
   }

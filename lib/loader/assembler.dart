@@ -39,7 +39,7 @@ class ScriptAssembler {
     String name = firstModel.name;
     String id = firstModel.pid ?? name;
     Version version = firstModel.version;
-    List<Pages> pages = List.empty(growable: true);
+    List<Page> pages = List.empty(growable: true);
     final ConversionErrorMessages conversionErrorMessages =
         ConversionErrorMessages(patterns: Map());
     final ValidationErrorMessages validationErrorMessages =

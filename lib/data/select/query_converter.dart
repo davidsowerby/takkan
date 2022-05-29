@@ -4,16 +4,17 @@ import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/select/query.dart';
 import 'package:takkan_script/data/select/rest_query.dart';
 
+import '../../common/constants.dart';
+
 /// JSON converter for [Query] sub-classes
 class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
-  static final elementKey = '-type-';
 
   const QueryConverter();
 
   @override
   Query fromJson(Map<String, dynamic> json) {
-    final String? typeName = json[elementKey];
-    json.remove(elementKey);
+    final String? typeName = json[jsonClassKey] as String?;
+    json.remove(jsonClassKey);
     switch (typeName) {
       case 'GetDocument':
         return GetDocument.fromJson(json);
@@ -24,7 +25,7 @@ class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
       case 'RestQuery':
         return RestQuery.fromJson(json);
       default:
-        String msg = 'Conversion required for $typeName';
+        final String msg = 'Conversion required for $typeName';
         logName('QueryConverter').e(msg);
         throw TakkanException(msg);
     }
@@ -32,9 +33,9 @@ class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
 
   @override
   Map<String, dynamic> toJson(Query object) {
-    final type = object.runtimeType;
-    Map<String, dynamic> jsonMap = Map();
-    jsonMap[elementKey] = type.toString();
+    final  Type type = object.runtimeType;
+    final Map<String, dynamic> jsonMap = {};
+    jsonMap[jsonClassKey] = type.toString();
     switch (type) {
       case GetDocument:
       case GetStream:
@@ -45,7 +46,9 @@ class QueryConverter implements JsonConverter<Query, Map<String, dynamic>> {
           return jsonMap;
         }
       default:
-        throw TakkanException("Conversion required for $type");
+        final String msg='Conversion required for $type';
+        logType(runtimeType).e(msg);
+        throw TakkanException(msg);
     }
   }
 }

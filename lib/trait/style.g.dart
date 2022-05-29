@@ -7,13 +7,8 @@ part of 'style.dart';
 // **************************************************************************
 
 HeadingStyle _$HeadingStyleFromJson(Map<String, dynamic> json) => HeadingStyle(
-      textTrait: json['textTrait'] == null
-          ? const TextTrait(textStyle: TextStyle.subtitle1)
-          : TextTrait.fromJson(json['textTrait'] as Map<String, dynamic>),
       background: $enumDecodeNullable(_$ColorEnumMap, json['background']) ??
           Color.canvas,
-      textTheme: $enumDecodeNullable(_$TextThemeEnumMap, json['textTheme']) ??
-          TextTheme.cardCanvas,
       height: (json['height'] as num?)?.toDouble() ?? 40,
       elevation: (json['elevation'] as num?)?.toDouble() ?? 20,
       border: json['border'] == null
@@ -23,10 +18,8 @@ HeadingStyle _$HeadingStyleFromJson(Map<String, dynamic> json) => HeadingStyle(
 
 Map<String, dynamic> _$HeadingStyleToJson(HeadingStyle instance) =>
     <String, dynamic>{
-      'textTrait': instance.textTrait.toJson(),
       'border': instance.border.toJson(),
       'background': _$ColorEnumMap[instance.background],
-      'textTheme': _$TextThemeEnumMap[instance.textTheme],
       'height': instance.height,
       'elevation': instance.elevation,
     };
@@ -41,12 +34,6 @@ const _$ColorEnumMap = {
   Color.highlight: 'highlight',
   Color.hint: 'hint',
   Color.error: 'error',
-};
-
-const _$TextThemeEnumMap = {
-  TextTheme.cardCanvas: 'cardCanvas',
-  TextTheme.primary: 'primary',
-  TextTheme.accent: 'accent',
 };
 
 Border _$BorderFromJson(Map<String, dynamic> json) => Border(

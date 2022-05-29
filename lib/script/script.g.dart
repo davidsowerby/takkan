@@ -11,9 +11,10 @@ Script _$ScriptFromJson(Map<String, dynamic> json) => Script(
           ? const ConversionErrorMessages(patterns: defaultConversionPatterns)
           : ConversionErrorMessages.fromJson(
               json['conversionErrorMessages'] as Map<String, dynamic>),
-      pages: json['pages'] == null
-          ? const []
-          : PagesJsonConverter.fromJson(json['pages'] as List?),
+      pages: (json['pages'] as List<dynamic>?)
+              ?.map((e) => Page.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       name: json['name'] as String,
       version: Version.fromJson(json['version'] as Map<String, dynamic>),
       locale: json['locale'] as String? ?? 'en_GB',
@@ -30,7 +31,7 @@ Map<String, dynamic> _$ScriptToJson(Script instance) => <String, dynamic>{
       'version': instance.version.toJson(),
       'nameLocale': instance.nameLocale,
       'schema': instance.schema.toJson(),
-      'pages': PagesJsonConverter.toJson(instance.pages),
+      'pages': instance.pages.map((e) => e.toJson()).toList(),
       'conversionErrorMessages': instance.conversionErrorMessages.toJson(),
     };
 

@@ -63,8 +63,8 @@ class Panel extends PodBase implements Panels {
 
   /// See [TakkanItem.subElements]
   @override
-  List<dynamic> get subElements => [
-        if (heading != null) heading,
+  List<Object> get subElements => [
+        if (heading != null) heading!,
         children,
         ...super.subElements,
       ];

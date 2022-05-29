@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_script/common/debug.dart';
-import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/element.dart';
@@ -11,7 +11,6 @@ import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/schema/field/integer.dart';
 import 'package:takkan_script/schema/field/string.dart';
@@ -22,19 +21,20 @@ import 'package:takkan_script/validation/message.dart';
 part 'page.g.dart';
 
 /// A [Page] defines the presentation of a Page, as perceived by a user.  It is
-/// mapped to a route in the *takkan_client* TakkanRouter, and connects to dynamic data.
+/// mapped to a route in the *takkan_client* TakkanRouter, and usually connects
+/// to dynamic data.
 ///
-/// For static pages see [PageStatic].
+/// For static pages - for example a splash page - set [dataSelectors] property
+/// to a single instance of [NoData]. The route will be automatically created
+/// from the [Data.tag] property
 ///
-/// A [Page] contains [children] of type [Panel] and [PPart] which define the detail
+/// A [Page] contains [children] of type [Panel] and [Part] which define the detail
 /// of the presentation, and in conjunction with the [Schema] manages connection
 /// to data, validation and permissions.  It can also contain further [Page]
 /// instances which are not children in the presentation sense, but are children
 /// in the sense of data connection.
 ///
-/// These are the principal use cases for pages coonecting to dynamic data [PPage]:
-///
-///
+/// These are the principal use cases for pages connecting to dynamic data [PPage]:
 ///
 /// - The page uses dynamic data but actually uses the data from a 'parent' page.
 /// [property] defines which element of the parent data to use. [children] must then
@@ -66,30 +66,48 @@ part 'page.g.dart';
 ///
 /// The [TakkanRouter] uses routes to navigate to the appropriate page.
 ///
-/// For a static page, [PStatic.route] requires a developer defined specific
-/// route.  For a dynamic page,[DataItem] and [DataList] are used to automatically
+/// For a dynamic page,[DataItem] and [DataList] are used to automatically
 /// generate routes in the following structure:
 ///
 /// - individual documents: document/[documentClass]/{dataSelector.tag}/{page.tag}
 /// - list of documents:  documents/[documentClass]/{dataSelector.tag}/{page.tag}
 ///
+/// For static pages, the route is:
+///
+/// - static/{dataSelector.tag}/{page.tag}
+///
 /// If a data selector [tag] is not specified it defaults to 'default'
 /// If a page tag is not specified it is just ignored, and no trailing slash is expected:
 ///
-/// - document/[documentClass]/{dataSelector.tag
+/// - document/[documentClass]/{dataSelector.tag}
 ///
 /// A list of all routes generated and defined will be available during script
 /// validation, see https://gitlab.com/takkan/takkan_script/-/issues/28
 ///
-/// For a list of documents, [children] will often comprise a single [PNavTile],
+/// For a list of documents, [children] will be a list of [NavTile],
 /// to enable tapping to select a single document
 ///
-/// [pageType] may in future be used to look up from [PageLibrary] - not currently used
 ///
 /// -- Note: [ContentConverter] has to be imported for code generation
 @JsonSerializable(explicitToJson: true)
-class Page extends PodBase implements Pages {
-  final String pageType;
+class Page extends PodBase {
+
+  Page({
+    this.tag,
+    super.documentClass,
+    super.caption,
+    super.listEntryConfig,
+    this.scrollable = true,
+    super.layout = const LayoutDistributedColumn(),
+    super.children = const [],
+    super.dataProvider,
+    super.controlEdit = ControlEdit.inherited,
+    super.id,
+    super.property,
+    this.dataSelectors = const [Property()],
+  });
+
+  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
   final bool scrollable;
   final String? tag;
 
@@ -99,29 +117,16 @@ class Page extends PodBase implements Pages {
   )
   final List<Data> dataSelectors;
 
-  Page({
-    this.tag,
-    super.documentClass,
-    super.caption,
-    super.listEntryConfig,
-    this.pageType = 'defaultPage',
-    this.scrollable = true,
-    super.layout = const LayoutDistributedColumn(),
-    super.children = const [],
-    super.dataProvider,
-    super. controlEdit = ControlEdit.inherited,
-   super. id,
-    super. property,
-    this.dataSelectors = const [const Property()],
-  }) ;
-
-  factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
-
   @override
   Script get parent => super.parent as Script;
 
   @override
-  bool get isStatic => false;
+  bool get isStatic {
+    if (dataSelectors.isEmpty) {
+      return false;
+    }
+    return dataSelectors[0] is NoData;
+  }
 
   Content get baseConfig => this;
 
@@ -141,23 +146,11 @@ class Page extends PodBase implements Pages {
   @override
   Map<String, dynamic> toJson() => _$PageToJson(this);
 
-  @override
-  void doValidate(ValidationWalkerCollector collector) {
-    super.doValidate(collector);
-    if (pageType.isEmpty) {
-      collector.messages.add(ValidationMessage(
-        item: this,
-        msg: 'must define a non-empty pageType',
-      ));
-    }
-  }
-
-  @override
-  Map<String, Pages> get routeMap {
-    final Map<String, Pages> map = Map();
-    for (Data selector in dataSelectors) {
-      final prefix = (selector.isItem) ? 'document' : 'documents';
-      final route = '$prefix/$documentClass/${selector.tag}';
+  Map<String, Page> get routeMap {
+    final Map<String, Page> map = {};
+    for (final Data selector in dataSelectors) {
+      final prefix = (selector is NoData) ? 'static': (selector.isItem) ? 'document' : 'documents';
+      final route = (selector is NoData) ?'$prefix/${selector.tag}' :'$prefix/$documentClass/${selector.tag}';
       if (tag == null) {
         map[route] = this;
       } else {
@@ -169,7 +162,7 @@ class Page extends PodBase implements Pages {
 
   /// See [TakkanItem.subElements]
   @override
-  List<dynamic> get subElements => [
+  List<Object> get subElements => [
         children,
         ...super.subElements,
       ];
@@ -234,61 +227,5 @@ class RoleVisitor implements ScriptVisitor {
     if (entry is Document) {
       roles.addAll(entry.permissions.allRoles);
     }
-  }
-}
-
-abstract class Pages {
-  Map<String, Pages> get routeMap;
-
-  List<Content> get children;
-
-  Map<String, Content> get contentAsMap;
-
-  String? get title;
-
-  bool get isStatic;
-}
-
-class PagesJsonConverter {
-  static List<Pages> fromJson(List<dynamic>? json) {
-    if (json == null) throw NullThrownError();
-    final List<Pages> results = List.empty(growable: true);
-    for (Map<String, dynamic> entry in json) {
-      final dataType = entry["-data-"];
-      switch (dataType) {
-        case 'Page':
-          results.add(Page.fromJson(entry));
-          break;
-        case 'PageStatic':
-          results.add(PageStatic.fromJson(entry));
-          break;
-
-        default:
-          print("data type $dataType not recognised");
-          throw TakkanException("data type $dataType not recognised");
-      }
-    }
-    return results;
-  }
-
-  static List<Map<String, dynamic>> toJson(List<Pages> objectList) {
-    final List<Map<String, dynamic>> results = List.empty(growable: true);
-    for (Pages entry in objectList) {
-      late Map<String, dynamic> jsonMap;
-      switch (entry.runtimeType) {
-        case Page:
-          jsonMap = (entry as Page).toJson();
-          break;
-        case PageStatic:
-          jsonMap = (entry as PageStatic).toJson();
-          break;
-      }
-
-      /// Will only need the replace if we use freezed again
-      /// freezed creates a delegate, hence the name change
-      jsonMap["-data-"] = entry.runtimeType.toString();
-      results.add(jsonMap);
-    } //.replaceFirst('_\$_', '');
-    return results;
   }
 }

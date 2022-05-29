@@ -12,7 +12,6 @@ Page _$PageFromJson(Map<String, dynamic> json) => Page(
       listEntryConfig: json['listEntryConfig'] == null
           ? null
           : Panel.fromJson(json['listEntryConfig'] as Map<String, dynamic>),
-      pageType: json['pageType'] as String? ?? 'defaultPage',
       scrollable: json['scrollable'] as bool? ?? true,
       layout: json['layout'] == null
           ? const LayoutDistributedColumn()
@@ -26,7 +25,7 @@ Page _$PageFromJson(Map<String, dynamic> json) => Page(
               ControlEdit.inherited,
       property: json['property'] as String?,
       dataSelectors: json['dataSelectors'] == null
-          ? const [const Property()]
+          ? const [Property()]
           : DataListJsonConverter.fromJson(json['dataSelectors'] as List?),
     );
 
@@ -37,7 +36,6 @@ Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
       'listEntryConfig': instance.listEntryConfig?.toJson(),
       'children': ContentConverter.toJson(instance.children),
       'layout': LayoutJsonConverter.toJson(instance.layout),
-      'pageType': instance.pageType,
       'scrollable': instance.scrollable,
       'tag': instance.tag,
       'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),

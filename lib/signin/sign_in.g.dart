@@ -51,7 +51,7 @@ EmailSignIn _$EmailSignInFromJson(Map<String, dynamic> json) => EmailSignIn(
       submitCaption: json['submitCaption'] as String? ?? 'Submit',
       successRoute: json['successRoute'] as String? ?? '',
       failureRoute: json['failureRoute'] as String? ?? 'signInFail',
-      readTraitName: json['readTraitName'] as String? ?? 'EmailSignIn-default',
+      traitName: json['traitName'] as String? ?? 'EmailSignIn-default',
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
@@ -61,7 +61,7 @@ Map<String, dynamic> _$EmailSignInToJson(EmailSignIn instance) =>
     <String, dynamic>{
       'caption': instance.caption,
       'help': instance.help?.toJson(),
-      'readTraitName': instance.readTraitName,
+      'traitName': instance.traitName,
       'emailCaption': instance.emailCaption,
       'usernameCaption': instance.usernameCaption,
       'passwordCaption': instance.passwordCaption,

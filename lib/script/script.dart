@@ -64,26 +64,6 @@ part 'script.g.dart';
 @JsonSerializable(explicitToJson: true)
 @QueryConverter()
 class Script extends Common {
-  final String name;
-  final String locale;
-  final Version version;
-  String? nameLocale;
-  final Schema schema;
-  @JsonKey(ignore: true)
-  final SchemaSource? schemaSource;
-  @JsonKey(
-    toJson: PagesJsonConverter.toJson,
-    fromJson: PagesJsonConverter.fromJson,
-  )
-  final List<Pages> pages;
-  final ConversionErrorMessages conversionErrorMessages;
-  @JsonKey(ignore: true)
-  final ValidationErrorMessages validationErrorMessages;
-  @JsonKey(ignore: true)
-  List<ValidationMessage> _scriptValidationMessages =
-      List.empty(growable: true);
-
-  Map<String, Pages> _routes = Map();
 
   Script({
     this.conversionErrorMessages =
@@ -97,13 +77,28 @@ class Script extends Common {
     this.schemaSource,
     required this.schema,
     DataProvider? dataProvider,
-    ControlEdit controlEdit = ControlEdit.firstLevelPanels,
+    super.controlEdit = ControlEdit.firstLevelPanels,
   }) : super(
     dataProvider: dataProvider ?? NullDataProvider(),
-          controlEdit: controlEdit,
         );
 
   factory Script.fromJson(Map<String, dynamic> json) => _$ScriptFromJson(json);
+  final String name;
+  final String locale;
+  final Version version;
+  String? nameLocale;
+  final Schema schema;
+  @JsonKey(ignore: true)
+  final SchemaSource? schemaSource;
+  final List<Page> pages;
+  final ConversionErrorMessages conversionErrorMessages;
+  @JsonKey(ignore: true)
+  final ValidationErrorMessages validationErrorMessages;
+  @JsonKey(ignore: true)
+  List<ValidationMessage> _scriptValidationMessages =
+      List.empty(growable: true);
+
+  final Map<String, Page> _routes = {};
 
   @override
   Map<String, dynamic> toJson() => _$ScriptToJson(this);
@@ -112,7 +107,7 @@ class Script extends Common {
   String get debugId => name;
 
   @JsonKey(ignore: true)
-  Map<String, Pages> get routeMap => _routes;
+  Map<String, Page> get routeMap => _routes;
 
   Set<String> get allRoles {
     final counter = RoleVisitor();
@@ -124,7 +119,7 @@ class Script extends Common {
 
   static Future<Script> readFromFile(File f) async {
     final encoded = await f.readAsString();
-    final jsonMap = json.decode(encoded);
+    final jsonMap = json.decode(encoded) as Map<String,dynamic>;
     return Script.fromJson(jsonMap);
   }
 
@@ -218,9 +213,9 @@ class Script extends Common {
 
   /// See [TakkanItem.subElements]
   @override
-  List<dynamic> get subElements => [
+  List<Object> get subElements => [
         schema,
-        if (schemaSource != null) schemaSource,
+        if (schemaSource != null) schemaSource!,
         ...super.subElements,
         pages,
       ];
@@ -271,17 +266,17 @@ class Script extends Common {
   /// Creates a lookup list of all routes to pages, regardless of whether they are defined
   /// via [pages] or [routes]
   void _mergeRoutes() {
-    for (Pages page in pages) {
+    for (Page page in pages) {
       _routes.addAll(page.routeMap);
     }
   }
 
-  Map<String, Pages> get routes => _routes;
+  Map<String, Page> get routes => _routes;
 }
 
 class Walkers {
-  final InitWalker initWalker;
-  final SetParentWalker parentWalker;
 
   const Walkers({required this.initWalker, required this.parentWalker});
+  final InitWalker initWalker;
+  final SetParentWalker parentWalker;
 }

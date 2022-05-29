@@ -10,10 +10,10 @@ abstract class V {
 
 VResult validate(V v, dynamic value) {
   if (v is VInteger) {
-    return VInteger.validate(v, value);
+    return VInteger.validate(v, value as int);
   }
   if (v is VString) {
-    return VString.validate(v, value);
+    return VString.validate(v, value as String);
   }
   String msg = '${v.runtimeType} is missing';
   logName('validate in validate.dart').e(msg);

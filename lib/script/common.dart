@@ -1,17 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/data/select/query_converter.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/page/static_page.dart';
-import 'package:takkan_script/panel/panel.dart';
-import 'package:takkan_script/panel/static_panel.dart';
-import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/trait/text_trait.dart';
+
+import '../data/provider/data_provider.dart';
+import '../data/select/query.dart';
+import '../data/select/query_converter.dart';
+import '../page/page.dart';
+import '../panel/panel.dart';
+import '../panel/static_panel.dart';
+import '../part/part.dart';
+import '../schema/schema.dart';
+import 'script.dart';
+import 'takkan_item.dart';
 
 part 'common.g.dart';
 
@@ -77,22 +76,20 @@ enum ControlEdit {
 @JsonSerializable(explicitToJson: true)
 @QueryConverter()
 class Common extends TakkanItem {
+  Common({
+    DataProvider? dataProvider,
+    Query? query,
+    this.controlEdit = ControlEdit.inherited,
+    super.id,
+  })  : _dataProvider = dataProvider,
+        _query = query;
+
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @protected
   final DataProvider? _dataProvider;
   @JsonKey(ignore: true)
   final Query? _query;
-
-  Common({
-    DataProvider? dataProvider,
-    Query? query,
-    TextTrait? textTrait,
-    this.controlEdit = ControlEdit.inherited,
-    Schema? schema,
-    super. id,
-  })  : _dataProvider = dataProvider,
-        _query = query;
 
   bool get hasEditControl => _hasEditControl;
 
@@ -111,8 +108,7 @@ class Common extends TakkanItem {
   DataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
-  bool get dataProviderIsDeclared => (_dataProvider != null);
-
+  bool get dataProviderIsDeclared => _dataProvider != null;
 
   @override
   @JsonKey(ignore: true)
@@ -122,7 +118,7 @@ class Common extends TakkanItem {
   /// If you override this to pass the call on to other levels, make sure you call super
   /// [inherited] is not just from the immediate parent - a [ControlEdit.panelsOnly] for example, could come from the [Script] level
   @override
-  doInit(InitWalkerParams params) {
+  void doInit(InitWalkerParams params) {
     super.doInit(params);
     TakkanItem p = parent;
 
@@ -140,13 +136,13 @@ class Common extends TakkanItem {
 
   /// See [TakkanItem.subElements]
   @override
-  List<dynamic> get subElements => [
-        if (_query != null) _query,
-        if (_dataProvider != null) _dataProvider,
+  List<Object> get subElements => [
+        if (_query != null) _query!,
+        if (_dataProvider != null) _dataProvider!,
       ];
 
   /// [ControlEdit.noEdit] overrides everything
-  setupControlEdit(ControlEdit inherited) {
+  void setupControlEdit(ControlEdit inherited) {
     // top levels are not visual elements
     if (this is Script) {
       _hasEditControl = false;
@@ -185,7 +181,7 @@ class Common extends TakkanItem {
       }
     }
 
-    if (this is Page || this is PageStatic) {
+    if (this is Page) {
       if (controlEdit == ControlEdit.pagesOnly ||
           inherited == ControlEdit.pagesOnly) {
         _hasEditControl = true;
@@ -195,7 +191,7 @@ class Common extends TakkanItem {
 
     if (controlEdit == ControlEdit.firstLevelPanels ||
         inherited == ControlEdit.firstLevelPanels) {
-      if ((this is Panel || this is PanelStatic) && parent is Pages) {
+      if ((this is Panel || this is PanelStatic) && parent is Page) {
         _hasEditControl = true;
         return;
       }

@@ -18,9 +18,10 @@ part 'part.g.dart';
 ///
 /// [T] is the data type as held by the database. Type conversion is handled automatically within the *takkan_client* package
 ///
-/// [staticData] - if not null, the part is considered static and [isStatic] will return true.   See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation).
-/// Takes precedence over [property].  This can be useful sometimes to temporarily display something while developing before data is available.
+/// [staticData] - used either on its own or combined with dynamic data. For example 'Welcome David' could be constructed from [staticData] of 'Welcome ' and 'David' from the logged in user's name. See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation).
+/// Takes precedence over [property].  For a full description of how to use static and dynamic data together, see:
 /// [property] - the property to look up in order to get the data value.  This connects a data binding to the [EditState] immediately above the [Part] Widget associated with this configuration.
+/// If [property] is null, [isStatic] will return true. For a full description of how to use static and dynamic data together, see:
 /// [caption] - the text to display as a caption.  See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation)
 /// [readOnly] - if true, this part is always in read only mode, regardless of any other edit state settings.  If false, the [Part] will respond to the current edit state of the [EditState] immediately above it.
 /// [help] - if non-null a small help icon button will popup when clicked. See [Localisation](https://www.takkanblog.co.uk/user-guide/takkan-model.html#localisation)
@@ -29,21 +30,13 @@ part 'part.g.dart';
 /// [isStatic] - returns true if [staticData] is non-null
 @JsonSerializable(explicitToJson: true)
 class Part extends Content {
-  final bool readOnly;
-  final String? staticData;
-  final Help? help;
-  final String? tooltip;
-  final double? height;
-  final String readTraitName;
-  final String? editTraitName;
 
   Part(
       {super.caption,
       this.readOnly = false,
       this.height,
       super.property,
-      this.readTraitName = '?',
-      this.editTraitName = '?',
+      required this.traitName,
       this.staticData,
       this.help,
       super.controlEdit = ControlEdit.inherited,
@@ -51,6 +44,12 @@ class Part extends Content {
       this.tooltip});
 
   factory Part.fromJson(Map<String, dynamic> json) => _$PartFromJson(json);
+  final bool readOnly;
+  final String? staticData;
+  final Help? help;
+  final String? tooltip;
+  final double? height;
+  final String traitName;
 
   @override
   Map<String, dynamic> toJson() => _$PartToJson(this);

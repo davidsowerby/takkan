@@ -76,9 +76,9 @@ class TakkanItem with WalkTarget {
   ///
   /// Not all elements are [TakkanItem] sub-classes, hence the returned list is not
   /// typed.
-  List<dynamic> get subElements => [];
+  List<Object> get subElements => [];
 
-  setParent(SetParentWalkerParams params) {
+  void setParent(SetParentWalkerParams params) {
     _parent = params.parent;
     _script = params.script;
   }
@@ -166,13 +166,14 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
   TRACK _processItem(TakkanItem root, PARAMS params);
 
   void cascade(TakkanItem item, PARAMS params) {
-    for (Object child in item.subElements) {
+    for (final Object child in item.subElements) {
       if (child is TakkanItem) {
         walk(child, childParams(item, params));
       } else {
         if (child is List) {
+          final List<Object> c=List.castFrom(child);
           int count = 0;
-          for (Object entry in child) {
+          for (final Object entry in c) {
             if (entry is TakkanItem) {
               walk(entry, childParams(item, params, index: count));
             }
@@ -180,9 +181,10 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
           }
         } else {
           if (child is Map) {
-            for (MapEntry entry in child.entries) {
+            final Map<String,dynamic> c=Map.castFrom(child);
+            for (final entry in c.entries ) {
               if (entry.value is TakkanItem) {
-                walk(entry.value, childParams(item, params, name: entry.key));
+                walk(entry.value as TakkanItem, childParams(item, params, name: entry.key));
               }
             }
           }

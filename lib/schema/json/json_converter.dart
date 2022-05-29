@@ -12,16 +12,18 @@ import 'package:takkan_script/schema/field/post_code.dart';
 import 'package:takkan_script/schema/field/relation.dart';
 import 'package:takkan_script/schema/field/string.dart';
 
+import '../../common/constants.dart';
+
 class SchemaFieldMapConverter
     implements JsonConverter<Map<String, Field>, Map<String, dynamic>> {
   const SchemaFieldMapConverter();
 
   @override
   Map<String, Field> fromJson(Map<String, dynamic> json) {
-    Map<String, Field> outputMap = Map();
-    for (var entry in json.entries) {
-      if (entry.key != "-part-") {
-        outputMap[entry.key] = FieldConverter().fromJson(entry.value);
+    final Map<String, Field> outputMap = {};
+    for (final entry in json.entries) {
+      if (entry.key != jsonClassKey) {
+        outputMap[entry.key] = const FieldConverter().fromJson(entry.value as Map<String,dynamic>);
       }
     }
     return outputMap;
@@ -29,9 +31,9 @@ class SchemaFieldMapConverter
 
   @override
   Map<String, dynamic> toJson(Map<String, Field> partMap) {
-    final outputMap = Map<String, dynamic>();
-    for (var entry in partMap.entries) {
-      outputMap[entry.key] = FieldConverter().toJson(entry.value);
+    final outputMap = <String, dynamic>{};
+    for (final entry in partMap.entries) {
+      outputMap[entry.key] = const FieldConverter().toJson(entry.value);
     }
     return outputMap;
   }

@@ -1,5 +1,5 @@
 
-import 'package:takkan_script/script/takkan_item.dart';
+import '../script/takkan_item.dart';
 
 class DebugNode {
   final TakkanItem item;

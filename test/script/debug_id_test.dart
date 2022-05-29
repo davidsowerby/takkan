@@ -1,7 +1,8 @@
+import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/list_view.dart';
@@ -39,28 +40,28 @@ void main() {
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
-          PageStatic(
-            routes: ['home'],
+          Page(
+            dataSelectors: [NoData(tag: 'home')],
             id: 'Home',
             caption: 'Home',
             children: [
-              Text(caption: 'using caption'),
-              Text(),
-              Text(id: 'using id'),
+              Heading1(caption: 'using caption'),
+              Heading2(),
+              Heading3(id: 'using id'),
               PanelStatic(
                   caption: 'Top Panel',
                   heading: PanelHeading(),
                   children: [
-                    Text(),
-                    Text(caption: 'with caption'),
-                    ListView(property: 'eggs', caption: 'Eggs')
+                    Heading1(),
+                    Heading2(caption: 'with caption'),
+                    ListView(property: 'eggs', caption: 'Eggs', traitName: 'ListView')
                   ])
             ],
           )
         ],
       );
       // when
-      InitWalker walker = script.init(useCaptionsAsIds: true).initWalker;
+      InitWalker walker = script.init().initWalker;
       // then
       expect(walker.tracker, [
         'script',
@@ -71,13 +72,13 @@ void main() {
         'script.NullDataProvider',
         'script.Home',
         'script.Home.using caption',
-        'script.Home.Text:1',
+        'script.Home.Heading2:1',
         'script.Home.using id',
         'script.Home.Top Panel',
         'script.Home.Top Panel.PanelHeading',
-        'script.Home.Top Panel.Text:0',
+        'script.Home.Top Panel.Heading1:0',
         'script.Home.Top Panel.with caption',
-        'script.Home.Top Panel.Eggs',
+        'script.Home.Top Panel.Eggs'
       ]);
 
       // when
@@ -91,13 +92,13 @@ void main() {
         'script.SchemaSource',
         'script.NullDataProvider',
         'script.Home',
-        'script.Home.Text:0',
-        'script.Home.Text:1',
+        'script.Home.Heading1:0',
+        'script.Home.Heading2:1',
         'script.Home.using id',
         'script.Home.PanelStatic:3',
         'script.Home.PanelStatic:3.PanelHeading',
-        'script.Home.PanelStatic:3.Text:0',
-        'script.Home.PanelStatic:3.Text:1',
+        'script.Home.PanelStatic:3.Heading1:0',
+        'script.Home.PanelStatic:3.Heading2:1',
         'script.Home.PanelStatic:3.ListView:2'
       ]);
     });

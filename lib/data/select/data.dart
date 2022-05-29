@@ -1,11 +1,13 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/script/content.dart';
-import 'package:takkan_script/data/select/data_item.dart';
-import 'package:takkan_script/data/select/data_list.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/panel/panel.dart';
+
+import '../../common/constants.dart';
+import '../../common/exception.dart';
+import '../../common/log.dart';
+import '../../page/page.dart';
+import '../../panel/panel.dart';
+import '../../script/content.dart';
+import 'data_item.dart';
+import 'data_list.dart';
 
 part 'data.g.dart';
 
@@ -44,14 +46,53 @@ abstract class Data {
   bool get isList;
 }
 
+@JsonSerializable(explicitToJson: true)
+class NoData implements Data {
+
+  const NoData({
+    this.caption,
+    required this.tag,
+  });
+  factory NoData.fromJson(Map<String, dynamic> json) => _$NoDataFromJson(json);
+
+  @override
+  final String? caption;
+  @override
+  final String tag;
+
+  @override
+  bool get isItem => true;
+
+  @override
+  bool get isList => false;
+
+  @override
+  bool get liveConnect => false;
+
+  @override
+  int get pageLength => 0;
+
+  Map<String, dynamic> toJson() => _$NoDataToJson(this);
+}
+
 /// [properties] is used to specify properties and values as required by the
 /// custom page implementation.  Note that the following getters will also need
 /// values assigned if the defaults are not correct for the intended use:
-/// - [isList], [isItem], [isStatic], [pageLength]
+/// - [isList], [isItem], [pageLength]
 ///
 /// [routes] must contain at least one entry, but multiple routes may be specified
 @JsonSerializable(explicitToJson: true)
 class PageCustom implements Data {
+  const PageCustom({
+    required this.routes,
+    this.properties = const <String, dynamic>{},
+    this.tag = 'default',
+    this.liveConnect = false,
+    required this.caption,
+  });
+
+  factory PageCustom.fromJson(Map<String, dynamic> json) =>
+      _$PageCustomFromJson(json);
   final List<String> routes;
   final Map<String, dynamic> properties;
   @override
@@ -61,29 +102,35 @@ class PageCustom implements Data {
   @override
   final String caption;
 
-  const PageCustom({
-    required this.routes,
-    this.properties = const {},
-    this.tag = 'default',
-    this.liveConnect = false,
-    required this.caption,
-  });
-
-  factory PageCustom.fromJson(Map<String, dynamic> json) =>
-      _$PageCustomFromJson(json);
-
   Map<String, dynamic> toJson() => _$PageCustomToJson(this);
 
   @override
-  bool get isList => properties['isMulti'] ?? false;
+  bool get isList {
+    const String prop = 'isMulti';
+    if (properties[prop] == null) {
+      return false;
+    }
+    return properties[prop] as bool;
+  }
 
   @override
-  bool get isItem => properties['isSingle'] ?? true;
+  bool get isItem {
+    const String prop = 'isSingle';
+    if (properties[prop] == null) {
+      return false;
+    }
+    return properties[prop] as bool;
+  }
 
   @override
-  int get pageLength => properties['pageLength'] ?? 1;
+  int get pageLength {
+    const String prop = 'pageLength';
+    if (properties[prop] == null) {
+      return 1;
+    }
+    return properties[prop] as int;
+  }
 }
-
 
 /// Effectively just a marker.  This is the default value for the [Page.dataSelectors]
 /// and [Panel.dataSelectors] properties when their respective [Content.property] is non-null.
@@ -107,16 +154,18 @@ class Property implements Data {
 
   @override
   String get caption => 'property';
-
-
 }
 
+// ignore: avoid_classes_with_only_static_members
 class DataListJsonConverter {
-  static List<Data> fromJson(List<dynamic>? json) {
-    if (json == null) throw NullThrownError();
-    final List<Data> results = List.empty(growable: true);
-    for (Map<String, dynamic> entry in json) {
-      final dataType = entry["-data-"];
+  static List<Data> fromJson(List<dynamic>? input) {
+    if (input == null) {
+      throw NullThrownError();
+    }
+    final List<Map<String,dynamic>> json = List.castFrom(input);
+    final List<Data> results = List<Data>.empty(growable: true);
+    for (final Map<String, dynamic> entry in json) {
+      final String dataType = entry[jsonClassKey] as String;
       switch (dataType) {
         case 'DataItem':
           results.add(DataItem.fromJson(entry));
@@ -148,20 +197,25 @@ class DataListJsonConverter {
         case 'DataListByGQL':
           results.add(DataListByGQL.fromJson(entry));
           break;
+        case 'NoData':
+          results.add(NoData.fromJson(entry));
+          break;
 
         default:
-          print("data type $dataType not recognised");
-          throw TakkanException("data type $dataType not recognised");
+          final String msg='data type $dataType not recognised';
+          logName('DataListJsonConverter').e(msg);
+          throw TakkanException(msg);
+
       }
     }
     return results;
   }
 
   static List<Map<String, dynamic>> toJson(List<Data> objectList) {
-    final List<Map<String, dynamic>> results = List.empty(growable: true);
-    for (Data entry in objectList) {
+    final List<Map<String, dynamic>> results = List<Map<String, dynamic>>.empty(growable: true);
+    for (final Data entry in objectList) {
       late Map<String, dynamic> jsonMap;
-      final type = entry.runtimeType;
+      final Type type = entry.runtimeType;
       switch (type) {
         case DataItem:
           jsonMap = (entry as DataItem).toJson();
@@ -193,20 +247,21 @@ class DataListJsonConverter {
         case DataListByGQL:
           jsonMap = (entry as DataListByGQL).toJson();
           break;
+        case NoData:
+          jsonMap = (entry as NoData).toJson();
+          break;
 
         default:
-          String msg = '${type.toString()} is not recognised';
+          final String msg = '${type.toString()} is not recognised';
           logName('PDataListJsonConverter').e(msg);
           throw TakkanException(msg);
       }
 
       /// Will only need the replace if we use freezed again
       /// freezed creates a delegate, hence the name change
-      jsonMap["-data-"] = type.toString();
+      jsonMap[jsonClassKey] = type.toString();
       results.add(jsonMap);
     } //.replaceFirst('_\$_', '');
     return results;
   }
 }
-
-

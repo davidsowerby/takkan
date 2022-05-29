@@ -37,8 +37,8 @@ void main() {
       expect(script2.routes.length, script.routes.length);
 
       expect(nullsInTracker(tracker), 0);
-      final c0 = script2.routes['/'];
-      expect(c0?.routeMap.keys, contains('/'));
+      final c0 = script2.routes['static/home'];
+      expect(c0?.routeMap.keys, contains('static/home'));
 
       expect(c0?.title, "Home");
       expect(c0?.children.length, 1);

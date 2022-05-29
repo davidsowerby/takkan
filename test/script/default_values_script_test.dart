@@ -31,7 +31,7 @@ void main() {
       // given
 
       // when
-      QueryView a = QueryView();
+      QueryView a = QueryView(traitName: 'QueryView');
       QueryView b = QueryView.fromJson(a.toJson());
       // then
       // expect(a.height, 60.0);
@@ -41,7 +41,8 @@ void main() {
       // given
       medleyScript0.init();
       // when
-      Text pText = medleyScript0.routes['/']?.children[0] as Text;
+      // ignore: cast_nullable_to_non_nullable
+      final Title pText = medleyScript0.routes['static/home']?.children[0] as Title;
       // then
 
       expect(pText.caption, isNull);

@@ -1,26 +1,27 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/part/part.dart';
+import '../common/constants.dart';
+import '../common/exception.dart';
+import 'part.dart';
 
 class PartConverter implements JsonConverter<Part, Map<String, dynamic>> {
   const PartConverter();
 
   @override
   Part fromJson(Map<String, dynamic> json) {
-    final partType = json["-part-"];
+    final partType = json[jsonClassKey];
     switch (partType) {
-      case "PPart":
+      case 'Part':
         return Part.fromJson(json);
       default:
-        throw TakkanException("part type $partType not recognised");
+        throw TakkanException('part type $partType not recognised');
     }
   }
 
   @override
   Map<String, dynamic> toJson(Part object) {
     final type = object.runtimeType;
-    Map<String, dynamic> jsonMap = object.toJson();
-    jsonMap["-part-"] = type.toString();
+    final Map<String, dynamic> jsonMap = object.toJson();
+    jsonMap[jsonClassKey] = type.toString();
     return jsonMap;
   }
 }
@@ -31,10 +32,10 @@ class PartMapConverter
 
   @override
   Map<String, Part> fromJson(Map<String, dynamic> json) {
-    Map<String, Part> outputMap = Map();
-    for (var entry in json.entries) {
-      if (entry.key != "-part-") {
-        outputMap[entry.key] = PartConverter().fromJson(entry.value);
+    final Map<String, Part> outputMap = {};
+    for (final entry in json.entries) {
+      if (entry.key != jsonClassKey) {
+        outputMap[entry.key] = const PartConverter().fromJson(entry.value as Map<String, dynamic>);
       }
     }
     return outputMap;
@@ -42,9 +43,9 @@ class PartMapConverter
 
   @override
   Map<String, dynamic> toJson(Map<String, Part> partMap) {
-    final outputMap = Map<String, dynamic>();
-    for (var entry in partMap.entries) {
-      outputMap[entry.key] = PartConverter().toJson(entry.value);
+    final outputMap = <String, dynamic>{};
+    for (final entry in partMap.entries) {
+      outputMap[entry.key] = const PartConverter().toJson(entry.value);
     }
     return outputMap;
   }

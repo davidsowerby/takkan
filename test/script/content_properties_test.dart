@@ -19,7 +19,7 @@ void main() {
       // then
 
       expect(
-          medleyScript0.routes['person']?.contentAsMap['age']?.caption, 'age');
+          medleyScript0.routes['static/person']?.contentAsMap['age']?.caption, 'age');
     });
   });
 }
