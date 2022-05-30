@@ -1,9 +1,10 @@
+
+import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/page/static_page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/part/list_view.dart';
 import 'package:takkan_script/part/navigation.dart';
@@ -31,24 +32,21 @@ final Script medleyScript2 = Script(
     useAuthenticator: true,
   ),
   pages: [
-    PageStatic(caption: 'Home', routes: [
-      '/'
+    Page(caption: 'Home', dataSelectors: [
+      NoData(tag: 'home')
     ], children: [
       Group(children: [
-        Text(
-          readTraitName: Text.title,
+        Title(
           staticData: 'Takkan',
         ),
-        Text(
-          readTraitName: Text.subtitle,
+        Subtitle(
           staticData: 'Proof of Concept',
         ),
-        Text(
-          readTraitName: Text.strapText,
+        Subtitle2(
           staticData: 'A brief introduction to faster Flutter development',
         ),
         NavButton(
-          staticData: 'OK',
+          caption: 'OK',
           route: 'document/Issue/Top Issue',
         ),
       ])
@@ -60,15 +58,15 @@ final Script medleyScript2 = Script(
       dataSelectors: [DataItemById(objectId: 'JJoGIErtzn', tag: 'Top Issue')],
       children: [
         Group(children: [
-          Text(
+          BodyText1(
             property: 'title',
             caption: 'Title',
           ),
-          Text(
+          BodyText2(
             property: 'description',
             caption: 'Description',
           ),
-          Text(
+          BodyText2(
             property: 'weight',
             caption: 'Weight',
           ),
@@ -94,36 +92,35 @@ final Script medleyScript1 = Script(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    PageStatic(caption: 'Home', routes: [
-      '/'
+    Page(caption: 'Home', dataSelectors: [
+      NoData(tag: 'home'),
     ], children: [
-      Text(
-        readTraitName: Text.title,
+      Title(
         staticData: 'Takkan',
       ),
-      Text(
-        readTraitName: Text.subtitle,
+      Subtitle(
         staticData: 'Proof of Concept',
       ),
-      Text(
-        readTraitName: Text.strapText,
+      Subtitle2(
         staticData: 'A brief introduction to faster Flutter development',
       ),
       NavButton(
-        staticData: 'OK',
+        caption: 'OK',
         route: 'person',
       ),
     ]),
-    PageStatic(
+    Page(
       caption: 'Person',
-      routes: ['person'],
+      dataSelectors: [
+        NoData(tag: 'person'),
+      ],
       children: [
-        Text(
+        BodyText1(
           property: 'firstName',
           caption: 'First Name',
           staticData: 'Michael',
         ),
-        Text(
+        BodyText2(
           property: 'age',
           caption: 'age',
           staticData: '17',
@@ -149,51 +146,50 @@ final Script medleyScript0 = Script(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    PageStatic(caption: 'Home', routes: [
-      '/'
+    Page(caption: 'Home', dataSelectors: [
+      NoData(tag: 'home'),
     ], children: [
-      Text(
-        readTraitName: Text.title,
+      Title(
         staticData: 'Takkan',
       ),
-      Text(
-        readTraitName: Text.subtitle,
+      Subtitle(
         staticData: 'Proof of Concept',
       ),
-      Text(
-        readTraitName: Text.strapText,
+      Subtitle2(
         staticData: 'A brief introduction to faster Flutter development',
       ),
       NavButton(
-        staticData: 'OK',
+        caption: 'OK',
         route: 'persons',
       ),
     ]),
-    PageStatic(
+    Page(
       caption: 'Person',
-      routes: ['person'],
+      dataSelectors: [
+        NoData(tag: 'person'),
+      ],
       children: [
-        Text(
+        BodyText1(
           property: 'firstName',
           caption: 'First Name',
           staticData: 'Michael',
         ),
-        Text(
+        BodyText2(
           property: 'age',
           caption: 'age',
           staticData: '17',
         ),
       ],
     ),
-    PageStatic(caption: 'Person', routes: [
-      'persons'
+    Page(caption: 'Person', dataSelectors: [
+      NoData(tag: 'persons'),
     ], children: [
-      Text(
+      BodyText1(
         property: 'firstName',
         caption: 'First Name',
         staticData: 'Michael',
       ),
-      Text(
+      BodyText2(
         property: 'age',
         caption: 'age',
         staticData: '17',
