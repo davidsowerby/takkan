@@ -9,7 +9,6 @@ import '../script/layout.dart';
 import '../script/takkan_item.dart';
 import '../util/visitor.dart';
 import 'panel.dart';
-import 'panel_style.dart';
 
 part 'static_panel.g.dart';
 
@@ -27,7 +26,6 @@ class PanelStatic extends PodBase implements Panels {
     PanelHeading? heading,
     this.scrollable = false,
     this.help,
-    this.panelStyle = const PanelStyle(),
     super.dataProvider,
     super.controlEdit = ControlEdit.inherited,
     super.id,
@@ -44,7 +42,6 @@ class PanelStatic extends PodBase implements Panels {
   final bool openExpanded;
   final bool scrollable;
   final Help? help;
-  final PanelStyle panelStyle;
   final Map<String, dynamic> pageArguments;
 
   @override

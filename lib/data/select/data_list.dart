@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:takkan_script/data/select/data.dart';
-import 'package:takkan_script/panel/panel.dart';
+
+import '../../panel/panel.dart';
+import 'data.dart';
 
 part 'data_list.g.dart';
 
@@ -20,7 +21,17 @@ part 'data_list.g.dart';
 ///
 
 @JsonSerializable(explicitToJson: true)
-class DataList implements Data {
+class DataList implements IDataList {
+
+  const DataList({
+    this.liveConnect = false,
+    required this.name,
+    this.pageLength = 20,
+    this.caption,
+  });
+
+  factory DataList.fromJson(Map<String, dynamic> json) =>
+      _$DataListFromJson(json);
   @override
   final bool liveConnect;
   @override
@@ -35,43 +46,36 @@ class DataList implements Data {
   bool get isStatic => false;
 
   @override
-  final String tag;
+    final String name;
   @override
   final String? caption;
-
-  const DataList({
-    this.liveConnect = false,
-    this.tag = 'default',
-    this.pageLength = 20,
-    this.caption,
-  });
-
-  factory DataList.fromJson(Map<String, dynamic> json) =>
-      _$DataListFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataListToJson(this);
 }
 
 /// A list of documents identified by fixed [objectId]s
 @JsonSerializable(explicitToJson: true)
-class DataListById implements Data {
-  final List<String> objectIds;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
-  @override
-  final int pageLength;
+class DataListById implements IDataList {
 
   const DataListById({
     required this.objectIds,
     this.liveConnect = false,
     this.pageLength = 20,
-    this.tag = 'default',
+    required this.name,
     this.caption,
   });
+
+  factory DataListById.fromJson(Map<String, dynamic> json) =>
+      _$DataListByIdFromJson(json);
+  final List<String> objectIds;
+  @override
+  final bool liveConnect;
+  @override
+    final String name;
+  @override
+  final String? caption;
+  @override
+  final int pageLength;
 
   @override
   bool get isItem => false;
@@ -79,35 +83,34 @@ class DataListById implements Data {
   @override
   bool get isList => true;
 
-  factory DataListById.fromJson(Map<String, dynamic> json) =>
-      _$DataListByIdFromJson(json);
-
   Map<String, dynamic> toJson() => _$DataListByIdToJson(this);
 }
 
 /// A list of documents retrieved from a cloud function identified
-/// by [cloudFunctionName]
+/// by [cloudFunctionName].  Unlike other [Data] implementations,
+/// no [name] is needed, as the [cloudFunctionName] is used in its place.
 @JsonSerializable(explicitToJson: true)
-class DataListByFunction implements Data {
-  final Map<String, dynamic> params;
-  final String cloudFunctionName;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
-  @override
-  final int pageLength;
+class DataListByFunction implements IDataList {
 
   const DataListByFunction({
     required this.cloudFunctionName,
     this.pageLength = 20,
     this.params = const {},
     this.liveConnect = false,
-    this.tag = 'default',
     this.caption,
   });
+
+  factory DataListByFunction.fromJson(Map<String, dynamic> json) =>
+      _$DataListByFunctionFromJson(json);
+  final Map<String, dynamic> params;
+  final String cloudFunctionName;
+  @override
+  final bool liveConnect;
+
+  @override
+  final String? caption;
+  @override
+  final int pageLength;
 
   @override
   bool get isItem => false;
@@ -115,9 +118,8 @@ class DataListByFunction implements Data {
   @override
   bool get isList => true;
 
-  factory DataListByFunction.fromJson(Map<String, dynamic> json) =>
-      _$DataListByFunctionFromJson(json);
-
+  @override
+    String get name=> cloudFunctionName;
   Map<String, dynamic> toJson() => _$DataListByFunctionToJson(this);
 }
 
@@ -132,7 +134,19 @@ class DataListByFunction implements Data {
 ///
 /// The function must return a list.
 @JsonSerializable(explicitToJson: true)
-class DataListByFilter implements Data {
+class DataListByFilter implements IDataList {
+
+  const DataListByFilter({
+    required this.script,
+    this.cloudFunctionName,
+    this.liveConnect = false,
+    required this.name,
+    this.caption,
+    this.pageLength = 20,
+  });
+
+  factory DataListByFilter.fromJson(Map<String, dynamic> json) =>
+      _$DataListByFilterFromJson(json);
   final String script;
   final String? cloudFunctionName;
   @override
@@ -140,60 +154,48 @@ class DataListByFilter implements Data {
   @override
   final int pageLength;
   @override
-  final String tag;
+    final String name;
   @override
   final String? caption;
-
-  const DataListByFilter({
-    required this.script,
-    this.cloudFunctionName,
-    this.liveConnect = false,
-    this.tag = 'default',
-    this.caption,
-    this.pageLength = 20,
-  });
 
   @override
   bool get isItem => false;
 
   @override
   bool get isList => true;
-
-  factory DataListByFilter.fromJson(Map<String, dynamic> json) =>
-      _$DataListByFilterFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataListByFilterToJson(this);
 }
 
 /// [script] must be a valid GraphQL script which returns a list of 0..n documents
 @JsonSerializable(explicitToJson: true)
-class DataListByGQL implements Data {
-  final String script;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
-  @override
-  final int pageLength;
+class DataListByGQL implements IDataList {
 
   const DataListByGQL({
     required this.script,
     this.liveConnect = false,
-    this.tag = 'default',
+    required this.name,
     this.caption,
     this.pageLength = 20,
   });
+
+  factory DataListByGQL.fromJson(Map<String, dynamic> json) =>
+      _$DataListByGQLFromJson(json);
+  final String script;
+  @override
+  final bool liveConnect;
+  @override
+    final String name;
+  @override
+  final String? caption;
+  @override
+  final int pageLength;
 
   @override
   bool get isItem => false;
 
   @override
   bool get isList => true;
-
-  factory DataListByGQL.fromJson(Map<String, dynamic> json) =>
-      _$DataListByGQLFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataListByGQLToJson(this);
 }

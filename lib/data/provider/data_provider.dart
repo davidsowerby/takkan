@@ -85,7 +85,7 @@ class NullDataProvider extends DataProvider {
   }) : super(
           signInOptions: const SignInOptions(),
           signIn: const SignIn(),
-          instanceConfig: AppInstance(group: 'none', instance: 'none'),
+          instanceConfig: const AppInstance(group: 'none', instance: 'none'),
         );
 
   factory NullDataProvider.fromJson(Map<String, dynamic> json) =>

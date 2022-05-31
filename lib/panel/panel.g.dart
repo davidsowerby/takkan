@@ -31,9 +31,6 @@ Panel _$PanelFromJson(Map<String, dynamic> json) => Panel(
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
-      panelStyle: json['panelStyle'] == null
-          ? const PanelStyle()
-          : PanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
@@ -50,7 +47,6 @@ Map<String, dynamic> _$PanelToJson(Panel instance) => <String, dynamic>{
       'openExpanded': instance.openExpanded,
       'scrollable': instance.scrollable,
       'help': instance.help?.toJson(),
-      'panelStyle': instance.panelStyle.toJson(),
       'pageArguments': instance.pageArguments,
       'heading': instance.heading?.toJson(),
     };
@@ -72,9 +68,6 @@ PanelHeading _$PanelHeadingFromJson(Map<String, dynamic> json) => PanelHeading(
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
-      style: json['style'] == null
-          ? const HeadingStyle()
-          : HeadingStyle.fromJson(json['style'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PanelHeadingToJson(PanelHeading instance) =>
@@ -82,7 +75,6 @@ Map<String, dynamic> _$PanelHeadingToJson(PanelHeading instance) =>
       'expandable': instance.expandable,
       'canEdit': instance.canEdit,
       'help': instance.help?.toJson(),
-      'style': instance.style.toJson(),
     };
 
 Group _$GroupFromJson(Map<String, dynamic> json) => Group(

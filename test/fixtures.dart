@@ -10,7 +10,7 @@ class FakeTakkanSchemaLoader extends Fake implements TakkanSchemaLoader {
   Future<Schema> load(SchemaSource source) async {
     return Schema(
       name: 'test',
-      version: Version(number: 0),
+      version: const Version(number: 0),
     );
   }
 }

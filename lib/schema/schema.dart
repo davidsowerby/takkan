@@ -98,7 +98,7 @@ class Schema extends SchemaElement {
     if (doc == null) {
       String msg =
           "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
-      logType(this.runtimeType).e(msg);
+      logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
     return doc;

@@ -25,8 +25,8 @@ Logger logName(String source) {
 class WebDebugFilter extends LogFilter {
   @override
   bool shouldLog(LogEvent event) {
-    Level reqLevel = level ?? Level.debug;
-    var shouldLog = (event.level.index >= reqLevel.index);
+    final Level reqLevel = level ?? Level.debug;
+    final shouldLog = event.level.index >= reqLevel.index;
     return shouldLog;
   }
 }
@@ -35,7 +35,7 @@ class WebDebugFilter extends LogFilter {
 class WebConsoleOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
-    final message = event.lines.join("\n");
+    final message = event.lines.join('\n');
     print(message);
   }
 }

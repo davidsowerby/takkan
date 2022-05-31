@@ -13,11 +13,11 @@ void main() {
 
     test('output', () {
       // given
-      final String p1 = 'a message with no params';
-      final String p2 = 'a message with {number} params';
-      final String p3 =
+      const String p1 = 'a message with no params';
+      const String p2 = 'a message with {number} params';
+      const String p3 =
           'a message with {number} params, using {a} and {reallyLongOne}';
-      final String p4 =
+      const String p4 =
           'a message with {number} params, using {a} and {reallyLongOne} and {a} again';
       // when
 

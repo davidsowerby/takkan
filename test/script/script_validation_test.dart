@@ -22,10 +22,10 @@ void main() {
       // given
       final script1 = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
       );
       // when
@@ -50,15 +50,14 @@ void main() {
         // given
         final script = Script(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
           schema: Schema(
             name: 'test',
-            version: Version(number: 0),
+            version: const Version(number: 0),
           ),
           pages: [
-            Page(
+            Page(name:'home',
               caption: 'A page',
-              dataSelectors: [NoData(tag: 'home')],
             ),
           ],
         ); // ignore: missing_required_param
@@ -78,14 +77,13 @@ void main() {
       // given
       final component = Script(
         name: 'A script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'a Page title',
           ),
         ],
@@ -105,10 +103,10 @@ void main() {
       // given
       final component = Script(
         name: 'a script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(
@@ -117,11 +115,11 @@ void main() {
           ),
         ),
         pages: [
-          Page(
-            caption: "Wiggly",
+          Page(name: 'wiggly',
+            caption: 'Wiggly',
             dataSelectors: [
-              DataItemById(
-                tag: '?',
+              const DataItemById(
+                name: '?',
                 objectId: 'x',
               )
             ],
@@ -141,23 +139,23 @@ void main() {
       // given
       final component = Script(
           name: 'A Script',
-          version: Version(number: 0),
+          version: const Version(number: 0),
           schema: Schema(
             name: 'test',
-            version: Version(number: 0),
+            version: const Version(number: 0),
           ),
           dataProvider: DataProvider(
-            instanceConfig: AppInstance(
+            instanceConfig: const AppInstance(
               group: 'back4app',
               instance: 'dev',
             ),
           ),
           pages: [
-            Page(
-              caption: "Wiggly",
+            Page(name:'wiggly',
+              caption: 'Wiggly',
               dataSelectors: [
-                DataItemById(
-                  tag: '?',
+                const DataItemById(
+                  name: '?',
                   objectId: 'x',
                   caption: 'Wiggly',
                 )
@@ -178,15 +176,14 @@ void main() {
       // given
       final withoutQueryOrDataProvider = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [NoData(tag: 'home')],
-            caption: "Wiggly",
+          Page(name: 'home',
+            caption: 'Wiggly',
             children: [
               PanelStatic(
                 caption: 'panel1',
@@ -198,21 +195,20 @@ void main() {
 
       final withoutQuery = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         dataProvider: DataProvider(
-          instanceConfig: AppInstance(
+          instanceConfig: const AppInstance(
             group: 'back4app',
             instance: 'dev',
           ),
         ),
         pages: [
-          Page(
-            dataSelectors: [NoData(tag: 'home')],
-            caption: "Wiggly",
+          Page(name:'home',
+            caption: 'Wiggly',
             children: [PanelStatic(caption: 'panel1')],
           ),
         ],
@@ -220,23 +216,23 @@ void main() {
 
       final withQueryAndProvider = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         dataProvider: DataProvider(
-          instanceConfig: AppInstance(
+          instanceConfig: const AppInstance(
             group: 'back4app',
             instance: 'dev',
           ),
         ),
         pages: [
-          Page(
-            caption: "Wiggly",
+          Page(name:'wiggly',
+            caption: 'Wiggly',
             dataSelectors: [
-              DataItemById(
-                tag: 'fixed thing',
+              const DataItemById(
+                name: 'fixed thing',
                 objectId: 'xx',
               )
             ],

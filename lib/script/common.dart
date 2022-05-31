@@ -46,7 +46,6 @@ enum ControlEdit {
 /// - [dataProvider]
 /// - [data-select]
 /// - [textTrait] defines styles for all heading and text levels, derived from [ThemeData].  It would be called textStyle, but Flutter already uses that name
-/// - [panelStyle] defines borders and other styling for panels
 /// - [isStatic] which if true, means a [Part] takes its data from the [Script] and not a data source.
 /// This also means that no [DataBinding] is needed.  Although this really only applies at [Part] level, it can be set
 /// anywhere up to [Script] and take effect for all lower levels.

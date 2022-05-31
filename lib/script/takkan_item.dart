@@ -121,7 +121,7 @@ class TakkanItem with WalkTarget {
   /// Walks through all instances of [TakkanItem] or its sub-classes held within this item.
   /// At each instance, the each of the [visitors] [ScriptVisitor.step] is invoked
   @override
-  walk(List<ScriptVisitor> visitors) {
+  void walk(List<ScriptVisitor> visitors) {
     final collector = VisitorWalkerParams(visitors: visitors);
     final walker = VisitorWalker();
     walker.walk(this, collector);
@@ -139,8 +139,8 @@ class TakkanItem with WalkTarget {
 }
 
 abstract class WalkTarget {
-  walk(List<ScriptVisitor> visitors) {
-    for (ScriptVisitor visitor in visitors) {
+  void walk(List<ScriptVisitor> visitors) {
+    for (final ScriptVisitor visitor in visitors) {
       visitor.step(this);
     }
   }
@@ -260,7 +260,7 @@ class SetParentWalker extends Walker<SetParentWalkerParams, String> {
 class VisitorWalker extends Walker<VisitorWalkerParams, String> {
   @override
   String _processItem(TakkanItem root, VisitorWalkerParams params) {
-    for (ScriptVisitor visitor in params.visitors) {
+    for (final ScriptVisitor visitor in params.visitors) {
       visitor.step(root);
     }
     return root.debugId!;

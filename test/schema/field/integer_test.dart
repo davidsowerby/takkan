@@ -16,7 +16,7 @@ void main() {
 
     test('greaterThan validation', () {
       // given
-      final v1 = VInteger.greaterThan(3);
+      const v1 = VInteger.greaterThan(3);
       // when
 
       // then
@@ -34,7 +34,7 @@ void main() {
 
     test('lessThan validation', () {
       // given
-      final v1 = VInteger.lessThan(3);
+      const v1 = const VInteger.lessThan(3);
       // when
 
       // then
@@ -47,8 +47,8 @@ void main() {
 
     test('JSON', () {
       // given
-      final v11 = VInteger.greaterThan(3);
-      final v21 = VInteger.lessThan(3);
+      const v11 = const VInteger.greaterThan(3);
+      const v21 = const VInteger.lessThan(3);
       // when
       final v12 = VInteger.fromJson(v11.toJson());
       final v22 = VInteger.fromJson(v21.toJson());
@@ -61,15 +61,15 @@ void main() {
       // given
       final Script script = Script(
         name: 'test',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
       );
       final field = FInteger(validations: [
-        VInteger.greaterThan(5),
-        VInteger.lessThan(10),
+        const VInteger.greaterThan(5),
+        const VInteger.lessThan(10),
       ]);
       // when
 
@@ -82,7 +82,7 @@ void main() {
     /// The set is used to detect duplicates declared in refs
     test('refs', () {
       // given
-      Set s = Set();
+      final Set s = {};
 
       // when
       VInteger.refs().forEach((element) {

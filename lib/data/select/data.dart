@@ -15,12 +15,12 @@ part 'data.g.dart';
 /// Relevant ony to [DataList], and just returns 1 from [DataItem]
 ///
 /// [caption] can be used in the display and is therefore subject to translation
-/// for multi-lingual apps, but [tag] is used in the construction of the route
+/// for multi-lingual apps, but [name] is used in the construction of the route
 /// associated with the data selection, and should be constant regardless of language.
 ///
 /// Examples:
 /// - [caption] 'Open Issues', 'Closed Issues'
-/// - [tag] 'openIssues', 'closedIssues'  (you can use spaces, but debugging can be easier if you don't)
+/// - [name] 'openIssues', 'closedIssues'  (you can use spaces, but debugging can be easier if you don't)
 ///
 /// The implementations of this interface used to use [freezed](https://pub.dev/packages/freezed), and may revert
 /// to doing so.  This creates proxy classes during code generation, so it is easier
@@ -31,9 +31,9 @@ part 'data.g.dart';
 ///
 /// [isItem]
 /// [isList]
-/// [isStatic]
+
 abstract class Data {
-  String get tag;
+  String get name;
 
   String? get caption;
 
@@ -46,22 +46,29 @@ abstract class Data {
   bool get isList;
 }
 
+abstract class IDataList extends Data{
+
+}
+
+abstract class IDataItem implements Data{
+
+
+}
+
 @JsonSerializable(explicitToJson: true)
 class NoData implements Data {
 
-  const NoData({
-    this.caption,
-    required this.tag,
-  });
+  const NoData();
   factory NoData.fromJson(Map<String, dynamic> json) => _$NoDataFromJson(json);
 
   @override
-  final String? caption;
-  @override
-  final String tag;
+  String? get caption=>'static';
 
   @override
-  bool get isItem => true;
+  String get name => 'static';
+
+  @override
+  bool get isItem => false;
 
   @override
   bool get isList => false;
@@ -86,7 +93,7 @@ class PageCustom implements Data {
   const PageCustom({
     required this.routes,
     this.properties = const <String, dynamic>{},
-    this.tag = 'default',
+required this.name,
     this.liveConnect = false,
     required this.caption,
   });
@@ -96,7 +103,7 @@ class PageCustom implements Data {
   final List<String> routes;
   final Map<String, dynamic> properties;
   @override
-  final String tag;
+  final String name;
   @override
   final bool liveConnect;
   @override
@@ -150,7 +157,7 @@ class Property implements Data {
   bool get liveConnect => false;
 
   @override
-  String get tag => 'property';
+  String get name => 'property';
 
   @override
   String get caption => 'property';

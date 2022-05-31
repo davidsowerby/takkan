@@ -64,7 +64,6 @@ part 'script.g.dart';
 @JsonSerializable(explicitToJson: true)
 @QueryConverter()
 class Script extends Common {
-
   Script({
     this.conversionErrorMessages =
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
@@ -79,7 +78,7 @@ class Script extends Common {
     DataProvider? dataProvider,
     super.controlEdit = ControlEdit.firstLevelPanels,
   }) : super(
-    dataProvider: dataProvider ?? NullDataProvider(),
+          dataProvider: dataProvider ?? NullDataProvider(),
         );
 
   factory Script.fromJson(Map<String, dynamic> json) => _$ScriptFromJson(json);
@@ -98,7 +97,7 @@ class Script extends Common {
   List<ValidationMessage> _scriptValidationMessages =
       List.empty(growable: true);
 
-  final Map<String, Page> _routes = {};
+  final Map<TakkanRoute, Page> _routes = {};
 
   @override
   Map<String, dynamic> toJson() => _$ScriptToJson(this);
@@ -106,8 +105,10 @@ class Script extends Common {
   @override
   String get debugId => name;
 
+  Page? pageFromStringRoute(String route) => routes[TakkanRoute.fromString(route)];
+
   @JsonKey(ignore: true)
-  Map<String, Page> get routeMap => _routes;
+  Map<TakkanRoute, Page> get routeMap => _routes;
 
   Set<String> get allRoles {
     final counter = RoleVisitor();
@@ -119,7 +120,7 @@ class Script extends Common {
 
   static Future<Script> readFromFile(File f) async {
     final encoded = await f.readAsString();
-    final jsonMap = json.decode(encoded) as Map<String,dynamic>;
+    final jsonMap = json.decode(encoded) as Map<String, dynamic>;
     return Script.fromJson(jsonMap);
   }
 
@@ -204,7 +205,7 @@ class Script extends Common {
 
   /// Passes call to all components, and builds [_routes] from [pages]
   @override
-  doInit(InitWalkerParams params) {
+  void doInit(InitWalkerParams params) {
     super.doInit(params);
     nameLocale = '$name:$locale';
     setupControlEdit(ControlEdit.inherited);
@@ -223,7 +224,7 @@ class Script extends Common {
   Document documentSchema({required String documentSchemaName}) {
     final Document? documentSchema = schema.documents[documentSchemaName];
     if (documentSchema == null) {
-      String msg = "document schema '$documentSchemaName' not found";
+      final String msg = "document schema '$documentSchemaName' not found";
       logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
@@ -237,8 +238,8 @@ class Script extends Common {
   @override
   String get idAlternative => name;
 
-  validationOutput() {
-    StringBuffer buf = StringBuffer();
+  void validationOutput() {
+    final StringBuffer buf = StringBuffer();
     buf.writeln(
         '============================================================================');
     buf.writeln(
@@ -266,17 +267,17 @@ class Script extends Common {
   /// Creates a lookup list of all routes to pages, regardless of whether they are defined
   /// via [pages] or [routes]
   void _mergeRoutes() {
-    for (Page page in pages) {
+    for (final Page page in pages) {
       _routes.addAll(page.routeMap);
     }
   }
 
-  Map<String, Page> get routes => _routes;
+  Map<TakkanRoute, Page> get routes => _routes;
 }
 
 class Walkers {
-
   const Walkers({required this.initWalker, required this.parentWalker});
+
   final InitWalker initWalker;
   final SetParentWalker parentWalker;
 }

@@ -58,15 +58,15 @@ class VInteger with _$VInteger implements V {
   }
 
   static List<VInteger> values() {
-    return [VInteger.greaterThan(1), VInteger.lessThan(1)];
+    return [const VInteger.greaterThan(1), const VInteger.lessThan(1)];
   }
 
   static List<VResultRef> refs() {
-    List<VResultRef> refsList = List.empty(growable: true);
+    final List<VResultRef> refsList = List.empty(growable: true);
     final values = VInteger.values();
-    values.forEach((element) {
+    for (final element in values) {
       refsList.add(VInteger.ref(element));
-    });
+    }
     return refsList;
   }
 }

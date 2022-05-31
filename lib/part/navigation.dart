@@ -1,12 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
+import '../page/page.dart';
+import '../script/takkan_item.dart';
 import 'part.dart';
 
 part 'navigation.g.dart';
 
+/// Configuration for a Flutter button which causes the client Router to navigate
+/// to the Page and DataSelector specified in [toPage] and [toData].
 @JsonSerializable(explicitToJson: true)
 class NavButton extends Part {
   NavButton({
-    required this.route,
+    required this.toPage,
+    required this.toData,
     super.caption,
     super.traitName = 'NavButton',
     super.height = 100,
@@ -18,14 +23,25 @@ class NavButton extends Part {
 
   factory NavButton.fromJson(Map<String, dynamic> json) =>
       _$NavButtonFromJson(json);
-  final String route;
 
   @override
   Map<String, dynamic> toJson() => _$NavButtonToJson(this);
+
+  final String toPage;
+  final String toData;
+
+  String get route =>
+      TakkanRoute(pageName: toPage, dataSelectorName: toData).toString();
+
+  @override
+  void doInit(InitWalkerParams params) {
+    super.doInit(params);
+    script.pageFromStringRoute(route);
+  }
 }
 
-/// A simple way to specify a list of buttons which only route to another page
-/// [buttons] should be specified as a map, for example {'button text':'route'}
+/// A simple way to specify a group of buttons which only route to another page
+/// [buttons] are specified as list of [NavButton]
 @JsonSerializable(explicitToJson: true)
 class NavButtonSet extends Part {
   NavButtonSet({
@@ -41,9 +57,10 @@ class NavButtonSet extends Part {
 
   factory NavButtonSet.fromJson(Map<String, dynamic> json) =>
       _$NavButtonSetFromJson(json);
-  final Map<String, String> buttons;
+  final List<NavButton> buttons;
   final double? width;
 
   @override
   Map<String, dynamic> toJson() => _$NavButtonSetToJson(this);
 }
+

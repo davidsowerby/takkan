@@ -1,4 +1,5 @@
 import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/query_view.dart';
 import 'package:takkan_script/part/text.dart';
@@ -21,8 +22,8 @@ void main() {
       // given
 
       // when
-      NavButtonSet a = NavButtonSet(buttons: {});
-      NavButtonSet b = NavButtonSet.fromJson(a.toJson());
+      final NavButtonSet a = NavButtonSet(buttons: []);
+      final NavButtonSet b = NavButtonSet.fromJson(a.toJson());
       // then
       expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
@@ -31,8 +32,8 @@ void main() {
       // given
 
       // when
-      QueryView a = QueryView(traitName: 'QueryView');
-      QueryView b = QueryView.fromJson(a.toJson());
+      final QueryView a = QueryView(traitName: 'QueryView');
+      final QueryView b = QueryView.fromJson(a.toJson());
       // then
       // expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
@@ -42,7 +43,7 @@ void main() {
       medleyScript0.init();
       // when
       // ignore: cast_nullable_to_non_nullable
-      final Title pText = medleyScript0.routes['static/home']?.children[0] as Title;
+      final Title pText = medleyScript0.routes[TakkanRoute.fromString('home/static')]?.children[0] as Title;
       // then
 
       expect(pText.caption, isNull);

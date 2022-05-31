@@ -8,7 +8,7 @@ import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('PPage', () {
+  group('Page', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -19,52 +19,55 @@ void main() {
 
     test('autoRoute', () {
       // given
-      Script s = Script(
+      final Script s = Script(
         name: 'test',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
-          version: Version(number: 0),
+          version: const Version(number: 0),
           name: 'test',
         ),
         pages: [
           Page(
+            name: 'profile',
             documentClass: 'Person',
             dataSelectors: [
-              DataItemById(
-                tag: 'MyObject',
+              const DataItemById(
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(caption: '?'),
+              const DataItem(name: 'mine', caption: '?'),
             ],
           ),
           Page(
+            name: 'shortForm',
             documentClass: 'Person',
-            tag: 'shortForm',
             dataSelectors: [
-              DataItemById(
-                tag: 'MyObject',
+              const DataItemById(
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(),
+              const DataItem(name: 'person'),
             ],
           ),
           Page(
+            name: 'crowd',
             documentClass: 'Person',
             dataSelectors: [
-              DataList(),
+              const DataList(name: 'people'),
             ],
           ),
           Page(
+            name: 'people',
             documentClass: 'Person',
             dataSelectors: [
-              DataListByFilter(
-                tag: 'members',
+              const DataListByFilter(
+                name: 'members',
                 script: 'member==true',
               )
             ],
           ),
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            name: 'home',
           )
         ],
       );
@@ -73,17 +76,40 @@ void main() {
       s.init();
       // then
 
-      expect(s.routeMap.length,7);
-      expect(s.routeMap.containsKey('document/Person/MyObject'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/MyObject/shortForm'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/default/shortForm'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/default'), isTrue);
-      expect(s.routeMap.containsKey('documents/Person/default'), isTrue);
-      expect(s.routeMap.containsKey('static/home'), isTrue);
-      expect(s.routeMap.containsKey('documents/Person/members'), isTrue);
+      expect(s.routeMap.length, 7);
+      for (final route in s.routeMap.keys) {
+        print(route.toString());
+      }
 
-      expect (s.pages[0].isStatic,isFalse);
-      expect (s.pages[4].isStatic,isTrue);
+      expect(
+          s.routeMap.containsKey(TakkanRoute.fromString('home/static')), isTrue);
+      expect(
+          s.routeMap
+              .containsKey(TakkanRoute.fromString('profile/MyObject/xxx')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('profile/mine')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('shortForm/person')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('crowd/people')),
+          isTrue);
+      expect(
+          s.routeMap
+              .containsKey(TakkanRoute.fromString('shortForm/MyObject/xxx')),
+          isTrue);
+
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('people/members')),
+          isTrue);
+
+      expect(s.pages[0].isStatic, isFalse);
+      expect(s.pages[4].isStatic, isTrue);
+
+      Data dataSelector=s.pages[0].dataSelectorByName('MyObject');
+      expect(dataSelector, isA<DataItemById>());
+      expect((dataSelector as DataItemById).objectId,'xxx');
+
+      dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
+      expect(dataSelector, isA<NoData>());
     });
   });
 }
