@@ -19,7 +19,7 @@ class StaticPage extends StatelessWidget {
   final DataContext dataContext;
   final String route;
   final PageBuilder pageBuilder;
-  final Map<String,dynamic> pageArguments;
+  final Map<String, dynamic> pageArguments;
 
   const StaticPage({
     Key? key,
@@ -48,7 +48,7 @@ class StaticPage extends StatelessWidget {
         config: config,
         dataContext: dataContext,
         parentBinding: NullDataBinding(),
-        pageBuilder: pageBuilder, pageArguments: pageArguments,
+        pageArguments: pageArguments,
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:takkan_client/app/page_builder.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/pod/layout/layout_wrapper.dart';
+import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/layout.dart';
@@ -13,7 +14,6 @@ class LayoutDistributedColumn implements PageLayout {
   final DataContext dataContext;
   final DataBinding parentBinding;
   final ThemeData theme;
-  final PageBuilder pageBuilder;
 
   const LayoutDistributedColumn({
     required this.layoutConfig,
@@ -21,7 +21,6 @@ class LayoutDistributedColumn implements PageLayout {
     required this.dataContext,
     required this.parentBinding,
     required this.theme,
-    required this.pageBuilder,
   });
 
   @override
@@ -43,7 +42,7 @@ class LayoutDistributedColumn implements PageLayout {
     required Map<String, dynamic> pageArguments,
   }) {
     final widgets = podConfig.children;
-
+    final pageBuilder = inject<PageBuilder>();
     final dim = dimensions(
       constraints: constraints,
       preferredColumnWidth: layoutConfig.preferredColumnWidth,

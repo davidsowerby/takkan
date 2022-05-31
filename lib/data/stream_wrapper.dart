@@ -10,7 +10,6 @@ class StreamWrapper extends StatelessWidget {
   final DataContext dataContext;
   final CacheEntry cacheEntry;
   final DataBinding parentBinding;
-  final PageBuilder pageBuilder;
   final Map<String, dynamic> pageArguments;
 
   const StreamWrapper({
@@ -19,7 +18,6 @@ class StreamWrapper extends StatelessWidget {
     required this.cacheEntry,
     required this.config,
     required this.parentBinding,
-    required this.pageBuilder,
     required this.pageArguments,
   }) : super(key: key);
 
@@ -33,7 +31,6 @@ class StreamWrapper extends StatelessWidget {
           config: config,
           parentBinding: parentBinding,
           dataContext: dataContext,
-          pageBuilder: pageBuilder,
           pageArguments: pageArguments,
         );
       },

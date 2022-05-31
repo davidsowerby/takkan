@@ -54,12 +54,10 @@ class DocumentPage extends StatefulWidget {
   final Map<String, dynamic> pageArguments;
   final String? objectId;
   final String route;
-  final PageBuilder pageBuilder;
 
   const DocumentPage({
     Key? key,
     required this.config,
-    required this.pageBuilder,
     this.objectId,
     required this.dataContext,
     required this.route,
@@ -118,7 +116,6 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
               dataContext: widget.dataContext,
               config: widget.config,
               parentBinding: dataBinding,
-              pageBuilder: widget.pageBuilder,
               pageArguments: widget.pageArguments,
             ),
           ),

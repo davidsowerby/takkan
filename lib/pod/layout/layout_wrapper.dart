@@ -10,7 +10,6 @@ class LayoutWrapper extends StatelessWidget {
   final Pod config;
   final DataBinding parentBinding;
   final DataContext dataContext;
-  final PageBuilder pageBuilder;
   final Map<String, dynamic> pageArguments;
 
   const LayoutWrapper({
@@ -18,7 +17,6 @@ class LayoutWrapper extends StatelessWidget {
     required this.config,
     required this.dataContext,
     required this.parentBinding,
-    required this.pageBuilder,
     Key? key,
   }) : super(key: key);
 
@@ -68,7 +66,6 @@ class LayoutWrapper extends StatelessWidget {
       parentBinding: parentBinding,
       dataContext: dataContext,
       theme: theme,
-      pageBuilder: pageBuilder,
     ).assemble(
       context: context,
       constraints: constraints,

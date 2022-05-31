@@ -253,11 +253,9 @@ class DefaultPageBuilder implements PageBuilder {
 
     final DataContext dataContext =
         DefaultDataContext(classCache: cache.getClassCache(config: pageConfig));
-    final pageBuilder = inject<PageBuilder>();
     final pageWidget = (dataSelector.isItem)
         ? DocumentPage(
             dataContext: dataContext,
-            pageBuilder: pageBuilder,
             pageArguments: pageArguments,
             config: pageConfig,
             objectId:
