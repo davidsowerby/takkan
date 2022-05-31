@@ -16,20 +16,20 @@ void main() {
 
     test('validate', () {
       // given
-      Script script = Script(
+      final Script script = Script(
         name: 'A script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
       );
       // script.init();
 
       final FString field = FString(
         validations: [
-          VString.longerThan(3),
-          VString.shorterThan(6),
+          const VString.longerThan(3),
+          const VString.shorterThan(6),
         ],
       );
 
@@ -46,7 +46,7 @@ void main() {
 
     test('shorterThan', () {
       // given
-      final val1 = VString.shorterThan(5);
+      const val1 = VString.shorterThan(5);
       // when
 
       // then
@@ -58,7 +58,7 @@ void main() {
 
     test('longerThan', () {
       // given
-      final val1 = VString.longerThan(5);
+      const val1 = VString.longerThan(5);
       // when
 
       // then
@@ -71,7 +71,7 @@ void main() {
     /// The set is used to detect duplicates declared in refs
     test('refs', () {
       // given
-      Set s = Set();
+      final Set<String> s = {};
 
       // when
       VString.refs().forEach((element) {

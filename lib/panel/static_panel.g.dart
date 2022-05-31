@@ -24,9 +24,6 @@ PanelStatic _$PanelStaticFromJson(Map<String, dynamic> json) => PanelStatic(
       help: json['help'] == null
           ? null
           : Help.fromJson(json['help'] as Map<String, dynamic>),
-      panelStyle: json['panelStyle'] == null
-          ? const PanelStyle()
-          : PanelStyle.fromJson(json['panelStyle'] as Map<String, dynamic>),
       controlEdit:
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
@@ -41,7 +38,6 @@ Map<String, dynamic> _$PanelStaticToJson(PanelStatic instance) =>
       'openExpanded': instance.openExpanded,
       'scrollable': instance.scrollable,
       'help': instance.help?.toJson(),
-      'panelStyle': instance.panelStyle.toJson(),
       'pageArguments': instance.pageArguments,
       'heading': instance.heading?.toJson(),
     };

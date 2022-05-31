@@ -44,7 +44,7 @@ class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
 
   @override
   Field fromJson(Map<String, dynamic> json) {
-    final elementType = json["-element-"];
+    final elementType = json[jsonClassKey];
     switch (elementType) {
       case 'FBoolean':
         return FBoolean.fromJson(json);
@@ -80,7 +80,7 @@ class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
       //   return PSelectString.fromJson(json);
 
       default:
-        final msg = "SchemaElement type $elementType not recognised";
+        final msg = 'SchemaElement type $elementType not recognised';
         logType(runtimeType).e(msg);
         throw SchemaException(msg);
     }
@@ -89,8 +89,8 @@ class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
   @override
   Map<String, dynamic> toJson(Field object) {
     final type = object.runtimeType;
-    Map<String, dynamic> jsonMap = object.toJson();
-    jsonMap["-element-"] = type.toString();
+    final Map<String, dynamic> jsonMap = object.toJson();
+    jsonMap[jsonClassKey] = type.toString();
     return jsonMap;
   }
 }

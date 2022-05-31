@@ -23,7 +23,7 @@ class DocumentId {
   Map<String, dynamic> toJson() => _$DocumentIdToJson(this);
 
   @JsonKey(ignore: true)
-  String get fullReference => "$documentClass:$objectId";
+  String get fullReference => '$documentClass:$objectId';
 
   @override
   bool operator ==(other) {

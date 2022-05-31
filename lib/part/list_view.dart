@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/help.dart';
-import 'package:takkan_script/part/abstract_list_view.dart';
+import '../script/common.dart';
+import '../script/help.dart';
+import 'abstract_list_view.dart';
 
 part 'list_view.g.dart';
 

@@ -11,6 +11,6 @@ class ValidationMessage {
 
   @override
   String toString() {
-    return "$type : $debugId : $msg";
+    return '$type : $debugId : $msg';
   }
 }

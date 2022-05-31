@@ -51,6 +51,7 @@ class LayoutDistributedColumn implements Layout {
   Map<String, dynamic> toJson() => _$LayoutDistributedColumnToJson(this);
 }
 
+// ignore: avoid_classes_with_only_static_members
 class LayoutJsonConverter {
   static Layout fromJson(Map<String, dynamic> json) {
     final dataType = json['-data-'];
@@ -73,7 +74,7 @@ class LayoutJsonConverter {
         jsonMap = (object as LayoutDistributedColumn).toJson();
         return jsonMap;
       default:
-        String msg = 'Layout type ${type.toString()} not recognised';
+        final String msg = 'Layout type ${type.toString()} not recognised';
         logName('LayoutJsonConverter').e(msg);
         throw TakkanException(msg);
     }

@@ -58,15 +58,15 @@ class VString with _$VString implements V {
   }
 
   static List<VString> values() {
-    return [VString.longerThan(1), VString.shorterThan(1)];
+    return [const VString.longerThan(1), const VString.shorterThan(1)];
   }
 
   static List<VResultRef> refs() {
-    List<VResultRef> refsList = List.empty(growable: true);
+    final List<VResultRef> refsList = List.empty(growable: true);
     final values = VString.values();
-    values.forEach((element) {
+    for (final element in values) {
       refsList.add(VString.ref(element));
-    });
+    }
     return refsList;
   }
 }

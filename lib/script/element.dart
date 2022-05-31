@@ -78,7 +78,7 @@ class ContentConverter {
         case 'Subtitle':
           list.add(Subtitle.fromJson(entryCopy));
           break;
-        case 'StrapLine':
+        case 'Subtitle2':
           list.add(Subtitle2.fromJson(entryCopy));
           break;
 
@@ -97,7 +97,7 @@ class ContentConverter {
     if (elementList == null) {
       return outputList;
     }
-    for (var entry in elementList) {
+    for (final entry in elementList) {
       final Map<String, dynamic> outputMap = Map();
       outputMap[jsonClassKey] = entry.runtimeType.toString();
       outputMap.addAll(entry.toJson());

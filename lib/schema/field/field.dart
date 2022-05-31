@@ -31,9 +31,9 @@ abstract class Field<VAL, MODEL> extends SchemaElement {
       return List.empty();
     }
     final List<String> errors = List.empty(growable: true);
-    for (VAL validation in validations) {
+    for (final VAL validation in validations) {
       if (validation is V) {
-        VResult result = validate(validation, value);
+        final VResult result = validate(validation, value);
         if (result.failed) {
           String? errorPattern =
               pScript.validationErrorMessages.find(result.patternKey);

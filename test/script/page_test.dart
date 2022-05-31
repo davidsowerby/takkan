@@ -19,52 +19,52 @@ void main() {
 
     test('autoRoute', () {
       // given
-      Script s = Script(
+      final Script s = Script(
         name: 'test',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
-          version: Version(number: 0),
+          version: const Version(number: 0),
           name: 'test',
         ),
         pages: [
           Page(
             documentClass: 'Person',
             dataSelectors: [
-              DataItemById(
+              const DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(caption: '?'),
+              const DataItem(caption: '?'),
             ],
           ),
           Page(
             documentClass: 'Person',
             tag: 'shortForm',
             dataSelectors: [
-              DataItemById(
+              const DataItemById(
                 tag: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(),
+              const DataItem(),
             ],
           ),
           Page(
             documentClass: 'Person',
             dataSelectors: [
-              DataList(),
+              const DataList(),
             ],
           ),
           Page(
             documentClass: 'Person',
             dataSelectors: [
-              DataListByFilter(
+              const DataListByFilter(
                 tag: 'members',
                 script: 'member==true',
               )
             ],
           ),
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
           )
         ],
       );

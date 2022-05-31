@@ -21,8 +21,8 @@ void main() {
       // given
 
       // when
-      NavButtonSet a = NavButtonSet(buttons: {});
-      NavButtonSet b = NavButtonSet.fromJson(a.toJson());
+      final NavButtonSet a = NavButtonSet(buttons: {});
+      final NavButtonSet b = NavButtonSet.fromJson(a.toJson());
       // then
       expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());
@@ -31,8 +31,8 @@ void main() {
       // given
 
       // when
-      QueryView a = QueryView(traitName: 'QueryView');
-      QueryView b = QueryView.fromJson(a.toJson());
+      final QueryView a = QueryView(traitName: 'QueryView');
+      final QueryView b = QueryView.fromJson(a.toJson());
       // then
       // expect(a.height, 60.0);
       expect(a.toJson(), b.toJson());

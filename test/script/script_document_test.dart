@@ -24,15 +24,15 @@ void main() {
 
     test('round trip, DocumentGet', () {
       // given
-      GetDocument g = GetDocument(
-        documentId: DocumentId(
-          documentClass: "user/prefs",
-          objectId: "23",
+      final GetDocument g = GetDocument(
+        documentId: const DocumentId(
+          documentClass: 'user/prefs',
+          objectId: '23',
         ),
       );
       // when
-      final Map<String, dynamic> j = QueryConverter().toJson(g);
-      final mirror = QueryConverter().fromJson(j);
+      final Map<String, dynamic> j = const QueryConverter().toJson(g);
+      final mirror = const QueryConverter().fromJson(j);
       // then
 
       expect(json.encode(g), json.encode(mirror));

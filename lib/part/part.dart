@@ -58,7 +58,9 @@ class Part extends Content {
     final List<DebugNode> children = List.empty(growable: true);
     if (dataProviderIsDeclared) {
       DebugNode? dn = dataProvider?.debugNode;
-      if (dn != null) children.add(dn);
+      if (dn != null) {
+        children.add(dn);
+      }
     }
     return DebugNode(this, children);
   }

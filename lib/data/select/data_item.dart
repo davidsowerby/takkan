@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'data.dart';
 
 part 'data_item.g.dart';
 

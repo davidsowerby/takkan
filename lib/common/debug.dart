@@ -7,7 +7,7 @@ class DebugNode {
   DebugNode? parent;
 
   DebugNode(this.item, this.children) {
-    for (DebugNode child in children) {
+    for (final DebugNode child in children) {
       child.parent = this;
     }
   }
@@ -24,7 +24,7 @@ class DebugNode {
     if (hasDebugId(debugId)) {
       return this;
     }
-    for (DebugNode child in children) {
+    for (final DebugNode child in children) {
       final withId = child.nodeWithId(debugId);
       if (withId != null) {
         return withId;

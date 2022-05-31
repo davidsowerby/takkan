@@ -29,15 +29,15 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         pages: [
           Page(
             caption: 'A page',
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             // ignore: missing_required_param
             children: [
               PanelStatic(
@@ -91,15 +91,15 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             caption: 'A page',
             // ignore: missing_required_param
             children: [
@@ -148,14 +148,14 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
             children: [
@@ -205,14 +205,14 @@ void main() {
       // given
       final script = Script(
         name: 'A script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(
@@ -258,16 +258,16 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(
@@ -315,15 +315,15 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         controlEdit: ControlEdit.inherited,
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             caption: 'A page',
             children: [
               PanelStatic(

@@ -170,7 +170,7 @@ class Page extends PodBase {
   @override
   walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
-    for (Content entry in children) {
+    for (final Content entry in children) {
       entry.walk(visitors);
     }
   }
@@ -183,15 +183,14 @@ class Page extends PodBase {
   /// This is because a page is the first level to be actually built into the Widget tree
   @override
   bool get dataProviderIsDeclared =>
-      (dataProvider != null && !(dataProvider is NullDataProvider));
+      dataProvider != null && (dataProvider is! NullDataProvider);
 
   @override
   String? get idAlternative => title;
 
-  @override
   Map<String, Content> get contentAsMap {
-    final Map<String, Content> map = Map();
-    for (Content content in children) {
+    final Map<String, Content> map = {};
+    for (final Content content in children) {
       if (content.property != null) {
         map[content.property!] = content;
       }

@@ -1,8 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/data/object/geo.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/validation/validator.dart';
+
+import '../../data/object/geo.dart';
+import '../../script/common.dart';
+import '../validation/validator.dart';
+import 'field.dart';
 
 part 'geo_polygon.g.dart';
 

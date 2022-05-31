@@ -30,10 +30,10 @@ void main() {
       // given
       final script = Script(
         name: 'test',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(group: '', instance: ''),
@@ -41,7 +41,7 @@ void main() {
         pages: [
           Page(
             caption: 'A Page',
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             controlEdit: ControlEdit.thisAndBelow,
             children: [
               PanelStatic(
@@ -80,16 +80,16 @@ void main() {
       // given
       final script = Script(
           name: 'test',
-          version: Version(number: 0),
+          version: const Version(number: 0),
           schema: Schema(
             name: 'test',
-            version: Version(number: 0),
+            version: const Version(number: 0),
           ),
           dataProvider: NullDataProvider(),
           pages: [
             Page(
               caption: 'A Page',
-              dataSelectors: [NoData(tag: 'test')],
+              dataSelectors: [const NoData(tag: 'test')],
               children: [
                 PanelStatic(
                   children: [

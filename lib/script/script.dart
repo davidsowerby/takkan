@@ -223,7 +223,7 @@ class Script extends Common {
   Document documentSchema({required String documentSchemaName}) {
     final Document? documentSchema = schema.documents[documentSchemaName];
     if (documentSchema == null) {
-      String msg = "document schema '$documentSchemaName' not found";
+      final String msg = "document schema '$documentSchemaName' not found";
       logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
@@ -237,8 +237,8 @@ class Script extends Common {
   @override
   String get idAlternative => name;
 
-  validationOutput() {
-    StringBuffer buf = StringBuffer();
+  void validationOutput() {
+    final StringBuffer buf = StringBuffer();
     buf.writeln(
         '============================================================================');
     buf.writeln(
@@ -266,7 +266,7 @@ class Script extends Common {
   /// Creates a lookup list of all routes to pages, regardless of whether they are defined
   /// via [pages] or [routes]
   void _mergeRoutes() {
-    for (Page page in pages) {
+    for (final Page page in pages) {
       _routes.addAll(page.routeMap);
     }
   }

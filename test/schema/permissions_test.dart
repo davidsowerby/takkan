@@ -13,7 +13,7 @@ void main() {
 
     test('default no permissions required', () {
       // given
-      final Permissions permissions = Permissions();
+      const Permissions permissions = Permissions();
       // when
 
       // then
@@ -30,7 +30,7 @@ void main() {
 
     test('RequiresAuth.all returns correctly', () {
       // given
-      final Permissions permissions =
+      const Permissions permissions =
           Permissions(requiresAuthentication: [AccessMethod.all]);
       // when
 
@@ -49,7 +49,7 @@ void main() {
 
     test('role set, requiresAuthentication returns true', () {
       // given
-      final Permissions permissions = Permissions(
+      const Permissions permissions = Permissions(
         createRoles: ['boss'],
         readRoles: ['boss'],
         updateRoles: ['boss'],
@@ -86,7 +86,7 @@ void main() {
     test('readRoles added to get, find, count', () {
       // given
       final Document document = Document(
-          permissions: Permissions(
+          permissions: const Permissions(
             readRoles: ['reader'],
             getRoles: ['getter'],
             findRoles: ['finder'],
@@ -107,7 +107,7 @@ void main() {
     test('writeRoles added to create, update, delete', () {
       // given
       final Document document = Document(
-          permissions: Permissions(
+          permissions: const Permissions(
               writeRoles: ['writer'],
               createRoles: ['creator'],
               updateRoles: ['updater'],

@@ -26,22 +26,22 @@ void main() {
       // given
       final script = Script(
         name: 'script',
-        version: Version(number: 0),
+        version: const Version(number: 0),
         schema: Schema(
-          version: Version(number: 0),
+          version: const Version(number: 0),
           name: 'schema',
           documents: {'Person': Document(fields: {})},
           namedQueries: {
             'A person': GetDocument(
               queryName: 'GetPerson',
-              documentId: DocumentId(documentClass: 'x', objectId: 'x'),
+              documentId: const DocumentId(documentClass: 'x', objectId: 'x'),
             )
           },
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
           Page(
-            dataSelectors: [NoData(tag: 'home')],
+            dataSelectors: [const NoData(tag: 'home')],
             id: 'Home',
             caption: 'Home',
             children: [
