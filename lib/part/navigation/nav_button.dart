@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/common/on_color.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/library/library.dart';
 import 'package:takkan_client/part/navigation/nav_trait.dart';
 import 'package:takkan_client/part/part.dart';
 import 'package:takkan_client/part/trait.dart';
 import 'package:takkan_script/part/navigation.dart';
+
+import '../../library/trait_library.dart';
 
 class NavButtonPart extends StatelessWidget {
   final NavButton partConfig;

@@ -5,14 +5,11 @@ import 'package:takkan_client/common/component/edit_save_cancel.dart';
 import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/locale.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/library/border_library.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/data_root.dart';
 import 'package:provider/provider.dart';
-import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/script/help.dart';
-import 'package:takkan_script/trait/style.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
 /// - [actionButtons], if present, are placed before the 'expand' widget
@@ -21,7 +18,6 @@ import 'package:takkan_script/trait/style.dart';
 /// - [dataContext] is only required if the data is to be edited, as it is used in the edit/save/cancel cycle
 class Heading extends StatefulWidget {
   final String headingText;
-  final HeadingStyle headingStyle;
   final Help? help;
   final Widget Function(bool) expandedContent;
   final bool expandable;
@@ -43,7 +39,6 @@ class Heading extends StatefulWidget {
     this.headingText = 'Heading',
     this.help,
     this.dataContext,
-    this.headingStyle = const HeadingStyle(),
     this.openExpanded = true,
     required this.expandedContent,
     this.expandable = true,
@@ -90,18 +85,20 @@ class _HeadingState extends State<Heading> with Interpolator {
     }
 
     final theme = Theme.of(context);
-    final borderLibrary = inject<BorderLibrary>();
     return Card(
-      shape:
-          borderLibrary.find(theme: theme, border: widget.headingStyle.border),
-      elevation: widget.headingStyle.elevation,
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: theme.primaryColor),
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          )),
+      elevation: 20,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           InkWell(
             onTap: () => _toggleExpanded(context),
             child: Container(
-              height: widget.headingStyle.height,
+              height: 90,
               color: theme.colorScheme.onBackground,
               child: Row(
                 children: <Widget>[

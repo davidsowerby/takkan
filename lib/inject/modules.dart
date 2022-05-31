@@ -3,7 +3,6 @@ import 'package:takkan_client/app/router.dart';
 import 'package:takkan_client/common/locale.dart';
 import 'package:takkan_client/common/toast.dart';
 import 'package:takkan_client/config/asset_loader.dart';
-import 'package:takkan_client/library/border_library.dart';
 import 'package:takkan_client/pod/page/signin_page.dart';
 import 'package:takkan_client/user/signin_factory.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
@@ -32,8 +31,7 @@ commonInjectionBindings() {
 }
 
 libraryInjectionBindings() {
-  getIt.registerSingleton<BorderLibrary>(
-      BorderLibrary(modules: [TakkanBorderLibraryModule()]));
+
   getIt.registerSingleton<DataProviderLibrary>(DefaultDataProviderLibrary());
 }
 

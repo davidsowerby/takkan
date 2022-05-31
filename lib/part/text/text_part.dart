@@ -4,13 +4,12 @@ import 'package:takkan_client/common/on_color.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/connector_factory.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/library/library.dart';
 import 'package:takkan_client/part/part.dart';
 import 'package:takkan_client/part/text/text_particle.dart';
 import 'package:takkan_client/part/trait.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/part/part.dart';
+
+import '../../library/trait_library.dart';
 
 class TextPart extends StatelessWidget {
   final ModelConnector modelConnector;

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/common/on_color.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_client/library/library.dart';
-import 'package:takkan_client/part/trait.dart';
+import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_script/common/exception.dart';
@@ -19,7 +18,7 @@ enum SourceDataType { string, int, timestamp, boolean, singleSelect, textBlock }
 /// instance (from the widget tree above) to determine whether it is in edit or read mode.
 ///
 /// Data is connected directly to the Particles during the process of creating them,
-/// see [Library.constructPart]
+/// see [PartLibrary.constructPart]
 ///
 /// Implementations of Part determine which particles to use, along with configuration
 /// from its associated Trait.  A Part implementation also provides a suitable builder.

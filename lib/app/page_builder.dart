@@ -4,7 +4,7 @@ import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/page/static_page.dart';
 import 'package:takkan_client/pod/panel/static_panel.dart';
-import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_script/common/exception.dart';
@@ -180,9 +180,10 @@ class DefaultPageBuilder implements PageBuilder {
     throw TakkanException(msg);
   }
 
+  /// TODO: Panel style was removed, something needs to replace it
   Widget panelExpansion(
       {required Panel config, required List<Widget> content}) {
-    return config.panelStyle.expandable
+    return true
         ? ExpansionTile(
             title: Text(config.caption ?? ''),
             children: content,

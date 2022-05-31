@@ -5,7 +5,7 @@ import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/data/mutable_document.dart';
-import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_client/pod/data_root.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:takkan_client/inject/modules.dart';
-import 'package:takkan_client/library/library.dart';
+import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/page/standard_page.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
