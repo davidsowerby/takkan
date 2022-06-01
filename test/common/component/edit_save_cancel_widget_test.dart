@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:takkan_client/common/component/edit_save_cancel.dart';
 import 'package:takkan_client/common/component/key_assist.dart';
+import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
 
@@ -11,19 +12,22 @@ import '../../test_assist.dart';
 
 void main() {
   group('Static Page (kitchen-sink-00)', () {
+    late CacheEntry cacheEntry;
     setUpAll(() {});
 
     tearDownAll(() {});
 
-    setUp(() {});
+    setUp(() {
+      cacheEntry=MockCacheEntry();
+    });
 
     tearDown(() {});
 
     testWidgets('All ', (WidgetTester tester) async {
       // given
-      MockDocumentRoot dataStore = MockDocumentRoot();
+      MockCacheEntry dataStore = MockCacheEntry();
       final escKey = 'esc';
-      final esc = EditSaveCancel(
+      final esc = EditSaveCancel(cacheEntry: cacheEntry,
         key: keys(null, [escKey]),
         // documentRoot: dataStore,
       );
@@ -62,7 +66,7 @@ void main() {
       await tester.pumpWidget(widgetTree);
 
       // when we save, with invalid data
-      when(() => dataStore.validate()).thenReturn(false);
+      when(() => dataStore.flushFormsToModel()).thenReturn(false);
       await tester.tap(find.byKey(esc.saveKey));
       await tester.pumpWidget(widgetTree);
 
@@ -70,7 +74,7 @@ void main() {
       row(esc.rowKey).contains([esc.saveKey, esc.cancelKey]);
 
       // when we save, with valid data
-      when(() => dataStore.validate()).thenReturn(true);
+      when(() => dataStore.flushFormsToModel()).thenReturn(true);
       // when(() => dataStore.save()).thenAnswer((_) async => UpdateResult(
       //     success: true, documentClass: 'Wiggly', objectId: 'beast', data: {}));
       when(() => dataStore.save()).thenAnswer((_) async => true);
@@ -80,7 +84,6 @@ void main() {
       // then we are back in read mode
       // row(esc.rowKey).contains([esc.blankKey, esc.editKey]);
       verifyInOrder([
-        () => dataStore.validate(),
         () => dataStore.flushFormsToModel(),
         () => dataStore.save(),
       ]);

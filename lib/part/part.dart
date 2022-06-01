@@ -63,19 +63,19 @@ class ParticleSwitch extends StatelessWidget {
     if (editParticle != null) {
       return (editState.readMode) ? readParticle : editParticle!;
     } else {
-      String msg='EditParticle must not be null at this point';
+      String msg = 'EditParticle must not be null at this point';
       logType(this.runtimeType).e(msg);
       throw TakkanException(msg);
     }
   }
 }
 
-abstract class PartBuilder<P extends Part,T extends StatelessWidget>{
-  T createPart({    required P config,
+abstract class PartBuilder<P extends Part, T extends StatelessWidget> {
+  T createPart({
+    required P config,
     required ThemeData theme,
     required DataContext dataContext,
     required DataBinding parentDataBinding,
-    OnColor onColor = OnColor.surface,});
+    OnColor onColor = OnColor.surface,
+  });
 }
-
-

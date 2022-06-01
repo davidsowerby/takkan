@@ -8,10 +8,8 @@ import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
-import 'package:takkan_client/pod/data_root.dart';
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/part/part.dart';
@@ -31,13 +29,12 @@ class MockToast extends Mock implements Toast {}
 
 class MockAppConfig extends Mock implements AppConfig {}
 
-class MockDocumentRoot extends Mock implements DocumentRoot {}
+
+class MockCacheEntry extends Mock implements CacheEntry{}
 
 class MockDocument extends Mock implements Document {}
 
 class MockDataProvider extends Mock implements IDataProvider {}
-
-class MockDataProviderLibrary extends Mock implements DataProviderLibrary {}
 
 class MockDocumentCache extends Mock implements DocumentCache {}
 
@@ -67,6 +64,9 @@ class MockDataContextWithParams implements DataContext {
   })  : dataProvider = dataProvider ?? MockDataProvider(),
         documentSchema = documentSchema ?? MockDocument(),
         classCache = classCache ?? MockDocumentClassCache();
+
+  @override
+  String get documentIdKey => 'objectId';
 }
 
 class MockPartConfig extends Mock implements Part{}

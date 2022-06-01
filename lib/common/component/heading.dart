@@ -6,10 +6,11 @@ import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/locale.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
-import 'package:takkan_client/pod/data_root.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/script/help.dart';
+
+import '../../data/cache_entry.dart';
 
 /// - [openExpanded] if true, the section is set to expand when first created
 /// - [actionButtons], if present, are placed before the 'expand' widget
@@ -31,7 +32,7 @@ class Heading extends StatefulWidget {
   final bool showEditSave;
   final PanelHeading config;
   final DataContext? dataContext;
-  final DocumentRoot documentRoot;
+  final CacheEntry cacheEntry;
 
   const Heading({
     Key? key,
@@ -49,7 +50,7 @@ class Heading extends StatefulWidget {
     this.onBeforeSave = const [],
     this.onAfterSave = const [],
     this.showEditSave = true,
-    required this.documentRoot,
+    required this.cacheEntry,
   }) : super(key: key);
 
   @override
@@ -115,7 +116,7 @@ class _HeadingState extends State<Heading> with Interpolator {
                     ),
                   Spacer(),
                   if (editable)
-                    EditSaveCancel(
+                    EditSaveCancel(cacheEntry: widget.cacheEntry,
                       key: keys(widget.key, ['esc']),
                       // documentRoot: widget.documentRoot,
                     ),

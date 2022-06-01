@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:takkan_client/app/page_builder.dart';
 import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/common/component/edit_save_cancel.dart';
 import 'package:takkan_client/data/cache_entry.dart';
@@ -10,14 +9,17 @@ import 'package:takkan_client/data/stream_wrapper.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/layout/layout_wrapper.dart';
-import 'package:takkan_client/pod/page/standard_page.dart';
-import 'package:takkan_client/pod/data_root.dart';
-import 'package:takkan_client/pod/document_root.dart';
 import 'package:provider/provider.dart';
+import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/content.dart';
+
+import '../../common/component/takkan_refresh_button.dart';
+import '../../data/cache_consumer.dart';
 
 /// Represents a page displaying a single document.
 ///
@@ -53,7 +55,7 @@ class DocumentPage extends StatefulWidget {
   final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
   final String? objectId;
-  final String route;
+  final TakkanRoute route;
 
   const DocumentPage({
     Key? key,
@@ -68,23 +70,61 @@ class DocumentPage extends StatefulWidget {
   DocumentPageState createState() => DocumentPageState();
 }
 
-class DocumentPageState extends State<DocumentPage> with DocRoot {
+class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   bool needsAuthentication = false;
+  CacheEntry? _cacheEntry;
+
+  final _formKey = GlobalKey<FormState>();
+  String? currentObjectId;
+  late EditState editState;
+  bool hasData = false;
+  late IDataItem dataSelector;
 
   DocumentPageState();
 
   @override
   void initState() {
     super.initState();
-    if (widget.objectId != null) {
-      _requestDocument(widget.objectId!);
-    }
+    dataSelector = widget.config
+        .dataSelectorByName(widget.route.dataSelectorName) as IDataItem;
+
+    /// Issue request for document, cache will notify us when it arrives
+    _requestData(dataSelector: dataSelector);
     _checkAuthentication();
     editState = EditState(canEdit: _canEdit());
-    editState.registerDocumentRoot(this);
+    editState.addDocumentRoot(this);
   }
 
   ModelBinding get modelBinding => cacheEntry.modelBinding;
+
+  /// The [_cacheEntry] is either being changed (a different document has been
+  /// selected), or its data is being updated
+  ///
+  /// if this is a new[_cacheEntry]:
+  ///
+  /// - The [_formKey] is removed from the outgoing [cacheEntry], if there is one
+  /// - the new [_cacheEntry] has the [_formKey] added to it.
+  void _updateCacheEntry(CacheEntry newEntry) {
+    setState(() {
+      final ce = _cacheEntry;
+
+      if (ce != null) {
+        ce.removeConsumer(this);
+        ce.removeForm(_formKey);
+      }
+      newEntry.addConsumer(this);
+      newEntry.addForm(_formKey);
+      _cacheEntry = newEntry;
+    });
+  }
+
+  CacheEntry get cacheEntry {
+    final ce = _cacheEntry;
+    if (ce != null) return ce;
+    final String msg = '_cacheEntry is null';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
+  }
 
   DataBinding get dataBinding => DefaultDataBinding(modelBinding);
 
@@ -93,15 +133,23 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
     if (needsAuthentication) {
       return Center(child: CircularProgressIndicator());
     }
-    if (cacheEntry is NullCacheEntry) {
-      return Center(child: CircularProgressIndicator());
+    final ce = _cacheEntry;
+    if (ce == null) {
+      return Center(child: Text('No data selected'));
     }
-    return optionalEditControl(
+    if (ce.dataIsNotLoaded) {
+      return Center(child: Text('No data available'));
+    }
+
+    return optionalEditState(
         widget: Scaffold(
           appBar: AppBar(
             actions: [
               TakkanRefreshButton(),
-              EditSaveCancel(),
+              if (widget.config.hasEditControl)
+                EditSaveCancel(
+                  cacheEntry: cacheEntry,
+                ),
               IconButton(
                 icon: Icon(FontAwesomeIcons.signOutAlt),
                 onPressed: () => _doSignOut(context),
@@ -110,7 +158,7 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
             title: Text(widget.config.title ?? ''),
           ),
           body: Form(
-            key: formKey,
+            key: _formKey,
             child: StreamWrapper(
               cacheEntry: cacheEntry,
               dataContext: widget.dataContext,
@@ -123,25 +171,20 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
         config: widget.config);
   }
 
-  /// [formKey] used to identify the Form
-  Widget formWhenEditing({
+  /// [_formKey] used to identify the Form
+  Widget _formWhenEditing({
     required Widget content,
   }) {
     if (cacheEntry.isEditable) {
-      return Form(key: formKey, child: content);
+      return Form(key: _formKey, child: content);
     }
     return content;
   }
 
-  /// Returns [widget] wrapped in [EditState] if it is not static, and [config.hasEditControl] is true
+  /// Returns [widget] wrapped in [EditState] if [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
   /// see [_canEdit]
-  Widget optionalEditControl(
-      {required Widget widget, required Content config}) {
-    if (config.isStatic) {
-      return widget;
-    }
-
+  Widget optionalEditState({required Widget widget, required Content config}) {
     return (config.hasEditControl)
         ? ChangeNotifierProvider<EditState>.value(
             value: editState, child: widget)
@@ -205,19 +248,25 @@ class DocumentPageState extends State<DocumentPage> with DocRoot {
     return userHasPermissions;
   }
 
-  /// Requests a document from the cache and sets [cacheEntry] from it.
-  /// The [formKey] is removed from the outgoing [cacheEntry], if there is one,
-  /// and the new [cacheEntry] has the [formKey] added to it.
-  _requestDocument(String objectId) async {
-    final doc =
-        await widget.dataContext.classCache.requestDocument(objectId: objectId);
-    setState(() {
-      if (cacheEntry.isEditable) {
-        (cacheEntry as EditCacheEntry).removeForm(formKey);
-      }
-      doc.addForm(formKey);
-      cacheEntry = doc;
-      currentObjectId = objectId;
-    });
+  /// Requests a document or list of documents from the cache and sets
+  /// [cacheEntry] from it.
+  ///
+  /// [_updateCacheEntry] is a callback invoked once an existing CacheEntry has been
+  /// located in the cache, or a new one created after retrieving data from the
+  /// server.
+  void _requestData({
+    required IDataItem dataSelector,
+  }) {
+    widget.dataContext.classCache.requestDocument(
+        dataSelector: dataSelector, callback: _updateCacheEntry);
+  }
+
+  @protected
+  @mustCallSuper
+  @override
+  void dispose() {
+    cacheEntry.removeForm(_formKey);
+    cacheEntry.removeConsumer(this);
+    super.dispose();
   }
 }

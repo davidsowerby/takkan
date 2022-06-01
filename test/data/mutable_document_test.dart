@@ -15,7 +15,7 @@ void main() {
     tdoc = MutableDocument();
     listener = ChangeListener();
     tdoc.addListener(listener.listenToChange);
-    monitor = StreamMonitor(tdoc.stream);
+    monitor = StreamMonitor(tdoc.output.stream);
   });
 
   group("data changes correctly and fires listeners and stream", () {
@@ -24,9 +24,9 @@ void main() {
           "add, change, remove, clear. Output, changes & changeList tracks changes, initial data unchanged",
           () async {
         tdoc.createNew(initialData: {"item1": 3});
-        expect(tdoc.initialData["item1"], 3);
+        expect(tdoc.checkpoint["item1"], 3);
         expect(listener.changeCount, 1);
-        expect(tdoc.output['item1'], 3);
+        expect(tdoc.output.data['item1'], 3);
 
         tdoc["item1"] = 23;
         expect(tdoc["item1"], 23);
@@ -35,7 +35,7 @@ void main() {
         expect(tdoc.changeList[0].type, ChangeType.update);
         expect(tdoc.changeList[0].key, "item1");
         expect(tdoc.changes["item1"], 23);
-        expect(tdoc.initialData["item1"], 3);
+        expect(tdoc.checkpoint["item1"], 3);
 
         tdoc["item2"] = 24;
         expect(listener.changeCount, 3);
@@ -53,7 +53,7 @@ void main() {
 
         tdoc.reset();
         expect(listener.changeCount, 6);
-        expect(tdoc.output, tdoc.initialData);
+        expect(tdoc.output.data, tdoc.checkpoint);
         expect(tdoc.changes.isEmpty, true);
         expect(tdoc.changeList.isEmpty, true);
 
@@ -112,7 +112,7 @@ void main() {
           documentId: DocumentId(documentClass: '', objectId: 'x'));
 
       // then
-      expect(tdoc.initialData, originalSource);
+      expect(tdoc.checkpoint, originalSource);
 
       // given
       final item1 = tdoc.rootBinding.stringBinding(property: "item1");
@@ -140,7 +140,7 @@ void main() {
       expect(item2.read(), "localupdated2");
       expect(item3.read(), "remoteupdated3");
       expect(item4.read(), "original4");
-      expect(tdoc.initialData, updatedSource);
+      expect(tdoc.checkpoint, updatedSource);
     });
   });
 }

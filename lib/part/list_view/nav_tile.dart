@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class NavigationTile extends StatelessWidget {
   final String route;
   final Map<String, dynamic> arguments;
-  final Text? title;
-  final Text? subtitle;
+  final Widget? title;
+  final Widget? subtitle;
 
   const NavigationTile({
     Key? key,

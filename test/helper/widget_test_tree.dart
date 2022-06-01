@@ -3,18 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:takkan_client/inject/modules.dart';
 import 'package:takkan_client/library/part_library.dart';
+import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
-import 'package:takkan_client/pod/page/standard_page.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_client/part/part.dart';
 import 'package:provider/provider.dart';
-import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/script/script.dart';
 
 import './exception.dart';
-import 'mock.dart';
 
 /// [pages], [panels] & [parts] are the number of each expected to be found.  This is checked by calling [verify]
 class WidgetTestTree {
@@ -40,7 +37,7 @@ class WidgetTestTree {
   _scan() {
     int index = 0;
     for (Widget widget in widgets) {
-      if (widget is TakkanPage) {
+      if (widget is DocumentPage) {
         _pageIndexes[widget.config.debugId] = index;
         _allIndexes[widget.config.debugId] = index;
         elementDebugs.add(widget.config.debugId);
@@ -70,7 +67,7 @@ class WidgetTestTree {
         return index;
       }
       // TODO: this is a bit fragile, would need new types adding
-      if (widgets[index] is TakkanPage) break;
+      if (widgets[index] is DocumentPage) break;
       if (widgets[index] is PanelWidget) break;
       if (widgets[index] is ParticleSwitch) break;
       index--;
@@ -135,12 +132,10 @@ class KitchenSinkTest {
   Script init(
       {required Script script,
       bool useCaptionsAsIds = true,
-      required AppConfig appConfig}) {
+  }) {
     takkanDefaultInjectionBindings();
     library.init();
-    dataProviderLibrary.register(
-        type: 'mock', builder: (dp) => MockDataProvider());
-    dataProviderLibrary.init(appConfig);
+
     script.validate(useCaptionsAsIds: useCaptionsAsIds);
     if (script.failed) {
       script.validationOutput();

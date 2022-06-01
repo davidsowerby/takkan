@@ -22,7 +22,7 @@ void main() {
     getIt.reset();
     temporaryDocument = MutableDocument();
     rootBinding =
-        RootBinding(id: "-root-", data: data, editHost: temporaryDocument);
+        RootBinding(id: "-root-", data: data, getEditHost: ()=>temporaryDocument);
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -39,7 +39,7 @@ void main() {
     });
 
     test("editHost returns non null", () {
-      expect(rootBinding.editHost, temporaryDocument);
+      expect(rootBinding.getEditHost(), temporaryDocument);
     });
 
     test("itemBinding returns correct value", () {
@@ -81,42 +81,42 @@ void main() {
       Binding itemBinding = rootBinding.stringBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.intBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.modelBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.doubleBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.intBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.listBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.booleanBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
 
       itemBinding = rootBinding.tableBinding(property: "item");
       expect(itemBinding.property, "item");
       expect(itemBinding.firstLevelKey, "item");
-      expect(itemBinding.editHost, temporaryDocument);
+      expect(itemBinding.getEditHost(), temporaryDocument);
     });
   });
 }

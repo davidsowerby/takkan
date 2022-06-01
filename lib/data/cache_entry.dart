@@ -5,172 +5,177 @@ import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
+import 'package:takkan_client/data/streamed_output.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 
-abstract class CacheEntry {
-  Map<String, dynamic> get data;
+import 'cache_consumer.dart';
 
-  DateTime get lastUpdate;
+/// Holds a cached single document, or a list of documents.
+///
+/// ** Single Document **
+///
+/// Holds the data for a specific document within a [DocumentClassCache] instance.
+/// It may initially be empty of data, which can be tested through [dataIsLoaded]
+///
+///
+/// When [editMode] is *first* set to true, a [_mutableDocument] is created with
+/// a copy of the cache data to support editing. At the same time, [_formKeys]
+/// is also created.  This recognises that many instances will never be put into
+/// edit mode, and thus avoids the creation of a large number of redundant
+/// collections.
+///
+/// Once created, both [mutableDocument] and [formKeys] are then cleared when
+/// reverting back to [readMode]. It is believed that clearing will be more
+/// performant than releasing and re-creating them, although no profiling has
+/// been done to prove this.
+///
+/// [_formKeys] is used to track Forms which are connected to the [mutableDocument].
+/// These keys allow [flushFormsToModel] to validate and push data from active
+/// forms into the [mutableDocument], prior to persisting the data.
+///
+/// [addForm] adds a form to [formKeys]
+///
+/// When a data update arrives, [externalUpdate] is invoked.
+///
+/// ** List of Documents **
+///
+/// A list of documents is held as a list for a notional root property of
+/// [listRootProperty].  This allows most of the [CacheEntry] structure to remain
+/// unchanged from that holding a single document.
+///
+const String listRootProperty='--listRoot--';
 
-  Stream<Map<String, dynamic>> get stream;
-
-  DocumentId get documentId;
-
-  ModelBinding get modelBinding;
-
-  DocumentClassCache get classCache;
-
-  void updateFromServer({
-    required Map<String, dynamic> data,
-    required DocumentId documentId,
-  });
-
-  /// Call before disposing of a CacheEntry completely, it needs to release
-  /// resources used by StreamController
-  close();
-
-  bool get streamIsActive;
-
-  bool get isEditable;
-
-  EditCacheEntry makeEditable();
-}
-
-class ReadCacheEntry implements CacheEntry, CacheListener {
-  final Map<String, dynamic> data;
-  DateTime lastUpdate;
+class CacheEntry implements CacheListener {
+  bool _editMode = false;
+  bool _dataIsLoaded = false;
+  DateTime _lastUpdate;
+  MutableDocument? _mutableDocument;
+  late StreamedOutput _sharedOutput;
+  Set<GlobalKey<FormState>>? _formKeys;
+  final DocumentClassCache classCache;
+  final List<CacheConsumer> consumers = List.empty(growable: true);
   final DocumentId documentId;
-  late StreamController<Map<String, dynamic>> streamController;
-  bool _streamIsActive = false;
-  final RootBinding modelBinding;
-  final DocumentClassCache classCache;
 
-  ReadCacheEntry({
-    required this.data,
+  CacheEntry({
+    required Map<String, dynamic> data,
+    required this.classCache,
     required this.documentId,
-    required this.classCache,
-  })  : lastUpdate = DateTime.now(),
-        modelBinding = RootBinding(data: data, id: documentId.objectId) {
-    streamController = StreamController<Map<String, dynamic>>.broadcast(
-      onCancel: () => {_streamIsActive = false},
-      onListen: () => {_streamIsActive = true},
-    );
+  }) : _lastUpdate = DateTime.now() {
+    _sharedOutput = StreamedOutput(getEditHost: getEditHost);
+    classCache.addListener(documentId, this);
+    externalUpdate(data: data, documentId: documentId);
   }
 
-  @override
-  void updateFromServer({
+  CacheEntry.forList({
+    required List<Map<String, dynamic>> dataList,
+    required this.classCache,
+    required this.documentId,
+  }) : _lastUpdate = DateTime.now() {
+    _sharedOutput = StreamedOutput(getEditHost: getEditHost);
+    classCache.addListener(documentId, this);
+    externalUpdate(data: {listRootProperty:dataList}, documentId: documentId);
+  }
+
+  MutableDocument? getEditHost() {
+    return _mutableDocument;
+  }
+
+  bool get editMode => _editMode;
+
+  bool get isEmpty => documentId.isEmpty;
+
+  bool get readMode => !_editMode;
+
+  bool get dataIsLoaded => _dataIsLoaded;
+
+  bool get dataIsNotLoaded => !_dataIsLoaded;
+
+  StreamedOutput get output => _sharedOutput;
+
+  DateTime get lastUpdate => _lastUpdate;
+
+  /// True when the data is 'stale'
+  bool get requiresRefresh => throw UnimplementedError();
+
+  MutableDocument get mutableDocument {
+    if (_mutableDocument != null) {
+      return _mutableDocument!;
+    }
+    throw TakkanException('Cannot access mutable document');
+  }
+
+  setReadMode() {
+    _editMode = false;
+  }
+
+  setEditMode() {
+    if (_mutableDocument == null) {
+      _mutableDocument = MutableDocument(sharedOutput: _sharedOutput);
+    }
+    if (_formKeys == null) {
+      _formKeys = {};
+    }
+    _editMode = true;
+  }
+
+  /// Data in the cache has been updated
+  void externalUpdate({
     required Map<String, dynamic> data,
     required DocumentId documentId,
   }) {
-    this.data.clear();
-    this.data.addAll(data);
-    lastUpdate = DateTime.now();
+    _lastUpdate = DateTime.now();
+    if (editMode) {
+      mutableDocument.updateFromSource(source: data, documentId: documentId);
+    } else {
+      _sharedOutput.update(data: data);
+    }
+    _dataIsLoaded = true;
   }
 
-  @override
-  // TODO: implement stream
-  Stream<Map<String, dynamic>> get stream => streamController.stream;
+  Stream<Map<String, dynamic>> get stream => _sharedOutput.stream;
+
+  Map<String, dynamic> get data => _sharedOutput.data;
+
+  Set<GlobalKey<FormState>> get formKeys {
+    final fKeys = _formKeys;
+    if (fKeys != null) {
+      return fKeys;
+    }
+    final String msg = '_formKeys should not be null';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
+  }
 
   close() {
-    streamController.close();
+    _sharedOutput.close();
+    final md = _mutableDocument;
+    if (md != null) {
+      md.clear();
+    }
+    classCache.removeListener(documentId, this);
   }
 
-  bool get streamIsActive => _streamIsActive;
+  bool get streamIsActive => _sharedOutput.streamIsActive;
 
-  @override
-  onCreateDocument(CreateResult result) {
-    // TODO: implement onCreateDocument
-    throw UnimplementedError();
-  }
-
-  @override
-  onUpdateDocument(UpdateResult result) {
-    // TODO: implement onUpdateDocument
-    throw UnimplementedError();
-  }
-
-  @override
-  bool get isEditable => false;
-
-  @override
-  EditCacheEntry makeEditable() {
-    return EditCacheEntry.fromReadEntry(this);
-  }
-}
-
-class EditCacheEntry implements CacheEntry, CacheListener {
-  DateTime lastUpdate;
-  final MutableDocument mutableDocument = MutableDocument();
-  final Set<GlobalKey<FormState>> _formKeys = Set();
-  final DocumentClassCache classCache;
-
-  EditCacheEntry({
-    required Map<String, dynamic> data,
-    required this.classCache,
-    required DocumentId documentId,
-  }) : lastUpdate = DateTime.now() {
-    updateFromServer(data: data, documentId: documentId);
-  }
-
-  EditCacheEntry.fromReadEntry(ReadCacheEntry readEntry)
-      : lastUpdate = DateTime.now(),
-        classCache = readEntry.classCache {
-    updateFromServer(data: readEntry.data, documentId: readEntry.documentId);
-  }
-
-  @override
-  void updateFromServer({
-    required Map<String, dynamic> data,
-    required DocumentId documentId,
-  }) {
-    mutableDocument.updateFromSource(source: data, documentId: documentId);
-    this.data.clear();
-    this.data.addAll(data);
-    lastUpdate = DateTime.now();
-  }
-
-  Stream<Map<String, dynamic>> get stream => mutableDocument.stream;
-
-  DocumentId get documentId => mutableDocument.documentId;
-
-  Map<String, dynamic> get data => mutableDocument.output;
-
-  Set<GlobalKey<FormState>> get formKeys => _formKeys;
-
-  @override
-  close() {
-    mutableDocument.close();
-  }
-
-  bool get streamIsActive => mutableDocument.streamIsActive;
-
-  @override
   onCreateDocument(CreateResult result) {
     // TODO: implement onCreateDocument
     throw UnimplementedError();
   }
 
   /// TODO: Seemed like a good idea, but now seems redundant
-  @override
   onUpdateDocument(UpdateResult result) {}
 
-  @override
-  ModelBinding get modelBinding => mutableDocument.rootBinding;
+  ModelBinding get modelBinding =>
+      (editMode) ? mutableDocument.rootBinding : output.rootBinding;
 
-  @override
   bool get isEditable => true;
 
-  @override
-  EditCacheEntry makeEditable() {
-    return this;
-  }
-
   /// Iterates though form keys registered by Pages, Panels or Parts using the same [mutableDocument].
-  /// Keys are added through [addForm], this method 'saves' the [Form] data -
+  /// Keys are added through [addForm. This method 'saves' the [Form] data -
   /// that is, it transfers data from the [Form] back to the [mutableDocument] via [Binding]s.
-  bool flushFormToModel() {
+  bool flushFormsToModel() {
     logType(this.runtimeType).d('Flushing forms data to Mutable Document');
     bool validationResult = true;
     for (GlobalKey<FormState> key in formKeys) {
@@ -190,15 +195,53 @@ class EditCacheEntry implements CacheEntry, CacheListener {
     return validationResult;
   }
 
+  addConsumer(CacheConsumer consumer) {
+    consumers.add(consumer);
+  }
+
+  removeConsumer(CacheConsumer consumer) {
+    consumers.remove(consumer);
+  }
+
   /// Stores a key for a Form.
-  /// Forms are 'flushed' to the backing data in [mutableDocument] by [flushFormToModel]
+  /// Forms are 'flushed' to the backing data in [mutableDocument] by [flushFormsToModel]
   addForm(GlobalKey<FormState> formKey) {
+    if (_formKeys == null) {
+      _formKeys = {};
+    }
     formKeys.add(formKey);
     logType(this.runtimeType).d("Holding ${formKeys.length} form keys");
   }
 
   removeForm(GlobalKey<FormState> formKey) {
-    formKeys.remove(formKey);
+    if (_formKeys != null) {
+      formKeys.remove(formKey);
+    }
+  }
+
+  Future<bool> save() async {
+    bool validationResult = flushFormsToModel();
+    if (validationResult) {
+      return classCache.updateDocumentOnServer(
+        changes: mutableDocument.changes,
+        cacheEntry: this,
+        objectId: documentId.objectId,
+      );
+    }
+    return false;
+  }
+
+  cancelChanges() {
+    if (editMode) {
+      _mutableDocument?.reset();
+    }
+  }
+
+  @override
+  onReadDocument(ReadResult<dynamic> result) {
+    // TODO: implement onReadDocument
+    logType(this.runtimeType).i("onReadDocument");
+    // throw UnimplementedError();
   }
 }
 
@@ -215,56 +258,4 @@ class DefaultDataBinding implements DataBinding {
 class NullDataBinding implements DataBinding {
   @override
   ModelBinding get modelBinding => throw UnimplementedError();
-}
-
-class NullCacheEntry implements CacheEntry {
-  final msg =
-      'This class represents a null.  A real CacheEntry must ne provided';
-
-  throwException() {
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-
-  @override
-  close() {
-    throwException();
-  }
-
-  @override
-  Map<String, dynamic> get data => throwException();
-
-  @override
-  DocumentId get documentId => throwException();
-
-  @override
-  DateTime get lastUpdate => throwException();
-
-  @override
-  ModelBinding get modelBinding => throwException();
-
-  @override
-  Stream<Map<String, dynamic>> get stream => throwException();
-
-  @override
-  bool get streamIsActive => throwException();
-
-  @override
-  void updateFromServer(
-      {required Map<String, dynamic> data, required DocumentId documentId}) {
-    throwException();
-  }
-
-  @override
-  bool get isEditable => false;
-
-  @override
-  EditCacheEntry makeEditable() {
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-
-  @override
-  // TODO: implement classCache
-  DocumentClassCache get classCache => throwException();
 }

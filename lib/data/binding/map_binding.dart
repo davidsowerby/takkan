@@ -11,20 +11,21 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
       String property = notSet,
       int index = Binding.noValue,
       required String firstLevelKey,
-      MutableDocument? editHost})
+      required super.getEditHost,
+      })
       : super.private(
             parent: parent,
             property: property,
             index: index,
             firstLevelKey: firstLevelKey,
-            editHost: editHost);
+  );
 
   BooleanBinding booleanBinding({required String property}) {
     return BooleanBinding.private(
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   DoubleBinding doubleBinding({required String property}) {
@@ -32,7 +33,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   IntBinding intBinding({required String property}) {
@@ -40,7 +41,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   StringBinding stringBinding({required String property}) {
@@ -48,7 +49,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   TableBinding tableBinding({required String property}) {
@@ -56,7 +57,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   ListBinding<T> listBinding<T>({required String property}) {
@@ -64,7 +65,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   ModelBinding modelBinding({required String property}) {
@@ -72,7 +73,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   MapBinding<K, V> mapBinding<K, V>({required String property}) {
@@ -80,7 +81,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   DynamicBinding dynamicBinding({required String property}) {
@@ -88,7 +89,7 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
         parent: this,
         property: property,
         firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
-        editHost: this.editHost);
+        getEditHost: this.getEditHost);
   }
 
   // TimestampBinding timestampBinding({required String property}) {
@@ -109,17 +110,17 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
 }
 
 /// Binds to [data], which is typically either from a [MutableDocument] for editing, or from a [DocumentSnapshot] in a read only situation.
-/// If data is to be written back to a [MutableDocument], [editHost] must not be null.
+/// If data is to be written back to a [MutableDocument], [getEditHost] must not be null.
 /// Bindings can then make the [MutableDocument] aware of changes at level below that of the first level keys.
 /// [id] is primarily used for debugging, to ensure bindings are associated with the correct source
-/// [createIfAbsent] will create a value if not present, but only if [editHost] is not null (because a null [editHost] indicates a read only binding)
+/// [createIfAbsent] will create a value if not present, but only if [getEditHost] is not null (because a null [getEditHost] indicates a read only binding)
 class RootBinding extends ModelBinding {
   final Map<String, dynamic> data;
   final String id;
   final instance = DateTime.now();
 
-  RootBinding({required this.data, MutableDocument? editHost, required this.id})
-      : super.private(editHost: editHost, property: "-root-", firstLevelKey: notSet, parent: null);
+  RootBinding({required this.data, required MutableDocument? Function() getEditHost, required this.id})
+      : super.private(getEditHost: getEditHost, property: "-root-", firstLevelKey: notSet, parent: null);
 
   @override
   Map<String, dynamic> read(
@@ -153,13 +154,14 @@ class ModelBinding extends MapBinding<String, dynamic> {
         String property=notSet,
         int index=Binding.noValue,
       required String firstLevelKey,
-      MutableDocument? editHost})
+        required super.getEditHost,
+      })
       : super.private(
             parent: parent,
             property: property,
             index: index,
             firstLevelKey: firstLevelKey,
-            editHost: editHost);
+  );
 
   @override
   Map<String, dynamic> emptyValue() {

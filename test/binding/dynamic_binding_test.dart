@@ -23,7 +23,7 @@ void main() {
     getIt.reset();
     temporaryDocument = MutableDocument();
     rootBinding =
-        RootBinding(data: data, editHost: temporaryDocument, id: "test");
+        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });

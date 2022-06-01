@@ -3,6 +3,8 @@ import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/cache_entry.dart';
+
 class EditSaveCancel extends StatelessWidget {
   final IconData editIcon;
 
@@ -10,7 +12,7 @@ class EditSaveCancel extends StatelessWidget {
 
   final IconData saveIcon;
 
-  // final DocumentRoot documentRoot;
+  final CacheEntry cacheEntry;
 
   final _saveKey = 'save';
   final _cancelKey = 'cancel';
@@ -19,11 +21,11 @@ class EditSaveCancel extends StatelessWidget {
   final _blankKey = 'blank';
 
   const EditSaveCancel({
-    Key? key,
+    Key? key,required this.cacheEntry,
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
-    // required this.documentRoot,
+
   }) : super(key: key);
 
   Key get rowKey => keys(key, [_rowKey]);
@@ -77,14 +79,20 @@ class EditSaveCancel extends StatelessWidget {
   }
 
   _onCancel(EditState editState) {
+    cacheEntry.setReadMode();
     editState.readMode = true;
   }
 
   _onSave(EditState editState) async {
-    editState.save();
+    final success= await cacheEntry.save();
+    if (success){
+      cacheEntry.setReadMode();
+      editState.readMode = true;
+    }
   }
 
   _onEdit(EditState editState) {
+    cacheEntry.setEditMode();
     editState.readMode = false;
   }
 }

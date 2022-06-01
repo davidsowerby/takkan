@@ -1,94 +1,95 @@
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/data.dart';
 
 /// Holds all the query results for a [DocumentClassCache] instance.
 ///
 /// Queries with potentially multiple results are assumed to be paged, and are held in [_multiples]
 /// Queries which must return a single document are held separately, in [_singles]
+///
+/// This cache holds only the objectIds of the results, thus acting as references to the data.
+///
+/// The [DocumentClassCache] holds the data, which may be updated from other queries or live
+/// streams.
 class QueryResultsCache {
   // final DataProvider dataProvider;
-  final Map<String, QueryResultsSet> _multiples = Map();
-  final Map<String, Map<String, dynamic>> _singles = Map();
+  final Map<String, QueryResultsSet> _multiples = {};
+  final Map<String, String> _singles = {};
+  final String documentClass;
 
-  QueryResultsCache();
+  QueryResultsCache({required this.documentClass});
 
-  addResults({
-    required String queryName,
+  /// adds results which may return 0..n results
+  void addResults({
+    required IDataList selector,
     required int page,
     required List<Map<String, dynamic>> results,
   }) {
-    if (!(_multiples.containsKey(queryName))) {
-      _multiples[queryName] = QueryResultsSet();
-    }
-    final QueryResultsSet set = _multiples[queryName]!;
-    set.addPage(page: page, results: results);
+    final queryName = _queryName(selector);
+    final QueryResultsSet set = _multiples.putIfAbsent(
+      queryName,
+      () => QueryResultsSet(),
+    );
+    set.addResultsPage(page: page, results: results);
+    print('xx');
   }
 
-  addResult({
-    required String queryName,
+  /// add the result of a query that is required to return a single document
+  void addResult({
+    required IDataItem selector,
     required Map<String, dynamic> result,
   }) {
-    _singles[queryName] = result;
+    _singles[_queryName(selector)] = result['objectId'];
+  }
+
+  /// Returns a list of objectIds for a list based [Data] implementation.
+  /// For selectors which return a single item, use [resultFor]
+  ///
+  /// Returns null if the cache does not hold any query results for this selector
+  List<String>? resultsFor({required IDataList selector, required int page}) {
+    final resultSet = _multiples[_queryName(selector)];
+    if (resultSet == null) {
+      return null;
+    }
+    return resultSet[page];
+  }
+
+  /// Returns a single objectId result for [selector], or null if not in the cache
+  String? resultFor({required IDataItem selector}) {
+    return _singles[_queryName(selector)];
+  }
+
+  _queryName(Data selector) {
+    return '$documentClass-${selector.name}';
   }
 }
 
 /// All the results for one named query in a [QueryResults] instance, potentially
 /// containing multiple pages
 class QueryResultsSet {
-  final Map<int, QueryResultsPage> _data = Map();
-  int _selectedPage = -1;
+  final Map<int, List<String>> _data = Map();
 
   QueryResultsSet();
 
-  addPage({
+  /// Add the results of a query page, keeping only the objectId, as the data
+  /// itself may get updated from another query
+  void addResultsPage({
     required int page,
     required List<Map<String, dynamic>> results,
   }) {
-    if (!(_data.containsKey(page))) {
-      _data[page] = QueryResultsPage();
+    final List<String> ids = List.empty(growable: true);
+    for (final entry in results) {
+      final objectId = entry['objectId'];
+      if (objectId == null) {
+        logType(this.runtimeType).w(
+            'All documents should contain an objectId.  This entry is ignored.');
+      }
+      ids.add(objectId);
     }
-    final QueryResultsPage resultsPage = _data[page]!;
-    resultsPage.results = results;
+    _data[page]=ids;
   }
 
-  selectPage(int page) {
-    _selectedPage = page;
+  List<String>? operator [](int key) {
+    return _data[key];
   }
-
-  QueryResultsPage get currentPage {
-    if (_data.containsKey(_selectedPage)) {
-      return _data[_selectedPage]!;
-    }
-    String msg = 'There is no page $_selectedPage';
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-
-  QueryResultsPage get nextPage {
-    final targetPage = _selectedPage++;
-    if (_data.containsKey(targetPage)) {
-      selectPage(targetPage);
-      return _data[targetPage]!;
-    }
-    String msg='There is no page $targetPage';
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-
-  QueryResultsPage get previousPage {
-    final targetPage = _selectedPage--;
-    if (_data.containsKey(targetPage)) {
-      selectPage(targetPage);
-      return _data[targetPage]!;
-    }
-    String msg='There is no page $targetPage';
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-}
-
-/// One page of query results, a member of a  [QueryResultsSet]
-class QueryResultsPage {
-  List<Map<String, dynamic>> results = [];
 }

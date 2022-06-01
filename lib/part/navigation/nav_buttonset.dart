@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:takkan_client/data/binding/connector.dart';
 import 'package:takkan_client/part/navigation/nav_button.dart';
 import 'package:takkan_client/part/navigation/nav_trait.dart';
 import 'package:takkan_script/part/navigation.dart';
@@ -22,9 +21,7 @@ class NavButtonSetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = List.empty(growable: true);
-    config.buttons.forEach((key, value) {
-      final NavButton config = NavButton(route: value, caption: key);
-      final ModelConnector connector = StaticConnector(key);
+    config.buttons.forEach((config) {
       final child = NavButtonPart(
         pageArguments: pageArguments,
         partConfig: config,

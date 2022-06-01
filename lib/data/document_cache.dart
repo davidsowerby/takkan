@@ -1,12 +1,10 @@
+import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_client/app/takkan.dart';
-import 'package:takkan_client/pod/pod_state.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_client/data/query_results.dart';
-import 'package:takkan_client/pod/data_root.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
@@ -15,6 +13,7 @@ import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/schema/schema.dart';
 
@@ -60,7 +59,8 @@ class DocumentCache {
     if (!_classCaches.containsKey(config.documentClass)) {
       final classCache = DocumentClassCache(
           documentClass: documentClass,
-          dataProvider: _lookupDataProvider(config.dataProvider));
+          dataProvider: _lookupDataProvider(
+              providerConfig: config.dataProvider!));
       classCache.init();
       _classCaches[config.documentClass!] = classCache;
     }
@@ -68,13 +68,15 @@ class DocumentCache {
     return classCache;
   }
 
-  IDataProvider _lookupDataProvider(DataProvider? config) {
-    if (config != null) {
-      return dataProviderLibrary.find(providerConfig: config);
-    }
-    String msg = 'Cannot look up a dataProvider class';
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg);
+  /// Selects the [IDataProvider] identified by [providerConfig]
+  IDataProvider _lookupDataProvider(
+      {required DataProvider providerConfig}) {
+    final AppConfig appConfig=inject<AppConfig>();
+    final instanceConfig = appConfig.instanceConfig(providerConfig);
+    final IDataProvider provider =
+        inject<IDataProvider>(instanceName: instanceConfig.uniqueName);
+    provider.init(config: providerConfig);
+    return provider;
   }
 
   /// TODO: This would cause the loss of consumer list. Needs to be smarter
@@ -143,67 +145,102 @@ class DocumentCache {
 /// [CacheEntry] may be a read only [ReadCacheEntry], or an editable [EditCacheEntry].
 /// The latter contains a [MutableDocument] to manage the editing process.
 ///
-/// [queryResults] hold the results of queries, but as a list of objectIds.  The
-/// data for those objectIds is actually held in [_cache]
-///
+/// [queryCache] hold the results of queries. See [QueryResultsCache].
 class DocumentClassCache {
   late Document documentSchema;
   final IDataProvider dataProvider;
   final Map<String, CacheEntry> _cache = Map();
-  final QueryResultsCache queryResults = QueryResultsCache();
+  late QueryResultsCache queryCache;
+
   final String documentClass;
+  final Map<String, List<CacheListener>> listeners = {};
 
   DocumentClassCache({required this.documentClass, required this.dataProvider});
 
   init() {
+    queryCache = QueryResultsCache(documentClass: documentClass);
     documentSchema = _lookupDocumentSchema(documentClass);
+  }
+
+  void addListener(DocumentId documentId, CacheListener listener) {
+    _checkDocId(documentId);
+    final e = listeners[documentId.objectId];
+    if (e == null) {
+      listeners[documentId.objectId] = List.empty(growable: true);
+    }
+    final f = listeners[documentId.objectId];
+    if (f != null) {
+      f.add(listener);
+    }
+  }
+
+  void removeListener(DocumentId documentId, CacheListener listener) {
+    _checkDocId(documentId);
+    final e = listeners[documentId.objectId];
+    if (e != null) {
+      e.remove(listener);
+    }
+  }
+
+  void _checkDocId(DocumentId documentId) {
+    if (documentId.isEmpty) {
+      final String msg = 'DocumentId cannot be empty';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
+    }
+    if (documentId.documentClass != documentClass) {
+      final String msg =
+          'document class of documentId must match document class of this cache';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
+    }
   }
 
   bool cacheContains(String itemId) {
     return _cache.containsKey(itemId);
   }
 
-  /// Gets a document from the server, and either updates the existing [CacheEntry],
+  /// Reads a document from the server, and either updates the existing [CacheEntry],
   /// or creates one if none exists.
-  Future<CacheEntry> readDocumentFromServer({
-    required String objectId,
-    bool makeEditable = false,
+  ///
+  /// [listeners] are notified
+  ///
+  /// Invokes the [callback] with the result
+  void readDocumentFromServer({
+    required IDataItem dataSelector,
+    required void Function(CacheEntry newEntry) callback,
   }) async {
-    final documentId = DocumentId(
+    final result = await dataProvider.dataItem(
+      selector: dataSelector,
       documentClass: documentClass,
-      objectId: objectId,
     );
-    final result = await dataProvider.readDocument(documentId: documentId);
-    if (result.success) {
-      if (_cache.containsKey(documentId.objectId)) {
-        final CacheEntry existingCacheEntry = _cache[documentId.objectId]!;
-        existingCacheEntry.updateFromServer(
-            data: result.data, documentId: documentId);
-        return existingCacheEntry;
-      } else {
-        if (makeEditable) {
-          final EditCacheEntry entry = EditCacheEntry(
-            data: result.data,
+    if (!result.success) {
+      String msg = 'Unsuccessful read';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg); // TODO: handle properly
+    }
+
+    /// Use existing entry or create a new one with empty data
+    final cacheEntry = _cache.containsKey(result.objectId)
+        ? _cache[result.objectId]!
+        : CacheEntry(
             classCache: this,
-            documentId: documentId,
+            data: {},
+            documentId: result.documentId,
           );
 
-          _cache[documentId.objectId] = entry;
-          return entry;
-        } else {
-          final ReadCacheEntry readEntry = ReadCacheEntry(
-            classCache: this,
-            data: result.data,
-            documentId: documentId,
-          );
-          _cache[documentId.objectId] = readEntry;
-          return readEntry;
-        }
+    cacheEntry.externalUpdate(data: result.data, documentId: result.documentId);
+
+    /// This seems redundant, as callback target is also a listener, but it may
+    /// not yet have the [cacheEntry]
+    callback(cacheEntry);
+
+    final documentListeners = listeners[result.objectId];
+    if (documentListeners != null) {
+      for (final listener in documentListeners) {
+        listener.onReadDocument(result);
       }
     }
-    String msg='Unsuccessful read';
-    logType(this.runtimeType).e(msg);
-    throw TakkanException(msg); // TODO: handle properly
   }
 
   Document _lookupDocumentSchema(String? documentClass) {
@@ -236,6 +273,11 @@ class DocumentClassCache {
     }
   }
 
+  Map<String, dynamic>? getDocument(String objectId) {
+    final ce = _cache[objectId];
+    return (ce == null) ? null : ce.data;
+  }
+
   Map<String, dynamic>? _listFromCache(DataList pMulti) {
     return null;
   }
@@ -244,94 +286,24 @@ class DocumentClassCache {
     return null;
   }
 
-  /// Assumes static data has already been dealt with by [DocumentCache]
+  /// If a [CacheEntry] does not exist or needs a refresh, a call is made to
+  /// [readDocumentFromServer], which will retrieve data and update the cache.
   ///
-  /// Returns an appropriately configured [DataContext] based on
-  /// [Pod.data] of [pod].
-  // DataContext dataConnector({
-  //   required DataContext parentDataConnector,
-  //   required Pod config,
-  //   required PData dataSelector,
-  // }) {
-  //   if (dataSelector.isSingle) {
-  //     return _singleDataConnector(
-  //       parentDataConnector: parentDataConnector,
-  //       config: config,
-  //       dataConfig: dataSelector,
-  //     );
-  //   }
-  //   return _multiDataConnector(
-  //     parentDataConnector: parentDataConnector,
-  //     config: config,
-  //     dataConfig: dataSelector,
-  //   );
-  // }
-
-  DataContext _singleDataConnector({
-    required DataContext parentDataConnector,
-    required Pod config,
-    required Data dataConfig,
-  }) {
-    // if (config.isDataRoot) {
-    //   return dataRoot(config, listener);
-    // }
-    throw UnimplementedError();
-  }
-
-  // DataContext _multiDataConnector({
-  //   required DataContext parentDataConnector,
-  //   required Pod config,
-  //   required PData dataConfig,
-  // }) {
-  //   /// TODO: replace - this is just getting rid of compile errors
-  //   return StaticDataContext(
-  //       parentDataContext: parentDataConnector, config: config);
-  //   // if (config.isDataRoot) {
-  //   //   return dataRoot(config, listener);
-  //   // }
-  //   // final root = SingleDataRoot(
-  //   //     objectId: objectId, classCache: this, dataListener: listener);
-  //   // _roots[objectId] = root;
-  //   // requestDocument(dataRoot: root, objectId: objectId);
-  //   // return root;
-  // }
-
-  // DocumentRoot singleRootFor({required String objectId}) {
-  //   if (_roots.containsKey(objectId)) {
-  //     return _roots[objectId]!;
-  //   }
-  //   final root = DocumentRoot(objectId: objectId, classCache: this);
-  //   _roots[objectId] = root;
-  //   requestDocument(dataRoot: root, objectId: objectId);
-  //   return root;
-  // }
-
-  /// Returns cached data if it is present, then makes a call
-  /// to [readDocumentFromServer] to retrieve or refresh the cache data from
-  /// the server.
+  /// If there is an existing entry [callback] is invoked with it, so that the UI
+  /// can continue with the cached entry.
   ///
-  /// Always returns an [EditCacheEntry], converting an existing [ReadCacheEntry]
-  /// if necessary.
-  ///
-  ///
-  /// This approach may be sub-optimal, see: https://gitlab.com/takkan_/takkan_client/-/issues/115
-  Future<EditCacheEntry> requestDocument({required String objectId}) async {
-    final CacheEntry? existingEntry = _cache[objectId];
-    final EditCacheEntry editable;
+  /// The original approach was probably sub-optimal, see: https://gitlab.com/takkan_/takkan_client/-/issues/115
+  /// However, current design may have overcome that issue.  TODO: review
+  void requestDocument({
+    required IDataItem dataSelector,
+    required void Function(CacheEntry newEntry) callback,
+  }) async {
+    final CacheEntry? existingEntry = _cache[dataSelector];
+    if (existingEntry == null || existingEntry.requiresRefresh) {
+      readDocumentFromServer(dataSelector: dataSelector, callback: callback);
+    }
     if (existingEntry != null) {
-      if (existingEntry.isEditable) {
-        editable = existingEntry as EditCacheEntry;
-      } else {
-        editable = existingEntry.makeEditable();
-        _cache[objectId] = editable;
-      }
-      readDocumentFromServer(objectId: objectId, makeEditable: true);
-      return editable;
-    } else {
-      editable =
-          await readDocumentFromServer(objectId: objectId, makeEditable: true)
-              as EditCacheEntry;
-      return editable;
+      callback(existingEntry);
     }
   }
 
@@ -343,14 +315,14 @@ class DocumentClassCache {
   ///
   /// A new document is created if [objectId] is null, otherwise the [objectId]
   /// identifies the document to update.
-  Future<bool> updateDocument({
+  Future<bool> updateDocumentOnServer({
     required String? objectId,
     required Map<String, dynamic> changes,
     required CacheEntry cacheEntry,
   }) async {
     if (objectId == null) {
       _doCreateDocument(
-        onCreate: (cacheEntry as CacheListener).onCreateDocument,
+        onCreate: cacheEntry.onCreateDocument,
         changes: changes,
       );
       return true;
@@ -358,7 +330,7 @@ class DocumentClassCache {
       _doUpdateDocument(
         objectId: objectId,
         changes: changes,
-        onUpdate: (cacheEntry as CacheListener).onUpdateDocument,
+        onUpdate: cacheEntry.onUpdateDocument,
       );
       return true;
     }
@@ -394,4 +366,7 @@ abstract class CacheListener {
 
   /// Called when a document has been create on the server
   onCreateDocument(CreateResult result);
+
+  /// Called when a document has been read from the server
+  onReadDocument(ReadResult result);
 }

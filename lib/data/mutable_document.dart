@@ -1,9 +1,7 @@
-import 'dart:async';
-import 'dart:collection';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:takkan_client/data/binding/map_binding.dart';
+import 'package:takkan_client/data/streamed_output.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 
@@ -29,56 +27,49 @@ const String fromVersionKeyProperty = "fromVersionKey";
 const String fromUpdatedByUserNameProperty = "fromUpdatedByUserName";
 const String metaProperty = "metax";
 
-class MutableDocument extends MapBase<String, dynamic> with ChangeNotifier {
+/// Used to edit documents.  [_checkpoint] is first populated from the data source.
+///
+/// A copy is transferred to [_output].  The [_rootBinding] is connected to the
+/// [_output], as the first link in a chain down through child [Binding]
+/// instances as far as is needed through a document.
+///
+/// [Binding] instances also feed updates to data back in to the [_output].
+///
+/// If changes need to be cancelled, [_output] is reverted to [_checkpoint]
+///
+/// The output can be shared by providing the optional [sharedOutput] constructor
+/// parameter.  Be aware however, that if you do this you are responsible for
+/// managing any changes which occur directly on the [output]
+class MutableDocument with ChangeNotifier {
   final DateTime timestamp;
-  final Map<String, dynamic> _output = Map<String, dynamic>();
+  late StreamedOutput _output;
   final List<ChangeEntry> _changeList = List.empty(growable: true);
   final Map<String, dynamic> _changes = Map<String, dynamic>();
-  final Map<String, dynamic> _initialData = Map<String, dynamic>();
-  late StreamController<Map<String, dynamic>> streamController;
+  final Map<String, dynamic> _checkpoint = Map<String, dynamic>();
 
   final instance = DateTime.now();
-  bool _streamIsActive = false;
-  late RootBinding _rootBinding;
+
 
   late DocumentId _documentId;
 
-  /// Adds an event listener to itself.  This is to ensure [outputStream]
-  /// and listeners get the same events
-  ///
-  /// Sets up [StreamController] for [stream]
-  MutableDocument() : timestamp = DateTime.now() {
-    _rootBinding = RootBinding(data: _output, editHost: this, id: "not used");
-    addListener(_fireStreamEvent);
-    streamController = StreamController<Map<String, dynamic>>.broadcast(
-      onCancel: () => {_streamIsActive = false},
-      onListen: () => {_streamIsActive = true},
-    );
-  }
-
-  close() {
-    streamController.close();
-    removeListener(_fireStreamEvent);
-    super.dispose();
+  MutableDocument({StreamedOutput? sharedOutput}) : timestamp = DateTime.now() {
+    _output = sharedOutput ?? StreamedOutput(getEditHost: () => this);
   }
 
   DocumentId get documentId => _documentId;
 
   @override
-  Iterable<String> get keys => _output.keys;
+  Iterable<String> get keys => _output.data.keys;
 
   Map<String, dynamic> get changes => Map.from(_changes);
 
-  Map<String, dynamic> get initialData => Map.from(_initialData);
+  Map<String, dynamic> get checkpoint => Map.from(_checkpoint);
 
-  Map<String, dynamic> get output => Map.from(_output);
+  StreamedOutput get output => _output;
 
-  RootBinding get rootBinding => _rootBinding;
+  RootBinding get rootBinding => _output.rootBinding;
 
-  Stream<Map<String, dynamic>> get stream => streamController.stream;
-
-  @override
-  Object remove(Object? key) {
+  Object remove(String key) {
     final removed = _output.remove(key);
     _changeList.add(ChangeEntry(type: ChangeType.remove, key: key.toString()));
     _changes.remove(key);
@@ -86,31 +77,20 @@ class MutableDocument extends MapBase<String, dynamic> with ChangeNotifier {
     return removed;
   }
 
-  /// We take a copy of [_output] to post onto the stream, because [_output]
-  /// may change before the event is actioned
-  _fireStreamEvent() {
-    if (_streamIsActive) {
-      streamController.add(Map.from(_output));
-    }
-  }
-
-  /// Resets the output to [initialData] and cancels all changes made
+  /// Resets the output to [checkpoint] and cancels all changes made
   void reset() {
-    _output.clear();
     _changeList.clear();
     _changes.clear();
-    _output.addAll(_initialData);
+    _output.update(data: _checkpoint);
     notifyListeners();
   }
 
-  @override
   void clear() {
-    _initialData.clear();
+    _checkpoint.clear();
     reset();
-    _documentId = const DocumentId(documentClass: '', objectId: '?');
+    _documentId = DocumentId.empty();
   }
 
-  @override
   operator []=(String key, dynamic value) {
     _output[key] = value;
     _changeList.add(ChangeEntry(type: ChangeType.update, key: key));
@@ -118,13 +98,12 @@ class MutableDocument extends MapBase<String, dynamic> with ChangeNotifier {
     notifyListeners();
   }
 
-  @override
   dynamic operator [](Object? key) {
-    return _output[key];
+    return _output.data[key];
   }
 
-  /// Updates both [initialData] and [output].
-  /// - [initialData] reflects exactly what is received from the source
+  /// Updates both [checkpoint] and [output].
+  /// - [checkpoint] reflects exactly what is received from the source
   /// - [output] reflects what has been received from the source, but with changes reapplied from the [changeList]
   ///
   /// Updates [_output] by accepting the new source and then overwriting it with any [changes] already made locally.
@@ -134,27 +113,35 @@ class MutableDocument extends MapBase<String, dynamic> with ChangeNotifier {
   /// override this default
   ///
   /// See also [createNew]
-  MutableDocument updateFromSource({required Map<String, dynamic> source,
-    required DocumentId documentId,
-    bool fireListeners = false}) {
-    _initialData.clear();
-    _initialData.addAll(source);
-    _output.clear(); // we have to clear - keys may have been deleted
-    _output.addAll(source); // output is now a copy of the source
-    _output.addAll(_changes); // re-apply changes
+  MutableDocument updateFromSource(
+      {required Map<String, dynamic> source,
+      required DocumentId documentId,
+      bool fireListeners = false}) {
+    _checkpoint.clear();
+    _checkpoint.addAll(source);
+
+    /// We want to reapply changes before passing to [_output] so that only one stream event is created
+    final temp = Map<String, dynamic>.from(source);
+    temp.addAll(_changes);
+
+    _output.update(data: temp);
     _documentId = documentId;
+    if (fireListeners) notifyListeners();
     return this;
   }
 
   /// 'Creates' a new document [output], [changes] and [changeList] are cleared, but instances not changed.  This is to
   /// ensure that the [RootBinding] connected to this document remains connected.  All changes are lost.
+  ///
+  /// If [initialData] is not empty, the new document is populated with this new data
   MutableDocument createNew({Map<String, dynamic> initialData = const {}}) {
-    _output.clear();
     _changeList.clear();
     _changes.clear();
-    _initialData.clear();
-    _initialData.addAll(initialData);
-    _output.addAll(_initialData);
+    _checkpoint.clear();
+    if (initialData.isNotEmpty) {
+      _checkpoint.addAll(initialData);
+    }
+    _output.update(data: _checkpoint);
     notifyListeners();
     return this;
   }
@@ -211,21 +198,19 @@ class MutableDocument extends MapBase<String, dynamic> with ChangeNotifier {
     return _output[metaProperty];
   }
 
-  bool get streamIsActive => _streamIsActive;
-
-  /// Used as a callback to enable resetting of [initialData].  There should otherwise be no need to call
-  /// this method
-  void saved() {
-    _initialData.clear();
-    _initialData.addAll(_output);
+  /// Callback to reset [checkpoint] to the state of the saved output
+  void onSaved() {
+    _checkpoint.clear();
+    _checkpoint.addAll(_output.data);
     _changes.clear();
     _changeList.clear();
   }
 
   /// Stores a single result query
-  MutableDocument storeQueryResult({required String queryName,
-    required Map<String, dynamic> queryResults,
-    bool fireListeners = false}) {
+  MutableDocument storeQueryResult(
+      {required String queryName,
+      required Map<String, dynamic> queryResults,
+      bool fireListeners = false}) {
     return createNew(initialData: queryResults);
   }
 }

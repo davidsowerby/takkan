@@ -1,13 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/common/interpolate.dart';
-import 'package:takkan_client/data/data_source.dart';
 
-import '../helper/mock.dart';
 
 void main() {
-  DataContext mockDataContext = MockDataContextWithParams();
-  ModelBinding modelBinding = MockModelBinding();
   group(
     'interpolate',
     () {

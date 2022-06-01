@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:takkan_client/app/router.dart';
 import 'package:takkan_client/data/binding/connector.dart';
-import 'package:takkan_client/config/asset_loader.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/inject/modules.dart';
 import 'package:takkan_client/library/part_library.dart';
-import 'package:takkan_client/common/args.dart';
-import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/loader/assembler.dart';
 import 'package:takkan_script/loader/loaders.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/script/constants.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/util/visitor.dart';
 
@@ -57,15 +51,22 @@ class Takkan {
         const [],
   }) async {
     this.commandLineArguments = commandLineArguments;
+    WidgetsFlutterBinding.ensureInitialized();
+
+    appConfigFromAssetBindings();
+
+
+
     if (includeTakkanDefaults || injectionBindings.isEmpty) {
       takkanDefaultInjectionBindings();
     }
-    WidgetsFlutterBinding.ensureInitialized();
-    _jsonConfig =
-        await inject<JsonAssetLoader>().loadFile(filePath: 'takkan.json');
+
+
+
     _loaders = loaders;
     _particleLibraryEntries = particleLibraryEntries;
     router.init(routersBefore: routersBefore, routersAfter: routersAfter);
+    await getIt.allReady();
     await loadScripts(loaders);
     await _doAfterLoad();
   }
@@ -80,15 +81,7 @@ class Takkan {
     await _loadSchemas();
     library.init(entries: _particleLibraryEntries);
 
-    final stage = extractCurrentStage(commandLineArguments);
-    dataProviderLibrary.init(AppConfig(data: _jsonConfig, currentStage: stage));
 
-    /// register the default data provider
-    if (useDefaultDataProvider) {
-      dataProviderLibrary.register(
-          type: 'default',
-          builder: (config) => DefaultDataProvider(config: config));
-    }
     _isReady = true;
     notifyReadyListeners();
     notifyScriptReloadListeners();
@@ -146,15 +139,8 @@ class Takkan {
 
   bool get isReady => _isReady;
 
-  Map<String, dynamic> getConfig(String segment) {
-    return _jsonConfig[segment];
-  }
 
-  String extractCurrentStage(List<String> commandLineArguments) {
-    final Args args = Args(args: commandLineArguments);
-    final stage = args.mappedArgs['stage'];
-    return (stage == null) ? notSet : stage;
-  }
+
 }
 
 final Takkan _takkan = Takkan();

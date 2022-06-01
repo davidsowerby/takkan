@@ -5,7 +5,6 @@ import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
-import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
@@ -21,8 +20,8 @@ void main() {
   late PageBuilder builder;
   late Script script;
   registerFallbackValue(NullDataContext());
-  registerFallbackValue(DataItemById(objectId: 'x'));
-  registerFallbackValue(DataItem());
+  registerFallbackValue(DataItemById(name: 'itemWithId', objectId: 'x'));
+  registerFallbackValue(DataItem(name: 'item'));
   group('PageBuilder', () {
     setUpAll(() {});
 
@@ -39,49 +38,53 @@ void main() {
         ),
         pages: [
           PageConfig.Page(
+            name: 'person',
             documentClass: 'Person',
             dataSelectors: [
               DataItemById(
-                tag: 'MyObject',
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(),
+              DataItem(name: 'anyObject'),
             ],
           ),
           PageConfig.Page(
             documentClass: 'Person',
-            tag: 'shortForm',
+            name: 'shortForm',
             dataSelectors: [
               DataItemById(
-                tag: 'MyObject',
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              DataItem(),
+              DataItem(name: 'anyObject'),
             ],
           ),
           PageConfig.Page(
+            name: 'people',
             documentClass: 'Person',
             dataSelectors: [
-              DataList(),
+              DataList(name: 'allPeople'),
             ],
           ),
           PageConfig.Page(
+            name: 'member',
             documentClass: 'Person',
             dataSelectors: [
               DataListByFilter(
-                tag: 'members',
+                name: 'members',
                 script: 'member==true',
               )
             ],
           ),
           PageConfig.Page(
-            dataSelectors: [NoData(tag: 'static page')],
+            name: 'emptyStatic',
           ),
           PageConfig.Page(
+            name: 'members',
             documentClass: 'Person',
             dataSelectors: [
               DataListById(
-                tag: 'specialMembers',
+                name: 'specialMembers',
                 objectIds: ['xxx', 'yyy'],
               )
             ],
@@ -94,10 +97,11 @@ void main() {
 
     tearDown(() {});
 
-
-    test('single page, tagged DataItemById', () {
+    test('single page, DataItemById', () {
       // given
       final pageConfig = script.pages[0];
+      const String route='person/MyObject';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -105,7 +109,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'document/Person/MyObject',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -121,11 +125,13 @@ void main() {
       expect(page.config, pageConfig);
       expect(page.objectId,
           (pageConfig.dataSelectors[0] as DataItemById).objectId);
-      expect(page.route, 'document/Person/MyObject');
+      expect(page.route.toString(), route);
     });
-    test('single page, untagged DataItem', () {
+    test('single page, DataItem second selector', () {
       // given
       final pageConfig = script.pages[0];
+      const String route='person/anyObject';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -133,7 +139,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'document/Person/default',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -148,11 +154,13 @@ void main() {
       final DocumentPage page = p as DocumentPage;
       expect(page.config, pageConfig);
       expect(page.objectId, isNull);
-      expect(page.route, 'document/Person/default');
+      expect(page.route.toString(), route);
     });
-    test('single page, tagged DataItemById, tagged Page', () {
+    test('single page, DataItemById,  Page', () {
       // given
       final pageConfig = script.pages[1];
+      const String route='shortForm/MyObject';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -160,7 +168,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'document/Person/MyObject/shortForm',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -176,11 +184,13 @@ void main() {
       expect(page.config, pageConfig);
       expect(page.objectId,
           (pageConfig.dataSelectors[0] as DataItemById).objectId);
-      expect(page.route, 'document/Person/MyObject/shortForm');
+      expect(page.route.toString(), route);
     });
-    test('single page, untagged DataItem tagged Page', () {
+    test('single page,  DataItem , Page', () {
       // given
       final pageConfig = script.pages[1];
+      const String route='shortForm/anyObject';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -188,7 +198,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'document/Person/default/shortForm',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -203,11 +213,13 @@ void main() {
       final DocumentPage page = p as DocumentPage;
       expect(page.config, pageConfig);
       expect(page.objectId, isNull);
-      expect(page.route, 'document/Person/default/shortForm');
+      expect(page.route.toString(), route);
     });
-    test('multi page, untagged PMulti', () {
+    test('multi page,  PMulti', () {
       // given
       final pageConfig = script.pages[2];
+      const String route='people/allPeople';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -215,7 +227,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'documents/Person/default',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -229,11 +241,13 @@ void main() {
       expect(p, isA<DocumentListPage>());
       final DocumentListPage page = p as DocumentListPage;
       expect(page.config, pageConfig);
-      expect(page.route, 'documents/Person/default');
+      expect(page.route.toString(),route);
     });
-    test('multi page, tagged PMulti', () {
+    test('multi page,  PMulti', () {
       // given
-      final pageConfig = script.pages[5];
+      final pageConfig = script.pages[3];
+      const String route='member/members';
+      when(()=> cache.getClassCache(config: pageConfig)).thenReturn(MockDocumentClassCache());
       when(() => cache.dataContext(
           parentDataContext: any<NullDataContext>(named: 'parentDataContext'),
           config: pageConfig,
@@ -241,7 +255,7 @@ void main() {
               named: 'dataSelector'))).thenReturn(MockDataContext());
       // when
       MaterialPageRoute? r = builder.buildPage(
-        route: 'documents/Person/specialMembers',
+        route: route,
         pageArguments: {},
         context: MockBuildContext(),
         parentBinding: MockDataBinding(),
@@ -255,8 +269,8 @@ void main() {
       expect(p, isA<DocumentListPage>());
       final DocumentListPage page = p as DocumentListPage;
       expect(page.config, pageConfig);
-      expect(page.route, 'documents/Person/specialMembers');
-      expect(page.objectIds, ['xxx', 'yyy']);
+      expect(page.route.toString(), route);
+      expect(page.objectIds, isNull);
     });
   });
 }

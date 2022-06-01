@@ -71,8 +71,9 @@ class StaticConnector extends ModelConnector<String, String> {
             binding: StringBinding.private(
               property: 'not used',
               firstLevelKey: 'x',
+              getEditHost: ()=>null,
               parent:
-                  ListBinding.private(firstLevelKey: 'x', property: 'not used'),
+                  ListBinding.private(firstLevelKey: 'x', property: 'not used',getEditHost: ()=>null),
             ),
             fieldSchema: FString());
 
@@ -86,3 +87,4 @@ class StaticConnector extends ModelConnector<String, String> {
         'Static converter only works from model to view');
   }
 }
+

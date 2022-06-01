@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/widgets.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/mutable_document.dart';
-import 'package:takkan_client/pod/document_root.dart';
 import 'package:takkan_script/common/log.dart';
+
+import '../../data/cache_consumer.dart';
 
 /// [readMode] determines the display of [Part] elements - for example, [Text] if true, [TextField] if false
 /// [canEdit] reflects whether the [readMode] status can be changed, and typically enables / disables the display of an 'edit' icon
@@ -12,7 +15,8 @@ import 'package:takkan_script/common/log.dart';
 class EditState with ChangeNotifier {
   bool _canEdit;
   bool _readMode;
-  final List<DocRoot> documentRoots = List.empty(growable: true);
+  final int id =Random().nextInt(20000);
+  final List<CacheConsumer> documentRoots = List.empty(growable: true);
 
   EditState({bool canEdit = true, bool readMode = true})
       : _readMode = readMode,
@@ -34,10 +38,7 @@ class EditState with ChangeNotifier {
 
   set readMode(bool value) {
     if (!canEdit && value) return;
-    for (DocRoot documentRoot in documentRoots) {
-      documentRoot.beforeEditStateChange(value);
-      _readMode = value;
-    }
+    _readMode=value;
     logType(this.runtimeType).d("EditState changed to readMode: $value");
     notifyListeners();
   }
@@ -47,29 +48,21 @@ class EditState with ChangeNotifier {
     notifyListeners();
   }
 
-  disableCanEdit() {
+  void disableCanEdit() {
     _canEdit = false;
   }
 
-  /// An [EditState] may contain multiple [DocRoot] instances, which need to be notified of
+  /// An [EditState] may contain multiple [CacheConsumer] instances, which need to be notified of
   /// impending state changes
-  registerDocumentRoot(DocRoot documentRoot) {
+  void addDocumentRoot(CacheConsumer documentRoot) {
     documentRoots.add(documentRoot);
   }
 
-  /// Removes a [DocRoot] from [documentRoots].  Usually only called from the dispose method
+  /// Removes a [CacheConsumer] from [documentRoots].  Usually only called from the dispose method
   /// of the Page or Panel
-  deRegisterDocumentRoot(DocRoot documentRoot) {
+  void removeDocumentRoot(CacheConsumer documentRoot) {
     documentRoots.remove(documentRoot);
   }
 
-  void save() {
-    for (DocRoot documentRoot in documentRoots) {
-      bool valid = documentRoot.flushFormToModel();
-      if (valid) {
-        documentRoot.persist();
-        readMode = true;
-      }
-    }
-  }
+
 }

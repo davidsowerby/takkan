@@ -1,5 +1,4 @@
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_client/pod/page/standard_page.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_script/common/exception.dart';
@@ -24,6 +23,8 @@ abstract class DataContext {
   DocumentClassCache get classCache;
 
   Document get documentSchema;
+
+  String get documentIdKey;
 }
 
 /// A standard [DataContext] pointing back to the relevant [DocumentClassCache]
@@ -37,6 +38,11 @@ class DefaultDataContext implements DataContext {
   IDataProvider get dataProvider => classCache.dataProvider;
 
   Document get documentSchema => classCache.documentSchema;
+
+  @override
+  String get documentIdKey => dataProvider.objectIdKey;
+
+
 }
 
 
@@ -60,6 +66,9 @@ class NullDataContext implements DataContext {
 
   @override
   DocumentClassCache get classCache => throwException();
+
+  @override
+  String get documentIdKey => throwException();
 }
 
 /// A [TakkanPage] or [PanelWidget] which uses only static data is allocated
@@ -91,4 +100,7 @@ class StaticDataContext implements DataContext {
 
   @override
   DocumentClassCache get classCache => parentDataContext.classCache;
+
+  @override
+  String get documentIdKey => parentDataContext.documentIdKey;
 }

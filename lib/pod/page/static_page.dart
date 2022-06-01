@@ -4,8 +4,9 @@ import 'package:takkan_client/app/page_builder.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/pod/layout/layout_wrapper.dart';
-import 'package:takkan_client/pod/page/standard_page.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
+
+import '../../common/component/takkan_refresh_button.dart';
 
 /// A page displaying only static data, and therefore requiring no connection
 /// to the [DocumentCache] for dynamic data.
@@ -17,7 +18,7 @@ import 'package:takkan_script/page/page.dart' as PageConfig;
 class StaticPage extends StatelessWidget {
   final PageConfig.Page config;
   final DataContext dataContext;
-  final String route;
+  final PageConfig.TakkanRoute route;
   final PageBuilder pageBuilder;
   final Map<String, dynamic> pageArguments;
 

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:takkan_client/pod/pod_state.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
-import 'package:takkan_client/pod/layout/layout.dart';
-import 'package:takkan_client/pod/page/standard_page.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
-import 'package:takkan_script/panel/panel.dart';
+
+import '../../common/component/takkan_refresh_button.dart';
 
 /// This could be used directly, but is generally used only by Takkan to generate
 /// pages automatically from [Script]
@@ -20,7 +17,7 @@ class DocumentListPage extends StatefulWidget {
   final PageConfig.Page config;
   final Map<String, dynamic> pageArguments;
   final DataContext dataContext;
-  final String route;
+  final PageConfig.TakkanRoute route;
   final List<String>? objectIds;
 
   /// [dataContext] defaults to a [NullDataContext] when used as a top level page,
@@ -46,82 +43,29 @@ class DocumentListPage extends StatefulWidget {
       );
 }
 
-class DocumentListPageState extends PodState<DocumentListPage>
-    with DisplayColumns {
+class DocumentListPageState extends State<DocumentListPage>
+  {
   DocumentListPageState({
     required PageConfig.Page config,
     IDataProvider? dataProvider,
     Map<String, dynamic> pageArguments = const {},
-  }) : super(
-    parentDataContext: NullDataContext(),
-          config: config,
-          pageArguments: pageArguments,
-        );
+  }) ;
 
   @override
   Widget build(BuildContext context) {
-    if (needsAuthentication) {
-      return Center(child: CircularProgressIndicator());
-    }
+
     final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         actions: [
           TakkanRefreshButton(),
-          IconButton(
-            icon: Icon(FontAwesomeIcons.signOutAlt),
-            onPressed: () => _doSignOut(context),
-          )
+
         ],
         title: Text(widget.config.title ?? ''),
       ),
-      body: doBuild(
-        context,
-        theme,
-      ),
+      body: Center(child: Text('TBD'),)
     );
   }
 
-  _doSignOut(BuildContext context) async {
-    if (dataContext.dataProvider.authenticator.isAuthenticated) {
-      await dataContext.dataProvider.authenticator.signOut();
-      Navigator.of(context).pushNamed("/");
-    }
-  }
 
-  @override
-  Widget assembleContent(ThemeData theme) {
-    return buildSubContent(
-      dataContext: dataContext,
-      theme: theme,
-      config: widget.config,
-      pageArguments: widget.pageArguments,
-    );
-  }
-
-  /// Simple page layout :
-  /// - Calculate the number of columns based on the width of the display, and allocate the children
-  /// left to right
-  /// - Add margin to each column as specified in [config.layout]
-  ///
-  /// This needs to be expanded to support more sophisticated layout options
-  /// See https://gitlab.com/takkan_/takkan_client/-/issues/37
-  Widget layout(
-      {required List<Widget> children,
-      required Size screenSize,
-      required Pod config}) {
-    final padding = (config as PageConfig.Page).layout.padding;
-    return Padding(
-      padding: EdgeInsets.only(
-        top: padding.top,
-        bottom: padding.bottom,
-        left: padding.left,
-        right: padding.right,
-      ),
-      child: distributeWidgets(
-          screenSize: screenSize,
-          preferredColumnWidth: widget.config.layout.preferredColumnWidth,
-          widgets: children),
-    );
-  }
 }
