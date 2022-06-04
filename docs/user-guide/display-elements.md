@@ -10,13 +10,8 @@ Regardless of the type of display element, we consider two aspects as:
 - content: what is displayed
 - trait: how it is displayed, in terms of style and behaviour
 
-The purpose of the Trait is to support consistency across an app, whether that is the style of presentation, or the behaviour of a Widget.
+A [Trait](traits.md) promotes consistency across an app, through consistent presentation and behaviour of a Widget.
 
-When you compose a Takkan Script, each Part contains a Trait name. The Takkan client looks up the Trait from the Library, and uses it when building the Widget for that Part.
-
-You can use the in-built Trait names, or very simply redefine the implementation of the trait name.  
-
-You will be able to [add your own](#defining-traits) trait names and implementations.
 
 ## Text
 
