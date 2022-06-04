@@ -47,7 +47,7 @@ final Script medleyScript2 = Script(
         ),
         NavButton(
           caption: 'OK',
-          route: 'document/Issue/Top Issue',
+          pageLink: PageLink(pageTag: 'page-default',selectorTag: 'Top Issue'),
         ),
       ])
     ]),
@@ -73,7 +73,7 @@ final Script medleyScript2 = Script(
         ])
       ],
     ),
-    Page(caption: 'Issues', dataSelectors: [
+    Page(caption: 'Issues', documentClass: 'Issue',dataSelectors: [
       DataList(caption: 'All Issues', tag: 'allIssues'),
     ], children: [
       ListView(
