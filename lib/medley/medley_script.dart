@@ -1,4 +1,3 @@
-
 import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
@@ -32,8 +31,8 @@ final Script medleyScript2 = Script(
     useAuthenticator: true,
   ),
   pages: [
-    Page(caption: 'Home', dataSelectors: [
-      NoData(tag: 'home')
+    Page(name: 'home', caption: 'Home', dataSelectors: [
+      NoData(name: 'home')
     ], children: [
       Group(children: [
         Title(
@@ -47,15 +46,17 @@ final Script medleyScript2 = Script(
         ),
         NavButton(
           caption: 'OK',
-          route: 'document/Issue/Top Issue',
+          toPage: 'issue',
+          toData: 'topIssue',
         ),
       ])
     ]),
     Page(
+      name: 'issue',
       controlEdit: ControlEdit.pagesOnly,
       caption: 'Issue',
       documentClass: 'Issue',
-      dataSelectors: [DataItemById(objectId: 'JJoGIErtzn', tag: 'Top Issue')],
+      dataSelectors: [DataItemById(objectId: 'JJoGIErtzn', name: 'topIssue')],
       children: [
         Group(children: [
           BodyText1(
@@ -73,8 +74,8 @@ final Script medleyScript2 = Script(
         ])
       ],
     ),
-    Page(caption: 'Issues', dataSelectors: [
-      DataList(caption: 'All Issues', tag: 'allIssues'),
+    Page(name: 'issues', caption: 'Issues', dataSelectors: [
+      DataList(caption: 'All Issues', name: 'allIssues'),
     ], children: [
       ListView(
         property: 'results',
@@ -92,8 +93,8 @@ final Script medleyScript1 = Script(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    Page(caption: 'Home', dataSelectors: [
-      NoData(tag: 'home'),
+    Page(name: 'home', caption: 'Home', dataSelectors: [
+      NoData(name: 'home'),
     ], children: [
       Title(
         staticData: 'Takkan',
@@ -106,13 +107,15 @@ final Script medleyScript1 = Script(
       ),
       NavButton(
         caption: 'OK',
-        route: 'person',
+        toPage: 'person',
+        toData: 'topIssue',
       ),
     ]),
     Page(
+      name: 'person',
       caption: 'Person',
       dataSelectors: [
-        NoData(tag: 'person'),
+        NoData(name: 'person'),
       ],
       children: [
         BodyText1(
@@ -146,27 +149,34 @@ final Script medleyScript0 = Script(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
   pages: [
-    Page(caption: 'Home', dataSelectors: [
-      NoData(tag: 'home'),
-    ], children: [
-      Title(
-        staticData: 'Takkan',
-      ),
-      Subtitle(
-        staticData: 'Proof of Concept',
-      ),
-      Subtitle2(
-        staticData: 'A brief introduction to faster Flutter development',
-      ),
-      NavButton(
-        caption: 'OK',
-        route: 'persons',
-      ),
-    ]),
     Page(
+      name: 'home',
+      caption: 'Home',
+      dataSelectors: [
+        NoData(name: 'home'),
+      ],
+      children: [
+        Title(
+          staticData: 'Takkan',
+        ),
+        Subtitle(
+          staticData: 'Proof of Concept',
+        ),
+        Subtitle2(
+          staticData: 'A brief introduction to faster Flutter development',
+        ),
+        NavButton(
+          caption: 'OK',
+          toPage: 'persons',
+          toData: 'allIssues',
+        ),
+      ],
+    ),
+    Page(
+      name: 'person',
       caption: 'Person',
       dataSelectors: [
-        NoData(tag: 'person'),
+        NoData(name: 'person'),
       ],
       children: [
         BodyText1(
@@ -181,19 +191,24 @@ final Script medleyScript0 = Script(
         ),
       ],
     ),
-    Page(caption: 'Person', dataSelectors: [
-      NoData(tag: 'persons'),
-    ], children: [
-      BodyText1(
-        property: 'firstName',
-        caption: 'First Name',
-        staticData: 'Michael',
-      ),
-      BodyText2(
-        property: 'age',
-        caption: 'age',
-        staticData: '17',
-      ),
-    ])
+    Page(
+      name: 'persons',
+      caption: 'Person',
+      dataSelectors: [
+        NoData(name: 'persons'),
+      ],
+      children: [
+        BodyText1(
+          property: 'firstName',
+          caption: 'First Name',
+          staticData: 'Michael',
+        ),
+        BodyText2(
+          property: 'age',
+          caption: 'age',
+          staticData: '17',
+        ),
+      ],
+    )
   ],
 );
