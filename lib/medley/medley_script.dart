@@ -1,4 +1,3 @@
-import 'package:takkan_script/data/select/data.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data_list.dart';
@@ -32,7 +31,6 @@ final Script medleyScript2 = Script(
   ),
   pages: [
     Page(name: 'home', caption: 'Home', dataSelectors: [
-      NoData(name: 'home')
     ], children: [
       Group(children: [
         Title(
@@ -94,7 +92,6 @@ final Script medleyScript1 = Script(
   ),
   pages: [
     Page(name: 'home', caption: 'Home', dataSelectors: [
-      NoData(name: 'home'),
     ], children: [
       Title(
         staticData: 'Takkan',
@@ -114,9 +111,7 @@ final Script medleyScript1 = Script(
     Page(
       name: 'person',
       caption: 'Person',
-      dataSelectors: [
-        NoData(name: 'person'),
-      ],
+
       children: [
         BodyText1(
           property: 'firstName',
@@ -152,9 +147,7 @@ final Script medleyScript0 = Script(
     Page(
       name: 'home',
       caption: 'Home',
-      dataSelectors: [
-        NoData(name: 'home'),
-      ],
+
       children: [
         Title(
           staticData: 'Takkan',
@@ -175,9 +168,6 @@ final Script medleyScript0 = Script(
     Page(
       name: 'person',
       caption: 'Person',
-      dataSelectors: [
-        NoData(name: 'person'),
-      ],
       children: [
         BodyText1(
           property: 'firstName',
@@ -194,9 +184,6 @@ final Script medleyScript0 = Script(
     Page(
       name: 'persons',
       caption: 'Person',
-      dataSelectors: [
-        NoData(name: 'persons'),
-      ],
       children: [
         BodyText1(
           property: 'firstName',
