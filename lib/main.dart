@@ -19,7 +19,7 @@ void main(List<String> args) async {
     primarySwatch: Colors.green,
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
-  runApp(TakkanApp(theme: theme));
+  runApp(TakkanApp(theme: theme, initialRoute: 'home/static',));
 }
 
 class MyHomePage extends StatefulWidget {
