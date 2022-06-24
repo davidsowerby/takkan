@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/script/constants.dart';
+import 'package:takkan_script/common/log.dart';
 
 /// The default is to hold app configuration in a file *takkan.json* in the project root.
 ///
@@ -24,7 +24,6 @@ class AppConfigFileLoader {
   /// [AppConfig] - if false, a [TakkanException] is thrown if no *takkan.json*
   /// exists in [fileName]
   Future<AppConfig> load({
-    String currentStage = notSet,
     bool returnEmptyIfAbsent = false,
   }) async {
     final f = (fileName == null)
@@ -33,17 +32,16 @@ class AppConfigFileLoader {
     if (!f.existsSync()) {
       if (returnEmptyIfAbsent) {
         return AppConfig(
-          currentStage: currentStage,
           data: Map(),
         );
-      } else {
-        throw TakkanException('There is no file at ${f.path}');
+      } else {final String msg='There is no file at ${f.path}';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
       }
     }
     final content = f.readAsStringSync();
     final j = json.decode(content);
     return AppConfig(
-      currentStage: currentStage,
       data: j,
     );
   }

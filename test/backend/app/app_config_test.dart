@@ -41,33 +41,47 @@ void main() {
       expect(instance.type, 'back4app');
     });
 
-    test('access instanceConfig, valid & invalid instance', () {
+    test('access instanceConfig, valid group, valid selectedInstance',
+        () {
       // given
       final AppConfig appConfig = AppConfig(
         data: {
-          'group1': {
-            'instance1': {'serverUrl': 'https://test.com'}
-          }
+          'core': {
+            'test': {'serverUrl': 'https://test.com'},
+            'dev': {'serverUrl': 'https://dev.com'}
+          },
+          'selectedInstance': 'test',
         },
       );
-      final MockDataProvider mockDpValid = MockDataProvider();
-      final MockDataProvider mockDpInvalidInstance = MockDataProvider();
-      final MockDataProvider mockDpInvalidGroup = MockDataProvider();
+      final MockDataProviderConfig mockDpValid = MockDataProviderConfig();
       when(() => mockDpValid.instanceConfig)
-          .thenReturn(AppInstance(group: 'group1', instance: 'instance1'));
-      when(() => mockDpInvalidInstance.instanceConfig)
-          .thenReturn(AppInstance(group: 'group1', instance: 'instance2'));
-      when(() => mockDpInvalidGroup.instanceConfig)
-          .thenReturn(AppInstance(group: 'group2', instance: 'instance1'));
+          .thenReturn(AppInstance(group: 'core', instance: 'test'));
 
       // when
 
       // then
 
       expect(appConfig.instanceConfig(mockDpValid), isA<InstanceConfig>());
+    });
+    test('access instanceConfig, valid group, invalid instance', () {
+      // given
+      final AppConfig appConfig = AppConfig(
+        data: {
+          'core': {
+            'test': {'serverUrl': 'https://test.com'}
+          }
+        },
+      );
+      final MockDataProviderConfig mockDpInvalidInstance = MockDataProviderConfig();
+      when(() => mockDpInvalidInstance.instanceConfig)
+          .thenReturn(AppInstance(group: 'back4app', instance: 'wiggly'));
+
+
+      // when
+
+      // then
+
       expect(() => appConfig.instanceConfig(mockDpInvalidInstance),
-          throwsTakkanException);
-      expect(() => appConfig.instanceConfig(mockDpInvalidGroup),
           throwsTakkanException);
     });
     test('instanceConfig, default values', () {
@@ -113,7 +127,7 @@ void main() {
       // when
       final appConfig = await AppConfigFileLoader(
               fileName: 'test/backend/app/sample-takkan.json')
-          .load(currentStage: 'dev');
+          .load();
       // then
 
       expect(appConfig.appName, 'MyApp');
@@ -132,7 +146,6 @@ void main() {
       final GroupConfig main = appConfig.group('main');
       expect(main.appName, 'Sample App');
       expect(main.type, 'back4app');
-      expect(main.stages, ["dev", "test", "qa", "prod"]);
       expect(main.serverUrl, 'https://parseapi.back4app.com');
       expect(main.documentStub, 'classes');
       expect(main.functionStub, 'functions');

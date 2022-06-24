@@ -25,19 +25,12 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
   late IDataProvider parent;
   late RestServerConnect serverConnect;
 
-  DefaultRestDataProviderDelegate(
-    this.parent,
-  );
+  DefaultRestDataProviderDelegate();
 
   @override
   init(InstanceConfig instanceConfig, IDataProvider parent) async {
     this.parent = parent;
     this.instanceConfig = instanceConfig;
-    if (parent.config.restDelegate == null) {
-      String msg = 'RestDelegate cannot be used without configuration';
-      logType(this.runtimeType).e(msg);
-      throw TakkanException(msg);
-    }
     serverConnect = inject<RestServerConnect>();
   }
 
@@ -203,6 +196,7 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         statusCode: response.statusCode ?? -999);
   }
 
+  @deprecated
   transformResponseData(dio.Response response) {
     if (response.data is List) {
       final List<Map<String, dynamic>> data = (response.data as List)
@@ -216,12 +210,37 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
     throw TakkanException('Not a map or list');
   }
 
+  Map<String, dynamic> _transformResponseToDocument(dio.Response response) {
+    if (!(response.data is Map)) {
+      final String msg='Response data is not a map';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
+    }
+    final data=response.data as Map;
+    if (!(data.containsKey('objectId'))){
+      final String msg='Response data is not a document, it has no objectId';
+      logType(this.runtimeType).e(msg);
+      throw TakkanException(msg);
+    }
+    return Map<String, dynamic>.from(response.data);
+  }
+
+  List<Map<String, dynamic>> _transformResponseToDocumentList(
+      dio.Response response) {
+    if (!(response.data is List)) {
+      throw TakkanException('Response data is not a List');
+    }
+    final List<Map<String, dynamic>> data =
+        (response.data as List).map((e) => e as Map<String, dynamic>).toList();
+    return data;
+  }
+
   @override
   Future<ReadResult> executeFunction({
     required String functionName,
     Map<String, dynamic> params = const {},
   }) async {
-    print('Calling Cloud Function \'$functionName\'');
+    logType(this.runtimeType).d('Calling Cloud Function \'$functionName\'');
     final serverConnectResponse = await serverConnect
         .executeFunction(instanceConfig, functionName, params: params);
     final data = transformResponseData(serverConnectResponse);
@@ -239,5 +258,53 @@ class DefaultRestDataProviderDelegate implements RestDataProviderDelegate {
         documentClass: 'function',
       );
     }
+  }
+
+  /// Executes a cloud function expecting a single document in return
+  /// Always returns a single document, or sets 'success' to false
+  @override
+  Future<ReadResultItem> executeItemFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+    required String documentClass,
+  }) async {
+    logType(this.runtimeType).d('Calling Cloud Function \'$functionName\'');
+    final serverConnectResponse = await serverConnect
+        .executeFunction(instanceConfig, functionName, params: params);
+    final data = _transformResponseToDocument(serverConnectResponse);
+
+    if (!data.containsKey('objectId'))
+      return ReadResultItem(
+          success: false,
+          data: data,
+          documentClass: 'unknown',
+          queryReturnType: QueryReturnType.unexpected);
+    return ReadResultItem(
+        data: data,
+        documentClass: documentClass,
+        queryReturnType: QueryReturnType.futureItem,
+        success: true);
+  }
+
+  /// Executes a cloud function expecting a list of documents in return
+  /// Always returns a list of documents (which may be empty), or sets 'success'
+  /// to false
+  @override
+  Future<ReadResultList> executeListFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+    required String documentClass,
+  }) async {
+    logType(this.runtimeType).d('Calling Cloud Function \'$functionName\'');
+    final serverConnectResponse = await serverConnect
+        .executeFunction(instanceConfig, functionName, params: params);
+    final data = _transformResponseToDocumentList(serverConnectResponse);
+
+
+    return ReadResultList(
+        data: data,
+        documentClass: documentClass,
+        queryReturnType: QueryReturnType.futureList,
+        success: true);
   }
 }

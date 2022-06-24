@@ -1,4 +1,5 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/delegate.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
@@ -22,4 +23,5 @@ MockRestDelegate createMockRestDelegate() {
   return MockRestDelegate();
 }
 
-class MockDataProvider extends Mock implements DataProvider {}
+class MockDataProviderConfig extends Mock implements DataProvider {}
+class MockDataProvider extends Mock implements IDataProvider {}

@@ -1,13 +1,16 @@
-import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_backend/backend/user/takkan_user.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 
+import '../data_provider/data_provider.dart';
+
 class NoAuthenticator
-    extends Authenticator<DataProvider, TakkanUser, NoDataProvider> {
+    extends Authenticator<DataProvider, TakkanUser, IDataProvider> {
   final String msg =
       'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
+
+  NoAuthenticator(super.parent);
 
   @override
   Future<bool> doDeRegister(TakkanUser user) {
@@ -37,8 +40,9 @@ class NoAuthenticator
   }
 
   @override
-  init(NoDataProvider parent) {
-    logType(this.runtimeType).i("Authenticator not set");
+  init() {
+    super.init();
+    logType(this.runtimeType).i("Using a 'NoAuthenticator' so real authentication not possible");
   }
 
   @override

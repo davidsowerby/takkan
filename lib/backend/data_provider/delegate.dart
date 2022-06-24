@@ -55,10 +55,35 @@ abstract class IDataProviderDelegate<QUERY extends Query> {
 /// Defined as an interface to enable injection of alternative implementations
 abstract class RestDataProviderDelegate
     implements IDataProviderDelegate<RestQuery> {
-  Future<ReadResult> executeFunction(
-      {required String functionName, Map<String, dynamic> params = const {}});
+  /// Executes a general server side server-side function [functionName], with [params]
+  ///
+  /// The REST delegate is always used
+  Future<ReadResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+  });
+
+  /// Executes a server side server-side function [functionName], with [params]
+  /// Always returns a single document unless success==false in the returned result
+  Future<ReadResultItem> executeItemFunction({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  });
+
+  /// Executes a server side server-side function [functionName], with [params]
+  /// Always returns a list of documents unless success==false in the returned result
+  Future<ReadResultList> executeListFunction({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  });
 }
 
 /// Defined as an interface to enable injection of alternative implementations
 abstract class GraphQLDataProviderDelegate
-    implements IDataProviderDelegate<GraphQLQuery> {}
+    implements IDataProviderDelegate<GraphQLQuery> {
+
+
+
+}

@@ -6,12 +6,14 @@ import 'package:takkan_script/data/provider/data_provider.dart';
 
 abstract class Authenticator<T extends DataProvider, USER,
     D extends IDataProvider> {
-  late D parent;
+  final D parent;
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners =
       List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
   USER? nativeUser;
+
+  Authenticator(this.parent);
 
   TakkanUser get user => takkanUserFromNative(nativeUser);
 
@@ -62,7 +64,7 @@ abstract class Authenticator<T extends DataProvider, USER,
   Future<AuthenticationResult> signInByEmail(
       {required String username, required String password}) async {
     if (status == SignInStatus.Uninitialized) {
-      await init(parent);
+      await init();
     }
     status = SignInStatus.Authenticating;
     final AuthenticationResult result =
@@ -115,8 +117,10 @@ abstract class Authenticator<T extends DataProvider, USER,
   /// Not sure what this is need for :-)
   registrationAcknowledged() {}
 
-  /// Implementation specific, may not be needed, but must always change status to [SignInStatus.Initialised]
-  init(D parent){
+  /// Implementation specific.Some Authenticators may not need initialisation, but
+  /// must always set status to [SignInStatus.Initialised]
+  @mustCallSuper
+  init(){
     status=SignInStatus.Initialised;
   }
 

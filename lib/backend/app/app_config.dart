@@ -32,36 +32,29 @@ class AppConfig extends BaseConfig with Appendage {
   static const String keyGraphqlStub = 'graphqlStub';
   static const String keyDocumentStub = 'documentStub';
   static const String keyFunctionStub = 'functionStub';
-  static const String keyStages = 'stages';
+  static const String keySelectedInstance = 'selectedInstance';
   static const String keyType = 'type';
   static const String defaultInstanceType = 'back4app';
   final Map<String, GroupConfig> _groups = Map();
-  final String currentStage;
+  final Map<String, dynamic> data;
 
   AppConfig({
-    this.currentStage = notSet,
-    required Map<String, dynamic> data,
-    String? type,
+    required this.data,
   }) : super(ConfigPropsRoot(data), null) {
     for (String groupKey in data.keys) {
-      _groups[groupKey] = GroupConfig(
-        parent: this,
-        data: data[groupKey],
-        name: groupKey,
-      );
+      if (data[groupKey] is Map) {
+        _groups[groupKey] = GroupConfig(
+          parent: this,
+          data: data[groupKey],
+          name: groupKey,
+        );
+      }
     }
   }
 
   InstanceConfig instanceConfig(DataProvider providerConfig) {
     final g = group(providerConfig.instanceConfig.group);
-    final instanceName =
-        (g.staged) ? currentStage : providerConfig.instanceConfig.instance;
-    if (instanceName == null) {
-      String msg =
-          'Either a current stage must be set from takkan.json or DataProvider must define an instance name';
-      logType(this.runtimeType).e(msg);
-      throw TakkanException(msg);
-    }
+    final instanceName = g.selectedInstanceName;
     final i = g.instance(instanceName);
     return i;
   }
@@ -75,6 +68,17 @@ class AppConfig extends BaseConfig with Appendage {
       throw TakkanException(msg);
     }
     return group;
+  }
+
+  List<GroupConfig> get groups => _groups.values.toList();
+
+  /// Returns all instances from all groups
+  List<InstanceConfig> get instances {
+    final _instances = List<InstanceConfig>.empty(growable: true);
+    for (GroupConfig group in groups) {
+      _instances.addAll(group.instances);
+    }
+    return _instances;
   }
 }
 
@@ -104,12 +108,12 @@ class GroupConfig extends BaseConfig with Appendage {
     }
   }
 
-  List<String> get stages => (data[AppConfig.keyStages] == null)
-      ? ['dev', 'test', 'qa', 'prod']
-      : List.castFrom(data[AppConfig.keyStages]);
+  String get selectedInstanceName =>
+      data[AppConfig.keySelectedInstance] ?? _instances.keys.first;
 
-
-  bool get staged => stages.isNotEmpty;
+  InstanceConfig get selectedInstance {
+    return instance(selectedInstanceName);
+  }
 
   InstanceConfig instance(String instanceName) {
     final instanceConfig = _instances[instanceName];
@@ -129,6 +133,8 @@ class GroupConfig extends BaseConfig with Appendage {
     }
     return _instances.containsKey(instanceName);
   }
+
+  Iterable<InstanceConfig> get instances => _instances.values;
 }
 
 /// Headers are grouped together under 'headers'
@@ -171,6 +177,9 @@ class InstanceConfig extends BaseConfig with Appendage {
       return {};
     }
   }
+
+  /// Unique within its [AppConfig]
+  String get uniqueName => '${(parent as GroupConfig).name}:$name';
 }
 
 mixin Appendage {
