@@ -1,27 +1,32 @@
 import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.dart';
 import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_backend/backend/app/app_config_loader.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/result.dart';
-import 'package:takkan_medley_script/medley/medley_script.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_backend/backend/data_provider/server_connect.dart';
+import 'package:takkan_medley_orchestrator/script/medley_script.dart';
+import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
 
 /// Note: This uses the takkan-dev instance of Back4App and therefore needs
 /// takkan.json to be set up for it (but excluded from Git)
 void main() async {
-  AppConfigFileLoader loader = AppConfigFileLoader();
-  AppConfig appConfig = await loader.load();
   late Script script;
   group('Provider CRUD', () {
     IDataProvider? provider;
     setUpAll(() async {
       script = medleyScript[0];
       script.init();
-      provider = Back4AppDataProvider(config: script.dataProvider!);
-      provider?.init(appConfig);
+      getIt.reset();
+      getIt.onScopeChanged=scopeChanged;
+      appConfigFromFileBindings();
+
+      getIt.registerFactory<RestServerConnect>(() => DefaultRestServerConnect());
+      await getIt.isReady<AppConfig>();
+
+      await Back4App.register();
+      // DataProvider config=DataProvider(instanceConfig: AppInstance(group: 'primary',instance: 'dev'));
+      // provider = inject<IDataProvider>(instanceName: inject<AppConfig>().instanceConfig(config).uniqueName);
+      // provider?.init(config: config);
     });
 
     tearDownAll(() {});
@@ -143,30 +148,10 @@ void main() async {
   });
 }
 
-const String fetchAllScripts = r'''query GetTakkanScripts {
-  takkanScripts {
-    edges {
-      node{
-        objectId
-        name
-      }
-    }
-  }
-}''';
 
-deleteAllScripts(IDataProvider? provider, Document scriptSchema) async {
-  final ReadResultList result = await provider!.fetchList(
-      queryConfig: GraphQLQuery(
-        queryName: 'deleteAllScripts',
-        documentSchema: 'PScript',
-        queryScript: fetchAllScripts,
-      ),
-      pageArguments: {});
-  final List<Map<String, dynamic>> currentEntries = result.data;
 
-  for (Map<String, dynamic> e in currentEntries) {
-    await provider.deleteDocument(
-      documentId: provider.documentIdFromData(e),
-    );
-  }
+
+
+scopeChanged(bool pushed){
+  print('Scope change to: ${getIt.currentScopeName}');
 }

@@ -1,5 +1,5 @@
 import 'package:takkan_backend/backend/script_handler.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 
 class Back4AppScriptHandler implements ScriptHandler {

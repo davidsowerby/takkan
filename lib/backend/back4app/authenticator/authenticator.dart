@@ -4,23 +4,24 @@ import 'package:takkan_back4app_client/backend/back4app/provider/data_provider.d
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_backend/backend/user/takkan_user.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/query.dart';
 
-class Back4AppAuthenticator
-    extends Authenticator<DataProvider, ParseUser, Back4AppDataProvider> {
+class Back4AppAuthenticator extends Authenticator<DataProvider, ParseUser> {
   late Parse parse;
-  late Back4AppDataProvider parent;
 
-  Back4AppAuthenticator();
+  Back4AppAuthenticator(super.parent);
 
-  init(Back4AppDataProvider parent) async {
-    this.parent = parent;
+  @override
+  Future<SignInStatus> init() async {
+    super.init();
+    // TODO: using 'p' is a horrible hack should be able to type correctly though construction
+    final p=parent as Back4AppDataProvider;
     parse = await Parse().initialize(
-      parent.instanceConfig.appId,
-      parent.instanceConfig.serverUrl,
-      clientKey: parent.instanceConfig.clientKey,
+      p.instanceConfig.appId,
+      p.instanceConfig.serverUrl,
+      clientKey: p.instanceConfig.clientKey,
     );
     status = SignInStatus.Initialised;
+    return status;
   }
 
 // TODO: should not allow call if already logged in (_parseUser would be overwritten)
@@ -109,29 +110,7 @@ class Back4AppAuthenticator
 
   @override
   Future<List<String>> loadUserRoles() async {
-    GraphQLQuery query = GraphQLQuery(
-      queryName: 'userRoles',
-      queryScript: userRolesScript,
-      returnType: QueryReturnType.futureList,
-      variables: {'id': user.objectId},
-      documentSchema: '_Role',
-    );
-    final loadResult =
-        await parent.fetchList(queryConfig: query, pageArguments: const {});
-    final List<Map<String, dynamic>> result = loadResult.data;
-    final List<String> roles = List.empty(growable: true);
-    result.forEach((element) {
-      roles.add(element['name']);
-    });
-    return roles;
+//TODO: get user roles from cloud function
+    throw UnimplementedError();
   }
 }
-
-final userRolesScript = r'''query GetRoles  ($id: ID!) {
-  roles (where: {users: {have: {id:{equalTo: $id}}}}){
-    edges {
-    node{name}
-    }
-    }
-
-}''';

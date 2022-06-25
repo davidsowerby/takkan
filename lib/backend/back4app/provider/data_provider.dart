@@ -1,59 +1,53 @@
 import 'package:parse_server_sdk/parse_server_sdk.dart';
 import 'package:takkan_back4app_client/backend/back4app/authenticator/authenticator.dart';
-import 'package:takkan_back4app_client/backend/back4app/provider/graphql_delegate.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider_library.dart';
-import 'package:takkan_backend/backend/data_provider/delegate.dart';
+import 'package:takkan_backend/backend/data_provider/base_data_provider.dart';
+import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
+import 'package:takkan_backend/backend/user/takkan_user.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/inject/inject.dart';
 
-class Back4AppDataProvider extends DefaultDataProvider<DataProvider> {
-  Back4AppDataProvider({required DataProvider config})
-      : super(
-    config: config,
-  );
+class Back4AppDataProvider extends BaseDataProvider<DataProvider,ParseUser> {
+  Back4AppDataProvider() : super();
 
   DocumentId documentIdFromData(Map<String, dynamic> data) {
     return DocumentId(
         documentClass: data['__typename'], objectId: data['objectId']);
   }
-
-  Future<Authenticator> createAuthenticator() async {
-    return Back4AppAuthenticator();
-  }
-
-  GraphQLDataProviderDelegate createGraphQLDelegate() {
-    return Back4AppGraphQLDelegate();
-  }
 }
 
 class Back4App {
-  static register() {
-    dataProviderLibrary.register(
-        type: 'back4app',
-        builder: (config) => Back4AppDataProvider(config: config));
-  }
-}
+  /// Identifies the instances which will need Back4App DataProviders and creates
+  /// the [getIt] bindings for them.
+  ///
+  /// Make sure you 'await' this call - it depends on loading the configuration
+  /// file
+  static register() async {
 
-Back4AppGraphQLDelegate constructGraphQLDelegate() {
-  return Back4AppGraphQLDelegate();
-}
+    final AppConfig appConfig=inject<AppConfig>();
+    for (InstanceConfig instance in appConfig.instances) {
+      if (instance.serviceType == 'back4app') {
+        final provider = Back4AppDataProvider();
 
-Future<Authenticator<DataProvider, ParseUser, Back4AppDataProvider>>
-    constructAuthenticator() async {
-  return Back4AppAuthenticator();
-}
+        getIt.registerSingleton<IDataProvider>(
+          provider,
+          instanceName: instance.uniqueName,
+        );
 
-final allRolesScript = r'''
-query AllRoles{
-  roles{
-    edges{
-      node{
-        name,
-        objectId
+
+
+        /// Although this is a factory, it is effectively a singleton, as it is
+        /// held within the singleton provider
+        getIt.registerFactory<Authenticator<DataProvider,ParseUser>>(
+          () => Back4AppAuthenticator(provider),
+          instanceName: instance.uniqueName,
+        );
+
       }
     }
   }
 }
-''';
+
+

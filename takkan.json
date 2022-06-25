@@ -1,5 +1,5 @@
 {
-  "back4app": {
+  "primary": {
     "dev": {
       "X-Parse-Application-Id": "test",
       "X-Parse-Client-Key": "test",
