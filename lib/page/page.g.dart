@@ -7,7 +7,7 @@ part of 'page.dart';
 // **************************************************************************
 
 Page _$PageFromJson(Map<String, dynamic> json) => Page(
-      tag: json['tag'] as String?,
+      name: json['name'] as String,
       caption: json['caption'] as String?,
       listEntryConfig: json['listEntryConfig'] == null
           ? null
@@ -24,9 +24,8 @@ Page _$PageFromJson(Map<String, dynamic> json) => Page(
           $enumDecodeNullable(_$ControlEditEnumMap, json['controlEdit']) ??
               ControlEdit.inherited,
       property: json['property'] as String?,
-      dataSelectors: json['dataSelectors'] == null
-          ? const [Property()]
-          : DataListJsonConverter.fromJson(json['dataSelectors'] as List?),
+      dataSelectors:
+          DataListJsonConverter.fromJson(json['dataSelectors'] as List?),
     );
 
 Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
@@ -37,7 +36,7 @@ Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
       'children': ContentConverter.toJson(instance.children),
       'layout': LayoutJsonConverter.toJson(instance.layout),
       'scrollable': instance.scrollable,
-      'tag': instance.tag,
+      'name': instance.name,
       'dataSelectors': DataListJsonConverter.toJson(instance.dataSelectors),
     };
 

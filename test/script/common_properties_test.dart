@@ -39,9 +39,8 @@ void main() {
           instanceConfig: const AppInstance(group: '', instance: ''),
         ),
         pages: [
-          Page(
+          Page(name: 'home',
             caption: 'A Page',
-            dataSelectors: [const NoData(tag: 'home')],
             controlEdit: ControlEdit.thisAndBelow,
             children: [
               PanelStatic(
@@ -57,7 +56,7 @@ void main() {
       // when
       script.init();
       // then
-      final page = script.routes['static/home'] as Page;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel = page.children[0] as PanelStatic;
       final part = panel.children[0] as Part;
 
@@ -87,9 +86,8 @@ void main() {
           ),
           dataProvider: NullDataProvider(),
           pages: [
-            Page(
+            Page(name: 'test',
               caption: 'A Page',
-              dataSelectors: [const NoData(tag: 'test')],
               children: [
                 PanelStatic(
                   children: [
@@ -106,7 +104,8 @@ void main() {
 
       script.init();
       // then
-      final page = script.routes['static/test'] as Page;
+      // ignore: cast_nullable_to_non_nullable
+      final page = script.routes[TakkanRoute.fromString('test/static')] as Page;
       final panel = page.children[0] as PanelStatic;
       final part = panel.children[0] as Part;
 

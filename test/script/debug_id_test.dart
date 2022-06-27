@@ -40,8 +40,7 @@ void main() {
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name: 'home',
             id: 'Home',
             caption: 'Home',
             children: [

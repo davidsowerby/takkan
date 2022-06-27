@@ -8,7 +8,7 @@ import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('PPage', () {
+  group('Page', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -28,43 +28,46 @@ void main() {
         ),
         pages: [
           Page(
+            name: 'profile',
             documentClass: 'Person',
             dataSelectors: [
               const DataItemById(
-                tag: 'MyObject',
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              const DataItem(caption: '?'),
+              const DataItem(name: 'mine', caption: '?'),
             ],
           ),
           Page(
+            name: 'shortForm',
             documentClass: 'Person',
-            tag: 'shortForm',
             dataSelectors: [
               const DataItemById(
-                tag: 'MyObject',
+                name: 'MyObject',
                 objectId: 'xxx',
               ),
-              const DataItem(),
+              const DataItem(name: 'person'),
             ],
           ),
           Page(
+            name: 'crowd',
             documentClass: 'Person',
             dataSelectors: [
-              const DataList(),
+              const DataList(name: 'people'),
             ],
           ),
           Page(
+            name: 'people',
             documentClass: 'Person',
             dataSelectors: [
               const DataListByFilter(
-                tag: 'members',
+                name: 'members',
                 script: 'member==true',
               )
             ],
           ),
           Page(
-            dataSelectors: [const NoData(tag: 'home')],
+            name: 'home',
           )
         ],
       );
@@ -73,17 +76,40 @@ void main() {
       s.init();
       // then
 
-      expect(s.routeMap.length,7);
-      expect(s.routeMap.containsKey('document/Person/MyObject'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/MyObject/shortForm'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/default/shortForm'), isTrue);
-      expect(s.routeMap.containsKey('document/Person/default'), isTrue);
-      expect(s.routeMap.containsKey('documents/Person/default'), isTrue);
-      expect(s.routeMap.containsKey('static/home'), isTrue);
-      expect(s.routeMap.containsKey('documents/Person/members'), isTrue);
+      expect(s.routeMap.length, 7);
+      for (final route in s.routeMap.keys) {
+        print(route.toString());
+      }
 
-      expect (s.pages[0].isStatic,isFalse);
-      expect (s.pages[4].isStatic,isTrue);
+      expect(
+          s.routeMap.containsKey(TakkanRoute.fromString('home/static')), isTrue);
+      expect(
+          s.routeMap
+              .containsKey(TakkanRoute.fromString('profile/MyObject/xxx')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('profile/mine')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('shortForm/person')),
+          isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('crowd/people')),
+          isTrue);
+      expect(
+          s.routeMap
+              .containsKey(TakkanRoute.fromString('shortForm/MyObject/xxx')),
+          isTrue);
+
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('people/members')),
+          isTrue);
+
+      expect(s.pages[0].isStatic, isFalse);
+      expect(s.pages[4].isStatic, isTrue);
+
+      Data dataSelector=s.pages[0].dataSelectorByName('MyObject');
+      expect(dataSelector, isA<DataItemById>());
+      expect((dataSelector as DataItemById).objectId,'xxx');
+
+      dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
+      expect(dataSelector, isA<NoData>());
     });
   });
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:takkan_medley_script/medley/medley_script.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
 
@@ -37,8 +38,8 @@ void main() {
       expect(script2.routes.length, script.routes.length);
 
       expect(nullsInTracker(tracker), 0);
-      final c0 = script2.routes['static/home'];
-      expect(c0?.routeMap.keys, contains('static/home'));
+      final c0 = script2.routes[TakkanRoute.fromString('home/static')];
+      expect(c0?.routeMap.keys, contains(TakkanRoute.fromString('home/static')));
 
       expect(c0?.title, 'Home');
       expect(c0?.children.length, 1);

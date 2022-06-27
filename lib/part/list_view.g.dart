@@ -7,7 +7,6 @@ part of 'list_view.dart';
 // **************************************************************************
 
 ListView _$ListViewFromJson(Map<String, dynamic> json) => ListView(
-      isQuery: json['isQuery'] as bool? ?? false,
       titleProperty: json['titleProperty'] as String? ?? 'title',
       subtitleProperty: json['subtitleProperty'] as String? ?? 'subtitle',
       readOnly: json['readOnly'] as bool? ?? false,
@@ -35,7 +34,6 @@ Map<String, dynamic> _$ListViewToJson(ListView instance) => <String, dynamic>{
       'tooltip': instance.tooltip,
       'height': instance.height,
       'traitName': instance.traitName,
-      'isQuery': instance.isQuery,
       'titleProperty': instance.titleProperty,
       'subtitleProperty': instance.subtitleProperty,
     };

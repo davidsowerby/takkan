@@ -56,9 +56,8 @@ void main() {
             version: const Version(number: 0),
           ),
           pages: [
-            Page(
+            Page(name:'home',
               caption: 'A page',
-              dataSelectors: [const NoData(tag: 'home')],
             ),
           ],
         ); // ignore: missing_required_param
@@ -84,8 +83,7 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'a Page title',
           ),
         ],
@@ -117,11 +115,11 @@ void main() {
           ),
         ),
         pages: [
-          Page(
+          Page(name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
               const DataItemById(
-                tag: '?',
+                name: '?',
                 objectId: 'x',
               )
             ],
@@ -153,11 +151,11 @@ void main() {
             ),
           ),
           pages: [
-            Page(
+            Page(name:'wiggly',
               caption: 'Wiggly',
               dataSelectors: [
                 const DataItemById(
-                  tag: '?',
+                  name: '?',
                   objectId: 'x',
                   caption: 'Wiggly',
                 )
@@ -184,8 +182,7 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name: 'home',
             caption: 'Wiggly',
             children: [
               PanelStatic(
@@ -210,8 +207,7 @@ void main() {
           ),
         ),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'Wiggly',
             children: [PanelStatic(caption: 'panel1')],
           ),
@@ -232,11 +228,11 @@ void main() {
           ),
         ),
         pages: [
-          Page(
+          Page(name:'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
               const DataItemById(
-                tag: 'fixed thing',
+                name: 'fixed thing',
                 objectId: 'xx',
               )
             ],

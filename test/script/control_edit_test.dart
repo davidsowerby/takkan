@@ -35,9 +35,8 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(
+          Page(name:'home',
             caption: 'A page',
-            dataSelectors: [const NoData(tag: 'home')],
             // ignore: missing_required_param
             children: [
               PanelStatic(
@@ -61,7 +60,8 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['static/home'] as Page;
+      // ignore: cast_nullable_to_non_nullable
+      final page = script.pageFromStringRoute('home/static') as Page;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -98,8 +98,7 @@ void main() {
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'A page',
             // ignore: missing_required_param
             children: [
@@ -125,7 +124,7 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['static/home'] as Page;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -154,8 +153,7 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
             children: [
@@ -181,7 +179,7 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['static/home']! ;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -211,8 +209,7 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -234,7 +231,7 @@ void main() {
       );
       script.init();
 
-      final page = script.routes['static/home'] !;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -266,8 +263,7 @@ void main() {
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -292,7 +288,7 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['static/home'] !;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;
@@ -322,8 +318,7 @@ void main() {
         ),
         controlEdit: ControlEdit.inherited,
         pages: [
-          Page(
-            dataSelectors: [const NoData(tag: 'home')],
+          Page(name:'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -354,7 +349,7 @@ void main() {
         ],
       );
       script.init();
-      final page = script.routes['static/home'] !;
+      final page = script.pageFromStringRoute('home/static')!;
       final panel1 = page.children[0] as PanelStatic;
       final panel11 = panel1.children[1] as PanelStatic;
       final panel1Part1 = panel1.children[0] as Part;

@@ -1,17 +1,30 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../page/page.dart';
 import 'data.dart';
 
 part 'data_item.g.dart';
 
 /// Defines how to retrieve a single document.
 ///
+/// [name] must be unique within the [Page] it is declared, and must not contain a '/'
+///
 /// The default [DataItem] connects to the currently selected document (see DocumentPage in *takkan_client+).
 /// Selection of the current document is made, for example, by use of a search panel etc.
 ///
 /// See below for other options for selection, such as [DataItemById], [DataItemByFunction],
 /// [DataItemByFilter] and [DataItemByGQL]
+///
 @JsonSerializable(explicitToJson: true)
-class DataItem implements Data {
+class DataItem implements IDataItem {
+
+  const DataItem({
+    this.liveConnect = false,
+    required this.name,
+    this.caption,
+  });
+
+  factory DataItem.fromJson(Map<String, dynamic> json) =>
+      _$DataItemFromJson(json);
   @override
   final bool liveConnect;
 
@@ -24,18 +37,9 @@ class DataItem implements Data {
   bool get isStatic => false;
 
   @override
-  final String tag;
+  final String name;
   @override
   final String? caption;
-
-  const DataItem({
-    this.liveConnect = false,
-    this.tag = 'default',
-    this.caption,
-  });
-
-  factory DataItem.fromJson(Map<String, dynamic> json) =>
-      _$DataItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataItemToJson(this);
 
@@ -45,21 +49,24 @@ class DataItem implements Data {
 
 /// A single document identified by a fixed [objectId]
 @JsonSerializable(explicitToJson: true)
-class DataItemById implements Data {
-  final String objectId;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
+class DataItemById implements IDataItem {
 
   const DataItemById({
     required this.objectId,
     this.liveConnect = false,
     this.caption,
-    this.tag = 'default',
+    required this.name,
   });
+
+  factory DataItemById.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByIdFromJson(json);
+  final String objectId;
+  @override
+  final bool liveConnect;
+  @override
+  final String name;
+  @override
+  final String? caption;
 
   @override
   bool get isItem => true;
@@ -69,33 +76,32 @@ class DataItemById implements Data {
 
   @override
   int get pageLength => 1;
-
-  factory DataItemById.fromJson(Map<String, dynamic> json) =>
-      _$DataItemByIdFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataItemByIdToJson(this);
 }
 
 /// A single document retrieved from a cloud function identified
-/// by [cloudFunctionName]
+/// by [cloudFunctionName].  Unlike other [Data] implementations,
+/// no [name] is needed, as the [cloudFunctionName] is used in its place.
 @JsonSerializable(explicitToJson: true)
-class DataItemByFunction implements Data {
-  final Map<String, dynamic> params;
-  final String cloudFunctionName;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
+class DataItemByFunction implements IDataItem {
 
   const DataItemByFunction({
     required this.cloudFunctionName,
     this.params = const {},
     this.liveConnect = false,
-    this.tag = 'default',
     this.caption,
-  });
+  }) ;
+
+  factory DataItemByFunction.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByFunctionFromJson(json);
+  final Map<String, dynamic> params;
+  final String cloudFunctionName;
+  @override
+  final bool liveConnect;
+
+  @override
+  final String? caption;
 
   @override
   bool get isItem => true;
@@ -106,8 +112,8 @@ class DataItemByFunction implements Data {
   @override
   int get pageLength => 1;
 
-  factory DataItemByFunction.fromJson(Map<String, dynamic> json) =>
-      _$DataItemByFunctionFromJson(json);
+  @override
+  String get name=> cloudFunctionName;
 
   Map<String, dynamic> toJson() => _$DataItemByFunctionToJson(this);
 }
@@ -123,23 +129,25 @@ class DataItemByFunction implements Data {
 ///
 /// The function must return a single valid document
 @JsonSerializable(explicitToJson: true)
-class DataItemByFilter implements Data {
-  final String script;
-  final String? cloudFunctionName;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
+class DataItemByFilter implements IDataItem {
 
   const DataItemByFilter({
     required this.script,
-    this.cloudFunctionName,
+    required this.name,
     this.liveConnect = false,
-    this.tag = 'default',
+
     this.caption,
   });
+
+  factory DataItemByFilter.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByFilterFromJson(json);
+  final String script;
+  final String name;
+  @override
+  final bool liveConnect;
+
+  @override
+  final String? caption;
 
   @override
   bool get isItem => true;
@@ -150,29 +158,31 @@ class DataItemByFilter implements Data {
   @override
   int get pageLength => 1;
 
-  factory DataItemByFilter.fromJson(Map<String, dynamic> json) =>
-      _$DataItemByFilterFromJson(json);
+
 
   Map<String, dynamic> toJson() => _$DataItemByFilterToJson(this);
 }
 
 /// [script] must be a valid GraphQL script which returns exactly one document
 @JsonSerializable(explicitToJson: true)
-class DataItemByGQL implements Data {
-  final String script;
-  @override
-  final bool liveConnect;
-  @override
-  final String tag;
-  @override
-  final String? caption;
+class DataItemByGQL implements IDataItem {
 
   const DataItemByGQL({
     required this.script,
     this.liveConnect = false,
-    this.tag = 'default',
+    required this.name,
     this.caption,
   });
+
+  factory DataItemByGQL.fromJson(Map<String, dynamic> json) =>
+      _$DataItemByGQLFromJson(json);
+  final String script;
+  @override
+  final bool liveConnect;
+  @override
+  final String name;
+  @override
+  final String? caption;
 
   @override
   bool get isItem => true;
@@ -182,9 +192,6 @@ class DataItemByGQL implements Data {
 
   @override
   int get pageLength => 1;
-
-  factory DataItemByGQL.fromJson(Map<String, dynamic> json) =>
-      _$DataItemByGQLFromJson(json);
 
   Map<String, dynamic> toJson() => _$DataItemByGQLToJson(this);
 }

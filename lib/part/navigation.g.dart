@@ -7,7 +7,8 @@ part of 'navigation.dart';
 // **************************************************************************
 
 NavButton _$NavButtonFromJson(Map<String, dynamic> json) => NavButton(
-      route: json['route'] as String,
+      toPage: json['toPage'] as String,
+      toData: json['toData'] as String,
       caption: json['caption'] as String?,
       traitName: json['traitName'] as String? ?? 'NavButton',
       height: (json['height'] as num?)?.toDouble() ?? 100,
@@ -19,11 +20,14 @@ Map<String, dynamic> _$NavButtonToJson(NavButton instance) => <String, dynamic>{
       'property': instance.property,
       'height': instance.height,
       'traitName': instance.traitName,
-      'route': instance.route,
+      'toPage': instance.toPage,
+      'toData': instance.toData,
     };
 
 NavButtonSet _$NavButtonSetFromJson(Map<String, dynamic> json) => NavButtonSet(
-      buttons: Map<String, String>.from(json['buttons'] as Map),
+      buttons: (json['buttons'] as List<dynamic>)
+          .map((e) => NavButton.fromJson(e as Map<String, dynamic>))
+          .toList(),
       width: (json['width'] as num?)?.toDouble(),
       height: (json['height'] as num?)?.toDouble() ?? 60,
       pid: json['pid'] as String?,
@@ -36,6 +40,6 @@ Map<String, dynamic> _$NavButtonSetToJson(NavButtonSet instance) =>
       'caption': instance.caption,
       'height': instance.height,
       'traitName': instance.traitName,
-      'buttons': instance.buttons,
+      'buttons': instance.buttons.map((e) => e.toJson()).toList(),
       'width': instance.width,
     };
