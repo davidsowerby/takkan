@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:takkan_backend/backend/app/app_config.dart';
+import 'package:takkan_backend/backend/app/app_config_loader.dart';
 import 'package:takkan_backend/backend/data_provider/base_data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/delegate.dart';
@@ -39,6 +40,34 @@ void main() {
     tearDownAll(() {});
 
     setUp(() {
+      final instanceName='group:instance';
+      final provider = BaseDataProvider();
+      getIt.registerSingleton<IDataProvider>(
+        provider,
+        instanceName: instanceName,
+      );
+      getIt.registerSingleton<RestDataProviderDelegate>(
+        DefaultRestDataProviderDelegate(),
+        instanceName: instanceName,
+      );
+      getIt.registerFactory<QuerySelector>(
+            () => DefaultQuerySelector(dataProvider: provider),
+        instanceName: instanceName,
+      );
+      getIt.registerFactory<Authenticator>(
+            () => NoAuthenticator(provider),
+        instanceName: instanceName,
+      );
+      getIt.registerFactory<JsonFileLoader>(() => DirectFileLoader(
+        data: {
+          'group': {'selectedInstance': 'instance', 'instance': {'headers':{}}},
+        },
+      ));
+      getIt.registerSingletonAsync<AppConfig>(() {
+        final AppConfig appConfig = AppConfig();
+        return appConfig.load();
+      });
+      
       dio = Dio(BaseOptions(baseUrl: baseUrl));
       dioAdapter = DioAdapter(dio: dio);
       getIt.reset();
@@ -50,10 +79,10 @@ void main() {
 
     test('fetchList', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
-      final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
 
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
+      final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
       final route = '${instanceConfig.documentEndpoint}/Person';
       final returnedData = [
         {
@@ -69,7 +98,7 @@ void main() {
       IDataProvider provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.fetchList(
           queryConfig: RestQuery(queryName: 'items', documentSchema: 'Person'),
@@ -83,9 +112,10 @@ void main() {
 
     test('fetchItem', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final route = '${instanceConfig.documentEndpoint}/Person';
       final returnedData = [
         {
@@ -101,7 +131,7 @@ void main() {
       IDataProvider provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.fetchItem(
           queryConfig: RestQuery(queryName: 'items', documentSchema: 'Person'),
@@ -114,9 +144,10 @@ void main() {
     });
     test('createDocument', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+
       final route = '${instanceConfig.documentEndpoint}/Person';
       final data = {
         'objectId': 'XXxxnnyy',
@@ -136,7 +167,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.createDocument(
         documentClass: 'Person',
@@ -151,9 +182,10 @@ void main() {
     });
     test('updateDocument', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final updateResponse = {"updatedAt": "2011-08-21T18:02:52.248Z"};
       final objectId = 'XXxxnnyy';
       final route = '${instanceConfig.documentEndpoint}/Person/$objectId';
@@ -175,7 +207,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.updateDocument(
         documentId: DocumentId(documentClass: 'Person', objectId: objectId),
@@ -191,9 +223,10 @@ void main() {
 
     test('deleteDocument', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final deleteResponse = {};
       final objectId = 'XXxxnnyy';
       final route = '${instanceConfig.documentEndpoint}/Person/$objectId';
@@ -207,7 +240,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.deleteDocument(
         documentId: DocumentId(documentClass: 'Person', objectId: objectId),
@@ -222,9 +255,10 @@ void main() {
 
     test('executeFunction', () async {
       // given
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final String functionName = 'dummyFunction';
       final route = '${instanceConfig.functionEndpoint}/$functionName';
       final params = {'x': 2, 'y': 7};
@@ -240,7 +274,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.executeFunction(
         functionName: functionName,
@@ -255,13 +289,14 @@ void main() {
     test('executeItemFunction', () async {
       // given
       const documentClass = 'Person';
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final String functionName = 'dummyFunction';
       final route = '${instanceConfig.functionEndpoint}/$functionName';
       final params = {'x': 2, 'y': 7};
-      final serverDataResponse = {'data': 14, 'objectId':'xxxyyy'};
+      final serverDataResponse = {'data': 14, 'objectId': 'xxxyyy'};
       dioAdapter.onPost(
         route,
         (server) => server.reply(201, serverDataResponse),
@@ -273,7 +308,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.executeItemFunction(
         functionName: functionName,
@@ -289,9 +324,10 @@ void main() {
     test('executeListFunction', () async {
       // given
       const documentClass = 'Person';
-      final AppConfig appConfig = createAppConfig();
+      await getIt.isReady<AppConfig>();
+      final appConfig = inject<AppConfig>();
       final InstanceConfig instanceConfig = appConfig.instanceConfig(config);
-      getItBindings(instanceConfig.uniqueName);
+      
       final String functionName = 'dummyFunction';
       final route = '${instanceConfig.functionEndpoint}/$functionName';
       final params = {'x': 2, 'y': 7};
@@ -310,7 +346,7 @@ void main() {
       final provider = inject<IDataProvider>(
         instanceName: instanceConfig.uniqueName,
       );
-      provider.init(appConfig: appConfig, config: config);
+      provider.init(config: config);
       // when
       final result = await provider.executeListFunction(
         functionName: functionName,
@@ -326,31 +362,8 @@ void main() {
   });
 }
 
-getItBindings(String instanceName) {
-  final provider = BaseDataProvider();
-  getIt.registerSingleton<IDataProvider>(
-    provider,
-    instanceName: instanceName,
-  );
-  getIt.registerSingleton<RestDataProviderDelegate>(
-    DefaultRestDataProviderDelegate(),
-    instanceName: instanceName,
-  );
-  getIt.registerFactory<QuerySelector>(
-    () => DefaultQuerySelector(dataProvider: provider),
-    instanceName: instanceName,
-  );
-  getIt.registerFactory<Authenticator>(
-    () => NoAuthenticator(provider),
-    instanceName: instanceName,
-  );
-}
 
-AppConfig createAppConfig() {
-  AppConfig appConfig = AppConfig(
-    data: {
-      'group': {'instance': {}},
-    },
-  );
-  return appConfig;
+Future<AppConfig> _loadAppConfig() {
+  final AppConfig appConfig = AppConfig();
+  return appConfig.load();
 }

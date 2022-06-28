@@ -55,8 +55,9 @@ class BaseDataProvider<CONFIG extends DataProvider>
   }
 
   @mustCallSuper
-  init({required CONFIG config, required AppConfig appConfig}) async {
+  init({required CONFIG config}) async {
     this.config = config;
+    final AppConfig appConfig=inject<AppConfig>();
     final instanceConfig = appConfig.instanceConfig(config);
     this._instanceConfig = instanceConfig;
     _restDelegate = inject<RestDataProviderDelegate>(

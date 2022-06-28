@@ -69,7 +69,7 @@ class NoDataProvider implements IDataProvider {
     throw TakkanException(msg);
   }
 
-  init({required DataProvider config, required AppConfig appConfig}) {
+  init({required DataProvider config}) {
     throw TakkanException(msg);
   }
 

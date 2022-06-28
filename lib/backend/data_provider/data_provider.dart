@@ -1,5 +1,4 @@
 import 'package:graphql/client.dart';
-import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/data_provider/delegate.dart';
 import 'package:takkan_backend/backend/data_provider/query_selector.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
@@ -47,7 +46,7 @@ import 'package:takkan_script/script/script.dart';
 
 abstract class IDataProvider<CONFIG extends DataProvider>
     extends QuerySelector {
-  init({required CONFIG config,required AppConfig appConfig});
+  init({required CONFIG config});
 
   CONFIG get config;
 

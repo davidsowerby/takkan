@@ -1,26 +1,53 @@
+import 'dart:core';
 import 'dart:io';
 
-import 'package:takkan_backend/backend/data_provider/constants.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/script/constants.dart';
+import 'package:takkan_script/inject/inject.dart';
+
+import '../data_provider/constants.dart';
+import 'app_config_loader.dart';
 
 /// A wrapper for the JSON application configuration held in *takkan.json*
 /// The entire contents of *takkan.json* are loaded through the constructor.
 ///
 /// The configuration for a specific backend instance can be accessed via [instanceConfig]
-/// All property values can be accessed directly from [data]
+/// All property values, including any custom properties* a developer may wish to add,
+/// can be accessed directly from [data]
 ///
-/// Headers for HTTP / GraphQL clients can be obtained from [headers], assuming
-/// of course that they have been declared in *takkan.json*
+/// Headers for HTTP / GraphQL clients can be obtained from [InstanceConfig.headers],
+/// assuming of course that they have been declared in *takkan.json*
 ///
 /// Many properties are 'inherited', which means they can be defined at
 /// app, group or instance level.  An inherited property value is valid for all lower
 /// levels, unless overridden at a lower level:
 ///
 /// See https://takkan.org/docs/user-guide/app-configuration
-class AppConfig extends BaseConfig with Appendage {
+///
+/// A singleton instance is available within a Takkan app, via a call to:
+///
+/// ```
+/// inject<AppConfig>();
+/// ```
+///
+/// **Testing**
+///
+/// From within the Flutter client, the AppConfig singleton is loaded as a JSON
+/// asset.  For testing outside Flutter, however, a direct file loading mechanism
+/// is needed.  This can be set up with the following snippet:
+///
+/// ```
+/// import 'package:takkan_backend/backend/app/app_config.dart';
+/// import 'package:takkan_script/inject/inject.dart';
+///
+/// appConfigFromFileBindings(filePath:'myFilePath');
+/// await getIt.isReady<AppConfig>(); // make sure file load is complete
+/// final AppConfig=inject<AppConfig>();
+/// ```
+///
+/// *NOTE: Custom properties cannot currently be a map. https://gitlab.com/takkan/takkan_backend/-/issues/22
+class AppConfig {
   static const String keyGroup = 'group';
   static const String keyInstance = 'instance';
   static const String keyServerUrl = 'serverUrl';
@@ -29,27 +56,47 @@ class AppConfig extends BaseConfig with Appendage {
   static const String keyGraphqlEndpoint = 'graphqlEndpoint';
   static const String keyDocumentEndpoint = 'documentEndpoint';
   static const String keyFunctionEndpoint = 'functionEndpoint';
-  static const String keyGraphqlStub = 'graphqlStub';
-  static const String keyDocumentStub = 'documentStub';
-  static const String keyFunctionStub = 'functionStub';
   static const String keySelectedInstance = 'selectedInstance';
-  static const String keyType = 'type';
-  static const String defaultInstanceType = 'back4app';
-  final Map<String, GroupConfig> _groups = Map();
-  final Map<String, dynamic> data;
+  static const String keyServiceType = 'type';
+  static const String defaultServiceType = 'back4app';
 
-  AppConfig({
-    required this.data,
-  }) : super(ConfigPropsRoot(data), null) {
-    for (String groupKey in data.keys) {
-      if (data[groupKey] is Map) {
-        _groups[groupKey] = GroupConfig(
+  final Map<String, GroupConfig> _groups = {};
+  final Map<String, dynamic> _data = {};
+  final Map<String, dynamic> _properties = {};
+  bool _ready = false;
+
+  AppConfig();
+
+  AppConfig.fromData({required Map<String, dynamic> data}) {
+    _processData(data);
+  }
+
+  Future<AppConfig> load({String filePath = 'takkan.json'}) async {
+    _ready = false;
+    final fileContent =
+        await inject<JsonFileLoader>().loadFile(filePath: filePath);
+    return _processData(fileContent);
+  }
+
+  AppConfig _processData(Map<String, dynamic> data) {
+    _data.clear();
+    _data.addAll(data);
+
+    /// Copy the groups into GroupConfig instances, properties into _properties
+    for (String key in _data.keys) {
+      final entry = _data[key];
+      if (entry is Map) {
+        _groups[key] = GroupConfig(
           parent: this,
-          data: data[groupKey],
-          name: groupKey,
+          data: _data[key],
+          name: key,
         );
+      } else {
+        _properties[key] = entry;
       }
     }
+    _ready = true;
+    return this;
   }
 
   InstanceConfig instanceConfig(DataProvider providerConfig) {
@@ -72,26 +119,31 @@ class AppConfig extends BaseConfig with Appendage {
 
   List<GroupConfig> get groups => _groups.values.toList();
 
+  bool get isReady => _ready;
+
+  Map<String, dynamic> get data => Map.from(_data);
+
   /// Returns all instances from all groups
   List<InstanceConfig> get instances {
     final _instances = List<InstanceConfig>.empty(growable: true);
-    for (GroupConfig group in groups) {
+    for (GroupConfig group in _groups.values) {
       _instances.addAll(group.instances);
     }
     return _instances;
   }
 }
 
-class GroupConfig extends BaseConfig with Appendage {
-  final Map<String, InstanceConfig> _instances = Map();
-  final Map<String, dynamic> data = Map();
+/// [_properties] holds any group properties not part of an [InstanceConfig]
+class GroupConfig {
+  final AppConfig parent;
   final String name;
+  final Map<String, InstanceConfig> _instances = {};
+  final Map<String, dynamic> _properties = {};
 
   GroupConfig(
-      {required this.name,
-      required AppConfig parent,
-      required Map<String, dynamic> data})
-      : super(ConfigProps(data, parent), parent) {
+      {required this.parent,
+      required this.name,
+      required Map<String, dynamic> data}) {
     for (String key in data.keys) {
       if (data[key] is Map) {
         final instanceKey = key;
@@ -103,17 +155,18 @@ class GroupConfig extends BaseConfig with Appendage {
           data: t,
         );
       } else {
-        this.data[key] = data[key];
+        this._properties[key] = data[key];
       }
     }
   }
 
-  String get selectedInstanceName =>
-      data[AppConfig.keySelectedInstance] ?? _instances.keys.first;
-
   InstanceConfig get selectedInstance {
     return instance(selectedInstanceName);
   }
+
+  /// Returns value of key [AppConfig.keySelectedInstance] or the first declared instance name
+  String get selectedInstanceName =>
+      _properties[AppConfig.keySelectedInstance] ?? _instances.keys.first;
 
   InstanceConfig instance(String instanceName) {
     final instanceConfig = _instances[instanceName];
@@ -137,133 +190,126 @@ class GroupConfig extends BaseConfig with Appendage {
   Iterable<InstanceConfig> get instances => _instances.values;
 }
 
-/// Headers are grouped together under 'headers'
-class InstanceConfig extends BaseConfig with Appendage {
-  final String? name;
+class InstanceConfig {
+  final String name;
+  final GroupConfig parent;
+  final Map<String, dynamic> _properties;
 
   InstanceConfig(
-      {required GroupConfig parent,
-      required Map<String, dynamic> data,
-      required this.name})
-      : super(ConfigProps(data, parent), parent) {}
+      {required this.name,
+      required this.parent,
+      required Map<String, dynamic> data})
+      : _properties = data;
 
-  String get appId => headers[keyHeaderApplicationId] ?? notSet;
+  String get serviceType => _property(
+        propertyName: AppConfig.keyServiceType,
+        defaultValue: AppConfig.defaultServiceType,
+      );
 
-  String get clientKey => headers[keyHeaderClientKey] ?? notSet;
+  String get graphqlEndpoint => _property(
+        propertyName: AppConfig.keyGraphqlEndpoint,
+        defaultValue: _appendToServerUrl(serverUrl, 'graphql'),
+      );
 
-  Directory get cloudCodeDirectory => (props.data[AppConfig.keyCloudCodeDir] ==
-          null)
-      ? Directory('${Platform.environment['HOME']!}/b4a/$appName/$name/cloud')
-      : Directory(props.data[AppConfig.keyCloudCodeDir]);
+  String get documentEndpoint => _property(
+        propertyName: AppConfig.keyDocumentEndpoint,
+        defaultValue: _appendToServerUrl(serverUrl, 'classes'),
+      );
+
+  String get functionEndpoint => _property(
+        propertyName: AppConfig.keyFunctionEndpoint,
+        defaultValue: _appendToServerUrl(serverUrl, 'functions'),
+      );
+
+  String get serverUrl => _property(
+        propertyName: AppConfig.keyServerUrl,
+        defaultValue: 'https://parseapi.back4app.com',
+      );
 
   /// These are typically API Keys, Client Keys etc, and required for HTTP/GraphQL client
   /// initialisation.
   ///
   /// The header keys must be declared in *takkan.json* exactly as they are to be used
   ///
-  /// This seems unnecessarily complicated just to get a Map<String,String> from a
+  /// This conversion seems unnecessarily complicated just to get a Map<String,String> from a
   /// Map<String,dynamic> but was the only way I found to get around Dart's typing
   ///
-  /// TODO: use Map.castFrom
   Map<String, String> get headers {
-    final Map<String, dynamic>? h1 = props.data['headers'];
-    if (h1 != null) {
-      final Map<String, String> h2 = Map();
-      h1.entries.forEach((element) {
-        h2[element.key] = element.value;
-      });
-      return h2;
-    } else {
-      return {};
-    }
+    final Map h1 = _requiredMapProperty('headers');
+    return Map.castFrom(h1);
   }
+
+  String get appName =>
+      _property(propertyName: AppConfig.keyAppName, defaultValue: 'MyApp');
 
   /// Unique within its [AppConfig]
-  String get uniqueName => '${(parent as GroupConfig).name}:$name';
-}
+  String get uniqueName => '${parent.name}:$name';
 
-mixin Appendage {
-  String _appendToServerUrl(String serverUrl, String appendage) {
-    return serverUrl.endsWith('/')
-        ? '$serverUrl$appendage'
-        : '$serverUrl/$appendage';
+  String get appId =>
+      headers[keyHeaderApplicationId] ??
+      _requiredProperty(keyHeaderApplicationId);
+
+  String get clientKey =>
+      headers[keyHeaderClientKey] ?? _requiredProperty(keyHeaderClientKey);
+
+  Directory get cloudCodeDirectory => Directory(
+        _property(
+            propertyName: AppConfig.keyCloudCodeDir,
+            defaultValue:
+                '${Platform.environment['HOME']!}/b4a/${appName}/$name/cloud'),
+      );
+
+  String _requiredProperty(String propertyName) {
+    final String? value = _properties[propertyName];
+    if (value != null) return value;
+    final String msg =
+        'A String property \'$propertyName\' must be defined in InstanceConfig $uniqueName or its parent chain';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
+  }
+
+  Map _requiredMapProperty(String propertyName) {
+    final Map? value = _properties[propertyName];
+    if (value != null) return value;
+    final String msg =
+        'A Map property \'$propertyName\' must be defined in InstanceConfig $uniqueName or its parent chain';
+    logType(this.runtimeType).e(msg);
+    throw TakkanException(msg);
+  }
+
+  String _property(
+      {required String propertyName, required String defaultValue}) {
+    final instanceValue = _properties[propertyName];
+    if (instanceValue != null) return instanceValue;
+    final groupValue = parent._properties[propertyName];
+    if (groupValue != null) return groupValue;
+    final appValue = parent.parent._properties[propertyName];
+    if (appValue != null) return appValue;
+    return defaultValue;
   }
 }
 
-class ConfigProps extends ConfigPropsRoot with Appendage {
-  final BaseConfig parent;
-
-  ConfigProps(Map<String, dynamic> data, this.parent) : super(data);
-
-  String get appName => data[AppConfig.keyAppName] ?? parent.appName;
-
-  String get type => data[AppConfig.keyType] ?? parent.type;
-
-  String get serverUrl => data[AppConfig.keyServerUrl] ?? parent.serverUrl;
-
-  String get documentStub =>
-      data[AppConfig.keyDocumentStub] ?? parent.documentStub;
-
-  String get graphqlStub =>
-      data[AppConfig.keyGraphqlStub] ?? parent.graphqlStub;
-
-  String get functionStub =>
-      data[AppConfig.keyFunctionStub] ?? parent.functionStub;
+String _appendToServerUrl(String serverUrl, String appendage) {
+  return serverUrl.endsWith('/')
+      ? '$serverUrl$appendage'
+      : '$serverUrl/$appendage';
 }
 
-class ConfigPropsRoot with Appendage {
-  final Map<String, dynamic> data;
-
-  ConfigPropsRoot(this.data);
-
-  /// Inherited properties
-  String get type => data[AppConfig.keyType] ?? 'back4app';
-
-  String get appName => data[AppConfig.keyAppName] ?? 'MyApp';
-
-  String get serverUrl =>
-      data[AppConfig.keyServerUrl] ?? 'https://parseapi.back4app.com';
-
-  String get documentStub => data[AppConfig.keyDocumentStub] ?? 'classes';
-
-  String get graphqlStub => data[AppConfig.keyGraphqlStub] ?? 'graphql';
-
-  String get functionStub => data[AppConfig.keyFunctionStub] ?? 'functions';
-
-  String get documentEndpoint =>
-      data[AppConfig.keyDocumentEndpoint] ??
-      _appendToServerUrl(serverUrl, documentStub);
-
-  String get graphqlEndpoint =>
-      data[AppConfig.keyGraphqlEndpoint] ??
-      _appendToServerUrl(serverUrl, graphqlStub);
-
-  String get functionEndpoint =>
-      data[AppConfig.keyFunctionEndpoint] ??
-      _appendToServerUrl(serverUrl, functionStub);
+/// Creates GetIt bindings to create an [AppConfig] instance, with data from
+/// a JSON file at [filePath]
+appConfigFromFileBindings({String filePath = 'takkan.json'}) {
+  getIt.registerFactory<JsonFileLoader>(() => DefaultJsonFileLoader());
+  getIt.registerSingletonAsync<AppConfig>(() {
+    final AppConfig appConfig = AppConfig();
+    return appConfig.load(filePath: filePath);
+  });
 }
 
-abstract class BaseConfig {
-  final ConfigPropsRoot props;
-  final BaseConfig? parent;
-
-  const BaseConfig(this.props, this.parent);
-
-  String get type => props.type;
-
-  String get appName => props.appName;
-
-  String get serverUrl => props.serverUrl;
-
-  String get documentStub => props.documentStub;
-
-  String get graphqlStub => props.graphqlStub;
-
-  String get functionStub => props.functionStub;
-
-  String get documentEndpoint => props.documentEndpoint;
-
-  String get graphqlEndpoint => props.graphqlEndpoint;
-
-  String get functionEndpoint => props.functionEndpoint;
+/// Creates GetIt bindings to create an [AppConfig] instance with [data]
+appConfigFromDataBindings({required Map<String, dynamic> data}) {
+  getIt.registerFactory<JsonFileLoader>(() => DirectFileLoader(data: data));
+  getIt.registerSingletonAsync<AppConfig>(() {
+    final AppConfig appConfig = AppConfig();
+    return appConfig.load();
+  });
 }
