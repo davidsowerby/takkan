@@ -54,7 +54,7 @@ final Script medleyScript2 = Script(
       controlEdit: ControlEdit.pagesOnly,
       caption: 'Issue',
       documentClass: 'Issue',
-      dataSelectors: [DataItemById(objectId: 'JJoGIErtzn', name: 'topIssue')],
+      dataSelectors: [DocByFilter(script:'objectId==JJoGIErtzn', name: 'topIssue')],
       children: [
         Group(children: [
           BodyText1(
@@ -73,7 +73,7 @@ final Script medleyScript2 = Script(
       ],
     ),
     Page(name: 'issues', caption: 'Issues', dataSelectors: [
-      DataList(caption: 'All Issues', name: 'allIssues'),
+      DocListByFilter(caption: 'All Issues', name: 'allIssues', script: ''),
     ], children: [
       ListView(
         property: 'results',
