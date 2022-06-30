@@ -84,12 +84,12 @@ class GraphQLQuery extends Query {
     required String queryName,
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-          queryName: queryName,
-          propertyReferences: propertyReferences,
-          variables: variables,
-          returnType: returnType,
-          documentSchema: documentSchema,
-        );
+    queryName: queryName,
+    propertyReferences: propertyReferences,
+    variables: variables,
+    returnType: returnType,
+    documentSchema: documentSchema,
+  );
 
   factory GraphQLQuery.fromJson(Map<String, dynamic> json) =>
       _$GraphQLQueryFromJson(json);
@@ -127,13 +127,13 @@ class PQuery extends GraphQLQuery {
     List<String> propertyReferences = const [],
     QueryReturnType returnType = QueryReturnType.futureItem,
   }) : super(
-          queryName: queryName,
-          documentSchema: documentSchema,
-          queryScript: '',
-          propertyReferences: propertyReferences,
-          variables: variables,
-          returnType: returnType,
-        );
+    queryName: queryName,
+    documentSchema: documentSchema,
+    queryScript: '',
+    propertyReferences: propertyReferences,
+    variables: variables,
+    returnType: returnType,
+  );
 
   factory PQuery.fromJson(Map<String, dynamic> json) => _$PQueryFromJson(json);
 
@@ -153,13 +153,13 @@ class GetDocument extends Query {
     this.fieldSelector = const FieldSelector(),
     required this.documentId,
     String? queryName,
-    super. variables = const {},
+    super.variables = const {},
     super.propertyReferences = const [],
   }) : super(
-          queryName: queryName ?? 'get${documentId.fullReference}',
-          documentSchema: documentId.documentClass,
-          returnType: QueryReturnType.futureDocument,
-        );
+    queryName: queryName ?? 'get${documentId.fullReference}',
+    documentSchema: documentId.documentClass,
+    returnType: QueryReturnType.futureDocument,
+  );
 
   factory GetDocument.fromJson(Map<String, dynamic> json) =>
       _$GetDocumentFromJson(json);
@@ -180,11 +180,11 @@ class GetStream extends Query {
     List<String> propertyReferences = const [],
     required this.documentId,
   }) : super(
-          propertyReferences: propertyReferences,
-          documentSchema: documentId.documentClass,
-          variables: arguments,
-          queryName: queryName ?? 'get${documentId.fullReference}',
-        );
+    propertyReferences: propertyReferences,
+    documentSchema: documentId.documentClass,
+    variables: arguments,
+    queryName: queryName ?? 'get${documentId.fullReference}',
+  );
 
   String get table => documentId.documentClass;
 
@@ -202,5 +202,6 @@ enum QueryReturnType {
   streamItem,
   streamList,
   futureDocument,
-  streamDocument
+  streamDocument,
+  unexpected,
 }

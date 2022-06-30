@@ -43,4 +43,5 @@ const _$QueryReturnTypeEnumMap = {
   QueryReturnType.streamList: 'streamList',
   QueryReturnType.futureDocument: 'futureDocument',
   QueryReturnType.streamDocument: 'streamDocument',
+  QueryReturnType.unexpected: 'unexpected',
 };
