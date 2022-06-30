@@ -1,5 +1,5 @@
 import 'package:takkan_medley_script/medley/medley_script.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart';
@@ -25,12 +25,12 @@ void main() {
         name: 'person',
         documentClass: 'Person',
         dataSelectors: [
-          const DataItem(name: 'person'),
-          const DataItem(name: 'tagged'),
-          const DataItemById(name: 'byId', objectId: 'xxx'),
-          const DataItemByFilter(script: 'age>=18', name: 'adult'),
-          const DataItemByFunction(cloudFunctionName: 'mostRecent'),
-          const DataItemByGQL(script: 'gqlScript', name: 'allWithRelatives'),
+          const DocByFilter(name: 'person',script:''),
+          const DocByFilter(name: 'tagged',script:''),
+          const DocByFilter(name: 'byId', script: 'objectId==xxx'),
+          const DocByFilter(script: 'age>=18', name: 'adult'),
+          const DocByFunction(cloudFunctionName: 'mostRecent'),
+          const DocByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
       );
       // when
@@ -78,12 +78,12 @@ void main() {
         name: 'person',
         documentClass: 'Person',
         dataSelectors: [
-          const DataList(name: 'people'),
-          const DataList(name: 'tagged'),
-          const DataListById(name: 'byId', objectIds: ['xxx', 'yyy']),
-          const DataListByFilter(script: 'age>=18', name: 'adult'),
-          const DataListByFunction(cloudFunctionName: 'mostRecent'),
-          const DataListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
+          const DocListByFilter(name: 'people', script:''),
+          const DocListByFilter(name: 'tagged', script:''),
+          const DocListByFilter(name: 'byId', script: "objectId in ['xxx', 'yyy']"),
+          const DocListByFilter(script: 'age>=18', name: 'adult'),
+          const DocListByFunction(cloudFunctionName: 'mostRecent'),
+          const DocListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
       );
       // when

@@ -1,4 +1,4 @@
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/document_id.dart';

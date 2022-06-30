@@ -6,13 +6,13 @@ part 'geo.g.dart';
 /// change and therefore includes a timestamp
 @JsonSerializable(explicitToJson: true)
 class GeoPoint {
-  final double latitude;
-  final double longitude;
-
-  const GeoPoint({required this.latitude, required this.longitude});
 
   factory GeoPoint.fromJson(Map<String, dynamic> json) =>
       _$GeoPointFromJson(json);
+
+  const GeoPoint({required this.latitude, required this.longitude});
+  final double latitude;
+  final double longitude;
 
   Map<String, dynamic> toJson() => _$GeoPointToJson(this);
 }
@@ -20,17 +20,17 @@ class GeoPoint {
 /// A [GeoPoint] which may change and therefore includes a timestamp
 @JsonSerializable(explicitToJson: true)
 class GeoPosition {
-  final double latitude;
-  final double longitude;
-  final DateTime dateTime;
+
+  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
+      _$GeoPositionFromJson(json);
 
   const GeoPosition(
       {required this.latitude,
       required this.longitude,
       required this.dateTime});
-
-  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      _$GeoPositionFromJson(json);
+  final double latitude;
+  final double longitude;
+  final DateTime dateTime;
 
   Map<String, dynamic> toJson() => _$GeoPositionToJson(this);
 }
@@ -38,12 +38,12 @@ class GeoPosition {
 /// A geographic area represented by a polygon of a minimum of 3 [GeoPoint]s
 @JsonSerializable(explicitToJson: true)
 class GeoPolygon {
-  final List<GeoPoint> points;
-
-  GeoPolygon({required this.points});
 
   factory GeoPolygon.fromJson(Map<String, dynamic> json) =>
       _$GeoPolygonFromJson(json);
+
+  GeoPolygon({required this.points});
+  final List<GeoPoint> points;
 
   Map<String, dynamic> toJson() => _$GeoPolygonToJson(this);
 }

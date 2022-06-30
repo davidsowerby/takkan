@@ -36,7 +36,7 @@ class WebConsoleOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
     final message = event.lines.join('\n');
+    // ignore: avoid_print
     print(message);
   }
 }
-

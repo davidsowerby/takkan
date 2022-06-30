@@ -9,7 +9,7 @@ import '../../script/content.dart';
 import 'data_item.dart';
 import 'data_list.dart';
 
-part 'data.g.dart';
+part 'data_selector.g.dart';
 
 /// [pageLength] is the number of documents to be returned for each data-select 'page'
 /// Relevant ony to [DataList], and just returns 1 from [DataItem]
@@ -32,7 +32,7 @@ part 'data.g.dart';
 /// [isItem]
 /// [isList]
 
-abstract class Data {
+abstract class DataSelector {
   String get name;
 
   String? get caption;
@@ -46,17 +46,17 @@ abstract class Data {
   bool get isList;
 }
 
-abstract class IDataList extends Data{
+abstract class DocumentListSelector extends DataSelector{
 
 }
 
-abstract class IDataItem implements Data{
+abstract class DocumentSelector implements DataSelector{
 
 
 }
 
 @JsonSerializable(explicitToJson: true)
-class NoData implements Data {
+class NoData implements DataSelector {
 
   const NoData();
   factory NoData.fromJson(Map<String, dynamic> json) => _$NoDataFromJson(json);
@@ -89,7 +89,7 @@ class NoData implements Data {
 ///
 /// [routes] must contain at least one entry, but multiple routes may be specified
 @JsonSerializable(explicitToJson: true)
-class PageCustom implements Data {
+class PageCustom implements DataSelector {
   const PageCustom({
     required this.routes,
     this.properties = const <String, dynamic>{},
@@ -141,7 +141,7 @@ required this.name,
 
 /// Effectively just a marker.  This is the default value for the [Page.dataSelectors]
 /// and [Panel.dataSelectors] properties when their respective [Content.property] is non-null.
-class Property implements Data {
+class Property implements DataSelector {
   const Property();
 
   @override
@@ -165,44 +165,32 @@ class Property implements Data {
 
 // ignore: avoid_classes_with_only_static_members
 class DataListJsonConverter {
-  static List<Data> fromJson(List<dynamic>? input) {
+  static List<DataSelector> fromJson(List<dynamic>? input) {
     if (input == null) {
       throw NullThrownError();
     }
     final List<Map<String,dynamic>> json = List.castFrom(input);
-    final List<Data> results = List<Data>.empty(growable: true);
+    final List<DataSelector> results = List<DataSelector>.empty(growable: true);
     for (final Map<String, dynamic> entry in json) {
       final String dataType = entry[jsonClassKey] as String;
       switch (dataType) {
-        case 'DataItem':
-          results.add(DataItem.fromJson(entry));
+        case 'DocByFunction':
+          results.add(DocByFunction.fromJson(entry));
           break;
-        case 'DataItemById':
-          results.add(DataItemById.fromJson(entry));
+        case 'DocByFilter':
+          results.add(DocByFilter.fromJson(entry));
           break;
-        case 'DataItemByFunction':
-          results.add(DataItemByFunction.fromJson(entry));
+        case 'DocByGQL':
+          results.add(DocByGQL.fromJson(entry));
           break;
-        case 'DataItemByFilter':
-          results.add(DataItemByFilter.fromJson(entry));
+        case 'DocListByFunction':
+          results.add(DocListByFunction.fromJson(entry));
           break;
-        case 'DataItemByGQL':
-          results.add(DataItemByGQL.fromJson(entry));
+        case 'DocListByFilter':
+          results.add(DocListByFilter.fromJson(entry));
           break;
-        case 'DataList':
-          results.add(DataList.fromJson(entry));
-          break;
-        case 'DataListById':
-          results.add(DataListById.fromJson(entry));
-          break;
-        case 'DataListByFunction':
-          results.add(DataListByFunction.fromJson(entry));
-          break;
-        case 'DataListByFilter':
-          results.add(DataListByFilter.fromJson(entry));
-          break;
-        case 'DataListByGQL':
-          results.add(DataListByGQL.fromJson(entry));
+        case 'DocListByGQL':
+          results.add(DocListByGQL.fromJson(entry));
           break;
         case 'NoData':
           results.add(NoData.fromJson(entry));
@@ -218,41 +206,29 @@ class DataListJsonConverter {
     return results;
   }
 
-  static List<Map<String, dynamic>> toJson(List<Data> objectList) {
+  static List<Map<String, dynamic>> toJson(List<DataSelector> objectList) {
     final List<Map<String, dynamic>> results = List<Map<String, dynamic>>.empty(growable: true);
-    for (final Data entry in objectList) {
+    for (final DataSelector entry in objectList) {
       late Map<String, dynamic> jsonMap;
       final Type type = entry.runtimeType;
       switch (type) {
-        case DataItem:
-          jsonMap = (entry as DataItem).toJson();
+        case DocByFunction:
+          jsonMap = (entry as DocByFunction).toJson();
           break;
-        case DataItemById:
-          jsonMap = (entry as DataItemById).toJson();
+        case DocByFilter:
+          jsonMap = (entry as DocByFilter).toJson();
           break;
-        case DataItemByFunction:
-          jsonMap = (entry as DataItemByFunction).toJson();
+        case DocByGQL:
+          jsonMap = (entry as DocByGQL).toJson();
           break;
-        case DataItemByFilter:
-          jsonMap = (entry as DataItemByFilter).toJson();
+        case DocListByFunction:
+          jsonMap = (entry as DocListByFunction).toJson();
           break;
-        case DataItemByGQL:
-          jsonMap = (entry as DataItemByGQL).toJson();
+        case DocListByFilter:
+          jsonMap = (entry as DocListByFilter).toJson();
           break;
-        case DataList:
-          jsonMap = (entry as DataList).toJson();
-          break;
-        case DataListById:
-          jsonMap = (entry as DataListById).toJson();
-          break;
-        case DataListByFunction:
-          jsonMap = (entry as DataListByFunction).toJson();
-          break;
-        case DataListByFilter:
-          jsonMap = (entry as DataListByFilter).toJson();
-          break;
-        case DataListByGQL:
-          jsonMap = (entry as DataListByGQL).toJson();
+        case DocListByGQL:
+          jsonMap = (entry as DocListByGQL).toJson();
           break;
         case NoData:
           jsonMap = (entry as NoData).toJson();

@@ -1,15 +1,15 @@
 class TakkanException implements Exception {
-  final String msg;
 
   const TakkanException(this.msg);
+  final String msg;
 
   String errMsg() => msg;
 }
 
 class SchemaException implements Exception {
-  final String msg;
 
   const SchemaException(this.msg);
+  final String msg;
 
   String errMsg() => msg;
 }

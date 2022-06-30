@@ -1,5 +1,5 @@
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
@@ -15,8 +15,7 @@ void main() {
   group('PScript validation', () {
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
     test('Insufficient components', () {
       // given
@@ -41,8 +40,7 @@ void main() {
   group('PPage validation 1', () {
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
     test(
       'Must have non-empty route',
@@ -56,7 +54,8 @@ void main() {
             version: const Version(number: 0),
           ),
           pages: [
-            Page(name:'home',
+            Page(
+              name: 'home',
               caption: 'A page',
             ),
           ],
@@ -83,13 +82,13 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'a Page title',
           ),
         ],
       );
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
       // when
       final messages = component.validate();
       // then
@@ -115,12 +114,13 @@ void main() {
           ),
         ),
         pages: [
-          Page(name: 'wiggly',
+          Page(
+            name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-              const DataItemById(
+              const DocByFilter(
                 name: '?',
-                objectId: 'x',
+                script: 'objectId==x',
               )
             ],
           ),
@@ -151,12 +151,13 @@ void main() {
             ),
           ),
           pages: [
-            Page(name:'wiggly',
+            Page(
+              name: 'wiggly',
               caption: 'Wiggly',
               dataSelectors: [
-                const DataItemById(
+                const DocByFilter(
                   name: '?',
-                  objectId: 'x',
+                  script: 'objectId==x',
                   caption: 'Wiggly',
                 )
               ],
@@ -182,7 +183,8 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(name: 'home',
+          Page(
+            name: 'home',
             caption: 'Wiggly',
             children: [
               PanelStatic(
@@ -207,7 +209,8 @@ void main() {
           ),
         ),
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'Wiggly',
             children: [PanelStatic(caption: 'panel1')],
           ),
@@ -228,12 +231,13 @@ void main() {
           ),
         ),
         pages: [
-          Page(name:'wiggly',
+          Page(
+            name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-              const DataItemById(
+              const DocByFilter(
                 name: 'fixed thing',
-                objectId: 'xx',
+                script: 'objectId==xx',
               )
             ],
             children: [PanelStatic(caption: 'panel1')],

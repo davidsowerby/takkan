@@ -2,15 +2,15 @@
 import '../script/takkan_item.dart';
 
 class DebugNode {
-  final TakkanItem item;
-  final List<DebugNode> children;
-  DebugNode? parent;
 
   DebugNode(this.item, this.children) {
     for (final DebugNode child in children) {
       child.parent = this;
     }
   }
+  final TakkanItem item;
+  final List<DebugNode> children;
+  DebugNode? parent;
 
   /// Returns the debugId of the parent of node with debug node of [id]
   DebugNode? parentOf({required String debugId}) {

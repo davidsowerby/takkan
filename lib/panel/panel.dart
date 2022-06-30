@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../common/debug.dart';
 import '../data/provider/data_provider.dart';
-import '../data/select/data.dart';
+import '../data/select/data_selector.dart';
 import '../page/page.dart';
 import '../script/common.dart';
 import '../script/content.dart';
@@ -41,7 +41,7 @@ class Panel extends PodBase implements Panels {
     fromJson: DataListJsonConverter.fromJson,
     toJson: DataListJsonConverter.toJson,
   )
-  final List<Data> dataSelectors;
+  final List<DataSelector> dataSelectors;
   @JsonKey(
     fromJson: ContentConverter.fromJson,
     toJson: ContentConverter.toJson,

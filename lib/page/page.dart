@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../common/debug.dart';
 import '../data/provider/data_provider.dart';
-import '../data/select/data.dart';
+import '../data/select/data_selector.dart';
 import '../data/select/data_item.dart';
 import '../data/select/data_list.dart';
 import '../panel/panel.dart';
@@ -75,7 +75,7 @@ class Page extends PodBase {
     super.controlEdit = ControlEdit.inherited,
     super.id,
     super.property,
-    List<Data>? dataSelectors,
+    List<DataSelector>? dataSelectors,
   }) : dataSelectors = dataSelectors ?? List.empty(growable: true);
 
   factory Page.fromJson(Map<String, dynamic> json) => _$PageFromJson(json);
@@ -86,10 +86,10 @@ class Page extends PodBase {
     fromJson: DataListJsonConverter.fromJson,
     toJson: DataListJsonConverter.toJson,
   )
-  final List<Data> dataSelectors;
+  final List<DataSelector> dataSelectors;
 
-  Data dataSelectorByName(String name){
-    for (final Data selector in dataSelectors){
+  DataSelector dataSelectorByName(String name){
+    for (final DataSelector selector in dataSelectors){
       if (selector.name==name){
         return selector;
       }
@@ -159,7 +159,7 @@ class Page extends PodBase {
       map[takkanRoute] = this;
       return map;
     }
-    for (final Data selector in dataSelectors) {
+    for (final DataSelector selector in dataSelectors) {
       final TakkanRoute takkanRoute = TakkanRoute.fromConfig(
         page: this,
         selector: selector,
@@ -256,10 +256,10 @@ class TakkanRoute extends Equatable{
   });
 
 
-  /// Constructs an instance from [Page] and [Data]
+  /// Constructs an instance from [Page] and [DataSelector]
   factory TakkanRoute.fromConfig({
     required Page page,
-    required Data selector,
+    required DataSelector selector,
   }) {
     return TakkanRoute(
       dataSelectorName:selector.name,

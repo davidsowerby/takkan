@@ -177,9 +177,9 @@ class DoubleStringConverter extends ModelViewConverter<double, String> {
 // }
 
 class ConversionException implements Exception {
-  final String msg;
 
   ConversionException(this.msg);
+  final String msg;
 
   String errMsg() => msg;
 }

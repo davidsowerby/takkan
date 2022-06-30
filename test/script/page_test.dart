@@ -1,4 +1,4 @@
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart';
@@ -31,36 +31,36 @@ void main() {
             name: 'profile',
             documentClass: 'Person',
             dataSelectors: [
-              const DataItemById(
+              const DocByFilter(
                 name: 'MyObject',
-                objectId: 'xxx',
+                script: 'objectId==xxx',
               ),
-              const DataItem(name: 'mine', caption: '?'),
+              const DocByFilter(name: 'mine', script: ''),
             ],
           ),
           Page(
             name: 'shortForm',
             documentClass: 'Person',
             dataSelectors: [
-              const DataItemById(
+              const DocByFilter(
                 name: 'MyObject',
-                objectId: 'xxx',
+                script: 'objectId==xxx',
               ),
-              const DataItem(name: 'person'),
+              const DocByFilter(name: 'person', script:''),
             ],
           ),
           Page(
             name: 'crowd',
             documentClass: 'Person',
             dataSelectors: [
-              const DataList(name: 'people'),
+              const DocListByFilter(name: 'people', script:''),
             ],
           ),
           Page(
             name: 'people',
             documentClass: 'Person',
             dataSelectors: [
-              const DataListByFilter(
+              const DocListByFilter(
                 name: 'members',
                 script: 'member==true',
               )
@@ -104,9 +104,9 @@ void main() {
       expect(s.pages[0].isStatic, isFalse);
       expect(s.pages[4].isStatic, isTrue);
 
-      Data dataSelector=s.pages[0].dataSelectorByName('MyObject');
-      expect(dataSelector, isA<DataItemById>());
-      expect((dataSelector as DataItemById).objectId,'xxx');
+      DataSelector dataSelector=s.pages[0].dataSelectorByName('MyObject');
+      expect(dataSelector, isA<DocByFilter>());
+      expect((dataSelector as DocByFilter).script,'objectId==xxx');
 
       dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
       expect(dataSelector, isA<NoData>());
