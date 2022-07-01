@@ -2,8 +2,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 import '../data/provider/data_provider.dart';
-import '../data/select/query.dart';
-import '../data/select/query_converter.dart';
 import '../page/page.dart';
 import '../panel/panel.dart';
 import '../panel/static_panel.dart';
@@ -73,22 +71,17 @@ enum ControlEdit {
 /// set this during construction - this also means that the [Script] structure cannot be **const**
 ///
 @JsonSerializable(explicitToJson: true)
-@QueryConverter()
 class Common extends TakkanItem {
   Common({
     DataProvider? dataProvider,
-    Query? query,
     this.controlEdit = ControlEdit.inherited,
     super.id,
-  })  : _dataProvider = dataProvider,
-        _query = query;
+  })  : _dataProvider = dataProvider;
 
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
   @protected
   final DataProvider? _dataProvider;
-  @JsonKey(ignore: true)
-  final Query? _query;
 
   bool get hasEditControl => _hasEditControl;
 
@@ -136,7 +129,6 @@ class Common extends TakkanItem {
   /// See [TakkanItem.subElements]
   @override
   List<Object> get subElements => [
-        if (_query != null) _query!,
         if (_dataProvider != null) _dataProvider!,
       ];
 

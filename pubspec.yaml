@@ -13,6 +13,7 @@ dependencies:
   validators: ^3.0.0
   get_it: ^7.2.0
   equatable: ^2.0.3
+  characters: ^1.2.1
 
 dev_dependencies:
   lints: ^2.0.0

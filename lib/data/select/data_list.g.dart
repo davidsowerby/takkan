@@ -26,7 +26,7 @@ Map<String, dynamic> _$DocListByFunctionToJson(DocListByFunction instance) =>
 
 DocListByFilter _$DocListByFilterFromJson(Map<String, dynamic> json) =>
     DocListByFilter(
-      script: json['script'] as String,
+      queryScript: json['script'] as String,
       cloudFunctionName: json['cloudFunctionName'] as String?,
       liveConnect: json['liveConnect'] as bool? ?? false,
       name: json['name'] as String,
@@ -36,7 +36,7 @@ DocListByFilter _$DocListByFilterFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$DocListByFilterToJson(DocListByFilter instance) =>
     <String, dynamic>{
-      'script': instance.script,
+      'script': instance.queryScript,
       'cloudFunctionName': instance.cloudFunctionName,
       'liveConnect': instance.liveConnect,
       'pageLength': instance.pageLength,

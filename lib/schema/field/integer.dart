@@ -4,6 +4,8 @@ import 'package:takkan_script/schema/field/field.dart';
 import 'package:takkan_script/validation/result.dart';
 import 'package:takkan_script/validation/validate.dart';
 
+import '../../data/select/expression.dart';
+
 part 'integer.freezed.dart';
 part 'integer.g.dart';
 
@@ -24,6 +26,7 @@ class FInteger extends Field<VInteger, int> {
 
   @override
   Map<String, dynamic> toJson() => _$FIntegerToJson(this);
+
 }
 
 @freezed

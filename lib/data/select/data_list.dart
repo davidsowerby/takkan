@@ -4,6 +4,7 @@ import '../../page/page.dart';
 import '../../panel/panel.dart';
 import '../provider/data_provider.dart';
 import 'data_selector.dart';
+import 'expression.dart';
 
 part 'data_list.g.dart';
 
@@ -21,15 +22,11 @@ part 'data_list.g.dart';
 /// [liveConnect] If true, a Stream of data is expected (equivalent to a Back4App LiveQuery), rather than a Future
 ///
 
-
-
-
 /// A list of documents retrieved from a cloud function identified
 /// by [cloudFunctionName].  Unlike other [DataSelector] implementations,
 /// no [name] is needed, as the [cloudFunctionName] is used in its place.
 @JsonSerializable(explicitToJson: true)
 class DocListByFunction implements DocumentListSelector {
-
   const DocListByFunction({
     required this.cloudFunctionName,
     this.pageLength = 20,
@@ -57,11 +54,12 @@ class DocListByFunction implements DocumentListSelector {
   bool get isList => true;
 
   @override
-    String get name=> cloudFunctionName;
+  String get name => cloudFunctionName;
+
   Map<String, dynamic> toJson() => _$DocListByFunctionToJson(this);
 }
 
-/// [script] is a javascript-valid boolean statement, for example:
+/// [queryScript] is a javascript-valid boolean statement, for example:
 ///
 /// - 'age >= 18 && isMember==true'
 ///
@@ -73,28 +71,29 @@ class DocListByFunction implements DocumentListSelector {
 /// The function must return a list.
 @JsonSerializable(explicitToJson: true)
 class DocListByFilter implements DocumentListSelector {
-
   const DocListByFilter({
-    required this.script,
+     this.queryScript,
     this.cloudFunctionName,
     this.liveConnect = false,
     required this.name,
     this.caption,
     this.pageLength = 20,
+    this.query,
   });
 
   factory DocListByFilter.fromJson(Map<String, dynamic> json) =>
       _$DocListByFilterFromJson(json);
-  final String script;
+  final String? queryScript;
   final String? cloudFunctionName;
   @override
   final bool liveConnect;
   @override
   final int pageLength;
   @override
-    final String name;
+  final String name;
   @override
   final String? caption;
+  final Query? query;
 
   @override
   bool get isItem => false;
@@ -108,7 +107,6 @@ class DocListByFilter implements DocumentListSelector {
 /// [script] must be a valid GraphQL script which returns a list of 0..n documents
 @JsonSerializable(explicitToJson: true)
 class DocListByGQL implements DocumentListSelector {
-
   const DocListByGQL({
     required this.script,
     this.liveConnect = false,
@@ -123,7 +121,7 @@ class DocListByGQL implements DocumentListSelector {
   @override
   final bool liveConnect;
   @override
-    final String name;
+  final String name;
   @override
   final String? caption;
   @override

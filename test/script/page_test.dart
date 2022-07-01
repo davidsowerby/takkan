@@ -31,29 +31,29 @@ void main() {
             name: 'profile',
             documentClass: 'Person',
             dataSelectors: [
-              const DocByFilter(
+             DocByFilter(
                 name: 'MyObject',
-                script: 'objectId==xxx',
+                queryScript: 'objectId==xxx',
               ),
-              const DocByFilter(name: 'mine', script: ''),
+             DocByFilter(name: 'mine', queryScript: ''),
             ],
           ),
           Page(
             name: 'shortForm',
             documentClass: 'Person',
             dataSelectors: [
-              const DocByFilter(
+             DocByFilter(
                 name: 'MyObject',
-                script: 'objectId==xxx',
+                queryScript: 'objectId==xxx',
               ),
-              const DocByFilter(name: 'person', script:''),
+             DocByFilter(name: 'person', queryScript:''),
             ],
           ),
           Page(
             name: 'crowd',
             documentClass: 'Person',
             dataSelectors: [
-              const DocListByFilter(name: 'people', script:''),
+              const DocListByFilter(name: 'people', queryScript:''),
             ],
           ),
           Page(
@@ -62,7 +62,7 @@ void main() {
             dataSelectors: [
               const DocListByFilter(
                 name: 'members',
-                script: 'member==true',
+                queryScript: 'member==true',
               )
             ],
           ),
@@ -106,7 +106,7 @@ void main() {
 
       DataSelector dataSelector=s.pages[0].dataSelectorByName('MyObject');
       expect(dataSelector, isA<DocByFilter>());
-      expect((dataSelector as DocByFilter).script,'objectId==xxx');
+      expect((dataSelector as DocByFilter).queryScript,'objectId==xxx');
 
       dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
       expect(dataSelector, isA<NoData>());

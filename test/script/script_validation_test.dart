@@ -118,9 +118,9 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-              const DocByFilter(
+             DocByFilter(
                 name: '?',
-                script: 'objectId==x',
+                queryScript: 'objectId==x',
               )
             ],
           ),
@@ -155,9 +155,9 @@ void main() {
               name: 'wiggly',
               caption: 'Wiggly',
               dataSelectors: [
-                const DocByFilter(
+               DocByFilter(
                   name: '?',
-                  script: 'objectId==x',
+                  queryScript: 'objectId==x',
                   caption: 'Wiggly',
                 )
               ],
@@ -235,9 +235,9 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-              const DocByFilter(
+             DocByFilter(
                 name: 'fixed thing',
-                script: 'objectId==xx',
+                queryScript: 'objectId==xx',
               )
             ],
             children: [PanelStatic(caption: 'panel1')],

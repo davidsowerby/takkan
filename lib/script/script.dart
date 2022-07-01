@@ -9,7 +9,6 @@ import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/converter/conversion_error_messages.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/query_converter.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/schema/validation/validation_error_messages.dart';
@@ -62,7 +61,6 @@ part 'script.g.dart';
 ///
 
 @JsonSerializable(explicitToJson: true)
-@QueryConverter()
 class Script extends Common {
   Script({
     this.conversionErrorMessages =

@@ -2,7 +2,6 @@ import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
-import 'package:takkan_script/data/select/query.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/list_view.dart';
@@ -31,12 +30,7 @@ void main() {
           version: const Version(number: 0),
           name: 'schema',
           documents: {'Person': Document(fields: {})},
-          namedQueries: {
-            'A person': GetDocument(
-              queryName: 'GetPerson',
-              documentId: const DocumentId(documentClass: 'x', objectId: 'x'),
-            )
-          },
+          namedQueries: {},
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
@@ -66,7 +60,6 @@ void main() {
         'script',
         'script.schema',
         'script.schema.Person',
-        'script.schema.GetPerson',
         'script.SchemaSource',
         'script.NullDataProvider',
         'script.Home',
@@ -77,7 +70,7 @@ void main() {
         'script.Home.Top Panel.PanelHeading',
         'script.Home.Top Panel.Heading1:0',
         'script.Home.Top Panel.with caption',
-        'script.Home.Top Panel.Eggs'
+        'script.Home.Top Panel.Eggs',
       ]);
 
       // when
@@ -87,7 +80,6 @@ void main() {
         'script',
         'script.Schema',
         'script.Schema.Document',
-        'script.Schema.GetDocument',
         'script.SchemaSource',
         'script.NullDataProvider',
         'script.Home',
@@ -98,7 +90,7 @@ void main() {
         'script.Home.PanelStatic:3.PanelHeading',
         'script.Home.PanelStatic:3.Heading1:0',
         'script.Home.PanelStatic:3.Heading2:1',
-        'script.Home.PanelStatic:3.ListView:2'
+        'script.Home.PanelStatic:3.ListView:2',
       ]);
     });
   });

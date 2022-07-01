@@ -7,6 +7,8 @@ import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/validation/result.dart';
 import 'package:takkan_script/validation/validate.dart';
 
+import '../../data/select/expression.dart';
+
 /// [VAL] is the validator type for example, [IntegerValidation]
 /// [MODEL] is the data type of the model attribute represented
 ///
@@ -39,7 +41,7 @@ abstract class Field<VAL, MODEL> extends SchemaElement {
               pScript.validationErrorMessages.find(result.patternKey);
           if (errorPattern == null) {
             errorPattern = 'error message not defined for ${result.patternKey}';
-            logType(this.runtimeType).e(errorPattern);
+            logType(runtimeType).e(errorPattern);
           } else {
             errors.add(expandErrorMessage(errorPattern, result.params));
           }
@@ -48,5 +50,7 @@ abstract class Field<VAL, MODEL> extends SchemaElement {
     }
     return errors;
   }
+
+
 
 }

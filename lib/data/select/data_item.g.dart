@@ -23,7 +23,7 @@ Map<String, dynamic> _$DocByFunctionToJson(DocByFunction instance) =>
     };
 
 DocByFilter _$DocByFilterFromJson(Map<String, dynamic> json) => DocByFilter(
-      script: json['script'] as String,
+      queryScript: json['script'] as String? ?? '',
       name: json['name'] as String,
       liveConnect: json['liveConnect'] as bool? ?? false,
       caption: json['caption'] as String?,
@@ -31,7 +31,7 @@ DocByFilter _$DocByFilterFromJson(Map<String, dynamic> json) => DocByFilter(
 
 Map<String, dynamic> _$DocByFilterToJson(DocByFilter instance) =>
     <String, dynamic>{
-      'script': instance.script,
+      'script': instance.queryScript,
       'name': instance.name,
       'liveConnect': instance.liveConnect,
       'caption': instance.caption,

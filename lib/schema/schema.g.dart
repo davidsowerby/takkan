@@ -14,16 +14,15 @@ Schema _$SchemaFromJson(Map<String, dynamic> json) => Schema(
       name: json['name'] as String,
       version: Version.fromJson(json['version'] as Map<String, dynamic>),
       namedQueries: (json['namedQueries'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(
-                k, const QueryConverter().fromJson(e as Map<String, dynamic>)),
+            (k, e) => MapEntry(k, Query.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
     );
 
 Map<String, dynamic> _$SchemaToJson(Schema instance) => <String, dynamic>{
       'name': instance.name,
-      'namedQueries': instance.namedQueries
-          .map((k, e) => MapEntry(k, const QueryConverter().toJson(e))),
+      'namedQueries':
+          instance.namedQueries.map((k, e) => MapEntry(k, e.toJson())),
       'version': instance.version.toJson(),
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };

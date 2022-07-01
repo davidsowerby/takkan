@@ -2,7 +2,6 @@ import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/converter/conversion_error_messages.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/query.dart';
 import 'package:takkan_script/loader/loaders.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -45,7 +44,6 @@ class ScriptAssembler {
     final ValidationErrorMessages validationErrorMessages =
         ValidationErrorMessages(typePatterns: Map());
     DataProvider? dataProvider;
-    Query? query;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
     for (Script s in models) {
       pages.addAll(s.pages);

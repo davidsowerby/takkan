@@ -1,12 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/data/select/expression.dart';
 import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/script/takkan_item.dart';
 import 'package:takkan_script/util/visitor.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/data/select/query_converter.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/schema/field/field.dart';
 import 'package:takkan_script/schema/json/json_converter.dart';
@@ -42,24 +41,21 @@ part 'schema.g.dart';
 ///
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
-@QueryConverter()
 class Schema extends SchemaElement {
+  Schema({Map<String, Document> documents = const {},
+    bool readOnly = false,
+    required this.name,
+    required this.version,
+    this.namedQueries = const {}})
+      : _documents = documents,
+        super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
+
+  factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
   @override
   final String name;
   final Map<String, Document> _documents;
   final Map<String, Query> namedQueries;
   final Version version;
-
-  Schema(
-      {Map<String, Document> documents = const {},
-      bool readOnly = false,
-      required this.name,
-      required this.version,
-      this.namedQueries = const {}})
-      : _documents = documents,
-        super(readOnly: (readOnly) ? IsReadOnly.yes : IsReadOnly.no);
-
-  factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$SchemaToJson(this);
@@ -88,20 +84,21 @@ class Schema extends SchemaElement {
     documents.forEach((key, value) {
       value.walk(visitors);
     });
-    namedQueries.forEach((key, value) {
-      value.walk(visitors);
-    });
   }
 
   Document document(String key) {
     final doc = _documents[key];
     if (doc == null) {
-      String msg =
+      final String msg =
           "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
       logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
     return doc;
+  }
+
+  Query query(String documentName,List<Condition> Function(QueryBuilder) fConditions) {
+    return QueryBuilder(document(documentName)).build(fConditions);
   }
 
   int get documentCount => _documents.length;
@@ -110,6 +107,28 @@ class Schema extends SchemaElement {
     final counter = RoleVisitor();
     walk([counter]);
     return counter.roles;
+  }
+}
+
+class QueryBuilder {
+
+  QueryBuilder(this.document) ;
+
+  final Document document;
+
+  Query build(List<Condition> Function(QueryBuilder) fConditions) {
+    final List<Condition> conditions = fConditions(this);
+    return Query(document, conditions);
+  }
+
+  ConditionBuilder operator [](String fieldName) {
+    final Field<dynamic, dynamic>? f = document.fields[fieldName];
+    if (f != null) {
+      return ConditionBuilder(document, fieldName, f);
+    }
+    final String msg = '$fieldName is not a valid field name';
+    logType(runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 }
 
@@ -124,12 +143,11 @@ class Schema extends SchemaElement {
 ///
 /// which for longer declarations is a bit more readable
 abstract class SchemaElement extends TakkanItem {
+  SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
+      : _isReadOnly = readOnly;
   String? _name;
 
   final IsReadOnly _isReadOnly;
-
-  SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
-      : _isReadOnly = readOnly;
 
   @override
   Map<String, dynamic> toJson();
@@ -182,6 +200,29 @@ abstract class SchemaElement extends TakkanItem {
 ///
 @JsonSerializable(explicitToJson: true)
 class Permissions with WalkTarget {
+  const Permissions({
+    this.isPublic = const [],
+    List<AccessMethod> requiresAuthentication = const [],
+    this.readRoles = const [],
+    this.writeRoles = const [],
+    List<String> updateRoles = const [],
+    List<String> createRoles = const [],
+    List<String> deleteRoles = const [],
+    this.addFieldRoles = const [],
+    List<String> getRoles = const [],
+    List<String> findRoles = const [],
+    List<String> countRoles = const [],
+  })
+      : _requiresAuthentication = requiresAuthentication,
+        _updateRoles = updateRoles,
+        _createRoles = createRoles,
+        _deleteRoles = deleteRoles,
+        _getRoles = getRoles,
+        _findRoles = findRoles,
+        _countRoles = countRoles;
+
+  factory Permissions.fromJson(Map<String, dynamic> json) =>
+      _$PermissionsFromJson(json);
   final List<AccessMethod> _requiresAuthentication;
   final List<AccessMethod> isPublic;
 
@@ -197,26 +238,6 @@ class Permissions with WalkTarget {
   final List<String> _deleteRoles;
 
   final List<String> addFieldRoles;
-
-  const Permissions({
-    this.isPublic = const [],
-    List<AccessMethod> requiresAuthentication = const [],
-    this.readRoles = const [],
-    this.writeRoles = const [],
-    List<String> updateRoles = const [],
-    List<String> createRoles = const [],
-    List<String> deleteRoles = const [],
-    this.addFieldRoles = const [],
-    List<String> getRoles = const [],
-    List<String> findRoles = const [],
-    List<String> countRoles = const [],
-  })  : _requiresAuthentication = requiresAuthentication,
-        _updateRoles = updateRoles,
-        _createRoles = createRoles,
-        _deleteRoles = deleteRoles,
-        _getRoles = getRoles,
-        _findRoles = findRoles,
-        _countRoles = countRoles;
 
   List<String> get updateRoles {
     final list = List<String>.from(_updateRoles, growable: true);
@@ -266,45 +287,42 @@ class Permissions with WalkTarget {
     return list;
   }
 
-  factory Permissions.fromJson(Map<String, dynamic> json) =>
-      _$PermissionsFromJson(json);
-
   Map<String, dynamic> toJson() => _$PermissionsToJson(this);
 
   bool get requiresGetAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.get) ||
-      getRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.get) ||
+          getRoles.isNotEmpty;
 
   bool get requiresFindAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.find) ||
-      findRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.find) ||
+          findRoles.isNotEmpty;
 
   bool get requiresCountAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.count) ||
-      countRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.count) ||
+          countRoles.isNotEmpty;
 
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.create) ||
-      createRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.create) ||
+          createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.update) ||
-      updateRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.update) ||
+          updateRoles.isNotEmpty;
 
   bool get requiresDeleteAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.delete) ||
-      deleteRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.delete) ||
+          deleteRoles.isNotEmpty;
 
   bool get requiresAddFieldAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.addField) ||
-      addFieldRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.addField) ||
+          addFieldRoles.isNotEmpty;
 
   bool methodIsPublic(AccessMethod method) {
     return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
@@ -336,10 +354,6 @@ enum DocumentType { standard, versioned }
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 @SchemaFieldMapConverter()
 class Document extends SchemaElement {
-  final Permissions permissions;
-  final DocumentType documentType;
-  final Map<String, Field> fields;
-
   Document({
     required this.fields,
     this.documentType = DocumentType.standard,
@@ -348,6 +362,9 @@ class Document extends SchemaElement {
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
+  final Permissions permissions;
+  final DocumentType documentType;
+  final Map<String, Field> fields;
 
   @override
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
@@ -356,6 +373,16 @@ class Document extends SchemaElement {
   doInit(InitWalkerParams params) {
     super.doInit(params);
     _name = params.name!;
+  }
+
+  ConditionBuilder operator [](String fieldName) {
+    final Field<dynamic, dynamic>? f = fields[fieldName];
+    if (f != null) {
+      return ConditionBuilder(this, fieldName, f);
+    }
+    final String msg = '$fieldName is not a valid field name';
+    logType(runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 
   @override
@@ -394,17 +421,16 @@ class Document extends SchemaElement {
 /// [instance] relates to the second level within *takkan.json*
 @JsonSerializable(explicitToJson: true)
 class SchemaSource extends TakkanItem {
-  final String group;
-  final String instance;
-
   SchemaSource({
     required this.group,
     required this.instance,
-    super. id,
-  }) ;
+    super.id,
+  });
 
   factory SchemaSource.fromJson(Map<String, dynamic> json) =>
       _$SchemaSourceFromJson(json);
+  final String group;
+  final String instance;
 
   @override
   Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);
