@@ -1,0 +1,9 @@
+const f = require('./functions.js');
+
+Parse.Cloud.define('allIssues', async (request) => {
+    return f.allIssues(request);
+});
+
+Parse.Cloud.define('topIssue', async (request) => {
+    return f.topIssue(request);
+});

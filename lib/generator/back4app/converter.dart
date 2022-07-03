@@ -14,7 +14,7 @@ abstract class SchemaConverter<S extends DataProviderSchema> {
   /// Gets the schema as JSON, from the backend.  See also [getBackendSchema]
   Future<Map<String, dynamic>> getRawBackendSchema();
 
-  putBackendSchema({required S backendSchema});
+  void putBackendSchema({required S backendSchema});
 }
 
 /// Primarily for type safety

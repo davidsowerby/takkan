@@ -1,5 +1,5 @@
+import 'package:takkan_server_code_generator/generator/back4app/schema_generator/schema_generator.dart';
 import 'package:takkan_server_code_generator/generator/format.dart';
-import 'package:takkan_server_code_generator/generator/back4app/back4app_schema_generator.dart';
 import 'package:test/test.dart';
 
 import '../compare_file.dart';
@@ -16,19 +16,21 @@ void main() {
 
     test('Json', () {
       // given
-
+      final Formatter f = Formatter();
       // when
-      outt('const roleCLP = ');
+      f.outt('const roleCLP = ');
       final testMap = Map<String, dynamic>.from(roleDefaultCLP);
       testMap['String value'] = 'A String';
-      outJson(map: testMap);
+      f.outJson(map: testMap);
       // then
-      final result=compareLines(actual: bufContentAsLines,expected: expected.split('\n'));
-      expect(result,isEmpty);
+      final result = compareLines(
+          actual: f.bufContentAsLines, expected: expected.split('\n'));
+      expect(result, isEmpty);
     });
   });
 }
 
+// ignore: leading_newlines_in_multiline_strings
 String expected = r'''const roleCLP = {
     "find": {
         "*": true,

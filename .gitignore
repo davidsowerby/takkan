@@ -6,3 +6,4 @@
 build/
 /.idea/
 /precept-server-code-generator.iml
+/exported_schemas/

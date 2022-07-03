@@ -9,5 +9,6 @@
 ///
 /// The server is then initialised via a function provided by the code code
 void main(List<String> arguments) {
+  // ignore: avoid_print
   print('generate me');
 }

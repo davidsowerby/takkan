@@ -1,0 +1,6 @@
+require('./framework.js');
+require('./classes/Person/triggers.js');
+require('./classes/Person/api.js');
+require('./classes/Issue/triggers.js');
+require('./classes/Issue/api.js');
+require('./b4a_schema.js');

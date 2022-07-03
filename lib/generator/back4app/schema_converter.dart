@@ -19,7 +19,6 @@ part 'schema_converter.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Back4AppSchema implements DataProviderSchema {
-  final List<ServerSchemaClass> results;
 
   const Back4AppSchema({required this.results});
 
@@ -27,6 +26,7 @@ class Back4AppSchema implements DataProviderSchema {
 
   factory Back4AppSchema.fromJson(Map<String, dynamic> json) =>
       _$Back4AppSchemaFromJson(json);
+  final List<ServerSchemaClass> results;
 
   Map<String, dynamic> toJson() => _$Back4AppSchemaToJson(this);
 
@@ -43,7 +43,7 @@ class Back4AppSchema implements DataProviderSchema {
             element.className != '_User' && element.className != '_Role')
         .toList();
     final Map<String, ServerSchemaClass> mapped = {};
-    for (var element in trimmedList) {
+    for (final element in trimmedList) {
       mapped[element.className] = element;
     }
     return mapped;
@@ -52,12 +52,6 @@ class Back4AppSchema implements DataProviderSchema {
 
 @JsonSerializable(explicitToJson: true)
 class ServerSchemaClass {
-  final String className;
-  final Map<String, ServerSchemaField> fields;
-  @JsonKey(includeIfNull: false)
-  final SchemaClassLevelPermissions? classLevelPermissions;
-  @JsonKey(includeIfNull: false)
-  final Map<String, dynamic>? indexes;
 
   const ServerSchemaClass(
       {required this.fields,
@@ -68,16 +62,22 @@ class ServerSchemaClass {
   factory ServerSchemaClass.fromJson(Map<String, dynamic> json) =>
       _$ServerSchemaClassFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ServerSchemaClassToJson(this);
-
   ServerSchemaClass.fromPrecept(Document doc)
       : className = doc.name,
         fields = convertFields(doc),
         classLevelPermissions = SchemaClassLevelPermissions.fromDocument(doc),
         indexes = null;
+  final String className;
+  final Map<String, ServerSchemaField> fields;
+  @JsonKey(includeIfNull: false)
+  final SchemaClassLevelPermissions? classLevelPermissions;
+  @JsonKey(includeIfNull: false)
+  final Map<String, dynamic>? indexes;
+
+  Map<String, dynamic> toJson() => _$ServerSchemaClassToJson(this);
 
   static Map<String, ServerSchemaField> convertFields(Document doc) {
-    Map<String, ServerSchemaField> fields = {};
+    final Map<String, ServerSchemaField> fields = {};
     doc.fields.forEach((key, value) {
       switch (value.runtimeType) {
         case FPointer:
@@ -106,7 +106,7 @@ class ServerSchemaClass {
     return fields;
   }
 
-  static String selectFieldType(Field takkanField) {
+  static String selectFieldType(Field<dynamic> takkanField) {
     switch (takkanField.modelType) {
       case int:
         return 'Number';
@@ -135,20 +135,20 @@ class ServerSchemaClass {
         '${takkanField.modelType.toString()} is not supported');
   }
 
-  void addField(Field pField) {}
+  void addField(Field<dynamic> pField) {}
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ServerSchemaField {
-  final String type;
-  final bool? required;
-  final dynamic defaultValue;
 
   const ServerSchemaField(
       {required this.type, this.required, this.defaultValue});
 
   factory ServerSchemaField.fromJson(Map<String, dynamic> json) =>
       _$ServerSchemaFieldFromJson(json);
+  final String type;
+  final bool? required;
+  final dynamic defaultValue;
 
   Map<String, dynamic> toJson() => _$ServerSchemaFieldToJson(this);
 }
@@ -156,21 +156,17 @@ class ServerSchemaField {
 /// A specific [ServerSchemaField] for use with fields which refer elsewhere, for example Pointers and Relations
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ReferenceSchemaField extends ServerSchemaField {
-  final String targetClass;
 
   ReferenceSchemaField({
     required this.targetClass,
-    required bool required,
-    required String type,
-    dynamic defaultValue,
-  }) : super(
-          required: required,
-          defaultValue: defaultValue,
-          type: type,
-        );
+    required bool super.required,
+    required super.type,
+    super.defaultValue,
+  });
 
   factory ReferenceSchemaField.fromJson(Map<String, dynamic> json) =>
       _$ReferenceSchemaFieldFromJson(json);
+  final String targetClass;
 
   @override
   Map<String, dynamic> toJson() => _$ReferenceSchemaFieldToJson(this);
@@ -178,22 +174,6 @@ class ReferenceSchemaField extends ServerSchemaField {
 
 @JsonSerializable(explicitToJson: true)
 class SchemaClassLevelPermissions {
-  final Map<String, dynamic> find;
-  final Map<String, dynamic> get;
-  final Map<String, dynamic> count;
-  final Map<String, dynamic> create;
-  final Map<String, dynamic> update;
-  final Map<String, dynamic> delete;
-  final Map<String, dynamic> addField;
-
-  SchemaClassLevelPermissions.fromDocument(Document document)
-      : get = buildPermissions(AccessMethod.get, document),
-        find = buildPermissions(AccessMethod.find, document),
-        count = buildPermissions(AccessMethod.count, document),
-        create = buildPermissions(AccessMethod.create, document),
-        update = buildPermissions(AccessMethod.update, document),
-        delete = buildPermissions(AccessMethod.delete, document),
-        addField = buildPermissions(AccessMethod.addField, document);
 
   const SchemaClassLevelPermissions({
     required this.find,
@@ -205,44 +185,63 @@ class SchemaClassLevelPermissions {
     required this.addField,
   });
 
+  SchemaClassLevelPermissions.fromDocument(Document document)
+      : get = buildPermissions(AccessMethod.get, document),
+        find = buildPermissions(AccessMethod.find, document),
+        count = buildPermissions(AccessMethod.count, document),
+        create = buildPermissions(AccessMethod.create, document),
+        update = buildPermissions(AccessMethod.update, document),
+        delete = buildPermissions(AccessMethod.delete, document),
+        addField = buildPermissions(AccessMethod.addField, document);
+
+  factory SchemaClassLevelPermissions.fromJson(Map<String, dynamic> json) =>
+      _$SchemaClassLevelPermissionsFromJson(json);
+  final Map<String, dynamic> find;
+  final Map<String, dynamic> get;
+  final Map<String, dynamic> count;
+  final Map<String, dynamic> create;
+  final Map<String, dynamic> update;
+  final Map<String, dynamic> delete;
+  final Map<String, dynamic> addField;
+
   static Map<String, dynamic> buildPermissions(
       AccessMethod method, Document document) {
     final Map<String, dynamic> map = {};
     switch (method) {
       case AccessMethod.get:
-        map['requiresAuthentication'] = (document.requiresGetAuthentication);
+        map['requiresAuthentication'] = document.requiresGetAuthentication;
         _roleConstructor(map, document.permissions.getRoles);
         break;
       case AccessMethod.find:
-        map['requiresAuthentication'] = (document.requiresFindAuthentication);
+        map['requiresAuthentication'] = document.requiresFindAuthentication;
         _roleConstructor(map, document.permissions.findRoles);
         break;
       case AccessMethod.count:
-        map['requiresAuthentication'] = (document.requiresCountAuthentication);
+        map['requiresAuthentication'] = document.requiresCountAuthentication;
         _roleConstructor(map, document.permissions.countRoles);
         break;
       case AccessMethod.create:
-        map['requiresAuthentication'] = (document.requiresCreateAuthentication);
+        map['requiresAuthentication'] = document.requiresCreateAuthentication;
         _roleConstructor(map, document.permissions.createRoles);
         break;
       case AccessMethod.update:
-        map['requiresAuthentication'] = (document.requiresUpdateAuthentication);
+        map['requiresAuthentication'] = document.requiresUpdateAuthentication;
         _roleConstructor(map, document.permissions.updateRoles);
         break;
       case AccessMethod.delete:
-        map['requiresAuthentication'] = (document.requiresDeleteAuthentication);
+        map['requiresAuthentication'] = document.requiresDeleteAuthentication;
         _roleConstructor(map, document.permissions.deleteRoles);
         break;
       case AccessMethod.addField:
         map['requiresAuthentication'] =
-            (document.requiresAddFieldAuthentication);
+            document.requiresAddFieldAuthentication;
         _roleConstructor(map, document.permissions.addFieldRoles);
         break;
       case AccessMethod.all:
       case AccessMethod.read:
       case AccessMethod.write:
         throw TakkanException(
-            '\'$method\' is not appropriate in this context');
+            "'$method' is not appropriate in this context");
     }
     if (document.permissions.isPublic.contains(method)) {
       map['*'] = true;
@@ -250,14 +249,11 @@ class SchemaClassLevelPermissions {
     return map;
   }
 
-  static _roleConstructor(Map<String, dynamic> map, List<String> fromRoles) {
-    for (var element in fromRoles) {
+  static void _roleConstructor(Map<String, dynamic> map, List<String> fromRoles) {
+    for (final element in fromRoles) {
       map['role:$element'] = true;
     }
   }
-
-  factory SchemaClassLevelPermissions.fromJson(Map<String, dynamic> json) =>
-      _$SchemaClassLevelPermissionsFromJson(json);
 
   Map<String, dynamic> toJson() => _$SchemaClassLevelPermissionsToJson(this);
 }

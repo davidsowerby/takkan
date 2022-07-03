@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:takkan_server_code_generator/generator/generated_file.dart';
@@ -7,6 +6,12 @@ Future<List<LineComparison>> compareFileToGenerated(
     {required File reference, required GeneratedFile generated}) async {
   final referenceContent = await reference.readAsLines();
   return compareLines(expected: referenceContent, actual: generated.lines);
+}
+
+Future<List<LineComparison>> compareGeneratedToReferenceFile(
+    {required File reference, required List<String> generated}) async {
+  final referenceContent = await reference.readAsLines();
+  return compareLines(expected: referenceContent, actual: generated);
 }
 
 List<LineComparison> compareText(
@@ -32,12 +37,12 @@ List<LineComparison> compareLines(
 }
 
 class LineComparison {
-  final String expected;
-  final String actual;
-  final int lineNumber;
 
   const LineComparison(
       {required this.expected, required this.actual, required this.lineNumber});
+  final String expected;
+  final String actual;
+  final int lineNumber;
 
   @override
   String toString() {
@@ -46,7 +51,7 @@ class LineComparison {
 }
 
 bool hasFile(List<GeneratedFile> files, String filename) {
-  for (GeneratedFile f in files) {
+  for (final GeneratedFile f in files) {
     if (f.fileName == filename) {
       return true;
     }

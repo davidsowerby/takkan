@@ -1,0 +1,62 @@
+const b4a = require('../../b4a_schema.js');
+
+async function allIssues(request) {
+    const schema_versionProp = request.params.schema_version;
+    const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp);
+
+    switch (schema_version) {
+        case 1: {
+            const query = new Parse.Query('Issue');
+            const results = await query.find();
+            return results;
+        }
+        case 2: {
+            const query = new Parse.Query('Issue');
+            const results = await query.find();
+            return results;
+        }
+        default: {
+            throw 'Invalid version requested';
+        }
+    }
+}
+
+async function topIssue(request) {
+    const schema_versionProp = request.params.schema_version;
+    const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp);
+
+    switch (schema_version) {
+        case 1: {
+            const query = new Parse.Query('Issue');
+            query.equalTo("objectId", "JJoGIErtzn");
+            const results = await query.find();
+            return checkExactlyOne(results);
+        }
+        case 2: {
+            const query = new Parse.Query('Issue');
+            query.equalTo("objectId", "xxx");
+            const results = await query.find();
+            return checkExactlyOne(results);
+        }
+        default: {
+            throw 'Invalid version requested';
+        }
+    }
+}
+
+function checkExactlyOne(results) {
+    if (results.length === 1) {
+        return results[0];
+    }
+    if (results.length < 1) {
+        throw 'Not Found';
+    }
+    if (results.length > 1) {
+        throw 'Multiple results';
+    }
+}
+
+module.exports = {
+    allIssues: allIssues,
+    topIssue: topIssue
+};

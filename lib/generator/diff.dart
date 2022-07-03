@@ -1,136 +1,170 @@
-import 'dart:convert';
-
+import 'package:equatable/equatable.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/schema/field/field.dart';
 import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/validation/validate.dart';
+import 'package:takkan_script/script/version.dart';
 
-/// Creates a diff between 2 versions of a Schema
+/// Generate a diff between [previous] and [current].  If [previous] is null,
+/// the diff represents the whole of [current]
 ///
-///
-SchemaDiff generateDiff({Schema? previous, required Schema current}) {
+/// The does rely on accurate configuration for [Equatable], so any errors
+/// in setting up the  [Equatable.props] getters could cause an issue
+SchemaDiff generateDiff2({Schema? previous, required Schema current}) {
   if (previous != null) {
-    if (current.version.number - previous.version.number == 0) {
-      throw TakkanException(
+    if (current.version.number == previous.version.number) {
+      throw const TakkanException(
           'To create a diff, two different versions are required');
     }
+    if (current.name != previous.name) {
+      throw UnsupportedError('Schema name change is not supported');
+    }
     if (current.version.number < previous.version.number) {
-      throw TakkanException('Previous version must precede current version');
+      throw const TakkanException(
+          'Previous version must precede current version');
     }
   }
 
-  final Map<String, Document> create = {};
-  final Map<String, Document> delete = {};
-  final Map<String, DocumentDiff> update = {};
-  if (previous == null) {
-    create.addAll(current.documents);
-  } else {
-    for (String doc in current.documents.keys) {
-      if (!previous.documents.containsKey(doc)) {
-        create[doc] = (current.documents[doc]!);
-      } else {
-        update[doc] = (diffDocument(
-          previous: previous.documents[doc]!,
-          current: current.documents[doc]!,
-        ));
-      }
-    }
-    for (String doc in previous.documents.keys) {
-      if (!current.documents.containsKey(doc)) {
-        delete[doc] = current.documents[doc]!;
-      }
-    }
-  }
-  return SchemaDiff(create: create, update: update, delete: delete);
+  /// replace null previous with 'empty' schema
+  final p = (previous == null)
+      ? Schema(
+    name: current.name,
+    version: const Version(number: -1),
+  )
+      : previous;
+  return SchemaDiff(previous: p, current: current);
 }
 
-/// Updating a field is actually just replacing old with new, except that changing field type is not
-/// possible.  Trying to will throw a PreceptException
-DocumentDiff diffDocument(
-    {required Document previous, required Document current}) {
-  final Map<String, Field> create = {};
-  final Map<String, Field> delete = {};
-  final Map<String, Field> update = {};
+mixin Differ {
+  /// This relies on the correct implementation of [Equatable.props]
+  DiffNames<T> _identifyChanges<T extends Equatable>({
+    required Map<String, T> previous,
+    required Map<String, T> current,
+  }) {
+    final p = previous.keys.toSet();
+    final c = current.keys.toSet();
 
-  for (String field in current.fields.keys) {
-    final currentField = current.fields[field]!;
-    if (!previous.fields.containsKey(field)) {
-      create[field] = currentField;
-    } else {
-      final previousField = previous.fields[field]!;
-      if (!fieldUnchanged(previous: previousField, current: currentField)) {
-        update[field] = currentField;
-      }
-    }
-  }
-  for (String field in previous.fields.keys) {
-    if (!current.fields.containsKey(field)) {
-      delete[field] = current.fields[field]!;
-    }
-  }
+    // find the document level changes first
+    final deleted = p.difference(c);
+    final added = c.difference(p);
 
-  return DocumentDiff(
-      name: current.name, create: create, update: update, delete: delete);
+    // candidate update entries are those which are in both the current set,
+    // and the previous set.
+    final candidateUpdates = p.intersection(c);
+
+    // Now remove update candidates where they are the same in current and previous.
+    // This relies on the use of Equatable
+    candidateUpdates.removeWhere((name) => previous[name] == current[name]);
+
+    return DiffNames<T>(
+        created: added, deleted: deleted, updated: candidateUpdates);
+  }
 }
 
-class DocumentDiff {
-  final String name;
-  final Map<String, Field> create;
-  final Map<String, Field> delete;
-  final Map<String, Field> update;
+class DiffNames<T extends Equatable> {
+  const DiffNames({
+    required this.created,
+    required this.deleted,
+    required this.updated,
+  });
 
-  const DocumentDiff({
+  final Set<String> created;
+  final Set<String> deleted;
+  final Set<String> updated;
+}
+
+class DocumentDiff with Differ {
+  DocumentDiff({
     required this.name,
-    required this.create,
-    required this.delete,
-    required this.update,
-  });
+    required this.previous,
+    required this.current,
+  }) {
+    fieldNamesDiff = _identifyChanges<Field<dynamic>>(
+        previous: previous.fields, current: current.fields);
+  }
+
+  final Document previous;
+  final Document current;
+  final String name;
+  late DiffNames<Field<dynamic>> fieldNamesDiff;
+
+  Map<String, Field<dynamic>> get create =>
+      Map.fromEntries(current.fields.entries
+          .where((entry) => fieldNamesDiff.created.contains(entry.key)));
+
+  Map<String, Field<dynamic>> get delete =>
+      Map.fromEntries(current.fields.entries
+          .where((entry) => fieldNamesDiff.deleted.contains(entry.key)));
+
+  Map<String, FieldChange> get update =>
+      Map.fromEntries(current.fields.entries
+          .where((entry) => fieldNamesDiff.updated.contains(entry.key))).map(
+            (key, value) =>
+            MapEntry<String, FieldChange>(
+              key,
+              FieldChange(
+                  previous: previous.fields[key]!,
+                  current: current.fields[key]!),
+            ),
+      );
+
+  /// Supports schema generation, as that does not process field updates
+  bool get fieldUpdatesOnly => create.isEmpty && delete.isEmpty;
 }
 
-class SchemaDiff {
-  final Map<String, Document> create;
-  final Map<String, DocumentDiff> update;
-  final Map<String, Document> delete;
+class FieldChange {
+  const FieldChange({required this.previous, required this.current});
 
-  const SchemaDiff({
-    required this.create,
-    required this.delete,
-    required this.update,
-  });
+  final Field<dynamic> previous;
+  final Field<dynamic> current;
 }
 
-// final List<VAL> validations;
-// final bool required;
-// @JsonKey(includeIfNull: false)
-// final MODEL? defaultValue;
-bool fieldUnchanged({required Field previous, required Field current}) {
-  if (current.modelType != previous.modelType) {
-    throw TakkanException('A field data type cannot be changed');
+class SchemaDiff with Differ {
+  SchemaDiff({
+    required this.previous,
+    required this.current,
+  }) {
+    /// Removing User and Role is a temporary fix until all the necessary
+    /// data types have been covered see https://gitlab.com/takkan/takkan_design/-/issues/34
+    /// Certainly need pointers and relations
+    final p = Map<String, Document>.from(previous.documents);
+    p.remove('User');
+    p.remove('Role');
+    final c = Map<String, Document>.from(current.documents);
+    c.remove('User');
+    c.remove('Role');
+
+    documentNamesDiff = _identifyChanges<Document>(previous: p, current: c);
   }
-  if (previous.defaultValue != current.defaultValue) {
-    return false;
-  }
-  if (previous.required != current.required) {
-    return false;
-  }
-  if (previous.validations.length != current.validations.length) {
-    return false;
-  }
-  final List<V> previousV = previous.validations as List<V>;
-  final List<V> currentV = current.validations as List<V>;
-  final List<String> previousJson =
-      previousV.map((e) => json.encode(e.toJson())).toList();
-  final List<String> currentJson =
-      currentV.map((e) => json.encode(e.toJson())).toList();
-  for (final s in previousJson) {
-    if (!currentJson.contains(s)) {
-      return false;
-    }
-  }
-  for (final s in currentJson) {
-    if (!previousJson.contains(s)) {
-      return false;
-    }
-  }
-  return true;
+
+  final Schema previous;
+  final Schema current;
+  late DiffNames<Document> documentNamesDiff;
+
+  Map<String, Document> get create =>
+      Map.fromEntries(current.documents.entries
+          .where((entry) => documentNamesDiff.created.contains(entry.key)));
+
+  Map<String, Document> get delete =>
+      Map.fromEntries(current.documents.entries
+          .where((entry) => documentNamesDiff.deleted.contains(entry.key)));
+
+  Map<String, DocumentDiff> get update =>
+      Map.fromEntries(current.documents.entries
+          .where((entry) => documentNamesDiff.updated.contains(entry.key))).map(
+            (key, value) =>
+            MapEntry<String, DocumentDiff>(
+              key,
+              DocumentDiff(
+                  previous: previous.documents[key]!,
+                  current: current.documents[key]!,
+                  name: key),
+            ),
+      );
+}
+
+class DocumentChange {
+  const DocumentChange({required this.previous, required this.current});
+
+  final Document previous;
+  final Document current;
 }

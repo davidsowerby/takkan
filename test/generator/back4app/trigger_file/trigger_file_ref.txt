@@ -1,0 +1,74 @@
+const b4a = require('../../b4a_schema.js');
+
+Parse.Cloud.beforeSave('Person', (request) => {
+    const schema_versionProp = request.params.schema_version;
+    const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp);
+
+    switch (schema_version) {
+        case 2: {
+            const firstNameProp = request.object.get(firstName);
+            if (firstNameProp == null) throw 'validation';
+
+            const ageProp = request.object.get(age);
+            if (ageProp == null) throw 'validation';
+            const age = parseInt(ageProp);
+            if (!(age > 0)) throw 'validation';
+            if (!(age < 128)) throw 'validation';
+
+            const heightProp = request.object.get(height);
+            if (heightProp != null) {
+                const height = parseInt(heightProp);
+                if (!(height > 0)) throw 'validation';
+                if (!(height < 300)) throw 'validation';
+            }
+
+            break;
+        }
+
+        case 1: {
+            const firstNameProp = request.object.get(firstName);
+            if (firstNameProp == null) throw 'validation';
+
+            const ageProp = request.object.get(age);
+            if (ageProp == null) throw 'validation';
+            const age = parseInt(ageProp);
+            if (!(age > 0)) throw 'validation';
+            if (!(age < 128)) throw 'validation';
+
+            const heightProp = request.object.get(height);
+            if (heightProp != null) {
+                const height = parseInt(heightProp);
+                if (!(height > 0)) throw 'validation';
+                if (!(height < 300)) throw 'validation';
+            }
+
+            break;
+        }
+
+        case 0: {
+            const ageProp = request.object.get(age);
+            if (ageProp == null) throw 'validation';
+            const age = parseInt(ageProp);
+            if (!(age > 0)) throw 'validation';
+            if (!(age < 100)) throw 'validation';
+
+            const heightProp = request.object.get(height);
+            if (heightProp != null) {
+                const height = parseInt(heightProp);
+                if (!(height > 0)) throw 'validation';
+            }
+
+            const siblingsProp = request.object.get(siblings);
+            if (siblingsProp != null) {
+                const siblings = parseInt(siblingsProp);
+                if (!(siblings > -1)) throw 'validation';
+            }
+
+            break;
+        }
+
+        default: {
+            throw 'Invalid version requested';
+        }
+    }
+});
