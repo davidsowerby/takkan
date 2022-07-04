@@ -177,8 +177,8 @@ class DataListJsonConverter {
         case 'DocByFunction':
           results.add(DocByFunction.fromJson(entry));
           break;
-        case 'DocByFilter':
-          results.add(DocByFilter.fromJson(entry));
+        case 'DocByQuery':
+          results.add(DocByQuery.fromJson(entry));
           break;
         case 'DocByGQL':
           results.add(DocByGQL.fromJson(entry));
@@ -186,8 +186,8 @@ class DataListJsonConverter {
         case 'DocListByFunction':
           results.add(DocListByFunction.fromJson(entry));
           break;
-        case 'DocListByFilter':
-          results.add(DocListByFilter.fromJson(entry));
+        case 'DocListByQuery':
+          results.add(DocListByQuery.fromJson(entry));
           break;
         case 'DocListByGQL':
           results.add(DocListByGQL.fromJson(entry));
@@ -215,8 +215,8 @@ class DataListJsonConverter {
         case DocByFunction:
           jsonMap = (entry as DocByFunction).toJson();
           break;
-        case DocByFilter:
-          jsonMap = (entry as DocByFilter).toJson();
+        case DocByQuery:
+          jsonMap = (entry as DocByQuery).toJson();
           break;
         case DocByGQL:
           jsonMap = (entry as DocByGQL).toJson();
@@ -224,8 +224,8 @@ class DataListJsonConverter {
         case DocListByFunction:
           jsonMap = (entry as DocListByFunction).toJson();
           break;
-        case DocListByFilter:
-          jsonMap = (entry as DocListByFilter).toJson();
+        case DocListByQuery:
+          jsonMap = (entry as DocListByQuery).toJson();
           break;
         case DocListByGQL:
           jsonMap = (entry as DocListByGQL).toJson();

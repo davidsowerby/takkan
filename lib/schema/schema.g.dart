@@ -13,16 +13,10 @@ Schema _$SchemaFromJson(Map<String, dynamic> json) => Schema(
           const {},
       name: json['name'] as String,
       version: Version.fromJson(json['version'] as Map<String, dynamic>),
-      namedQueries: (json['namedQueries'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, Query.fromJson(e as Map<String, dynamic>)),
-          ) ??
-          const {},
     );
 
 Map<String, dynamic> _$SchemaToJson(Schema instance) => <String, dynamic>{
       'name': instance.name,
-      'namedQueries':
-          instance.namedQueries.map((k, e) => MapEntry(k, e.toJson())),
       'version': instance.version.toJson(),
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };
@@ -101,6 +95,10 @@ const _$AccessMethodEnumMap = {
 Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
       fields: const SchemaFieldMapConverter()
           .fromJson(json['fields'] as Map<String, dynamic>),
+      queryScripts: (json['queryScripts'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, e as String),
+          ) ??
+          const {},
       documentType:
           $enumDecodeNullable(_$DocumentTypeEnumMap, json['documentType']) ??
               DocumentType.standard,
@@ -123,6 +121,7 @@ Map<String, dynamic> _$DocumentToJson(Document instance) {
 
   writeNotNull(
       'fields', const SchemaFieldMapConverter().toJson(instance.fields));
+  val['queryScripts'] = instance.queryScripts;
   return val;
 }
 

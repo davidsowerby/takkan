@@ -1,24 +1,17 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/util/interpolate.dart';
-import 'package:takkan_script/schema/field/integer.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/validation/result.dart';
-import 'package:takkan_script/validation/validate.dart';
 
-import '../../data/select/expression.dart';
+import '../../common/log.dart';
+import '../../script/script.dart';
+import '../../util/interpolate.dart';
+import '../../validation/result.dart';
+import '../../validation/validate.dart';
+import '../schema.dart';
+import 'integer.dart';
 
 /// [VAL] is the validator type for example, [IntegerValidation]
 /// [MODEL] is the data type of the model attribute represented
 ///
 abstract class Field<VAL, MODEL> extends SchemaElement {
-  final List<VAL> validations;
-  final bool required;
-  @JsonKey(includeIfNull: false)
-  final MODEL? defaultValue;
-
-  Type get modelType;
 
   Field({
     this.validations = const [],
@@ -26,6 +19,12 @@ abstract class Field<VAL, MODEL> extends SchemaElement {
     this.defaultValue,
     required super. readOnly,
   }) ;
+  final List<VAL> validations;
+  final bool required;
+  @JsonKey(includeIfNull: false)
+  final MODEL? defaultValue;
+
+  Type get modelType;
 
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> doValidation(MODEL value, Script pScript) {

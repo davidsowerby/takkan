@@ -1,15 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/data/select/expression.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/util/visitor.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/json/json_converter.dart';
-import 'package:takkan_script/script/version.dart';
+
+import '../common/exception.dart';
+import '../common/log.dart';
+import '../data/provider/data_provider.dart';
+import '../page/page.dart';
+import '../script/common.dart';
+import '../script/takkan_item.dart';
+import '../script/version.dart';
+import '../util/visitor.dart';
+import 'field/field.dart';
+import 'json/json_converter.dart';
+import 'query_combiner.dart';
 
 part 'schema.g.dart';
 
@@ -42,19 +43,18 @@ part 'schema.g.dart';
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Schema extends SchemaElement {
-  Schema({Map<String, Document> documents = const {},
+  Schema({
+    Map<String, Document> documents = const {},
     bool readOnly = false,
     required this.name,
     required this.version,
-    this.namedQueries = const {}})
-      : _documents = documents,
+  })  : _documents = documents,
         super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
   @override
   final String name;
   final Map<String, Document> _documents;
-  final Map<String, Query> namedQueries;
   final Version version;
 
   @override
@@ -70,16 +70,16 @@ class Schema extends SchemaElement {
   IsReadOnly get isReadOnly => _isReadOnly;
 
   @override
-  List<Object> get subElements => [_documents, namedQueries];
+  List<Object> get subElements => [_documents];
 
   @override
-  doInit(InitWalkerParams params) {
+  void doInit(InitWalkerParams params) {
     _name = name;
     super.doInit(params);
   }
 
   @override
-  walk(List<ScriptVisitor> visitors) {
+  void walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     documents.forEach((key, value) {
       value.walk(visitors);
@@ -97,10 +97,6 @@ class Schema extends SchemaElement {
     return doc;
   }
 
-  Query query(String documentName,List<Condition> Function(QueryBuilder) fConditions) {
-    return QueryBuilder(document(documentName)).build(fConditions);
-  }
-
   int get documentCount => _documents.length;
 
   Set<String> get allRoles {
@@ -110,27 +106,6 @@ class Schema extends SchemaElement {
   }
 }
 
-class QueryBuilder {
-
-  QueryBuilder(this.document) ;
-
-  final Document document;
-
-  Query build(List<Condition> Function(QueryBuilder) fConditions) {
-    final List<Condition> conditions = fConditions(this);
-    return Query(document, conditions);
-  }
-
-  ConditionBuilder operator [](String fieldName) {
-    final Field<dynamic, dynamic>? f = document.fields[fieldName];
-    if (f != null) {
-      return ConditionBuilder(document, fieldName, f);
-    }
-    final String msg = '$fieldName is not a valid field name';
-    logType(runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-}
 
 /// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
 ///
@@ -212,8 +187,7 @@ class Permissions with WalkTarget {
     List<String> getRoles = const [],
     List<String> findRoles = const [],
     List<String> countRoles = const [],
-  })
-      : _requiresAuthentication = requiresAuthentication,
+  })  : _requiresAuthentication = requiresAuthentication,
         _updateRoles = updateRoles,
         _createRoles = createRoles,
         _deleteRoles = deleteRoles,
@@ -240,44 +214,44 @@ class Permissions with WalkTarget {
   final List<String> addFieldRoles;
 
   List<String> get updateRoles {
-    final list = List<String>.from(_updateRoles, growable: true);
+    final list = List<String>.from(_updateRoles);
     list.addAll(writeRoles);
     return list;
   }
 
   List<String> get createRoles {
-    final list = List<String>.from(_createRoles, growable: true);
+    final list = List<String>.from(_createRoles);
     list.addAll(writeRoles);
     return list;
   }
 
   List<String> get deleteRoles {
-    final list = List<String>.from(_deleteRoles, growable: true);
+    final list = List<String>.from(_deleteRoles);
     list.addAll(writeRoles);
     return list;
   }
 
   List<String> get getRoles {
-    final list = List<String>.from(_getRoles, growable: true);
+    final list = List<String>.from(_getRoles);
     list.addAll(readRoles);
     return list;
   }
 
   List<String> get findRoles {
-    final list = List<String>.from(_findRoles, growable: true);
+    final list = List<String>.from(_findRoles);
     list.addAll(readRoles);
     return list;
   }
 
   List<String> get countRoles {
-    final list = List<String>.from(_countRoles, growable: true);
+    final list = List<String>.from(_countRoles);
     list.addAll(readRoles);
     return list;
   }
 
   /// A list of all the roles used
   Set<String> get allRoles {
-    final Set<String> list = Set();
+    final Set<String> list = {};
     list.addAll(updateRoles);
     list.addAll(createRoles);
     list.addAll(deleteRoles);
@@ -291,38 +265,38 @@ class Permissions with WalkTarget {
 
   bool get requiresGetAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.get) ||
-          getRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.get) ||
+      getRoles.isNotEmpty;
 
   bool get requiresFindAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.find) ||
-          findRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.find) ||
+      findRoles.isNotEmpty;
 
   bool get requiresCountAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.count) ||
-          countRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.count) ||
+      countRoles.isNotEmpty;
 
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.create) ||
-          createRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.create) ||
+      createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.update) ||
-          updateRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.update) ||
+      updateRoles.isNotEmpty;
 
   bool get requiresDeleteAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.delete) ||
-          deleteRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.delete) ||
+      deleteRoles.isNotEmpty;
 
   bool get requiresAddFieldAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.addField) ||
-          addFieldRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.addField) ||
+      addFieldRoles.isNotEmpty;
 
   bool methodIsPublic(AccessMethod method) {
     return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
@@ -356,24 +330,53 @@ enum DocumentType { standard, versioned }
 class Document extends SchemaElement {
   Document({
     required this.fields,
+    this.queryScripts=const {},
     this.documentType = DocumentType.standard,
     this.permissions = const Permissions(),
-  }) : super();
+    Map<String,List<Condition<dynamic>> Function(Document)> queries=const {},
+  }) : _queryDefinitions=queries, super();
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
   final Permissions permissions;
   final DocumentType documentType;
-  final Map<String, Field> fields;
+  final Map<String, Field<dynamic,dynamic>> fields;
+  @JsonKey(ignore: true)
+  final Map<String,List<Condition<dynamic>> Function(Document)> _queryDefinitions;
+  final Map<String,String> queryScripts;
+  final Map<String,Query> _queries={};
 
   @override
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
 
   @override
-  doInit(InitWalkerParams params) {
+  void doInit(InitWalkerParams params) {
     super.doInit(params);
-    _name = params.name!;
+    _name = params.name;
+    _buildQueries();
   }
+
+  void _buildQueries(){
+     for (final entry in _queryDefinitions.entries){
+       _queries[entry.key]=Query(entry.value(this));
+     }
+     for (final String key in queryScripts.keys){
+       final q=_queries[key];
+       final expr=QueryCombiner.fromSource(queryScripts[key], q);
+       _queries[key]=Query(expr.conditions);
+     }
+  }
+
+  Query query(String queryName){
+    final q = _queries[queryName];
+    if (q==null){
+      final String msg='Unknown query with name $queryName';
+      logType(runtimeType).e(msg);
+      throw TakkanException(msg);
+    }
+    return q;
+  }
+
 
   ConditionBuilder operator [](String fieldName) {
     final Field<dynamic, dynamic>? f = fields[fieldName];
@@ -386,7 +389,7 @@ class Document extends SchemaElement {
   }
 
   @override
-  walk(List<ScriptVisitor> visitors) {
+  void walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     permissions.walk(visitors);
   }

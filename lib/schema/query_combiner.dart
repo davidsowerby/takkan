@@ -1,33 +1,31 @@
 import 'package:characters/characters.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:validators/validators.dart';
 
-import '../../common/exception.dart';
-import '../../common/log.dart';
-import '../../schema/field/field.dart';
-import '../../schema/field/integer.dart';
-import '../../schema/schema.dart';
+import '../common/exception.dart';
+import '../common/log.dart';
+import 'field/field.dart';
+import 'schema.dart';
 
-part 'expression.g.dart';
+part 'query_combiner.g.dart';
 
-class Expression extends Equatable {
-  const Expression({required this.conditions});
+class QueryCombiner extends Equatable {
+  const QueryCombiner({required this.conditions});
 
   /// Combines the query conditions from both the [queryScript] and [query]
-  factory Expression.fromSource(
-    String? expression,
-    Query ? query,
+  factory QueryCombiner.fromSource(
+    String? queryScript,
+    Query? query,
   ) {
-    final conditions = List<Condition>.empty(growable: true);
-    if (expression != null) {
-      conditions.addAll(parse(expression));
+    final conditions = List<Condition<dynamic>>.empty(growable: true);
+    if (queryScript != null) {
+      conditions.addAll(parse(queryScript));
     }
     if (query != null) {
       conditions.addAll(query.conditions);
     }
     conditions.sort((a, b) => a.field.compareTo(b.field));
-    return Expression(conditions: conditions);
+    return QueryCombiner(conditions: conditions);
   }
 
   // factory Expression.fromC(List<C> cond){
@@ -38,7 +36,7 @@ class Expression extends Equatable {
   //   return Expression(conditions: result);
   // }
 
-  final List<Condition> conditions;
+  final List<Condition<dynamic>> conditions;
 
   @override
   List<Object?> get props => [conditions];
@@ -128,7 +126,7 @@ dynamic _decodeValueType(String source) {
     return DateTime.parse(source);
   }
   throw UnimplementedError(
-      'https://gitlab.com/takkan/takkan_script/-/issues/40');
+      'value: $source Have you forgotten to put quotes around String in queryScript?. If not, see https://gitlab.com/takkan/takkan_script/-/issues/40');
 }
 
 enum Operator {
@@ -173,10 +171,12 @@ class Condition<T> extends Equatable {
 
 @JsonSerializable(explicitToJson: true)
 class Query {
-  Query(this.document, this.conditions);
+  Query(List<Condition<dynamic>> conditions)
+      : conditions = List.from(conditions) {
+    this.conditions.sort((a, b) => a.field.compareTo(b.field));
+  }
 
   factory Query.fromJson(Map<String, dynamic> json) => _$QueryFromJson(json);
-  final Document document;
 
   final List<Condition<dynamic>> conditions;
 

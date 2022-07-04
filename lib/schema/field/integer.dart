@@ -1,18 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/validation/result.dart';
-import 'package:takkan_script/validation/validate.dart';
 
-import '../../data/select/expression.dart';
+import '../../script/common.dart';
+import '../../validation/result.dart';
+import '../../validation/validate.dart';
+import 'field.dart';
 
 part 'integer.freezed.dart';
 part 'integer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class FInteger extends Field<VInteger, int> {
-  @override
-  Type get modelType => int;
 
   FInteger({
     super.defaultValue,
@@ -23,6 +20,8 @@ class FInteger extends Field<VInteger, int> {
 
   factory FInteger.fromJson(Map<String, dynamic> json) =>
       _$FIntegerFromJson(json);
+  @override
+  Type get modelType => int;
 
   @override
   Map<String, dynamic> toJson() => _$FIntegerToJson(this);

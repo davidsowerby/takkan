@@ -1,5 +1,4 @@
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
@@ -118,9 +117,8 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-             DocByFilter(
-                name: '?',
-                queryScript: 'objectId==x',
+             DocByQuery(
+               queryName: '?',
               )
             ],
           ),
@@ -155,9 +153,8 @@ void main() {
               name: 'wiggly',
               caption: 'Wiggly',
               dataSelectors: [
-               DocByFilter(
-                  name: '?',
-                  queryScript: 'objectId==x',
+               DocByQuery(
+                 queryName: '?',
                   caption: 'Wiggly',
                 )
               ],
@@ -235,9 +232,8 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: [
-             DocByFilter(
-                name: 'fixed thing',
-                queryScript: 'objectId==xx',
+             DocByQuery(
+               queryName: 'fixed thing',
               )
             ],
             children: [PanelStatic(caption: 'panel1')],

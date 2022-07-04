@@ -24,24 +24,20 @@ Map<String, dynamic> _$DocListByFunctionToJson(DocListByFunction instance) =>
       'pageLength': instance.pageLength,
     };
 
-DocListByFilter _$DocListByFilterFromJson(Map<String, dynamic> json) =>
-    DocListByFilter(
-      queryScript: json['script'] as String,
-      cloudFunctionName: json['cloudFunctionName'] as String?,
+DocListByQuery _$DocListByQueryFromJson(Map<String, dynamic> json) =>
+    DocListByQuery(
       liveConnect: json['liveConnect'] as bool? ?? false,
-      name: json['name'] as String,
       caption: json['caption'] as String?,
       pageLength: json['pageLength'] as int? ?? 20,
+      queryName: json['queryName'] as String,
     );
 
-Map<String, dynamic> _$DocListByFilterToJson(DocListByFilter instance) =>
+Map<String, dynamic> _$DocListByQueryToJson(DocListByQuery instance) =>
     <String, dynamic>{
-      'script': instance.queryScript,
-      'cloudFunctionName': instance.cloudFunctionName,
       'liveConnect': instance.liveConnect,
       'pageLength': instance.pageLength,
-      'name': instance.name,
       'caption': instance.caption,
+      'queryName': instance.queryName,
     };
 
 DocListByGQL _$DocListByGQLFromJson(Map<String, dynamic> json) => DocListByGQL(

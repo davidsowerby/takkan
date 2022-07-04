@@ -30,7 +30,6 @@ void main() {
           version: const Version(number: 0),
           name: 'schema',
           documents: {'Person': Document(fields: {})},
-          namedQueries: {},
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [

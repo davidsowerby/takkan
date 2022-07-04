@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/util/visitor.dart';
-import 'package:takkan_script/data/provider/delegate.dart';
-import 'package:takkan_script/data/provider/graphql_delegate.dart';
-import 'package:takkan_script/data/provider/rest_delegate.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/signin/sign_in.dart';
+
+import '../../schema/schema.dart';
+import '../../script/takkan_item.dart';
+import '../../signin/sign_in.dart';
+import '../../util/visitor.dart';
+import 'delegate.dart';
+import 'graphql_delegate.dart';
+import 'rest_delegate.dart';
 
 part 'data_provider.g.dart';
 
@@ -16,13 +17,6 @@ part 'data_provider.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class DataProvider extends TakkanItem {
-  final SignInOptions signInOptions;
-  final SignIn signIn;
-  final AppInstance instanceConfig;
-  final Delegate defaultDelegate;
-  final GraphQL? graphQLDelegate;
-  final Rest restDelegate;
-  final bool useAuthenticator;
 
   DataProvider({
     this.useAuthenticator = false,
@@ -35,15 +29,22 @@ class DataProvider extends TakkanItem {
     super. id,
   }) ;
 
+  factory DataProvider.fromJson(Map<String, dynamic> json) =>
+      _$DataProviderFromJson(json);
+  final SignInOptions signInOptions;
+  final SignIn signIn;
+  final AppInstance instanceConfig;
+  final Delegate defaultDelegate;
+  final GraphQL? graphQLDelegate;
+  final Rest restDelegate;
+  final bool useAuthenticator;
+
   @override
-  walk(List<ScriptVisitor> visitors) {
+  void walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
     graphQLDelegate?.walk(visitors);
     restDelegate.walk(visitors);
   }
-
-  factory DataProvider.fromJson(Map<String, dynamic> json) =>
-      _$DataProviderFromJson(json);
 
   @override
   Map<String, dynamic> toJson() => _$DataProviderToJson(this);
@@ -62,27 +63,25 @@ class DataProvider extends TakkanItem {
 /// and is therefore nullable
 @JsonSerializable(explicitToJson: true)
 class AppInstance {
-  final String group;
-  final String? instance;
 
   const AppInstance({required this.group, this.instance});
+
+  factory AppInstance.fromJson(Map<String, dynamic> json) =>
+      _$AppInstanceFromJson(json);
+  final String group;
+  final String? instance;
 
   @override
   String toString() {
     return '$group:$instance';
   }
 
-  factory AppInstance.fromJson(Map<String, dynamic> json) =>
-      _$AppInstanceFromJson(json);
-
   Map<String, dynamic> toJson() => _$AppInstanceToJson(this);
 }
 
 @JsonSerializable(explicitToJson: true)
 class NullDataProvider extends DataProvider {
-  NullDataProvider({
-    Schema? schema,
-  }) : super(
+  NullDataProvider() : super(
           signInOptions: const SignInOptions(),
           signIn: const SignIn(),
           instanceConfig: const AppInstance(group: 'none', instance: 'none'),

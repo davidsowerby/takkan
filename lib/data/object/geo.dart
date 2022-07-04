@@ -7,10 +7,10 @@ part 'geo.g.dart';
 @JsonSerializable(explicitToJson: true)
 class GeoPoint {
 
+  const GeoPoint({required this.latitude, required this.longitude});
+
   factory GeoPoint.fromJson(Map<String, dynamic> json) =>
       _$GeoPointFromJson(json);
-
-  const GeoPoint({required this.latitude, required this.longitude});
   final double latitude;
   final double longitude;
 
@@ -21,13 +21,13 @@ class GeoPoint {
 @JsonSerializable(explicitToJson: true)
 class GeoPosition {
 
-  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
-      _$GeoPositionFromJson(json);
-
   const GeoPosition(
       {required this.latitude,
       required this.longitude,
       required this.dateTime});
+
+  factory GeoPosition.fromJson(Map<String, dynamic> json) =>
+      _$GeoPositionFromJson(json);
   final double latitude;
   final double longitude;
   final DateTime dateTime;
@@ -39,10 +39,10 @@ class GeoPosition {
 @JsonSerializable(explicitToJson: true)
 class GeoPolygon {
 
+  GeoPolygon({required this.points});
+
   factory GeoPolygon.fromJson(Map<String, dynamic> json) =>
       _$GeoPolygonFromJson(json);
-
-  GeoPolygon({required this.points});
   final List<GeoPoint> points;
 
   Map<String, dynamic> toJson() => _$GeoPolygonToJson(this);

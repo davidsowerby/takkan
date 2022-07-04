@@ -1,6 +1,6 @@
-import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
@@ -31,38 +31,35 @@ void main() {
             name: 'profile',
             documentClass: 'Person',
             dataSelectors: [
-             DocByFilter(
-                name: 'MyObject',
-                queryScript: 'objectId==xxx',
+             DocByQuery(
+               queryName: 'MyObject',
               ),
-             DocByFilter(name: 'mine', queryScript: ''),
+             DocByQuery(queryName: 'mine'),
             ],
           ),
           Page(
             name: 'shortForm',
             documentClass: 'Person',
             dataSelectors: [
-             DocByFilter(
-                name: 'MyObject',
-                queryScript: 'objectId==xxx',
+             DocByQuery(
+               queryName: 'MyObject',
               ),
-             DocByFilter(name: 'person', queryScript:''),
+             DocByQuery(queryName: 'person'),
             ],
           ),
           Page(
             name: 'crowd',
             documentClass: 'Person',
             dataSelectors: [
-              const DocListByFilter(name: 'people', queryScript:''),
+              const DocListByQuery(queryName: 'people'),
             ],
           ),
           Page(
             name: 'people',
             documentClass: 'Person',
             dataSelectors: [
-              const DocListByFilter(
-                name: 'members',
-                queryScript: 'member==true',
+              const DocListByQuery(
+                queryName: 'members',
               )
             ],
           ),
@@ -78,7 +75,8 @@ void main() {
 
       expect(s.routeMap.length, 7);
       for (final route in s.routeMap.keys) {
-        print(route.toString());
+         // ignore: avoid_print
+         print(route.toString());
       }
 
       expect(
@@ -105,8 +103,7 @@ void main() {
       expect(s.pages[4].isStatic, isTrue);
 
       DataSelector dataSelector=s.pages[0].dataSelectorByName('MyObject');
-      expect(dataSelector, isA<DocByFilter>());
-      expect((dataSelector as DocByFilter).queryScript,'objectId==xxx');
+      expect(dataSelector, isA<DocByQuery>());
 
       dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
       expect(dataSelector, isA<NoData>());

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'expression.dart';
+part of 'query_combiner.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -26,13 +26,11 @@ const _$OperatorEnumMap = {
 };
 
 Query _$QueryFromJson(Map<String, dynamic> json) => Query(
-      Document.fromJson(json['document'] as Map<String, dynamic>),
       (json['conditions'] as List<dynamic>)
           .map((e) => Condition<dynamic>.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$QueryToJson(Query instance) => <String, dynamic>{
-      'document': instance.document.toJson(),
       'conditions': instance.conditions.map((e) => e.toJson()).toList(),
     };

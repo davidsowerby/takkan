@@ -2,9 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../page/page.dart';
 import '../../panel/panel.dart';
-import '../provider/data_provider.dart';
 import 'data_selector.dart';
-import 'expression.dart';
 
 part 'data_list.g.dart';
 
@@ -16,7 +14,7 @@ part 'data_list.g.dart';
 /// Lists can be retrieved using:
 ///
 /// - [DocListByFunction], which uses a user-defined server-side function
-/// - [DocListByFilter], which defines the filter conditions in a code-like script
+/// - [DocListByQuery], which defines the filter conditions in a code-like script
 /// - [DocListByGQL], which defines a query in GraphQL script
 ///
 /// [liveConnect] If true, a Stream of data is expected (equivalent to a Back4App LiveQuery), rather than a Future
@@ -70,30 +68,27 @@ class DocListByFunction implements DocumentListSelector {
 ///
 /// The function must return a list.
 @JsonSerializable(explicitToJson: true)
-class DocListByFilter implements DocumentListSelector {
-  const DocListByFilter({
-     this.queryScript,
-    this.cloudFunctionName,
+class DocListByQuery implements DocumentListSelector {
+  const DocListByQuery({
     this.liveConnect = false,
-    required this.name,
+
     this.caption,
     this.pageLength = 20,
-    this.query,
+    required this.queryName,
   });
 
-  factory DocListByFilter.fromJson(Map<String, dynamic> json) =>
-      _$DocListByFilterFromJson(json);
-  final String? queryScript;
-  final String? cloudFunctionName;
+  factory DocListByQuery.fromJson(Map<String, dynamic> json) =>
+      _$DocListByQueryFromJson(json);
   @override
   final bool liveConnect;
   @override
   final int pageLength;
-  @override
-  final String name;
+
+   @override
+  String get name=> queryName;
   @override
   final String? caption;
-  final Query? query;
+  final String queryName;
 
   @override
   bool get isItem => false;
@@ -101,7 +96,7 @@ class DocListByFilter implements DocumentListSelector {
   @override
   bool get isList => true;
 
-  Map<String, dynamic> toJson() => _$DocListByFilterToJson(this);
+  Map<String, dynamic> toJson() => _$DocListByQueryToJson(this);
 }
 
 /// [script] must be a valid GraphQL script which returns a list of 0..n documents

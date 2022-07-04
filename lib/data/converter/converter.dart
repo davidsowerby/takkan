@@ -1,7 +1,8 @@
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
 import 'package:validators/validators.dart';
+
+import '../../schema/field/field.dart';
+import '../../schema/schema.dart';
+import '../../script/script.dart';
 
 /// Function class to read dropdown selection list from a data source
 // abstract class SelectionReader {
@@ -30,7 +31,7 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   /// If conversion validation fails, returns the error message for that (model validation is not possible)
   /// If conversion validation succeeds, return result of model validation (which is an empty list
   /// if there are no validation errors)
-  List<String> validate(VIEW inputData, Field field, Script pScript) {
+  List<String> validate(VIEW inputData, Field<dynamic,dynamic> field, Script pScript) {
     final conversionValidation = viewModelValidate(inputData);
     if (conversionValidation) {
       return field.doValidation(viewToModel(inputData), pScript);

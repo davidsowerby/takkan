@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../../page/page.dart';
 import 'data_selector.dart';
-import 'expression.dart';
 
 part 'data_item.g.dart';
 
@@ -13,7 +13,7 @@ part 'data_item.g.dart';
 /// A document can be retrieved using:
 ///
 /// - [DocByFunction], which uses a user-defined server-side function
-/// - [DocByFilter], which defines the filter conditions in a code-like script
+/// - [DocByQuery], which defines the filter conditions in a code-like script
 /// - [DocByGQL], which defines a query in GraphQL script
 ///
 /// [liveConnect] If true, a Stream of data is expected (equivalent to a Back4App LiveQuery), rather than a Future
@@ -68,23 +68,19 @@ class DocByFunction implements DocumentSelector {
 ///
 /// The function must return a single valid document
 @JsonSerializable(explicitToJson: true)
-class DocByFilter implements DocumentSelector {
-   DocByFilter({
-    this.queryScript = '',
-    required this.name,
+class DocByQuery implements DocumentSelector {
+  DocByQuery({
     this.liveConnect = false,
     this.caption,
-  this.query,
-  }) ;
+    required this.queryName,
+  });
 
-  factory DocByFilter.fromJson(Map<String, dynamic> json) =>
-      _$DocByFilterFromJson(json);
+  factory DocByQuery.fromJson(Map<String, dynamic> json) =>
+      _$DocByQueryFromJson(json);
 
-  final String? queryScript;
-  @JsonKey(ignore: true)
-  final Query? query;
+  final String  queryName;
   @override
-  final String name;
+  String get name=> queryName;
   @override
   final bool liveConnect;
 
@@ -100,11 +96,8 @@ class DocByFilter implements DocumentSelector {
   @override
   int get pageLength => 1;
 
-  Map<String, dynamic> toJson() => _$DocByFilterToJson(this);
+  Map<String, dynamic> toJson() => _$DocByQueryToJson(this);
 
-  Expression get expression{
-    return Expression.fromSource(queryScript, query);
-  }
 }
 
 /// [script] must be a valid GraphQL script which returns exactly one document

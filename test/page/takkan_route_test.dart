@@ -1,12 +1,11 @@
 import 'package:takkan_medley_script/medley/medley_script.dart';
-import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/version.dart';
-
 import 'package:test/test.dart';
 
 void main() {
@@ -25,10 +24,10 @@ void main() {
         name: 'person',
         documentClass: 'Person',
         dataSelectors: [
-           DocByFilter(name: 'person',queryScript:''),
-           DocByFilter(name: 'tagged',queryScript:''),
-           DocByFilter(name: 'byId', queryScript: 'objectId==xxx'),
-           DocByFilter(queryScript: 'age>=18', name: 'adult'),
+           DocByQuery(queryName: 'person'),
+           DocByQuery(queryName: 'tagged'),
+           DocByQuery(queryName: 'byId'),
+           DocByQuery(queryName: 'adult'),
           const DocByFunction(cloudFunctionName: 'mostRecent'),
           const DocByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
@@ -78,10 +77,10 @@ void main() {
         name: 'person',
         documentClass: 'Person',
         dataSelectors: [
-          const DocListByFilter(name: 'people', queryScript:''),
-          const DocListByFilter(name: 'tagged', queryScript:''),
-          const DocListByFilter(name: 'byId', queryScript: "objectId in ['xxx', 'yyy']"),
-          const DocListByFilter(queryScript: 'age>=18', name: 'adult'),
+          const DocListByQuery(queryName: 'people'),
+          const DocListByQuery(queryName: 'tagged'),
+          const DocListByQuery(queryName: 'byId'),
+          const DocListByQuery(queryName:  'adult'),
           const DocListByFunction(cloudFunctionName: 'mostRecent'),
           const DocListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
@@ -171,8 +170,8 @@ void main() {
       expect(route1 == route1, isTrue,
           reason: 'identical params, different compare');
 
-      // expect(route1.hashCode==route2.hashCode,isFalse);
-      // expect(route1==route2,isFalse);
+      expect(route1.hashCode==route2.hashCode,isFalse);
+      expect(route1==route2,isFalse);
       expect(route1==route3,isFalse);
 
     });
