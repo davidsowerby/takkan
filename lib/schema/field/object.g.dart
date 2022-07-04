@@ -8,16 +8,13 @@ part of 'object.dart';
 
 FObject _$FObjectFromJson(Map<String, dynamic> json) => FObject(
       defaultValue: json['defaultValue'] as Map<String, dynamic>?,
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map((e) => ObjectValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FObjectToJson(FObject instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -30,19 +27,3 @@ Map<String, dynamic> _$FObjectToJson(FObject instance) {
   writeNotNull('defaultValue', instance.defaultValue);
   return val;
 }
-
-ObjectValidation _$ObjectValidationFromJson(Map<String, dynamic> json) =>
-    ObjectValidation(
-      method: $enumDecode(_$ValidateObjectEnumMap, json['method']),
-      param: json['param'],
-    );
-
-Map<String, dynamic> _$ObjectValidationToJson(ObjectValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidateObjectEnumMap[instance.method],
-      'param': instance.param,
-    };
-
-const _$ValidateObjectEnumMap = {
-  ValidateObject.isNotEmpty: 'isNotEmpty',
-};

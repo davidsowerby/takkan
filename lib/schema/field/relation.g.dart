@@ -11,17 +11,13 @@ FRelation _$FRelationFromJson(Map<String, dynamic> json) => FRelation(
       defaultValue: json['defaultValue'] == null
           ? null
           : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map(
-                  (e) => RelationValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FRelationToJson(FRelation instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -35,21 +31,3 @@ Map<String, dynamic> _$FRelationToJson(FRelation instance) {
   val['targetClass'] = instance.targetClass;
   return val;
 }
-
-RelationValidation _$RelationValidationFromJson(Map<String, dynamic> json) =>
-    RelationValidation(
-      method: $enumDecode(_$ValidateRelationEnumMap, json['method']),
-      param: json['param'] == null
-          ? null
-          : Relation.fromJson(json['param'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$RelationValidationToJson(RelationValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidateRelationEnumMap[instance.method],
-      'param': instance.param?.toJson(),
-    };
-
-const _$ValidateRelationEnumMap = {
-  ValidateRelation.isValid: 'isValid',
-};

@@ -2,6 +2,7 @@ import 'package:validators/validators.dart';
 
 import '../../schema/field/field.dart';
 import '../../schema/schema.dart';
+import '../../schema/validation/validation_error_messages.dart';
 import '../../script/script.dart';
 
 /// Function class to read dropdown selection list from a data source
@@ -12,7 +13,6 @@ import '../../script/script.dart';
 //
 //   List<dynamic> call(DocumentSnapshot document);
 // }
-
 
 /// Converts data from the model to the view and back again.  If the model and the view use the same data type,
 /// a [PassThroughConverter] is used
@@ -31,10 +31,14 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   /// If conversion validation fails, returns the error message for that (model validation is not possible)
   /// If conversion validation succeeds, return result of model validation (which is an empty list
   /// if there are no validation errors)
-  List<String> validate(VIEW inputData, Field<dynamic,dynamic> field, Script pScript) {
+  List<String> validate(VIEW inputData, Field<dynamic> field, Script pScript) {
     final conversionValidation = viewModelValidate(inputData);
     if (conversionValidation) {
-      return field.doValidation(viewToModel(inputData), pScript);
+      final errorMessages = (pScript.validationErrorMessages.isEmpty)
+          ? const ValidationErrorMessages(
+              typePatterns: defaultValidationErrorMessages)
+          : pScript.validationErrorMessages;
+      return field.doValidation(viewToModel(inputData), errorMessages);
     } else {
       final String key = runtimeType.toString();
       return [pScript.conversionErrorMessages.patterns[key] ?? 'unknown'];
@@ -66,8 +70,6 @@ class PassThroughConverter<T> extends ModelViewConverter<T, T> {
     return true;
   }
 }
-
-
 
 /// Converting view back to the model rounds a double value
 class IntDoubleConverter extends ModelViewConverter<int, double> {
@@ -132,9 +134,6 @@ class DoubleStringConverter extends ModelViewConverter<double, String> {
   }
 }
 
-
-
-
 // class BooleanStringConverter extends ModelViewConverter<bool, String> {
 //   final BooleanText booleanText;
 //   final bool caseSensitive;
@@ -178,8 +177,8 @@ class DoubleStringConverter extends ModelViewConverter<double, String> {
 // }
 
 class ConversionException implements Exception {
-
   ConversionException(this.msg);
+
   final String msg;
 
   String errMsg() => msg;

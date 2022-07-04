@@ -1,55 +1,84 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../common/log.dart';
-import '../../script/script.dart';
+import '../../data/select/condition/condition.dart';
+import '../../script/takkan_item.dart';
 import '../../util/interpolate.dart';
-import '../../validation/result.dart';
-import '../../validation/validate.dart';
+import '../query/expression.dart';
+import '../query/query_combiner.dart';
 import '../schema.dart';
-import 'integer.dart';
+import '../validation/validation_error_messages.dart';
 
-/// [VAL] is the validator type for example, [IntegerValidation]
-/// [MODEL] is the data type of the model attribute represented
-///
-abstract class Field<VAL, MODEL> extends SchemaElement {
-
+/// [MODEL] the data type of the model attribute represented
+/// 
+/// Validation can be defined by either or both of the following properties:
+/// - [validation] is a script version of validation, for example '> 100'
+/// - [constraints] also defines validation but in a code format.  The easiest way
+/// to define these are with the helper class 'V', for example:  V.int.greaterThan(0)
+/// 
+/// Both achieve the same thing, and if both are defined, they are combined.
+/// 
+/// [_conditions] is the result of that combination. It is built in [doInit]
+@ConditionConverter()
+abstract class Field<MODEL> extends SchemaElement {
   Field({
-    this.validations = const [],
+    this.constraints = const [],
     required this.required,
     this.defaultValue,
-    required super. readOnly,
-  }) ;
-  final List<VAL> validations;
+    this.validation,
+    required super.readOnly,
+  });
+
+  @JsonKey(ignore: true)
+  final List<Condition<MODEL> > constraints;
+  final String? validation;
   final bool required;
   @JsonKey(includeIfNull: false)
   final MODEL? defaultValue;
 
+  /// Not really a Query, just holds conditions for validation
+  final Query _conditions=Query([]);
+
   Type get modelType;
 
   /// Returns a list of validation errors, or an empty list if there are none
-  List<String> doValidation(MODEL value, Script pScript) {
-    if (validations.isEmpty) {
+  List<String> doValidation(MODEL value, ValidationErrorMessages errorMessages) {
+    if (constraints.isEmpty) {
       return List.empty();
     }
     final List<String> errors = List.empty(growable: true);
-    for (final VAL validation in validations) {
-      if (validation is V) {
-        final VResult result = validate(validation, value);
-        if (result.failed) {
-          String? errorPattern =
-              pScript.validationErrorMessages.find(result.patternKey);
-          if (errorPattern == null) {
-            errorPattern = 'error message not defined for ${result.patternKey}';
-            logType(runtimeType).e(errorPattern);
-          } else {
-            errors.add(expandErrorMessage(errorPattern, result.params));
-          }
+    for (final Condition<dynamic> condition in _conditions.conditions) {
+      if (!condition.isValid(value)) {
+        String? errorPattern =            errorMessages.find(condition.operator);
+        if (errorPattern == null) {
+          errorPattern = 'error message not defined for ${condition.operator}';
+          logType(runtimeType).e(errorPattern);
+        } else {
+          errors.add(expandErrorMessage(errorPattern, {
+            'threshold': condition.reference,
+          }));
         }
       }
     }
     return errors;
   }
 
+  @override
+  void doInit(InitWalkerParams params) {
+    super.doInit(params);
+    _buildValidations();
+  }
 
+  void _buildValidations() {
 
+    for (final condition in constraints){
+      _conditions.conditions.add(condition.withField(name));
+    }
+    final vs = validation;
+    if (vs != null) {
+      final c = Expression(field: this).parseValidation(vs);
+      final List<Condition<MODEL>> c1 = List.castFrom(c);
+     _conditions.conditions.addAll(c1);
+    }
+  }
 }

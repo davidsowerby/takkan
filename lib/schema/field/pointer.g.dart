@@ -11,17 +11,13 @@ FPointer _$FPointerFromJson(Map<String, dynamic> json) => FPointer(
       defaultValue: json['defaultValue'] == null
           ? null
           : Pointer.fromJson(json['defaultValue'] as Map<String, dynamic>),
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map(
-                  (e) => PointerValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FPointerToJson(FPointer instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -35,21 +31,3 @@ Map<String, dynamic> _$FPointerToJson(FPointer instance) {
   val['targetClass'] = instance.targetClass;
   return val;
 }
-
-PointerValidation _$PointerValidationFromJson(Map<String, dynamic> json) =>
-    PointerValidation(
-      method: $enumDecode(_$ValidatePointerEnumMap, json['method']),
-      param: json['param'] == null
-          ? null
-          : Pointer.fromJson(json['param'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$PointerValidationToJson(PointerValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidatePointerEnumMap[instance.method],
-      'param': instance.param?.toJson(),
-    };
-
-const _$ValidatePointerEnumMap = {
-  ValidatePointer.isValid: 'isValid',
-};

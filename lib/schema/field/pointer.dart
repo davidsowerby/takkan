@@ -1,54 +1,29 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/data/object/pointer.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/validation/validator.dart';
+
+import '../../data/object/pointer.dart';
+import '../../script/common.dart';
+import 'field.dart';
 
 part 'pointer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FPointer extends Field<PointerValidation, Pointer> {
-  @override
-  Type get modelType => Pointer;
-  final String targetClass;
+class FPointer extends Field< Pointer> {
 
   FPointer({
     required this.targetClass,
     super.defaultValue,
-    super. validations = const [],
+    super. constraints = const [],
     super. required = false,
     super. readOnly = IsReadOnly.inherited,
+    super.validation,
   }) ;
 
   factory FPointer.fromJson(Map<String, dynamic> json) =>
       _$FPointerFromJson(json);
+  @override
+  Type get modelType => Pointer;
+  final String targetClass;
 
   @override
   Map<String, dynamic> toJson() => _$FPointerToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class PointerValidation implements ModelValidation<ValidatePointer, Pointer> {
-  @override
-  final ValidatePointer method;
-  @override
-  final Pointer? param;
-
-  const PointerValidation({required this.method, this.param});
-
-  factory PointerValidation.fromJson(Map<String, dynamic> json) =>
-      _$PointerValidationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PointerValidationToJson(this);
-}
-
-enum ValidatePointer {
-  isValid,
-}
-
-validatePointer(PointerValidation validation, Pointer value) {
-  switch (validation.method) {
-    case ValidatePointer.isValid:
-      return true;
-  }
 }

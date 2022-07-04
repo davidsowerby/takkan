@@ -10,17 +10,13 @@ FPostCode _$FPostCodeFromJson(Map<String, dynamic> json) => FPostCode(
       defaultValue: json['defaultValue'] == null
           ? null
           : PostCode.fromJson(json['defaultValue'] as Map<String, dynamic>),
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map(
-                  (e) => PostCodeValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FPostCodeToJson(FPostCode instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -33,21 +29,3 @@ Map<String, dynamic> _$FPostCodeToJson(FPostCode instance) {
   writeNotNull('defaultValue', instance.defaultValue?.toJson());
   return val;
 }
-
-PostCodeValidation _$PostCodeValidationFromJson(Map<String, dynamic> json) =>
-    PostCodeValidation(
-      method: $enumDecode(_$ValidatePostCodeEnumMap, json['method']),
-      param: json['param'] == null
-          ? null
-          : PostCode.fromJson(json['param'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$PostCodeValidationToJson(PostCodeValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidatePostCodeEnumMap[instance.method],
-      'param': instance.param?.toJson(),
-    };
-
-const _$ValidatePostCodeEnumMap = {
-  ValidatePostCode.isValidForLocale: 'isValidForLocale',
-};

@@ -3,14 +3,16 @@ import 'package:json_annotation/json_annotation.dart';
 import '../common/exception.dart';
 import '../common/log.dart';
 import '../data/provider/data_provider.dart';
+import '../data/select/condition/condition.dart';
 import '../page/page.dart';
 import '../script/common.dart';
 import '../script/takkan_item.dart';
 import '../script/version.dart';
 import '../util/visitor.dart';
 import 'field/field.dart';
+import 'field/string.dart';
 import 'json/json_converter.dart';
-import 'query_combiner.dart';
+import 'query/query_combiner.dart';
 
 part 'schema.g.dart';
 
@@ -105,7 +107,6 @@ class Schema extends SchemaElement {
     return counter.roles;
   }
 }
-
 
 /// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
 ///
@@ -330,24 +331,29 @@ enum DocumentType { standard, versioned }
 class Document extends SchemaElement {
   Document({
     required this.fields,
-    this.queryScripts=const {},
+    this.queryScripts = const {},
     this.documentType = DocumentType.standard,
     this.permissions = const Permissions(),
-    Map<String,List<Condition<dynamic>> Function(Document)> queries=const {},
-  }) : _queryDefinitions=queries, super();
+    Map<String, List<Condition<dynamic>> Function(Document)> queries = const {},
+  })  : _queryDefinitions = queries,
+        super();
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
   final Permissions permissions;
   final DocumentType documentType;
-  final Map<String, Field<dynamic,dynamic>> fields;
+  final Map<String, Field<dynamic>> fields;
   @JsonKey(ignore: true)
-  final Map<String,List<Condition<dynamic>> Function(Document)> _queryDefinitions;
-  final Map<String,String> queryScripts;
-  final Map<String,Query> _queries={};
+  final Map<String, List<Condition<dynamic>> Function(Document)>
+      _queryDefinitions;
+  final Map<String, String> queryScripts;
+  final Map<String, Query> _queries = {};
 
   @override
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
+
+  @override
+  List<Object> get subElements => [fields];
 
   @override
   void doInit(InitWalkerParams params) {
@@ -356,32 +362,54 @@ class Document extends SchemaElement {
     _buildQueries();
   }
 
-  void _buildQueries(){
-     for (final entry in _queryDefinitions.entries){
-       _queries[entry.key]=Query(entry.value(this));
-     }
-     for (final String key in queryScripts.keys){
-       final q=_queries[key];
-       final expr=QueryCombiner.fromSource(queryScripts[key], q);
-       _queries[key]=Query(expr.conditions);
-     }
+  Field<dynamic> field(String fieldName) {
+    final f = fields[fieldName];
+    if (f == null) {
+      final f1 = reservedField(fieldName);
+      if (f1 == null) {
+        final String msg = 'Field $fieldName does not exist in document $name';
+        logType(runtimeType).e(msg);
+        throw TakkanException(msg);
+      }
+      return f1;
+    }
+    return f;
   }
 
-  Query query(String queryName){
+  /// see https://gitlab.com/takkan/takkan_script/-/issues/45
+  Field<dynamic>? reservedField(fieldName) {
+    switch (fieldName) {
+      case 'objectId':
+        return FString(readOnly: IsReadOnly.yes);
+    }
+    return null;
+  }
+
+  void _buildQueries() {
+    for (final entry in _queryDefinitions.entries) {
+      _queries[entry.key] = Query(entry.value(this));
+    }
+    for (final String key in queryScripts.keys) {
+      final q = _queries[key];
+      final expr = QueryCombiner.fromSource(this, queryScripts[key], q);
+      _queries[key] = Query(expr.conditions);
+    }
+  }
+
+  Query query(String queryName) {
     final q = _queries[queryName];
-    if (q==null){
-      final String msg='Unknown query with name $queryName';
+    if (q == null) {
+      final String msg = 'Unknown query with name $queryName';
       logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
     return q;
   }
 
-
   ConditionBuilder operator [](String fieldName) {
-    final Field<dynamic, dynamic>? f = fields[fieldName];
+    final Field<dynamic>? f = fields[fieldName];
     if (f != null) {
-      return ConditionBuilder(this, fieldName, f);
+      return ConditionBuilder( fieldName);
     }
     final String msg = '$fieldName is not a valid field name';
     logType(runtimeType).e(msg);

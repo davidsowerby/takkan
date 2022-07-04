@@ -1,56 +1,29 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/data/object/relation.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/validation/validator.dart';
+
+import '../../data/object/relation.dart';
+import '../../script/common.dart';
+import 'field.dart';
 
 part 'relation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FRelation extends Field<RelationValidation, Relation> {
-  @override
-  Type get modelType => Relation;
-  final String targetClass;
+class FRelation extends Field< Relation> {
 
   FRelation({
     required this.targetClass,
     super.defaultValue,
-    super. validations = const [],
+    super. constraints = const [],
     super. required = false,
     super. readOnly = IsReadOnly.inherited,
+    super.validation,
   }) ;
 
   factory FRelation.fromJson(Map<String, dynamic> json) =>
       _$FRelationFromJson(json);
+  @override
+  Type get modelType => Relation;
+  final String targetClass;
 
   @override
   Map<String, dynamic> toJson() => _$FRelationToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class RelationValidation
-    implements ModelValidation<ValidateRelation, Relation> {
-  @override
-  final ValidateRelation method;
-  @override
-  final Relation? param;
-
-  const RelationValidation({required this.method, this.param});
-
-  factory RelationValidation.fromJson(Map<String, dynamic> json) =>
-      _$RelationValidationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$RelationValidationToJson(this);
-}
-
-// TODO: Not sure that validation is ever actually appropriate?
-enum ValidateRelation {
-  isValid,
-}
-
-validateRelation(RelationValidation validation, Relation value) {
-  switch (validation.method) {
-    case ValidateRelation.isValid:
-      return true;
-  }
 }

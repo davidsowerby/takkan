@@ -1,3 +1,4 @@
+import 'package:takkan_script/data/select/condition/condition.dart';
 import 'package:takkan_script/schema/field/integer.dart';
 import 'package:takkan_script/schema/field/string.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -6,7 +7,7 @@ import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Unit test', () {
+  group('Expressions', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -15,7 +16,9 @@ void main() {
 
     tearDown(() {});
 
-    test('output', () {
+
+
+    test('combine script and query', () {
       // given
       final Schema schema = Schema(
         name: 'test',
@@ -26,9 +29,8 @@ void main() {
               'firstName': FString(),
               'lastName': FString(),
               'age': FInteger(
-                validations: [
-                  const VInteger.greaterThan(0),
-                  const VInteger.lessThan(128),
+                constraints: [
+
                 ],
               ),
             },
@@ -38,6 +40,7 @@ void main() {
                     q['lastName'].string.equalTo('Hazel'),
                   ]
             },
+            queryScripts: {'adults': "firstName == 'Jack'"},
           )
         },
       );
@@ -46,12 +49,16 @@ void main() {
 
       // when
       script.init();
-      final query=schema.document('Person').query('adults');
+      final query = schema.document('Person').query('adults');
       // then
 
-      expect(query.conditions.length, 2);
-      expect(query.conditions[0].field,'age');
-      expect(query.conditions[0].value,152);
+      expect(query.conditions.length, 3);
+      expect(query.conditions[0].field, 'age');
+      expect(query.conditions[0].operator, Operator.equalTo);
+      expect(query.conditions[0].reference, 152);
+      expect(query.conditions[1].field, 'firstName');
+      expect(query.conditions[1].operator, Operator.equalTo);
+      expect(query.conditions[1].reference, 'Jack');
     });
   });
 }

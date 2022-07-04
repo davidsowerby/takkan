@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 import '../common/debug.dart';
 import '../data/provider/data_provider.dart';
 import '../data/select/data_selector.dart';
-import '../data/select/data_item.dart';
-import '../data/select/data_list.dart';
 import '../panel/panel.dart';
 import '../part/part.dart';
 import '../schema/field/integer.dart';
@@ -248,7 +246,6 @@ class RoleVisitor implements ScriptVisitor {
 /// - list of documents:  {page.name}/{dataSelector.name}/{[objectId, objectId]*}
 /// - static pages: {page.name}/{dataSelector.name}/static
 ///
-@immutable
 class TakkanRoute extends Equatable{
   const TakkanRoute({
     required this.dataSelectorName,

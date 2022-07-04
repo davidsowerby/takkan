@@ -1,26 +1,24 @@
-import 'package:takkan_script/schema/field/integer.dart';
-import 'package:takkan_script/schema/field/string.dart';
+
+import '../../data/select/condition/condition.dart';
 
 /// This is a temporary setup until the validation patterns can be included in PScript,
 /// or some other server based method is designed
 ///
 class ValidationErrorMessages {
-  final Map<Object, String> typePatterns;
 
   const ValidationErrorMessages({this.typePatterns = const {}});
+  final Map<Object, String> typePatterns;
 
-  String? find(Object patternKey) {
+  String? find(Operator patternKey) {
     return typePatterns[patternKey];
   }
+
+  bool get isEmpty => typePatterns.isEmpty;
 }
 
 const Map<Object, String> defaultValidationErrorMessages = {
-  IntegerValidation.greaterThan: 'must be greater than {threshold}',
-  IntegerValidation.lessThan: 'must be less than {threshold}',
-  StringValidation.longerThan: 'must be more than {threshold} characters',
-  StringValidation.shorterThan: 'must be less than {threshold} characters',
+  Operator.greaterThan: 'must be greater than {threshold}',
+  Operator.lessThan: 'must be less than {threshold}',
+  Operator.longerThan: 'must have length of more than {threshold}',
+  Operator.shorterThan: 'must have length of less than {threshold} characters',
 };
-
-// ValidateInteger.lessThan: 'must be less than {0}',
-// ValidateString.lengthGreaterThan: 'must be more than {0} characters',
-// ValidateString.lengthLessThan: 'must be less than {0} characters',

@@ -10,16 +10,13 @@ FDate _$FDateFromJson(Map<String, dynamic> json) => FDate(
       defaultValue: json['defaultValue'] == null
           ? null
           : DateTime.parse(json['defaultValue'] as String),
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map((e) => DateValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FDateToJson(FDate instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -32,20 +29,3 @@ Map<String, dynamic> _$FDateToJson(FDate instance) {
   writeNotNull('defaultValue', instance.defaultValue?.toIso8601String());
   return val;
 }
-
-DateValidation _$DateValidationFromJson(Map<String, dynamic> json) =>
-    DateValidation(
-      method: $enumDecode(_$ValidateDateEnumMap, json['method']),
-      param: DateTime.parse(json['param'] as String),
-    );
-
-Map<String, dynamic> _$DateValidationToJson(DateValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidateDateEnumMap[instance.method],
-      'param': instance.param.toIso8601String(),
-    };
-
-const _$ValidateDateEnumMap = {
-  ValidateDate.isLaterThan: 'isLaterThan',
-  ValidateDate.isBefore: 'isBefore',
-};

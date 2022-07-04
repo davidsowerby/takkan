@@ -13,11 +13,11 @@ part 'query_result.g.dart';
 /// [documentSchema] is used to lookup the schema for the document(s) returned, from [Schema.documents]
 ///
 /// [permissions] can be defined but usually permissions are set by the [documentSchema]
-@deprecated
+@Deprecated('https://gitlab.com/takkan/takkan_script/-/issues/43')
 @JsonSerializable(explicitToJson: true)
-class FQuerySchema extends Field<ListValidation, List> {
-  final String documentSchema;
+class FQuerySchema extends Field< List<dynamic>> {
 
+  @Deprecated('https://gitlab.com/takkan/takkan_script/-/issues/43')
   FQuerySchema({
     required this.documentSchema,
   }) : super(
@@ -25,9 +25,12 @@ class FQuerySchema extends Field<ListValidation, List> {
           readOnly: IsReadOnly.yes,
         );
 
+  @Deprecated('https://gitlab.com/takkan/takkan_script/-/issues/43')
   factory FQuerySchema.fromJson(Map<String, dynamic> json) =>
       _$FQuerySchemaFromJson(json);
+  final String documentSchema;
 
+  @override
   Map<String, dynamic> toJson() => _$FQuerySchemaToJson(this);
 
   @override

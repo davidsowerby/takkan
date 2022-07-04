@@ -1,15 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/validation/validator.dart';
+import '../../data/select/condition/condition.dart';
+import '../../script/common.dart';
+import 'field.dart';
 
 part 'list.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FList extends Field<ListValidation, List> {
+@ConditionConverter()
+class FList extends Field< List<dynamic>> {
   FList({
     super.defaultValue,
-    super. validations = const [],
+    super. constraints = const [],
     super. required = false,
     super. readOnly = IsReadOnly.inherited,
   }) ;
@@ -21,21 +22,4 @@ class FList extends Field<ListValidation, List> {
 
   @override
   Type get modelType => List;
-}
-
-enum ValidateList { containsLessThan, containsMoreThan }
-
-@JsonSerializable(explicitToJson: true)
-class ListValidation implements ModelValidation<ValidateList, List> {
-  @override
-  final ValidateList method;
-  @override
-  final int param;
-
-  const ListValidation({required this.method, this.param = 0});
-
-  factory ListValidation.fromJson(Map<String, dynamic> json) =>
-      _$ListValidationFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ListValidationToJson(this);
 }

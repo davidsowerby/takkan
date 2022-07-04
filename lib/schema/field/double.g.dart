@@ -8,16 +8,13 @@ part of 'double.dart';
 
 FDouble _$FDoubleFromJson(Map<String, dynamic> json) => FDouble(
       defaultValue: (json['defaultValue'] as num?)?.toDouble(),
-      validations: (json['validations'] as List<dynamic>?)
-              ?.map((e) => DoubleValidation.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
       required: json['required'] as bool? ?? false,
+      validation: json['validation'] as String?,
     );
 
 Map<String, dynamic> _$FDoubleToJson(FDouble instance) {
   final val = <String, dynamic>{
-    'validations': instance.validations.map((e) => e.toJson()).toList(),
+    'validation': instance.validation,
     'required': instance.required,
   };
 
@@ -30,20 +27,3 @@ Map<String, dynamic> _$FDoubleToJson(FDouble instance) {
   writeNotNull('defaultValue', instance.defaultValue);
   return val;
 }
-
-DoubleValidation _$DoubleValidationFromJson(Map<String, dynamic> json) =>
-    DoubleValidation(
-      method: $enumDecode(_$ValidateDoubleEnumMap, json['method']),
-      param: (json['param'] as num).toDouble(),
-    );
-
-Map<String, dynamic> _$DoubleValidationToJson(DoubleValidation instance) =>
-    <String, dynamic>{
-      'method': _$ValidateDoubleEnumMap[instance.method],
-      'param': instance.param,
-    };
-
-const _$ValidateDoubleEnumMap = {
-  ValidateDouble.isGreaterThan: 'isGreaterThan',
-  ValidateDouble.isLessThan: 'isLessThan',
-};
