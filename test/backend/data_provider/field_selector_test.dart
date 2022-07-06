@@ -1,6 +1,6 @@
+import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
-import 'package:takkan_script/schema/field/string.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -15,8 +15,8 @@ void main() {
 
     test('directly specified', () {
       // given
-      Document schema = Document(fields: {'c': FString()});
-      final selector = FieldSelector(fields: const ['a', 'b']);
+      final Document schema = Document(fields: {'c': FString()});
+      const selector = FieldSelector(fields: ['a', 'b']);
       // when
       final selection = selector.selection(schema);
       // then
@@ -26,9 +26,9 @@ void main() {
 
     test('all fields true, direct fields ignored', () {
       // given
-      Document schema = Document(fields: {'c': FString(), 'd': FString()});
-      final selector = FieldSelector(
-        fields: const ['a', 'b'],
+      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      const selector = FieldSelector(
+        fields: ['a', 'b'],
         allFields: true,
       );
       // when
@@ -39,9 +39,9 @@ void main() {
     });
     test('all fields except excluded', () {
       // given
-      Document schema = Document(fields: {'c': FString(), 'd': FString()});
-      final selector = FieldSelector(
-        excludeFields: const ['c'],
+      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      const selector = FieldSelector(
+        excludeFields: ['c'],
         allFields: true,
       );
       // when
@@ -52,9 +52,9 @@ void main() {
     });
     test('all fields plus meta, except excluded', () {
       // given
-      Document schema = Document(fields: {'c': FString(), 'd': FString()});
-      final selector = FieldSelector(
-        excludeFields: const ['c'],
+      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      const selector = FieldSelector(
+        excludeFields: ['c'],
         includeMetaFields: true,
         allFields: true,
       );
@@ -66,9 +66,9 @@ void main() {
     });
     test('all fields plus meta, except excluded one meta excluded', () {
       // given
-      Document schema = Document(fields: {'c': FString(), 'd': FString()});
-      final selector = FieldSelector(
-        excludeFields: const ['c', 'updatedAt'],
+      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      const selector = FieldSelector(
+        excludeFields: ['c', 'updatedAt'],
         includeMetaFields: true,
         allFields: true,
       );

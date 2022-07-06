@@ -1,19 +1,19 @@
 import 'package:meta/meta.dart';
-import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_backend/backend/user/takkan_user.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 
-abstract class Authenticator<T extends DataProvider, USER,
-    D extends IDataProvider> {
-  final D parent;
+import '../data_provider/data_provider.dart';
+import 'takkan_user.dart';
+
+abstract class Authenticator<CONFIG extends DataProvider, USER> {
+
+  Authenticator(this.parent);
+  final IDataProvider<CONFIG> parent;
   final List<String> _userRoles = List.empty(growable: true);
   final List<Function(SignInStatus)> _signInStatusListeners =
       List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
   USER? nativeUser;
-
-  Authenticator(this.parent);
 
   TakkanUser get user => takkanUserFromNative(nativeUser);
 
@@ -21,11 +21,11 @@ abstract class Authenticator<T extends DataProvider, USER,
 
   TakkanUser takkanUserFromNative(USER? nativeUser);
 
-  addSignInStatusListener(Function(SignInStatus) listener) {
+  void addSignInStatusListener(Function(SignInStatus) listener) {
     _signInStatusListeners.add(listener);
   }
 
-  removeSignInStatusListener(Function(SignInStatus) listener) {
+  void removeSignInStatusListener(Function(SignInStatus) listener) {
     _signInStatusListeners.remove(listener);
   }
 
@@ -46,7 +46,7 @@ abstract class Authenticator<T extends DataProvider, USER,
       nativeUser = null;
       return true;
     } else {
-      logType(this.runtimeType).i("already logged out");
+      logType(runtimeType).i('already logged out');
       return false;
     }
   }
@@ -55,7 +55,7 @@ abstract class Authenticator<T extends DataProvider, USER,
   bool get isNotAuthenticated => !isAuthenticated;
 
   @protected
-  doSignOut();
+  Future<void> doSignOut();
 
   Future<AuthenticationResult> doRegisterWithEmail(
       {required String username, required String password});
@@ -79,7 +79,7 @@ abstract class Authenticator<T extends DataProvider, USER,
     }
   }
 
-  _loadUserRoles() async {
+  Future<void> _loadUserRoles() async {
     final List<String> roles = await loadUserRoles();
     _userRoles.addAll(roles);
   }
@@ -100,7 +100,7 @@ abstract class Authenticator<T extends DataProvider, USER,
   /// access user information (which may in some case actually two user 'tables', depending on the
   /// backend implementation so we need to use this rather than a more general interface
   Future<bool> updateUser(TakkanUser user) async {
-    return await doUpdateUser(user);
+    return  doUpdateUser(user);
   }
 
   Future<bool> doUpdateUser(TakkanUser user);
@@ -108,35 +108,36 @@ abstract class Authenticator<T extends DataProvider, USER,
   Future<bool> deRegister(TakkanUser user) async {
     status = SignInStatus.Removing_Registration;
     final result = await doDeRegister(user);
-    status = (result) ? status = SignInStatus.Registration_Removed : SignInStatus.Uninitialized;
+    status = result ? status = SignInStatus.Registration_Removed : SignInStatus.Uninitialized;
     return result;
   }
 
   Future<bool> doDeRegister(TakkanUser user);
 
   /// Not sure what this is need for :-)
-  registrationAcknowledged() {}
+  void registrationAcknowledged() {}
 
   /// Implementation specific.Some Authenticators may not need initialisation, but
   /// must always set status to [SignInStatus.Initialised]
   @mustCallSuper
-  init(){
+  Future<SignInStatus> init() async {
     status=SignInStatus.Initialised;
+    return status;
   }
 
   SignInStatus get status => _status;
 
-  set status(value) {
+  set status(SignInStatus value) {
     _status = value;
     notifyStatusListeners();
   }
 
   List<String> get userRoles => _userRoles;
 
-  notifyStatusListeners() {
-    _signInStatusListeners.forEach((element) {
+  void notifyStatusListeners() {
+    for (final element in _signInStatusListeners) {
       element(status);
-    });
+    }
   }
 }
 
@@ -161,10 +162,6 @@ enum SignInStatus {
 /// - [errorCode] if not -1, represents some kind of failure, perhaps a lost connection for example.  See https://gitlab.com/takkan/takkan_backend/-/issues/1
 /// - [message] currently this is implementation specific - see https://gitlab.com/takkan/takkan_backend/-/issues/1
 class AuthenticationResult {
-  final TakkanUser user;
-  final bool success;
-  final int errorCode;
-  final String message;
 
   // TODO standardise for all implementations
   AuthenticationResult({
@@ -173,4 +170,8 @@ class AuthenticationResult {
     this.errorCode = -999,
     this.message = 'Unknown',
   });
+  final TakkanUser user;
+  final bool success;
+  final int errorCode;
+  final String message;
 }

@@ -1,38 +1,46 @@
 import 'package:dio/dio.dart' as dio;
-import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
+
+import '../app/app_config.dart';
+import 'url_builder.dart';
 
 /// A wrapper for a GraphQL / HttpClient, to enable mocking
 abstract class ServerConnect {}
 
 /// [ResponseType] defaults to json
 abstract class RestServerConnect extends ServerConnect {
-  Future<dio.Response> fetch(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-  );
+  ///
+  Future<dio.Response<dynamic>> fetch({
+    required InstanceConfig instanceConfig,
+    required URLComposition urlComposition,
+  });
 
-  Future<dio.Response> create(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-    Map<String, dynamic> data,
-  );
+  Future<dio.Response<dynamic>> create({
+    required InstanceConfig instanceConfig,
+    required String url,
+    required Map<String, dynamic> data,
+  });
 
-  Future<dio.Response> update(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-    DocumentId documentId,
-    Map<String, dynamic> data,
-  );
+  Future<dio.Response<dynamic>> update({
+    required InstanceConfig instanceConfig,
+    required String url,
+    required DocumentId documentId,
+    required Map<String, dynamic> data,
+  });
 
-  Future<dio.Response> delete(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-  );
+  Future<dio.Response<dynamic>> delete({
+    required InstanceConfig instanceConfig,
+    required String url,
+  });
 
-  Future<dio.Response> executeFunction(
-    InstanceConfig instanceConfig,
-    String function, {
+  Future<dio.Response<dynamic>> read({
+    required InstanceConfig instanceConfig,
+    required String url,
+  });
+
+  Future<dio.Response<dynamic>> executeFunction({
+    required InstanceConfig instanceConfig,
+    required String function,
     Map<String, dynamic> params = const {},
   });
 }
@@ -42,60 +50,65 @@ abstract class GraphQLServerConnect extends ServerConnect {}
 class DefaultRestServerConnect implements RestServerConnect {
   const DefaultRestServerConnect();
 
-  Future<dio.Response> fetch(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-  ) async {
+  /// [fetch] uses cloud functions to retrieve data and hence calls put and not get
+  @override
+  Future<dio.Response<dynamic>> fetch({
+    required InstanceConfig instanceConfig,
+    required URLComposition urlComposition,
+  }) async {
     final options = dio.BaseOptions(
-      baseUrl: instanceConfig.serverUrl,
       headers: instanceConfig.headers,
       validateStatus: (c) => c == 200,
+      queryParameters: urlComposition.paramsAsData,
     );
-    return await client(options).get(relativeUrl);
+    return client(options).post(urlComposition.url);
   }
 
-  Future<dio.Response> create(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-    Map<String, dynamic> data,
-  ) async {
+  @override
+  Future<dio.Response<dynamic>> create({
+    required InstanceConfig instanceConfig,
+    required String url,
+    required Map<String, dynamic> data,
+  }) async {
     final options = dio.BaseOptions(
       baseUrl: instanceConfig.serverUrl,
       headers: instanceConfig.headers,
       validateStatus: (c) => c == 201,
     );
 
-    return await client(options).post(relativeUrl, data: data);
+    return client(options).post(url, data: data);
   }
 
-  Future<dio.Response> update(
-    InstanceConfig instanceConfig,
-    String relativeUrl,
-    DocumentId documentId,
-    Map<String, dynamic> data,
-  ) async {
+  @override
+  Future<dio.Response<dynamic>> update({
+    required InstanceConfig instanceConfig,
+    required String url,
+    required DocumentId documentId,
+    required Map<String, dynamic> data,
+  }) async {
     final options = dio.BaseOptions(
       baseUrl: instanceConfig.serverUrl,
       headers: instanceConfig.headers,
       validateStatus: (c) => c == 200,
     );
 
-    return await client(options)
-        .put('$relativeUrl/${documentId.objectId}', data: data);
+    return client(options)
+        .put('$url/${documentId.objectId}', data: data);
   }
 
-  Future<dio.Response> executeFunction(
-    InstanceConfig instanceConfig,
-    String function, {
+  @override
+  Future<dio.Response<dynamic>> executeFunction({
+    required InstanceConfig instanceConfig,
+    required String function,
     Map<String, dynamic> params = const {},
   }) async {
     final options = dio.BaseOptions(
       baseUrl: instanceConfig.serverUrl,
       headers: instanceConfig.headers,
-      validateStatus: (c) => (c == 200 || c == 201),
+      validateStatus: (c) => c == 200 || c == 201,
     );
 
-    return await client(options).post(
+    return client(options).post(
       '${instanceConfig.functionEndpoint}/$function',
       queryParameters: params,
     );
@@ -107,14 +120,30 @@ class DefaultRestServerConnect implements RestServerConnect {
   }
 
   @override
-  Future<dio.Response> delete(
-      InstanceConfig instanceConfig, String relativeUrl) async {
+  Future<dio.Response<dynamic>> delete({
+    required InstanceConfig instanceConfig,
+    required String url,
+  }) async {
     final options = dio.BaseOptions(
       baseUrl: instanceConfig.serverUrl,
       headers: instanceConfig.headers,
       validateStatus: (c) => c == 200,
     );
 
-    return await client(options).delete(relativeUrl);
+    return client(options).delete(url);
+  }
+
+  @override
+  Future<dio.Response<dynamic>> read({
+    required InstanceConfig instanceConfig,
+    required String url,
+  }) async {
+    final options = dio.BaseOptions(
+      baseUrl: instanceConfig.serverUrl,
+      headers: instanceConfig.headers,
+      validateStatus: (c) => c == 200,
+    );
+
+    return client(options).get(url);
   }
 }

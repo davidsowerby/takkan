@@ -1,0 +1,30 @@
+{
+  "main": {
+    "type": "back4app",
+    "dev": {
+      "headers": {
+        "X-Parse-Application-Id": "aaaa",
+        "X-Parse-Client-Key": "bbb"
+      }
+    }
+  },
+  "takkan_store": {
+    "type": "back4app",
+    "script": {
+      "headers": {
+        "X-Parse-Application-Id": "ccc",
+        "X-Parse-Client-Key": "ddd"
+      }
+    }
+  },
+  "I am a group": {"isGroup": true, "type": "rest"},
+  "not a group": {
+    "start": 3,
+    "end": 4
+  },
+  "exportFilePath": "tmp:takkan_export",
+  "letters": [
+    "a",
+    "b"
+  ]
+}

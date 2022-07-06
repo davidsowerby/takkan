@@ -1,294 +1,337 @@
 import 'package:graphql/client.dart';
 import 'package:meta/meta.dart';
-import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_backend/backend/data_provider/delegate.dart';
-import 'package:takkan_backend/backend/data_provider/query_selector.dart';
-import 'package:takkan_backend/backend/data_provider/result.dart';
-import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_backend/backend/user/takkan_user.dart';
-import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/provider/delegate.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/data/select/rest_query.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/script/script.dart';
 
+import '../app/app_config.dart';
+import '../user/authenticator.dart';
+import '../user/takkan_user.dart';
 import 'data_provider.dart';
+import 'result.dart';
+import 'result_transformer.dart';
+import 'server_connect.dart';
+import 'url_builder.dart';
 
-/// Routes all calls to the [graphQLDelegate]
 class BaseDataProvider<CONFIG extends DataProvider>
-    implements IDataProvider<CONFIG>, QuerySelector {
-  late CONFIG config;
-  late Authenticator _authenticator;
-  RestDataProviderDelegate? _restDelegate;
-  GraphQLDataProviderDelegate? _graphQLDelegate;
-  late InstanceConfig _instanceConfig;
-  late QuerySelector querySelector;
-
+    implements IDataProvider<CONFIG> {
   BaseDataProvider();
 
+  @override
+  late CONFIG config;
+  late Authenticator<CONFIG, TakkanUser> _authenticator;
+  late InstanceConfig _instanceConfig;
+  late RestServerConnect serverConnect;
+  late URLBuilder urlBuilder;
+  late ResultTransformer resultTransformer;
+
+  @override
   List<String> get userRoles => authenticator.userRoles;
 
   InstanceConfig get instanceConfig => _instanceConfig;
 
-  Authenticator get authenticator => _authenticator;
+  @override
+  Authenticator<CONFIG, TakkanUser> get authenticator => _authenticator;
 
-  RestDataProviderDelegate get restDelegate {
-    if (_restDelegate != null) {
-      return _restDelegate!;
-    }
-    throw TakkanException(
-        'You have used a PRestQuery but no REST delegate Make sure you have set config.restQLDelegate');
-  }
-
-  GraphQLDataProviderDelegate get graphQLDelegate {
-    if (_graphQLDelegate != null) {
-      return _graphQLDelegate!;
-    }
-    throw TakkanException(
-        'No GraphQL delegate has been constructed.  Make sure you have set config.graphQLDelegate');
-  }
-
+  @override
   @mustCallSuper
-  init({required CONFIG config}) async {
+  Future<void> init({required CONFIG config}) async {
     this.config = config;
-    final AppConfig appConfig=inject<AppConfig>();
+    final AppConfig appConfig = inject<AppConfig>();
     final instanceConfig = appConfig.instanceConfig(config);
-    this._instanceConfig = instanceConfig;
-    _restDelegate = inject<RestDataProviderDelegate>(
+    _instanceConfig = instanceConfig;
+    serverConnect =
+        inject<RestServerConnect>(instanceName: instanceConfig.uniqueName);
+    _authenticator = inject<Authenticator<CONFIG, TakkanUser>>(
         instanceName: instanceConfig.uniqueName);
-
-    restDelegate.init(instanceConfig, this);
-    if (config.graphQLDelegate != null) {
-      _graphQLDelegate = inject<GraphQLDataProviderDelegate>(
-          instanceName: instanceConfig.uniqueName);
-      graphQLDelegate.init(instanceConfig, this);
-    }
-
-    querySelector =
-        inject<QuerySelector>(instanceName: instanceConfig.uniqueName);
-    _authenticator =
-        inject<Authenticator>(instanceName: instanceConfig.uniqueName);
+    urlBuilder = inject<URLBuilder>(instanceName: instanceConfig.uniqueName);
+    resultTransformer =
+        inject<ResultTransformer>(instanceName: instanceConfig.uniqueName);
     _authenticator.init();
   }
 
+  @override
   TakkanUser get user => authenticator.user;
 
+  @override
   bool get userIsAuthenticated => authenticator.isAuthenticated;
 
+  @override
   bool get userIsNotAuthenticated => authenticator.isNotAuthenticated;
+
+  String get documentEndpoint => instanceConfig.documentEndpoint;
+
+  String get functionEndpoint => instanceConfig.functionEndpoint;
 
   SignInStatus get authStatus => authenticator.status;
 
-  IDataProviderDelegate get defaultDelegate {
-    switch (config.defaultDelegate) {
-      case Delegate.graphQl:
-        return graphQLDelegate;
-      case Delegate.rest:
-        return restDelegate;
+  /// see [IDataProvider.fetchDocument]
+  /// The request is set to [URLRequest.functionItem] as this is using cloud
+  /// function to fetch the document
+  @override
+  Future<ReadResultItem> fetchDocument(
+      {required String functionName,
+      required String documentClass,
+      Map<String, dynamic> params = const {}}) async {
+    const requestType = URLRequest.functionItem;
+    final serverConnectResponse = await serverConnect.fetch(
+      instanceConfig: instanceConfig,
+      urlComposition: urlBuilder.build(
+        request: requestType,
+        params: params,
+        instanceConfig: instanceConfig,
+        functionName: functionName,
+      ),
+    );
+
+    return ReadResultItem(
+      data: resultTransformer.transform(
+        rawResponse: serverConnectResponse,
+        requestType: requestType,
+      ),
+      documentClass: documentClass,
+      returnSingle: true,
+      success: true,
+    );
+  }
+
+  /// see [IDataProvider.fetchDocumentList]
+  @override
+  Future<ReadResultList> fetchDocumentList({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  }) async {
+    const requestType = URLRequest.functionList;
+    final serverConnectResponse = await serverConnect.fetch(
+      instanceConfig: instanceConfig,
+      urlComposition: urlBuilder.build(
+        request: requestType,
+        instanceConfig: instanceConfig,
+        functionName: functionName,
+        params: params,
+      ),
+    );
+    return ReadResultList(
+      data: resultTransformer.transformList(
+        rawResponse: serverConnectResponse,
+        requestType: requestType,
+      ),
+      documentClass: documentClass,
+      success: true,
+    );
+  }
+
+  @override
+  Future<ReadResultItem> selectDocument({
+    required DocumentSelector selector,
+    required String documentClass,
+    Map<String, dynamic> pageArguments = const {},
+  }) {
+    final params = combineVariables(selector, pageArguments);
+    final s = selector;
+    if (s is DocByQuery) {
+      return fetchDocument(
+        functionName: s.queryName,
+        documentClass: documentClass,
+        params: params,
+      );
     }
-  }
-
-  /// see [IDataProvider.fetchItem]
-  Future<ReadResultItem> fetchItem({
-    required Query queryConfig,
-    required Map<String, dynamic> pageArguments,
-  }) async {
-    final Map<String, dynamic> variables =
-    combineVariables(queryConfig, pageArguments);
-    return _delegateFromQueryType(queryConfig: queryConfig)
-        .fetchItem(queryConfig, variables);
-  }
-
-  /// Returns a Future of a list of one or more document instances
-  Future<ReadResultList> fetchList({
-    required Query queryConfig,
-    required Map<String, dynamic> pageArguments,
-  }) async {
-    final Map<String, dynamic> variables =
-    combineVariables(queryConfig, pageArguments);
-    return _delegateFromQueryType(queryConfig: queryConfig)
-        .fetchList(queryConfig, variables);
-  }
-
-  /// Returns a stream of document
-  Future<Stream<Map<String, dynamic>>> connectItem() {
     throw UnimplementedError();
   }
 
-  /// Returns a stream of document list
-  Future<Stream<List<Map<String, dynamic>>>> connectList() {
+  /// See [IDataProvider.selectDocumentList]
+  @override
+  Future<ReadResultList> selectDocumentList({
+    required DocumentListSelector selector,
+    required String documentClass,
+    Map<String, dynamic> pageArguments = const {},
+  }) {
+    final params = combineVariables(selector, pageArguments);
+    final s = selector;
+    if (s is DocListByQuery) {
+      return fetchDocumentList(
+        functionName: s.queryName,
+        documentClass: documentClass,
+        params: params,
+      );
+    }
     throw UnimplementedError();
   }
 
   /// See [IDataProvider.createDocument]
+  @override
   Future<CreateResult> createDocument({
     required String documentClass,
     required Map<String, dynamic> data,
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) async {
-    return await _selectDelegate(useDelegate).createDocument(
-        documentClass: documentClass, data: data, documentIdKey: objectIdKey);
-  }
-
-  /// Executes a server-side (cloud) function.  Always uses the [restDelegate]
-  Future<ReadResult> executeFunction({
-    required String functionName,
-    Map<String, dynamic> params = const {},
-  }) async {
-    return await restDelegate.executeFunction(
-      functionName: functionName,
-      params: params,
-    );
-  }
-
-  /// Executes a server side server-side function [functionName], with [params]
-  /// Always returns a single document unless success==false in the returned result
-  Future<ReadResultItem> executeItemFunction({
-    required String functionName,
-    required String documentClass,
-    Map<String, dynamic> params = const {},
-  }) async {
-    return await restDelegate.executeItemFunction(
+    logType(runtimeType).d('Creating new document');
+    final urlComposition = urlBuilder.build(
+      request: URLRequest.createDoc,
       documentClass: documentClass,
-      functionName: functionName,
-      params: params,
+      instanceConfig: instanceConfig,
     );
-  }
 
-  /// Executes a server side server-side function [functionName], with [params]
-  /// Always returns a list of documents unless success==false in the returned result
-  Future<ReadResultList> executeListFunction({
-    required String functionName,
-    required String documentClass,
-    Map<String, dynamic> params = const {},
-  }) async {
-    return await restDelegate.executeListFunction(
+    final serverConnectResponse = await serverConnect.create(
+        instanceConfig: instanceConfig,
+        url: urlComposition.url,
+        data: data);
+
+    final returnedData=resultTransformer.transform(
+      rawResponse: serverConnectResponse,
+      requestType: URLRequest.createDoc,
+    );
+    return CreateResult(
       documentClass: documentClass,
-      functionName: functionName,
-      params: params,
+      data: returnedData,
+      success: true,
+      objectId: returnedData[objectIdKey] as String? ?? '?',
     );
-  }
-
-  /// See [IDataProvider.updateDocument]
-  Future<UpdateResult> updateDocument({
-    required DocumentId documentId,
-    Delegate? useDelegate,
-    FieldSelector fieldSelector = const FieldSelector(),
-    required Map<String, dynamic> data,
-  }) async {
-    return await _selectDelegate(useDelegate)
-        .updateDocument(documentId: documentId, data: data);
-  }
-
-  /// Once a document has been created, it should be possible to create a unique id for it
-  /// from its data, but the manner of doing so is implementation specific.
-  DocumentId documentIdFromData(Map<String, dynamic> data) {
-    return DocumentId(documentClass: 'unknown', objectId: 'unknown');
-  }
-
-  /// Combines variable values from 3 possible sources. Order of precedence is:
-  ///
-  /// 1. [PQuery.variables]
-  /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
-  /// 1. Values passed as [pageArguments]
-  @protected
-  Map<String, dynamic> combineVariables(Query query,
-      Map<String, dynamic> pageArguments) {
-    final variables = Map<String, dynamic>();
-    final propertyVariables = _buildPropertyVariables(query.propertyReferences);
-    variables.addAll(pageArguments);
-    variables.addAll(propertyVariables);
-    variables.addAll(query.variables);
-    return variables;
-  }
-
-// TODO: get variable values from property references
-  Map<String, dynamic> _buildPropertyVariables(
-      List<String> propertyReferences) {
-    return {};
   }
 
   @override
-  Future<Script> latestScript({required String locale,
-    required int fromVersion,
-    Delegate? useDelegate,
-    required String name}) async {
-    final ReadResultItem result = await _selectDelegate(useDelegate)
-        .latestScript(locale: locale, fromVersion: fromVersion, name: name);
-    return Script.fromJson(result.data);
+  Future<ReadResultItem> readDocument({
+    required DocumentId documentId,
+  }) async {
+    logType(runtimeType).d('Reading document');
+
+    final urlComposition = urlBuilder.build(
+      request: URLRequest.readDoc,
+      instanceConfig: instanceConfig,
+      documentId: documentId,
+    );
+    final serverConnectResponse = await serverConnect.read(
+      instanceConfig: instanceConfig,
+      url: urlComposition.url,
+    );
+
+    return ReadResultItem(
+      documentClass: documentId.documentClass,
+      data: resultTransformer.transform(
+        rawResponse: serverConnectResponse,
+        requestType: URLRequest.readDoc,
+      ),
+      success: true,
+      returnSingle: true,
+    );
   }
 
-  /// If the [restDelegate] available, calls it to delete the document,
-  /// otherwise call the [graphQLDelegate] to execute the delete.
-  ///
   /// see [IDataProvider.deleteDocument]
   @override
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
-    Delegate? useDelegate,
   }) async {
-    return await _selectDelegate(useDelegate)
-        .deleteDocument(documentId: documentId);
+    logType(runtimeType).d('Deleting document');
+    final urlComposition = urlBuilder.build(
+      request: URLRequest.deleteDoc,
+      instanceConfig: instanceConfig,
+      documentId: documentId,
+    );
+    final serverConnectResponse = await serverConnect.delete(
+      instanceConfig: instanceConfig,
+      url: urlComposition.url,
+    );
+
+    return DeleteResult(
+      documentClass: documentId.documentClass,
+      data: resultTransformer.transform(
+        rawResponse: serverConnectResponse,
+        requestType: URLRequest.deleteDoc,
+      ),
+      success: true,
+      objectId: documentId.objectId,
+    );
   }
 
-  ///
-  /// see [IDataProvider.readDocument]
+  /// See [IDataProvider.updateDocument]
   @override
-  Future<ReadResultItem> readDocument({
+  Future<UpdateResult> updateDocument({
     required DocumentId documentId,
-    FieldSelector fieldSelector = const FieldSelector(),
-    Delegate? useDelegate,
-    FetchPolicy? fetchPolicy,
+    required Map<String, dynamic> data,
   }) async {
-    return await _selectDelegate(useDelegate)
-        .readDocument(documentId: documentId);
+    logType(runtimeType).d('Updating document');
+    final serverConnectResponse = await serverConnect.update(
+      instanceConfig: instanceConfig,
+      url: '$documentEndpoint/${documentId.documentClass}',
+      data: data,
+      documentId: documentId,
+    );
+
+    return UpdateResult(
+      documentClass: documentId.documentClass,
+      data: resultTransformer.transform(
+        rawResponse: serverConnectResponse,
+        requestType: URLRequest.updateDoc,
+      ),
+      success: true,
+      objectId: documentId.objectId,
+    );
   }
 
-  Document documentSchema({required String documentSchemaName}) {
-    return config.script.documentSchema(documentSchemaName: documentSchemaName);
+  /// Executes a server-side (cloud) function.  Always uses the [restDelegate]
+  @override
+  Future<FunctionResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
+  }) async {
+    logType(runtimeType).d('Executing function $functionName');
+    final serverConnectResponse = await serverConnect.executeFunction(
+      function: functionName,
+      instanceConfig: instanceConfig,
+      params: params,
+    );
+
+    return FunctionResult(
+      data: resultTransformer.transform(
+        rawResponse: serverConnectResponse,
+        requestType: URLRequest.function,
+      ),
+      success: true,
+    );
   }
 
-  IDataProviderDelegate _delegateFromQueryType({
-    required Query queryConfig,
-  }) {
-    if (queryConfig is GraphQLQuery) {
-      if (_graphQLDelegate != null) {
-        return graphQLDelegate;
-      } else {
-        throw TakkanException(
-            'In order to use a ${queryConfig.runtimeType
-                .toString()}, a graphQLDelegate must be specified in DataProvider');
-      }
-    }
-    if (queryConfig is RestQuery) {
-      if (_restDelegate != null) {
-        return restDelegate;
-      } else {
-        throw TakkanException(
-            'In order to use a ${queryConfig.runtimeType
-                .toString()}, a restDelegate must be specified in DataProvider');
-      }
-    }
-    throw TakkanException(
-        'No delegate available to support a ${queryConfig.runtimeType
-            .toString()}');
+  /// Once a document has been created, it should be possible to create a unique id for it
+  /// from its data, but the manner of doing so is implementation specific.
+  @override
+  DocumentId documentIdFromData(Map<String, dynamic> data) {
+    return const DocumentId(documentClass: 'unknown', objectId: 'unknown');
   }
 
-  IDataProviderDelegate _selectDelegate(Delegate? selectedDelegate) {
-    final Delegate selection = selectedDelegate ?? config.defaultDelegate;
-    switch (selection) {
-      case Delegate.graphQl:
-        return graphQLDelegate;
-      case Delegate.rest:
-        return restDelegate;
-    }
+  /// TODO: This is a bit confused - what do we really need? https://gitlab.com/takkan/takkan_backend/-/issues/25
+  /// Combines variable values from 3 possible sources. Order of precedence is:
+  ///
+  /// 1. [DataSelector.variables]
+  /// 1. Values looked up from the properties specified in [PQuery.propertyReferences]
+  /// 1. Values passed as [pageArguments]
+  @protected
+  Map<String, dynamic> combineVariables(
+      DataSelector selector, Map<String, dynamic> pageArguments) {
+    final variables = <String, dynamic>{};
+    // final propertyVariables = _buildPropertyVariables(selector.propertyReferences);
+    variables.addAll(pageArguments);
+    // variables.addAll(propertyVariables);
+    // variables.addAll(selector.params);
+    return variables;
+  }
+
+  // TODO: get variable values from property references
+
+  @override
+  Future<Script> latestScript(
+      {required String locale,
+      required int fromVersion,
+      Delegate? useDelegate,
+      required String name}) async {
+    throw UnimplementedError();
   }
 
   @override
@@ -299,20 +342,11 @@ class BaseDataProvider<CONFIG extends DataProvider>
   String get objectIdKey => 'objectId';
 
   @override
-  Future<ReadResultItem> dataItem({
-    required String documentClass,
-    required IDataItem selector,
+  Future<ReadResult<dynamic>> executeGraphQL({
+    required String script,
+    FetchPolicy? fetchPolicy,
+    FieldSelector? fieldSelector,
   }) {
-    return querySelector.dataItem(
-        documentClass: documentClass, selector: selector);
-  }
-
-  @override
-  Future<ReadResultList> dataList({
-    required String documentClass,
-    required IDataList selector,
-  }) {
-    return querySelector.dataList(
-        documentClass: documentClass, selector: selector);
+    throw UnimplementedError();
   }
 }
