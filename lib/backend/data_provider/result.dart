@@ -1,34 +1,31 @@
 import 'package:takkan_script/data/provider/document_id.dart';
-import 'package:takkan_script/data/select/query.dart';
+
 
 abstract class QueryResults<DATA> {
-  final DATA data;
-  final bool success;
-  final String documentClass;
-  final QueryReturnType queryReturnType;
 
   const QueryResults({
     required this.data,
     required this.success,
     required this.documentClass,
-    required this.queryReturnType,
+    required this.returnSingle,
   });
+  final DATA data;
+  final bool success;
+  final String documentClass;
+  final bool returnSingle;
 }
 
 class QueryResultItem extends QueryResults<Map<String, dynamic>> {
-  final String objectId;
 
   const QueryResultItem({
     required this.objectId,
-    required Map<String, dynamic> data,
-    required bool success,
-    required String documentClass,
+    required super.data,
+    required super.success,
+    required super.documentClass,
   }) : super(
-          documentClass: documentClass,
-          success: success,
-          data: data,
-          queryReturnType: QueryReturnType.futureItem,
+    returnSingle: true,
         );
+  final String objectId;
 
   DocumentId get documentId =>
       DocumentId(documentClass: documentClass, objectId: objectId);
@@ -36,99 +33,76 @@ class QueryResultItem extends QueryResults<Map<String, dynamic>> {
 
 class CreateResult extends UpdateResult {
   const CreateResult({
-    required Map<String, dynamic> data,
-    required bool success,
-    required String documentClass,
-    required String objectId,
-  }) : super(
-            data: data,
-            success: success,
-            documentClass: documentClass,
-            objectId: objectId);
+    required super.data,
+    required super.success,
+    required super.documentClass,
+    required super.objectId,
+  });
 
-  DateTime get createdAt => DateTime.parse(data['createdAt']);
+  DateTime get createdAt => DateTime.parse(data['createdAt'] as String);
 }
 
 abstract class ReadResult<DATA> extends QueryResults<DATA> {
   const ReadResult({
-    required QueryReturnType queryReturnType,
-    required DATA data,
-    required bool success,
-    required String documentClass,
-  }) : super(
-    data: data,
-          success: success,
-          documentClass: documentClass,
-          queryReturnType: queryReturnType,
-        );
+    required super.returnSingle,
+    required super.data,
+    required super.success,
+    required super.documentClass,
+  });
 }
 
 class ReadResultItem extends ReadResult<Map<String, dynamic>> {
   const ReadResultItem({
-    required Map<String, dynamic> data,
-    required bool success,
-    required QueryReturnType queryReturnType,
-    required String documentClass,
-  }) : super(
-    success: success,
-          data: data,
-          documentClass: documentClass,
-          queryReturnType: queryReturnType,
-        );
+    required super.data,
+    required super.success,
+    required super.returnSingle,
+    required super.documentClass,
+  });
 
   DocumentId get documentId =>
       DocumentId(documentClass: documentClass, objectId: objectId);
 
   /// This relies on 'objectId' being included in all queries that return this result type.
-  /// This is enforced in the DataProviderDelegate, to avoid a lot of
-  /// repetitive checking.  Check for success before invoking
-  ///
-  /// TODO: use DataProvider.itemIdKey
-  String get objectId => data['objectId'] ?? '?';
+  // TODO:(dsowerby) use DataProvider.itemIdKey, https://gitlab.com/takkan/takkan_backend/-/issues/24
+  String get objectId => data['objectId'] as String? ?? '?';
 }
 
 class ReadResultList extends ReadResult<List<Map<String, dynamic>>> {
   const ReadResultList({
-    required List<Map<String, dynamic>> data,
-    required bool success,
-    required QueryReturnType queryReturnType,
-    required String documentClass,
-  }) : super(
-    success: success,
-          data: data,
-          documentClass: documentClass,
-          queryReturnType: queryReturnType,
-        );
+    required super.data,
+    required super.success,
+    required super.documentClass,
+  }) : super(returnSingle: false);
 
   bool get isNotEmpty => data.isNotEmpty;
 
   bool get isEmpty => data.isEmpty;
 }
 
+
+/// Status and data returned from a general cloud function call
+class FunctionResult {
+  const FunctionResult({required this.data,required this.success});
+
+  final Map<String,dynamic> data;
+  final bool success;
+
+}
+
 class UpdateResult extends QueryResultItem {
   const UpdateResult({
-    required Map<String, dynamic> data,
-    required bool success,
-    required String documentClass,
-    required String objectId,
-  }) : super(
-    data: data,
-          success: success,
-          documentClass: documentClass,
-          objectId: objectId,
-        );
+    required super.data,
+    required super.success,
+    required super.documentClass,
+    required super.objectId,
+  });
 }
 
 class DeleteResult extends QueryResultItem {
   const DeleteResult({
-    required Map<String, dynamic> data,
-    required bool success,
-    required String documentClass,
-    required String objectId,
-  }) : super(
-    data: data,
-          success: success,
-          documentClass: documentClass,
-          objectId: objectId,
-        );
+    required super.data,
+    required super.success,
+    required super.documentClass,
+    required super.objectId,
+  });
 }

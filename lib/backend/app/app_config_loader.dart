@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
+
+import 'app_config.dart';
 
 /// The default is to hold app configuration in a file *takkan.json* in the project root.
 ///
@@ -22,20 +23,22 @@ class DefaultJsonFileLoader implements JsonFileLoader {
   /// If [returnEmptyIfAbsent] is true, a missing *takkan.json* returns an empty
   /// [AppConfig] - if false, a [TakkanException] is thrown if no *takkan.json*
   /// exists in [fileName]
+  @override
   Future<Map<String, dynamic>> loadFile(
       {required String filePath}) async {
     final File f=File(filePath);
     if (!f.existsSync()) {
       final String msg = 'There is no file at ${f.path}';
-      logType(this.runtimeType).e(msg);
+      logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
 
     final content = f.readAsStringSync();
-    return json.decode(content);
+    return json.decode(content) as Map<String, dynamic>;
 
   }
 
+  @override
   Future<String> toQuotedJson({required String filePath}) async {
     final data = await loadFile(filePath: filePath);
     return jsonEncode(json.encode(data));
@@ -50,9 +53,9 @@ abstract class JsonFileLoader {
 /// Not really a file loader at all, just uses data directly loaded, but can
 /// be used with inject<JsonFileLoader>, usually only for testing
 class DirectFileLoader extends DefaultJsonFileLoader {
-  final Map<String, dynamic> data;
 
   const DirectFileLoader({required this.data});
+  final Map<String, dynamic> data;
   @override
   Future<Map<String, dynamic>> loadFile({required String filePath}) async {
     return data;

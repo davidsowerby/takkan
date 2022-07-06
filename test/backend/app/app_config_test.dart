@@ -25,6 +25,7 @@ void main() {
       // given
       final Map<String, dynamic> data = {
         'back4app': {
+          'isGroup':true,
           'instance1': {
             'headers': {
               keyHeaderApplicationId: 'test',
@@ -51,6 +52,7 @@ void main() {
 
       final Map<String, dynamic> data = {
         'core': {
+          'isGroup':true,
           'dev': {'serverUrl': 'https://dev.com'},
           'test': {'serverUrl': 'https://test.com'},
           'selectedInstance': 'test',
@@ -63,7 +65,7 @@ void main() {
 
       final MockDataProviderConfig mockDpValid = MockDataProviderConfig();
       when(() => mockDpValid.instanceConfig)
-          .thenReturn(AppInstance(group: 'core', instance: 'test'));
+          .thenReturn(const AppInstance(group: 'core', instance: 'test'));
 
       // when
 
@@ -87,7 +89,7 @@ void main() {
       final MockDataProviderConfig mockDpInvalidInstance =
           MockDataProviderConfig();
       when(() => mockDpInvalidInstance.instanceConfig)
-          .thenReturn(AppInstance(group: 'back4app', instance: 'wiggly'));
+          .thenReturn(const AppInstance(group: 'back4app', instance: 'wiggly'));
 
       // when
 
@@ -100,6 +102,7 @@ void main() {
       // given
       final Map<String, dynamic> data = {
         'back4app': {
+          'isGroup':true,
           'instance1': {
             'headers': {
               keyHeaderApplicationId: 'test',
@@ -140,15 +143,9 @@ void main() {
   group('AppConfig', () {
     test('inheritance', () async {
       // given
-      final Map<String, dynamic> data = {
-        'core': {
-          'dev': {'serverUrl': 'https://dev.com'},
-          'test': {'serverUrl': 'https://test.com'},
-          'selectedInstance': 'test',
-        },
-      };
       getIt.reset();
-      getIt.registerFactory<JsonFileLoader>(() => DefaultJsonFileLoader());
+      getIt
+          .registerFactory<JsonFileLoader>(() => const DefaultJsonFileLoader());
       final AppConfig appConfig = AppConfig();
       await appConfig.load(filePath: 'test/backend/app/sample-takkan.json');
 
@@ -170,9 +167,9 @@ void main() {
       final InstanceConfig test = main.instance('test');
       expect(test.appName, 'Sample App');
       expect(test.serviceType, 'back4app');
-      expect(test.serverUrl, "http://localhost:1337/parse/");
-      expect(test.documentEndpoint, "http://localhost:1337/parse/classes");
-      expect(test.functionEndpoint, "http://localhost:1337/parse/functions");
+      expect(test.serverUrl, 'http://localhost:1337/parse/');
+      expect(test.documentEndpoint, 'http://localhost:1337/parse/classes');
+      expect(test.functionEndpoint, 'http://localhost:1337/parse/functions');
       expect(test.graphqlEndpoint, 'http://localhost:1337/parse/graphql');
       expect(test.clientKey, 'test client key');
       expect(test.appId, 'test app id');
@@ -183,7 +180,8 @@ void main() {
       // given
 
       getIt.reset();
-      getIt.registerFactory<JsonFileLoader>(() => DefaultJsonFileLoader());
+      getIt
+          .registerFactory<JsonFileLoader>(() => const DefaultJsonFileLoader());
 
       // when
       final AppConfig appConfig1 = AppConfig();
@@ -194,47 +192,68 @@ void main() {
       expect(appConfig1.data, appConfig2.data);
       expect(appConfig1.isReady, appConfig2.isReady);
     });
+    test('Mixed properties and groups', () async {
+      // given
+      getIt.reset();
+      getIt
+          .registerFactory<JsonFileLoader>(() => const DefaultJsonFileLoader());
+      // when
+      final AppConfig appConfig = AppConfig();
+      await appConfig.load(filePath: 'test/backend/app/sample-takkan2.json');
+      // then
+
+      expect(
+        appConfig.property(propertyName: 'exportFilePath', defaultValue: '?'),
+        'tmp:takkan_export',
+      );
+      expect(appConfig.groups.length, 2);
+      expect(appConfig.groups.map((e) => e.name).toList(),
+          ['main', 'I am a group']);
+      expect(appConfig.takkanStoreConfig.isNotEmpty, isTrue);
+    });
   });
+
+
 }
 
 /// This must be a replica of file 'test/backend/app/sample-takkan.json'
 const sampleData = {
-  "main": {
-    "appName": "Sample App",
-    "type": "back4app",
-    "stages": ["dev", "test", "qa", "prod"],
-    "serverUrl": "https://parseapi.back4app.com",
-    "dev": {
-      "headers": {
-        "X-Parse-Application-Id": "dev app id",
-        "X-Parse-Client-Key": "dev client key"
+  'main': {
+    'appName': 'Sample App',
+    'type': 'back4app',
+    'stages': ['dev', 'test', 'qa', 'prod'],
+    'serverUrl': 'https://parseapi.back4app.com',
+    'dev': {
+      'headers': {
+        'X-Parse-Application-Id': 'dev app id',
+        'X-Parse-Client-Key': 'dev client key'
       }
     },
-    "test": {
-      "headers": {
-        "X-Parse-Application-Id": "test app id",
-        "X-Parse-Client-Key": "test client key"
+    'test': {
+      'headers': {
+        'X-Parse-Application-Id': 'test app id',
+        'X-Parse-Client-Key': 'test client key'
       },
-      "serverUrl": "http://localhost:1337/parse/"
+      'serverUrl': 'http://localhost:1337/parse/'
     },
-    "qa": {
-      "headers": {
-        "X-Parse-Application-Id": "qa app id",
-        "X-Parse-Client-Key": "qa client key"
+    'qa': {
+      'headers': {
+        'X-Parse-Application-Id': 'qa app id',
+        'X-Parse-Client-Key': 'qa client key'
       }
     },
-    "prod": {
-      "headers": {
-        "X-Parse-Application-Id": "prod app id",
-        "X-Parse-Client-Key": "prod client key"
+    'prod': {
+      'headers': {
+        'X-Parse-Application-Id': 'prod app id',
+        'X-Parse-Client-Key': 'prod client key'
       }
     }
   },
-  "public REST": {
-    "type": "rest",
-    "restcountries": {
-      "headers": {},
-      "documentEndpoint": "https://restcountries.eu/"
+  'public REST': {
+    'type': 'rest',
+    'restcountries': {
+      'headers': {},
+      'documentEndpoint': 'https://restcountries.eu/'
     }
   }
 };

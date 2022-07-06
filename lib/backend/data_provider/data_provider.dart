@@ -1,75 +1,132 @@
 import 'package:graphql/client.dart';
-import 'package:takkan_backend/backend/data_provider/delegate.dart';
-import 'package:takkan_backend/backend/data_provider/query_selector.dart';
-import 'package:takkan_backend/backend/data_provider/result.dart';
-import 'package:takkan_backend/backend/exception.dart';
-import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_backend/backend/user/takkan_user.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/provider/delegate.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
+
+import '../exception.dart';
+import '../user/authenticator.dart';
+import '../user/takkan_user.dart';
+import 'result.dart';
 
 /// The layer between the client and server.
 ///
 /// It provides a consistent data access interface regardless of the type of data provider used.
 ///
-/// The default implementation [BaseDataProvider] uses the GraphQL delegate if available, falling
-/// back to the REST delegate if there is no GraphQL delegate.
-///
-/// An implementation could, however, use GraphQL queries but REST for updates, though
-/// that may not be a good idea if a cache is used.
-///
-/// However it is implemented, the delegate used should transparent to the app.
-///
-/// Selection of the active [IDataProvider] is through the use of get_it [scopes](https://pub.dev/packages/get_it#scope-functions).
+/// Selection of the active [IDataProvider] is through the use of [getIt] named
+/// instances
 ///
 /// Identification of a provider is provided by [config.instanceConfig], as
 /// there may be the occasional requirement to work with two instances of the
 /// same backend type,
 ///
-/// In addition to CRUD calls, a [IDataProvider] provides a backend-specific [Authenticator]
-/// implementation, for use where a user is required to authenticate for a particular data provider.
-/// The [Authenticator] also contains a [UserState] object for this data provider, holding
-/// basic user information and authentication status.
-///
-/// This means that a client app can log in as a different user for each [IDataProvider]
-/// it uses.
-///
 /// If a call is not supported by an implementation, it will throw a [APINotSupportedException]
 ///
 /// [init] must always be invoked before use
 ///
-
-abstract class IDataProvider<CONFIG extends DataProvider>
-    extends QuerySelector {
-  init({required CONFIG config});
+/// [fetchDocument] and [fetchDocumentList] call cloud functions known to return a
+/// single document or list of documents respectively.  These cloud functions are
+/// usually generated from the [Schema] by the *takkan_server_code_generator* but
+/// could be user provided.
+///
+/// These are also used by [selectDocument] and [selectDocumentList], which use a
+/// [DocumentSelector] to identify the query (and therefore cloud function) to
+/// use to select a document or documents
+///
+/// [executeFunction] is used to executes any other cloud function, usually
+/// user-provided.
+///
+/// Document CRUD functionality is provided by [createDocument], [readDocument],
+/// [updateDocument] and [deleteDocument].  With the exception of creating a new document
+/// all require a [DocumentId] to operate on a specific document.  A GraphQL script
+/// can be executed using [executeGraphQL]
+///
+/// [documentIdFromData] returns a [DocumentId] from a document's data, and is
+/// a backend-specific implementation
+///
+/// [latestScript] retrieves the latest Takkan [Script]
+///
+/// In addition to CRUD and function calls, an [IDataProvider] implementation
+/// provides a backend-specific [Authenticator], where a user is required to authenticate.
+/// The [Authenticator] contains a [user] object for this data provider, holding
+/// basic user information and authentication status.  Shortcuts status calls
+/// are available in [userIsAuthenticated] and [userIsNotAuthenticated].
+///
+/// A [userRoles] call invokes a cloud function provided by the Takkan framework
+/// to returns roles for the authenticated [user].
+///
+/// This structure means that a client app can log in as a different user
+/// for each [IDataProvider] it uses.
+///
+/// Different implementations will provide their own [objectIdKey] and
+/// [sessionTokenKey]:
+///
+///  - [objectIdKey] The property of a document unique id ('objectId' in Back4App)
+///  - [sessionTokenKey] the HTTP header key for the session token
+///
+abstract class IDataProvider<CONFIG extends DataProvider> {
+  Future<void> init({required CONFIG config});
 
   CONFIG get config;
 
-  Authenticator get authenticator;
+  Authenticator<CONFIG,dynamic> get authenticator;
 
-  /// Fetch exactly one item (document) from the database.  The [Delegate] used
-  /// is determined by the runtime type of [queryConfig]
-  ///
-  /// [ReadResult.success] is false if there is not exactly one result
-  Future<ReadResultItem> fetchItem({
-    required Query queryConfig,
-    required Map<String, dynamic> pageArguments,
+  /// Uses the [selector] to identify the cloud function to call via
+  /// [fetchDocumentList]
+  Future<ReadResultList> selectDocumentList(
+      {required DocumentListSelector selector,
+      required String documentClass,
+      Map<String, dynamic> pageArguments = const {},
+      });
+
+  /// Uses the [selector] to identify the cloud function to call via
+  /// [fetchDocument]
+  Future<ReadResultItem> selectDocument({
+    required DocumentSelector selector,
+    required String documentClass,
+    Map<String, dynamic> pageArguments = const {},
   });
 
-  /// The property name for the field which provides a document's unique id
-  String get objectIdKey;
+  /// Fetch exactly one document from the database, using the cloud function
+  /// identified by [functionName].  This is usually a cloud function automatically
+  /// generated from the [Schema] by the takkan_server_code_generator.
+  /// It could, however, be a user-provided function as long as it meets
+  /// the requirement of providing exactly one document.
+  ///
+  /// - [functionName] is the name of the cloud function to call
+  /// - [params] are the params to pass with the call
+  /// - [documentClass] is required only to pass back in the result
+  ///
+  /// [ReadResult.success] is false if there is not exactly one result
+  Future<ReadResultItem> fetchDocument({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  });
 
-  /// Fetch 0..n items from the database, matching the [queryConfig]
+  /// Fetch 0..n documents from the database, using the cloud function
+  /// identified by [functionName].  This is usually a cloud function automatically
+  /// generated from the [Schema] by the takkan_server_code_generator.
+  /// It could, however, be a user-provided function as long as it meets
+  /// the requirement of providing 0..n documents.
+  ///
+  /// - [functionName] is the name of the cloud function to call
+  /// - [params] are the params to pass with the call
+  /// - [documentClass] is required only to pass back in the result
   ///
   /// [ReadResult.success] is false the query fails
-  Future<ReadResultList> fetchList({
-    required Query queryConfig,
-    required Map<String, dynamic> pageArguments,
+  Future<ReadResultList> fetchDocumentList({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  });
+
+  /// Executes a general server side server-side function [functionName], with [params]
+  Future<FunctionResult> executeFunction({
+    required String functionName,
+    Map<String, dynamic> params = const {},
   });
 
   /// Updates a document according the document type declared in its [schema].
@@ -80,13 +137,8 @@ abstract class IDataProvider<CONFIG extends DataProvider>
   ///
   /// A [DocumentType.standard] simply updates the existing document
   ///
-  /// There are occasions where it is necessary to explicitly select which delegate
-  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [DataProvider.defaultDelegate] is used.
   Future<UpdateResult> updateDocument({
     required DocumentId documentId,
-    FieldSelector fieldSelector = const FieldSelector(),
-    Delegate? useDelegate,
     required Map<String, dynamic> data,
   });
 
@@ -99,53 +151,13 @@ abstract class IDataProvider<CONFIG extends DataProvider>
   ///
   /// No exceptions are thrown if the document does not exist
   ///
-  /// There are occasions where it is necessary to explicitly select which delegate
-  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [DataProvider.defaultDelegate] is used.
   Future<DeleteResult> deleteDocument({
     required DocumentId documentId,
-    Delegate? useDelegate,
-  });
-
-  /// Executes a general server side server-side function [functionName], with [params]
-  ///
-  /// The REST delegate is always used
-  Future<ReadResult> executeFunction({
-    required String functionName,
-    Map<String, dynamic> params = const {},
-  });
-
-  /// Executes a server side server-side function [functionName], with [params]
-  /// Always returns a single document unless success==false in the returned result
-  Future<ReadResultItem> executeItemFunction({
-    required String functionName,
-    required String documentClass,
-    Map<String, dynamic> params = const {},
-  });
-
-  /// Executes a server side server-side function [functionName], with [params]
-  /// Always returns a list of documents unless success==false in the returned result
-  Future<ReadResultList> executeListFunction({
-    required String functionName,
-    required String documentClass,
-    Map<String, dynamic> params = const {},
   });
 
   /// Reads the document identified by [documentId]
-  ///
-  /// [fieldSelector] is used only by the [GraphQLDataProviderDelegate], to limit the
-  /// fields returned, rather than return the whole document
-  ///
-  /// There are occasions where it is necessary to explicitly select which delegate
-  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [DataProvider.defaultDelegate] is used.
-  ///
-  /// throws an [APIException] if the document is not found
   Future<ReadResultItem> readDocument({
     required DocumentId documentId,
-    Delegate? useDelegate,
-    FieldSelector fieldSelector = const FieldSelector(),
-    FetchPolicy? fetchPolicy,
   });
 
   /// Used only to create a completely new document.  The document is created
@@ -154,35 +166,34 @@ abstract class IDataProvider<CONFIG extends DataProvider>
   /// Subsequent updates, whether [DocumentType.standard] or [DocumentType.versioned],
   /// should be amended via a call to [updateDocument]
   ///
-  /// [documentClass] is the equivalent of [DocumentId.documentClass], so will be something like
-  ///  the class / table name used by the [IDataProvider]
-  ///
-  /// There are occasions where it is necessary to explicitly select which delegate
-  /// to use, and this is done with [useDelegate].  If [useDelegate] is null,
-  /// the [DataProvider.defaultDelegate] is used.
+  /// [documentClass] is the equivalent of [DocumentId.documentClass].  For Back4App
+  /// this is the Class name
   Future<CreateResult> createDocument({
     required String documentClass,
     required Map<String, dynamic> data,
-    Delegate? useDelegate,
-    FieldSelector fieldSelector = const FieldSelector(),
   });
 
-  /// Returns the latest [PScript] from this provider.
+  /// Executes the supplied GraphQL [script], optionally restricting returned fields
+  /// with [fieldSelector]
+  Future<ReadResult<dynamic>> executeGraphQL({
+    required String script,
+    FetchPolicy? fetchPolicy,
+    FieldSelector? fieldSelector,
+  });
+
+  /// Returns the latest [Script] from this provider.
   ///
-  /// A [PScript] is identified by [name] and [locale]
+  /// A [Script] is identified by [name] and [locale]
   ///
   /// [fromVersion] is used to limit the number of scripts returned.  If there are
   /// multiple scripts with the same version (which should not actually happen),
   /// the one with the most recent 'updatedAt' field is returned
   ///
-  /// If required, [useDelegate] may select a specific delegate, otherwise it will
-  /// default to [DataProvider.defaultDelegate]
   ///
   Future<Script> latestScript({
     required String locale,
     required int fromVersion,
     required String name,
-    Delegate? useDelegate,
   });
 
   /// Returns a [DocumentId] from a document's data.  This is likely to be backend
@@ -198,12 +209,14 @@ abstract class IDataProvider<CONFIG extends DataProvider>
   /// returns a user instance created with [TakkanUser.unknownUser]
   TakkanUser get user;
 
-  Document documentSchema({required String documentSchemaName});
+  bool get userIsAuthenticated;
+
+  bool get userIsNotAuthenticated;
 
   /// The HTTP header key for the session token
   String get sessionTokenKey;
 
-  bool get userIsAuthenticated;
-
-  bool get userIsNotAuthenticated;
+  /// The property name for the field which provides a document's unique id
+  /// For example 'objectId' in Back4App
+  String get objectIdKey;
 }

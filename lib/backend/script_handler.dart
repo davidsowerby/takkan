@@ -1,4 +1,4 @@
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 
 abstract class ScriptHandler {

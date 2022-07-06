@@ -1,82 +1,81 @@
 import 'package:graphql/client.dart';
-import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_backend/backend/data_provider/delegate.dart';
-import 'package:takkan_backend/backend/data_provider/result.dart';
-import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_backend/backend/user/takkan_user.dart';
-import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/provider/delegate.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
-import 'package:takkan_script/data/select/query.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 
+import '../app/app_config.dart';
+import '../user/authenticator.dart';
+import '../user/takkan_user.dart';
 import 'data_provider.dart';
+import 'result.dart';
 
 /// Equivalent to a null but throws a meaningful exception instead.
 class NoDataProvider implements IDataProvider {
+
+  const NoDataProvider();
   static const String msg =
       'A NoDataProvider represents a condition where no data provider is available, and invoking this method is an error condition';
 
-  const NoDataProvider();
+  AppConfig get appConfig => throw const TakkanException(msg);
 
-  AppConfig get appConfig => throw TakkanException(msg);
+  SignInStatus get authStatus => throw const TakkanException(msg);
 
-  IDataProviderDelegate<Query> get authenticatorDelegate =>
-      throw TakkanException(msg);
+  @override
+  Authenticator<DataProvider, dynamic> get authenticator =>
+      throw const TakkanException(msg);
 
-  GraphQLDataProviderDelegate get graphQLDelegate => throw TakkanException(msg);
-
-  RestDataProviderDelegate get restDelegate => throw TakkanException(msg);
-
-  SignInStatus get authStatus => throw TakkanException(msg);
-
-  Authenticator<DataProvider, dynamic, NoDataProvider> get authenticator =>
-      throw TakkanException(msg);
-
-  DataProvider get config => throw TakkanException(msg);
+  @override
+  DataProvider get config => throw const TakkanException(msg);
 
   Future<Stream<Map<String, dynamic>>> connectItem() {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
   Future<Stream<List<Map<String, dynamic>>>> connectList() {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
-  createAuthenticator() {
-    throw TakkanException(msg);
-  }
 
+  @override
   DocumentId documentIdFromData(Map<String, dynamic> data) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
-  /// See [IDataProvider.fetchItem]
-  Future<ReadResultItem> fetchItem(
-      {required Query queryConfig,
-      required Map<String, dynamic> pageArguments}) {
-    throw TakkanException(msg);
+  /// See [IDataProvider.fetchDocument]
+  @override
+  Future<ReadResultItem> fetchDocument({
+    required String functionName,
+    required String documentClass,
+    Map<String, dynamic> params = const {},
+  }) {
+    throw const TakkanException(msg);
   }
 
-  /// See [IDataProvider.fetchList]
-  Future<ReadResultList> fetchList(
-      {required Query queryConfig,
-      required Map<String, dynamic> pageArguments}) {
-    throw TakkanException(msg);
+  /// See [IDataProvider.fetchDocList]
+  Future<ReadResultList> fetchDocList({
+    required String functionName,
+    Map<String, dynamic> variables = const {},
+    required String documentClass,
+  }) {
+    throw const TakkanException(msg);
   }
 
-  init({required DataProvider config}) {
-    throw TakkanException(msg);
+ @override
+  Future<void> init({required DataProvider config}) {
+    throw const TakkanException(msg);
   }
 
-  TakkanUser get user => throw TakkanException(msg);
+  @override
+  TakkanUser get user => throw const TakkanException(msg);
 
-  List<String> get userRoles => throw TakkanException(msg);
+  @override
+  List<String> get userRoles => throw const TakkanException(msg);
 
+  @override
   String get sessionTokenKey => 'X-Parse-Session-Token';
 
   @override
@@ -85,7 +84,7 @@ class NoDataProvider implements IDataProvider {
       required int fromVersion,
       Delegate? useDelegate,
       required String name}) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
   @override
@@ -95,7 +94,7 @@ class NoDataProvider implements IDataProvider {
     Delegate? useDelegate,
     FieldSelector fieldSelector = const FieldSelector(),
   }) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
   @override
@@ -103,7 +102,7 @@ class NoDataProvider implements IDataProvider {
     required DocumentId documentId,
     Delegate? useDelegate,
   }) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
   @override
@@ -113,7 +112,7 @@ class NoDataProvider implements IDataProvider {
     FieldSelector fieldSelector = const FieldSelector(),
     required Map<String, dynamic> data,
   }) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
   @override
@@ -123,60 +122,60 @@ class NoDataProvider implements IDataProvider {
     FetchPolicy? fetchPolicy,
     Delegate? useDelegate,
   }) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
   }
 
-  Document documentSchemaFromQuery({required String querySchemaName}) {
-    throw TakkanException(msg);
-  }
+
 
   @override
-  Document documentSchema({required String documentSchemaName}) {
-    throw TakkanException(msg);
-  }
-
-  @override
-  Future<ReadResult> executeFunction(
-      {required String functionName, Map<String, dynamic> params = const {}}) {
-    throw TakkanException(msg);
-  }
-
-  @override
-  String get objectIdKey => throw TakkanException(msg);
-
-  @override
-  bool get userIsAuthenticated => throw TakkanException(msg);
-
-  @override
-  bool get userIsNotAuthenticated => throw TakkanException(msg);
-
-  @override
-  Future<ReadResultItem> dataItem(
-      {required String documentClass, required IDataItem selector}) {
-    throw TakkanException(msg);
-  }
-
-  @override
-  Future<ReadResultList> dataList(
-      {required String documentClass, required IDataList selector}) {
-    throw TakkanException(msg);
-  }
-
-  @override
-  Future<ReadResultItem> executeItemFunction({
+  Future<FunctionResult> executeFunction({
     required String functionName,
-    required String documentClass,
     Map<String, dynamic> params = const {},
-  }) {
-    throw TakkanException(msg);
+  }){
+    throw const TakkanException(msg);
   }
 
   @override
-  Future<ReadResultList> executeListFunction({
-    required String functionName,
-    required String documentClass,
-    Map<String, dynamic> params = const {},
+  String get objectIdKey => throw const TakkanException(msg);
+
+  @override
+  bool get userIsAuthenticated => throw const TakkanException(msg);
+
+  @override
+  bool get userIsNotAuthenticated => throw const TakkanException(msg);
+
+
+  @override
+  Future<ReadResult<dynamic>> executeGraphQL({
+    required String script,
+    FetchPolicy? fetchPolicy,
+    FieldSelector? fieldSelector,
   }) {
-    throw TakkanException(msg);
+    throw const TakkanException(msg);
+  }
+
+  @override
+  Future<ReadResultList> fetchDocumentList(
+      {required String functionName,
+      required String documentClass,
+      Map<String, dynamic> params = const {}}) {
+    throw const TakkanException(msg);
+  }
+
+  @override
+  Future<ReadResultItem> selectDocument(
+      {required DocumentSelector selector,
+      required String documentClass,
+      Map<String, dynamic> pageArguments = const {}}) {
+    throw const TakkanException(msg);
+  }
+
+  @override
+  Future<ReadResultList> selectDocumentList({
+    required DocumentListSelector selector,
+    required String documentClass,
+    Map<String, dynamic> pageArguments = const {},
+  }) {
+    throw const TakkanException(msg);
   }
 }

@@ -1,13 +1,14 @@
 import 'dart:core';
 import 'dart:io';
 
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 
 import '../data_provider/constants.dart';
 import 'app_config_loader.dart';
+import 'takkan_store_config.dart';
 
 /// A wrapper for the JSON application configuration held in *takkan.json*
 /// The entire contents of *takkan.json* are loaded through the constructor.
@@ -45,9 +46,17 @@ import 'app_config_loader.dart';
 /// await getIt.isReady<AppConfig>(); // make sure file load is complete
 /// final AppConfig=inject<AppConfig>();
 /// ```
+/// **NOTE** make sure you call [load] or create with [AppConfig.fromData] before trying to access properties
 ///
 /// *NOTE: Custom properties cannot currently be a map. https://gitlab.com/takkan/takkan_backend/-/issues/22
 class AppConfig {
+  AppConfig(){    _takkanStoreConfig = TakkanStoreConfig(parent: this, data: {});}
+
+  AppConfig.fromData({required Map<String, dynamic> data}) {
+    _takkanStoreConfig = TakkanStoreConfig(parent: this, data: {});
+    _processData(data);
+  }
+
   static const String keyGroup = 'group';
   static const String keyInstance = 'instance';
   static const String keyServerUrl = 'serverUrl';
@@ -57,46 +66,67 @@ class AppConfig {
   static const String keyDocumentEndpoint = 'documentEndpoint';
   static const String keyFunctionEndpoint = 'functionEndpoint';
   static const String keySelectedInstance = 'selectedInstance';
+  static const String keyTakkanStore = 'takkan_store';
+  static const String keyMain = 'main';
   static const String keyServiceType = 'type';
   static const String defaultServiceType = 'back4app';
 
   final Map<String, GroupConfig> _groups = {};
-  final Map<String, dynamic> _data = {};
+  Map<String, dynamic> _data = {};
+  late TakkanStoreConfig _takkanStoreConfig;
+
   final Map<String, dynamic> _properties = {};
   bool _ready = false;
 
-  AppConfig();
-
-  AppConfig.fromData({required Map<String, dynamic> data}) {
-    _processData(data);
-  }
-
-  Future<AppConfig> load({String filePath = 'takkan.json'}) async {
+  Future<AppConfig> load(
+      {String filePath = 'takkan.json', void Function()? callback}) async {
     _ready = false;
     final fileContent =
         await inject<JsonFileLoader>().loadFile(filePath: filePath);
     return _processData(fileContent);
   }
 
-  AppConfig _processData(Map<String, dynamic> data) {
-    _data.clear();
-    _data.addAll(data);
+  String property(
+      {required String propertyName, required String defaultValue}) {
+    return _properties[propertyName] as String? ?? defaultValue;
+  }
 
-    /// Copy the groups into GroupConfig instances, properties into _properties
-    for (String key in _data.keys) {
-      final entry = _data[key];
-      if (entry is Map) {
+  TakkanStoreConfig get takkanStoreConfig => _takkanStoreConfig;
+
+  AppConfig _processData(Map<String, dynamic> data) {
+    _data = Map.from(data);
+    data.forEach((key, value) {
+      _processItem(key, value);
+    });
+
+    return this;
+  }
+
+  void _processItem(String key, dynamic value) {
+    if (value is Map) {
+      final v = value as Map<String, dynamic>;
+      if (key == keyTakkanStore) {
+        _takkanStoreConfig = TakkanStoreConfig(parent: this, data: v);
+        return;
+      }
+      final bool isGroup = _isGroup(key, v);
+      if (isGroup) {
         _groups[key] = GroupConfig(
           parent: this,
-          data: _data[key],
+          data: value,
           name: key,
         );
-      } else {
-        _properties[key] = entry;
       }
+      return;
     }
-    _ready = true;
-    return this;
+    _properties[key] = value;
+  }
+
+  bool _isGroup(String key, Map<String, dynamic> value) {
+    if (key == keyMain) {
+      return true;
+    }
+    return value['isGroup'] as bool? ?? false;
   }
 
   InstanceConfig instanceConfig(DataProvider providerConfig) {
@@ -109,9 +139,9 @@ class AppConfig {
   GroupConfig group(String groupName) {
     final group = _groups[groupName];
     if (group == null) {
-      String msg =
-          'File takkan.json in project root does not define a group \'${groupName}\'';
-      logType(this.runtimeType).e(msg);
+      final String msg =
+          "File takkan.json in project root does not define a group '$groupName'";
+      logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
     return group;
@@ -125,29 +155,21 @@ class AppConfig {
 
   /// Returns all instances from all groups
   List<InstanceConfig> get instances {
-    final _instances = List<InstanceConfig>.empty(growable: true);
-    for (GroupConfig group in _groups.values) {
-      _instances.addAll(group.instances);
+    final i = List<InstanceConfig>.empty(growable: true);
+    for (final GroupConfig group in _groups.values) {
+      i.addAll(group.instances);
     }
-    return _instances;
+    return i;
   }
 }
 
 /// [_properties] holds any group properties not part of an [InstanceConfig]
 class GroupConfig {
-  final AppConfig parent;
-  final String name;
-  final Map<String, InstanceConfig> _instances = {};
-  final Map<String, dynamic> _properties = {};
-
-  GroupConfig(
-      {required this.parent,
-      required this.name,
-      required Map<String, dynamic> data}) {
-    for (String key in data.keys) {
+  GroupConfig({required this.parent, required this.name, required this.data}) {
+    for (final String key in data.keys) {
       if (data[key] is Map) {
         final instanceKey = key;
-        final Map untypedMap = data[instanceKey];
+        final Map<dynamic, dynamic> untypedMap = data[instanceKey] as Map;
         final Map<String, dynamic> t = Map.castFrom(untypedMap);
         _instances[instanceKey] = InstanceConfig(
           name: instanceKey,
@@ -155,10 +177,17 @@ class GroupConfig {
           data: t,
         );
       } else {
-        this._properties[key] = data[key];
+        _properties[key] = data[key];
       }
     }
   }
+
+  final Map<String, dynamic> data;
+
+  final AppConfig parent;
+  final String name;
+  final Map<String, InstanceConfig> _instances = {};
+  final Map<String, dynamic> _properties = {};
 
   InstanceConfig get selectedInstance {
     return instance(selectedInstanceName);
@@ -166,15 +195,16 @@ class GroupConfig {
 
   /// Returns value of key [AppConfig.keySelectedInstance] or the first declared instance name
   String get selectedInstanceName =>
-      _properties[AppConfig.keySelectedInstance] ?? _instances.keys.first;
+      _properties[AppConfig.keySelectedInstance] as String? ??
+      _instances.keys.first;
 
   InstanceConfig instance(String instanceName) {
     final instanceConfig = _instances[instanceName];
 
     if (instanceConfig == null) {
-      String msg =
-          'File takkan.json in project root does not define an instance \'${instanceName}\' in group \'${name}\'';
-      logType(this.runtimeType).e(msg);
+      final String msg =
+          "File takkan.json in project root does not define an instance '$instanceName' in group '$name'";
+      logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
     return instanceConfig;
@@ -188,40 +218,52 @@ class GroupConfig {
   }
 
   Iterable<InstanceConfig> get instances => _instances.values;
+
+  String property(
+      {required String propertyName, required String defaultValue}) {
+    final groupValue = _properties[propertyName] as String?;
+    if (groupValue != null) {
+      return groupValue;
+    }
+    final appValue = parent._properties[propertyName] as String?;
+    if (appValue != null) {
+      return appValue;
+    }
+    return defaultValue;
+  }
 }
 
 class InstanceConfig {
-  final String name;
-  final GroupConfig parent;
-  final Map<String, dynamic> _properties;
-
   InstanceConfig(
       {required this.name,
       required this.parent,
       required Map<String, dynamic> data})
       : _properties = data;
+  final String name;
+  final GroupConfig parent;
+  final Map<String, dynamic> _properties;
 
-  String get serviceType => _property(
+  String get serviceType => property(
         propertyName: AppConfig.keyServiceType,
         defaultValue: AppConfig.defaultServiceType,
       );
 
-  String get graphqlEndpoint => _property(
+  String get graphqlEndpoint => property(
         propertyName: AppConfig.keyGraphqlEndpoint,
         defaultValue: _appendToServerUrl(serverUrl, 'graphql'),
       );
 
-  String get documentEndpoint => _property(
+  String get documentEndpoint => property(
         propertyName: AppConfig.keyDocumentEndpoint,
         defaultValue: _appendToServerUrl(serverUrl, 'classes'),
       );
 
-  String get functionEndpoint => _property(
+  String get functionEndpoint => property(
         propertyName: AppConfig.keyFunctionEndpoint,
         defaultValue: _appendToServerUrl(serverUrl, 'functions'),
       );
 
-  String get serverUrl => _property(
+  String get serverUrl => property(
         propertyName: AppConfig.keyServerUrl,
         defaultValue: 'https://parseapi.back4app.com',
       );
@@ -235,12 +277,12 @@ class InstanceConfig {
   /// Map<String,dynamic> but was the only way I found to get around Dart's typing
   ///
   Map<String, String> get headers {
-    final Map h1 = _requiredMapProperty('headers');
+    final Map<dynamic, dynamic> h1 = _requiredMapProperty('headers');
     return Map.castFrom(h1);
   }
 
   String get appName =>
-      _property(propertyName: AppConfig.keyAppName, defaultValue: 'MyApp');
+      property(propertyName: AppConfig.keyAppName, defaultValue: 'MyApp');
 
   /// Unique within its [AppConfig]
   String get uniqueName => '${parent.name}:$name';
@@ -253,38 +295,48 @@ class InstanceConfig {
       headers[keyHeaderClientKey] ?? _requiredProperty(keyHeaderClientKey);
 
   Directory get cloudCodeDirectory => Directory(
-        _property(
+        property(
             propertyName: AppConfig.keyCloudCodeDir,
             defaultValue:
-                '${Platform.environment['HOME']!}/b4a/${appName}/$name/cloud'),
+                '${Platform.environment['HOME']!}/b4a/$appName/$name/cloud'),
       );
 
   String _requiredProperty(String propertyName) {
-    final String? value = _properties[propertyName];
-    if (value != null) return value;
+    final String? value = _properties[propertyName] as String?;
+    if (value != null) {
+      return value;
+    }
     final String msg =
-        'A String property \'$propertyName\' must be defined in InstanceConfig $uniqueName or its parent chain';
-    logType(this.runtimeType).e(msg);
+        "A String property '$propertyName' must be defined in InstanceConfig $uniqueName or its parent chain";
+    logType(runtimeType).e(msg);
     throw TakkanException(msg);
   }
 
-  Map _requiredMapProperty(String propertyName) {
-    final Map? value = _properties[propertyName];
-    if (value != null) return value;
+  Map<dynamic, dynamic> _requiredMapProperty(String propertyName) {
+    final Map<dynamic, dynamic>? value = _properties[propertyName] as Map?;
+    if (value != null) {
+      return value;
+    }
     final String msg =
-        'A Map property \'$propertyName\' must be defined in InstanceConfig $uniqueName or its parent chain';
-    logType(this.runtimeType).e(msg);
+        "A Map property '$propertyName' must be defined in InstanceConfig $uniqueName or its parent chain";
+    logType(runtimeType).e(msg);
     throw TakkanException(msg);
   }
 
-  String _property(
+  String property(
       {required String propertyName, required String defaultValue}) {
-    final instanceValue = _properties[propertyName];
-    if (instanceValue != null) return instanceValue;
-    final groupValue = parent._properties[propertyName];
-    if (groupValue != null) return groupValue;
-    final appValue = parent.parent._properties[propertyName];
-    if (appValue != null) return appValue;
+    final instanceValue = _properties[propertyName] as String?;
+    if (instanceValue != null) {
+      return instanceValue;
+    }
+    final groupValue = parent._properties[propertyName] as String?;
+    if (groupValue != null) {
+      return groupValue;
+    }
+    final appValue = parent.parent._properties[propertyName] as String?;
+    if (appValue != null) {
+      return appValue;
+    }
     return defaultValue;
   }
 }
@@ -297,8 +349,8 @@ String _appendToServerUrl(String serverUrl, String appendage) {
 
 /// Creates GetIt bindings to create an [AppConfig] instance, with data from
 /// a JSON file at [filePath]
-appConfigFromFileBindings({String filePath = 'takkan.json'}) {
-  getIt.registerFactory<JsonFileLoader>(() => DefaultJsonFileLoader());
+void appConfigFromFileBindings({String filePath = 'takkan.json'}) {
+  getIt.registerFactory<JsonFileLoader>(() => const DefaultJsonFileLoader());
   getIt.registerSingletonAsync<AppConfig>(() {
     final AppConfig appConfig = AppConfig();
     return appConfig.load(filePath: filePath);
@@ -306,7 +358,7 @@ appConfigFromFileBindings({String filePath = 'takkan.json'}) {
 }
 
 /// Creates GetIt bindings to create an [AppConfig] instance with [data]
-appConfigFromDataBindings({required Map<String, dynamic> data}) {
+void appConfigFromDataBindings({required Map<String, dynamic> data}) {
   getIt.registerFactory<JsonFileLoader>(() => DirectFileLoader(data: data));
   getIt.registerSingletonAsync<AppConfig>(() {
     final AppConfig appConfig = AppConfig();

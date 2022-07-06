@@ -1,19 +1,19 @@
 class TakkanState {
-  final Map<String, dynamic> state;
 
   const TakkanState(this.state);
+  final Map<String, dynamic> state;
 
-  String get artifact => state['artifact'];
+  String get artifact => state['artifact'] as String;
 
-  int get currentVersion => state['currentVersion'];
+  int get currentVersion => state['currentVersion'] as int;
 
-  int get nextVersion => state['nextVersion'];
+  int get nextVersion => state['nextVersion'] as int;
 
-  int get maxVersion => state['maxVersion'];
+  int get maxVersion => state['maxVersion'] as int;
 
-  DateTime? get nextActivation => state['nextActivation'];
+  DateTime? get nextActivation => state['nextActivation'] as DateTime?;
 }
 
 class TakkanStateHistory extends TakkanState {
-  const TakkanStateHistory(Map<String, dynamic> state) : super(state);
+  const TakkanStateHistory(super.state);
 }

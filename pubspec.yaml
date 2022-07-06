@@ -13,6 +13,8 @@ dependencies:
   meta: ^1.7.0
   takkan_script:
     path: ../takkan_script
+  takkan_schema:
+    path: ../takkan_schema
 
 dev_dependencies:
   test:

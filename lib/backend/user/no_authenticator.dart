@@ -1,16 +1,16 @@
-import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_backend/backend/user/takkan_user.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 
-import '../data_provider/data_provider.dart';
+import 'authenticator.dart';
+import 'takkan_user.dart';
+
 
 class NoAuthenticator
-    extends Authenticator<DataProvider, TakkanUser, IDataProvider> {
-  final String msg =
-      'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
+    extends Authenticator<DataProvider, TakkanUser> {
 
   NoAuthenticator(super.parent);
+  final String msg =
+      'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
 
   @override
   Future<bool> doDeRegister(TakkanUser user) {
@@ -40,9 +40,10 @@ class NoAuthenticator
   }
 
   @override
-  init() {
+  Future<SignInStatus> init() async{
     super.init();
-    logType(this.runtimeType).i("Using a 'NoAuthenticator' so real authentication not possible");
+    logType(runtimeType).i("Using a 'NoAuthenticator' so real authentication not possible");
+    return status;
   }
 
   @override
@@ -51,19 +52,17 @@ class NoAuthenticator
   }
 
   @override
-  takkanUserToNative(TakkanUser takkanUser) {
+  TakkanUser takkanUserToNative(TakkanUser takkanUser) {
     throw UnimplementedError();
   }
 
   @override
   Future<List<String>> loadUserRoles() {
-    // TODO: implement userRoles
     throw UnimplementedError();
   }
 
   @override
-  doSignOut() {
-    // TODO: implement doSignOut
+  Future<void> doSignOut() {
     throw UnimplementedError();
   }
 }
