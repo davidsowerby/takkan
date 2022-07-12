@@ -72,7 +72,7 @@ void main() {
 
 int nullsInTracker(List<String> tracker) {
   int count = 0;
-  for (String item in tracker) {
+  for (final String item in tracker) {
     if (item.contains('null')) {
       count++;
     }

@@ -1,6 +1,9 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
+
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../script/common.dart';
+import '../../script/script_element.dart';
 import '../schema.dart';
 import 'field.dart';
 import 'list.dart';
@@ -32,7 +35,9 @@ class FQuerySchema extends Field< List<dynamic>> {
 
   @override
   Map<String, dynamic> toJson() => _$FQuerySchemaToJson(this);
-
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props,documentSchema];
   @override
   Type get modelType => List;
 }

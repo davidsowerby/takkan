@@ -1,23 +1,25 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+
+import '../common/exception.dart';
+import '../common/log.dart';
 
 part 'layout.g.dart';
 
-/// Reduces the area available to the parent compoent effectively creating whitespace
+/// Reduces the area available to the parent component effectively creating whitespace
 /// around it.  Used by layouts [Layout.padding] and individual parts.
 @JsonSerializable(explicitToJson: true)
 class Padding {
-  final double left;
-  final double top;
-  final double bottom;
-  final double right;
 
   const Padding(
       {this.left = 8.0, this.top = 8.0, this.bottom = 8.0, this.right = 8.0});
 
   factory Padding.fromJson(Map<String, dynamic> json) =>
       _$PaddingFromJson(json);
+  final double left;
+  final double top;
+  final double bottom;
+  final double right;
 
   Map<String, dynamic> toJson() => _$PaddingToJson(this);
 }
@@ -36,19 +38,22 @@ abstract class Layout {
 /// [preferredColumnWidth] tells the page layout algorithm what to use as as the target column width.  This
 /// applies to single and multi-column layouts.
 @JsonSerializable(explicitToJson: true)
-class LayoutDistributedColumn implements Layout {
-  @override
-  final Padding padding;
-  @override
-  final double preferredColumnWidth;
+class LayoutDistributedColumn extends Equatable implements Layout {
 
   const LayoutDistributedColumn(
       {this.padding = const Padding(), this.preferredColumnWidth = 360});
 
   factory LayoutDistributedColumn.fromJson(Map<String, dynamic> json) =>
       _$LayoutDistributedColumnFromJson(json);
+  @override
+  final Padding padding;
+  @override
+  final double preferredColumnWidth;
 
   Map<String, dynamic> toJson() => _$LayoutDistributedColumnToJson(this);
+
+  @override
+  List<Object?> get props => [padding,preferredColumnWidth];
 }
 
 // ignore: avoid_classes_with_only_static_members

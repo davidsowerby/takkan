@@ -92,7 +92,7 @@ void main() {
             findRoles: ['finder'],
             countRoles: ['counter'],
           ),
-          fields: {});
+          fields: const {});
       // when
 
       // then
@@ -112,7 +112,7 @@ void main() {
               createRoles: ['creator'],
               updateRoles: ['updater'],
               deleteRoles: ['destroyer']),
-          fields: {});
+          fields: const {});
       // when
 
       // then

@@ -1,13 +1,16 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
-import '../script/common.dart';
+
 import '../script/help.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
 import 'part.dart';
 
 part 'text.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class BodyText1 extends Part {
-
   BodyText1({
     super.caption,
     super.readOnly = false,
@@ -26,9 +29,9 @@ class BodyText1 extends Part {
   @override
   Map<String, dynamic> toJson() => _$BodyText1ToJson(this);
 }
+
 @JsonSerializable(explicitToJson: true)
 class BodyText2 extends Part {
-
   BodyText2({
     super.caption,
     super.readOnly = false,
@@ -47,8 +50,6 @@ class BodyText2 extends Part {
   @override
   Map<String, dynamic> toJson() => _$BodyText2ToJson(this);
 }
-
-
 
 @JsonSerializable(explicitToJson: true)
 class Text extends Part {
@@ -72,7 +73,6 @@ class Text extends Part {
 
 @JsonSerializable(explicitToJson: true)
 class Heading1 extends Part {
-
   Heading1({
     super.caption,
     super.readOnly = false,

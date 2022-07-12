@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../common/exception.dart';
@@ -5,10 +7,10 @@ import '../common/log.dart';
 import '../data/provider/data_provider.dart';
 import '../data/select/condition/condition.dart';
 import '../page/page.dart';
-import '../script/common.dart';
-import '../script/takkan_item.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
 import '../script/version.dart';
-import '../util/visitor.dart';
+import '../script/walker.dart';
 import 'field/field.dart';
 import 'field/string.dart';
 import 'json/json_converter.dart';
@@ -50,7 +52,8 @@ class Schema extends SchemaElement {
     bool readOnly = false,
     required this.name,
     required this.version,
-  })  : _documents = documents,
+  })
+      : _documents = documents,
         super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
@@ -61,6 +64,16 @@ class Schema extends SchemaElement {
 
   @override
   Map<String, dynamic> toJson() => _$SchemaToJson(this);
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props =>
+      [
+        ...super.props,
+        version,
+        name,
+        _documents,
+      ];
 
   @override
   @JsonKey(ignore: true)
@@ -118,7 +131,7 @@ class Schema extends SchemaElement {
 /// PDocument(fields: [PString(name: 'title')])
 ///
 /// which for longer declarations is a bit more readable
-abstract class SchemaElement extends TakkanItem {
+abstract class SchemaElement extends TakkanElement {
   SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
       : _isReadOnly = readOnly;
   String? _name;
@@ -133,6 +146,10 @@ abstract class SchemaElement extends TakkanItem {
     _name = params.name;
     super.doInit(params);
   }
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, _isReadOnly, _name];
 
   @JsonKey(ignore: true)
   bool get readOnly => _readOnlyState() == IsReadOnly.yes;
@@ -188,7 +205,8 @@ class Permissions with WalkTarget {
     List<String> getRoles = const [],
     List<String> findRoles = const [],
     List<String> countRoles = const [],
-  })  : _requiresAuthentication = requiresAuthentication,
+  })
+      : _requiresAuthentication = requiresAuthentication,
         _updateRoles = updateRoles,
         _createRoles = createRoles,
         _deleteRoles = deleteRoles,
@@ -266,38 +284,38 @@ class Permissions with WalkTarget {
 
   bool get requiresGetAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.get) ||
-      getRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.get) ||
+          getRoles.isNotEmpty;
 
   bool get requiresFindAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.find) ||
-      findRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.find) ||
+          findRoles.isNotEmpty;
 
   bool get requiresCountAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.count) ||
-      countRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.count) ||
+          countRoles.isNotEmpty;
 
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.create) ||
-      createRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.create) ||
+          createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.update) ||
-      updateRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.update) ||
+          updateRoles.isNotEmpty;
 
   bool get requiresDeleteAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.delete) ||
-      deleteRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.delete) ||
+          deleteRoles.isNotEmpty;
 
   bool get requiresAddFieldAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.addField) ||
-      addFieldRoles.isNotEmpty;
+          _requiresAuthentication.contains(AccessMethod.addField) ||
+          addFieldRoles.isNotEmpty;
 
   bool methodIsPublic(AccessMethod method) {
     return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
@@ -335,17 +353,28 @@ class Document extends SchemaElement {
     this.documentType = DocumentType.standard,
     this.permissions = const Permissions(),
     Map<String, List<Condition<dynamic>> Function(Document)> queries = const {},
-  })  : _queryDefinitions = queries,
+  })
+      : _queryDefinitions = queries,
         super();
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
+
+  /// Using [_queries] as that is a combination of [_queryDefinitions] and [queryScripts],
+  /// and it should not matter which method is used to define the query.
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props =>
+      [...super.props, permissions, documentType, fields, _queries];
+
+  List<Object?> get excludeProps => [_queryDefinitions, queryScripts];
+
   final Permissions permissions;
   final DocumentType documentType;
   final Map<String, Field<dynamic>> fields;
   @JsonKey(ignore: true)
   final Map<String, List<Condition<dynamic>> Function(Document)>
-      _queryDefinitions;
+  _queryDefinitions;
   final Map<String, String> queryScripts;
   final Map<String, Query> _queries = {};
 
@@ -409,7 +438,7 @@ class Document extends SchemaElement {
   ConditionBuilder operator [](String fieldName) {
     final Field<dynamic>? f = fields[fieldName];
     if (f != null) {
-      return ConditionBuilder( fieldName);
+      return ConditionBuilder(fieldName);
     }
     final String msg = '$fieldName is not a valid field name';
     logType(runtimeType).e(msg);
@@ -451,7 +480,7 @@ class Document extends SchemaElement {
 /// [group] relates to the first level within *takkan.json*
 /// [instance] relates to the second level within *takkan.json*
 @JsonSerializable(explicitToJson: true)
-class SchemaSource extends TakkanItem {
+class SchemaSource extends TakkanElement {
   SchemaSource({
     required this.group,
     required this.instance,
@@ -462,6 +491,10 @@ class SchemaSource extends TakkanItem {
       _$SchemaSourceFromJson(json);
   final String group;
   final String instance;
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, group, instance];
 
   @override
   Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);

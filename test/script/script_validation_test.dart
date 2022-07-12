@@ -116,7 +116,7 @@ void main() {
           Page(
             name: 'wiggly',
             caption: 'Wiggly',
-            dataSelectors: [
+            dataSelectors: const [
              DocByQuery(
                queryName: '?',
               )
@@ -152,7 +152,7 @@ void main() {
             Page(
               name: 'wiggly',
               caption: 'Wiggly',
-              dataSelectors: [
+              dataSelectors: const [
                DocByQuery(
                  queryName: '?',
                   caption: 'Wiggly',
@@ -231,7 +231,7 @@ void main() {
           Page(
             name: 'wiggly',
             caption: 'Wiggly',
-            dataSelectors: [
+            dataSelectors: const [
              DocByQuery(
                queryName: 'fixed thing',
               )

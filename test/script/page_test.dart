@@ -30,7 +30,7 @@ void main() {
           Page(
             name: 'profile',
             documentClass: 'Person',
-            dataSelectors: [
+            dataSelectors: const [
              DocByQuery(
                queryName: 'MyObject',
               ),
@@ -40,7 +40,7 @@ void main() {
           Page(
             name: 'shortForm',
             documentClass: 'Person',
-            dataSelectors: [
+            dataSelectors: const [
              DocByQuery(
                queryName: 'MyObject',
               ),
@@ -50,15 +50,15 @@ void main() {
           Page(
             name: 'crowd',
             documentClass: 'Person',
-            dataSelectors: [
-              const DocListByQuery(queryName: 'people'),
+            dataSelectors: const [
+              DocListByQuery(queryName: 'people'),
             ],
           ),
           Page(
             name: 'people',
             documentClass: 'Person',
-            dataSelectors: [
-              const DocListByQuery(
+            dataSelectors: const [
+              DocListByQuery(
                 queryName: 'members',
               )
             ],

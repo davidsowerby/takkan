@@ -22,7 +22,7 @@ void main() {
       // given
 
       // when
-      final NavButtonSet a = NavButtonSet(buttons: []);
+      final NavButtonSet a = NavButtonSet(buttons: const []);
       final NavButtonSet b = NavButtonSet.fromJson(a.toJson());
       // then
       expect(a.height, 60.0);

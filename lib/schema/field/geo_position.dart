@@ -1,7 +1,10 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/object/geo.dart';
-import '../../script/common.dart';
+import '../../script/script_element.dart';
+import '../../script/takkan_element.dart';
 import 'field.dart';
 
 part 'geo_position.g.dart';
@@ -9,7 +12,6 @@ part 'geo_position.g.dart';
 /// see [GeoPosition]
 @JsonSerializable(explicitToJson: true)
 class FGeoPosition extends Field< GeoPosition> {
-
   FGeoPosition({
     super.defaultValue,
     super.constraints = const [],

@@ -1,12 +1,15 @@
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/schema/field/field.dart';
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
+import 'field/field.dart';
 
 // part 'select.g.dart';
 
-abstract class SelectField extends Field {
+abstract class SelectField extends Field<dynamic> {
   SelectField({
-    super. readOnly = IsReadOnly.inherited,
-    required super. required,
+    super.readOnly = IsReadOnly.inherited,
+    required super.required,
   });
 }
 

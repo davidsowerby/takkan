@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/provider/delegate.dart';
-import 'package:takkan_script/data/provider/graphql_delegate.dart';
+import 'data_provider.dart';
+import 'delegate.dart';
+import 'graphql_delegate.dart';
 
 part 'rest_delegate.g.dart';
 
@@ -16,7 +16,6 @@ part 'rest_delegate.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class Rest extends DataProviderDelegate {
-  final String documentEndpoint;
 
   const Rest({
     this.documentEndpoint = '/classes',
@@ -24,6 +23,7 @@ class Rest extends DataProviderDelegate {
   }) ;
 
   factory Rest.fromJson(Map<String, dynamic> json) => _$RestFromJson(json);
+  final String documentEndpoint;
 
   Map<String, dynamic> toJson() => _$RestToJson(this);
 }

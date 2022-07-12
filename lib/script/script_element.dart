@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,9 +10,8 @@ import '../panel/static_panel.dart';
 import '../part/part.dart';
 import '../schema/schema.dart';
 import 'script.dart';
-import 'takkan_item.dart';
-
-part 'common.g.dart';
+import 'takkan_element.dart';
+import 'walker.dart';
 
 enum IsReadOnly { yes, no, inherited }
 
@@ -70,13 +71,13 @@ enum ControlEdit {
 /// is set only after a [init] call.  Unfortunately there seems to be no way to
 /// set this during construction - this also means that the [Script] structure cannot be **const**
 ///
-@JsonSerializable(explicitToJson: true)
-class Common extends TakkanItem {
-  Common({
+
+abstract class ScriptElement extends TakkanElement {
+  ScriptElement({
     DataProvider? dataProvider,
     this.controlEdit = ControlEdit.inherited,
     super.id,
-  })  : _dataProvider = dataProvider;
+  }) : _dataProvider = dataProvider;
 
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
@@ -86,8 +87,8 @@ class Common extends TakkanItem {
   bool get hasEditControl => _hasEditControl;
 
   bool get inheritedEditControl {
-    Common p = parent;
-    while (p is! NullTakkanItem) {
+    ScriptElement p = parent;
+    while (p is! NullScriptElement) {
       if (p.hasEditControl) {
         return true;
       }
@@ -97,6 +98,15 @@ class Common extends TakkanItem {
   }
 
   @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        controlEdit,
+        _dataProvider,
+        _hasEditControl,
+      ];
+
+  @JsonKey(ignore: true)
   DataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
@@ -104,7 +114,7 @@ class Common extends TakkanItem {
 
   @override
   @JsonKey(ignore: true)
-  Common get parent => super.parent as Common;
+  ScriptElement get parent => super.parent as ScriptElement;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.
   /// If you override this to pass the call on to other levels, make sure you call super
@@ -112,11 +122,11 @@ class Common extends TakkanItem {
   @override
   void doInit(InitWalkerParams params) {
     super.doInit(params);
-    TakkanItem p = parent;
+    TakkanElement p = parent;
 
     ControlEdit inherited = ControlEdit.inherited;
-    while (p is! NullTakkanItem) {
-      final Common p1 = p as Common;
+    while (p is! NullScriptElement) {
+      final ScriptElement p1 = p as ScriptElement;
       if (p1.controlEdit != ControlEdit.inherited) {
         inherited = p1.controlEdit;
         break;
@@ -126,7 +136,7 @@ class Common extends TakkanItem {
     setupControlEdit(inherited);
   }
 
-  /// See [TakkanItem.subElements]
+  /// See [TakkanElement.subElements]
   @override
   List<Object> get subElements => [
         if (_dataProvider != null) _dataProvider!,
@@ -190,10 +200,13 @@ class Common extends TakkanItem {
   }
 }
 
-class NullTakkanItem extends Common {
-  NullTakkanItem() : super();
+class NullScriptElement extends ScriptElement {
+  NullScriptElement() : super();
 }
 
 class NullSchemaElement extends SchemaElement {
   NullSchemaElement() : super();
+
+  @override
+  Map<String, dynamic> toJson() => throw UnimplementedError();
 }

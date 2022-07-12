@@ -1,10 +1,12 @@
 
+import 'package:equatable/equatable.dart';
+
 import '../../data/select/condition/condition.dart';
 
 /// This is a temporary setup until the validation patterns can be included in PScript,
 /// or some other server based method is designed
 ///
-class ValidationErrorMessages {
+class ValidationErrorMessages extends Equatable {
 
   const ValidationErrorMessages({this.typePatterns = const {}});
   final Map<Object, String> typePatterns;
@@ -14,6 +16,10 @@ class ValidationErrorMessages {
   }
 
   bool get isEmpty => typePatterns.isEmpty;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [typePatterns];
 }
 
 const Map<Object, String> defaultValidationErrorMessages = {

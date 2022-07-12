@@ -11,5 +11,3 @@ T injectParam<T extends Object>({param1, param2, String? instanceName}) {
   return getIt.get<T>(
       instanceName: instanceName, param1: param1, param2: param2);
 }
-
-

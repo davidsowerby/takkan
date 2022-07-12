@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -9,13 +11,13 @@ import '../part/part.dart';
 import '../schema/field/integer.dart';
 import '../schema/field/string.dart';
 import '../schema/schema.dart';
-import '../script/common.dart';
 import '../script/content.dart';
 import '../script/element.dart';
 import '../script/layout.dart';
 import '../script/script.dart';
-import '../script/takkan_item.dart';
-import '../util/visitor.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
+import '../script/walker.dart';
 
 part 'page.g.dart';
 
@@ -80,20 +82,25 @@ class Page extends PodBase {
   final bool scrollable;
   final String name;
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, name, scrollable, dataSelectors];
+
   @JsonKey(
     fromJson: DataListJsonConverter.fromJson,
     toJson: DataListJsonConverter.toJson,
   )
   final List<DataSelector> dataSelectors;
 
-  DataSelector dataSelectorByName(String name){
-    for (final DataSelector selector in dataSelectors){
-      if (selector.name==name){
+  DataSelector dataSelectorByName(String name) {
+    for (final DataSelector selector in dataSelectors) {
+      if (selector.name == name) {
         return selector;
       }
     }
     return const NoData();
   }
+
   bool get dataIsItem {
     if (isStatic) {
       return false;
@@ -152,8 +159,9 @@ class Page extends PodBase {
   /// Generates structured routes.  See [TakkanRoute] for structure
   Map<TakkanRoute, Page> get routeMap {
     final Map<TakkanRoute, Page> map = {};
-    if(dataSelectors.isEmpty){
-      final TakkanRoute takkanRoute=TakkanRoute.fromConfig(page: this, selector:const NoData());
+    if (dataSelectors.isEmpty) {
+      final TakkanRoute takkanRoute =
+          TakkanRoute.fromConfig(page: this, selector: const NoData());
       map[takkanRoute] = this;
       return map;
     }
@@ -167,7 +175,7 @@ class Page extends PodBase {
     return map;
   }
 
-  /// See [TakkanItem.subElements]
+  /// See [TakkanElement.subElements]
   @override
   List<Object> get subElements => [
         children,
@@ -246,12 +254,11 @@ class RoleVisitor implements ScriptVisitor {
 /// - list of documents:  {page.name}/{dataSelector.name}/{[objectId, objectId]*}
 /// - static pages: {page.name}/{dataSelector.name}/static
 ///
-class TakkanRoute extends Equatable{
+class TakkanRoute extends Equatable {
   const TakkanRoute({
     required this.dataSelectorName,
     required this.pageName,
   });
-
 
   /// Constructs an instance from [Page] and [DataSelector]
   factory TakkanRoute.fromConfig({
@@ -259,16 +266,14 @@ class TakkanRoute extends Equatable{
     required DataSelector selector,
   }) {
     return TakkanRoute(
-      dataSelectorName:selector.name,
+      dataSelectorName: selector.name,
       pageName: page.name,
     );
   }
 
   factory TakkanRoute.fromString(String route) {
     final segments = route.split('/');
-    return TakkanRoute(
-        pageName: segments[0],
-        dataSelectorName: segments[1]);
+    return TakkanRoute(pageName: segments[0], dataSelectorName: segments[1]);
   }
 
   final String dataSelectorName;
@@ -279,9 +284,7 @@ class TakkanRoute extends Equatable{
     return '$pageName/$dataSelectorName';
   }
 
+  @JsonKey(ignore: true)
   @override
-  List<Object?> get props => [pageName,dataSelectorName];
-
-
-
+  List<Object?> get props => [pageName, dataSelectorName];
 }

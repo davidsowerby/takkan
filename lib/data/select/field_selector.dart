@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/schema/schema.dart';
+import '../../schema/schema.dart';
 
 part 'field_selector.g.dart';
 
@@ -17,11 +17,6 @@ part 'field_selector.g.dart';
 /// this, or provide other [metaFields] on construction
 @JsonSerializable(explicitToJson: true)
 class FieldSelector {
-  final List<String> metaFields;
-  final List<String> fields;
-  final bool allFields;
-  final bool includeMetaFields;
-  final List<String> excludeFields;
 
   const FieldSelector({
     this.fields = const [],
@@ -30,6 +25,14 @@ class FieldSelector {
     this.metaFields = const ['createdAt', 'updatedAt'],
     this.excludeFields = const [],
   });
+
+  factory FieldSelector.fromJson(Map<String, dynamic> json) =>
+      _$FieldSelectorFromJson(json);
+  final List<String> metaFields;
+  final List<String> fields;
+  final bool allFields;
+  final bool includeMetaFields;
+  final List<String> excludeFields;
 
   List<String> selection(Document schema) {
     final List<String> s = List.empty(growable: true);
@@ -42,14 +45,12 @@ class FieldSelector {
     if (includeMetaFields) {
       s.addAll(metaFields);
     }
-    for (String field in excludeFields) {
+    // ignore: prefer_foreach
+    for (final String field in excludeFields) {
       s.remove(field);
     }
     return s;
   }
-
-  factory FieldSelector.fromJson(Map<String, dynamic> json) =>
-      _$FieldSelectorFromJson(json);
 
   Map<String, dynamic> toJson() => _$FieldSelectorToJson(this);
 }

@@ -1,16 +1,20 @@
-import 'package:takkan_script/script/takkan_item.dart';
+import 'package:equatable/equatable.dart';
+import '../script/takkan_element.dart';
 
-class ValidationMessage {
+class ValidationMessage extends Equatable{
+
+  ValidationMessage({required TakkanElement item, required this.msg})
+      : type = item.runtimeType.toString(),
+        debugId = item.debugId;
   final String type;
   final String? debugId;
   final String msg;
-
-  ValidationMessage({required TakkanItem item, required this.msg})
-      : type = item.runtimeType.toString(),
-        debugId = item.debugId;
 
   @override
   String toString() {
     return '$type : $debugId : $msg';
   }
+
+  @override
+  List<Object?> get props => [type,debugId,msg];
 }

@@ -1,19 +1,23 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../data/select/condition/condition.dart';
-import '../../script/common.dart';
+import '../../script/script_element.dart';
+import '../../script/takkan_element.dart';
 import 'field.dart';
 
 part 'list.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @ConditionConverter()
-class FList extends Field< List<dynamic>> {
+class FList extends Field<List<dynamic>> {
   FList({
     super.defaultValue,
-    super. constraints = const [],
-    super. required = false,
-    super. readOnly = IsReadOnly.inherited,
-  }) ;
+    super.constraints = const [],
+    super.required = false,
+    super.readOnly = IsReadOnly.inherited,
+  });
 
   factory FList.fromJson(Map<String, dynamic> json) => _$FListFromJson(json);
 

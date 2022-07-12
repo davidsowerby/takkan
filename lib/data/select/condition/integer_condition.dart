@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../../common/exception.dart';
 import '../../../common/log.dart';
 import 'condition.dart';
@@ -45,10 +46,9 @@ class IntegerConditionBuilder {
 
 @JsonSerializable(explicitToJson: true)
 class IntegerCondition extends Condition<int> {
-  const IntegerCondition(
-      {required super.field,
-      required super.operator,
-      required super.reference});
+  const IntegerCondition({required super.field,
+    required super.operator,
+    required super.reference});
 
   factory IntegerCondition.fromJson(Map<String, dynamic> json) =>
       _$IntegerConditionFromJson(json);
@@ -75,6 +75,7 @@ class IntegerCondition extends Condition<int> {
         }
     }
   }
+
 
   @override
   Map<String, dynamic> toJson() => _$IntegerConditionToJson(this);

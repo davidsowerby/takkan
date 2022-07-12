@@ -1,4 +1,4 @@
-import 'package:takkan_script/script/script.dart';
+import '../script/script.dart';
 
 /// Common interface to load a Takkan instance from any source
 abstract class TakkanLoader {
@@ -13,10 +13,10 @@ abstract class TakkanLoader {
 /// loaded this way, as the value of the script is already compiled in.  The refresh option
 /// only works when the file is loaded from outside the app, for example, from [RestTakkanLoader] .
 class DirectTakkanLoader implements TakkanLoader {
-  final Script script;
-  bool _loaded = false;
 
   DirectTakkanLoader({required this.script});
+  final Script script;
+  bool _loaded = false;
 
   @override
   Future<Script> load() async {
@@ -24,6 +24,7 @@ class DirectTakkanLoader implements TakkanLoader {
     return script;
   }
 
+  @override
   bool get isLoaded => _loaded;
 }
 

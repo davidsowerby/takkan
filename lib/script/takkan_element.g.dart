@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'takkan_item.dart';
+part of 'takkan_element.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TakkanItem _$TakkanItemFromJson(Map<String, dynamic> json) => TakkanItem();
+TakkanElement _$TakkanElementFromJson(Map<String, dynamic> json) =>
+    TakkanElement();
 
-Map<String, dynamic> _$TakkanItemToJson(TakkanItem instance) =>
+Map<String, dynamic> _$TakkanElementToJson(TakkanElement instance) =>
     <String, dynamic>{};

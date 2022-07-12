@@ -1,8 +1,11 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../part/part.dart';
-import '../script/common.dart';
 import '../script/help.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
 
 part 'sign_in.g.dart';
 
@@ -83,6 +86,20 @@ class EmailSignIn extends Part {
   final String successRoute;
   final String failureRoute;
   final String signInFailureMessage;
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        signInFailureMessage,
+        checkingCredentialsMessage,
+        emailCaption,
+        usernameCaption,
+        passwordCaption,
+        submitCaption,
+        successRoute,
+        failureRoute,
+      ];
 
   @override
   Map<String, dynamic> toJson() => _$EmailSignInToJson(this);

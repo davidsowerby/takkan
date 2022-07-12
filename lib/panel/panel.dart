@@ -1,23 +1,24 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../common/debug.dart';
 import '../data/provider/data_provider.dart';
 import '../data/select/data_selector.dart';
 import '../page/page.dart';
-import '../script/common.dart';
 import '../script/content.dart';
 import '../script/element.dart';
 import '../script/help.dart';
 import '../script/layout.dart';
-import '../script/takkan_item.dart';
-import '../util/visitor.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
+import '../script/walker.dart';
 
 part 'panel.g.dart';
 
 /// [children], [documentClass], [cloudFunction] see [PodBase]
 @JsonSerializable(explicitToJson: true)
 class Panel extends PodBase implements Panels {
-
   Panel({
     super.caption,
     this.dataSelectors = const [Property()],
@@ -37,6 +38,18 @@ class Panel extends PodBase implements Panels {
   }) : _heading = heading;
 
   factory Panel.fromJson(Map<String, dynamic> json) => _$PanelFromJson(json);
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        dataSelectors,
+        openExpanded,
+        pageArguments,
+        _heading,
+        scrollable,
+        help
+      ];
   @JsonKey(
     fromJson: DataListJsonConverter.fromJson,
     toJson: DataListJsonConverter.toJson,
@@ -57,7 +70,7 @@ class Panel extends PodBase implements Panels {
   @override
   Map<String, dynamic> toJson() => _$PanelToJson(this);
 
-  /// See [TakkanItem.subElements]
+  /// See [TakkanElement.subElements]
   @override
   List<Object> get subElements => [
         if (heading != null) heading!,
@@ -100,8 +113,7 @@ class Panel extends PodBase implements Panels {
 }
 
 @JsonSerializable(explicitToJson: true)
-class PanelHeading extends TakkanItem {
-
+class PanelHeading extends TakkanElement {
   PanelHeading({
     this.expandable = true,
     this.canEdit = false,
@@ -114,6 +126,10 @@ class PanelHeading extends TakkanItem {
   final bool expandable;
   final bool canEdit;
   final Help? help;
+
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, expandable, canEdit, help];
 
   @override
   Map<String, dynamic> toJson() => _$PanelHeadingToJson(this);
@@ -133,7 +149,6 @@ class PanelHeading extends TakkanItem {
 /// [liveConnect] If true, a Stream of data is expected (equivalent to a Back4App LiveQuery)
 
 abstract class PodBase extends Content implements Pod {
-
   PodBase({
     required this.children,
     this.layout = const LayoutDistributedColumn(),
@@ -153,6 +168,9 @@ abstract class PodBase extends Content implements Pod {
   final List<Content> children;
   final String? _documentClass;
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, layout, _documentClass, children];
   @override
   @JsonKey(
     fromJson: LayoutJsonConverter.fromJson,

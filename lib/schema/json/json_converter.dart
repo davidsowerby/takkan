@@ -1,26 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/schema/field/boolean.dart';
-import 'package:takkan_script/schema/field/date.dart';
-import 'package:takkan_script/schema/field/double.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/field/geo_position.dart';
-import 'package:takkan_script/schema/field/integer.dart';
-import 'package:takkan_script/schema/field/pointer.dart';
-import 'package:takkan_script/schema/field/post_code.dart';
-import 'package:takkan_script/schema/field/relation.dart';
-import 'package:takkan_script/schema/field/string.dart';
 
 import '../../common/constants.dart';
+import '../../common/exception.dart';
+import '../../common/log.dart';
+import '../field/boolean.dart';
+import '../field/date.dart';
+import '../field/double.dart';
+import '../field/field.dart';
+import '../field/geo_position.dart';
+import '../field/integer.dart';
+import '../field/pointer.dart';
+import '../field/post_code.dart';
+import '../field/relation.dart';
+import '../field/string.dart';
 
 class SchemaFieldMapConverter
-    implements JsonConverter<Map<String, Field>, Map<String, dynamic>> {
+    implements JsonConverter<Map<String, Field<dynamic>>, Map<String, dynamic>> {
   const SchemaFieldMapConverter();
 
   @override
-  Map<String, Field> fromJson(Map<String, dynamic> json) {
-    final Map<String, Field> outputMap = {};
+  Map<String, Field<dynamic>> fromJson(Map<String, dynamic> json) {
+    final Map<String, Field<dynamic>> outputMap = {};
     for (final entry in json.entries) {
       if (entry.key != jsonClassKey) {
         outputMap[entry.key] = const FieldConverter().fromJson(entry.value as Map<String,dynamic>);
@@ -30,7 +30,7 @@ class SchemaFieldMapConverter
   }
 
   @override
-  Map<String, dynamic> toJson(Map<String, Field> partMap) {
+  Map<String, dynamic> toJson(Map<String, Field<dynamic>> partMap) {
     final outputMap = <String, dynamic>{};
     for (final entry in partMap.entries) {
       outputMap[entry.key] = const FieldConverter().toJson(entry.value);
@@ -39,11 +39,11 @@ class SchemaFieldMapConverter
   }
 }
 
-class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
+class FieldConverter implements JsonConverter<Field<dynamic>, Map<String, dynamic>> {
   const FieldConverter();
 
   @override
-  Field fromJson(Map<String, dynamic> json) {
+  Field<dynamic> fromJson(Map<String, dynamic> json) {
     final elementType = json[jsonClassKey];
     switch (elementType) {
       case 'FBoolean':
@@ -87,7 +87,7 @@ class FieldConverter implements JsonConverter<Field, Map<String, dynamic>> {
   }
 
   @override
-  Map<String, dynamic> toJson(Field object) {
+  Map<String, dynamic> toJson(Field<dynamic> object) {
     final type = object.runtimeType;
     final Map<String, dynamic> jsonMap = object.toJson();
     jsonMap[jsonClassKey] = type.toString();

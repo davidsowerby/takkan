@@ -1,9 +1,11 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../schema/schema.dart';
-import '../../script/takkan_item.dart';
+import '../../script/takkan_element.dart';
+import '../../script/walker.dart';
 import '../../signin/sign_in.dart';
-import '../../util/visitor.dart';
 import 'delegate.dart';
 import 'graphql_delegate.dart';
 import 'rest_delegate.dart';
@@ -11,13 +13,10 @@ import 'rest_delegate.dart';
 part 'data_provider.g.dart';
 
 /// If users need to be authenticated for this Data Provider,  [useAuthenticator]
-/// should be true.  The default is false, because the DefaultDataProvider in
-/// the lamin8_client package, which which collaborates with this configuration,
-/// does not provide authentication
+/// should be true.  The default is false
 ///
 @JsonSerializable(explicitToJson: true)
-class DataProvider extends TakkanItem {
-
+class DataProvider extends TakkanElement {
   DataProvider({
     this.useAuthenticator = false,
     this.graphQLDelegate,
@@ -26,8 +25,8 @@ class DataProvider extends TakkanItem {
     this.defaultDelegate = Delegate.rest,
     this.signInOptions = const SignInOptions(),
     this.signIn = const SignIn(),
-    super. id,
-  }) ;
+    super.id,
+  });
 
   factory DataProvider.fromJson(Map<String, dynamic> json) =>
       _$DataProviderFromJson(json);
@@ -46,6 +45,19 @@ class DataProvider extends TakkanItem {
     restDelegate.walk(visitors);
   }
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        useAuthenticator,
+        graphQLDelegate,
+        restDelegate,
+        instanceConfig,
+        defaultDelegate,
+        signInOptions,
+        signIn
+      ];
+
   @override
   Map<String, dynamic> toJson() => _$DataProviderToJson(this);
 }
@@ -63,7 +75,6 @@ class DataProvider extends TakkanItem {
 /// and is therefore nullable
 @JsonSerializable(explicitToJson: true)
 class AppInstance {
-
   const AppInstance({required this.group, this.instance});
 
   factory AppInstance.fromJson(Map<String, dynamic> json) =>
@@ -81,7 +92,8 @@ class AppInstance {
 
 @JsonSerializable(explicitToJson: true)
 class NullDataProvider extends DataProvider {
-  NullDataProvider() : super(
+  NullDataProvider()
+      : super(
           signInOptions: const SignInOptions(),
           signIn: const SignIn(),
           instanceConfig: const AppInstance(group: 'none', instance: 'none'),

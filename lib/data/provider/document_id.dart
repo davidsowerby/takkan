@@ -29,6 +29,7 @@ class DocumentId extends Equatable{
   @JsonKey(ignore: true)
   String get fullReference => '$documentClass:$objectId';
 
+  @JsonKey(ignore: true)
   @override
   List<Object?> get props => [documentClass,objectId];
 }

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/data/provider/delegate.dart';
-import 'package:takkan_script/data/provider/rest_delegate.dart';
+import 'data_provider.dart';
+import 'delegate.dart';
+import 'rest_delegate.dart';
 part 'graphql_delegate.g.dart';
 
 /// Config for a GraphQLDataProviderDelegate used in [DataProvider].
@@ -14,7 +14,6 @@ part 'graphql_delegate.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class GraphQL extends DataProviderDelegate {
-  final String graphqlEndpoint;
 
   const GraphQL({
     this.graphqlEndpoint = '/graphql',
@@ -23,6 +22,7 @@ class GraphQL extends DataProviderDelegate {
 
   factory GraphQL.fromJson(Map<String, dynamic> json) =>
       _$GraphQLFromJson(json);
+  final String graphqlEndpoint;
 
   Map<String, dynamic> toJson() => _$GraphQLToJson(this);
 }

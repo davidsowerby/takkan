@@ -15,14 +15,14 @@ void main() {
             getRoles: ['doc1-get'],
             readRoles: ['doc1-read', 'admin'],
           ),
-          fields: {},
+          fields: const {},
         ),
             'doc2': Document(
               permissions: const Permissions(
             readRoles: ['doc1-read', 'doc2-read'],
             updateRoles: ['admin'],
           ),
-          fields: {},
+          fields: const {},
         ),
       });
       final script = Script(
@@ -38,6 +38,7 @@ void main() {
       // then
       // final walkLog = WalkClasses();
       // script.walk([walkLog]);
+      // ignore: avoid_print
       print(script.allRoles);
       expect(script.allRoles, containsAll(expected));
       expect(script.allRoles.length, expected.length);

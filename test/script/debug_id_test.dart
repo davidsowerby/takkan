@@ -1,7 +1,4 @@
-import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/list_view.dart';
@@ -9,6 +6,7 @@ import 'package:takkan_script/part/text.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/version.dart';
+import 'package:takkan_script/script/walker.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -29,11 +27,12 @@ void main() {
         schema: Schema(
           version: const Version(number: 0),
           name: 'schema',
-          documents: {'Person': Document(fields: {})},
+          documents: {'Person': Document(fields: const {})},
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),
         pages: [
-          Page(name: 'home',
+          Page(
+            name: 'home',
             id: 'Home',
             caption: 'Home',
             children: [
@@ -46,7 +45,10 @@ void main() {
                   children: [
                     Heading1(),
                     Heading2(caption: 'with caption'),
-                    ListView(property: 'eggs', caption: 'Eggs', traitName: 'ListView')
+                    ListView(
+                      property: 'eggs',
+                      caption: 'Eggs',
+                    ),
                   ])
             ],
           )

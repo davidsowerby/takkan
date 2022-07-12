@@ -1,6 +1,10 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
-import '../script/common.dart';
+
 import '../script/help.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
 import 'part.dart';
 
 part 'list_view.g.dart';
@@ -31,7 +35,14 @@ class ListView extends Part {
   final String titleProperty;
   final String subtitleProperty;
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        titleProperty,
+        subtitleProperty,
+      ];
+
   @override
   Map<String, dynamic> toJson() => _$ListViewToJson(this);
 }
-

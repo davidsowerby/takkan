@@ -1,20 +1,20 @@
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/data/converter/conversion_error_messages.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/loader/loaders.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/schema/validation/validation_error_messages.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
+import '../common/log.dart';
+import '../data/converter/conversion_error_messages.dart';
+import '../data/provider/data_provider.dart';
+import '../page/page.dart';
+import '../schema/schema.dart';
+import '../schema/validation/validation_error_messages.dart';
+import '../script/script.dart';
+import '../script/script_element.dart';
+import '../script/version.dart';
+import 'loaders.dart';
 
 class ScriptAssembler {
   /// Loads all requested [Script], and merges them into a single [_rootModel]
   Future<Script> assemble({required List<TakkanLoader> loaders}) async {
     logType(runtimeType).d('Loading models');
     final List<Future<Script>> modelFutures = List.empty(growable: true);
-    for (TakkanLoader loader in loaders) {
+    for (final TakkanLoader loader in loaders) {
       modelFutures.add(loader.load());
     }
     final m = await Future.wait(modelFutures);
@@ -36,22 +36,24 @@ class ScriptAssembler {
   Script _mergeModels(List<Script> models) {
     final Script firstModel = models[0];
     final String name = firstModel.name;
-    final String id = firstModel.pid ?? name;
+    // final String id = firstModel.pid ?? name;
     final Version version = firstModel.version;
     final List<Page> pages = List.empty(growable: true);
-    final ConversionErrorMessages conversionErrorMessages =
-        ConversionErrorMessages(patterns: Map());
-    final ValidationErrorMessages validationErrorMessages =
-        ValidationErrorMessages(typePatterns: Map());
+    const ConversionErrorMessages conversionErrorMessages =
+        ConversionErrorMessages();
+    const ValidationErrorMessages validationErrorMessages =
+        ValidationErrorMessages();
     DataProvider? dataProvider;
     ControlEdit controlEdit = ControlEdit.firstLevelPanels;
-    for (Script s in models) {
+    for (final Script s in models) {
       pages.addAll(s.pages);
       conversionErrorMessages.patterns
           .addAll(s.conversionErrorMessages.patterns);
       validationErrorMessages.typePatterns
           .addAll(s.validationErrorMessages.typePatterns);
-      if (s.dataProviderIsDeclared) dataProvider = s.dataProvider;
+      if (s.dataProviderIsDeclared) {
+        dataProvider = s.dataProvider;
+      }
       // if (s.queryIsDeclared) data-select = s.data-select;  TODO: queryIsDeclared was removed
       controlEdit = s.controlEdit;
     }

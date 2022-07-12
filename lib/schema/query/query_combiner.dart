@@ -36,7 +36,7 @@ class QueryCombiner extends Equatable {
   // }
 
   final List<Condition<dynamic>> conditions;
-
+  @JsonKey(ignore: true)
   @override
   List<Object?> get props => [conditions];
 }
@@ -55,3 +55,5 @@ class Query {
 
   Map<String, dynamic> toJson() => _$QueryToJson(this);
 }
+
+enum QueryReturnType{futureItem, futureList,unexpected,}

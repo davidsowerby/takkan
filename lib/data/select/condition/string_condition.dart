@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../../common/exception.dart';
 import '../../../common/log.dart';
 import 'condition.dart';
@@ -6,7 +7,7 @@ import 'condition.dart';
 part 'string_condition.g.dart';
 
 class StringConditionBuilder {
-  StringConditionBuilder( this.fieldName);
+  StringConditionBuilder(this.fieldName);
 
   String fieldName;
 
@@ -66,7 +67,8 @@ class StringCondition extends Condition<String> {
       case Operator.longerThan:
       case Operator.shorterThan:
         {
-          final String msg = "Operator '${operator.name}' not implemented in $runtimeType";
+          final String msg =
+              "Operator '${operator.name}' not implemented in $runtimeType";
           logType(runtimeType).e(msg);
           throw TakkanException(msg);
         }
@@ -78,6 +80,7 @@ class StringCondition extends Condition<String> {
 
   @override
   Condition<String> withField(String field) {
-    return StringCondition(reference: reference,field: field,operator: operator);
+    return StringCondition(
+        reference: reference, field: field, operator: operator);
   }
 }

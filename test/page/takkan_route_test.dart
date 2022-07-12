@@ -23,13 +23,13 @@ void main() {
       final Page page = Page(
         name: 'person',
         documentClass: 'Person',
-        dataSelectors: [
+        dataSelectors: const [
            DocByQuery(queryName: 'person'),
            DocByQuery(queryName: 'tagged'),
            DocByQuery(queryName: 'byId'),
            DocByQuery(queryName: 'adult'),
-          const DocByFunction(cloudFunctionName: 'mostRecent'),
-          const DocByGQL(script: 'gqlScript', name: 'allWithRelatives'),
+          DocByFunction(cloudFunctionName: 'mostRecent'),
+          DocByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
       );
       // when
@@ -76,13 +76,13 @@ void main() {
       final Page page = Page(
         name: 'person',
         documentClass: 'Person',
-        dataSelectors: [
-          const DocListByQuery(queryName: 'people'),
-          const DocListByQuery(queryName: 'tagged'),
-          const DocListByQuery(queryName: 'byId'),
-          const DocListByQuery(queryName:  'adult'),
-          const DocListByFunction(cloudFunctionName: 'mostRecent'),
-          const DocListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
+        dataSelectors: const [
+          DocListByQuery(queryName: 'people'),
+          DocListByQuery(queryName: 'tagged'),
+          DocListByQuery(queryName: 'byId'),
+          DocListByQuery(queryName:  'adult'),
+          DocListByFunction(cloudFunctionName: 'mostRecent'),
+          DocListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
       );
       // when

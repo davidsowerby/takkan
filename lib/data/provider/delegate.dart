@@ -1,12 +1,13 @@
-import 'package:takkan_script/script/takkan_item.dart';
+
+import '../../script/walker.dart';
 
 /// Common base class for delegates to PDataProvider
 abstract class DataProviderDelegate with WalkTarget {
-  final bool checkHealthOnConnect;
 
   const DataProviderDelegate({
     this.checkHealthOnConnect = false,
   });
+  final bool checkHealthOnConnect;
 }
 
 /// Used primarily to select defaults.  Using an enum in case we want a third option,

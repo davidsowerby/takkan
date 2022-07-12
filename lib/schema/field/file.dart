@@ -1,8 +1,11 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../data/select/condition/condition.dart';
-import '../../script/common.dart';
+import '../../script/script_element.dart';
 import 'field.dart';
 
 part 'file.g.dart';

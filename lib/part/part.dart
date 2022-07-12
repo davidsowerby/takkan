@@ -1,11 +1,15 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/debug.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/content.dart';
-import 'package:takkan_script/script/help.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/validation/message.dart';
+
+import '../common/debug.dart';
+import '../script/content.dart';
+import '../script/help.dart';
+import '../script/script.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
+import '../script/walker.dart';
+import '../validation/message.dart';
 
 part 'part.g.dart';
 
@@ -51,13 +55,18 @@ class Part extends Content {
   final double? height;
   final String traitName;
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props,readOnly,height,traitName,staticData,help,tooltip];
+
   @override
   Map<String, dynamic> toJson() => _$PartToJson(this);
 
+  @override
   DebugNode get debugNode {
     final List<DebugNode> children = List.empty(growable: true);
     if (dataProviderIsDeclared) {
-      DebugNode? dn = dataProvider?.debugNode;
+      final DebugNode? dn = dataProvider?.debugNode;
       if (dn != null) {
         children.add(dn);
       }
@@ -65,8 +74,10 @@ class Part extends Content {
     return DebugNode(this, children);
   }
 
+  @override
   bool get isStatic => property == null;
 
+  @override
   void doValidate(ValidationWalkerCollector collector) {
     super.doValidate(collector);
     if (property == null && staticData == null) {

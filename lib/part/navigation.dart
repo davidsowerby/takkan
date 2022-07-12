@@ -1,6 +1,10 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+
 import '../page/page.dart';
-import '../script/takkan_item.dart';
+import '../script/takkan_element.dart';
+import '../script/walker.dart';
 import 'part.dart';
 
 part 'navigation.g.dart';
@@ -33,6 +37,10 @@ class NavButton extends Part {
   String get route =>
       TakkanRoute(pageName: toPage, dataSelectorName: toData).toString();
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, toPage, toData];
+
   @override
   void doInit(InitWalkerParams params) {
     super.doInit(params);
@@ -60,7 +68,10 @@ class NavButtonSet extends Part {
   final List<NavButton> buttons;
   final double? width;
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [...super.props, buttons, width];
+
   @override
   Map<String, dynamic> toJson() => _$NavButtonSetToJson(this);
 }
-

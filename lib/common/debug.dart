@@ -1,5 +1,5 @@
 
-import '../script/takkan_item.dart';
+import '../script/takkan_element.dart';
 
 class DebugNode {
 
@@ -8,7 +8,7 @@ class DebugNode {
       child.parent = this;
     }
   }
-  final TakkanItem item;
+  final TakkanElement item;
   final List<DebugNode> children;
   DebugNode? parent;
 

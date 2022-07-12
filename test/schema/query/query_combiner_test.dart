@@ -29,9 +29,7 @@ void main() {
               'firstName': FString(),
               'lastName': FString(),
               'age': FInteger(
-                constraints: [
 
-                ],
               ),
             },
             queries: {
@@ -40,7 +38,7 @@ void main() {
                     q['lastName'].string.equalTo('Hazel'),
                   ]
             },
-            queryScripts: {'adults': "firstName == 'Jack'"},
+            queryScripts: const {'adults': "firstName == 'Jack'"},
           )
         },
       );

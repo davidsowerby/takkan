@@ -1,13 +1,15 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 
 import '../common/debug.dart';
-import '../script/common.dart';
 import '../script/content.dart';
 import '../script/element.dart';
 import '../script/help.dart';
 import '../script/layout.dart';
-import '../script/takkan_item.dart';
-import '../util/visitor.dart';
+import '../script/script_element.dart';
+import '../script/takkan_element.dart';
+import '../script/walker.dart';
 import 'panel.dart';
 
 part 'static_panel.g.dart';
@@ -15,7 +17,6 @@ part 'static_panel.g.dart';
 /// [children], [documentClass], [cloudFunction] see [PodBase]
 @JsonSerializable(explicitToJson: true)
 class PanelStatic extends PodBase implements Panels {
-
   PanelStatic({
     super.caption,
     super.documentClass,
@@ -47,7 +48,12 @@ class PanelStatic extends PodBase implements Panels {
   @override
   Map<String, dynamic> toJson() => _$PanelStaticToJson(this);
 
-  /// See [TakkanItem.subElements]
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props =>
+      [_heading, openExpanded, scrollable, help, pageArguments];
+
+  /// See [TakkanElement.subElements]
   @override
   List<Object> get subElements => [
         if (heading != null) heading!,

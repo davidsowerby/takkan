@@ -1,19 +1,23 @@
+// ignore_for_file: must_be_immutable
+/// See comments on [TakkanElement]
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/debug.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/script/common.dart';
-import 'package:takkan_script/script/takkan_item.dart';
-import 'package:takkan_script/data/converter/conversion_error_messages.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/schema/validation/validation_error_messages.dart';
-import 'package:takkan_script/script/version.dart';
-import 'package:takkan_script/validation/message.dart';
+
+import '../common/debug.dart';
+import '../common/exception.dart';
+import '../common/log.dart';
+import '../data/converter/conversion_error_messages.dart';
+import '../data/provider/data_provider.dart';
+import '../page/page.dart';
+import '../schema/schema.dart';
+import '../schema/validation/validation_error_messages.dart';
+import '../validation/message.dart';
+import 'script_element.dart';
+import 'takkan_element.dart';
+import 'version.dart';
+import 'walker.dart';
 
 part 'script.g.dart';
 
@@ -61,7 +65,7 @@ part 'script.g.dart';
 ///
 
 @JsonSerializable(explicitToJson: true)
-class Script extends Common {
+class Script extends ScriptElement {
   Script({
     this.conversionErrorMessages =
         const ConversionErrorMessages(patterns: defaultConversionPatterns),
@@ -100,10 +104,28 @@ class Script extends Common {
   @override
   Map<String, dynamic> toJson() => _$ScriptToJson(this);
 
+  @JsonKey(ignore: true)
+  @override
+  List<Object?> get props => [
+        ...super.props,
+        conversionErrorMessages,
+        validationErrorMessages,
+        pages,
+        name,
+        version,
+        locale,
+        schemaSource,
+        schema,
+        nameLocale,
+        _scriptValidationMessages,
+        _routes,
+      ];
+
   @override
   String get debugId => name;
 
-  Page? pageFromStringRoute(String route) => routes[TakkanRoute.fromString(route)];
+  Page? pageFromStringRoute(String route) =>
+      routes[TakkanRoute.fromString(route)];
 
   @JsonKey(ignore: true)
   Map<TakkanRoute, Page> get routeMap => _routes;
@@ -136,7 +158,7 @@ class Script extends Common {
     _scriptValidationMessages = collector.messages;
     if (logFailures || throwOnFail) {
       final StringBuffer buf = StringBuffer();
-      for (ValidationMessage message in _scriptValidationMessages) {
+      for (final ValidationMessage message in _scriptValidationMessages) {
         buf.writeln(message.toString());
       }
       if (_scriptValidationMessages.isEmpty) {
@@ -157,11 +179,11 @@ class Script extends Common {
     super.doValidate(collector);
     if (routes.isEmpty) {
       collector.messages.add(
-          ValidationMessage(item: this, msg: "must contain at least one page"));
+          ValidationMessage(item: this, msg: 'must contain at least one page'));
     } else {
       if (routes.containsKey('')) {
         collector.messages.add(ValidationMessage(
-            item: this, msg: "PPage route cannot be an empty String"));
+            item: this, msg: 'PPage route cannot be an empty String'));
       }
     }
   }
@@ -170,7 +192,7 @@ class Script extends Common {
   ///
   /// This is a two stage process.
   /// 1.  the [parent] and [script] properties are set.
-  /// 1.  [doInit] is called for each [TakkanItem}
+  /// 1.  [doInit] is called for each [TakkanElement}
   ///
   /// Both stages cascade down to the [subElements].
   ///
@@ -179,13 +201,13 @@ class Script extends Common {
   /// without making the order of [subElements] critical.
   ///
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
-  /// by each class) is treated as the [id].  See [TakkanItem.doInit] for the processing of ids, and
-  /// each see the [doInit] call for each [TakkanItem} type for which property, if any, is used.
+  /// by each class) is treated as the [id].  See [TakkanElement.doInit] for the processing of ids, and
+  /// each see the [doInit] call for each [TakkanElement} type for which property, if any, is used.
   Walkers init({bool useCaptionsAsIds = true}) {
     final parentWalker = SetParentWalker();
     final parentParams = SetParentWalkerParams(
       script: this,
-      parent: NullTakkanItem(),
+      parent: NullScriptElement(),
     );
     parentWalker.walk(this, parentParams);
 
@@ -210,7 +232,7 @@ class Script extends Common {
     _mergeRoutes();
   }
 
-  /// See [TakkanItem.subElements]
+  /// See [TakkanElement.subElements]
   @override
   List<Object> get subElements => [
         schema,
@@ -241,7 +263,7 @@ class Script extends Common {
     buf.writeln(
         '============================================================================');
     buf.writeln(
-        '=                        PScript Validation Failed                         =');
+        '=                        Script Validation Failed                         =');
     buf.writeln(
         '============================================================================');
     buf.writeAll(_scriptValidationMessages.map((e) => e.toString()), '\n');
@@ -249,14 +271,16 @@ class Script extends Common {
     buf.writeln(
         '============================================================================');
     buf.writeln();
-    print(buf.toString());
+    final String msg = buf.toString();
+    logType(runtimeType).e(msg);
+    throw TakkanException(msg);
   }
 
   @override
   DebugNode get debugNode => DebugNode(this,
       List.from(routes.entries.toList().map((e) => (e as Page).debugNode)));
 
-  writeToFile(File f) async {
+  Future<void> writeToFile(File f) async {
     final jsonMap = toJson();
     final encoded = json.encode(jsonMap);
     await f.writeAsString(encoded);

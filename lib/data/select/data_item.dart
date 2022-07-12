@@ -68,7 +68,7 @@ class DocByFunction implements DocumentSelector {
 /// The function must return a single valid document
 @JsonSerializable(explicitToJson: true)
 class DocByQuery implements DocumentSelector {
-  DocByQuery({
+  const DocByQuery({
     this.liveConnect = false,
     this.caption,
     required this.queryName,
@@ -77,9 +77,10 @@ class DocByQuery implements DocumentSelector {
   factory DocByQuery.fromJson(Map<String, dynamic> json) =>
       _$DocByQueryFromJson(json);
 
-  final String  queryName;
+  final String queryName;
+
   @override
-  String get name=> queryName;
+  String get name => queryName;
   @override
   final bool liveConnect;
 
@@ -96,7 +97,6 @@ class DocByQuery implements DocumentSelector {
   int get pageLength => 1;
 
   Map<String, dynamic> toJson() => _$DocByQueryToJson(this);
-
 }
 
 /// [script] must be a valid GraphQL script which returns exactly one document

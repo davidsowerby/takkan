@@ -1,12 +1,11 @@
-import 'package:takkan_script/data/select/data_selector.dart';
-import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
+import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/script_element.dart';
 import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 

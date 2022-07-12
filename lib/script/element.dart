@@ -98,7 +98,7 @@ class ContentConverter {
       return outputList;
     }
     for (final entry in elementList) {
-      final Map<String, dynamic> outputMap = Map();
+      final Map<String, dynamic> outputMap = {};
       outputMap[jsonClassKey] = entry.runtimeType.toString();
       outputMap.addAll(entry.toJson());
       outputList.add(outputMap);
