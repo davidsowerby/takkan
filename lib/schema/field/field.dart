@@ -51,6 +51,8 @@ abstract class Field<MODEL> extends SchemaElement {
   /// Not really a Query, just holds conditions for validation
   final Query _conditions = Query([]);
 
+  bool get hasValidation => required || (conditions.isNotEmpty);
+
   List<Condition<dynamic>> get conditions => _conditions.conditions;
 
   Type get modelType;
@@ -58,7 +60,7 @@ abstract class Field<MODEL> extends SchemaElement {
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> doValidation(
       MODEL value, ValidationErrorMessages errorMessages) {
-    if (constraints.isEmpty) {
+    if (conditions.isEmpty) {
       return List.empty();
     }
     final List<String> errors = List.empty(growable: true);

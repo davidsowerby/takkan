@@ -52,8 +52,7 @@ class Schema extends SchemaElement {
     bool readOnly = false,
     required this.name,
     required this.version,
-  })
-      : _documents = documents,
+  })  : _documents = documents,
         super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
@@ -67,8 +66,7 @@ class Schema extends SchemaElement {
 
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
         ...super.props,
         version,
         name,
@@ -205,8 +203,7 @@ class Permissions with WalkTarget {
     List<String> getRoles = const [],
     List<String> findRoles = const [],
     List<String> countRoles = const [],
-  })
-      : _requiresAuthentication = requiresAuthentication,
+  })  : _requiresAuthentication = requiresAuthentication,
         _updateRoles = updateRoles,
         _createRoles = createRoles,
         _deleteRoles = deleteRoles,
@@ -284,38 +281,38 @@ class Permissions with WalkTarget {
 
   bool get requiresGetAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.get) ||
-          getRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.get) ||
+      getRoles.isNotEmpty;
 
   bool get requiresFindAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.find) ||
-          findRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.find) ||
+      findRoles.isNotEmpty;
 
   bool get requiresCountAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.count) ||
-          countRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.count) ||
+      countRoles.isNotEmpty;
 
   bool get requiresCreateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.create) ||
-          createRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.create) ||
+      createRoles.isNotEmpty;
 
   bool get requiresUpdateAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.update) ||
-          updateRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.update) ||
+      updateRoles.isNotEmpty;
 
   bool get requiresDeleteAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.delete) ||
-          deleteRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.delete) ||
+      deleteRoles.isNotEmpty;
 
   bool get requiresAddFieldAuthentication =>
       _requiresAuthentication.contains(AccessMethod.all) ||
-          _requiresAuthentication.contains(AccessMethod.addField) ||
-          addFieldRoles.isNotEmpty;
+      _requiresAuthentication.contains(AccessMethod.addField) ||
+      addFieldRoles.isNotEmpty;
 
   bool methodIsPublic(AccessMethod method) {
     return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
@@ -353,8 +350,7 @@ class Document extends SchemaElement {
     this.documentType = DocumentType.standard,
     this.permissions = const Permissions(),
     Map<String, List<Condition<dynamic>> Function(Document)> queries = const {},
-  })
-      : _queryDefinitions = queries,
+  })  : _queryDefinitions = queries,
         super();
 
   factory Document.fromJson(Map<String, dynamic> json) =>
@@ -374,9 +370,18 @@ class Document extends SchemaElement {
   final Map<String, Field<dynamic>> fields;
   @JsonKey(ignore: true)
   final Map<String, List<Condition<dynamic>> Function(Document)>
-  _queryDefinitions;
+      _queryDefinitions;
   final Map<String, String> queryScripts;
   final Map<String, Query> _queries = {};
+
+  bool get hasValidation {
+    for (Field<dynamic> f in fields.values) {
+      if (f.hasValidation) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
