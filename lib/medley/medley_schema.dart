@@ -1,3 +1,4 @@
+import 'package:takkan_script/data/select/condition/condition.dart';
 import 'package:takkan_script/schema/field/integer.dart';
 import 'package:takkan_script/schema/field/string.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -7,26 +8,24 @@ import 'package:takkan_script/script/version.dart';
 /// all the permutations of changes which can occur between one version and another.
 /// This is to support testing of diff and code generation
 ///
-/// It is possible to use one of these version as the basis of an example app but
+/// It is possible to use one of these versions as the basis of an example app but
 /// that is not its primary purpose.
-final List<Schema> medleySchema = [medleySchema0, medleySchema1];
-
+final List<Schema> medleySchema = [ medleySchema1,medleySchema0];
 final Schema medleySchema0 = Schema(
   name: 'medley',
   version: Version(number: 0),
   documents: {
     'Person': Document(fields: {
       'firstName': FString(),
-      'age': FInteger(validations: [
-        VInteger.greaterThan(0),
-        VInteger.lessThan(100),
-      ], required: true),
-      'height': FInteger(validations: [
-        VInteger.greaterThan(0),
-      ], required: false),
-      'siblings': FInteger(validations: [
-        VInteger.greaterThan(-1),
-      ], defaultValue: 0),
+      'age': FInteger(validation: '>0 && <100', required: true),
+      'height': FInteger(
+        constraints: [
+          V.int.greaterThan(0),
+        ],
+        required: false,
+      ),
+      'siblings': FInteger(
+          constraints: [V.int.greaterThan(-1)], defaultValue: 0),
     })
   },
 );
@@ -44,31 +43,36 @@ final Schema medleySchema1 = Schema(
   documents: {
     'Person': Document(fields: {
       'firstName': FString(),
-      'age': FInteger(validations: [
-        VInteger.greaterThan(0),
-        VInteger.lessThan(128),
+      'lastName': FString(),
+      'age': FInteger(constraints: [
+        V.int.greaterThan(0),
+        V.int.lessThan(128),
       ]),
-      'height': FInteger(validations: [
-        VInteger.greaterThan(0),
-        VInteger.lessThan(300),
+      'height': FInteger(constraints: [
+        V.int.greaterThan(0),
+        V.int.lessThan(300),
       ]),
-      'siblings': FInteger(validations: []),
+      'siblings': FInteger(constraints: []),
     }),
     'Issue': Document(fields: {
       'title': FString(),
       'description': FString(
-        validations: [
-          VString.longerThan(5),
-          VString.shorterThan(128),
+        constraints: [
+          V.string.longerThan(5),
+          V.string.shorterThan(128),
         ],
       ),
       'weight': FInteger(
-        validations: [
-          VInteger.greaterThan(0),
-          VInteger.lessThan(6),
+        constraints: [
+          V.int.greaterThan(0),
+          V.int.lessThan(6),
         ],
       ),
       'state': FString(),
+    }, queries: {
+      'allIssues': (q) => const []
+    }, queryScripts: {
+      'topIssue': "objectId=='JJoGIErtzn'"
     })
   },
 );

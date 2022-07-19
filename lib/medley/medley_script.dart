@@ -1,4 +1,3 @@
-import 'package:takkan_script/script/common.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_item.dart';
@@ -8,6 +7,7 @@ import 'package:takkan_script/part/list_view.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/text.dart';
 import 'package:takkan_script/script/script.dart';
+import 'package:takkan_script/script/script_element.dart';
 import 'package:takkan_script/script/version.dart';
 
 import 'medley_schema.dart';
@@ -24,7 +24,7 @@ final List<Script> medleyScript = [
 final Script medleyScript2 = Script(
   name: 'Medley',
   version: Version(number: 1, label: '0.0.1-draft'),
-  schema: medleySchema[1],
+  schema: medleySchema1,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main'),
     useAuthenticator: true,
@@ -54,7 +54,7 @@ final Script medleyScript2 = Script(
       controlEdit: ControlEdit.pagesOnly,
       caption: 'Issue',
       documentClass: 'Issue',
-      dataSelectors: [DocByFilter(script:'objectId==JJoGIErtzn', name: 'topIssue')],
+      dataSelectors: [DocByQuery(queryName: 'topIssue')],
       children: [
         Group(children: [
           BodyText1(
@@ -73,7 +73,7 @@ final Script medleyScript2 = Script(
       ],
     ),
     Page(name: 'issues', caption: 'Issues', dataSelectors: [
-      DocListByFilter(caption: 'All Issues', name: 'allIssues', script: ''),
+      DocListByQuery(caption: 'All Issues', queryName: 'allIssues' ),
     ], children: [
       ListView(
         property: 'results',
@@ -86,7 +86,7 @@ final Script medleyScript2 = Script(
 final Script medleyScript1 = Script(
   name: 'Medley',
   version: Version(number: 1, label: '0.0.1-draft'),
-  schema: medleySchema[0],
+  schema: medleySchema1,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
@@ -139,7 +139,7 @@ final Script medleyScript1 = Script(
 final Script medleyScript0 = Script(
   name: 'Medley',
   version: Version(number: 0, label: '0.0.0-draft'),
-  schema: medleySchema[0],
+  schema: medleySchema0,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
   ),
