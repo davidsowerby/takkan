@@ -59,9 +59,17 @@ void main() {
         variableNamesFromMirror
             .removeWhere((element) => exclusions.contains(element));
 
-        /// We should include ...super.props unless parent is Equatable itself
-        if (c.superclass?.simpleName == const Symbol('TakkanElement')) {
-          expect(declaredInProps.contains('...super.props'), isTrue);
+        /// We should include ...super.props unless either:
+        /// - parent is Equatable itself
+        /// - no other props have been declared
+        final superclass = c.superclass;
+        if (superclass != null) {
+          if (!superclass.simpleName.toString().contains('Equatable')) {
+            if (declaredInProps.isNotEmpty) {
+              expect(declaredInProps.contains('...super.props'), isTrue,
+                  reason: c.simpleName.toString());
+            }
+          }
         }
 
         /// But then remove it as it will not be a variable

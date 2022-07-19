@@ -51,7 +51,7 @@ class PanelStatic extends PodBase implements Panels {
   @JsonKey(ignore: true)
   @override
   List<Object?> get props =>
-      [_heading, openExpanded, scrollable, help, pageArguments];
+      [...super.props, _heading, openExpanded, scrollable, help, pageArguments];
 
   /// See [TakkanElement.subElements]
   @override
