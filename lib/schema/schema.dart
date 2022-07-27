@@ -421,12 +421,12 @@ class Document extends SchemaElement {
 
   void _buildQueries() {
     for (final entry in _queryDefinitions.entries) {
-      _queries[entry.key] = Query(entry.value(this));
+      _queries[entry.key] = Query(conditions: entry.value(this));
     }
     for (final String key in queryScripts.keys) {
       final q = _queries[key];
       final expr = QueryCombiner.fromSource(this, queryScripts[key], q);
-      _queries[key] = Query(expr.conditions);
+      _queries[key] = Query(conditions: expr.conditions);
     }
   }
 

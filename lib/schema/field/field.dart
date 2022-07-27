@@ -49,7 +49,7 @@ abstract class Field<MODEL> extends SchemaElement {
   final MODEL? defaultValue;
 
   /// Not really a Query, just holds conditions for validation
-  final Query _conditions = Query([]);
+  final Query _conditions = Query(conditions: []);
 
   bool get hasValidation => required || (conditions.isNotEmpty);
 
@@ -58,8 +58,8 @@ abstract class Field<MODEL> extends SchemaElement {
   Type get modelType;
 
   /// Returns a list of validation errors, or an empty list if there are none
-  List<String> doValidation(
-      MODEL value, ValidationErrorMessages errorMessages) {
+  List<String> doValidation(MODEL value,
+      ValidationErrorMessages errorMessages) {
     if (conditions.isEmpty) {
       return List.empty();
     }

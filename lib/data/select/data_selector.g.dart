@@ -6,7 +6,7 @@ part of 'data_selector.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-NoData _$NoDataFromJson(Map<String, dynamic> json) => const NoData();
+NoData _$NoDataFromJson(Map<String, dynamic> json) => NoData();
 
 Map<String, dynamic> _$NoDataToJson(NoData instance) => <String, dynamic>{};
 

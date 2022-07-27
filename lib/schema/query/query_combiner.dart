@@ -18,7 +18,7 @@ class QueryCombiner extends Equatable {
   ) {
     final conditions = List<Condition<dynamic>>.empty(growable: true);
     if (queryScript != null) {
-      conditions.addAll(Expression(document:document).parseQuery(queryScript));
+      conditions.addAll(Expression(document: document).parseQuery(queryScript));
     }
     if (query != null) {
       conditions.addAll(query.conditions);
@@ -36,6 +36,7 @@ class QueryCombiner extends Equatable {
   // }
 
   final List<Condition<dynamic>> conditions;
+
   @JsonKey(ignore: true)
   @override
   List<Object?> get props => [conditions];
@@ -44,10 +45,12 @@ class QueryCombiner extends Equatable {
 @JsonSerializable(explicitToJson: true)
 @ConditionConverter()
 class Query {
-  Query(List<Condition<dynamic>> conditions)
+  Query({required List<Condition<dynamic>> conditions, this.params = const []})
       : conditions = List.from(conditions) {
     this.conditions.sort((a, b) => a.field.compareTo(b.field));
   }
+
+  final List<String> params;
 
   factory Query.fromJson(Map<String, dynamic> json) => _$QueryFromJson(json);
 
@@ -56,4 +59,8 @@ class Query {
   Map<String, dynamic> toJson() => _$QueryToJson(this);
 }
 
-enum QueryReturnType{futureItem, futureList,unexpected,}
+enum QueryReturnType {
+  futureItem,
+  futureList,
+  unexpected,
+}
