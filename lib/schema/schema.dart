@@ -389,6 +389,9 @@ class Document extends SchemaElement {
   @override
   List<Object> get subElements => [fields];
 
+  @JsonKey(ignore: true)
+  Map<String, Query> get queries => _queries;
+
   @override
   void doInit(InitWalkerParams params) {
     super.doInit(params);
