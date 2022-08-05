@@ -1,5 +1,5 @@
-import 'package:takkan_medley_script/medley/medley_schema.dart';
-import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/schema/medley_schema.dart';
+import 'package:takkan_medley_script/script/medley_script.dart';
 import 'package:takkan_script/schema/validation/validation_error_messages.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';

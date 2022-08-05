@@ -8,8 +8,6 @@ import 'script.dart';
 import 'script_element.dart';
 import 'walker.dart';
 
-part 'takkan_element.g.dart';
-
 /// The whole of the [Script] structure is a tree, with a single [Script] instance at its root.
 ///
 /// This [TakkanElement] is the base class for the major components of that tree.
@@ -49,14 +47,14 @@ part 'takkan_element.g.dart';
 /// should be excluded from equality comparison.  For test purposes only, an additional
 /// getter `List<Object> get excludeProps` can be declared.  This is not an [Equatable]
 /// feature, simply an aid for testing in Takkan
-@JsonSerializable(explicitToJson: true)
-class TakkanElement extends Equatable with WalkTarget {
+// @JsonSerializable(explicitToJson: true)
+abstract class TakkanElement extends Equatable with WalkTarget {
   TakkanElement({
     String? id,
   }) : _id = id;
 
-  factory TakkanElement.fromJson(Map<String, dynamic> json) =>
-      _$TakkanElementFromJson(json);
+  // factory TakkanElement.fromJson(Map<String, dynamic> json) =>
+  //     _$TakkanElementFromJson(json);
   final String? _id;
   @JsonKey(ignore: true)
   late String? uid;
@@ -71,9 +69,11 @@ class TakkanElement extends Equatable with WalkTarget {
 
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props => [_id, uid, _debugId, _parent, _index, _script];
+  List<Object?> get props => [
+        _id,
+      ];
 
-  Map<String, dynamic> toJson() => _$TakkanElementToJson(this);
+  Map<String, dynamic> toJson();
 
   /// Used for Widget and Functional testing.  This also becomes the Widget key in [Page], [Part] and [Panel] instances
   /// The [Script.init] method ensures that this key is unique, or will flag an error if it cannot resolve it.
@@ -97,6 +97,11 @@ class TakkanElement extends Equatable with WalkTarget {
   /// Not all elements are [TakkanElement] sub-classes, hence the returned list is not
   /// typed.
   List<Object> get subElements => [];
+
+  /// Some objects need default values added if not prescribed by the developer.
+  /// For example, [Schema] provides default User and Role document definitions
+  /// if not provided, and these need to be added before initialisation
+  void setDefaults() {}
 
   void setParent(SetParentWalkerParams params) {
     _parent = params.parent;

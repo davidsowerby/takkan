@@ -1,4 +1,4 @@
-import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/script/medley_script.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/query_view.dart';
@@ -18,7 +18,7 @@ void main() {
 
     tearDown(() {});
 
-    test('PNavButtonSet', () {
+    test('NavButtonSet', () {
       // given
 
       // when
@@ -43,10 +43,21 @@ void main() {
       medleyScript0.init();
       // when
       // ignore: cast_nullable_to_non_nullable
-      final Title pText = medleyScript0.routes[TakkanRoute.fromString('home/static')]?.children[0] as Title;
+      final Title pText = medleyScript0
+          .routes[TakkanRoute.fromString('home/static')]?.children[0] as Title;
       // then
 
       expect(pText.caption, isNull);
+    });
+    test('User and Role documents', () {
+      // given
+
+      // when
+      medleyScript0.init();
+      // then
+
+      expect(medleyScript0.schema.documents.containsKey('User'), isTrue);
+      expect(medleyScript0.schema.documents.containsKey('Role'), isTrue);
     });
   });
 }

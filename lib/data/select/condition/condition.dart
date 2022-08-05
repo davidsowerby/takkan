@@ -9,15 +9,20 @@ import 'integer_condition.dart';
 import 'string_condition.dart';
 
 abstract class Condition<T> extends Equatable {
-  const Condition(
-      {required this.field, required this.operator, required this.reference});
+  const Condition({
+    required this.field,
+    required this.operator,
+    required this.reference,
+  });
 
   final String field;
   final Operator operator;
   final dynamic reference;
 
   bool isValid(T value);
+
   Condition<T> withField(String field);
+
   Map<String, dynamic> toJson();
 
   @JsonKey(ignore: true)
@@ -28,13 +33,16 @@ abstract class Condition<T> extends Equatable {
       'query.${operator.b4aSnippet.replaceAll('#n', field).replaceAll('#v', (reference is String) ? '"$reference"' : reference.toString())});';
 }
 
+/// This is not ideal, as JavaScript formatting requires space after comma for formatting
+/// and this is an odd place to be worrying about that.  Is there a better way?
+/// See https://gitlab.com/takkan/takkan_script/-/issues/53
 enum Operator {
-  equalTo(expression: '==', b4aSnippet: 'equalTo("#n",#v'),
-  notEqualTo(expression: '!=', b4aSnippet: 'notEqualTo("#n",#v'),
-  greaterThan(expression: '>', b4aSnippet: 'greaterThan("#n",#v'),
-  lessThan(expression: '<', b4aSnippet: 'lessThan("#n",#v'),
-  longerThan(expression: '>', b4aSnippet: 'greaterThan("#n",#v'),
-  shorterThan(expression: '<', b4aSnippet: 'lessThan("#n",#v'),
+  equalTo(expression: '==', b4aSnippet: 'equalTo("#n", #v'),
+  notEqualTo(expression: '!=', b4aSnippet: 'notEqualTo("#n", #v'),
+  greaterThan(expression: '>', b4aSnippet: 'greaterThan("#n", #v'),
+  lessThan(expression: '<', b4aSnippet: 'lessThan("#n", #v'),
+  longerThan(expression: '>', b4aSnippet: 'greaterThan("#n", #v'),
+  shorterThan(expression: '<', b4aSnippet: 'lessThan("#n", #v'),
   ;
 
   const Operator({
@@ -46,8 +54,9 @@ enum Operator {
   final String b4aSnippet;
 }
 
-class ConditionBuilder {
-  ConditionBuilder(this.fieldName);
+/// A [ConditionBuilder] abbreviated for brevity in definitions
+class C {
+  C(this.fieldName);
 
   final String fieldName;
 
@@ -57,16 +66,25 @@ class ConditionBuilder {
 }
 
 // ignore: avoid_classes_with_only_static_members
+// class C {
+//
+//   static IntegerConditionBuilder int(String fieldName) => IntegerConditionBuilder(fieldName);
+//
+//   static StringConditionBuilder string(String fieldName) => StringConditionBuilder(fieldName);
+// }
+
+// ignore: avoid_classes_with_only_static_members
 /// This is a static only class to allow easier construction of validation
 /// constraints in [Field.constraints].
 ///
-/// It should always mirror the getters in [ConditionBuilder]
+/// It should always mirror the getters in [C]
 ///
 /// The field name in the returned builder is set to an empty String.  This
 /// is corrected by the validation building process in [Field.doInit]
 class V {
   static IntegerConditionBuilder get int => IntegerConditionBuilder('');
-  static StringConditionBuilder  get string => StringConditionBuilder('');
+
+  static StringConditionBuilder get string => StringConditionBuilder('');
 }
 
 class ConditionConverter

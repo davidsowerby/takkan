@@ -95,20 +95,21 @@ const _$AccessMethodEnumMap = {
 Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
       fields: const SchemaFieldMapConverter()
           .fromJson(json['fields'] as Map<String, dynamic>),
-      queryScripts: (json['queryScripts'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, e as String),
-          ) ??
-          const {},
       documentType:
           $enumDecodeNullable(_$DocumentTypeEnumMap, json['documentType']) ??
               DocumentType.standard,
       permissions: json['permissions'] == null
           ? const Permissions()
           : Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
+      queries: (json['queries'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, Query.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
     );
 
 Map<String, dynamic> _$DocumentToJson(Document instance) {
   final val = <String, dynamic>{
+    'queries': instance.queries.map((k, e) => MapEntry(k, e.toJson())),
     'permissions': instance.permissions.toJson(),
     'documentType': _$DocumentTypeEnumMap[instance.documentType],
   };
@@ -121,7 +122,6 @@ Map<String, dynamic> _$DocumentToJson(Document instance) {
 
   writeNotNull(
       'fields', const SchemaFieldMapConverter().toJson(instance.fields));
-  val['queryScripts'] = instance.queryScripts;
   return val;
 }
 
@@ -139,4 +139,17 @@ Map<String, dynamic> _$SchemaSourceToJson(SchemaSource instance) =>
     <String, dynamic>{
       'group': instance.group,
       'instance': instance.instance,
+    };
+
+SchemaStatus _$SchemaStatusFromJson(Map<String, dynamic> json) => SchemaStatus(
+      activeVersion: json['activeVersion'] as int,
+      deprecatedVersions: (json['deprecatedVersions'] as List<dynamic>)
+          .map((e) => e as int)
+          .toList(),
+    );
+
+Map<String, dynamic> _$SchemaStatusToJson(SchemaStatus instance) =>
+    <String, dynamic>{
+      'activeVersion': instance.activeVersion,
+      'deprecatedVersions': instance.deprecatedVersions,
     };

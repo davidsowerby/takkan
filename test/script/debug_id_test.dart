@@ -61,6 +61,12 @@ void main() {
         'script',
         'script.schema',
         'script.schema.Person',
+        'script.schema.User',
+        'script.schema.User.email',
+        'script.schema.User.username',
+        'script.schema.User.emailVerified',
+        'script.schema.Role',
+        'script.schema.Role.name',
         'script.SchemaSource',
         'script.NullDataProvider',
         'script.Home',
@@ -71,16 +77,23 @@ void main() {
         'script.Home.Top Panel.PanelHeading',
         'script.Home.Top Panel.Heading1:0',
         'script.Home.Top Panel.with caption',
-        'script.Home.Top Panel.Eggs',
+        'script.Home.Top Panel.Eggs'
       ]);
 
       // when
       walker = script.init(useCaptionsAsIds: false).initWalker;
 
+      /// bug: https://gitlab.com/takkan/takkan_script/-/issues/52
       expect(walker.tracker, [
         'script',
         'script.Schema',
         'script.Schema.Document',
+        'script.Schema.Document',
+        'script.Schema.Document.FString:0',
+        'script.Schema.Document.FString:1',
+        'script.Schema.Document.FBoolean',
+        'script.Schema.Document',
+        'script.Schema.Document.FString',
         'script.SchemaSource',
         'script.NullDataProvider',
         'script.Home',
@@ -91,7 +104,7 @@ void main() {
         'script.Home.PanelStatic:3.PanelHeading',
         'script.Home.PanelStatic:3.Heading1:0',
         'script.Home.PanelStatic:3.Heading2:1',
-        'script.Home.PanelStatic:3.ListView:2',
+        'script.Home.PanelStatic:3.ListView:2'
       ]);
     });
   });

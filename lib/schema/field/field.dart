@@ -7,7 +7,6 @@ import '../../data/select/condition/condition.dart';
 import '../../script/walker.dart';
 import '../../util/interpolate.dart';
 import '../query/expression.dart';
-import '../query/query_combiner.dart';
 import '../schema.dart';
 import '../validation/validation_error_messages.dart';
 
@@ -49,22 +48,22 @@ abstract class Field<MODEL> extends SchemaElement {
   final MODEL? defaultValue;
 
   /// Not really a Query, just holds conditions for validation
-  final Query _conditions = Query(conditions: []);
+  final List<Condition<dynamic>> _conditions = [];
 
   bool get hasValidation => required || (conditions.isNotEmpty);
 
-  List<Condition<dynamic>> get conditions => _conditions.conditions;
+  List<Condition<dynamic>> get conditions => _conditions;
 
   Type get modelType;
 
   /// Returns a list of validation errors, or an empty list if there are none
-  List<String> doValidation(MODEL value,
-      ValidationErrorMessages errorMessages) {
+  List<String> doValidation(
+      MODEL value, ValidationErrorMessages errorMessages) {
     if (conditions.isEmpty) {
       return List.empty();
     }
     final List<String> errors = List.empty(growable: true);
-    for (final Condition<dynamic> condition in _conditions.conditions) {
+    for (final Condition<dynamic> condition in conditions) {
       if (!condition.isValid(value)) {
         String? errorPattern = errorMessages.find(condition.operator);
         if (errorPattern == null) {
@@ -88,13 +87,14 @@ abstract class Field<MODEL> extends SchemaElement {
 
   void _buildValidations() {
     for (final condition in constraints) {
-      _conditions.conditions.add(condition.withField(name));
+      _conditions.add(condition.withField(name));
     }
     final vs = validation;
     if (vs != null) {
-      final c = Expression(field: this).parseValidation(vs);
+      final c = ValidationExpression(document: parent as Document)
+          .parseValidation(field: this, expression: vs);
       final List<Condition<MODEL>> c1 = List.castFrom(c);
-      _conditions.conditions.addAll(c1);
+      _conditions.addAll(c1);
     }
   }
 }

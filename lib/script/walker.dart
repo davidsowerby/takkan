@@ -5,10 +5,9 @@ import 'takkan_element.dart';
 /// Used to 'walk' a [Script].  It is invoked at every entry within the [Script], by calling
 /// [Script.walk]. It simply returns the entry. It is up to the implementation of this interface to
 /// decide what do with the entry.
-abstract class ScriptVisitor{
+abstract class ScriptVisitor {
   void step(Object entry);
 }
-
 
 abstract class WalkTarget {
   void walk(List<ScriptVisitor> visitors) {
@@ -35,7 +34,7 @@ abstract class Walker<PARAMS extends WalkerParams, TRACK> {
     cascade(root, params);
   }
 
-  TRACK _processItem(TakkanElement root, PARAMS params);
+  TRACK _processItem(TakkanElement element, PARAMS params);
 
   void cascade(TakkanElement item, PARAMS params) {
     for (final Object child in item.subElements) {
@@ -84,9 +83,9 @@ class InitWalkerParams extends WalkerParams {
 
 class InitWalker extends Walker<InitWalkerParams, String> {
   @override
-  String _processItem(TakkanElement root, InitWalkerParams params) {
-    root.doInit(params);
-    return root.debugId!;
+  String _processItem(TakkanElement element, InitWalkerParams params) {
+    element.doInit(params);
+    return element.debugId!;
   }
 
   @override
@@ -112,9 +111,9 @@ class SetParentWalkerParams extends WalkerParams {
 
 class SetParentWalker extends Walker<SetParentWalkerParams, String> {
   @override
-  String _processItem(TakkanElement root, SetParentWalkerParams params) {
-    root.setParent(params);
-    return root.runtimeType.toString();
+  String _processItem(TakkanElement element, SetParentWalkerParams params) {
+    element.setParent(params);
+    return element.runtimeType.toString();
   }
 
   @override
@@ -130,18 +129,18 @@ class SetParentWalker extends Walker<SetParentWalkerParams, String> {
 
 class VisitorWalker extends Walker<VisitorWalkerParams, String> {
   @override
-  String _processItem(TakkanElement root, VisitorWalkerParams params) {
+  String _processItem(TakkanElement element, VisitorWalkerParams params) {
     for (final ScriptVisitor visitor in params.visitors) {
-      visitor.step(root);
+      visitor.step(element);
     }
-    return root.debugId!;
+    return element.debugId!;
   }
 }
 
 class ValidationWalker extends Walker<ValidationWalkerCollector, int> {
   @override
-  int _processItem(TakkanElement root, ValidationWalkerCollector params) {
-    root.doValidate(params);
+  int _processItem(TakkanElement element, ValidationWalkerCollector params) {
+    element.doValidate(params);
     return params.messages.length;
   }
 }
@@ -156,4 +155,12 @@ class VisitorWalkerParams extends WalkerParams {
   const VisitorWalkerParams({required this.visitors});
 
   final List<ScriptVisitor> visitors;
+}
+
+class SetDefaultsWalker extends Walker<EmptyWalkerParams, String> {
+  @override
+  String _processItem(TakkanElement element, EmptyWalkerParams params) {
+    element.setDefaults();
+    return element.runtimeType.toString();
+  }
 }

@@ -68,6 +68,8 @@ class DataProvider extends TakkanElement {
 /// Any [group], but typically that used for the main app database, may choose to
 /// treat its instances as stages - for example,'dev', 'test', 'qa' and 'prod'.
 ///
+///
+///  ------- The rest of this was how it was supposed to be but staging did not work ------------------
 /// A [group] is then declared as 'staged' in *takkan.json* (refer to takkan_backend AppConfig)
 /// A 'staged' group has the current stage set by the app main.dart or command line invocation.
 ///

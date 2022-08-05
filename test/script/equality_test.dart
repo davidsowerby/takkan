@@ -26,7 +26,7 @@ import 'package:takkan_script/script/takkan_element.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Unit test', () {
+  group('Equatable Props declaration', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -41,6 +41,7 @@ void main() {
       final List<ClassMirror> result = findSubClasses(Equatable);
       result.removeWhere(
           (element) => extractName(element.simpleName).startsWith('_'));
+      result.removeWhere((element) => element.isAbstract);
       // when
 
       // then
@@ -82,15 +83,15 @@ void main() {
 
         expect(check, isTrue, reason: diffMsg);
       }
-      expect(result.length, 57);
+      expect(result.length, 50);
     });
   });
 }
 
 String diffMessage(ClassMirror c, Set<String> declaredInProps,
     Set<String> variableNamesFromMirror) {
-  Set<String> diff1 = declaredInProps.difference(variableNamesFromMirror);
-  Set<String> diff2 = variableNamesFromMirror.difference(declaredInProps);
+  final Set<String> diff1 = declaredInProps.difference(variableNamesFromMirror);
+  final Set<String> diff2 = variableNamesFromMirror.difference(declaredInProps);
   final StringBuffer buf = StringBuffer();
   buf.writeln();
   buf.writeln('Equality Match failed');
@@ -153,7 +154,7 @@ Future<Set<String>> readSource(
   final uri = sourceLocation.sourceUri;
   final segments = uri.pathSegments.sublist(1);
 
-  File f = File('lib/${segments.join('/')}');
+  final File f = File('lib/${segments.join('/')}');
   final source = await f.readAsLines();
 
   /// Move to the actual code declaration, ignoring annotations and comments
@@ -191,7 +192,7 @@ Future<Set<String>> readSource(
 }
 
 String extractName(Symbol symbol) {
-  final s = symbol.toString().replaceFirst('Symbol(\"', '');
-  final s1 = s.replaceFirst('\")', '');
+  final s = symbol.toString().replaceFirst('Symbol("', '');
+  final s1 = s.replaceFirst('")', '');
   return s1.trim();
 }

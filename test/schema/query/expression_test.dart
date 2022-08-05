@@ -30,10 +30,14 @@ void main() {
       const expression3 = 'a==5';
       const expression4 = 'a   ==         5';
       // when
-      final actual1 = Expression(document: document).parseQuery(expression1);
-      final actual2 = Expression(document: document).parseQuery(expression2);
-      final actual3 = Expression(document: document).parseQuery(expression3);
-      final actual4 = Expression(document: document).parseQuery(expression4);
+      final actual1 = QueryExpression(document: document)
+          .parseQuery(expression: expression1);
+      final actual2 = QueryExpression(document: document)
+          .parseQuery(expression: expression2);
+      final actual3 = QueryExpression(document: document)
+          .parseQuery(expression: expression3);
+      final actual4 = QueryExpression(document: document)
+          .parseQuery(expression: expression4);
       // then
 
       expect(actual1.length, 1);
@@ -52,20 +56,22 @@ void main() {
         reference: 5,
       );
       // when
-      final actual = Expression(document: document).parseQuery(expression);
+      final actual = QueryExpression(document: document)
+          .parseQuery(expression: expression);
       // then
 
       final c = actual[0];
       expect(c, expected);
 
-      expect(c.cloudOut, 'query.equalTo("a",5);');
+      expect(c.cloudOut, 'query.equalTo("a", 5);');
     });
     test('equals String, inner single quotes', () {
       // given
       final Document document = Document(fields: {'a': FString()});
       const expression = "a == 'x'";
       // when
-      final actual = Expression(document: document).parseQuery(expression);
+      final actual = QueryExpression(document: document)
+          .parseQuery(expression: expression);
       // then
 
       final c = actual[0];
@@ -73,14 +79,15 @@ void main() {
           c,
           const StringCondition(
               field: 'a', operator: Operator.equalTo, reference: 'x'));
-      expect(c.cloudOut, 'query.equalTo("a","x");');
+      expect(c.cloudOut, 'query.equalTo("a", "x");');
     });
     test('equals String, inner double quotes', () {
       // given
       final Document document = Document(fields: {'a': FString()});
       const expression = 'a == "x"';
       // when
-      final actual = Expression(document: document).parseQuery(expression);
+      final actual = QueryExpression(document: document)
+          .parseQuery(expression: expression);
       // then
 
       final c = actual[0];
@@ -88,7 +95,7 @@ void main() {
           c,
           const StringCondition(
               field: 'a', operator: Operator.equalTo, reference: 'x'));
-      expect(c.cloudOut, 'query.equalTo("a","x");');
+      expect(c.cloudOut, 'query.equalTo("a", "x");');
     });
     test('validation', () {
       // given
@@ -107,16 +114,17 @@ void main() {
       final document = script.schema.document('testDoc');
       const validation = '!="x" && !="y"';
       // when
-      final actual = Expression(field: document.field('a')).parseValidation(validation);
+      final actual = ValidationExpression(document: document)
+          .parseValidation(expression: validation, field: document.field('a'));
       // then
 
       expect(actual.length, 2);
-      expect(actual[0].field,'a');
-      expect(actual[0].operator,Operator.notEqualTo);
-      expect(actual[0].reference,'x');
-      expect(actual[1].field,'a');
-      expect(actual[1].operator,Operator.notEqualTo);
-      expect(actual[1].reference,'y');
+      expect(actual[0].field, 'a');
+      expect(actual[0].operator, Operator.notEqualTo);
+      expect(actual[0].reference, 'x');
+      expect(actual[1].field, 'a');
+      expect(actual[1].operator, Operator.notEqualTo);
+      expect(actual[1].reference, 'y');
     });
 
     group('String conditions', () {
@@ -142,8 +150,8 @@ void main() {
           reference: 'yes',
         );
         // when
-        final Condition actual =
-            Expression(document: document).parseQuery('a == "yes"')[0];
+        final Condition actual = QueryExpression(document: document)
+            .parseQuery(expression: 'a == "yes"')[0];
 
         //then
         expect(actual, expected);
@@ -158,8 +166,8 @@ void main() {
           reference: 'yes',
         );
         // when
-        final Condition actual =
-            Expression(document: document).parseQuery('a != "yes"')[0];
+        final Condition actual = QueryExpression(document: document)
+            .parseQuery(expression: 'a != "yes"')[0];
 
         //then
         expect(actual, expected);
@@ -174,8 +182,8 @@ void main() {
           reference: 'yes',
         );
         // when
-        final Condition actual =
-            Expression(document: document).parseQuery('a > "yes"')[0];
+        final Condition actual = QueryExpression(document: document)
+            .parseQuery(expression: 'a > "yes"')[0];
 
         //then
         expect(actual, expected);

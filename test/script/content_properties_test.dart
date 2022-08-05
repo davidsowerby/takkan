@@ -1,8 +1,8 @@
-import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/script/medley_script.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('PContent properties', () {
+  group('Content properties', () {
     setUpAll(() {});
 
     tearDownAll(() {});
@@ -19,7 +19,11 @@ void main() {
       // then
 
       expect(
-          medleyScript0.pageFromStringRoute('person/static')?.contentAsMap['age']?.caption, 'age');
+          medleyScript0
+              .pageFromStringRoute('person/static')
+              ?.contentAsMap['age']
+              ?.caption,
+          'age');
     });
   });
 }

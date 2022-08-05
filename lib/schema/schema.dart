@@ -11,10 +11,11 @@ import '../script/script_element.dart';
 import '../script/takkan_element.dart';
 import '../script/version.dart';
 import '../script/walker.dart';
+import 'field/boolean.dart';
 import 'field/field.dart';
 import 'field/string.dart';
 import 'json/json_converter.dart';
-import 'query/query_combiner.dart';
+import 'query/query.dart';
 
 part 'schema.g.dart';
 
@@ -52,7 +53,7 @@ class Schema extends SchemaElement {
     bool readOnly = false,
     required this.name,
     required this.version,
-  })  : _documents = documents,
+  })  : _documents = Map.from(documents),
         super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
@@ -91,6 +92,21 @@ class Schema extends SchemaElement {
     super.doInit(params);
   }
 
+  /// If 'User' or 'Role' [Document] instances are not defined by the developer,
+  /// default definitions are added here, as they may be needed by the client.
+  ///
+  /// The default definitions are currently the same as the Back4App defaults,
+  /// but that may change.
+  @override
+  void setDefaults() {
+    if (!documents.containsKey('User')) {
+      documents['User'] = defaultUserDocument;
+    }
+    if (!documents.containsKey('Role')) {
+      documents['Role'] = defaultRoleDocument;
+    }
+  }
+
   @override
   void walk(List<ScriptVisitor> visitors) {
     super.walk(visitors);
@@ -103,7 +119,7 @@ class Schema extends SchemaElement {
     final doc = _documents[key];
     if (doc == null) {
       final String msg =
-          "There is no schema listed for '$key', have you forgotten to add it to your PSchema?";
+          "There is no schema listed for '$key', have you forgotten to add it to your Schema?";
       logType(runtimeType).e(msg);
       throw TakkanException(msg);
     }
@@ -117,6 +133,18 @@ class Schema extends SchemaElement {
     walk([counter]);
     return counter.roles;
   }
+
+  // TODO: needs other fields https://gitlab.com/takkan/takkan_script/-/issues/51
+  // Note: ACL would only be used by schema generator, see https://gitlab.com/takkan/takkan_script/-/issues/50
+  Document get defaultUserDocument => Document(fields: {
+        'email': FString(),
+        'username': FString(),
+        'emailVerified': FBoolean(),
+      });
+
+  // TODO: needs other fields https://gitlab.com/takkan/takkan_script/-/issues/51
+  // Note: ACL would only be used by schema generator, see https://gitlab.com/takkan/takkan_script/-/issues/50
+  Document get defaultRoleDocument => Document(fields: {'name': FString()});
 }
 
 /// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
@@ -171,23 +199,32 @@ abstract class SchemaElement extends TakkanElement {
 /// Permissions were designed very much with Back4App in mind, so there is a
 /// direct mapping between this class and Back4App Class Level Permissions.
 ///
-/// If a CRUD action only requires that the user is authenticated, specify it in [requiresAuthentication].
+/// The default settings create a fully public [Document] (equivalent to a
+/// Back4App Class)
 ///
-/// If a CRUD action requires that the user has a specific role, specify that role in the appropriate
-/// role list, for example [updateRoles], [createRoles], [deleteRoles].  A user with any of the specified roles
-/// will have appropriate access.
+/// If a CRUD action only requires that the user is authenticated, specify it
+/// in [requiresAuthentication].
+///
+/// If a CRUD action requires that the user has a specific role, specify that
+/// role in the appropriate role list, for example [updateRoles], [createRoles],
+/// [deleteRoles].  A user with any of the specified roles will have appropriate
+/// access.
 ///
 /// If a role is specified - for example in [updateRoles] - there is no need to
-/// also specify 'update' in [requiresAuthentication], provided you use
+/// also specify 'update' in [_requiresAuthentication], provided you use
 /// [requiresFindAuthentication]
 ///
-/// Roles specified in [readRoles] are added to [getRoles], [findRoles] and [countRoles]
-/// Roles specified in [writeRoles] are added to [createRoles],[updateRoles] and [deleteRoles]
+/// To simplify specification:
+///
+/// - Roles specified in [readRoles] are added to [getRoles], [findRoles] and
+/// [countRoles]
+/// - Roles specified in [writeRoles] are added to [createRoles],[updateRoles]
+/// and [deleteRoles]
 ///
 /// If no authentication is required, simply leave all properties empty.
 ///
-/// A method can be explicitly defined as public by adding it to [isPublic], and this will overrule any other settings
-///
+/// A method can be explicitly defined as public by adding it to [isPublic], and
+/// this will overrule any other settings
 ///
 @JsonSerializable(explicitToJson: true)
 class Permissions with WalkTarget {
@@ -340,42 +377,49 @@ enum AccessMethod {
 /// Implementation of these rules is managed by [DataProvider]
 enum DocumentType { standard, versioned }
 
-/// Schema for a 'Class' in Back4App, 'Document' in Firebase
+/// This defines a schema for a 'Class' in Back4App
+///
+/// A [Document] definition is used by client to control what is displayed to the
+/// user, limiting what is presented according to its [Permissions].
+///
+/// [fields] are used by the client, along with data bindings and conversion
+/// to connect the presentation layer to the data layer.  [fields] also define
+/// validation rules, which are used by the client, but also by the schema generator
+/// to generate server side validation.  That way, even if your client-side validation
+/// is hacked, server side validation will still be present.
+///
+/// [permissions] provide role based access control
+///
+/// [queries] relate to this specific document type (Back4App Class)
+///
+/// An ACL is used only be the schema generator but does need to be defined,
+/// with appropriate default. https://gitlab.com/takkan/takkan_script/-/issues/50
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 @SchemaFieldMapConverter()
 class Document extends SchemaElement {
   Document({
     required this.fields,
-    this.queryScripts = const {},
     this.documentType = DocumentType.standard,
     this.permissions = const Permissions(),
-    Map<String, List<Condition<dynamic>> Function(Document)> queries = const {},
-  })  : _queryDefinitions = queries,
-        super();
+    this.queries = const {},
+  });
 
   factory Document.fromJson(Map<String, dynamic> json) =>
       _$DocumentFromJson(json);
 
-  /// Using [_queries] as that is a combination of [_queryDefinitions] and [queryScripts],
-  /// and it should not matter which method is used to define the query.
+  final Map<String, Query> queries;
+
   @JsonKey(ignore: true)
   @override
   List<Object?> get props =>
-      [...super.props, permissions, documentType, fields, _queries];
-
-  List<Object?> get excludeProps => [_queryDefinitions, queryScripts];
+      [...super.props, permissions, documentType, fields, queries];
 
   final Permissions permissions;
   final DocumentType documentType;
   final Map<String, Field<dynamic>> fields;
-  @JsonKey(ignore: true)
-  final Map<String, List<Condition<dynamic>> Function(Document)>
-      _queryDefinitions;
-  final Map<String, String> queryScripts;
-  final Map<String, Query> _queries = {};
 
   bool get hasValidation {
-    for (Field<dynamic> f in fields.values) {
+    for (final Field<dynamic> f in fields.values) {
       if (f.hasValidation) {
         return true;
       }
@@ -387,16 +431,12 @@ class Document extends SchemaElement {
   Map<String, dynamic> toJson() => _$DocumentToJson(this);
 
   @override
-  List<Object> get subElements => [fields];
-
-  @JsonKey(ignore: true)
-  Map<String, Query> get queries => _queries;
+  List<Object> get subElements => [fields, queries];
 
   @override
   void doInit(InitWalkerParams params) {
     super.doInit(params);
     _name = params.name;
-    _buildQueries();
   }
 
   Field<dynamic> field(String fieldName) {
@@ -422,19 +462,8 @@ class Document extends SchemaElement {
     return null;
   }
 
-  void _buildQueries() {
-    for (final entry in _queryDefinitions.entries) {
-      _queries[entry.key] = Query(conditions: entry.value(this));
-    }
-    for (final String key in queryScripts.keys) {
-      final q = _queries[key];
-      final expr = QueryCombiner.fromSource(this, queryScripts[key], q);
-      _queries[key] = Query(conditions: expr.conditions);
-    }
-  }
-
   Query query(String queryName) {
-    final q = _queries[queryName];
+    final q = queries[queryName];
     if (q == null) {
       final String msg = 'Unknown query with name $queryName';
       logType(runtimeType).e(msg);
@@ -443,10 +472,10 @@ class Document extends SchemaElement {
     return q;
   }
 
-  ConditionBuilder operator [](String fieldName) {
+  C operator [](String fieldName) {
     final Field<dynamic>? f = fields[fieldName];
     if (f != null) {
-      return ConditionBuilder(fieldName);
+      return C(fieldName);
     }
     final String msg = '$fieldName is not a valid field name';
     logType(runtimeType).e(msg);
@@ -506,4 +535,18 @@ class SchemaSource extends TakkanElement {
 
   @override
   Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class SchemaStatus {
+  const SchemaStatus(
+      {required this.activeVersion, required this.deprecatedVersions});
+
+  factory SchemaStatus.fromJson(Map<String, dynamic> json) =>
+      _$SchemaStatusFromJson(json);
+
+  final int activeVersion;
+  final List<int> deprecatedVersions;
+
+  Map<String, dynamic> toJson() => _$SchemaStatusToJson(this);
 }

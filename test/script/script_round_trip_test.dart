@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/script/medley_script.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
@@ -18,8 +18,7 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
 
     tearDown(() {});
@@ -39,7 +38,8 @@ void main() {
 
       expect(nullsInTracker(tracker), 0);
       final c0 = script2.routes[TakkanRoute.fromString('home/static')];
-      expect(c0?.routeMap.keys, contains(TakkanRoute.fromString('home/static')));
+      expect(
+          c0?.routeMap.keys, contains(TakkanRoute.fromString('home/static')));
 
       expect(c0?.title, 'Home');
       expect(c0?.children.length, 1);

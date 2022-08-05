@@ -188,27 +188,44 @@ class Script extends ScriptElement {
     }
   }
 
-  /// Initialises the script by setting up a variety of variables which can be derived from those explicitly set by the user.
+  /// Initialises the script by:
   ///
-  /// This is a two stage process.
-  /// 1.  the [parent] and [script] properties are set.
+  /// - setting defaults to avoid the developer always
+  /// - setting unique Ids for debugging, and references to access the primary
+  /// [Script] and [Schema].
+  /// - Class specific initialisation, for example query assembly
+  ///
+  /// All stages cascade down to the [subElements] using the [walk] method
+  /// along with a [Walker] implementation
+  ///
+  /// This is a three stage process.
+  /// 1.  set defaults
+  /// 1.  the [parent] and [script] properties are set using [SetParentWalker]
   /// 1.  [doInit] is called for each [TakkanElement}
   ///
-  /// Both stages cascade down to the [subElements].
   ///
-  /// The [parent] and [script] properties are set first, because some [doInit] calls
+  /// 1.  Set Defaults - these are usually items added automatically, to
+  /// avoid the developer having to always declares them - for example default
+  /// User and Role [Document]s in [Schema]
+  ///
+  /// 2.  The [parent] and [script] properties are set next, because some [doInit] calls
   /// require that the [parent] is already set, and it is hard to guarantee that
   /// without making the order of [subElements] critical.
+  ///
+  /// 3.  [doInit] is called
   ///
   /// If [useCaptionsAsIds] is true:  if [id] is not set, then the caption (or other property, as determined
   /// by each class) is treated as the [id].  See [TakkanElement.doInit] for the processing of ids, and
   /// each see the [doInit] call for each [TakkanElement} type for which property, if any, is used.
   Walkers init({bool useCaptionsAsIds = true}) {
+    final defaultsWalker = SetDefaultsWalker();
     final parentWalker = SetParentWalker();
     final parentParams = SetParentWalkerParams(
       script: this,
       parent: NullScriptElement(),
     );
+
+    defaultsWalker.walk(this, EmptyWalkerParams());
     parentWalker.walk(this, parentParams);
 
     final initWalker = InitWalker();
@@ -223,7 +240,7 @@ class Script extends ScriptElement {
     );
   }
 
-  /// Passes call to all components, and builds [_routes] from [pages]
+  /// Passes call to all [subElements], and builds [_routes] from [pages]
   @override
   void doInit(InitWalkerParams params) {
     super.doInit(params);

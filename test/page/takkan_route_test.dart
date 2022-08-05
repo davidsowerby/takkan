@@ -1,4 +1,4 @@
-import 'package:takkan_medley_script/medley/medley_script.dart';
+import 'package:takkan_medley_script/script/medley_script.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
@@ -24,10 +24,10 @@ void main() {
         name: 'person',
         documentClass: 'Person',
         dataSelectors: const [
-           DocByQuery(queryName: 'person'),
-           DocByQuery(queryName: 'tagged'),
-           DocByQuery(queryName: 'byId'),
-           DocByQuery(queryName: 'adult'),
+          DocByQuery(queryName: 'person'),
+          DocByQuery(queryName: 'tagged'),
+          DocByQuery(queryName: 'byId'),
+          DocByQuery(queryName: 'adult'),
           DocByFunction(cloudFunctionName: 'mostRecent'),
           DocByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
@@ -80,7 +80,7 @@ void main() {
           DocListByQuery(queryName: 'people'),
           DocListByQuery(queryName: 'tagged'),
           DocListByQuery(queryName: 'byId'),
-          DocListByQuery(queryName:  'adult'),
+          DocListByQuery(queryName: 'adult'),
           DocListByFunction(cloudFunctionName: 'mostRecent'),
           DocListByGQL(script: 'gqlScript', name: 'allWithRelatives'),
         ],
@@ -170,10 +170,9 @@ void main() {
       expect(route1 == route1, isTrue,
           reason: 'identical params, different compare');
 
-      expect(route1.hashCode==route2.hashCode,isFalse);
-      expect(route1==route2,isFalse);
-      expect(route1==route3,isFalse);
-
+      expect(route1.hashCode == route2.hashCode, isFalse);
+      expect(route1 == route2, isFalse);
+      expect(route1 == route3, isFalse);
     });
 
     /// What needs testing here?

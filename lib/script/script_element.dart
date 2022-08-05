@@ -202,6 +202,9 @@ abstract class ScriptElement extends TakkanElement {
 
 class NullScriptElement extends ScriptElement {
   NullScriptElement() : super();
+
+  @override
+  Map<String, dynamic> toJson() => throw UnimplementedError();
 }
 
 class NullSchemaElement extends SchemaElement {
