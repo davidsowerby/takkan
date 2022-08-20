@@ -1,5 +1,5 @@
 name: takkan_medley_script
-description: Versioned script for testing and demonstrasting Takkan
+description: Script and Schema for takkan_medley
 version: 0.0.1
 homepage: https://www.takkan.org/
 
@@ -11,9 +11,8 @@ dependencies:
     path: ../takkan_script
 
 dev_dependencies:
+  test: ^1.16.0
 
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
 
 

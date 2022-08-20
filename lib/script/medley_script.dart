@@ -10,7 +10,7 @@ import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/script_element.dart';
 import 'package:takkan_script/script/version.dart';
 
-import 'medley_schema.dart';
+import '../schema/medley_schema.dart';
 
 final List<Script> medleyScript = [
   medleyScript0,
