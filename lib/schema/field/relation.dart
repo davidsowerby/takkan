@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/object/relation.dart';
 import '../../script/script_element.dart';
-import '../../script/takkan_element.dart';
 import 'field.dart';
 
 part 'relation.g.dart';

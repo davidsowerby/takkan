@@ -1,12 +1,11 @@
-
-import '../../script/walker.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
 /// Common base class for delegates to PDataProvider
 abstract class DataProviderDelegate with WalkTarget {
-
   const DataProviderDelegate({
     this.checkHealthOnConnect = false,
   });
+
   final bool checkHealthOnConnect;
 }
 

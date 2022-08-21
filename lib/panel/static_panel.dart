@@ -1,15 +1,14 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/debug.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
-import '../common/debug.dart';
 import '../script/content.dart';
 import '../script/element.dart';
 import '../script/help.dart';
 import '../script/layout.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
-import '../script/walker.dart';
 import 'panel.dart';
 
 part 'static_panel.g.dart';
@@ -55,7 +54,8 @@ class PanelStatic extends PodBase implements Panels {
 
   /// See [TakkanElement.subElements]
   @override
-  List<Object> get subElements => [
+  List<Object> get subElements =>
+      [
         if (heading != null) heading!,
         children,
         ...super.subElements,

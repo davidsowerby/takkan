@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
 import '../../common/log.dart';
 import '../../data/select/condition/condition.dart';
-import '../../script/walker.dart';
 import '../../util/interpolate.dart';
 import '../query/expression.dart';
 import '../schema.dart';

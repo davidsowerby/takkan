@@ -5,7 +5,6 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../data/object/post_code.dart';
 import '../../data/select/condition/condition.dart';
 import '../../script/script_element.dart';
-import '../../script/takkan_element.dart';
 import 'field.dart';
 
 part 'post_code.g.dart';

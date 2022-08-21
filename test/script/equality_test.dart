@@ -22,7 +22,6 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/script/takkan_element.dart';
 import 'package:test/test.dart';
 
 void main() {

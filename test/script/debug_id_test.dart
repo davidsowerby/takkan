@@ -1,3 +1,4 @@
+import 'package:takkan_schema/takkan/walker.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/static_panel.dart';
@@ -6,7 +7,6 @@ import 'package:takkan_script/part/text.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/version.dart';
-import 'package:takkan_script/script/walker.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -2,8 +2,9 @@
 /// See comments on [TakkanElement]
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/debug.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
-import '../common/debug.dart';
 import '../data/provider/data_provider.dart';
 import '../data/select/data_selector.dart';
 import '../panel/panel.dart';
@@ -16,8 +17,6 @@ import '../script/element.dart';
 import '../script/layout.dart';
 import '../script/script.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
-import '../script/walker.dart';
 
 part 'page.g.dart';
 

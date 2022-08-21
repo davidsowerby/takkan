@@ -13,6 +13,8 @@ dependencies:
   get_it: ^7.2.0
   equatable: ^2.0.3
   characters: ^1.2.0
+  takkan_schema:
+    path: ../takkan_schema
 
 
 dev_dependencies:
@@ -23,3 +25,4 @@ dev_dependencies:
   json_serializable: ^6.2.0
   takkan_medley_script:
     path: ../takkan_medley_script
+

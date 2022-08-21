@@ -2,6 +2,8 @@
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+import 'package:takkan_schema/takkan/takkan_element.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
 import '../data/provider/data_provider.dart';
 import '../page/page.dart';
@@ -10,8 +12,6 @@ import '../panel/static_panel.dart';
 import '../part/part.dart';
 import '../schema/schema.dart';
 import 'script.dart';
-import 'takkan_element.dart';
-import 'walker.dart';
 
 enum IsReadOnly { yes, no, inherited }
 

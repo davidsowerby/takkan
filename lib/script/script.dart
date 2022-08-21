@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/debug.dart';
+import 'package:takkan_schema/common/message.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
-import '../common/debug.dart';
 import '../common/exception.dart';
 import '../common/log.dart';
 import '../data/converter/conversion_error_messages.dart';
@@ -13,11 +15,8 @@ import '../data/provider/data_provider.dart';
 import '../page/page.dart';
 import '../schema/schema.dart';
 import '../schema/validation/validation_error_messages.dart';
-import '../validation/message.dart';
 import 'script_element.dart';
-import 'takkan_element.dart';
 import 'version.dart';
-import 'walker.dart';
 
 part 'script.g.dart';
 
@@ -103,6 +102,9 @@ class Script extends ScriptElement {
 
   @override
   Map<String, dynamic> toJson() => _$ScriptToJson(this);
+
+  @override
+  bool get hasParent => false;
 
   @JsonKey(ignore: true)
   @override

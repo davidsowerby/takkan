@@ -5,7 +5,6 @@ import 'package:json_annotation/json_annotation.dart';
 import '../part/part.dart';
 import '../script/help.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
 
 part 'sign_in.g.dart';
 

@@ -1,15 +1,14 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/debug.dart';
+import 'package:takkan_schema/common/message.dart';
+import 'package:takkan_schema/takkan/walker.dart';
 
-import '../common/debug.dart';
 import '../script/content.dart';
 import '../script/help.dart';
 import '../script/script.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
-import '../script/walker.dart';
-import '../validation/message.dart';
 
 part 'part.g.dart';
 
@@ -34,7 +33,6 @@ part 'part.g.dart';
 /// [isStatic] - returns true if [staticData] is non-null
 @JsonSerializable(explicitToJson: true)
 class Part extends Content {
-
   Part(
       {super.caption,
       this.readOnly = false,
@@ -57,7 +55,8 @@ class Part extends Content {
 
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props => [...super.props,readOnly,height,traitName,staticData,help,tooltip];
+  List<Object?> get props =>
+      [...super.props, readOnly, height, traitName, staticData, help, tooltip];
 
   @override
   Map<String, dynamic> toJson() => _$PartToJson(this);

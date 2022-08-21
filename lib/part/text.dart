@@ -4,7 +4,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../script/help.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
 import 'part.dart';
 
 part 'text.g.dart';

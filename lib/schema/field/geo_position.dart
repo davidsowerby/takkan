@@ -4,14 +4,13 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../data/object/geo.dart';
 import '../../script/script_element.dart';
-import '../../script/takkan_element.dart';
 import 'field.dart';
 
 part 'geo_position.g.dart';
 
 /// see [GeoPosition]
 @JsonSerializable(explicitToJson: true)
-class FGeoPosition extends Field< GeoPosition> {
+class FGeoPosition extends Field<GeoPosition> {
   FGeoPosition({
     super.defaultValue,
     super.constraints = const [],
@@ -22,6 +21,7 @@ class FGeoPosition extends Field< GeoPosition> {
 
   factory FGeoPosition.fromJson(Map<String, dynamic> json) =>
       _$FGeoPositionFromJson(json);
+
   @override
   Type get modelType => GeoPoint;
 

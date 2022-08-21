@@ -4,14 +4,12 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../script/help.dart';
 import '../script/script_element.dart';
-import '../script/takkan_element.dart';
 import 'abstract_list_view.dart';
 
 part 'query_view.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class QueryView extends AbstractListView {
-
   QueryView({
     String? queryName,
     super.titleProperty = 'title',
