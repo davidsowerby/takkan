@@ -101,11 +101,9 @@ class InitWalker extends Walker<InitWalkerParams, String> {
 
 class SetParentWalkerParams extends WalkerParams {
   const SetParentWalkerParams({
-    required this.script,
     required this.parent,
   });
 
-  final Script script;
   final TakkanElement parent;
 }
 
@@ -121,7 +119,6 @@ class SetParentWalker extends Walker<SetParentWalkerParams, String> {
       TakkanElement root, SetParentWalkerParams params,
       {int? index, String? name}) {
     return SetParentWalkerParams(
-      script: params.script,
       parent: root,
     );
   }

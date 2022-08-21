@@ -136,6 +136,9 @@ class Script extends ScriptElement {
     return counter.roles;
   }
 
+  @override
+  Script get script => this;
+
   // String get nameLocale => '$name:$locale';
 
   static Future<Script> readFromFile(File f) async {
@@ -221,7 +224,6 @@ class Script extends ScriptElement {
     final defaultsWalker = SetDefaultsWalker();
     final parentWalker = SetParentWalker();
     final parentParams = SetParentWalkerParams(
-      script: this,
       parent: NullScriptElement(),
     );
 

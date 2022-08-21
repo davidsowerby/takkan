@@ -73,14 +73,11 @@ enum ControlEdit {
 ///
 
 abstract class ScriptElement extends TakkanElement {
-
   ScriptElement({
     DataProvider? dataProvider,
     this.controlEdit = ControlEdit.inherited,
     super.id,
   }) : _dataProvider = dataProvider;
-  @JsonKey(ignore: true)
-  late Script _script;
 
   bool _hasEditControl = false;
   final ControlEdit controlEdit;
@@ -100,16 +97,9 @@ abstract class ScriptElement extends TakkanElement {
     return false;
   }
 
-  @override
-  void setParent(SetParentWalkerParams params) {
-    super.setParent(params);
-    _script = params.script;
-  }
-
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
         ...super.props,
         controlEdit,
         _dataProvider,
@@ -122,7 +112,7 @@ abstract class ScriptElement extends TakkanElement {
   /// [dataProvider] is declared rather than inherited
   bool get dataProviderIsDeclared => _dataProvider != null;
 
-  Script get script => _script;
+  Script get script => parent.script;
 
   @override
   @JsonKey(ignore: true)
@@ -150,8 +140,7 @@ abstract class ScriptElement extends TakkanElement {
 
   /// See [TakkanElement.subElements]
   @override
-  List<Object> get subElements =>
-      [
+  List<Object> get subElements => [
         if (_dataProvider != null) _dataProvider!,
       ];
 
