@@ -1,10 +1,9 @@
 import '../validation/message.dart';
-import 'script.dart';
 import 'takkan_element.dart';
 
-/// Used to 'walk' a [Script].  It is invoked at every entry within the [Script], by calling
-/// [Script.walk]. It simply returns the entry. It is up to the implementation of this interface to
-/// decide what do with the entry.
+/// Used to 'walk' a [TakkanElement] tree.  It is invoked at every entry within the tree, by calling
+/// [TakkanElement.walk] at the highest level required. It simply returns the entry.
+/// It is up to the implementation of this interface to decide what do with the entry.
 abstract class ScriptVisitor {
   void step(Object entry);
 }
@@ -115,8 +114,8 @@ class SetParentWalker extends Walker<SetParentWalkerParams, String> {
   }
 
   @override
-  SetParentWalkerParams childParams(
-      TakkanElement root, SetParentWalkerParams params,
+  SetParentWalkerParams childParams(TakkanElement root,
+      SetParentWalkerParams params,
       {int? index, String? name}) {
     return SetParentWalkerParams(
       parent: root,
