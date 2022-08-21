@@ -9,8 +9,6 @@ import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/data/select/data_item.dart';
-import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/page/page.dart';
@@ -245,8 +243,6 @@ class DefaultPageBuilder implements PageBuilder {
             dataContext: dataContext,
             pageArguments: pageArguments,
             config: pageConfig,
-            objectId:
-                (dataSelector is DataItemById) ? dataSelector.objectId : null,
             route: route,
           )
         : DocumentListPage(
@@ -258,8 +254,6 @@ class DefaultPageBuilder implements PageBuilder {
             pageArguments: pageArguments,
             config: pageConfig,
             route: route,
-            objectIds:
-                (dataSelector is DataListById) ? dataSelector.objectIds : null,
           );
     return constructRoute(
       route,

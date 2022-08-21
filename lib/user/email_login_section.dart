@@ -199,7 +199,7 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
   }
 
   registrationAcknowledged(IDataProvider dataProvider) async {
-    await dataProvider.authenticator.registrationAcknowledged();
+    // await dataProvider.authenticator.registrationAcknowledged();
     Navigator.pushNamed(context, widget.successRoute);
   }
 

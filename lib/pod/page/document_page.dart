@@ -12,8 +12,7 @@ import 'package:takkan_client/pod/layout/layout_wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/data/select/data.dart';
-import 'package:takkan_script/data/select/data_item.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/script/content.dart';
@@ -54,13 +53,11 @@ class DocumentPage extends StatefulWidget {
   final PageConfig.Page config;
   final DataContext dataContext;
   final Map<String, dynamic> pageArguments;
-  final String? objectId;
   final TakkanRoute route;
 
   const DocumentPage({
     Key? key,
     required this.config,
-    this.objectId,
     required this.dataContext,
     required this.route,
     this.pageArguments = const {},
@@ -78,7 +75,7 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   String? currentObjectId;
   late EditState editState;
   bool hasData = false;
-  late IDataItem dataSelector;
+  late DocumentSelector dataSelector;
 
   DocumentPageState();
 
@@ -86,7 +83,7 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   void initState() {
     super.initState();
     dataSelector = widget.config
-        .dataSelectorByName(widget.route.dataSelectorName) as IDataItem;
+        .dataSelectorByName(widget.route.dataSelectorName) as DocumentSelector;
 
     /// Issue request for document, cache will notify us when it arrives
     _requestData(dataSelector: dataSelector);
@@ -171,15 +168,6 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
         config: widget.config);
   }
 
-  /// [_formKey] used to identify the Form
-  Widget _formWhenEditing({
-    required Widget content,
-  }) {
-    if (cacheEntry.isEditable) {
-      return Form(key: _formKey, child: content);
-    }
-    return content;
-  }
 
   /// Returns [widget] wrapped in [EditState] if [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
@@ -255,7 +243,7 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   /// located in the cache, or a new one created after retrieving data from the
   /// server.
   void _requestData({
-    required IDataItem dataSelector,
+    required DocumentSelector dataSelector,
   }) {
     widget.dataContext.classCache.requestDocument(
         dataSelector: dataSelector, callback: _updateCacheEntry);

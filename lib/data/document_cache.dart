@@ -10,9 +10,7 @@ import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
-import 'package:takkan_script/data/select/data.dart';
-import 'package:takkan_script/data/select/data_item.dart';
-import 'package:takkan_script/data/select/data_list.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/schema/schema.dart';
@@ -106,7 +104,7 @@ class DocumentCache {
   DataContext dataContext({
     required DataContext parentDataContext,
     required Pod config,
-    required Data dataSelector,
+    required DataSelector dataSelector,
   }) {
     if (parentDataContext is NullDataContext) {
       if (config.isStatic) {
@@ -207,10 +205,10 @@ class DocumentClassCache {
   ///
   /// Invokes the [callback] with the result
   void readDocumentFromServer({
-    required IDataItem dataSelector,
+    required DocumentSelector dataSelector,
     required void Function(CacheEntry newEntry) callback,
   }) async {
-    final result = await dataProvider.dataItem(
+    final result = await dataProvider.selectDocument(
       selector: dataSelector,
       documentClass: documentClass,
     );
@@ -262,13 +260,13 @@ class DocumentClassCache {
     _cache[dataProvider.objectIdKey] = cacheEntry;
   }
 
-  Map<String, dynamic>? fromCacheOnly({required Data dataSpec}) {
-    final expectSingle = dataSpec is DataItem;
+  Map<String, dynamic>? fromCacheOnly({required DataSelector dataSpec}) {
+    final expectSingle = dataSpec is DocumentSelector;
     if (expectSingle) {
-      final DataItem pSingle = dataSpec;
+      final DocumentSelector pSingle = dataSpec;
       return _documentFromCache(pSingle);
     } else {
-      final DataList pMulti = dataSpec as DataList;
+      final DocumentListSelector pMulti = dataSpec as DocumentListSelector;
       return _listFromCache(pMulti);
     }
   }
@@ -278,11 +276,11 @@ class DocumentClassCache {
     return (ce == null) ? null : ce.data;
   }
 
-  Map<String, dynamic>? _listFromCache(DataList pMulti) {
+  Map<String, dynamic>? _listFromCache(DocumentListSelector pMulti) {
     return null;
   }
 
-  Map<String, dynamic>? _documentFromCache(DataItem pSingle) {
+  Map<String, dynamic>? _documentFromCache(DocumentSelector pSingle) {
     return null;
   }
 
@@ -295,7 +293,7 @@ class DocumentClassCache {
   /// The original approach was probably sub-optimal, see: https://gitlab.com/takkan_/takkan_client/-/issues/115
   /// However, current design may have overcome that issue.  TODO: review
   void requestDocument({
-    required IDataItem dataSelector,
+    required DocumentSelector dataSelector,
     required void Function(CacheEntry newEntry) callback,
   }) async {
     final CacheEntry? existingEntry = _cache[dataSelector];

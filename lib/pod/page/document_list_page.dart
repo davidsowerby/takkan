@@ -18,7 +18,6 @@ class DocumentListPage extends StatefulWidget {
   final Map<String, dynamic> pageArguments;
   final DataContext dataContext;
   final PageConfig.TakkanRoute route;
-  final List<String>? objectIds;
 
   /// [dataContext] defaults to a [NullDataContext] when used as a top level page,
   /// as it will have no parent..
@@ -32,7 +31,6 @@ class DocumentListPage extends StatefulWidget {
     required this.config,
     required this.dataContext,
     required this.route,
-    this.objectIds,
     this.pageArguments = const {},
   }) : super(key: key);
 
@@ -54,7 +52,6 @@ class DocumentListPageState extends State<DocumentListPage>
   @override
   Widget build(BuildContext context) {
 
-    final ThemeData theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         actions: [

@@ -28,16 +28,13 @@ void main() {
       const id1 = 'objectId1';
       const queryName = 'favourite';
       const Map<String, dynamic> doc1 = {'a': 1, 'objectId': id1};
-      const inputSelector = DataItemByFunction(cloudFunctionName: queryName);
+      const inputSelector = DocByFunction(cloudFunctionName: queryName);
 
       // when
       cache.addResult(selector: inputSelector, result: doc1);
       // then
       final actual = cache.resultFor(
-        selector: DataItemById(
-          objectId: id1,
-          name: queryName,
-        ),
+        selector: DocByQuery(queryName: queryName),
       );
 
       expect(actual, id1);
@@ -48,17 +45,15 @@ void main() {
       const id1 = 'objectId1';
       const queryName = 'favourite';
       const Map<String, dynamic> doc1 = {'a': 1, 'objectId': id1};
-      const inputSelector = DataItemByFilter(name: queryName, script: '');
+      const inputSelector = const DocByQuery(queryName: queryName);
 
       // when
       cache.addResult(selector: inputSelector, result: doc1);
       // then
       final actual = cache.resultFor(
-        selector: DataItemById(
-          objectId: id1,
-          name: queryName,
-        ),
-      );
+          selector: DocByQuery(
+        queryName: queryName,
+      ));
       expect(
         actual,
         id1,
@@ -70,18 +65,16 @@ void main() {
       const id1 = 'objectId1';
       const queryName = 'favourite';
       const Map<String, dynamic> doc1 = {'a': 1, 'objectId': id1};
-      const inputSelector = DataItemByGQL(name: queryName, script: '');
+      const inputSelector = DocByGQL(name: queryName, script: '');
 
       // when
       cache.addResult(selector: inputSelector, result: doc1);
 
       // then
       final actual = cache.resultFor(
-        selector: DataItemById(
-          objectId: id1,
-          name: queryName,
-        ),
-      );
+          selector: DocByQuery(
+            queryName: queryName,
+          ));
       expect(actual, id1);
     });
     test('add and return a GQL list result', () {
@@ -91,20 +84,20 @@ void main() {
       const queryName = 'favourite';
       const Map<String, dynamic> doc1 = {'a': 1, 'objectId': id1};
       const Map<String, dynamic> doc2 = {'a': 2, 'objectId': id2};
-      const inputSelector = DataListByGQL(name: queryName, script: '');
+      const inputSelector = DocListByGQL(name: queryName, script: '');
 
       // when
-      cache.addResults(selector: inputSelector, results: [doc1,doc2], page: 0);
+      cache.addResults(selector: inputSelector, results: [doc1, doc2], page: 0);
       // then
       final actual = cache.resultsFor(
-        selector: DataListByGQL(
+        selector: DocListByGQL(
           name: queryName,
           script: 'xx',
         ),
         page: 0,
       );
 
-      expect(actual, [id1,id2]);
+      expect(actual, [id1, id2]);
     });
   });
 }

@@ -1,6 +1,6 @@
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_script/common/log.dart';
-import 'package:takkan_script/data/select/data.dart';
+import 'package:takkan_script/data/select/data_selector.dart';
 
 /// Holds all the query results for a [DocumentClassCache] instance.
 ///
@@ -19,9 +19,9 @@ class QueryResultsCache {
 
   QueryResultsCache({required this.documentClass});
 
-  /// adds results which may return 0..n results
+  /// adds results from a query which may return 0..n entries
   void addResults({
-    required IDataList selector,
+    required DocumentListSelector selector,
     required int page,
     required List<Map<String, dynamic>> results,
   }) {
@@ -31,12 +31,11 @@ class QueryResultsCache {
       () => QueryResultsSet(),
     );
     set.addResultsPage(page: page, results: results);
-    print('xx');
   }
 
   /// add the result of a query that is required to return a single document
   void addResult({
-    required IDataItem selector,
+    required DocumentSelector selector,
     required Map<String, dynamic> result,
   }) {
     _singles[_queryName(selector)] = result['objectId'];
@@ -46,7 +45,7 @@ class QueryResultsCache {
   /// For selectors which return a single item, use [resultFor]
   ///
   /// Returns null if the cache does not hold any query results for this selector
-  List<String>? resultsFor({required IDataList selector, required int page}) {
+  List<String>? resultsFor({required DocumentListSelector selector, required int page}) {
     final resultSet = _multiples[_queryName(selector)];
     if (resultSet == null) {
       return null;
@@ -55,11 +54,11 @@ class QueryResultsCache {
   }
 
   /// Returns a single objectId result for [selector], or null if not in the cache
-  String? resultFor({required IDataItem selector}) {
+  String? resultFor({required DocumentSelector selector}) {
     return _singles[_queryName(selector)];
   }
 
-  _queryName(Data selector) {
+  _queryName(DataSelector selector) {
     return '$documentClass-${selector.name}';
   }
 }

@@ -1,9 +1,6 @@
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/app/app_config_loader.dart';
 import 'package:takkan_backend/backend/data_provider/base_data_provider.dart';
-import 'package:takkan_backend/backend/data_provider/delegate.dart';
-import 'package:takkan_backend/backend/data_provider/query_selector.dart';
-import 'package:takkan_backend/backend/data_provider/rest_delegate.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_backend/backend/user/no_authenticator.dart';
 import 'package:takkan_client/app/page_builder.dart';
@@ -45,15 +42,6 @@ Future<void> persistenceInjectionBindings() async {
         instanceName: instance.uniqueName,
       );
 
-      getIt.registerFactory<RestDataProviderDelegate>(
-            () => DefaultRestDataProviderDelegate(),
-        instanceName: instance.uniqueName,
-      );
-
-      getIt.registerFactory<QuerySelector>(
-            () => DefaultQuerySelector(dataProvider: provider),
-        instanceName: instance.uniqueName,
-      );
 
       /// Although this is a factory, it is effectively a singleton, as it is
       /// held within the singleton provider
