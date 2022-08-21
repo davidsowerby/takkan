@@ -64,8 +64,6 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   late TakkanElement _parent;
   @JsonKey(ignore: true)
   late int? _index;
-  @JsonKey(ignore: true)
-  late Script _script;
 
   @JsonKey(ignore: true)
   @override
@@ -83,8 +81,6 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   TakkanElement get parent => _parent;
 
   String? get pid => _id;
-
-  Script get script => _script;
 
   /// Defines those properties which represent child elements which require the
   /// [Walker] to visit.
@@ -105,7 +101,6 @@ abstract class TakkanElement extends Equatable with WalkTarget {
 
   void setParent(SetParentWalkerParams params) {
     _parent = params.parent;
-    _script = params.script;
   }
 
   void doInit(InitWalkerParams params) {
