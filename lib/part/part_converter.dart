@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../common/constants.dart';
-import '../common/exception.dart';
+import 'package:takkan_schema/common/constants.dart';
+import 'package:takkan_schema/common/exception.dart';
+
 import 'part.dart';
 
 class PartConverter implements JsonConverter<Part, Map<String, dynamic>> {
@@ -35,7 +36,8 @@ class PartMapConverter
     final Map<String, Part> outputMap = {};
     for (final entry in json.entries) {
       if (entry.key != jsonClassKey) {
-        outputMap[entry.key] = const PartConverter().fromJson(entry.value as Map<String, dynamic>);
+        outputMap[entry.key] =
+            const PartConverter().fromJson(entry.value as Map<String, dynamic>);
       }
     }
     return outputMap;

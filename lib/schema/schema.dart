@@ -1,11 +1,11 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
 import 'package:takkan_schema/takkan/walker.dart';
 
-import '../common/exception.dart';
-import '../common/log.dart';
 import '../data/provider/data_provider.dart';
 import '../data/select/condition/condition.dart';
 import '../page/page.dart';

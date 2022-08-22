@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/constants.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 
-import '../../../common/constants.dart';
-import '../../../common/exception.dart';
-import '../../../common/log.dart';
 import '../../../schema/field/field.dart';
 import 'integer_condition.dart';
 import 'string_condition.dart';

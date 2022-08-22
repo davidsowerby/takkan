@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/constants.dart';
 
-import '../../common/constants.dart';
-import '../../common/exception.dart';
-import '../../common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import '../field/boolean.dart';
 import '../field/date.dart';
 import '../field/double.dart';
@@ -15,7 +15,8 @@ import '../field/relation.dart';
 import '../field/string.dart';
 
 class SchemaFieldMapConverter
-    implements JsonConverter<Map<String, Field<dynamic>>, Map<String, dynamic>> {
+    implements
+        JsonConverter<Map<String, Field<dynamic>>, Map<String, dynamic>> {
   const SchemaFieldMapConverter();
 
   @override
@@ -23,7 +24,8 @@ class SchemaFieldMapConverter
     final Map<String, Field<dynamic>> outputMap = {};
     for (final entry in json.entries) {
       if (entry.key != jsonClassKey) {
-        outputMap[entry.key] = const FieldConverter().fromJson(entry.value as Map<String,dynamic>);
+        outputMap[entry.key] = const FieldConverter()
+            .fromJson(entry.value as Map<String, dynamic>);
       }
     }
     return outputMap;
@@ -39,7 +41,8 @@ class SchemaFieldMapConverter
   }
 }
 
-class FieldConverter implements JsonConverter<Field<dynamic>, Map<String, dynamic>> {
+class FieldConverter
+    implements JsonConverter<Field<dynamic>, Map<String, dynamic>> {
   const FieldConverter();
 
   @override

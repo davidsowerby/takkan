@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-
-import '../common/exception.dart';
-import '../common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 
 part 'layout.g.dart';
 
@@ -10,7 +9,6 @@ part 'layout.g.dart';
 /// around it.  Used by layouts [Layout.padding] and individual parts.
 @JsonSerializable(explicitToJson: true)
 class Padding {
-
   const Padding(
       {this.left = 8.0, this.top = 8.0, this.bottom = 8.0, this.right = 8.0});
 
@@ -23,8 +21,6 @@ class Padding {
 
   Map<String, dynamic> toJson() => _$PaddingToJson(this);
 }
-
-
 
 /// Common interface for type safety
 abstract class Layout {
@@ -39,7 +35,6 @@ abstract class Layout {
 /// applies to single and multi-column layouts.
 @JsonSerializable(explicitToJson: true)
 class LayoutDistributedColumn extends Equatable implements Layout {
-
   const LayoutDistributedColumn(
       {this.padding = const Padding(), this.preferredColumnWidth = 360});
 
@@ -53,7 +48,7 @@ class LayoutDistributedColumn extends Equatable implements Layout {
   Map<String, dynamic> toJson() => _$LayoutDistributedColumnToJson(this);
 
   @override
-  List<Object?> get props => [padding,preferredColumnWidth];
+  List<Object?> get props => [padding, preferredColumnWidth];
 }
 
 // ignore: avoid_classes_with_only_static_members

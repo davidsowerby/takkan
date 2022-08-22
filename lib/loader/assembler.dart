@@ -1,4 +1,5 @@
-import '../common/log.dart';
+import 'package:takkan_schema/common/log.dart';
+
 import '../data/converter/conversion_error_messages.dart';
 import '../data/provider/data_provider.dart';
 import '../page/page.dart';

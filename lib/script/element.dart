@@ -1,6 +1,7 @@
-import '../common/constants.dart';
-import '../common/exception.dart';
-import '../common/log.dart';
+import 'package:takkan_schema/common/constants.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
+
 import '../panel/panel.dart';
 import '../panel/static_panel.dart';
 import '../part/list_view.dart';
@@ -14,7 +15,7 @@ import 'content.dart';
 // ignore: avoid_classes_with_only_static_members
 class ContentConverter {
   static List<Content> fromJson(List<dynamic> input) {
-    final List<Map<String,dynamic>> json = List.castFrom(input);
+    final List<Map<String, dynamic>> json = List.castFrom(input);
     final List<Content> list = List.empty(growable: true);
     for (final entry in json) {
       final elementType = entry[jsonClassKey];

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 
-import '../../../common/exception.dart';
-import '../../../common/log.dart';
 import 'condition.dart';
 
 part 'string_condition.g.dart';

@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/constants.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 
-import '../../common/constants.dart';
-import '../../common/exception.dart';
-import '../../common/log.dart';
 import '../../page/page.dart';
 import '../../panel/panel.dart';
 import '../../script/content.dart';
@@ -46,23 +46,18 @@ abstract class DataSelector {
   bool get isList;
 }
 
-abstract class DocumentListSelector extends DataSelector{
+abstract class DocumentListSelector extends DataSelector {}
 
-}
-
-abstract class DocumentSelector implements DataSelector{
-
-
-}
+abstract class DocumentSelector implements DataSelector {}
 
 @JsonSerializable(explicitToJson: true)
 class NoData implements DataSelector {
-
   const NoData();
+
   factory NoData.fromJson(Map<String, dynamic> json) => _$NoDataFromJson(json);
 
   @override
-  String? get caption=>'static';
+  String? get caption => 'static';
 
   @override
   String get name => 'static';
@@ -93,7 +88,7 @@ class PageCustom implements DataSelector {
   const PageCustom({
     required this.routes,
     this.properties = const <String, dynamic>{},
-required this.name,
+    required this.name,
     this.liveConnect = false,
     required this.caption,
   });
@@ -169,7 +164,7 @@ class DataListJsonConverter {
     if (input == null) {
       throw NullThrownError();
     }
-    final List<Map<String,dynamic>> json = List.castFrom(input);
+    final List<Map<String, dynamic>> json = List.castFrom(input);
     final List<DataSelector> results = List<DataSelector>.empty(growable: true);
     for (final Map<String, dynamic> entry in json) {
       final String dataType = entry[jsonClassKey] as String;
@@ -197,17 +192,17 @@ class DataListJsonConverter {
           break;
 
         default:
-          final String msg='data type $dataType not recognised';
+          final String msg = 'data type $dataType not recognised';
           logName('DataListJsonConverter').e(msg);
           throw TakkanException(msg);
-
       }
     }
     return results;
   }
 
   static List<Map<String, dynamic>> toJson(List<DataSelector> objectList) {
-    final List<Map<String, dynamic>> results = List<Map<String, dynamic>>.empty(growable: true);
+    final List<Map<String, dynamic>> results =
+        List<Map<String, dynamic>>.empty(growable: true);
     for (final DataSelector entry in objectList) {
       late Map<String, dynamic> jsonMap;
       final Type type = entry.runtimeType;

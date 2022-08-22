@@ -1,4 +1,4 @@
-import 'package:takkan_script/common/exception.dart';
+import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/version.dart';

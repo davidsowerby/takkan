@@ -20,9 +20,9 @@ import 'dart:mirrors';
 
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
 import 'package:takkan_script/script/script_element.dart';
 import 'package:test/test.dart';
 
