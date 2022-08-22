@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
 import 'package:takkan_schema/util/walker.dart';
 
@@ -106,8 +105,4 @@ class NullDataProvider extends DataProvider {
 
   @override
   Map<String, dynamic> toJson() => _$NullDataProviderToJson(this);
-}
-
-abstract class TakkanSchemaLoader {
-  Future<Schema> load(SchemaSource source);
 }

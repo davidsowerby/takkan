@@ -132,11 +132,7 @@ class Script extends ScriptElement {
   @JsonKey(ignore: true)
   Map<TakkanRoute, Page> get routeMap => _routes;
 
-  Set<String> get allRoles {
-    final counter = RoleVisitor();
-    walk([counter]);
-    return counter.roles;
-  }
+  Set<String> get allRoles => schema.allRoles;
 
   @override
   Script get script => this;
