@@ -3,23 +3,23 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/constants.dart';
 
 import '../../data/select/condition/condition.dart';
-import '../../script/script_element.dart';
 import 'field.dart';
 
 part 'file.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @ConditionConverter()
-class FFile extends Field< String> {
+class FFile extends Field<String> {
   FFile({
-    super. defaultValue,
+    super.defaultValue,
     super.constraints = const [],
-    super. required = false,
-    super. readOnly = IsReadOnly.inherited,
+    super.required = false,
+    super.readOnly = IsReadOnly.inherited,
     super.validation,
-  }) ;
+  });
 
   factory FFile.fromJson(Map<String, dynamic> json) => _$FFileFromJson(json);
 

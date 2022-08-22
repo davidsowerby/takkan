@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/common/constants.dart';
 
 import '../../data/object/post_code.dart';
 import '../../data/select/condition/condition.dart';
-import '../../script/script_element.dart';
 import 'field.dart';
 
 part 'post_code.g.dart';

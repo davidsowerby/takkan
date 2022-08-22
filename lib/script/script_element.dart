@@ -13,8 +13,6 @@ import '../part/part.dart';
 import '../schema/schema.dart';
 import 'script.dart';
 
-enum IsReadOnly { yes, no, inherited }
-
 /// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
 /// [partsOnly] edit only at [Part] level (can be set higher up the hierarchy, even at [Script])
 /// [panelsOnly] all panels from this level down (can be set higher up the hierarchy, even at [Script])
