@@ -1,11 +1,11 @@
 import 'package:takkan_medley_script/script/medley_script.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {

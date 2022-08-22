@@ -1,8 +1,6 @@
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/validation/validation_error_messages.dart';
 import 'package:validators/validators.dart';
-
-import '../../schema/field/field.dart';
-import '../../schema/schema.dart';
-import '../../schema/validation/validation_error_messages.dart';
 import '../../script/script.dart';
 
 /// Function class to read dropdown selection list from a data source

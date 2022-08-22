@@ -2,7 +2,7 @@
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_schema/common/debug.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../script/content.dart';
 import '../script/element.dart';
@@ -54,8 +54,7 @@ class PanelStatic extends PodBase implements Panels {
 
   /// See [TakkanElement.subElements]
   @override
-  List<Object> get subElements =>
-      [
+  List<Object> get subElements => [
         if (heading != null) heading!,
         children,
         ...super.subElements,

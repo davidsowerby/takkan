@@ -6,7 +6,7 @@ import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
 
-import '../fixtures.dart';
+import '../../../takkan_schema/test/fixtures.dart';
 
 void main() {
   group('PScript JSON Round trip', () {

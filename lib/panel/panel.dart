@@ -3,7 +3,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_schema/common/debug.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../data/provider/data_provider.dart';
 import '../data/select/data_selector.dart';

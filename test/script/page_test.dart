@@ -1,10 +1,10 @@
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -31,20 +31,20 @@ void main() {
             name: 'profile',
             documentClass: 'Person',
             dataSelectors: const [
-             DocByQuery(
-               queryName: 'MyObject',
+              DocByQuery(
+                queryName: 'MyObject',
               ),
-             DocByQuery(queryName: 'mine'),
+              DocByQuery(queryName: 'mine'),
             ],
           ),
           Page(
             name: 'shortForm',
             documentClass: 'Person',
             dataSelectors: const [
-             DocByQuery(
-               queryName: 'MyObject',
+              DocByQuery(
+                queryName: 'MyObject',
               ),
-             DocByQuery(queryName: 'person'),
+              DocByQuery(queryName: 'person'),
             ],
           ),
           Page(
@@ -75,12 +75,12 @@ void main() {
 
       expect(s.routeMap.length, 7);
       for (final route in s.routeMap.keys) {
-         // ignore: avoid_print
-         print(route.toString());
+        // ignore: avoid_print
+        print(route.toString());
       }
 
-      expect(
-          s.routeMap.containsKey(TakkanRoute.fromString('home/static')), isTrue);
+      expect(s.routeMap.containsKey(TakkanRoute.fromString('home/static')),
+          isTrue);
       expect(
           s.routeMap
               .containsKey(TakkanRoute.fromString('profile/MyObject/xxx')),
@@ -102,10 +102,10 @@ void main() {
       expect(s.pages[0].isStatic, isFalse);
       expect(s.pages[4].isStatic, isTrue);
 
-      DataSelector dataSelector=s.pages[0].dataSelectorByName('MyObject');
+      DataSelector dataSelector = s.pages[0].dataSelectorByName('MyObject');
       expect(dataSelector, isA<DocByQuery>());
 
-      dataSelector=s.pages[0].dataSelectorByName('WhatNoPage');
+      dataSelector = s.pages[0].dataSelectorByName('WhatNoPage');
       expect(dataSelector, isA<NoData>());
     });
   });

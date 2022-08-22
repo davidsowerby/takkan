@@ -1,12 +1,12 @@
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
+import 'package:takkan_schema/util/walker.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/list_view.dart';
 import 'package:takkan_script/part/text.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 void main() {

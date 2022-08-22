@@ -3,14 +3,13 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../data/provider/data_provider.dart';
 import '../page/page.dart';
 import '../panel/panel.dart';
 import '../panel/static_panel.dart';
 import '../part/part.dart';
-import '../schema/schema.dart';
 import 'script.dart';
 
 /// [firstLevelPanels] can be set anywhere from {PPage] upwards, and enables edit control at the first level of Panels
@@ -202,13 +201,6 @@ abstract class ScriptElement extends TakkanElement {
 
 class NullScriptElement extends ScriptElement {
   NullScriptElement() : super();
-
-  @override
-  Map<String, dynamic> toJson() => throw UnimplementedError();
-}
-
-class NullSchemaElement extends SchemaElement {
-  NullSchemaElement() : super();
 
   @override
   Map<String, dynamic> toJson() => throw UnimplementedError();

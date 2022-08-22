@@ -2,7 +2,7 @@
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_schema/common/message.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../panel/panel.dart';
 import 'script_element.dart';

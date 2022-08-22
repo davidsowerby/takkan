@@ -3,15 +3,15 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_schema/common/debug.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/schema/field/integer.dart';
+import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/schema.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../data/provider/data_provider.dart';
 import '../data/select/data_selector.dart';
 import '../panel/panel.dart';
 import '../part/part.dart';
-import '../schema/field/integer.dart';
-import '../schema/field/string.dart';
-import '../schema/schema.dart';
 import '../script/content.dart';
 import '../script/element.dart';
 import '../script/layout.dart';
@@ -230,17 +230,6 @@ enum PageType { standard }
 /// parts || sections must be non empty
 
 //
-
-class RoleVisitor implements ScriptVisitor {
-  final Set<String> roles = {};
-
-  @override
-  void step(Object entry) {
-    if (entry is Document) {
-      roles.addAll(entry.permissions.allRoles);
-    }
-  }
-}
 
 /// A structured representation of a route.
 ///

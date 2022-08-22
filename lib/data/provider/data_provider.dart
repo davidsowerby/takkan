@@ -1,10 +1,10 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
-import '../../schema/schema.dart';
 import '../../signin/sign_in.dart';
 import 'delegate.dart';
 import 'graphql_delegate.dart';

@@ -1,13 +1,13 @@
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
+import 'package:takkan_schema/schema/validation/validation_error_messages.dart';
 
 import '../data/converter/conversion_error_messages.dart';
 import '../data/provider/data_provider.dart';
 import '../page/page.dart';
-import '../schema/schema.dart';
-import '../schema/validation/validation_error_messages.dart';
 import '../script/script.dart';
 import '../script/script_element.dart';
-import '../script/version.dart';
 import 'loaders.dart';
 
 class ScriptAssembler {

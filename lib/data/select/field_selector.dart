@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 part 'field_selector.g.dart';
 
@@ -17,7 +17,6 @@ part 'field_selector.g.dart';
 /// this, or provide other [metaFields] on construction
 @JsonSerializable(explicitToJson: true)
 class FieldSelector {
-
   const FieldSelector({
     this.fields = const [],
     this.allFields = false,

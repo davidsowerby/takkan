@@ -1,15 +1,15 @@
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/script_element.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
-import '../fixtures.dart';
+import '../../../takkan_schema/test/fixtures.dart';
 
 void main() {
   group('ControlEdit settings', () {
@@ -34,7 +34,8 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'A page',
             // ignore: missing_required_param
             children: [
@@ -50,10 +51,7 @@ void main() {
                   ),
                 ],
               ),
-              Part(
-                  traitName: 'default',
-                  property: '',
-                  caption: 'page-part1'),
+              Part(traitName: 'default', property: '', caption: 'page-part1'),
             ],
           ),
         ],
@@ -97,7 +95,8 @@ void main() {
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'A page',
             // ignore: missing_required_param
             children: [
@@ -152,7 +151,8 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'title',
             controlEdit: ControlEdit.firstLevelPanels,
             children: [
@@ -208,7 +208,8 @@ void main() {
           version: const Version(number: 0),
         ),
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -262,7 +263,8 @@ void main() {
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -317,7 +319,8 @@ void main() {
         ),
         controlEdit: ControlEdit.inherited,
         pages: [
-          Page(name:'home',
+          Page(
+            name: 'home',
             caption: 'A page',
             children: [
               PanelStatic(
@@ -339,10 +342,7 @@ void main() {
                   ),
                 ],
               ),
-              Part(
-                  traitName: 'default',
-                  property: '',
-                  caption: 'page-part1'),
+              Part(traitName: 'default', property: '', caption: 'page-part1'),
             ],
           ),
         ],

@@ -1,14 +1,14 @@
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
-import '../fixtures.dart';
+import '../../../takkan_schema/test/fixtures.dart';
 
 void main() {
   group('PScript validation', () {
@@ -117,8 +117,8 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: const [
-             DocByQuery(
-               queryName: '?',
+              DocByQuery(
+                queryName: '?',
               )
             ],
           ),
@@ -153,8 +153,8 @@ void main() {
               name: 'wiggly',
               caption: 'Wiggly',
               dataSelectors: const [
-               DocByQuery(
-                 queryName: '?',
+                DocByQuery(
+                  queryName: '?',
                   caption: 'Wiggly',
                 )
               ],
@@ -232,8 +232,8 @@ void main() {
             name: 'wiggly',
             caption: 'Wiggly',
             dataSelectors: const [
-             DocByQuery(
-               queryName: 'fixed thing',
+              DocByQuery(
+                queryName: 'fixed thing',
               )
             ],
             children: [PanelStatic(caption: 'panel1')],

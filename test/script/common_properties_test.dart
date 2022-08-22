@@ -1,15 +1,15 @@
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/script_element.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
-import '../fixtures.dart';
+import '../../../takkan_schema/test/fixtures.dart';
 
 void main() {
   group('Common properties', () {
@@ -19,8 +19,7 @@ void main() {
 
     setUp(() {
       getIt.reset();
-      getIt.registerFactory<TakkanSchemaLoader>(
-          () => FakeTakkanSchemaLoader());
+      getIt.registerFactory<TakkanSchemaLoader>(() => FakeTakkanSchemaLoader());
     });
 
     tearDown(() {});
@@ -38,7 +37,8 @@ void main() {
           instanceConfig: const AppInstance(group: '', instance: ''),
         ),
         pages: [
-          Page(name: 'home',
+          Page(
+            name: 'home',
             caption: 'A Page',
             controlEdit: ControlEdit.thisAndBelow,
             children: [
@@ -85,7 +85,8 @@ void main() {
           ),
           dataProvider: NullDataProvider(),
           pages: [
-            Page(name: 'test',
+            Page(
+              name: 'test',
               caption: 'A Page',
               children: [
                 PanelStatic(

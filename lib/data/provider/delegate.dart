@@ -1,4 +1,4 @@
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 /// Common base class for delegates to PDataProvider
 abstract class DataProviderDelegate with WalkTarget {

@@ -8,15 +8,15 @@ import 'package:takkan_schema/common/debug.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_schema/common/message.dart';
-import 'package:takkan_schema/takkan/walker.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/schema.dart';
+import 'package:takkan_schema/schema/validation/validation_error_messages.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 import '../data/converter/conversion_error_messages.dart';
 import '../data/provider/data_provider.dart';
 import '../page/page.dart';
-import '../schema/schema.dart';
-import '../schema/validation/validation_error_messages.dart';
 import 'script_element.dart';
-import 'version.dart';
 
 part 'script.g.dart';
 
