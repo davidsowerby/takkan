@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:takkan_medley_script/script/medley_script.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:test/test.dart';
