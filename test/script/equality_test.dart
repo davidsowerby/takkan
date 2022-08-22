@@ -23,6 +23,7 @@ import 'package:equatable/equatable.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
 import 'package:takkan_script/common/exception.dart';
 import 'package:takkan_script/common/log.dart';
+import 'package:takkan_script/script/script_element.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -38,7 +39,7 @@ void main() {
     test('output', () async {
       // given
 
-      final List<ClassMirror> result = findSubClasses(TakkanElement);
+      final List<ClassMirror> result = findSubClasses(ScriptElement);
       result.removeWhere(
           (element) => extractName(element.simpleName).startsWith('_'));
       result.removeWhere((element) => element.isAbstract);
@@ -83,7 +84,7 @@ void main() {
 
         expect(check, isTrue, reason: diffMsg);
       }
-      expect(result.length, 41);
+      expect(result.length, 24);
     });
   });
 }
