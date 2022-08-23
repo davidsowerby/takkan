@@ -12,8 +12,8 @@ dependencies:
   characters: ^1.2.1
   json_annotation: ^4.5.0
   equatable: ^2.0.3
-  takkan_script:
-    path: /home/david/git/takkan/takkan_script
+  takkan_schema:
+    path: /home/david/git/takkan/takkan_schema
   takkan_back4app_client:
     path: /home/david/git/takkan/takkan_back4app_client
   takkan_backend:

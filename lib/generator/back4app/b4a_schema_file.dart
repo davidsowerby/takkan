@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:characters/characters.dart';
-import 'package:takkan_script/data/object/geo.dart';
-import 'package:takkan_script/data/object/json_object.dart';
-import 'package:takkan_script/data/object/pointer.dart';
-import 'package:takkan_script/data/object/relation.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/data/object/geo.dart';
+import 'package:takkan_schema/data/object/json_object.dart';
+import 'package:takkan_schema/data/object/pointer.dart';
+import 'package:takkan_schema/data/object/relation.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 import '../diff.dart';
 import '../generated_file.dart';
@@ -196,9 +195,9 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     /// If the first version we are passed is at number 0, we need a 'nothing'
     /// before that, so we use an empty schema
     if (sortedVersions[0].version.number == 0) {
-      final emptyScript = EmptyScript();
-      emptyScript.init();
-      sortedVersions.insert(0, emptyScript.schema);
+      final emptySchema = EmptySchema();
+      emptySchema.init();
+      sortedVersions.insert(0, emptySchema);
     }
     final List<SchemaDiff> diffs = List.empty(growable: true);
 
@@ -268,15 +267,7 @@ String _schemaDataTypeMap(Field<dynamic> field) {
   }
 }
 
-// ignore: must_be_immutable
-class EmptyScript extends Script {
-  EmptyScript()
-      : super(
-          name: 'Empty',
-          version: const Version(number: 0),
-          schema: EmptySchema(),
-        );
-}
+
 
 // ignore: must_be_immutable
 class EmptySchema extends Schema {

@@ -1,4 +1,5 @@
-import 'package:takkan_script/schema/schema.dart';
+
+import 'package:takkan_schema/schema/schema.dart';
 
 import 'export_file.dart';
 

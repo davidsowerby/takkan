@@ -1,6 +1,4 @@
 import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:takkan_server_code_generator/generator/diff.dart';
 import 'package:test/test.dart';
 
@@ -16,12 +14,10 @@ void main() {
 
     test('nothing to 0', () {
       // given
-      final current = medleySchema0;
-      final Script script = Script(
-          name: 'test', schema: current, version: const Version(number: 0));
-      script.init();
+      final currentSchema = medleySchema0;
+      currentSchema.init();
       // when
-      final result = generateDiff2(current: current);
+      final result = generateDiff2(current: currentSchema);
       // then
 
       expect(result.create.length, 1);
@@ -33,16 +29,8 @@ void main() {
       // given
       final previousSchema = medleySchema0;
       final currentSchema = medleySchema1;
-      final Script previousScript = Script(
-          name: 'previous',
-          schema: previousSchema,
-          version: const Version(number: 0));
-      final Script currentScript = Script(
-          name: 'current',
-          schema: currentSchema,
-          version: const Version(number: 0));
-      previousScript.init();
-      currentScript.init();
+      previousSchema.init();
+      currentSchema.init();
       // when
       final result =
           generateDiff2(previous: previousSchema, current: currentSchema);

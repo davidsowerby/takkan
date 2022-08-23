@@ -96,8 +96,8 @@ Future<int> deploy(Directory deployDir) async {
         'b4a deploy',
       ],
       workingDirectory: deployDir.path);
-  process.stdout.transform(utf8.decoder).forEach(print);
-  process.stderr.transform(utf8.decoder).forEach(print);
+  process.stdout.transform(utf8.decoder).forEach(stdout.writeln);
+  process.stderr.transform(utf8.decoder).forEach(stdout.writeln);
   final exitCode = await process.exitCode;
   return exitCode;
 }

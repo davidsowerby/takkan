@@ -1,5 +1,5 @@
-import 'package:takkan_script/schema/query/query.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/query/query.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 import '../generated_file.dart';
 

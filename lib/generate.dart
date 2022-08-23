@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:takkan_backend/backend/app/app_config_loader.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 import 'generator/back4app/schema_generator/schema_generator.dart';
 

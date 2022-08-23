@@ -1,4 +1,4 @@
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 /// Uploads the SERVER schema - converted from a [Document] - to a [DataProvider]
 /// The DataProvider instance is identified by API keys.  An implementation of

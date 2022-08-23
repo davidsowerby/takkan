@@ -1,7 +1,6 @@
 import 'dart:io';
 
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/script.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 import '../../generated_file.dart';
 import '../api_file.dart';
@@ -49,9 +48,7 @@ class SchemaGenerator2 implements BackendSchemaGenerator {
 
   void _initSchemas(List<Schema> schemaVersions) {
     for (final schema in schemaVersions) {
-      final Script script = Script(
-          name: 'Generation Dummy', version: schema.version, schema: schema);
-      script.init();
+      schema.init();
     }
   }
 }

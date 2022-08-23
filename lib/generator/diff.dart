@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/version.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 /// Generate a diff between [previous] and [current].  If [previous] is null,
 /// the diff represents the whole of [current]

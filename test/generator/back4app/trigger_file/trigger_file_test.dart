@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_script/script/script.dart';
 import 'package:takkan_server_code_generator/generator/back4app/trigger_file.dart';
 import 'package:test/test.dart';
 
@@ -11,9 +10,7 @@ void main() {
   group('Trigger', () {
     setUpAll(() {
       for (final schema in medleySchema) {
-        final Script script = Script(
-            name: 'Generation Dummy', version: schema.version, schema: schema);
-        script.init();
+        schema.init();
       }
     });
 

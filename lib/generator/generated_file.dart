@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:characters/characters.dart';
-import 'package:takkan_script/data/select/condition/condition.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/version.dart';
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 abstract class GeneratedFile {
   GeneratedFile();

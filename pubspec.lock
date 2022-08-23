@@ -477,8 +477,15 @@ packages:
       relative: false
     source: path
     version: "0.0.1"
-  takkan_script:
+  takkan_schema:
     dependency: "direct main"
+    description:
+      path: "/home/david/git/takkan/takkan_schema"
+      relative: false
+    source: path
+    version: "0.1.0"
+  takkan_script:
+    dependency: transitive
     description:
       path: "/home/david/git/takkan/takkan_script"
       relative: false

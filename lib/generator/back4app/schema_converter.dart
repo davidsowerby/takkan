@@ -1,15 +1,15 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/data/object/geo.dart';
-import 'package:takkan_script/data/object/json_object.dart';
-import 'package:takkan_script/data/object/pointer.dart';
-import 'package:takkan_script/data/object/relation.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/field/pointer.dart';
-import 'package:takkan_script/schema/field/relation.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/data/object/geo.dart';
+import 'package:takkan_schema/data/object/json_object.dart';
+import 'package:takkan_schema/data/object/pointer.dart';
+import 'package:takkan_schema/data/object/relation.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/field/pointer.dart';
+import 'package:takkan_schema/schema/field/relation.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 import 'converter.dart';
 

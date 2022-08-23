@@ -1,4 +1,4 @@
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 /// Converts between [Schema] a [DataProviderSchema] implementation specific to
 /// a data provider
