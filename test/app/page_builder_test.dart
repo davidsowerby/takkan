@@ -5,12 +5,12 @@ import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
+import 'package:takkan_schema/common/version.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/version.dart';
 import 'package:test/test.dart';
 
 import '../helper/mock.dart';

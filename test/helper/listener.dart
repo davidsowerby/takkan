@@ -1,4 +1,4 @@
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 
 class ChangeListener {
   int changeCount = 0;

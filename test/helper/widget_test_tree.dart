@@ -8,7 +8,7 @@ import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_client/part/part.dart';
 import 'package:provider/provider.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/script/script.dart';
 
 import './exception.dart';

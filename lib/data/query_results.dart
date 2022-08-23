@@ -1,5 +1,5 @@
 import 'package:takkan_client/data/document_cache.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
 
 /// Holds all the query results for a [DocumentClassCache] instance.

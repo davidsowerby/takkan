@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/part/part.dart';
 
 import '../part/trait.dart';

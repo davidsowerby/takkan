@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 
 MultiChildResult row(Key rowKey) {
   final r = find.byKey(rowKey);

@@ -5,8 +5,8 @@ import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/edit_state.dart';
 import 'package:provider/provider.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/script/script.dart';
 

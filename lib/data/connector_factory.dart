@@ -2,15 +2,15 @@ import 'package:takkan_client/data/binding/binding.dart';
 import 'package:takkan_client/data/binding/connector.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/field/integer.dart';
+import 'package:takkan_schema/schema/field/list.dart';
+import 'package:takkan_schema/schema/field/string.dart';
 import 'package:takkan_script/data/converter/converter.dart';
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/field/integer.dart';
-import 'package:takkan_script/schema/field/list.dart';
-import 'package:takkan_script/schema/field/string.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 class ConnectorFactory {
   ModelConnector buildConnector(

@@ -7,14 +7,14 @@ import 'package:takkan_client/pod/panel/static_panel.dart';
 import 'package:takkan_client/library/part_library.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/panel.dart';
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/content.dart';
 import 'package:takkan_script/script/script.dart';
 

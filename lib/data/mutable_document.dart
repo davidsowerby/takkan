@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/data/streamed_output.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 
 enum ChangeType { update, remove, add, clear, createNew }
@@ -58,7 +58,6 @@ class MutableDocument with ChangeNotifier {
 
   DocumentId get documentId => _documentId;
 
-  @override
   Iterable<String> get keys => _output.data.keys;
 
   Map<String, dynamic> get changes => Map.from(_changes);

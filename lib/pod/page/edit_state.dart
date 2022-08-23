@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/mutable_document.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 
 import '../../data/cache_consumer.dart';
 

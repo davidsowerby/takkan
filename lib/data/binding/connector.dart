@@ -3,11 +3,11 @@ import 'package:takkan_client/data/binding/binding.dart';
 import 'package:takkan_client/data/binding/list_binding.dart';
 import 'package:takkan_client/data/binding/string_binding.dart';
 import 'package:takkan_client/common/exceptions.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/field/string.dart';
 import 'package:takkan_script/data/converter/converter.dart';
-import 'package:takkan_script/schema/field/field.dart';
-import 'package:takkan_script/schema/field/string.dart';
 
 /// Connects a Field Widget to its data source, using a [ModelViewConverter] to provide conversion where needed.
 /// For structural simplicity, if the data type of the Field is the same as the data type in the data source,

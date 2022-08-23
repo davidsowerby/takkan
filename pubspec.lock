@@ -700,6 +700,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  takkan_schema:
+    dependency: "direct main"
+    description:
+      path: "../takkan_schema"
+      relative: true
+    source: path
+    version: "0.1.0"
   takkan_script:
     dependency: "direct main"
     description:

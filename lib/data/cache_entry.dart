@@ -6,8 +6,8 @@ import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
 import 'package:takkan_client/data/streamed_output.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 
 import 'cache_consumer.dart';

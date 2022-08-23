@@ -4,8 +4,8 @@ import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_client/part/navigation/nav_button.dart';
 import 'package:takkan_client/part/text/text_part.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/part.dart';
 

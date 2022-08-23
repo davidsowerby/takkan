@@ -13,7 +13,7 @@ import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/part/part.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 class MockBuildContext extends Mock implements BuildContext {
   @override

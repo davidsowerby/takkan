@@ -1,7 +1,7 @@
 import 'package:takkan_client/data/binding/binding.dart';
 import 'package:takkan_client/data/binding/map_binding.dart';
 import 'package:takkan_client/data/binding/string_binding.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/script/constants.dart';
 
 /// [T] is the data type of the list items

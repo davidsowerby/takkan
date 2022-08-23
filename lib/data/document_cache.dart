@@ -6,14 +6,14 @@ import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_client/data/query_results.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/data_provider/result.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/provider/document_id.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/panel/panel.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 /// A document based cache.
 ///

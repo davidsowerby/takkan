@@ -4,8 +4,8 @@ import 'package:takkan_client/common/component/key_assist.dart';
 import 'package:takkan_client/common/component/message_panel.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/signin/sign_in.dart';
 
 class EmailSignInWidget extends StatelessWidget {

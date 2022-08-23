@@ -4,7 +4,7 @@ import 'package:takkan_client/app/takkan.dart';
 import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/pod/page/error_page.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/error.dart';
 import 'package:takkan_script/script/script.dart';

@@ -11,7 +11,7 @@ import 'package:takkan_script/loader/loaders.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_script/script/script.dart';
-import 'package:takkan_script/script/walker.dart';
+import 'package:takkan_schema/util/walker.dart';
 
 // TODO error handling, loader may fail
 

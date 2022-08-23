@@ -1,10 +1,10 @@
 import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
-import 'package:takkan_script/common/exception.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/exception.dart';
+import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
-import 'package:takkan_script/schema/schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 
 /// Provides the context of a connection from data in the [DocumentCache] to a [TakkanPage] or

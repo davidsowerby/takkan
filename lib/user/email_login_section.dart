@@ -8,7 +8,7 @@ import 'package:takkan_client/user/user_state.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
-import 'package:takkan_script/common/log.dart';
+import 'package:takkan_schema/common/log.dart';
 
 const String createPasswordText =
     "If this is a new account, create a password of at least 8 characters, containing at least one letter, one capital letter and one number";
