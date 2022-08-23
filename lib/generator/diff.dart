@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
@@ -78,20 +79,20 @@ class DocumentDiff with Differ {
     required this.previous,
     required this.current,
   }) {
-    fieldNamesDiff = _identifyChanges<Field<dynamic>>(
+    fieldNamesDiff = _identifyChanges<Field<dynamic,Condition<dynamic>>>(
         previous: previous.fields, current: current.fields);
   }
 
   final Document previous;
   final Document current;
   final String name;
-  late DiffNames<Field<dynamic>> fieldNamesDiff;
+  late DiffNames<Field<dynamic,Condition<dynamic>>> fieldNamesDiff;
 
-  Map<String, Field<dynamic>> get create =>
+  Map<String, Field<dynamic,Condition<dynamic>>> get create =>
       Map.fromEntries(current.fields.entries
           .where((entry) => fieldNamesDiff.created.contains(entry.key)));
 
-  Map<String, Field<dynamic>> get delete =>
+  Map<String, Field<dynamic,Condition<dynamic>>> get delete =>
       Map.fromEntries(current.fields.entries
           .where((entry) => fieldNamesDiff.deleted.contains(entry.key)));
 
@@ -114,8 +115,8 @@ class DocumentDiff with Differ {
 class FieldChange {
   const FieldChange({required this.previous, required this.current});
 
-  final Field<dynamic> previous;
-  final Field<dynamic> current;
+  final Field<dynamic,Condition<dynamic>> previous;
+  final Field<dynamic,Condition<dynamic>> current;
 }
 
 class SchemaDiff with Differ {

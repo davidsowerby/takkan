@@ -6,7 +6,10 @@ import 'package:takkan_schema/data/object/geo.dart';
 import 'package:takkan_schema/data/object/json_object.dart';
 import 'package:takkan_schema/data/object/pointer.dart';
 import 'package:takkan_schema/data/object/relation.dart';
+import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/field/field.dart';
+import 'package:takkan_schema/schema/field/pointer.dart';
+import 'package:takkan_schema/schema/field/relation.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
 import '../diff.dart';
@@ -48,7 +51,7 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     ]);
     elements.add(DelegateFunction(functionName: 'applySchema', elements: [
       Statement(
-        "const selectedVersion = parseInt(request.get('selectedVersion'))",
+        'const selectedVersion = parseInt(request.params.version)',
       ),
       Statement(
         'schemaVersion = selectedVersion',
@@ -125,7 +128,7 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     final clpVariableName = _clpVariableName(document, version);
     return [
       Statement(
-          "const $schemaVariable = new Parse.Schema('${document.name}').get()"),
+          "const $schemaVariable = new Parse.Schema('${document.name}')"),
       ..._addSchemaFields(document),
       Statement('$schemaVariable.setCLP($clpVariableName)'),
       Statement('await $schemaVariable.save(null, {useMasterKey: true})'),
@@ -144,17 +147,25 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     final String schemaVariable = '${decapitaliseName(document)}Schema';
     final getSchemaStatements = [
       Statement(
-          "const $schemaVariable = new Parse.Schema('${document.name}').get()"),
+          "const $schemaVariable = new Parse.Schema('${document.name}')"),
     ];
 
     /// Add fields from diff.create
-    final createFields = List<Field<dynamic>>.from(documentDiff.create.values);
+    final createFields = List<Field<dynamic,Condition<dynamic>>>.from(documentDiff.create.values);
     createFields.sort((a, b) => a.name.compareTo(b.name));
-    final createStatements = createFields.map((field) => Statement(
-        "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}')"));
+    final createStatements = createFields.map((field) {
+      if (field.isLinkField) {
+        final String targetClass=(field is FPointer) ? field.targetClass : (field as FRelation).targetClass;
+        return Statement(
+            "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}', '$targetClass')");
+      }
+
+      return Statement(
+          "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}')");
+    });
 
     /// Delete fields from diff.delete
-    final deleteFields = List<Field<dynamic>>.from(documentDiff.delete.values);
+    final deleteFields = List<Field<dynamic,Condition<dynamic>>>.from(documentDiff.delete.values);
     deleteFields.sort((a, b) => a.name.compareTo(b.name));
     final deleteStatements = deleteFields.map((field) => Statement(
         "$schemaVariable.delete${_schemaDataTypeMap(field)}('${field.name}')"));
@@ -226,7 +237,7 @@ List<JavaScriptElement> _deleteDocumentSchema(Document document) {
 }
 
 List<JavaScriptElement> _addSchemaFields(Document document) {
-  final List<Field<dynamic>> fields = document.fields.values.toList();
+  final List<Field<dynamic,Condition<dynamic>>> fields = document.fields.values.toList();
   final String schemaVariable = '${decapitaliseName(document)}Schema';
   fields.sort((a, b) => a.name.compareTo(b.name));
   return fields
@@ -237,7 +248,7 @@ List<JavaScriptElement> _addSchemaFields(Document document) {
 
 // TODO: Pointer and relation need to be added with, eg .addPointer('pointerField', '_User')
 // and .addRelation('relationField', '_User');
-String _schemaDataTypeMap(Field<dynamic> field) {
+String _schemaDataTypeMap(Field<dynamic,Condition<dynamic>> field) {
   switch (field.modelType) {
     case int:
       return 'Number';
@@ -266,8 +277,6 @@ String _schemaDataTypeMap(Field<dynamic> field) {
           'Unsupported data type: ${field.modelType.toString()}');
   }
 }
-
-
 
 // ignore: must_be_immutable
 class EmptySchema extends Schema {

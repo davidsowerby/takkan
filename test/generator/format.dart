@@ -1,5 +1,5 @@
-import 'package:takkan_server_code_generator/generator/back4app/schema_generator/schema_generator.dart';
-import 'package:takkan_server_code_generator/generator/format.dart';
+import 'package:takkan_back4app_generator/generator/back4app/schema_generator/cloud_generator.dart';
+import 'package:takkan_back4app_generator/generator/format.dart';
 import 'package:test/test.dart';
 
 import '../compare_file.dart';

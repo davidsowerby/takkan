@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_server_code_generator/export/export.dart';
+import 'package:takkan_back4app_generator/export/export.dart';
+import 'package:takkan_medley_orchestrator/schema/medley_schema.dart';
 import 'package:test/test.dart';
 
 void main() {

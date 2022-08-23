@@ -7,6 +7,8 @@ import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
+import 'back4app/server_code_structure2.dart';
+
 abstract class GeneratedFile {
   GeneratedFile();
 
@@ -18,6 +20,8 @@ abstract class GeneratedFile {
 
   String get content => lines.join('\n');
 
+  late VirtualFolder folder;
+
   Future<File> writeFile(Directory outputDirectory) async {
     final File outputFile = File('${outputDirectory.path}/$fileName');
     if (outputFile.existsSync()) {
@@ -26,6 +30,8 @@ abstract class GeneratedFile {
     await outputFile.create();
     return outputFile.writeAsString(content, flush: true);
   }
+
+  String get path => '${folder.path}/$fileName';
 }
 
 abstract class JavaScriptFile extends GeneratedFile {
@@ -117,7 +123,10 @@ class OutputConditions {
 }
 
 abstract class JavaScriptElement {
-  const JavaScriptElement({this.blankLinesAfter = 0, this.terminator = ';'});
+  const JavaScriptElement({
+    this.blankLinesAfter = 0,
+    this.terminator = ';',
+  });
 
   final String terminator;
   final int blankLinesAfter;
@@ -138,11 +147,12 @@ abstract class Block extends JavaScriptElement {
     this.separateLast = false,
     super.terminator = '',
     super.blankLinesAfter = 0,
+    this.commentsBefore = const [],
   });
 
   final String? elementSeparator;
   final bool separateLast;
-
+  final List<String> commentsBefore;
   final List<JavaScriptElement> content = List.empty(growable: true);
 
   String get opening => '{';
@@ -153,11 +163,15 @@ abstract class Block extends JavaScriptElement {
 
   @override
   void writeToBuffer(CodeBuffer buf, {required OutputConditions conditions}) {
+    final comment = Comment(commentsBefore);
     createContent();
     if (content.isEmpty) {
       buf.write(
           output: '{}', conditions: conditions.copyWith(continueLine: true));
       return;
+    }
+    if (comment.isNotEmpty) {
+      comment.writeToBuffer(buf, conditions: conditions);
     }
     buf.write(output: opening, conditions: conditions);
     buf.incIndent();
@@ -440,6 +454,8 @@ class Comment extends JavaScriptElement {
           blankLinesAfter: blankLinesAfter);
     }
   }
+
+  bool get isNotEmpty => comments.isNotEmpty;
 }
 
 class CLPMethod extends Block {
@@ -494,13 +510,14 @@ class ExtractSchemaVersionFromRequest extends StatementSet {
   @override
   void createContent() {
     content.addAll([
-      Statement('const schema_versionProp = request.params.schema_version'),
       Statement(
-          'const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp)'),
+          'const schema_version = (request.params) ? (request.params.schema_version) ? parseInt(request.params.schema_version) : b4a.schemaVersion : b4a.schemaVersion'),
     ]);
   }
 }
 
+/// [throwOnNull] may be required after [responseOnNull] if [responseOnNull] still
+/// does not produce a result
 class ExtractFromRequest extends StatementSet {
   ExtractFromRequest(
     this.property, {
@@ -508,6 +525,7 @@ class ExtractFromRequest extends StatementSet {
     this.isParam = false,
     this.throwOnNull,
     this.doParse = true,
+    this.responseOnNull='',
   });
 
   final String property;
@@ -515,10 +533,11 @@ class ExtractFromRequest extends StatementSet {
   final String? throwOnNull;
   final Type dataType;
   final bool doParse;
+  final String responseOnNull;
 
   @override
   void createContent() {
-    final retrieval = isParam ? 'params.$property;' : 'object.get($property);';
+    final retrieval = isParam ? 'params.$property' : "object.get('$property')$responseOnNull";
     content.addAll([
       Statement('const ${property}Prop = request.$retrieval'),
       if (throwOnNull != null)
@@ -547,15 +566,16 @@ class Statement extends JavaScriptElement {
 class ValidationElement extends StatementSet {
   ValidationElement({required this.field});
 
-  final Field<dynamic> field;
+  final Field<dynamic,Condition<dynamic>> field;
 
   @override
   void createContent() {
     content.add(ExtractFromRequest(
       field.name,
       dataType: field.modelType,
-      throwOnNull: (field.required) ? 'validation' : null,
+      throwOnNull: (field.required) ? 'validation ${field.name}' : null,
       doParse: field.conditions.isNotEmpty && field.required,
+      responseOnNull: " ?? ((request.original) ? request.original.get('${field.name}') : null)"
     ));
 
     if (field.conditions.isNotEmpty) {
@@ -576,11 +596,16 @@ class ValidationElement extends StatementSet {
   List<Statement> get _validationStatements {
     final List<Statement> list = List.empty(growable: true);
     for (final Condition<dynamic> c in field.conditions) {
-      final reference = (field.modelType == String)
-          ? "'${c.reference.toString()}'"
-          : c.reference.toString();
+      final operand = (c.operand is String)
+          ? "'${c.operand.toString()}'"
+          : c.operand.toString();
+
+      final String op = c.operator.operator;
+      final operator = (lengthOperations.contains(c.operator))
+          ? op.replaceFirst('length', '.length ')
+          : ' $op';
       final validation =
-          "if (!(${c.field} ${c.operator.expression} $reference)) throw 'validation';";
+          "if (!(${c.field}$operator $operand)) throw 'validation ${field.name}';";
       list.add(Statement(validation));
     }
     return list;
@@ -623,7 +648,7 @@ class BlankStatement extends Statement {
 class ExtractObjectProperty extends JavaScriptElement {
   ExtractObjectProperty({required this.field});
 
-  final Field<dynamic> field;
+  final Field<dynamic,Condition<dynamic>> field;
 
   @override
   void writeToBuffer(CodeBuffer buf, {required OutputConditions conditions}) {
@@ -637,7 +662,7 @@ class ExtractObjectProperty extends JavaScriptElement {
 class ParseProperty extends JavaScriptElement {
   ParseProperty(this.property, this.dataType);
 
-  ParseProperty.fromField(Field<dynamic> field)
+  ParseProperty.fromField(Field<dynamic,Condition<dynamic>> field)
       : property = field.name,
         dataType = field.modelType;
   final String property;
@@ -666,7 +691,7 @@ class ParseProperty extends JavaScriptElement {
     final String jsParse = _parseType(dataType);
     return (jsParse.isNotEmpty)
         ? 'const $property = $jsParse(${property}Prop);'
-        : 'const $property = ${property}Prop';
+        : 'const $property = ${property}Prop;';
   }
 }
 

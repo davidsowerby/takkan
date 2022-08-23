@@ -1,3 +1,4 @@
+import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/query/query.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
@@ -6,6 +7,8 @@ import '../generated_file.dart';
 /// Defines a cloud function file for a specific [documentClass].
 ///
 /// The full code generation comprises the API call, and a delegate to do the work:
+///
+/// **Example:**
 ///
 /// A 'Person' class might generate a function to return all adults:
 ///
@@ -27,8 +30,8 @@ import '../generated_file.dart';
 /// }
 /// ```
 ///
-/// The cloud code is generated from instances of [DataSelector], associated with
-/// a [Document].
+/// The cloud code is generated from instances of [Condition], held in a [Query],
+/// in turn held in a [Document].
 ///
 /// API entries are also created [APIJavaScriptFile]
 ///

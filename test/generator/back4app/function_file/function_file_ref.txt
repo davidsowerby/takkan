@@ -1,8 +1,7 @@
 const b4a = require('../../b4a_schema.js');
 
 async function allIssues(request) {
-    const schema_versionProp = request.params.schema_version;
-    const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp);
+    const schema_version = (request.params) ? (request.params.schema_version) ? parseInt(request.params.schema_version) : b4a.schemaVersion : b4a.schemaVersion;
 
     switch (schema_version) {
         case 1: {
@@ -22,8 +21,7 @@ async function allIssues(request) {
 }
 
 async function topIssue(request) {
-    const schema_versionProp = request.params.schema_version;
-    const schema_version = (schema_versionProp == null) ? b4a.schemaVersion : parseInt(schema_versionProp);
+    const schema_version = (request.params) ? (request.params.schema_version) ? parseInt(request.params.schema_version) : b4a.schemaVersion : b4a.schemaVersion;
 
     switch (schema_version) {
         case 1: {

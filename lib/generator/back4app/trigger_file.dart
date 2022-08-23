@@ -33,15 +33,23 @@ class TriggerJavaScriptFile extends JavaScriptFile {
 }
 
 abstract class Trigger extends Block {
-  Trigger();
+  Trigger({super.commentsBefore});
 }
 
 /// Takes all schema versions that contain this [documentClassName] and constructs
-/// validation rules
+/// validation rules.
+///
+/// **NOTE** The capture of current schema version takes a default value from
+/// b4_schema.js.  Without this, updating data through the Back4App Dashboard
+/// will not work
 class BeforeSaveTrigger extends Trigger {
   BeforeSaveTrigger({
     required this.schemaVersions,
     required this.documentClassName,
+    super.commentsBefore = const [
+      'Default schema_version is provided, otherwise data cannot be updated from the Back4App Dashboard',
+      'To validate what might be a partial update, we check original if present'
+    ],
   });
 
   List<Schema> schemaVersions;

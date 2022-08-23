@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_server_code_generator/generator/back4app/trigger_file.dart';
+import 'package:takkan_back4app_generator/generator/back4app/trigger_file.dart';
+import 'package:takkan_medley_orchestrator/schema/medley_schema.dart';
 import 'package:test/test.dart';
 
 import '../../../compare_file.dart';
@@ -9,7 +9,7 @@ import '../../../compare_file.dart';
 void main() {
   group('Trigger', () {
     setUpAll(() {
-      for (final schema in medleySchema) {
+      for (final schema in schemaVersions) {
         schema.init();
       }
     });

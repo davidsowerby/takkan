@@ -1,7 +1,8 @@
 import 'dart:io';
 
-import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_server_code_generator/generator/back4app/schema_generator/schema_generator.dart';
+import 'package:takkan_back4app_generator/generator/back4app/schema_generator/cloud_generator.dart';
+import 'package:takkan_back4app_generator/generator/back4app/server_code_structure.dart';
+import 'package:takkan_medley_orchestrator/schema/medley_schema.dart';
 import 'package:test/test.dart';
 
 import '../../compare_file.dart';
@@ -19,21 +20,21 @@ void main() {
   test('output structure', () async {
     // given
 
-    final SchemaGenerator2 generator = SchemaGenerator2();
+    final Back4AppCloudGenerator generator = Back4AppCloudGenerator();
     final Directory systemTemp = Directory.systemTemp;
     final Directory temp = await systemTemp.createTemp('codegen');
     final ServerCodeStructure structure =
-        ServerCodeStructure(outputDir: temp, jsFiles: generator.files);
-    generator.generateCode(schemaVersions: medleySchema);
+        ServerCodeStructure(outputDir: temp,);
+    generator.generateCode(schemaVersions: schemaVersions);
     // when
-    await structure.writeFiles();
+    // await structure.writeFilesExcludingSchemaAndFramework();
 
     // then
 
     final rootFileList = temp.listSync();
     final rootFileListNames = rootFileList.map((e) => e.path);
     final rootPath = temp.path;
-    expect(rootFileListNames.length, 4);
+    expect(rootFileListNames.length, 5);
     expect(
         rootFileListNames,
         containsAll([
@@ -41,6 +42,7 @@ void main() {
           '$rootPath/classes',
           '$rootPath/main.js',
           '$rootPath/framework.js',
+          '$rootPath/store.js',
         ]));
 
     final classesPath = '$rootPath/classes';

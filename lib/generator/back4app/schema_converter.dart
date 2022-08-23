@@ -6,6 +6,7 @@ import 'package:takkan_schema/data/object/geo.dart';
 import 'package:takkan_schema/data/object/json_object.dart';
 import 'package:takkan_schema/data/object/pointer.dart';
 import 'package:takkan_schema/data/object/relation.dart';
+import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/field/pointer.dart';
 import 'package:takkan_schema/schema/field/relation.dart';
@@ -106,7 +107,7 @@ class ServerSchemaClass {
     return fields;
   }
 
-  static String selectFieldType(Field<dynamic> takkanField) {
+  static String selectFieldType(Field<dynamic,Condition<dynamic>> takkanField) {
     switch (takkanField.modelType) {
       case int:
         return 'Number';
@@ -135,7 +136,7 @@ class ServerSchemaClass {
         '${takkanField.modelType.toString()} is not supported');
   }
 
-  void addField(Field<dynamic> pField) {}
+  void addField(Field<dynamic,Condition<dynamic>> pField) {}
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)

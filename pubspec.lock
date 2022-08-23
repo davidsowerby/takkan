@@ -238,7 +238,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.5.0"
+    version: "4.6.0"
   lints:
     dependency: "direct dev"
     description:
@@ -288,6 +288,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  mocktail:
+    dependency: "direct dev"
+    description:
+      name: mocktail
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
   node_preamble:
     dependency: transitive
     description:
@@ -470,10 +477,10 @@ packages:
       relative: false
     source: path
     version: "0.0.1"
-  takkan_medley_script:
+  takkan_medley_orchestrator:
     dependency: "direct dev"
     description:
-      path: "/home/david/git/takkan/takkan_medley_script"
+      path: "/home/david/git/takkan/takkan_medley_orchestrator"
       relative: false
     source: path
     version: "0.0.1"

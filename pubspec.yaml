@@ -1,5 +1,5 @@
-name: takkan_server_code_generator
-description: A simple command-line application.
+name: takkan_back4app_generator
+description: Generate Back4App server code from a Takkan Schema.
 version: 1.0.0
 # homepage: https://www.example.com
 
@@ -9,7 +9,7 @@ environment:
 
 dependencies:
   dio: ^4.0.0
-  characters: ^1.2.1
+  characters: ^1.2.0
   json_annotation: ^4.5.0
   equatable: ^2.0.3
   takkan_schema:
@@ -23,6 +23,7 @@ dependencies:
 dev_dependencies:
   path: ^1.8.1
   lints: ^1.0.0
+  mocktail: ^0.3.0
   test:
-  takkan_medley_script:
-    path: /home/david/git/takkan/takkan_medley_script
+  takkan_medley_orchestrator:
+    path: /home/david/git/takkan/takkan_medley_orchestrator

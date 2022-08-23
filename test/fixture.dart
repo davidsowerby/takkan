@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart' as dio;
@@ -70,6 +69,10 @@ Future<dio.Response<dynamic>> prepareFrameworkTest(
   return resetResponse;
 }
 
+Future<void> deploy(Directory deployDir) async {
+  throw UnimplementedError();
+}
+
 Future<Directory> copyReference(int version) async {
   final Directory reference = Directory('test/reference/$version/cloud');
   final Directory deployDir = Directory(serverCodeDeployDir);
@@ -85,19 +88,4 @@ Future<Directory> copyReference(int version) async {
   stdout.writeln(
       '${files.length} reference files copied from ${reference.path} to ${deployDir.path}');
   return deployDir;
-}
-
-Future<int> deploy(Directory deployDir) async {
-  stdout.writeln('Compiling generator');
-  final process = await Process.start(
-      'bash',
-      [
-        '-c',
-        'b4a deploy',
-      ],
-      workingDirectory: deployDir.path);
-  process.stdout.transform(utf8.decoder).forEach(stdout.writeln);
-  process.stderr.transform(utf8.decoder).forEach(stdout.writeln);
-  final exitCode = await process.exitCode;
-  return exitCode;
 }
