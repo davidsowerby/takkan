@@ -1,4 +1,4 @@
-import 'package:takkan_medley_script/script/medley_script.dart';
+import 'package:takkan_medley_orchestrator/script/medley_script.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/query_view.dart';

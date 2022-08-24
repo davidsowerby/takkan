@@ -1,4 +1,4 @@
-import 'package:takkan_medley_script/script/medley_script.dart';
+import 'package:takkan_medley_orchestrator/script/medley_script.dart';
 import 'package:test/test.dart';
 
 void main() {
