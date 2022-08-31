@@ -1,27 +1,53 @@
-# Schema Management
+# Schema
 
-The application schema, defined by instances of `Schema` are an integral part of Takkan.  
+The application schema, represented by a single instance of `Schema` is a fundamental part of Takkan. 
 
-Although multiple instances of `Schema` may be used to define an application, they are merged into one collection of `Document`s to form the application schema. 
+## Scope
 
-There are multiple elements which need to be kept in sync to ensure consistency:
+The `Schema` comprises a number of `Document` definitions, each relating to a database entity.  For Back4App, this means a `Document` equates to a Class.
 
-1. `Schema` itself drives client side presentation and validation, enabling view and edit according to data type and user roles.    
-1. As any client code is inherently insecure, server side validation code double checks data validation before saving.
-1. Server side code creates and updates the Back4App server schema to create or modify Classes.
+Each `Document` defines field types and names, validation rules, roles, permissions and queries.
 
-## Scope of Schema
+On the client, this information is used to control access to display elements which may require permission, and data validation prior to submission to the server.
 
-There are two major components to the application schema:
+The same `Schema` is used to generated cloud functions for validation and queries, plus the Back4App server schema and Class Level Permissions.  
 
-1. The validation code
-1. The server schema 
+This means that even a hacked client will still have to pass server validation, and as a by-product, also creates a REST API without additional effort.
+
+It also means that the client and server side schemas will always be in sync. 
+
+## Composability
+
+The single application `Schema` instance may start out as a collection of `Schema` instances, but are merged into one application schema at a specific version. 
+
+For example, you may have a `Document` which defines an address in a standard, consistent way, and you want to use it in different applications.  
+
+This can be composed into any application `Schema` which uses addresses.
+ 
 
 ## Version Management
 
-Inevitably, a schema will need to change as an application is developed or extended.  
+Each `Schema` holds a version number - a simple incrementing integer.  It also optionally contains a label which may be something like '2.12.2-alpha'.
 
-Each `Schema` holds a version number - a simple incrementing integer.  It also optionally contains a label which may be something like '2.12.2-alpha'
+A 'Schema` defines at least a 'current' version, and may also define 'supported' versions.  
+
+### Client feedback
+
+Every call to a generated cloud function must carry a param *schema_version* to identify the requested version.
+
+The returned result then incorporates a client update flag indicating one of:
+
+- no client update required, *schema_version* is up to date,
+- recommend a background update, the *schema_version* is supported but not the current version
+- require an immediate client update, the *schema_version* is not supported
+
+
+There is an [outstanding issue](https://gitlab.com/takkan/takkan_back4app_generator/-/issues/6) to look at using notifications instead of, or maybe in conjunction with the above process. The mechanism for this would be backend specific.
+
+## Version update process
+
+For [Back4App](back4app-implementation.md#version_deploy_and_update)
+
 
 ### Validation Code
 
@@ -29,34 +55,19 @@ The concept used by Takkan is straightforward:
 
 - Server validation code is generated with a switch statement, using a case for each version of schema supported.
 - Only one version is considered 'current'
-- Any number of versions may be 'deprecated'
+- Any number of versions may be 'supported'
 - all other versions are considered 'invalid'
 
-These are defined within the generated code, from the current and previous versions of `Schema`. Version status (of both script and schema) can be accessed by a call to server function 'versionStatus'.
+In the event of the requested version not being current, the client is [notified](#client-feedback). 
 
-The current version from the client is included with all calls to the server. This allows 3 different responses:
+Version status (of both `Script` and `Schema`) can be accessed by a call to server function 'versionStatus'.
 
-- The client version is also the server current version.  Data is returned as normal, and no further action is required
-- The client version is marked as deprecated on the server.  Data is returned as normal, together with a 'deprecated' message.  The client downloads the current schema version and updates in the background.
-- The client version is invalid (it is either out of date or has never been issued).  No data is returned, and the client must download the current version in order to continue.
 
 ### Server Schema
 
-It is possible to update the server schema via the Back4App REST API, but that would require holding the master key outside the server.
+Modifying the server schema is obviously a potentially hazardous task, and one that needs careful security.
 
-To avoid this, the server schema is actually defined in Javascript, and the code deployed in the same way as the validation code.
-
-This, however, means that the schema update code must be executed before the schema is applied to the server.
-
-## Deployment
-
-Schema code has to be executed before the server schema is actually updated.  This means that if validation and schema code were deployed together, here could easily be a situation where the server schema and server validation code do not match.
- 
-To avoid this, deployment is actually in 2 stages:
-
-1. Deploy server schema update code, with validation code unchanged
-1. Apply server schema updates
-1. Deploy validation code
+The process used by the Back4App implmentation is described [here](./back4app-implementation.md#process). 
 
 ## Security
 
