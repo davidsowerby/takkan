@@ -12,12 +12,10 @@ class DefaultJsonAssetLoader extends DefaultJsonFileLoader {
 
   DefaultJsonAssetLoader();
 
-  Future<Map<String, Map<String, dynamic>>> loadFile(
+  Future<Map<String, dynamic>>  loadFile(
       {required String filePath}) async {
     final String rawFile = await rootBundle.loadString(filePath);
-    final map = jsonDecode(rawFile);
-    final Map<String, Map<String, dynamic>> result = Map.castFrom(map);
-    return result;
+    return jsonDecode(rawFile);
   }
 
 }

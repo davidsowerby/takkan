@@ -1,6 +1,8 @@
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/app/app_config_loader.dart';
 import 'package:takkan_backend/backend/data_provider/base_data_provider.dart';
+import 'package:takkan_backend/backend/data_provider/result_transformer.dart';
+import 'package:takkan_backend/backend/data_provider/url_builder.dart';
 import 'package:takkan_backend/backend/user/authenticator.dart';
 import 'package:takkan_backend/backend/user/no_authenticator.dart';
 import 'package:takkan_client/app/page_builder.dart';
@@ -30,12 +32,15 @@ appConfigFromAssetBindings(){
 }
 
 Future<void> persistenceInjectionBindings() async {
-  getIt.registerFactory<RestServerConnect>(() => DefaultRestServerConnect());
+
   await getIt.isReady<AppConfig>();
   final appConfig=inject<AppConfig>();
   for (InstanceConfig instance in appConfig.instances) {
+    getIt.registerFactory<RestServerConnect>(instanceName: instance.uniqueName, () => DefaultRestServerConnect());
+    getIt.registerFactory<URLBuilder>(instanceName: instance.uniqueName, () => DefaultURLBuilder());
+    getIt.registerFactory<ResultTransformer>(instanceName: instance.uniqueName, () => DefaultResultTransformer());
     if (instance.serviceType == 'generic') {
-      final provider = BaseDataProvider();
+      final provider = GenericDataProvider();
 
       getIt.registerSingleton<IDataProvider>(
         provider,
