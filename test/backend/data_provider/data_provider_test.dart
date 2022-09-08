@@ -43,7 +43,7 @@ void main() {
         () => MockRestServerConnect(dio),
         instanceName: instanceName,
       );
-      final provider = BaseDataProvider();
+      final provider = GenericDataProvider();
       getIt.registerFactory<Authenticator<DataProvider, TakkanUser>>(
         () => NoAuthenticator(provider),
         instanceName: instanceName,

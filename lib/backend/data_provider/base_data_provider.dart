@@ -20,13 +20,13 @@ import 'result_transformer.dart';
 import 'server_connect.dart';
 import 'url_builder.dart';
 
-class BaseDataProvider<CONFIG extends DataProvider>
+abstract class BaseDataProvider<CONFIG extends DataProvider, USER extends Object>
     implements IDataProvider<CONFIG> {
   BaseDataProvider();
 
   @override
   late CONFIG config;
-  late Authenticator<CONFIG, TakkanUser> _authenticator;
+  late Authenticator<CONFIG, USER> _authenticator;
   late InstanceConfig _instanceConfig;
   late RestServerConnect serverConnect;
   late URLBuilder urlBuilder;
@@ -38,7 +38,7 @@ class BaseDataProvider<CONFIG extends DataProvider>
   InstanceConfig get instanceConfig => _instanceConfig;
 
   @override
-  Authenticator<CONFIG, TakkanUser> get authenticator => _authenticator;
+  Authenticator<CONFIG, USER> get authenticator => _authenticator;
 
   @override
   @mustCallSuper
@@ -49,7 +49,7 @@ class BaseDataProvider<CONFIG extends DataProvider>
     _instanceConfig = instanceConfig;
     serverConnect =
         inject<RestServerConnect>(instanceName: instanceConfig.uniqueName);
-    _authenticator = inject<Authenticator<CONFIG, TakkanUser>>(
+    _authenticator = inject<Authenticator<CONFIG, USER>>(
         instanceName: instanceConfig.uniqueName);
     urlBuilder = inject<URLBuilder>(instanceName: instanceConfig.uniqueName);
     resultTransformer =
@@ -349,4 +349,9 @@ class BaseDataProvider<CONFIG extends DataProvider>
   }) {
     throw UnimplementedError();
   }
+}
+
+
+class GenericDataProvider extends BaseDataProvider<DataProvider,TakkanUser>{
+  GenericDataProvider(): super();
 }

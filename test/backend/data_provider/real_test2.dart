@@ -14,6 +14,7 @@ import 'package:takkan_script/inject/inject.dart';
 import 'package:test/test.dart';
 
 
+
 void main() {
   final DataProvider config = DataProvider(
     instanceConfig: const AppInstance(
@@ -33,7 +34,7 @@ void main() {
         () => const DefaultRestServerConnect(),
         instanceName: instanceName,
       );
-      final provider = BaseDataProvider();
+      final provider = GenericDataProvider();
       getIt.registerFactory<Authenticator<DataProvider, TakkanUser>>(
         () => NoAuthenticator(provider),
         instanceName: instanceName,
