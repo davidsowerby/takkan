@@ -21,10 +21,15 @@ This command starts a local development server and opens up a browser window. Mo
 
 ```
 nvm install 16.14.0
-npm build
+npm run build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+### Hosting
+
+Hosted [site](https://app.netlify.com/teams/dsowerby-9fmn8pa/overview)
+
 
 
 ### Logo Colours:
