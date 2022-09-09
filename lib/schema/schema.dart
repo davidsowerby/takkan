@@ -17,16 +17,13 @@ import 'query/query.dart';
 
 part 'schema.g.dart';
 
-/// The root for a backend-agnostic definition of a data structure, including data types, validation, permissions
+/// A backend-agnostic definition of a data structure, including data types, validation, permissions
 /// and relationships.
 ///
 /// A [Schema] is associated with a [DataProvider] instance.  The [name] must be unique
-/// within a [Schema] instance, but has no other constraint.
+/// within the scope of an application, but has no other constraint.
 ///
-/// [Schema] provides a definition for use by Takkan, but could also be used to create a backend schema.
-/// If it is used that way, the interpretation of it is a matter for a SchemaInterpreter implementation
-/// within the backend-specific library.
-///
+/// [Schema] provides a definition for use by Takkan, and is also be used to create a backend schema.
 ///
 /// The terminology used reflects the intention to keep this backend-agnostic, although there may be cases where
 /// a backend does not support a particular data type.
@@ -34,14 +31,10 @@ part 'schema.g.dart';
 /// How these translate to the structure in the backend will depend on the backend itself, and the user's
 /// preferences.
 ///
-/// Each level will contain [Hints], which can be used to guide a [SchemaInterpreter} implementation.
-///
 ///
 /// - In [documents], the map key is the document name.  This is, for example, a
 /// Back4App Class or a Firestore collection, as determined by the backend implementation.
 ///
-/// - [namedQueries] is a place to put queries that may be used in different
-/// places in the app without having to specify them every time.
 ///
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
@@ -55,6 +48,8 @@ class Schema extends SchemaElement {
         super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
+  static const String supportedVersions='supportedSchemaVersions';
+  static const String documentClassName='TakkanSchema';
   @override
   final String name;
   final Map<String, Document> _documents;
