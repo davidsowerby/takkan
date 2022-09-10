@@ -1,9 +1,11 @@
-import 'package:takkan_script/data/select/condition/condition.dart';
-import 'package:takkan_script/schema/field/integer.dart';
-import 'package:takkan_script/schema/field/string.dart';
-import 'package:takkan_script/schema/query/query.dart';
-import 'package:takkan_script/schema/schema.dart';
-import 'package:takkan_script/script/version.dart';
+
+
+import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/field/integer.dart';
+import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/query/query.dart';
+import 'package:takkan_schema/schema/schema.dart';
 
 /// There are a lot of versions here.  It is structured this way to try and cover
 /// all the permutations of changes which can occur between one version and another.

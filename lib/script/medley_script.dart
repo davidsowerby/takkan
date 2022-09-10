@@ -1,3 +1,4 @@
+import 'package:takkan_schema/common/version.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/data/select/data_item.dart';
@@ -8,7 +9,6 @@ import 'package:takkan_script/part/navigation.dart';
 import 'package:takkan_script/part/text.dart';
 import 'package:takkan_script/script/script.dart';
 import 'package:takkan_script/script/script_element.dart';
-import 'package:takkan_script/script/version.dart';
 
 import '../schema/medley_schema.dart';
 

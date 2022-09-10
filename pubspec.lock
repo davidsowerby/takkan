@@ -140,7 +140,7 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.5.0"
+    version: "4.6.0"
   logger:
     dependency: transitive
     description:
@@ -281,6 +281,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  takkan_schema:
+    dependency: "direct main"
+    description:
+      path: "../takkan_schema"
+      relative: true
+    source: path
+    version: "0.1.0"
   takkan_script:
     dependency: "direct main"
     description:

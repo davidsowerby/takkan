@@ -1,4 +1,4 @@
-name: takkan_medley_script
+name: takkan_medley_orchestrator
 description: Script and Schema for takkan_medley
 version: 0.0.1
 homepage: https://www.takkan.org/
@@ -9,7 +9,8 @@ environment:
 dependencies:
   takkan_script:
     path: ../takkan_script
-
+  takkan_schema:
+    path: ../takkan_schema
 dev_dependencies:
   test: ^1.16.0
 

@@ -1,9 +1,9 @@
-import 'package:takkan_medley_script/schema/medley_schema.dart';
-import 'package:takkan_script/schema/schema.dart';
 
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:takkan_medley_orchestrator/schema/medley_schema.dart';
+import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';
 
 Future<List<dynamic>> exportSchemaVersions({
