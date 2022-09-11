@@ -49,10 +49,10 @@ void main() {
       expect(query.combinedConditions.length, 3);
       expect(query.combinedConditions[0].field, 'age');
       expect(query.combinedConditions[0].operator, Operator.equalTo);
-      expect(query.combinedConditions[0].reference, 152);
+      expect(query.combinedConditions[0].operand, 152);
       expect(query.combinedConditions[1].field, 'firstName');
       expect(query.combinedConditions[1].operator, Operator.equalTo);
-      expect(query.combinedConditions[1].reference, 'Jack');
+      expect(query.combinedConditions[1].operand, 'Jack');
     });
   });
 }

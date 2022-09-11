@@ -11,23 +11,29 @@ FRelation _$FRelationFromJson(Map<String, dynamic> json) => FRelation(
       defaultValue: json['defaultValue'] == null
           ? null
           : Relation.fromJson(json['defaultValue'] as Map<String, dynamic>),
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map(
+                  (e) => RelationCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       required: json['required'] as bool? ?? false,
+      isReadOnly:
+          $enumDecodeNullable(_$IsReadOnlyEnumMap, json['isReadOnly']) ??
+              IsReadOnly.inherited,
       validation: json['validation'] as String?,
     );
 
-Map<String, dynamic> _$FRelationToJson(FRelation instance) {
-  final val = <String, dynamic>{
-    'validation': instance.validation,
-    'required': instance.required,
-  };
+Map<String, dynamic> _$FRelationToJson(FRelation instance) => <String, dynamic>{
+      'isReadOnly': _$IsReadOnlyEnumMap[instance.isReadOnly]!,
+      'constraints': instance.constraints.map((e) => e.toJson()).toList(),
+      'validation': instance.validation,
+      'required': instance.required,
+      'defaultValue': instance.defaultValue?.toJson(),
+      'targetClass': instance.targetClass,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue?.toJson());
-  val['targetClass'] = instance.targetClass;
-  return val;
-}
+const _$IsReadOnlyEnumMap = {
+  IsReadOnly.yes: 'yes',
+  IsReadOnly.no: 'no',
+  IsReadOnly.inherited: 'inherited',
+};

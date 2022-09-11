@@ -6,22 +6,30 @@ part of 'list.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-FList _$FListFromJson(Map<String, dynamic> json) => FList(
-      defaultValue: json['defaultValue'] as List<dynamic>?,
+FIntegerList _$FIntegerListFromJson(Map<String, dynamic> json) => FIntegerList(
+      defaultValue: (json['defaultValue'] as List<dynamic>?)
+          ?.map((e) => e as int)
+          .toList(),
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map((e) => ListIntCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       required: json['required'] as bool? ?? false,
+      isReadOnly:
+          $enumDecodeNullable(_$IsReadOnlyEnumMap, json['isReadOnly']) ??
+              IsReadOnly.inherited,
     );
 
-Map<String, dynamic> _$FListToJson(FList instance) {
-  final val = <String, dynamic>{
-    'required': instance.required,
-  };
+Map<String, dynamic> _$FIntegerListToJson(FIntegerList instance) =>
+    <String, dynamic>{
+      'isReadOnly': _$IsReadOnlyEnumMap[instance.isReadOnly]!,
+      'constraints': instance.constraints.map((e) => e.toJson()).toList(),
+      'required': instance.required,
+      'defaultValue': instance.defaultValue,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue);
-  return val;
-}
+const _$IsReadOnlyEnumMap = {
+  IsReadOnly.yes: 'yes',
+  IsReadOnly.no: 'no',
+  IsReadOnly.inherited: 'inherited',
+};

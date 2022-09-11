@@ -10,22 +10,28 @@ FDate _$FDateFromJson(Map<String, dynamic> json) => FDate(
       defaultValue: json['defaultValue'] == null
           ? null
           : DateTime.parse(json['defaultValue'] as String),
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map(
+                  (e) => DateTimeCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       required: json['required'] as bool? ?? false,
+      isReadOnly:
+          $enumDecodeNullable(_$IsReadOnlyEnumMap, json['isReadOnly']) ??
+              IsReadOnly.inherited,
       validation: json['validation'] as String?,
     );
 
-Map<String, dynamic> _$FDateToJson(FDate instance) {
-  final val = <String, dynamic>{
-    'validation': instance.validation,
-    'required': instance.required,
-  };
+Map<String, dynamic> _$FDateToJson(FDate instance) => <String, dynamic>{
+      'isReadOnly': _$IsReadOnlyEnumMap[instance.isReadOnly]!,
+      'constraints': instance.constraints.map((e) => e.toJson()).toList(),
+      'validation': instance.validation,
+      'required': instance.required,
+      'defaultValue': instance.defaultValue?.toIso8601String(),
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue?.toIso8601String());
-  return val;
-}
+const _$IsReadOnlyEnumMap = {
+  IsReadOnly.yes: 'yes',
+  IsReadOnly.no: 'no',
+  IsReadOnly.inherited: 'inherited',
+};

@@ -1,23 +1,22 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
 import 'package:json_annotation/json_annotation.dart';
-import '../../common/constants.dart';
 
+import '../../common/constants.dart';
 import '../../data/object/geo.dart';
-import '../../data/select/condition/condition.dart';
+import '../../data/select/condition/geo_point_condition.dart';
 import 'field.dart';
 
 part 'geo_point.g.dart';
 
 /// see [GeoPoint]
 @JsonSerializable(explicitToJson: true)
-@ConditionConverter()
-class FGeoPoint extends Field<GeoPoint> {
+class FGeoPoint extends Field<GeoPoint, GeoPointCondition> {
   FGeoPoint({
     super.defaultValue,
     super.constraints = const [],
     super.required = false,
-    super.readOnly = IsReadOnly.inherited,
+    super.isReadOnly = IsReadOnly.inherited,
     super.validation,
   });
 

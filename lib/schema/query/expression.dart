@@ -12,31 +12,58 @@ import '../schema.dart';
 
 const separator = '&&';
 
-class Expression {
-  const Expression({required this.document});
+/// Builds a [Condition] instance from an expression in the form of "field operator operand"
+///
+/// - a > b
+/// - a contains b
+///
+/// where the operator is separated from operands by a single space
+///
+/// For String operands, surround with single quotes:
+///
+/// - a contains 'x'
+///
+/// For operands held in parameters, use a '#':
+///
+/// - a > #b
+///
+/// Or for a String
+///
+/// - a contains '#x'
+///
+/// The value will be looked up from [lookupParameterValue]
+class ConditionBuilder {
+  const ConditionBuilder(
+      {required this.document, dynamic Function(String)? lookupParameterValue});
 
   final Document document;
 
-  Condition<dynamic> _parseCondition(String cond) {
-    final Characters chars = Characters(cond);
+  Condition<dynamic> _parseCondition(String cond, bool forQuery) {
+    final s = cond.split(' ');
+    /// helps with minor spacing issues
+    s.removeWhere((element) => element.isEmpty);
+    if (s.length != 3) {
+      final String msg = '$cond is not a valid condition';
+      logName('Condition').e(msg);
+      throw TakkanException(msg);
+    }
+    final String operand1 = s[0];
+    final String operator = s[1];
+    final String operand2 = s[2];
     bool foundOp = false;
     bool conditionCreated = false;
     for (final Operator op in Operator.values) {
-      final opChar = Characters(op.expression);
-      if (chars.containsAll(opChar)) {
+      if (op.operator == operator) {
         foundOp = true;
-        final segments = chars.split(opChar);
-        final trimmed = segments.map((e) => e.toString().trim()).toList();
-        if (trimmed.length != 2) {
-          final String msg = '$cond is not a valid condition';
-          logName('Condition').e(msg);
-          throw TakkanException(msg);
-        }
         final Condition<dynamic> c = _createCondition(
-          fieldName: trimmed[0],
+          fieldName: operand1,
           operator: op,
-          reference: _decodeValue(trimmed[1]),
+          operand: _decodeValue(operand2),
+          forQuery: forQuery,
         );
+        // Make sure this is a valid operation
+        c.checkValidOperation(op); // TODO: Whatever this is supposed to do will break if operand is different type to value
+        // TODO: valid at this point means that the condition will not fial from one of the exclusions, eg 'notValidForType - call it 'compliant''
         conditionCreated = true;
         return c;
       }
@@ -56,18 +83,28 @@ class Expression {
     throw TakkanException(msg);
   }
 
-  Condition<dynamic> _createCondition(
-      {required String fieldName,
-      required Operator operator,
-      dynamic reference}) {
+  Condition<dynamic> _createCondition({
+    required String fieldName,
+    required Operator operator,
+    dynamic operand,
+    required bool forQuery,
+  }) {
     final f = document.field(fieldName);
     switch (f.runtimeType) {
       case FInteger:
         return IntegerCondition(
-            field: fieldName, operator: operator, reference: reference);
+          field: fieldName,
+          operator: operator,
+          operand: operand,
+          forQuery: forQuery,
+        );
       case FString:
         return StringCondition(
-            field: fieldName, operator: operator, reference: reference);
+          field: fieldName,
+          operator: operator,
+          operand: operand,
+          forQuery: forQuery,
+        );
       default:
         final String msg = '${f.runtimeType} not implemented yet';
         logType(runtimeType).e(msg);
@@ -111,31 +148,31 @@ class Expression {
   }
 
   /// Parses a String expression and converts to one or more [Condition]s
- /// Field names are part of the query expression, unlike [parseValidation],
+  /// Field names are part of the query expression, unlike [parseForValidation],
   /// which relate to a specific field
-  List<Condition<dynamic>> parseQuery({required String expression}) {
+  List<Condition<dynamic>> parseForQuery({required String expression}) {
     final List<Condition<dynamic>> conditions =
-    List<Condition<dynamic>>.empty(growable: true);
+        List<Condition<dynamic>>.empty(growable: true);
     final c = expression.split(separator);
     for (final String cond in c) {
-      conditions.add(_parseCondition(cond));
+      conditions.add(_parseCondition(cond,true));
     }
     return conditions;
   }
 
   /// Parses a String expression and converts to one or more [Condition]s
-  /// The field name for the [Condition] is taken from [field], unlike [parseQuery],
+  /// The field name for the [Condition] is taken from [field], unlike [parseForQuery],
   /// which contains field names as part of the query expression
-  List<Condition<dynamic>> parseValidation({
-    required Field<dynamic> field,
+  List<Condition<dynamic>> parseForValidation({
+    required Field<dynamic,dynamic> field,
     required String expression,
   }) {
     final f = field;
     final List<Condition<dynamic>> conditions =
-    List<Condition<dynamic>>.empty(growable: true);
+        List<Condition<dynamic>>.empty(growable: true);
     final c = expression.split(separator);
     for (final String cond in c) {
-      conditions.add(_parseCondition('${f.name} $cond'));
+      conditions.add(_parseCondition('${f.name} $cond',false));
     }
     return conditions;
   }

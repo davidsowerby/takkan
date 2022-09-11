@@ -10,21 +10,28 @@ IntegerCondition _$IntegerConditionFromJson(Map<String, dynamic> json) =>
     IntegerCondition(
       field: json['field'] as String,
       operator: $enumDecode(_$OperatorEnumMap, json['operator']),
-      reference: json['reference'],
+      operand: json['operand'],
+      forQuery: json['forQuery'] as bool,
     );
 
 Map<String, dynamic> _$IntegerConditionToJson(IntegerCondition instance) =>
     <String, dynamic>{
       'field': instance.field,
       'operator': _$OperatorEnumMap[instance.operator]!,
-      'reference': instance.reference,
+      'operand': instance.operand,
+      'forQuery': instance.forQuery,
     };
 
 const _$OperatorEnumMap = {
   Operator.equalTo: 'equalTo',
   Operator.notEqualTo: 'notEqualTo',
   Operator.greaterThan: 'greaterThan',
+  Operator.greaterThanOrEqualTo: 'greaterThanOrEqualTo',
   Operator.lessThan: 'lessThan',
-  Operator.longerThan: 'longerThan',
-  Operator.shorterThan: 'shorterThan',
+  Operator.lessThanOrEqualTo: 'lessThanOrEqualTo',
+  Operator.lengthEqualTo: 'lengthEqualTo',
+  Operator.lengthGreaterThan: 'lengthGreaterThan',
+  Operator.lengthGreaterThanOrEqualTo: 'lengthGreaterThanOrEqualTo',
+  Operator.lengthLessThan: 'lengthLessThan',
+  Operator.lengthLessThanOrEqualTo: 'lengthLessThanOrEqualTo',
 };

@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../common/constants.dart';
@@ -45,11 +46,11 @@ class Schema extends SchemaElement {
     required this.name,
     required this.version,
   })  : _documents = Map.from(documents),
-        super(readOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
+        super(isReadOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
 
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
-  static const String supportedVersions='supportedSchemaVersions';
-  static const String documentClassName='TakkanSchema';
+  static const String supportedVersions = 'supportedSchemaVersions';
+  static const String documentClassName = 'TakkanSchema';
   @override
   final String name;
   final Map<String, Document> _documents;
@@ -75,9 +76,6 @@ class Schema extends SchemaElement {
   SchemaElement get parent => NullSchemaElement();
 
   Map<String, Document> get documents => _documents;
-
-  @JsonKey(ignore: true)
-  IsReadOnly get isReadOnly => _isReadOnly;
 
   @override
   List<Object> get subElements => [_documents];
@@ -168,11 +166,11 @@ class Schema extends SchemaElement {
 ///
 /// which for longer declarations is a bit more readable
 abstract class SchemaElement extends TakkanElement {
-  SchemaElement({IsReadOnly readOnly = IsReadOnly.inherited})
-      : _isReadOnly = readOnly;
+  SchemaElement({this.isReadOnly = IsReadOnly.inherited});
+
   String? _name;
 
-  final IsReadOnly _isReadOnly;
+  final IsReadOnly isReadOnly;
 
   @override
   Map<String, dynamic> toJson();
@@ -185,7 +183,7 @@ abstract class SchemaElement extends TakkanElement {
 
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props => [...super.props, _isReadOnly, _name];
+  List<Object?> get props => [...super.props, isReadOnly, _name];
 
   @JsonKey(ignore: true)
   bool get readOnly => _readOnlyState() == IsReadOnly.yes;
@@ -197,9 +195,9 @@ abstract class SchemaElement extends TakkanElement {
   SchemaElement get parent => super.parent as SchemaElement;
 
   IsReadOnly _readOnlyState() {
-    return (_isReadOnly == IsReadOnly.inherited)
-        ? parent._isReadOnly
-        : _isReadOnly;
+    return (isReadOnly == IsReadOnly.inherited)
+        ? parent.isReadOnly
+        : isReadOnly;
   }
 
   @override
@@ -237,7 +235,7 @@ abstract class SchemaElement extends TakkanElement {
 /// this will overrule any other settings
 ///
 @JsonSerializable(explicitToJson: true)
-class Permissions with WalkTarget {
+class Permissions extends Equatable with WalkTarget {
   const Permissions({
     this.isPublic = const [],
     List<AccessMethod> requiresAuthentication = const [],
@@ -364,6 +362,17 @@ class Permissions with WalkTarget {
   bool methodIsPublic(AccessMethod method) {
     return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
   }
+
+  @override
+  List<Object?> get props => [
+        createRoles,
+        readRoles,
+        deleteRoles,
+        updateRoles,
+        getRoles,
+        findRoles,
+        countRoles
+      ];
 }
 
 enum AccessMethod {
@@ -426,10 +435,10 @@ class Document extends SchemaElement {
 
   final Permissions permissions;
   final DocumentType documentType;
-  final Map<String, Field<dynamic>> fields;
+  final Map<String, Field<dynamic, Condition<dynamic>>> fields;
 
   bool get hasValidation {
-    for (final Field<dynamic> f in fields.values) {
+    for (final Field f in fields.values) {
       if (f.hasValidation) {
         return true;
       }
@@ -449,7 +458,7 @@ class Document extends SchemaElement {
     _name = params.name;
   }
 
-  Field<dynamic> field(String fieldName) {
+  Field<dynamic, Condition<dynamic>> field(String fieldName) {
     final f = fields[fieldName];
     if (f == null) {
       final f1 = reservedField(fieldName);
@@ -464,10 +473,10 @@ class Document extends SchemaElement {
   }
 
   /// see https://gitlab.com/takkan/takkan_script/-/issues/45
-  Field<dynamic>? reservedField(fieldName) {
+  Field<dynamic, Condition<dynamic>>? reservedField(fieldName) {
     switch (fieldName) {
       case 'objectId':
-        return FString(readOnly: IsReadOnly.yes);
+        return FString(isReadOnly: IsReadOnly.yes);
     }
     return null;
   }
@@ -483,7 +492,7 @@ class Document extends SchemaElement {
   }
 
   C operator [](String fieldName) {
-    final Field<dynamic>? f = fields[fieldName];
+    final Field<dynamic, Condition<dynamic>>? f = fields[fieldName];
     if (f != null) {
       return C(fieldName);
     }

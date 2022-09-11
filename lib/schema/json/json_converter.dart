@@ -3,6 +3,7 @@ import '../../common/constants.dart';
 
 import '../../common/exception.dart';
 import '../../common/log.dart';
+import '../../data/select/condition/condition.dart';
 import '../field/boolean.dart';
 import '../field/date.dart';
 import '../field/double.dart';
@@ -16,12 +17,12 @@ import '../field/string.dart';
 
 class SchemaFieldMapConverter
     implements
-        JsonConverter<Map<String, Field<dynamic>>, Map<String, dynamic>> {
+        JsonConverter<Map<String, Field<dynamic,Condition<dynamic>>>, Map<String, dynamic>> {
   const SchemaFieldMapConverter();
 
   @override
-  Map<String, Field<dynamic>> fromJson(Map<String, dynamic> json) {
-    final Map<String, Field<dynamic>> outputMap = {};
+  Map<String, Field<dynamic,Condition<dynamic>>> fromJson(Map<String, dynamic> json) {
+    final Map<String, Field<dynamic,Condition<dynamic>>> outputMap = {};
     for (final entry in json.entries) {
       if (entry.key != jsonClassKey) {
         outputMap[entry.key] = const FieldConverter()
@@ -32,7 +33,7 @@ class SchemaFieldMapConverter
   }
 
   @override
-  Map<String, dynamic> toJson(Map<String, Field<dynamic>> partMap) {
+  Map<String, dynamic> toJson(Map<String, Field<dynamic,Condition<dynamic>>> partMap) {
     final outputMap = <String, dynamic>{};
     for (final entry in partMap.entries) {
       outputMap[entry.key] = const FieldConverter().toJson(entry.value);
@@ -42,11 +43,11 @@ class SchemaFieldMapConverter
 }
 
 class FieldConverter
-    implements JsonConverter<Field<dynamic>, Map<String, dynamic>> {
+    implements JsonConverter<Field<dynamic,Condition<dynamic>>, Map<String, dynamic>> {
   const FieldConverter();
 
   @override
-  Field<dynamic> fromJson(Map<String, dynamic> json) {
+  Field<dynamic,Condition<dynamic>> fromJson(Map<String, dynamic> json) {
     final elementType = json[jsonClassKey];
     switch (elementType) {
       case 'FBoolean':
@@ -90,7 +91,7 @@ class FieldConverter
   }
 
   @override
-  Map<String, dynamic> toJson(Field<dynamic> object) {
+  Map<String, dynamic> toJson(Field<dynamic,Condition<dynamic>> object) {
     final type = object.runtimeType;
     final Map<String, dynamic> jsonMap = object.toJson();
     jsonMap[jsonClassKey] = type.toString();

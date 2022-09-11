@@ -4,18 +4,19 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../common/constants.dart';
 
 import '../../data/object/pointer.dart';
+import '../../data/select/condition/pointer_condition.dart';
 import 'field.dart';
 
 part 'pointer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FPointer extends Field<Pointer> {
+class FPointer extends Field<Pointer,PointerCondition> {
   FPointer({
     required this.targetClass,
     super.defaultValue,
     super.constraints = const [],
     super.required = false,
-    super.readOnly = IsReadOnly.inherited,
+    super.isReadOnly = IsReadOnly.inherited,
     super.validation,
   });
 
@@ -29,6 +30,10 @@ class FPointer extends Field<Pointer> {
   @override
   Type get modelType => Pointer;
   final String targetClass;
+
+  @override
+  @JsonKey(ignore: true)
+  bool get isLinkField=> true;
 
   @override
   Map<String, dynamic> toJson() => _$FPointerToJson(this);

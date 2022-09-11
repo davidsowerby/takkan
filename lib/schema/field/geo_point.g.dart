@@ -10,22 +10,28 @@ FGeoPoint _$FGeoPointFromJson(Map<String, dynamic> json) => FGeoPoint(
       defaultValue: json['defaultValue'] == null
           ? null
           : GeoPoint.fromJson(json['defaultValue'] as Map<String, dynamic>),
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map(
+                  (e) => GeoPointCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       required: json['required'] as bool? ?? false,
+      isReadOnly:
+          $enumDecodeNullable(_$IsReadOnlyEnumMap, json['isReadOnly']) ??
+              IsReadOnly.inherited,
       validation: json['validation'] as String?,
     );
 
-Map<String, dynamic> _$FGeoPointToJson(FGeoPoint instance) {
-  final val = <String, dynamic>{
-    'validation': instance.validation,
-    'required': instance.required,
-  };
+Map<String, dynamic> _$FGeoPointToJson(FGeoPoint instance) => <String, dynamic>{
+      'isReadOnly': _$IsReadOnlyEnumMap[instance.isReadOnly]!,
+      'constraints': instance.constraints.map((e) => e.toJson()).toList(),
+      'validation': instance.validation,
+      'required': instance.required,
+      'defaultValue': instance.defaultValue?.toJson(),
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue?.toJson());
-  return val;
-}
+const _$IsReadOnlyEnumMap = {
+  IsReadOnly.yes: 'yes',
+  IsReadOnly.no: 'no',
+  IsReadOnly.inherited: 'inherited',
+};

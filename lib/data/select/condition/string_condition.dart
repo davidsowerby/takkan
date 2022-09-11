@@ -1,77 +1,147 @@
 import 'package:json_annotation/json_annotation.dart';
-import '../../../common/exception.dart';
-import '../../../common/log.dart';
 
 import 'condition.dart';
 
 part 'string_condition.g.dart';
 
+/// The only real purpose of this class is to support IDE friendly definitions of
+/// query and validation conditions, using [C] and [V] respectively.
+///
+/// The [fieldName] cannot be final as it may need updating when used in validation
 class StringConditionBuilder {
-  StringConditionBuilder(this.fieldName);
+  StringConditionBuilder({required this.fieldName, required this.forQuery});
 
   String fieldName;
+  final bool forQuery;
 
-  StringCondition equalTo(String reference) {
+  StringCondition equalTo(String operand) {
     return StringCondition(
       field: fieldName,
       operator: Operator.equalTo,
-      reference: reference,
+      operand: operand,
+      forQuery: forQuery,
     );
   }
 
-  StringCondition notEqualTo(String reference) {
+  StringCondition notEqualTo(String operand) {
     return StringCondition(
       field: fieldName,
       operator: Operator.notEqualTo,
-      reference: reference,
+      operand: operand,
+      forQuery: forQuery,
     );
   }
 
-  StringCondition longerThan(int reference) {
+  StringCondition lengthGreaterThan(int operand) {
     return StringCondition(
       field: fieldName,
-      operator: Operator.greaterThan,
-      reference: reference,
+      operator: Operator.lengthGreaterThan,
+      operand: operand,
+      forQuery: forQuery,
     );
   }
 
-  StringCondition shorterThan(int reference) {
+  StringCondition lengthGreaterThanOrEqualTo(int operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.lengthGreaterThanOrEqualTo,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+
+  StringCondition lengthLessThan(int operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.lengthLessThan,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+  StringCondition lengthLessThanOrEqualTo(int operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.lengthLessThanOrEqualTo,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+
+  StringCondition lessThan(String operand) {
     return StringCondition(
       field: fieldName,
       operator: Operator.lessThan,
-      reference: reference,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+
+  StringCondition lessThanOrEqualTo(String operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.lessThanOrEqualTo,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+
+  StringCondition greaterThan(String operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.greaterThan,
+      operand: operand,
+      forQuery: forQuery,
+    );
+  }
+
+  StringCondition greaterThanOrEqualTo(String operand) {
+    return StringCondition(
+      field: fieldName,
+      operator: Operator.greaterThanOrEqualTo,
+      operand: operand,
+      forQuery: forQuery,
     );
   }
 }
 
 @JsonSerializable(explicitToJson: true)
 class StringCondition extends Condition<String> {
-  const StringCondition(
-      {required super.field,
-      required super.operator,
-      required super.reference});
+  const StringCondition({
+    required super.field,
+    required super.operator,
+    required super.operand,
+    required super.forQuery,
+  });
 
   factory StringCondition.fromJson(Map<String, dynamic> json) =>
       _$StringConditionFromJson(json);
 
+  /// Call inherited method [isValid] rather than directly accessing this method
   @override
-  bool isValid(String value) {
+  bool typedOperations(String value) {
     switch (operator) {
       case Operator.equalTo:
-        return value == reference;
-      case Operator.notEqualTo:
-        return value != reference;
-      case Operator.greaterThan:
-        return value.length > (reference as int);
+        return value == operand;
       case Operator.lessThan:
-      case Operator.longerThan:
-      case Operator.shorterThan:
-        {
-          final String msg =
-              "Operator '${operator.name}' not implemented in $runtimeType";
-          logType(runtimeType).e(msg);
-          throw TakkanException(msg);
-        }
+        return value.compareTo(typedOperand) < 0;
+      case Operator.notEqualTo:
+        return value != operand;
+      case Operator.greaterThanOrEqualTo:
+        return value.compareTo(typedOperand) >= 0;
+      case Operator.lengthGreaterThanOrEqualTo:
+        return value.length >= (operand as int);
+      case Operator.lengthLessThan:
+        return value.length < (operand as int);
+      case Operator.lengthGreaterThan:
+        return value.length > (operand as int);
+      case Operator.greaterThan:
+        return value.compareTo(typedOperand) > 0;
+      case Operator.lessThanOrEqualTo:
+        return value.compareTo(typedOperand) <= 0;
+      case Operator.lengthLessThanOrEqualTo:
+        return value.length <= (operand as int);
+      default:
+        return throwOperatorInvalid();
     }
   }
 
@@ -81,6 +151,10 @@ class StringCondition extends Condition<String> {
   @override
   Condition<String> withField(String field) {
     return StringCondition(
-        reference: reference, field: field, operator: operator);
+      operand: operand,
+      field: field,
+      operator: operator,
+      forQuery: forQuery,
+    );
   }
 }

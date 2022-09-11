@@ -23,8 +23,15 @@ class ValidationErrorMessages extends Equatable {
 }
 
 const Map<Object, String> defaultValidationErrorMessages = {
+  Operator.equalTo: 'must be equal to {threshold}',
+  Operator.lengthGreaterThan: 'must have length of greater than {threshold}',
+  Operator.lengthGreaterThanOrEqualTo: 'must have length of greater than or equal to {threshold}',
+  Operator.lengthLessThan: 'must have length of less than {threshold}',
+  Operator.lengthLessThanOrEqualTo: 'must have length of less than or equal to {threshold}',
   Operator.greaterThan: 'must be greater than {threshold}',
+  Operator.greaterThanOrEqualTo: 'must be greater than or equal to {threshold}',
   Operator.lessThan: 'must be less than {threshold}',
-  Operator.longerThan: 'must have length of more than {threshold}',
-  Operator.shorterThan: 'must have length of less than {threshold} characters',
+  Operator.lessThanOrEqualTo: 'must be less than or equal to {threshold}',
+  Operator.notEqualTo: 'must not be equal to {threshold}',
+
 };

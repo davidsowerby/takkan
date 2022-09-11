@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
-import 'package:json_annotation/json_annotation.dart';
-
+import '../../common/exception.dart';
 import '../../common/log.dart';
 import '../../data/select/condition/condition.dart';
 import '../../util/interpolate.dart';
@@ -9,6 +8,8 @@ import '../../util/walker.dart';
 import '../query/expression.dart';
 import '../schema.dart';
 import '../validation/validation_error_messages.dart';
+import 'pointer.dart';
+import 'relation.dart';
 
 /// [MODEL] the data type of the model attribute represented
 ///
@@ -20,35 +21,37 @@ import '../validation/validation_error_messages.dart';
 /// Both achieve the same thing, and if both are defined, they are combined.
 ///
 /// [_conditions] is the result of that combination. It is built in [doInit]
-@ConditionConverter()
-abstract class Field<MODEL> extends SchemaElement {
+abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
   Field({
     this.constraints = const [],
     required this.required,
     this.defaultValue,
     this.validation,
-    required super.readOnly,
+    required super.isReadOnly,
   });
 
-  /// Returns [conditions] as this is the combination of [constraints] and
-  /// [validation].  As long as the end result is the same, it does not matter
-  /// which method is used to specify a condition
-  @JsonKey(ignore: true)
   @override
   List<Object?> get props =>
       [...super.props, _conditions, required, defaultValue];
 
   List<Object?> get excludeProps => [constraints, validation];
 
-  @JsonKey(ignore: true)
-  final List<Condition<MODEL>> constraints;
+  final List<C> constraints;
   final String? validation;
   final bool required;
-  @JsonKey(includeIfNull: false)
+
   final MODEL? defaultValue;
 
-  /// Not really a Query, just holds conditions for validation
+  /// Returns [_conditions], which is built during [Field.doInit] to combine
+  /// [constraints] and [validation].  As long as the end result is the same,
+  /// it does not matter which method (or even both) is used to specify a condition
+  ///
+  /// Ignore for JSON output, as the original [validation] and [constraints] are
+  /// serialised.
   final List<Condition<dynamic>> _conditions = [];
+
+  /// True only for [FPointer] and [FRelation]
+  bool get isLinkField => false;
 
   bool get hasValidation => required || (conditions.isNotEmpty);
 
@@ -65,14 +68,19 @@ abstract class Field<MODEL> extends SchemaElement {
     final List<String> errors = List.empty(growable: true);
     for (final Condition<dynamic> condition in conditions) {
       if (!condition.isValid(value)) {
-        String? errorPattern = errorMessages.find(condition.operator);
+        final String? errorPattern = errorMessages.find(condition.operator);
         if (errorPattern == null) {
-          errorPattern = 'error message not defined for ${condition.operator}';
-          logType(runtimeType).e(errorPattern);
+          final String msg =
+              'error message not defined for ${condition.operator}';
+          logType(runtimeType).e(msg);
+          throw TakkanException(msg);
         } else {
-          errors.add(expandErrorMessage(errorPattern, {
-            'threshold': condition.reference,
-          }));
+          errors.add(expandErrorMessage(
+              operandIsString: condition.operand is String,
+              errorPattern,
+              {
+                'threshold': condition.operand,
+              }));
         }
       }
     }
@@ -91,8 +99,8 @@ abstract class Field<MODEL> extends SchemaElement {
     }
     final vs = validation;
     if (vs != null) {
-      final c = Expression(document: parent as Document)
-          .parseValidation(field: this, expression: vs);
+      final c = ConditionBuilder(document: parent as Document)
+          .parseForValidation(field: this, expression: vs);
       final List<Condition<MODEL>> c1 = List.castFrom(c);
       _conditions.addAll(c1);
     }

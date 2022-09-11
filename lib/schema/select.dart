@@ -2,13 +2,14 @@
 /// See comments on [TakkanElement]
 import '../common/constants.dart';
 
+import '../data/select/condition/condition.dart';
 import 'field/field.dart';
 
 // part 'select.g.dart';
 
-abstract class SelectField extends Field<dynamic> {
+abstract class SelectField extends Field<dynamic,Condition<dynamic>> {
   SelectField({
-    super.readOnly = IsReadOnly.inherited,
+    super.isReadOnly = IsReadOnly.inherited,
     required super.required,
   });
 }

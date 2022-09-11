@@ -8,22 +8,27 @@ part of 'integer.dart';
 
 FInteger _$FIntegerFromJson(Map<String, dynamic> json) => FInteger(
       defaultValue: json['defaultValue'] as int?,
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map((e) => IntegerCondition.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
       required: json['required'] as bool? ?? false,
+      isReadOnly:
+          $enumDecodeNullable(_$IsReadOnlyEnumMap, json['isReadOnly']) ??
+              IsReadOnly.inherited,
       validation: json['validation'] as String?,
     );
 
-Map<String, dynamic> _$FIntegerToJson(FInteger instance) {
-  final val = <String, dynamic>{
-    'validation': instance.validation,
-    'required': instance.required,
-  };
+Map<String, dynamic> _$FIntegerToJson(FInteger instance) => <String, dynamic>{
+      'isReadOnly': _$IsReadOnlyEnumMap[instance.isReadOnly]!,
+      'constraints': instance.constraints.map((e) => e.toJson()).toList(),
+      'validation': instance.validation,
+      'required': instance.required,
+      'defaultValue': instance.defaultValue,
+    };
 
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull('defaultValue', instance.defaultValue);
-  return val;
-}
+const _$IsReadOnlyEnumMap = {
+  IsReadOnly.yes: 'yes',
+  IsReadOnly.no: 'no',
+  IsReadOnly.inherited: 'inherited',
+};

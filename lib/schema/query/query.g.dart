@@ -7,11 +7,9 @@ part of 'query.dart';
 // **************************************************************************
 
 Query _$QueryFromJson(Map<String, dynamic> json) => Query(
-      conditions: (json['conditions'] as List<dynamic>?)
-              ?.map((e) => const ConditionConverter()
-                  .fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      conditions: json['conditions'] == null
+          ? const []
+          : conditionListFromJson(json['conditions'] as List?),
       params: (json['params'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -26,6 +24,5 @@ Map<String, dynamic> _$QueryToJson(Query instance) => <String, dynamic>{
       'params': instance.params,
       'returnSingle': instance.returnSingle,
       'useStream': instance.useStream,
-      'conditions':
-          instance.conditions.map(const ConditionConverter().toJson).toList(),
+      'conditions': conditionListToJson(instance.conditions),
     };

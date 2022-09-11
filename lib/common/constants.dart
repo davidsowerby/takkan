@@ -1,3 +1,6 @@
+import 'package:json_annotation/json_annotation.dart';
+
 const String jsonClassKey='-classKey-';
 
-enum IsReadOnly { yes, no, inherited }
+@JsonEnum(alwaysCreate: true)
+enum IsReadOnly { @JsonValue('yes') yes,@JsonValue('no') no,@JsonValue('inherited') inherited }
