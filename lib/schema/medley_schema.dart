@@ -14,13 +14,14 @@ import 'package:takkan_schema/schema/schema.dart';
 /// It is possible to use one of these versions as the basis of an example app but
 /// that is not its primary purpose.
 final List<Schema> medleySchema = [medleySchema2, medleySchema1, medleySchema0];
+final List<Schema> schemaVersions = [medleySchema2, medleySchema1, medleySchema0];
 final Schema medleySchema0 = Schema(
   name: 'medley',
   version: Version(number: 0),
   documents: {
     'Person': Document(fields: {
       'firstName': FString(),
-      'age': FInteger(validation: '>0 && <100', required: true),
+      'age': FInteger(validation: '> 0 && < 100', required: true),
       'height': FInteger(
         constraints: [
           V.int.greaterThan(0),
@@ -68,8 +69,8 @@ final Schema medleySchema1 = Schema(
         'title': FString(required: true),
         'description': FString(
           constraints: [
-            V.string.longerThan(5),
-            V.string.shorterThan(128),
+            V.string.lengthGreaterThan(5),
+            V.string.lengthLessThan(128),
           ],
         ),
         'weight': FInteger(
@@ -83,7 +84,7 @@ final Schema medleySchema1 = Schema(
       queries: {
         'allIssues': Query(returnSingle: false, conditions: const []),
         'topIssue': Query(
-            queryScript: "objectId=='JJoGIErtzn'",
+            queryScript: "objectId == 'JJoGIErtzn'",
             returnSingle: true,
             conditions: []),
       },
@@ -97,7 +98,7 @@ final Schema medleySchema2 = Schema(
   documents: {
     'Person': Document(
       fields: {
-        'firstName': FString(required: true),
+        'firstName': FString(required: true, constraints: [V.string.lengthGreaterThan(1)]),
         'lastName': FString(),
         'age': FInteger(
           required: true,
@@ -118,8 +119,8 @@ final Schema medleySchema2 = Schema(
         'title': FString(required: true),
         'description': FString(
           constraints: [
-            V.string.longerThan(5),
-            V.string.shorterThan(128),
+            V.string.lengthGreaterThan(5),
+            V.string.lengthLessThan(128),
           ],
         ),
         'weight': FInteger(
@@ -133,7 +134,7 @@ final Schema medleySchema2 = Schema(
       queries: {
         'allIssues': Query(),
         'topIssue': Query(
-          queryScript: "objectId=='xxx'",
+          queryScript: "objectId == 'xxx'",
           returnSingle: true,
         )
       },
