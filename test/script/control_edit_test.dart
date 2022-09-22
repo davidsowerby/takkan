@@ -1,6 +1,5 @@
 import 'package:takkan_schema/common/version.dart';
 import 'package:takkan_schema/schema/schema.dart';
-import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart';
 import 'package:takkan_script/panel/static_panel.dart';
