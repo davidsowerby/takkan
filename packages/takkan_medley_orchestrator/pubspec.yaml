@@ -1,0 +1,18 @@
+name: takkan_medley_orchestrator
+description: Script and Schema for takkan_medley
+version: 0.0.1
+homepage: https://www.takkan.org/
+
+environment:
+  sdk: ">=2.17.0 <4.0.0"
+
+dependencies:
+  takkan_script: ^0.0.1
+  takkan_schema: ^0.1.0
+
+dev_dependencies:
+  test: ^1.16.0
+
+
+
+
