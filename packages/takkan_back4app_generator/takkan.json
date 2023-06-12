@@ -1,0 +1,11 @@
+{
+  "takkan": {
+    "test": {
+      "type" : "back4app",
+      "headers": {
+        "X-Parse-Application-Id": "H4T5mPRMK3Q1mFUhziYV5Rf3GciG1jcyXePFloAn",
+        "X-Parse-Client-Key": "X8ozDqNx2d87VkUqC60za8OgkVt4jJLnWKEeTAf0"
+      }
+    }
+  }
+}

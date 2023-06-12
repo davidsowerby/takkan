@@ -1,0 +1,213 @@
+var deprecatedSchemaVersions = [0, 1];
+var schemaVersion = 2;
+const versionStatus = {'current': schemaVersion, 'deprecated': deprecatedSchemaVersions};
+
+async function applySchema(request) {
+    const selectedVersion = parseInt(request.params.version);
+    schemaVersion = selectedVersion;
+
+    switch (selectedVersion) {
+        case 0: {
+            return version0(request);
+        }
+        case 1: {
+            return version1(request);
+        }
+        case 2: {
+            return version2(request);
+        }
+        default: {
+            throw 'Invalid version';
+        }
+    }
+}
+
+async function version0(request) {
+
+    // Create Classes
+
+    const personSchema = new Parse.Schema('Person');
+    personSchema.addNumber('age');
+    personSchema.addString('firstName');
+    personSchema.addNumber('height');
+    personSchema.addNumber('siblings');
+    personSchema.setCLP(personCLP0);
+    await personSchema.save(null, {useMasterKey: true});
+
+    // Update Classes
+
+    // Delete Classes
+
+    return 'schema version 0 applied';
+}
+
+const personCLP0 = {
+    'addField': {
+        '*': true,
+    },
+    'count': {
+        '*': true,
+    },
+    'create': {
+        '*': true,
+    },
+    'delete': {
+        '*': true,
+    },
+    'find': {
+        '*': true,
+    },
+    'get': {
+        '*': true,
+    },
+    'protectedFields': {},
+    'update': {
+        '*': true
+    }
+};
+
+async function version1(request) {
+
+    // Create Classes
+
+    const issueSchema = new Parse.Schema('Issue');
+    issueSchema.addString('description');
+    issueSchema.addString('state');
+    issueSchema.addString('title');
+    issueSchema.addNumber('weight');
+    issueSchema.setCLP(issueCLP1);
+    await issueSchema.save(null, {useMasterKey: true});
+
+    // Update Classes
+
+    const personSchema = new Parse.Schema('Person');
+    personSchema.addString('lastName');
+    personSchema.setCLP(personCLP1);
+    await personSchema.update(null, {useMasterKey: true});
+
+    // Delete Classes
+
+    return 'schema version 1 applied';
+}
+
+const issueCLP1 = {
+    'addField': {
+        '*': true,
+    },
+    'count': {
+        '*': true,
+    },
+    'create': {
+        '*': true,
+    },
+    'delete': {
+        '*': true,
+    },
+    'find': {
+        '*': true,
+    },
+    'get': {
+        '*': true,
+    },
+    'protectedFields': {},
+    'update': {
+        '*': true
+    }
+};
+
+const personCLP1 = {
+    'addField': {
+        '*': true,
+    },
+    'count': {
+        '*': true,
+    },
+    'create': {
+        '*': true,
+    },
+    'delete': {
+        '*': true,
+    },
+    'find': {
+        '*': true,
+    },
+    'get': {
+        '*': true,
+    },
+    'protectedFields': {},
+    'update': {
+        '*': true
+    }
+};
+
+async function version2(request) {
+
+    // Create Classes
+
+    // Update Classes
+
+    const issueSchema = new Parse.Schema('Issue');
+    issueSchema.addPointer('raisedBy', 'Person');
+    issueSchema.setCLP(issueCLP2);
+    await issueSchema.update(null, {useMasterKey: true});
+
+    // Delete Classes
+
+    return 'schema version 2 applied';
+}
+
+const issueCLP2 = {
+    'addField': {
+        '*': true,
+    },
+    'count': {
+        '*': true,
+    },
+    'create': {
+        '*': true,
+    },
+    'delete': {
+        '*': true,
+    },
+    'find': {
+        '*': true,
+    },
+    'get': {
+        '*': true,
+    },
+    'protectedFields': {},
+    'update': {
+        '*': true
+    }
+};
+
+const personCLP2 = {
+    'addField': {
+        '*': true,
+    },
+    'count': {
+        '*': true,
+    },
+    'create': {
+        '*': true,
+    },
+    'delete': {
+        '*': true,
+    },
+    'find': {
+        '*': true,
+    },
+    'get': {
+        '*': true,
+    },
+    'protectedFields': {},
+    'update': {
+        '*': true
+    }
+};
+
+module.exports = {
+    applySchema: applySchema,
+    schemaVersion: schemaVersion,
+    versionStatus: versionStatus
+};
