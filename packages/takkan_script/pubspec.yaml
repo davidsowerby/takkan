@@ -4,7 +4,7 @@ version: 0.0.1
 homepage: https://takkan.org
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.17.0 <4.0.0'
 
 dependencies:
   json_annotation: ^4.5.0
@@ -13,8 +13,7 @@ dependencies:
   get_it: ^7.2.0
   equatable: ^2.0.3
   characters: ^1.2.0
-  takkan_schema:
-    path: ../takkan_schema
+  takkan_schema: ^0.1.0
 
 
 dev_dependencies:
@@ -23,6 +22,4 @@ dev_dependencies:
   collection: ^1.16.0
   build_runner: ^2.1.10
   json_serializable: ^6.2.0
-  takkan_medley_orchestrator:
-    path: ../takkan_medley_orchestrator
-
+  takkan_medley_orchestrator: ^0.0.1
