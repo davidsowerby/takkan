@@ -95,7 +95,7 @@ class Query extends SchemaElement {
 
 List<Condition<dynamic>> conditionListFromJson(List<dynamic>? input) {
   if (input == null) {
-    throw NullThrownError();
+    throw const TakkanException('Null thrown');
   }
   final List<Map<String, dynamic>> json = List.castFrom(input);
   final List<Condition<dynamic>> results = List<Condition<dynamic>>.empty(growable: true);

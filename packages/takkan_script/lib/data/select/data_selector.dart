@@ -162,7 +162,7 @@ class Property implements DataSelector {
 class DataListJsonConverter {
   static List<DataSelector> fromJson(List<dynamic>? input) {
     if (input == null) {
-      throw NullThrownError();
+      throw TakkanException('Null in DataListJsonConverter');
     }
     final List<Map<String, dynamic>> json = List.castFrom(input);
     final List<DataSelector> results = List<DataSelector>.empty(growable: true);
