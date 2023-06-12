@@ -36,8 +36,7 @@ dependencies:
   takkan_client:
     path: ../takkan_client
   takkan_script: ^0.0.1
-  takkan_backend:
-    path: ../takkan_backend
+  takkan_backend: ^0.0.1
   takkan_back4app_client:
     path: ../takkan_back4app_client
   takkan_medley_script:

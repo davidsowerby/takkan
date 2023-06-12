@@ -11,10 +11,9 @@ dependencies:
   graphql: ^5.0.0
   json_annotation: ^4.4.0
   meta: ^1.7.0
-  takkan_script:
-    path: ../takkan_script
-  takkan_schema:
-    path: ../takkan_schema
+  takkan_script: ^0.0.1
+  takkan_schema: ^0.1.0
+
 
 dev_dependencies:
   test:
