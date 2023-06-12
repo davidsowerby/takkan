@@ -12,12 +12,9 @@ dependencies:
   json_annotation: ^4.4.0
   process_runner: ^4.1.2
   meta: ^1.7.0
-  takkan_script:
-    path: ../takkan_script
-  takkan_schema:
-    path: ../takkan_schema
-  takkan_backend:
-    path: ../takkan_backend
+  takkan_script: ^0.0.1
+  takkan_schema: ^0.1.0
+  takkan_backend: ^0.0.1
 
 
 
@@ -26,8 +23,7 @@ dev_dependencies:
   build_runner:
   mockito: ^5.0.7
   json_serializable: ^6.1.4
-  takkan_medley_orchestrator:
-    path: ../takkan_medley_orchestrator
+  takkan_medley_orchestrator: ^0.0.1
 
 
 # For information on the generic Dart part of this file, see the
