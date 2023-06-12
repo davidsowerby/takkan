@@ -4,7 +4,7 @@ version: 1.0.0
 # homepage: https://www.example.com
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=2.17.0 <4.0.0'
 
 
 dependencies:
@@ -12,12 +12,10 @@ dependencies:
   characters: ^1.2.0
   json_annotation: ^4.5.0
   equatable: ^2.0.3
-  takkan_schema:
-    path: /home/david/git/takkan/takkan_schema
+  takkan_schema: ^0.1.0
   takkan_back4app_client:
     path: /home/david/git/takkan/takkan_back4app_client
-  takkan_backend:
-    path: /home/david/git/takkan/takkan_backend
+  takkan_backend: ^0.0.1
 
 
 dev_dependencies:
@@ -25,5 +23,4 @@ dev_dependencies:
   lints: ^1.0.0
   mocktail: ^0.3.0
   test:
-  takkan_medley_orchestrator:
-    path: /home/david/git/takkan/takkan_medley_orchestrator
+  takkan_medley_orchestrator: ^0.0.1
