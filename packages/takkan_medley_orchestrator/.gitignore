@@ -1,0 +1,11 @@
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Others
+/logs/
+/exported_schemas/
+/.packages
+/.dart_tool/
