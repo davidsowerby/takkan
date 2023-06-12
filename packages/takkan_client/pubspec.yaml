@@ -37,12 +37,9 @@ dependencies:
 
   collection: ^1.16.0
   auto_size_text: ^3.0.0
-  takkan_script:
-    path: ../takkan_script
-  takkan_schema:
-    path: ../takkan_schema
-  takkan_backend:
-    path: ../takkan_backend
+  takkan_script: ^0.0.1
+  takkan_schema: ^0.1.0
+  takkan_backend: ^0.0.1
 
 
 dev_dependencies:
