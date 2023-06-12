@@ -1,0 +1,18 @@
+{
+  "primary": {
+    "dev": {
+      "X-Parse-Application-Id": "test",
+      "X-Parse-Client-Key": "test",
+      "serverUrl": "http://localhost:1337/parse/",
+      "graphqlEndpoint": "http://localhost:1337/graphql",
+      "documentEndpoint": "http://localhost:1337/parse/classes"
+    },
+    "test": {
+      "X-Parse-Application-Id": "test",
+      "X-Parse-Client-Key": "test",
+      "serverUrl": "http://localhost:1337/parse/",
+      "graphqlEndpoint": "http://localhost:1337/graphql",
+      "documentEndpoint": "http://localhost:1337/parse/classes"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "mongodb-runner": "^4.8.3",
+    "parse-server": "^4.10.4"
+  },
+  "scripts": {
+    "server": "parse-server --appId test --clientKey test --masterKey test --databaseURI mongodb://localhost/test --mountGraphQL --mountPlayground --cloud test/cloud/code/main.js",
+    "dashboard": "parse-dashboard --dev --appId test  --masterKey test --serverURL http://localhost:1337/parse --appName test",
+    "posttest": "mongodb-runner stop",
+    "db": "mongodb-runner start",
+    "pretest": "mongodb-runner start && parse-server --appId test --clientKey test --masterKey test --databaseURI mongodb://localhost/test --mountGraphQL --mountPlayground --cloud test/cloud/code/main.js"
+  }
+}

@@ -1,0 +1,35 @@
+name: takkan_back4app_client
+description: Client-side Takkan pacage for use with Back4App
+version: 0.0.1
+homepage: https://www.takkan.org
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  parse_server_sdk: ^3.1.0
+  dio: ^4.0.0
+  json_annotation: ^4.4.0
+  process_runner: ^4.1.2
+  meta: ^1.7.0
+  takkan_script:
+    path: ../takkan_script
+  takkan_schema:
+    path: ../takkan_schema
+  takkan_backend:
+    path: ../takkan_backend
+
+
+
+dev_dependencies:
+  test:
+  build_runner:
+  mockito: ^5.0.7
+  json_serializable: ^6.1.4
+  takkan_medley_orchestrator:
+    path: ../takkan_medley_orchestrator
+
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
