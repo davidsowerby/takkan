@@ -3,6 +3,8 @@
 import 'package:takkan_schema/common/version.dart';
 import 'package:takkan_schema/data/select/condition/condition.dart';
 import 'package:takkan_schema/schema/field/integer.dart';
+import 'package:takkan_schema/schema/field/pointer.dart';
+// import 'package:takkan_schema/schema/field/pointer.dart';
 import 'package:takkan_schema/schema/field/string.dart';
 import 'package:takkan_schema/schema/query/query.dart';
 import 'package:takkan_schema/schema/schema.dart';
@@ -130,6 +132,7 @@ final Schema medleySchema2 = Schema(
           ],
         ),
         'state': FString(),
+        'raisedBy' : FPointer(targetClass: 'Person'),
       },
       queries: {
         'allIssues': Query(),
