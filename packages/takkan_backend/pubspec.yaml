@@ -1,0 +1,29 @@
+name: takkan_backend
+description: Common declarations for Takkan backend implementations
+version: 0.0.1
+homepage: https://takkan.org/
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+
+dependencies:
+  dio: ^4.0.0
+  graphql: ^5.0.0
+  json_annotation: ^4.4.0
+  meta: ^1.7.0
+  takkan_script:
+    path: ../takkan_script
+  takkan_schema:
+    path: ../takkan_schema
+
+dev_dependencies:
+  test:
+  mocktail: ^0.1.4
+  build_runner:
+  json_serializable: ^6.1.4
+  http_mock_adapter: ^0.3.2
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+
