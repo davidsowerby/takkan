@@ -41,28 +41,58 @@ It is possible to modify the server schema via the Back4App API, but this requir
 
 This is is not recommended, and Takkan reduces this risk by using an authenticated role instead.
 
-### Process
-
-A [Takkan administrator](https://gitlab.com/takkan/takkan_design/-/issues/44), using the [Orchestrator](./orchestrator.md), goes through these steps:  
+Initial deployment and an update deployment are slightly different in process, but both are conducted by a [Takkan administrator](https://gitlab.com/takkan/takkan_design/-/issues/44), using the [Orchestrator](./orchestrator.md).
 
 
-1. the server schema is generated into a local directory. *framework.js*  is copied into the directory if this is the first deployment.  The local directory is specified by specified by *takkan.json* property 'serverCodePath'.
-1. the server schema is deployed to the Back4App instance, with  *framework.js* if required, using the Back4App CLI command `b4a deploy`
-1. depending on whether this is an initial deployment, or update:
-    - for initial deployment:
-        - cloud function 'initTakkan' is invoked to create base roles and classes
-        - cloud function 'initStore' is invoked if this instance acts as a [Takkan Store](./store.md) 
-    - for updates:
-        - cloud function 'applyServerSchema' is invoked
-1. the rest of the server code is then generated from the Takkan `Schema` and deployed using the Back4App CLI command
-1. the [Takkan Store](./store.md) is updated with any changes to the `Schema`.
+### Configuration
+
+A local deployment directory is specified by *takkan.json* property 'serverCodePath'.  
+
+The layout of files within its directory is determined by an implementation of `ServerCodeStructure`. 
+
+### Initial Deployment Process
+
+1. all the server code files are generated into a local deployment directory specified.  
+1. the server code files are deployed to the Back4App instance using the Back4App CLI command `b4a deploy`.
+1. the Back4App instance is initialised using by invoking cloud function 'initTakkan' to create base roles and classes (including the administrator role).
+1. a [Takkan Store](#takkan_store) is [created](#creating-a-takkan-store).
+1. the `Schema` is uploaded to the [Takkan Store](./store.md).
 
 The version may now be considered 'released'.
 
+### Update Deployment Process
+
+When a system is already up and running we need to update the server code in a specific order to avoid mis-matches between clients and server,
+
+:::danger
+This process relies on a schema being backward compatible.  If it is not, data loss may occur.  
+
+However, if you understand and accept the impact on your data, the process will work.
+:::
+
+1. the server schema only is generated into the local deployment directory.
+1. if *framework.js* has changed (a hopefully rare event), that will also be added to the deployment directory.
+1. these files are deployed to the Back4App instance, using the Back4App CLI command `b4a deploy`
+1. cloud function 'applyServerSchema' is invoked.
+1. when the schema has updated, the rest of the server code is then generated from the Takkan `Schema`.
+1. this updated code is deployed using the Back4App CLI command `b4a deploy`
+1. the `Schema` is uploaded to the [Takkan Store](./store.md).
+
+The version may now be considered 'released'.
+
+When client requests arrive now, they will be notified that a new version is [available](./schemas.md#client-feedback).
+
+### Creating a Takkan Store
+
+There is a reserved group in *takkan.json* named 'takkan_store', which defines the properties for the cloud instance nominated to hold `Schema` and `Script` instances.
+
+If the group does not exist, it is assumed that the first declared instance configuration in the 'main' group is to be used as a store.
 
 :::tip Note
 For initialization to work, a Back4App instance is expected to be clean.  If you want to re-use an instance, the Takkan framework includes a 'resetInstance' cloud function.
-However, to avoid embarrassing mistakes, this function will only execute if this Back4App instance has an environment variable 'resettable=true'
+However, to avoid embarrassing mistakes, this function will only execute if this Back4App instance has an environment variable 'resettable=true'.  
+
+To set the environment variable you will need access to the Back4App dashboard.
 :::
 
 ## Server Code Directory Structure
