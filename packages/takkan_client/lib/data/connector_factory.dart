@@ -50,8 +50,9 @@ Binding _binding(
   switch (fieldSchema.runtimeType) {
     case FString:
       return parentBinding.modelBinding.stringBinding(property: property);
-    case FList:
-      return parentBinding.modelBinding.listBinding(property: property);
+      // TODO: See
+    // case FList:
+    //   return parentBinding.modelBinding.listBinding(property: property);
     case FInteger:
       return parentBinding.modelBinding.intBinding(property: property);
     default:

@@ -37,8 +37,7 @@ dependencies:
   takkan_script: ^0.0.1
   takkan_backend: ^0.0.1
   takkan_back4app_client: ^0.0.1
-  takkan_medley_script:
-    path: ../takkan_medley_script
+  takkan_medley_orchestrator: ^0.0.1
 
 dev_dependencies:
   flutter_test:
