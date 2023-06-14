@@ -1,8 +1,11 @@
-name: trademation
-repository: https://gitlab.com/dsowerby/trademation
+name: takkan
+repository: https://gitlab.com/dsowerby/takkan
 
 packages:
-  - packages/**
+  - packages/*
+ignore:
+  - packages/takkan_mason/bricks/takkan_app/*
+
 
 command:
   version:
