@@ -6,7 +6,6 @@ packages:
 ignore:
   - packages/takkan_mason/bricks/takkan_app/*
 
-
 command:
   version:
     linkToCommits: true
