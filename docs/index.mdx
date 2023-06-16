@@ -1,1 +1,67 @@
-# Introduction to Takkan
+---
+title: Takkan Overview
+description: An Application Framework for Flutter.
+---
+
+## Objective
+
+The objective of Takkan is to simplify some of the application structural design, while leaving the developer completely free to use the full power of Flutter.
+
+
+## Concept
+
+### Schema
+
+At the heart of the Takkan framework is the `Schema`.  It allows app developers to define the application schema, with associated validations and permissions in one place, or if preferred, by combining various elements of a schema from different parts of the app:
+
+```dart
+final Schema schema = Schema(
+        name: 'test',
+        version: const Version(number: 0),
+        documents: {
+          'Person': Document(
+            fields: {
+              'firstName': FString(),
+              'lastName': FString(),
+              'age': FInteger(),
+            },
+            queries: {
+              'adults': Query(
+                conditions: [
+                  C('age').int.equalTo(152),
+                  C('lastName').string.equalTo('Hazel'),
+                ],
+                queryScript: "firstName == 'Jack'",
+                returnSingle: true,
+              ),
+            },
+          ),
+        },
+      );
+```
+
+The `Schema` is input to a `CloudCodeGenerator`, which generates server-side javascript to manage the server schema, permissions and validation code.  This supports initial deployment and application upgrades[^1].
+
+<Info>This code generation is currently limited to Back4App, although in theory it could be extended to other backends.  To do so is not currently a project priority, but contributions are welcome</Info>
+
+### Script
+
+A `Script` is the client side element, which is mostly about presenting data to the user, or the user editing that data.
+
+It uses the `Schema`, to avoid discrepancies between client and server side code, especially when clients may be operating on differing versions.
+
+The `Script` provides client-side validation, and allows the developer to, for example, hide or disable components that display data that the end user does not have permission to view.
+
+It also provides default behaviour that suits many situations, over and above that provided by Flutter.  For example, read / edit / save / cancel functionality is available with minimal developer effort.
+
+Currently, the Takkan app runs a `Script` in an "interpreted" mode.  However, it is recognised that this may have some performance limitations for the more demanding apps.
+
+### Builder
+
+In the event that performance becomes an issue, it is intended that a `Builder` would generate native Flutter code from the `Script`.  This would remove any need for interpreting the `Script` at run time, but would lose the flexibility of the being able to dynamically download a version update of the `Script`.
+
+This aspect of the project has not been started, and will only become a priority if performance does actually become an issue.
+
+
+[^1]: This does require the version upgrades are backward compatible.
+

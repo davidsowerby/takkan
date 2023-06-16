@@ -18,27 +18,29 @@ void main() {
 
     test('combine script and query', () {
       // given
-      final Schema schema =
-          Schema(name: 'test', version: const Version(number: 0), documents: {
-        'Person': Document(
-          fields: {
-            'firstName': FString(),
-            'lastName': FString(),
-            'age': FInteger(),
-          },
-          queries: {
-            'adults': Query(
-              conditions: [
-                C('age').int.equalTo(152),
-                C('lastName').string.equalTo('Hazel'),
-              ],
-              queryScript: "firstName == 'Jack'",
-              returnSingle: true,
-            ),
-          },
-        )
-      });
-
+      final Schema schema = Schema(
+        name: 'test',
+        version: const Version(number: 0),
+        documents: {
+          'Person': Document(
+            fields: {
+              'firstName': FString(),
+              'lastName': FString(),
+              'age': FInteger(),
+            },
+            queries: {
+              'adults': Query(
+                conditions: [
+                  C('age').int.equalTo(152),
+                  C('lastName').string.equalTo('Hazel'),
+                ],
+                queryScript: "firstName == 'Jack'",
+                returnSingle: true,
+              ),
+            },
+          ),
+        },
+      );
 
       // when
       schema.init();
