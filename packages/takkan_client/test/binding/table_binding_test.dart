@@ -28,8 +28,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -53,28 +53,38 @@ void main() {
       test("read with default value, value exists", () {
         List<Map<String, dynamic>> defaultValue = defValue;
         final List<Map<String, dynamic>> expected = loadedValue;
-        final List<Map<String, dynamic>>? actual =
-            rootBinding.tableBinding(property: property).read(defaultValue: defaultValue);
+        final List<Map<String, dynamic>>? actual = rootBinding
+            .tableBinding(property: property)
+            .read(defaultValue: defaultValue);
         expect(actual, expected);
       });
 
       test("read with default value, value does not exist", () {
         List<Map<String, dynamic>> defaultValue = defValue;
         final List<Map<String, dynamic>> expected = defaultValue;
-        final actual =
-            rootBinding.tableBinding(property: "no item").read(defaultValue: defaultValue);
+        final actual = rootBinding
+            .tableBinding(property: "no item")
+            .read(defaultValue: defaultValue);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final List<Map<String, dynamic>> expected = [];
-        final actual = rootBinding.tableBinding(property: "no item").read(allowNullReturn: false);
+        final actual = rootBinding
+            .tableBinding(property: "no item")
+            .read(allowNullReturn: false);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final List<Map<String, dynamic>>? expected = null;
-        final actual = rootBinding.tableBinding(property: "no item").read(allowNullReturn: true);
+        final actual = rootBinding
+            .tableBinding(property: "no item")
+            .read(allowNullReturn: true);
         expect(actual, expected);
       });
     });
@@ -99,7 +109,8 @@ void main() {
 
       test("parent list created when needed", () {
         List<Map<String, dynamic>> expected = updateValue;
-        final list = rootBinding.listBinding<List<Map<String, dynamic>>>(property: "theList");
+        final list = rootBinding.listBinding<List<Map<String, dynamic>>>(
+            property: "theList");
         expect(list.read(allowNullReturn: true), isNull);
         final TableBinding sb = list.tableBinding(index: 0);
         sb.write(expected);

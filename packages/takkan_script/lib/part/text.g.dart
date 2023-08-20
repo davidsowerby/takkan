@@ -22,7 +22,7 @@ BodyText1 _$BodyText1FromJson(Map<String, dynamic> json) => BodyText1(
     );
 
 Map<String, dynamic> _$BodyText1ToJson(BodyText1 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -59,7 +59,7 @@ BodyText2 _$BodyText2FromJson(Map<String, dynamic> json) => BodyText2(
     );
 
 Map<String, dynamic> _$BodyText2ToJson(BodyText2 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -86,7 +86,7 @@ Text _$TextFromJson(Map<String, dynamic> json) => Text(
     );
 
 Map<String, dynamic> _$TextToJson(Text instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -113,7 +113,7 @@ Heading1 _$Heading1FromJson(Map<String, dynamic> json) => Heading1(
     );
 
 Map<String, dynamic> _$Heading1ToJson(Heading1 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -139,7 +139,7 @@ Heading2 _$Heading2FromJson(Map<String, dynamic> json) => Heading2(
     );
 
 Map<String, dynamic> _$Heading2ToJson(Heading2 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -165,7 +165,7 @@ Heading3 _$Heading3FromJson(Map<String, dynamic> json) => Heading3(
     );
 
 Map<String, dynamic> _$Heading3ToJson(Heading3 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -191,7 +191,7 @@ Heading4 _$Heading4FromJson(Map<String, dynamic> json) => Heading4(
     );
 
 Map<String, dynamic> _$Heading4ToJson(Heading4 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -217,7 +217,7 @@ Heading5 _$Heading5FromJson(Map<String, dynamic> json) => Heading5(
     );
 
 Map<String, dynamic> _$Heading5ToJson(Heading5 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -243,7 +243,7 @@ Title _$TitleFromJson(Map<String, dynamic> json) => Title(
     );
 
 Map<String, dynamic> _$TitleToJson(Title instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -269,7 +269,7 @@ Subtitle _$SubtitleFromJson(Map<String, dynamic> json) => Subtitle(
     );
 
 Map<String, dynamic> _$SubtitleToJson(Subtitle instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,
@@ -295,7 +295,7 @@ Subtitle2 _$Subtitle2FromJson(Map<String, dynamic> json) => Subtitle2(
     );
 
 Map<String, dynamic> _$Subtitle2ToJson(Subtitle2 instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,

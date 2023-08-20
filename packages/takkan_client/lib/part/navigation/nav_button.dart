@@ -42,12 +42,17 @@ class NavButtonPart extends StatelessWidget {
 
 class NavButtonPartBuilder implements PartBuilder<NavButton, NavButtonPart> {
   @override
-  NavButtonPart createPart({    required NavButton config,
+  NavButtonPart createPart({
+    required NavButton config,
     required ThemeData theme,
     required DataContext dataContext,
     required DataBinding parentDataBinding,
-    OnColor onColor = OnColor.surface,}) {
+    OnColor onColor = OnColor.surface,
+  }) {
     final Trait trait = traitLibrary.find(config: config, theme: theme);
-    return NavButtonPart(partConfig: config, trait: trait as NavButtonTrait,);
+    return NavButtonPart(
+      partConfig: config,
+      trait: trait as NavButtonTrait,
+    );
   }
 }

@@ -107,23 +107,12 @@ Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
           const {},
     );
 
-Map<String, dynamic> _$DocumentToJson(Document instance) {
-  final val = <String, dynamic>{
-    'queries': instance.queries.map((k, e) => MapEntry(k, e.toJson())),
-    'permissions': instance.permissions.toJson(),
-    'documentType': _$DocumentTypeEnumMap[instance.documentType]!,
-  };
-
-  void writeNotNull(String key, dynamic value) {
-    if (value != null) {
-      val[key] = value;
-    }
-  }
-
-  writeNotNull(
-      'fields', const SchemaFieldMapConverter().toJson(instance.fields));
-  return val;
-}
+Map<String, dynamic> _$DocumentToJson(Document instance) => <String, dynamic>{
+      'queries': instance.queries.map((k, e) => MapEntry(k, e.toJson())),
+      'permissions': instance.permissions.toJson(),
+      'documentType': _$DocumentTypeEnumMap[instance.documentType]!,
+      'fields': const SchemaFieldMapConverter().toJson(instance.fields),
+    };
 
 const _$DocumentTypeEnumMap = {
   DocumentType.standard: 'standard',

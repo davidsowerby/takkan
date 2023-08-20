@@ -168,7 +168,6 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
         config: widget.config);
   }
 
-
   /// Returns [widget] wrapped in [EditState] if [config.hasEditControl] is true
   /// [EditState.canEdit] is set to reflect whether or not the user has permissions to change the data,
   /// see [_canEdit]

@@ -2,11 +2,10 @@ import 'package:takkan_medley_orchestrator/schema/medley_schema.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/schema/validation/validation_error_messages.dart';
 import 'package:test/test.dart';
+
 void main() {
   group('Unit test', () {
-    setUpAll(() {
-
-    });
+    setUpAll(() {});
 
     tearDownAll(() {});
 
@@ -16,7 +15,7 @@ void main() {
 
     test('field validations', () {
       // given
-      final schema=medleySchema1;
+      final schema = medleySchema1;
       schema.init();
       final doc = schema.document('Person');
       const errorMessages =

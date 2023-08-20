@@ -40,6 +40,7 @@ class ConditionBuilder {
 
   Condition<dynamic> _parseCondition(String cond, bool forQuery) {
     final s = cond.split(' ');
+
     /// helps with minor spacing issues
     s.removeWhere((element) => element.isEmpty);
     if (s.length != 3) {
@@ -62,7 +63,8 @@ class ConditionBuilder {
           forQuery: forQuery,
         );
         // Make sure this is a valid operation
-        c.checkValidOperation(op); // TODO: Whatever this is supposed to do will break if operand is different type to value
+        c.checkValidOperation(
+            op); // TODO: Whatever this is supposed to do will break if operand is different type to value
         // TODO: valid at this point means that the condition will not fial from one of the exclusions, eg 'notValidForType - call it 'compliant''
         conditionCreated = true;
         return c;
@@ -155,7 +157,7 @@ class ConditionBuilder {
         List<Condition<dynamic>>.empty(growable: true);
     final c = expression.split(separator);
     for (final String cond in c) {
-      conditions.add(_parseCondition(cond,true));
+      conditions.add(_parseCondition(cond, true));
     }
     return conditions;
   }
@@ -164,7 +166,7 @@ class ConditionBuilder {
   /// The field name for the [Condition] is taken from [field], unlike [parseForQuery],
   /// which contains field names as part of the query expression
   List<Condition<dynamic>> parseForValidation({
-    required Field<dynamic,dynamic> field,
+    required Field<dynamic, dynamic> field,
     required String expression,
   }) {
     final f = field;
@@ -172,7 +174,7 @@ class ConditionBuilder {
         List<Condition<dynamic>>.empty(growable: true);
     final c = expression.split(separator);
     for (final String cond in c) {
-      conditions.add(_parseCondition('${f.name} $cond',false));
+      conditions.add(_parseCondition('${f.name} $cond', false));
     }
     return conditions;
   }

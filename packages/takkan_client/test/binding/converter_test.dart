@@ -42,7 +42,5 @@ void main() {
       expect(converter.viewModelValidate('12.0'), false);
       expect(converter.viewModelValidate('x'), false);
     });
-
-
   });
 }

@@ -41,28 +41,24 @@ class DocumentListPage extends StatefulWidget {
       );
 }
 
-class DocumentListPageState extends State<DocumentListPage>
-  {
+class DocumentListPageState extends State<DocumentListPage> {
   DocumentListPageState({
     required PageConfig.Page config,
     IDataProvider? dataProvider,
     Map<String, dynamic> pageArguments = const {},
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          TakkanRefreshButton(),
-
-        ],
-        title: Text(widget.config.title ?? ''),
-      ),
-      body: Center(child: Text('TBD'),)
-    );
+        appBar: AppBar(
+          actions: [
+            TakkanRefreshButton(),
+          ],
+          title: Text(widget.config.title ?? ''),
+        ),
+        body: Center(
+          child: Text('TBD'),
+        ));
   }
-
-
 }

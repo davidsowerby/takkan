@@ -55,13 +55,9 @@ class Takkan {
 
     appConfigFromAssetBindings();
 
-
-
     if (includeTakkanDefaults || injectionBindings.isEmpty) {
       takkanDefaultInjectionBindings();
     }
-
-
 
     _loaders = loaders;
     _particleLibraryEntries = particleLibraryEntries;
@@ -80,7 +76,6 @@ class Takkan {
   _doAfterLoad() async {
     await _loadSchemas();
     library.init(entries: _particleLibraryEntries);
-
 
     _isReady = true;
     notifyReadyListeners();
@@ -138,9 +133,6 @@ class Takkan {
   }
 
   bool get isReady => _isReady;
-
-
-
 }
 
 final Takkan _takkan = Takkan();

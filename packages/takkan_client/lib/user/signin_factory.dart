@@ -15,7 +15,8 @@ class DefaultSignInFactory implements SignInFactory {
     required Map<String, dynamic> pageArguments,
     required IDataProvider dataProvider,
   }) {
-    return DefaultSignInPage(pageArguments: pageArguments, dataProvider: dataProvider);
+    return DefaultSignInPage(
+        pageArguments: pageArguments, dataProvider: dataProvider);
   }
 }
 

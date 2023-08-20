@@ -31,7 +31,7 @@ PanelStatic _$PanelStaticFromJson(Map<String, dynamic> json) => PanelStatic(
 
 Map<String, dynamic> _$PanelStaticToJson(PanelStatic instance) =>
     <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'children': ContentConverter.toJson(instance.children),
       'layout': LayoutJsonConverter.toJson(instance.layout),

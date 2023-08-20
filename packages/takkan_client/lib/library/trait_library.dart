@@ -33,8 +33,6 @@ abstract class TraitSpec {
   Trait? find({required String config, required ThemeData theme});
 }
 
-
-
 TraitLibrary _traitLibrary = DefaultTraitLibrary();
 
 TraitLibrary get traitLibrary => _traitLibrary;

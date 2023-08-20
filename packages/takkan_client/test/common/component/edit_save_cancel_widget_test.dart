@@ -18,7 +18,7 @@ void main() {
     tearDownAll(() {});
 
     setUp(() {
-      cacheEntry=MockCacheEntry();
+      cacheEntry = MockCacheEntry();
     });
 
     tearDown(() {});
@@ -27,7 +27,8 @@ void main() {
       // given
       MockCacheEntry dataStore = MockCacheEntry();
       final escKey = 'esc';
-      final esc = EditSaveCancel(cacheEntry: cacheEntry,
+      final esc = EditSaveCancel(
+        cacheEntry: cacheEntry,
         key: keys(null, [escKey]),
         // documentRoot: dataStore,
       );
@@ -87,6 +88,6 @@ void main() {
         () => dataStore.flushFormsToModel(),
         () => dataStore.save(),
       ]);
-    },skip: true);
+    }, skip: true);
   });
 }

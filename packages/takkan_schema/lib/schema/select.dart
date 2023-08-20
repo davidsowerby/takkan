@@ -7,7 +7,7 @@ import 'field/field.dart';
 
 // part 'select.g.dart';
 
-abstract class SelectField extends Field<dynamic,Condition<dynamic>> {
+abstract class SelectField extends Field<dynamic, Condition<dynamic>> {
   SelectField({
     super.isReadOnly = IsReadOnly.inherited,
     required super.required,

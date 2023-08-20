@@ -48,12 +48,10 @@ class ListViewPart extends StatelessWidget {
   }
 
 // return Container(color: Colors.amberAccent, height: 500, child: ListView.builder());
-
 }
 
 class ListViewPartBuilder
     implements PartBuilder<ListViewConfig.ListView, ListViewPart> {
-
   @override
   ListViewPart createPart(
       {required ListViewConfig.ListView config,
@@ -77,9 +75,7 @@ class ListViewPartBuilder
       dataContext: dataContext,
     );
   }
-
 }
-
 
 abstract class TileBuilder<TILE extends Widget> {
   TILE build({

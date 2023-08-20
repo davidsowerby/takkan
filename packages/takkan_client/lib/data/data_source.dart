@@ -41,10 +41,7 @@ class DefaultDataContext implements DataContext {
 
   @override
   String get documentIdKey => dataProvider.objectIdKey;
-
-
 }
-
 
 /// An implementation to enable the use of a non-null [DataContext] property
 /// in [TakkanPage] and [PanelWidget].

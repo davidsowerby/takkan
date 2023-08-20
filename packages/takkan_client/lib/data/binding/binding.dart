@@ -217,19 +217,18 @@ class IntBinding extends Binding<int> {
 
 /// [T] is the data type of the map value
 class TableBinding<T> extends ListBinding<Map<String, T>> {
-  const TableBinding.private(
-      {required CollectionBinding parent,
-      String property = notSet,
-      int index = Binding.noValue,
-      required String firstLevelKey,
-        required super.getEditHost,
-      })
-      : super.private(
-            parent: parent,
-            property: property,
-            index: index,
-            firstLevelKey: firstLevelKey,
-  );
+  const TableBinding.private({
+    required CollectionBinding parent,
+    String property = notSet,
+    int index = Binding.noValue,
+    required String firstLevelKey,
+    required super.getEditHost,
+  }) : super.private(
+          parent: parent,
+          property: property,
+          index: index,
+          firstLevelKey: firstLevelKey,
+        );
 
   @override
   List<Map<String, T>> emptyValue() {

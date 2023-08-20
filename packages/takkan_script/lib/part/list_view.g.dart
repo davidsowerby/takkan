@@ -25,7 +25,7 @@ ListView _$ListViewFromJson(Map<String, dynamic> json) => ListView(
     );
 
 Map<String, dynamic> _$ListViewToJson(ListView instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,

@@ -18,7 +18,7 @@ Content _$ContentFromJson(Map<String, dynamic> json) => Content(
     );
 
 Map<String, dynamic> _$ContentToJson(Content instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),

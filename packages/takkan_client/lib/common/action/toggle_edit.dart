@@ -8,7 +8,8 @@ mixin ToggleSectionEditState {
   /// In theory we could just call this with BuildContext, but if we did that we would not be listening for changes
   /// in the calling build() method
   toggleEditState(BuildContext context) {
-    final EditState sectionEditState = Provider.of<EditState>(context, listen: false);
+    final EditState sectionEditState =
+        Provider.of<EditState>(context, listen: false);
     // final DocumentModelShared documentEditState = Provider.of<DocumentModelShared>(context, listen: false);
 
     if (sectionEditState.readMode) {

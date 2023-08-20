@@ -7,7 +7,6 @@ part 'version.g.dart';
 /// Used by [Script] and [Schema] to record current and deprecated versions
 @JsonSerializable(explicitToJson: true)
 class Version extends Equatable {
-
   const Version(
       {required this.number, this.label = '', this.deprecated = const []});
 

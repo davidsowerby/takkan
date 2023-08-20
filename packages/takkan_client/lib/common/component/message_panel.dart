@@ -10,14 +10,16 @@ class MessagePanel extends StatelessWidget {
   final double elevation;
 
   const MessagePanel(
-      {Key? key, required this.message, this.width = 300, this.height = 160, this.elevation = 20})
+      {Key? key,
+      required this.message,
+      this.width = 300,
+      this.height = 160,
+      this.elevation = 20})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery
-        .of(context)
-        .size;
+    final screenSize = MediaQuery.of(context).size;
     final widthPad = (screenSize.width - width) / 2;
     final theme = Theme.of(context);
 
@@ -37,10 +39,12 @@ class MessagePanel extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 16, left: 8.0, right: 8, bottom: 24),
+                  padding: const EdgeInsets.only(
+                      top: 16, left: 8.0, right: 8, bottom: 24),
                   child: Container(
                     width: width,
-                    child: AutoSizeText(message,
+                    child: AutoSizeText(
+                      message,
                       textKey: keys(key, ['text']),
                       textAlign: TextAlign.center,
                       textScaleFactor: 1.4,

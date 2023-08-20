@@ -19,7 +19,11 @@ class StreamedOutput {
       onCancel: () => {_streamIsActive = false},
       onListen: () => {_streamIsActive = true},
     );
-    _rootBinding = RootBinding(data: _data, id: 'streamed output',getEditHost: getEditHost,);
+    _rootBinding = RootBinding(
+      data: _data,
+      id: 'streamed output',
+      getEditHost: getEditHost,
+    );
   }
 
   Map<String, dynamic> get data => Map.from(_data);
@@ -75,7 +79,4 @@ class StreamedOutput {
   _fireStreamEvent() {
     _streamController.add(data);
   }
-
-
 }
-

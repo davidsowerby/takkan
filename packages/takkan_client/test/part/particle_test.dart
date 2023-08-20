@@ -75,7 +75,8 @@ void main() {
           partConfig: MockPartConfig(),
           dataContext: MockDataContextWithParams());
       when(() => interpolator.partConfig.isStatic).thenReturn(false);
-      when(() => interpolator.partConfig.staticData).thenReturn('Your score is: {}');
+      when(() => interpolator.partConfig.staticData)
+          .thenReturn('Your score is: {}');
       when(() => interpolator.connector?.readFromModel()).thenReturn('5');
 
       // when

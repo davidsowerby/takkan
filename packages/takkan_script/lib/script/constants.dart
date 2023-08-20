@@ -1,1 +1,1 @@
-const String notSet='-not set-';
+const String notSet = '-not set-';

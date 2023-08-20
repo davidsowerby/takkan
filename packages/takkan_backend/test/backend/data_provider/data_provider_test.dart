@@ -232,7 +232,8 @@ void main() {
       provider.init(config: config);
       // when
       final result = await provider.updateDocument(
-        documentId: const DocumentId(documentClass: 'Person', objectId: objectId),
+        documentId:
+            const DocumentId(documentClass: 'Person', objectId: objectId),
         data: data,
       );
       // then
@@ -264,7 +265,8 @@ void main() {
       provider.init(config: config);
       // when
       final result = await provider.deleteDocument(
-        documentId: const DocumentId(documentClass: 'Person', objectId: objectId),
+        documentId:
+            const DocumentId(documentClass: 'Person', objectId: objectId),
       );
       // then
 

@@ -16,11 +16,10 @@ part 'rest_delegate.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class Rest extends DataProviderDelegate {
-
   const Rest({
     this.documentEndpoint = '/classes',
-    super. checkHealthOnConnect = false,
-  }) ;
+    super.checkHealthOnConnect = false,
+  });
 
   factory Rest.fromJson(Map<String, dynamic> json) => _$RestFromJson(json);
   final String documentEndpoint;

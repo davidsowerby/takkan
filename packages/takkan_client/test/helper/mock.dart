@@ -29,8 +29,7 @@ class MockToast extends Mock implements Toast {}
 
 class MockAppConfig extends Mock implements AppConfig {}
 
-
-class MockCacheEntry extends Mock implements CacheEntry{}
+class MockCacheEntry extends Mock implements CacheEntry {}
 
 class MockDocument extends Mock implements Document {}
 
@@ -69,8 +68,9 @@ class MockDataContextWithParams implements DataContext {
   String get documentIdKey => 'objectId';
 }
 
-class MockPartConfig extends Mock implements Part{}
-class MockModelConnector extends Mock implements ModelConnector{}
+class MockPartConfig extends Mock implements Part {}
+
+class MockModelConnector extends Mock implements ModelConnector {}
 
 // class MockUserDiscardChangesPrompt extends Mock
 //     implements UserDiscardChangesPrompt {}

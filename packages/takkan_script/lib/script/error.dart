@@ -1,11 +1,9 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'error.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class TakkanError {
-
   const TakkanError({required this.message});
 
   factory TakkanError.fromJson(Map<String, dynamic> json) =>

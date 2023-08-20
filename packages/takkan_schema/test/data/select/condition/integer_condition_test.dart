@@ -230,6 +230,7 @@ void main() {
     expect(document.field('d').doValidation(6, errorMessages),
         ['must be less than or equal to 5']);
 
-    expect(document.query('a is 5').combinedConditions[0].cloudOut,'query.equalTo("a", 5);');
+    expect(document.query('a is 5').combinedConditions[0].cloudOut,
+        'query.equalTo("a", 5);');
   });
 }

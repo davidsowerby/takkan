@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../takkan/takkan_element.dart';
 
-class ValidationMessage extends Equatable{
-
+class ValidationMessage extends Equatable {
   ValidationMessage({required TakkanElement item, required this.msg})
       : type = item.runtimeType.toString(),
         debugId = item.debugId;
@@ -16,5 +15,5 @@ class ValidationMessage extends Equatable{
   }
 
   @override
-  List<Object?> get props => [type,debugId,msg];
+  List<Object?> get props => [type, debugId, msg];
 }

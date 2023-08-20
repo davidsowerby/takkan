@@ -60,7 +60,7 @@ class Query extends SchemaElement {
 
   /// To retrieve conditions specified by [queryScript] as well,
   /// use [combinedConditions]
-  @JsonKey(fromJson: conditionListFromJson,toJson: conditionListToJson)
+  @JsonKey(fromJson: conditionListFromJson, toJson: conditionListToJson)
   final List<Condition<dynamic>> conditions;
 
   /// Combines [conditions] with [script].  Use this to ensure you have all
@@ -98,7 +98,8 @@ List<Condition<dynamic>> conditionListFromJson(List<dynamic>? input) {
     throw const TakkanException('Null thrown');
   }
   final List<Map<String, dynamic>> json = List.castFrom(input);
-  final List<Condition<dynamic>> results = List<Condition<dynamic>>.empty(growable: true);
+  final List<Condition<dynamic>> results =
+      List<Condition<dynamic>>.empty(growable: true);
   for (final Map<String, dynamic> entry in json) {
     final String dataType = entry[jsonClassKey] as String;
     switch (dataType) {
@@ -147,11 +148,12 @@ List<Condition<dynamic>> conditionListFromJson(List<dynamic>? input) {
   return results;
 }
 
-List<Map<String, dynamic>> conditionListToJson(List<Condition<dynamic>> objectList) {
+List<Map<String, dynamic>> conditionListToJson(
+    List<Condition<dynamic>> objectList) {
   final List<Map<String, dynamic>> results =
       List<Map<String, dynamic>>.empty(growable: true);
   for (final Condition<dynamic> entry in objectList) {
-    final Map<String, dynamic> jsonMap=entry.toJson();
+    final Map<String, dynamic> jsonMap = entry.toJson();
 
     /// Will only need the replace if we use freezed again
     /// freezed creates a delegate, hence the name change

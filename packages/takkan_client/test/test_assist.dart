@@ -29,7 +29,8 @@ class MultiChildResult {
   contains(List<Key> keys) {
     final parentFinder = find.byKey(parentKey);
     for (Key key in keys) {
-      expect(find.descendant(of: parentFinder, matching: find.byKey(key)), findsOneWidget);
+      expect(find.descendant(of: parentFinder, matching: find.byKey(key)),
+          findsOneWidget);
     }
   }
 }

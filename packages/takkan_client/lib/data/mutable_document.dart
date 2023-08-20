@@ -49,7 +49,6 @@ class MutableDocument with ChangeNotifier {
 
   final instance = DateTime.now();
 
-
   late DocumentId _documentId;
 
   MutableDocument({StreamedOutput? sharedOutput}) : timestamp = DateTime.now() {

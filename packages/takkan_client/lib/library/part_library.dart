@@ -62,6 +62,3 @@ class DefaultPartLibrary implements PartLibrary {
 PartLibrary _library = DefaultPartLibrary();
 
 PartLibrary get library => _library;
-
-
-

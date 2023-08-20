@@ -10,7 +10,7 @@ import 'field.dart';
 part 'pointer.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FPointer extends Field<Pointer,PointerCondition> {
+class FPointer extends Field<Pointer, PointerCondition> {
   FPointer({
     required this.targetClass,
     super.defaultValue,
@@ -33,7 +33,7 @@ class FPointer extends Field<Pointer,PointerCondition> {
 
   @override
   @JsonKey(ignore: true)
-  bool get isLinkField=> true;
+  bool get isLinkField => true;
 
   @override
   Map<String, dynamic> toJson() => _$FPointerToJson(this);

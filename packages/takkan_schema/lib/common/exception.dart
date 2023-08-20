@@ -1,5 +1,4 @@
 class TakkanException implements Exception {
-
   const TakkanException(this.msg);
   final String msg;
 
@@ -7,7 +6,6 @@ class TakkanException implements Exception {
 }
 
 class SchemaException implements Exception {
-
   const SchemaException(this.msg);
   final String msg;
 

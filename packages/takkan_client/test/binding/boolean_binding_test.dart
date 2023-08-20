@@ -13,17 +13,17 @@ const bool defValue = false;
 const bool updateValue = false;
 
 void main() {
-  late   Map<String, dynamic> data;
-  late   MutableDocument temporaryDocument;
-  late   RootBinding rootBinding;
-  late  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late RootBinding rootBinding;
+  late ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -32,14 +32,14 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final bool? actual =
-        rootBinding.booleanBinding(property: property).read();
+            rootBinding.booleanBinding(property: property).read();
         final bool expected = loadedValue;
         expect(actual, expected);
       });
 
       test("read with default settings, value does not exist", () {
         final bool actual =
-        rootBinding.booleanBinding(property: "no item").read()!;
+            rootBinding.booleanBinding(property: "no item").read()!;
         final bool expected = false;
         expect(actual, expected);
       });
@@ -64,22 +64,22 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-              () {
-            final bool expected = false;
-            final actual = rootBinding
-                .booleanBinding(property: "no item")
-                .read(allowNullReturn: false);
-            expect(actual, expected);
-          });
+          () {
+        final bool expected = false;
+        final actual = rootBinding
+            .booleanBinding(property: "no item")
+            .read(allowNullReturn: false);
+        expect(actual, expected);
+      });
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-              () {
-            final bool? expected = null;
-            final actual = rootBinding
-                .booleanBinding(property: "no item")
-                .read(allowNullReturn: true);
-            expect(actual, expected);
+          () {
+        final bool? expected = null;
+        final actual = rootBinding
+            .booleanBinding(property: "no item")
+            .read(allowNullReturn: true);
+        expect(actual, expected);
       });
     });
     group("Write", () {
@@ -89,7 +89,6 @@ void main() {
         itemBinding.write(expected);
         bool result = itemBinding.read()!;
         expect(result, expected);
-
       });
 
       /// Example: property added to map, but map was previously non-existent
@@ -100,7 +99,6 @@ void main() {
         final BooleanBinding sb = map.booleanBinding(property: "mapEntry");
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-
       });
 
       test("parent list created when needed", () {
@@ -110,7 +108,6 @@ void main() {
         final BooleanBinding sb = list.booleanBinding(index: 0);
         sb.write(expected);
         expect(sb.read(allowNullReturn: true), expected);
-
       });
     });
   });

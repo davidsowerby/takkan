@@ -25,7 +25,7 @@ void main() {
       // given
       final Map<String, dynamic> data = {
         'back4app': {
-          'isGroup':true,
+          'isGroup': true,
           'instance1': {
             'headers': {
               keyHeaderApplicationId: 'test',
@@ -52,7 +52,7 @@ void main() {
 
       final Map<String, dynamic> data = {
         'core': {
-          'isGroup':true,
+          'isGroup': true,
           'dev': {'serverUrl': 'https://dev.com'},
           'test': {'serverUrl': 'https://test.com'},
           'selectedInstance': 'test',
@@ -102,7 +102,7 @@ void main() {
       // given
       final Map<String, dynamic> data = {
         'back4app': {
-          'isGroup':true,
+          'isGroup': true,
           'instance1': {
             'headers': {
               keyHeaderApplicationId: 'test',
@@ -212,8 +212,6 @@ void main() {
       expect(appConfig.takkanStoreConfig.isNotEmpty, isTrue);
     });
   });
-
-
 }
 
 /// This must be a replica of file 'test/backend/app/sample-takkan.json'

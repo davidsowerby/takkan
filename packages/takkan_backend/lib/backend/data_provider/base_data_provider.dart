@@ -20,8 +20,8 @@ import 'result_transformer.dart';
 import 'server_connect.dart';
 import 'url_builder.dart';
 
-abstract class BaseDataProvider<CONFIG extends DataProvider, USER extends Object>
-    implements IDataProvider<CONFIG> {
+abstract class BaseDataProvider<CONFIG extends DataProvider,
+    USER extends Object> implements IDataProvider<CONFIG> {
   BaseDataProvider();
 
   @override
@@ -182,11 +182,9 @@ abstract class BaseDataProvider<CONFIG extends DataProvider, USER extends Object
     );
 
     final serverConnectResponse = await serverConnect.create(
-        instanceConfig: instanceConfig,
-        url: urlComposition.url,
-        data: data);
+        instanceConfig: instanceConfig, url: urlComposition.url, data: data);
 
-    final returnedData=resultTransformer.transform(
+    final returnedData = resultTransformer.transform(
       rawResponse: serverConnectResponse,
       requestType: URLRequest.createDoc,
     );
@@ -351,7 +349,6 @@ abstract class BaseDataProvider<CONFIG extends DataProvider, USER extends Object
   }
 }
 
-
-class GenericDataProvider extends BaseDataProvider<DataProvider,TakkanUser>{
-  GenericDataProvider(): super();
+class GenericDataProvider extends BaseDataProvider<DataProvider, TakkanUser> {
+  GenericDataProvider() : super();
 }

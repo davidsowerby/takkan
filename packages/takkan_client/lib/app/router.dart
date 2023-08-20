@@ -9,7 +9,6 @@ import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/script/error.dart';
 import 'package:takkan_script/script/script.dart';
 
-
 /// Router for Takkan.
 ///
 /// This class should be used as a singleton. It is accessible either via [router],
@@ -124,7 +123,6 @@ class TakkanRouter {
     return MaterialPageRoute(builder: (_) => page);
   }
 
-
   /// Passes route to Routers in [_routersBefore], which wil return null if they
   /// do not support the route.
   ///
@@ -187,4 +185,4 @@ final TakkanRouter _router = TakkanRouter();
 
 TakkanRouter get router => _router;
 
-typedef RouteGenerator(RouteSettings settings, BuildContext context);
+typedef RouteGenerator = Function(RouteSettings settings, BuildContext context);

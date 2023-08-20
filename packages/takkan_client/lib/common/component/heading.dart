@@ -116,7 +116,8 @@ class _HeadingState extends State<Heading> with Interpolator {
                     ),
                   Spacer(),
                   if (editable)
-                    EditSaveCancel(cacheEntry: widget.cacheEntry,
+                    EditSaveCancel(
+                      cacheEntry: widget.cacheEntry,
                       key: keys(widget.key, ['esc']),
                       // documentRoot: widget.documentRoot,
                     ),

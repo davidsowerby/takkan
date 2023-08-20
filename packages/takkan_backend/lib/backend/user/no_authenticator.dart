@@ -4,10 +4,7 @@ import 'package:takkan_script/data/provider/data_provider.dart';
 import 'authenticator.dart';
 import 'takkan_user.dart';
 
-
-class NoAuthenticator
-    extends Authenticator<DataProvider, TakkanUser> {
-
+class NoAuthenticator extends Authenticator<DataProvider, TakkanUser> {
   NoAuthenticator(super.parent);
   final String msg =
       'If authentication is required, an authenticator must be provided by a sub-class of DataProvider';
@@ -40,9 +37,10 @@ class NoAuthenticator
   }
 
   @override
-  Future<SignInStatus> init() async{
+  Future<SignInStatus> init() async {
     super.init();
-    logType(runtimeType).i("Using a 'NoAuthenticator' so real authentication not possible");
+    logType(runtimeType)
+        .i("Using a 'NoAuthenticator' so real authentication not possible");
     return status;
   }
 

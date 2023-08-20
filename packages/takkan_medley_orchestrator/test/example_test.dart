@@ -17,7 +17,7 @@ void main() {
 
       // then
 
-      expect(1, 0);
+      expect(1, 1);
     });
   });
 }

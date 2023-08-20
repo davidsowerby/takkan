@@ -6,7 +6,6 @@ class ConfigurationException implements Exception {
   String errMsg() => msg;
 }
 
-
 class NYIException implements Exception {
   String errMsg() => 'not yet implemented';
 }

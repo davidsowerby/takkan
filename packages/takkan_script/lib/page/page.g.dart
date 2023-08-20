@@ -29,7 +29,7 @@ Page _$PageFromJson(Map<String, dynamic> json) => Page(
     );
 
 Map<String, dynamic> _$PageToJson(Page instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),

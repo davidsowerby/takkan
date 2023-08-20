@@ -17,10 +17,11 @@ void main() async {
       script = medleyScript[0];
       script.init();
       getIt.reset();
-      getIt.onScopeChanged=scopeChanged;
+      getIt.onScopeChanged = scopeChanged;
       appConfigFromFileBindings();
 
-      getIt.registerFactory<RestServerConnect>(() => DefaultRestServerConnect());
+      getIt
+          .registerFactory<RestServerConnect>(() => DefaultRestServerConnect());
       await getIt.isReady<AppConfig>();
 
       await Back4App.register();
@@ -148,10 +149,6 @@ void main() async {
   });
 }
 
-
-
-
-
-scopeChanged(bool pushed){
+scopeChanged(bool pushed) {
   print('Scope change to: ${getIt.currentScopeName}');
 }

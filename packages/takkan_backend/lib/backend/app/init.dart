@@ -4,7 +4,6 @@ abstract class AppInitializer {
 }
 
 class InitResult {
-
   const InitResult({required this.ok, this.exception});
   final bool ok;
   final Exception? exception;

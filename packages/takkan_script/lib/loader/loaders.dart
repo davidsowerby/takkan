@@ -13,7 +13,6 @@ abstract class TakkanLoader {
 /// loaded this way, as the value of the script is already compiled in.  The refresh option
 /// only works when the file is loaded from outside the app, for example, from [RestTakkanLoader] .
 class DirectTakkanLoader implements TakkanLoader {
-
   DirectTakkanLoader({required this.script});
   final Script script;
   bool _loaded = false;

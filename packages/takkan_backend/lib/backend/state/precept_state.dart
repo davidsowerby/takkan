@@ -1,5 +1,4 @@
 class TakkanState {
-
   const TakkanState(this.state);
   final Map<String, dynamic> state;
 

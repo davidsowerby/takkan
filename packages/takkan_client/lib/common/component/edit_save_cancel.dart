@@ -21,11 +21,11 @@ class EditSaveCancel extends StatelessWidget {
   final _blankKey = 'blank';
 
   const EditSaveCancel({
-    Key? key,required this.cacheEntry,
+    Key? key,
+    required this.cacheEntry,
     this.editIcon = Icons.edit,
     this.cancelIcon = Icons.cancel_outlined,
     this.saveIcon = Icons.save,
-
   }) : super(key: key);
 
   Key get rowKey => keys(key, [_rowKey]);
@@ -84,8 +84,8 @@ class EditSaveCancel extends StatelessWidget {
   }
 
   _onSave(EditState editState) async {
-    final success= await cacheEntry.save();
-    if (success){
+    final success = await cacheEntry.save();
+    if (success) {
       cacheEntry.setReadMode();
       editState.readMode = true;
     }

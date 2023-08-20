@@ -37,7 +37,7 @@ Panel _$PanelFromJson(Map<String, dynamic> json) => Panel(
     );
 
 Map<String, dynamic> _$PanelToJson(Panel instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'listEntryConfig': instance.listEntryConfig?.toJson(),

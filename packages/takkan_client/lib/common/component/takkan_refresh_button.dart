@@ -10,9 +10,9 @@ class TakkanRefreshButton extends ActionIcon {
   }
 
   const TakkanRefreshButton({
-  Key? key,
-  IconData icon = Icons.update,
-  List<Function(BuildContext)> onBefore = const [],
-  List<Function(BuildContext)> onAfter = const [],
-}) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
+    Key? key,
+    IconData icon = Icons.update,
+    List<Function(BuildContext)> onBefore = const [],
+    List<Function(BuildContext)> onAfter = const [],
+  }) : super(key: key, icon: icon, onAfter: onAfter, onBefore: onBefore);
 }

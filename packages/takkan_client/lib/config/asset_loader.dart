@@ -9,13 +9,10 @@ import 'package:takkan_backend/backend/app/app_config_loader.dart';
 /// is needed to create it (assuming of course CI is being used!).
 
 class DefaultJsonAssetLoader extends DefaultJsonFileLoader {
-
   DefaultJsonAssetLoader();
 
-  Future<Map<String, dynamic>>  loadFile(
-      {required String filePath}) async {
+  Future<Map<String, dynamic>> loadFile({required String filePath}) async {
     final String rawFile = await rootBundle.loadString(filePath);
     return jsonDecode(rawFile);
   }
-
 }

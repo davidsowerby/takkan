@@ -45,7 +45,7 @@ void main() {
       const id1 = 'objectId1';
       const queryName = 'favourite';
       const Map<String, dynamic> doc1 = {'a': 1, 'objectId': id1};
-      const inputSelector = const DocByQuery(queryName: queryName);
+      const inputSelector = DocByQuery(queryName: queryName);
 
       // when
       cache.addResult(selector: inputSelector, result: doc1);
@@ -73,8 +73,8 @@ void main() {
       // then
       final actual = cache.resultFor(
           selector: DocByQuery(
-            queryName: queryName,
-          ));
+        queryName: queryName,
+      ));
       expect(actual, id1);
     });
     test('add and return a GQL list result', () {

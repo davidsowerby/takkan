@@ -54,9 +54,9 @@ class WidgetTestTree {
     }
   }
 
-  Widget panelWidget({panelIndex=0}){
-    final key=_panelIndexes.keys.toList()[panelIndex];
-    final widgetIndex=_panelIndexes[key];
+  Widget panelWidget({panelIndex = 0}) {
+    final key = _panelIndexes.keys.toList()[panelIndex];
+    final widgetIndex = _panelIndexes[key];
     return widgets[widgetIndex!];
   }
 
@@ -78,7 +78,8 @@ class WidgetTestTree {
   bool elementHas(String id, bool Function(Widget) typeTest, Type lookingFor) {
     final index = _allIndexes[id];
     if (index == null) {
-      String msg = "${this.runtimeType.toString()} cannot find '$id'. The _scan did not find it";
+      String msg =
+          "${this.runtimeType.toString()} cannot find '$id'. The _scan did not find it";
       logType(this.runtimeType).e("");
       debug.add(msg);
       throw TestException(msg);
@@ -91,7 +92,8 @@ class WidgetTestTree {
   }
 
   bool elementHasEditState(String id) {
-    return elementHas(id, (widget) => widget is ChangeNotifierProvider<EditState>, EditState);
+    return elementHas(
+        id, (widget) => widget is ChangeNotifierProvider<EditState>, EditState);
   }
 
   bool elementHasDataBinding(String id, Type type, WidgetTester tester) {
@@ -118,9 +120,12 @@ class WidgetTestTree {
     bool allCorrect = pagesCorrect && panelsCorrect && partsCorrect;
 
     if (!allCorrect) {
-      final String pageMsg = "expected $pages pages, but got ${_pageIndexes.length}\n";
-      final String panelMsg = "expected $panels panels, but got ${_panelIndexes.length}\n";
-      final String partMsg = "expected $parts parts, but got ${_partIndexes.length}\n";
+      final String pageMsg =
+          "expected $pages pages, but got ${_pageIndexes.length}\n";
+      final String panelMsg =
+          "expected $panels panels, but got ${_panelIndexes.length}\n";
+      final String partMsg =
+          "expected $parts parts, but got ${_partIndexes.length}\n";
       final msg = pageMsg + panelMsg + partMsg;
       print(msg);
       throw TestException(msg);
@@ -129,9 +134,9 @@ class WidgetTestTree {
 }
 
 class KitchenSinkTest {
-  Script init(
-      {required Script script,
-      bool useCaptionsAsIds = true,
+  Script init({
+    required Script script,
+    bool useCaptionsAsIds = true,
   }) {
     takkanDefaultInjectionBindings();
     library.init();

@@ -15,7 +15,7 @@ import '../../data/cache_consumer.dart';
 class EditState with ChangeNotifier {
   bool _canEdit;
   bool _readMode;
-  final int id =Random().nextInt(20000);
+  final int id = Random().nextInt(20000);
   final List<CacheConsumer> documentRoots = List.empty(growable: true);
 
   EditState({bool canEdit = true, bool readMode = true})
@@ -38,7 +38,7 @@ class EditState with ChangeNotifier {
 
   set readMode(bool value) {
     if (!canEdit && value) return;
-    _readMode=value;
+    _readMode = value;
     logType(this.runtimeType).d("EditState changed to readMode: $value");
     notifyListeners();
   }
@@ -63,6 +63,4 @@ class EditState with ChangeNotifier {
   void removeDocumentRoot(CacheConsumer documentRoot) {
     documentRoots.remove(documentRoot);
   }
-
-
 }

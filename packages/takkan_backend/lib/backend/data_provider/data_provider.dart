@@ -71,15 +71,15 @@ abstract class IDataProvider<CONFIG extends DataProvider> {
 
   CONFIG get config;
 
-  Authenticator<CONFIG,dynamic> get authenticator;
+  Authenticator<CONFIG, dynamic> get authenticator;
 
   /// Uses the [selector] to identify the cloud function to call via
   /// [fetchDocumentList]
-  Future<ReadResultList> selectDocumentList(
-      {required DocumentListSelector selector,
-      required String documentClass,
-      Map<String, dynamic> pageArguments = const {},
-      });
+  Future<ReadResultList> selectDocumentList({
+    required DocumentListSelector selector,
+    required String documentClass,
+    Map<String, dynamic> pageArguments = const {},
+  });
 
   /// Uses the [selector] to identify the cloud function to call via
   /// [fetchDocument]

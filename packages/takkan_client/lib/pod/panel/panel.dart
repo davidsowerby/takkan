@@ -17,7 +17,8 @@ class PanelWidget extends StatefulWidget {
   const PanelWidget({
     super.key,
     required this.config,
-    required this.dataContext,required this.cacheEntry,
+    required this.dataContext,
+    required this.cacheEntry,
     this.pageArguments = const {},
   });
 
@@ -47,8 +48,7 @@ class PanelWidgetState extends State<PanelWidget> {
   PanelWidgetState(
       {required Panel config,
       required DataContext parentDataContext,
-      required Map<String, dynamic> pageArguments})
-      ;
+      required Map<String, dynamic> pageArguments});
   late bool expanded;
 
   @override
@@ -58,8 +58,8 @@ class PanelWidgetState extends State<PanelWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('TBD'),);
+    return Center(
+      child: Text('TBD'),
+    );
   }
-
-
 }

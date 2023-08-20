@@ -9,8 +9,6 @@ import 'package:takkan_script/inject/inject.dart';
 import '../helper/catcher.dart';
 import '../helper/listener.dart';
 
-
-
 void main() {
   late Map<String, dynamic> data;
   late MutableDocument temporaryDocument;
@@ -21,8 +19,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(id: "-root-", data: data, getEditHost: ()=>temporaryDocument);
+    rootBinding = RootBinding(
+        id: "-root-", data: data, getEditHost: () => temporaryDocument);
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -72,7 +70,7 @@ void main() {
       expect(mb.read(), isNotEmpty);
       expect(sb.read(), "Wiggly");
 
-      expect(changeListener.changeCount,1);
+      expect(changeListener.changeCount, 1);
     });
   });
 
@@ -120,8 +118,6 @@ void main() {
     });
   });
 }
-
-
 
 class StateChangeRecorder {
   int count = 0;

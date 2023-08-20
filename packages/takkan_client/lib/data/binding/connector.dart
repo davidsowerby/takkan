@@ -51,7 +51,7 @@ class ModelConnector<MODEL, VIEW> {
   VIEW readFromModel() {
     final model = binding.read();
     if (model != null) return converter.modelToView(model);
-    String msg='Model cannot be null';
+    String msg = 'Model cannot be null';
     logType(this.runtimeType).e(msg);
     throw TakkanException(msg);
   }
@@ -71,9 +71,11 @@ class StaticConnector extends ModelConnector<String, String> {
             binding: StringBinding.private(
               property: 'not used',
               firstLevelKey: 'x',
-              getEditHost: ()=>null,
-              parent:
-                  ListBinding.private(firstLevelKey: 'x', property: 'not used',getEditHost: ()=>null),
+              getEditHost: () => null,
+              parent: ListBinding.private(
+                  firstLevelKey: 'x',
+                  property: 'not used',
+                  getEditHost: () => null),
             ),
             fieldSchema: FString());
 
@@ -87,4 +89,3 @@ class StaticConnector extends ModelConnector<String, String> {
         'Static converter only works from model to view');
   }
 }
-

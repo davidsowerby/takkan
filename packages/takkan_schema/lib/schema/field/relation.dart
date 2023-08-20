@@ -10,7 +10,7 @@ import 'field.dart';
 part 'relation.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class FRelation extends Field<Relation,RelationCondition> {
+class FRelation extends Field<Relation, RelationCondition> {
   FRelation({
     required this.targetClass,
     super.defaultValue,
@@ -29,8 +29,7 @@ class FRelation extends Field<Relation,RelationCondition> {
 
   @override
   @JsonKey(ignore: true)
-  bool get isLinkField=> true;
-
+  bool get isLinkField => true;
 
   @override
   Type get modelType => Relation;

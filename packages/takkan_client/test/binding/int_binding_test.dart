@@ -22,8 +22,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -45,27 +45,38 @@ void main() {
       test("read with default value, value exists", () {
         int defaultValue = defValue;
         final int expected = loadedValue;
-        final int actual =
-            rootBinding.intBinding(property: property).read(defaultValue: defaultValue)!;
+        final int actual = rootBinding
+            .intBinding(property: property)
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
       });
 
       test("read with default value, value does not exist", () {
         int defaultValue = defValue;
         final int expected = defaultValue;
-        final actual = rootBinding.intBinding(property: "no item").read(defaultValue: defaultValue);
+        final actual = rootBinding
+            .intBinding(property: "no item")
+            .read(defaultValue: defaultValue);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final int expected = 0;
-        final actual = rootBinding.intBinding(property: "no item").read(allowNullReturn: false);
+        final actual = rootBinding
+            .intBinding(property: "no item")
+            .read(allowNullReturn: false);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is true", () {
+      test(
+          "read with no default value, value does not exist, allowNull is true",
+          () {
         final int? expected = null;
-        final actual = rootBinding.intBinding(property: "no item").read(allowNullReturn: true);
+        final actual = rootBinding
+            .intBinding(property: "no item")
+            .read(allowNullReturn: true);
         expect(actual, expected);
       });
     });

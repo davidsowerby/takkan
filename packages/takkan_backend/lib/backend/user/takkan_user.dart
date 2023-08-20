@@ -1,5 +1,4 @@
 class TakkanUser {
-
   TakkanUser.fromJson(this.data) {
     data['unknown'] = false;
   }
@@ -19,7 +18,7 @@ class TakkanUser {
 
   set lastName(value) => data['lastName'] = value;
 
-  String get lastName => data['lastName']  as String? ?? '';
+  String get lastName => data['lastName'] as String? ?? '';
 
   set email(value) => data['email'] = value;
 
@@ -27,15 +26,15 @@ class TakkanUser {
 
   set userName(value) => data['userName'] = value;
 
-  String get userName => data['userName'] as String?  ?? '';
+  String get userName => data['userName'] as String? ?? '';
 
   set objectId(value) => data['objectId'] = value;
 
-  String get objectId => data['objectId'] as String?  ?? '';
+  String get objectId => data['objectId'] as String? ?? '';
 
   set sessionToken(value) => data['sessionToken'] = value;
 
-  String? get sessionToken => data['sessionToken'] as String? ;
+  String? get sessionToken => data['sessionToken'] as String?;
 
   set unknown(bool value) => data['unknown'] = value;
 

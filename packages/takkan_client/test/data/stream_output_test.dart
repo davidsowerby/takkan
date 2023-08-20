@@ -16,7 +16,7 @@ void main() {
     test('output', () async {
       // given
       final List<Map<String, dynamic>> events = List.empty(growable: true);
-      final StreamedOutput output = StreamedOutput(getEditHost: ()=>null);
+      final StreamedOutput output = StreamedOutput(getEditHost: () => null);
       // when
       output.stream.listen((event) {
         events.add(event);
@@ -32,17 +32,17 @@ void main() {
       // then
       await Future.delayed(Duration(seconds: 1));
       expect(events.length, 6);
-      expect(events[5],{'a': '5'});
-      expect(events[4],{'a': '4'});
-      expect(events[3],{'a': '3'});
-      expect(events[2],{'a': '2'});
-      expect(events[1],{'a': '1'});
-      expect(events[0],{'a': 'initial'});
+      expect(events[5], {'a': '5'});
+      expect(events[4], {'a': '4'});
+      expect(events[3], {'a': '3'});
+      expect(events[2], {'a': '2'});
+      expect(events[1], {'a': '1'});
+      expect(events[0], {'a': 'initial'});
 
-      expect(output.data,{'a': '5'},reason: 'Data should reflect the last event');
-      expect(output.rootBinding.read(),{'a': '5'},reason: 'Root binding has been attached');
+      expect(output.data, {'a': '5'},
+          reason: 'Data should reflect the last event');
+      expect(output.rootBinding.read(), {'a': '5'},
+          reason: 'Root binding has been attached');
     });
   });
 }
-
-

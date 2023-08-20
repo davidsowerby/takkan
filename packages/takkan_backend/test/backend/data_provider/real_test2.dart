@@ -1,4 +1,3 @@
-
 import 'package:takkan_backend/backend/app/app_config.dart';
 import 'package:takkan_backend/backend/app/app_config_loader.dart';
 import 'package:takkan_backend/backend/data_provider/base_data_provider.dart';
@@ -12,8 +11,6 @@ import 'package:takkan_backend/backend/user/takkan_user.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:test/test.dart';
-
-
 
 void main() {
   final DataProvider config = DataProvider(
@@ -84,8 +81,6 @@ void main() {
 
     tearDown(() {});
 
-
-
     test('executeFunction', () async {
       // given
       await getIt.isReady<AppConfig>();
@@ -154,7 +149,7 @@ void main() {
 
       const String functionName = 'issuesWeight';
       final Map<String, dynamic> params = {'weight': 1};
-      final expectedResponse =  [
+      final expectedResponse = [
         {
           'title': 'Wrong colour again',
           'description': 'I like pink best',
@@ -220,39 +215,38 @@ void main() {
 
       expect(result.data.containsKey('createdAt'), isTrue);
       expect(result.data.containsKey('objectId'), isTrue);
-      expect(result.documentId.documentClass,'Issue');
-      expect(result.documentId.objectId,result.data['objectId']);
+      expect(result.documentId.documentClass, 'Issue');
+      expect(result.documentId.objectId, result.data['objectId']);
       expect(result.success, isTrue);
 
-      final documentId=result.documentId;
+      final documentId = result.documentId;
 
-      final createReadResult= await provider.readDocument(
+      final createReadResult = await provider.readDocument(
         documentId: documentId,
       );
 
       expect(createReadResult.documentId, documentId);
       expect(createReadResult.success, isTrue);
-      expect(createReadResult.data['title'],'New creation');
+      expect(createReadResult.data['title'], 'New creation');
 
-      final updateResult= await provider.updateDocument(
+      final updateResult = await provider.updateDocument(
         documentId: documentId,
-        data: {'title':'shiny and updated'},
+        data: {'title': 'shiny and updated'},
       );
 
-      expect(updateResult.success,isTrue );
+      expect(updateResult.success, isTrue);
 
-
-      final updateReadResult= await provider.readDocument(
-        documentId: documentId,
-      );
-
-      expect(updateReadResult.data['title'],'shiny and updated');
-
-      final deleteResult= await provider.deleteDocument(
+      final updateReadResult = await provider.readDocument(
         documentId: documentId,
       );
 
-      expect(deleteResult.objectId,documentId.objectId);
+      expect(updateReadResult.data['title'], 'shiny and updated');
+
+      final deleteResult = await provider.deleteDocument(
+        documentId: documentId,
+      );
+
+      expect(deleteResult.objectId, documentId.objectId);
     });
   });
 }

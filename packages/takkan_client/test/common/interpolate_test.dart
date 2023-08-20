@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:takkan_client/common/interpolate.dart';
 
-
 void main() {
   group(
     'interpolate',
@@ -89,11 +88,13 @@ void main() {
 
       test('concatenated variables', () {
         // given
-        final values = <String, dynamic>{'something': 'bat','source':' out of hell'};
+        final values = <String, dynamic>{
+          'something': 'bat',
+          'source': ' out of hell'
+        };
         final String pattern = 'Do you like the song {something}{source}';
         // when
-        final actual =
-        TestInterpolator().interp(pattern, (key) => values[key]);
+        final actual = TestInterpolator().interp(pattern, (key) => values[key]);
         // then
 
         expect(actual, 'Do you like the song bat out of hell');

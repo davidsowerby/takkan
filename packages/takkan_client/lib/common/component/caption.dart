@@ -19,7 +19,13 @@ class Caption extends StatelessWidget {
     return (help == null)
         ? caption
         : Row(
-            children: [caption, SizedBox(width: 4,), HelpButton(help: help!)],
+            children: [
+              caption,
+              SizedBox(
+                width: 4,
+              ),
+              HelpButton(help: help!)
+            ],
           );
   }
 }

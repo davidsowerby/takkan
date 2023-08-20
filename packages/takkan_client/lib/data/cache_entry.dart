@@ -45,7 +45,7 @@ import 'cache_consumer.dart';
 /// [listRootProperty].  This allows most of the [CacheEntry] structure to remain
 /// unchanged from that holding a single document.
 ///
-const String listRootProperty='--listRoot--';
+const String listRootProperty = '--listRoot--';
 
 class CacheEntry implements CacheListener {
   bool _editMode = false;
@@ -75,7 +75,7 @@ class CacheEntry implements CacheListener {
   }) : _lastUpdate = DateTime.now() {
     _sharedOutput = StreamedOutput(getEditHost: getEditHost);
     classCache.addListener(documentId, this);
-    externalUpdate(data: {listRootProperty:dataList}, documentId: documentId);
+    externalUpdate(data: {listRootProperty: dataList}, documentId: documentId);
   }
 
   MutableDocument? getEditHost() {

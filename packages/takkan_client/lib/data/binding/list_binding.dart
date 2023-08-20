@@ -29,8 +29,7 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
         parent: this,
         index: index,
         firstLevelKey: this.firstLevelKey,
-        getEditHost: this.getEditHost
-    );
+        getEditHost: this.getEditHost);
   }
 
   DoubleBinding doubleBinding({required int index}) {
@@ -126,8 +125,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
 
   void sortAscending() {
     read()?.sort();
-    final editHost=getEditHost();
-    if (editHost!=null) {
+    final editHost = getEditHost();
+    if (editHost != null) {
       editHost.nestedChange(firstLevelKey);
     }
   }
@@ -141,8 +140,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     read()?.sort();
     parent?.read()[property] =
         parent?.read()[property].reversed.toList(growable: true);
-    final editHost=getEditHost();
-    if (editHost!=null) {
+    final editHost = getEditHost();
+    if (editHost != null) {
       editHost.nestedChange(firstLevelKey);
     }
   }
@@ -166,8 +165,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
       return -1;
     } else {
       _doChangeOrder(oldIndex, newIndex);
-      final editHost=getEditHost();
-      if (editHost!=null) {
+      final editHost = getEditHost();
+      if (editHost != null) {
         editHost.nestedChange(firstLevelKey);
       }
       return newIndex;
@@ -192,8 +191,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     logType(this.runtimeType)
         .d("inserted new item at index $index in list $property");
     parent?.read()[property] = rows;
-    final editHost=getEditHost();
-    if (editHost!=null) {
+    final editHost = getEditHost();
+    if (editHost != null) {
       editHost.nestedChange(firstLevelKey);
     }
   }
@@ -208,8 +207,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     rows.add(value);
     logType(this.runtimeType).d("added new item list $property");
     parent?.read()[property] = rows;
-    final editHost=getEditHost();
-    if (editHost!=null) {
+    final editHost = getEditHost();
+    if (editHost != null) {
       editHost.nestedChange(firstLevelKey);
     }
   }
@@ -222,8 +221,8 @@ class ListBinding<T> extends CollectionBinding<List<T>> {
     if (index >= 0 && index < rows.length) {
       rows.removeAt(index);
       parent?.read()[property] = rows;
-      final editHost=getEditHost();
-      if (editHost!=null) {
+      final editHost = getEditHost();
+      if (editHost != null) {
         editHost.nestedChange(firstLevelKey);
       }
     } else {

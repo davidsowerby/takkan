@@ -16,8 +16,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
   });
 
   group("ListBinding", () {

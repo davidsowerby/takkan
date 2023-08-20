@@ -31,7 +31,8 @@ class EmailLoginSection extends StatefulWidget {
   _EmailLoginSectionState createState() => _EmailLoginSectionState();
 }
 
-class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColumns {
+class _EmailLoginSectionState extends State<EmailLoginSection>
+    with DisplayColumns {
   late TextEditingController emailController;
   late TextEditingController passwordController;
   bool showPasswordBox = false;
@@ -49,7 +50,8 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     final UserState userState = Provider.of<UserState>(context);
     final screenSize = MediaQuery.of(context).size;
     final dim = dimensions(screenSize: screenSize);
-    logType(this.runtimeType).d("login status is ${dataProvider.authenticator.status}");
+    logType(this.runtimeType)
+        .d("login status is ${dataProvider.authenticator.status}");
     switch (userState.status) {
       case SignInStatus.Authenticated:
         return Container(
@@ -87,7 +89,8 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
-                  child: Text(dataProvider.user.email, style: theme.textTheme.headline6),
+                  child: Text(dataProvider.user.email,
+                      style: theme.textTheme.headline6),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
@@ -98,7 +101,8 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
                   ),
                 ),
                 ElevatedButton(
-                    child: Text('OK'), onPressed: () => registrationAcknowledged(dataProvider))
+                    child: Text('OK'),
+                    onPressed: () => registrationAcknowledged(dataProvider))
               ],
             ),
           ),
@@ -178,7 +182,8 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
           child: Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              (dataProvider.authenticator.status == SignInStatus.Authentication_Failed)
+              (dataProvider.authenticator.status ==
+                      SignInStatus.Authentication_Failed)
                   ? "The password or username is incorrect"
                   : "",
               style: TextStyle(color: Colors.red),
@@ -222,8 +227,10 @@ class _EmailLoginSectionState extends State<EmailLoginSection> with DisplayColum
     throw UnimplementedError('Forgotten password not implemented');
   }
 
-  bool _notSignInRoute(Route route){
-    String? routePath=route.settings.name;
-    return (routePath==null) ? true : !routePath.toLowerCase().contains('signin');
+  bool _notSignInRoute(Route route) {
+    String? routePath = route.settings.name;
+    return (routePath == null)
+        ? true
+        : !routePath.toLowerCase().contains('signin');
   }
 }

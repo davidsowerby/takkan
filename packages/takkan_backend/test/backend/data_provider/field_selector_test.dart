@@ -26,7 +26,8 @@ void main() {
 
     test('all fields true, direct fields ignored', () {
       // given
-      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      final Document schema =
+          Document(fields: {'c': FString(), 'd': FString()});
       const selector = FieldSelector(
         fields: ['a', 'b'],
         allFields: true,
@@ -39,7 +40,8 @@ void main() {
     });
     test('all fields except excluded', () {
       // given
-      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      final Document schema =
+          Document(fields: {'c': FString(), 'd': FString()});
       const selector = FieldSelector(
         excludeFields: ['c'],
         allFields: true,
@@ -52,7 +54,8 @@ void main() {
     });
     test('all fields plus meta, except excluded', () {
       // given
-      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      final Document schema =
+          Document(fields: {'c': FString(), 'd': FString()});
       const selector = FieldSelector(
         excludeFields: ['c'],
         includeMetaFields: true,
@@ -66,7 +69,8 @@ void main() {
     });
     test('all fields plus meta, except excluded one meta excluded', () {
       // given
-      final Document schema = Document(fields: {'c': FString(), 'd': FString()});
+      final Document schema =
+          Document(fields: {'c': FString(), 'd': FString()});
       const selector = FieldSelector(
         excludeFields: ['c', 'updatedAt'],
         includeMetaFields: true,

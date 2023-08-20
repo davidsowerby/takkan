@@ -6,7 +6,6 @@ import '../data_provider/data_provider.dart';
 import 'takkan_user.dart';
 
 abstract class Authenticator<CONFIG extends DataProvider, USER> {
-
   Authenticator(this.parent);
   final IDataProvider<CONFIG> parent;
   final List<String> _userRoles = List.empty(growable: true);
@@ -29,10 +28,14 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
     _signInStatusListeners.remove(listener);
   }
 
-  Future<bool> registerWithEmail({required String username, required String password}) async {
+  Future<bool> registerWithEmail(
+      {required String username, required String password}) async {
     status = SignInStatus.Registering;
-    final result = await doRegisterWithEmail(username: username, password: password);
-    status = (result.success) ? SignInStatus.Registered : SignInStatus.Registration_Failed;
+    final result =
+        await doRegisterWithEmail(username: username, password: password);
+    status = (result.success)
+        ? SignInStatus.Registered
+        : SignInStatus.Registration_Failed;
     return result.success;
   }
 
@@ -100,7 +103,7 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
   /// access user information (which may in some case actually two user 'tables', depending on the
   /// backend implementation so we need to use this rather than a more general interface
   Future<bool> updateUser(TakkanUser user) async {
-    return  doUpdateUser(user);
+    return doUpdateUser(user);
   }
 
   Future<bool> doUpdateUser(TakkanUser user);
@@ -108,7 +111,9 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
   Future<bool> deRegister(TakkanUser user) async {
     status = SignInStatus.Removing_Registration;
     final result = await doDeRegister(user);
-    status = result ? status = SignInStatus.Registration_Removed : SignInStatus.Uninitialized;
+    status = result
+        ? status = SignInStatus.Registration_Removed
+        : SignInStatus.Uninitialized;
     return result;
   }
 
@@ -121,7 +126,7 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
   /// must always set status to [SignInStatus.Initialised]
   @mustCallSuper
   Future<SignInStatus> init() async {
-    status=SignInStatus.Initialised;
+    status = SignInStatus.Initialised;
     return status;
   }
 
@@ -162,7 +167,6 @@ enum SignInStatus {
 /// - [errorCode] if not -1, represents some kind of failure, perhaps a lost connection for example.  See https://gitlab.com/takkan/takkan_backend/-/issues/1
 /// - [message] currently this is implementation specific - see https://gitlab.com/takkan/takkan_backend/-/issues/1
 class AuthenticationResult {
-
   // TODO standardise for all implementations
   AuthenticationResult({
     required this.success,

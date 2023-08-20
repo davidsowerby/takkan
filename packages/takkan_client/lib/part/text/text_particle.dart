@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:takkan_client/data/binding/connector.dart';
@@ -150,13 +149,15 @@ class ParticleInterpolator with Interpolator {
             // Could use Platform here, but not sure what is needed
             return 'system value';
           }
-        default: return '?';
+        default:
+          return '?';
       }
     }
     if (partConfig.isStatic) return '?';
+
     /// From empty key in static data, example: 'Your score is {}', this requires
     /// property is set
-    if (key=='') return connector?.readFromModel();
+    if (key == '') return connector?.readFromModel();
     return connector!.binding.parent!.read()[key] ?? '?';
   }
 }

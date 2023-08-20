@@ -10,13 +10,14 @@ part 'document_id.g.dart';
 /// - [documentClass] maps to a Collection
 /// - [objectId] maps to id in a DocumentReference
 @JsonSerializable(explicitToJson: true)
-class DocumentId extends Equatable{
-
+class DocumentId extends Equatable {
   const DocumentId({required this.documentClass, required this.objectId});
 
-  factory DocumentId.empty() => const DocumentId(documentClass: '',objectId: '');
+  factory DocumentId.empty() =>
+      const DocumentId(documentClass: '', objectId: '');
   factory DocumentId.fromJson(Map<String, dynamic> json) =>
       _$DocumentIdFromJson(json);
+
   /// The path to the document, but not including the [objectId]
   final String documentClass;
 
@@ -31,5 +32,5 @@ class DocumentId extends Equatable{
 
   @JsonKey(ignore: true)
   @override
-  List<Object?> get props => [documentClass,objectId];
+  List<Object?> get props => [documentClass, objectId];
 }

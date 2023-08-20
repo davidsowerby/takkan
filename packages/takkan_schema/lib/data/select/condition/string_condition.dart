@@ -58,6 +58,7 @@ class StringConditionBuilder {
       forQuery: forQuery,
     );
   }
+
   StringCondition lengthLessThanOrEqualTo(int operand) {
     return StringCondition(
       field: fieldName,

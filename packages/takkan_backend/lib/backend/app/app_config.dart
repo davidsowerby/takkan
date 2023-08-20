@@ -50,7 +50,9 @@ import 'takkan_store_config.dart';
 ///
 /// *NOTE: Custom properties cannot currently be a map. https://gitlab.com/takkan/takkan_backend/-/issues/22
 class AppConfig {
-  AppConfig(){    _takkanStoreConfig = TakkanStoreConfig(parent: this, data: {});}
+  AppConfig() {
+    _takkanStoreConfig = TakkanStoreConfig(parent: this, data: {});
+  }
 
   AppConfig.fromData({required Map<String, dynamic> data}) {
     _takkanStoreConfig = TakkanStoreConfig(parent: this, data: {});

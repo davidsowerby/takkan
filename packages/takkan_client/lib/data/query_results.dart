@@ -45,7 +45,8 @@ class QueryResultsCache {
   /// For selectors which return a single item, use [resultFor]
   ///
   /// Returns null if the cache does not hold any query results for this selector
-  List<String>? resultsFor({required DocumentListSelector selector, required int page}) {
+  List<String>? resultsFor(
+      {required DocumentListSelector selector, required int page}) {
     final resultSet = _multiples[_queryName(selector)];
     if (resultSet == null) {
       return null;
@@ -85,7 +86,7 @@ class QueryResultsSet {
       }
       ids.add(objectId);
     }
-    _data[page]=ids;
+    _data[page] = ids;
   }
 
   List<String>? operator [](int key) {

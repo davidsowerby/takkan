@@ -1,8 +1,6 @@
 import 'package:takkan_script/data/provider/document_id.dart';
 
-
 abstract class QueryResults<DATA> {
-
   const QueryResults({
     required this.data,
     required this.success,
@@ -16,14 +14,13 @@ abstract class QueryResults<DATA> {
 }
 
 class QueryResultItem extends QueryResults<Map<String, dynamic>> {
-
   const QueryResultItem({
     required this.objectId,
     required super.data,
     required super.success,
     required super.documentClass,
   }) : super(
-    returnSingle: true,
+          returnSingle: true,
         );
   final String objectId;
 
@@ -79,14 +76,12 @@ class ReadResultList extends ReadResult<List<Map<String, dynamic>>> {
   bool get isEmpty => data.isEmpty;
 }
 
-
 /// Status and data returned from a general cloud function call
 class FunctionResult {
-  const FunctionResult({required this.data,required this.success});
+  const FunctionResult({required this.data, required this.success});
 
-  final Map<String,dynamic> data;
+  final Map<String, dynamic> data;
   final bool success;
-
 }
 
 class UpdateResult extends QueryResultItem {

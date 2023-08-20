@@ -25,7 +25,7 @@ Script _$ScriptFromJson(Map<String, dynamic> json) => Script(
     )..nameLocale = json['nameLocale'] as String?;
 
 Map<String, dynamic> _$ScriptToJson(Script instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'name': instance.name,
       'locale': instance.locale,
       'version': instance.version.toJson(),

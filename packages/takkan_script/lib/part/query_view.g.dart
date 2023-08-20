@@ -23,7 +23,7 @@ QueryView _$QueryViewFromJson(Map<String, dynamic> json) => QueryView(
     );
 
 Map<String, dynamic> _$QueryViewToJson(QueryView instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'readOnly': instance.readOnly,
       'help': instance.help?.toJson(),

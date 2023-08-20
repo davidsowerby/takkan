@@ -17,16 +17,14 @@ import 'app_config.dart';
 /// If loading through a Flutter client, this loader will not work, use the
 /// JSONAssetLoader in the *takkan_client* package instead
 class DefaultJsonFileLoader implements JsonFileLoader {
-
   const DefaultJsonFileLoader();
 
   /// If [returnEmptyIfAbsent] is true, a missing *takkan.json* returns an empty
   /// [AppConfig] - if false, a [TakkanException] is thrown if no *takkan.json*
   /// exists in [fileName]
   @override
-  Future<Map<String, dynamic>> loadFile(
-      {required String filePath}) async {
-    final File f=File(filePath);
+  Future<Map<String, dynamic>> loadFile({required String filePath}) async {
+    final File f = File(filePath);
     if (!f.existsSync()) {
       final String msg = 'There is no file at ${f.path}';
       logType(runtimeType).e(msg);
@@ -35,7 +33,6 @@ class DefaultJsonFileLoader implements JsonFileLoader {
 
     final content = f.readAsStringSync();
     return json.decode(content) as Map<String, dynamic>;
-
   }
 
   @override
@@ -53,7 +50,6 @@ abstract class JsonFileLoader {
 /// Not really a file loader at all, just uses data directly loaded, but can
 /// be used with inject<JsonFileLoader>, usually only for testing
 class DirectFileLoader extends DefaultJsonFileLoader {
-
   const DirectFileLoader({required this.data});
   final Map<String, dynamic> data;
   @override

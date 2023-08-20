@@ -17,28 +17,30 @@ import 'package:takkan_backend/backend/data_provider/server_connect.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/signin/sign_in.dart';
 
-Future<void> takkanDefaultInjectionBindings() async{
+Future<void> takkanDefaultInjectionBindings() async {
   routerInjectionBindings();
   await persistenceInjectionBindings();
   commonInjectionBindings();
 }
 
-appConfigFromAssetBindings(){
+appConfigFromAssetBindings() {
   getIt.registerFactory<JsonFileLoader>(() => DefaultJsonAssetLoader());
   getIt.registerSingletonAsync<AppConfig>(() {
-    final AppConfig appConfig=AppConfig();
+    final AppConfig appConfig = AppConfig();
     return appConfig.load();
   });
 }
 
 Future<void> persistenceInjectionBindings() async {
-
   await getIt.isReady<AppConfig>();
-  final appConfig=inject<AppConfig>();
+  final appConfig = inject<AppConfig>();
   for (InstanceConfig instance in appConfig.instances) {
-    getIt.registerFactory<RestServerConnect>(instanceName: instance.uniqueName, () => DefaultRestServerConnect());
-    getIt.registerFactory<URLBuilder>(instanceName: instance.uniqueName, () => DefaultURLBuilder());
-    getIt.registerFactory<ResultTransformer>(instanceName: instance.uniqueName, () => DefaultResultTransformer());
+    getIt.registerFactory<RestServerConnect>(
+        instanceName: instance.uniqueName, () => DefaultRestServerConnect());
+    getIt.registerFactory<URLBuilder>(
+        instanceName: instance.uniqueName, () => DefaultURLBuilder());
+    getIt.registerFactory<ResultTransformer>(
+        instanceName: instance.uniqueName, () => DefaultResultTransformer());
     if (instance.serviceType == 'generic') {
       final provider = GenericDataProvider();
 
@@ -47,14 +49,12 @@ Future<void> persistenceInjectionBindings() async {
         instanceName: instance.uniqueName,
       );
 
-
       /// Although this is a factory, it is effectively a singleton, as it is
       /// held within the singleton provider
       getIt.registerFactory<Authenticator>(
-            () => NoAuthenticator(provider),
+        () => NoAuthenticator(provider),
         instanceName: instance.uniqueName,
       );
-
     }
   }
 }
@@ -76,5 +76,3 @@ routerInjectionBindings() {
   getIt.registerFactory<PageBuilder>(() => DefaultPageBuilder());
   // getIt.registerSingleton<TakkanRouter>(TakkanRouter());
 }
-
-

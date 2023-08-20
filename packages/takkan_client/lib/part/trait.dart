@@ -11,7 +11,8 @@ abstract class Trait<R extends ReadTrait, E extends EditTrait> {
 
   final E? editTrait;
 
-  const Trait({required this.readTrait, this.editTrait, required this.partName});
+  const Trait(
+      {required this.readTrait, this.editTrait, required this.partName});
 }
 
 class ReadTrait {
@@ -27,5 +28,3 @@ class EditTrait {
 
   const EditTrait({required this.showCaption, required this.alignment});
 }
-
-

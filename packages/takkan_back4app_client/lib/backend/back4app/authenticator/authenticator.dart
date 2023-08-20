@@ -14,7 +14,7 @@ class Back4AppAuthenticator extends Authenticator<DataProvider, ParseUser> {
   Future<SignInStatus> init() async {
     super.init();
     // TODO: using 'p' is a horrible hack should be able to type correctly though construction
-    final p=parent as Back4AppDataProvider;
+    final p = parent as Back4AppDataProvider;
     parse = await Parse().initialize(
       p.instanceConfig.appId,
       p.instanceConfig.serverUrl,

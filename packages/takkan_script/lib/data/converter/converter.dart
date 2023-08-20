@@ -30,7 +30,8 @@ abstract class ModelViewConverter<MODEL, VIEW> {
   /// If conversion validation fails, returns the error message for that (model validation is not possible)
   /// If conversion validation succeeds, return result of model validation (which is an empty list
   /// if there are no validation errors)
-  List<String> validate(VIEW inputData, Field<dynamic,Condition<dynamic>> field, Script pScript) {
+  List<String> validate(VIEW inputData,
+      Field<dynamic, Condition<dynamic>> field, Script pScript) {
     final conversionValidation = viewModelValidate(inputData);
     if (conversionValidation) {
       final errorMessages = (pScript.validationErrorMessages.isEmpty)

@@ -57,8 +57,8 @@ class DocumentCache {
     if (!_classCaches.containsKey(config.documentClass)) {
       final classCache = DocumentClassCache(
           documentClass: documentClass,
-          dataProvider: _lookupDataProvider(
-              providerConfig: config.dataProvider!));
+          dataProvider:
+              _lookupDataProvider(providerConfig: config.dataProvider!));
       classCache.init();
       _classCaches[config.documentClass!] = classCache;
     }
@@ -67,9 +67,8 @@ class DocumentCache {
   }
 
   /// Selects the [IDataProvider] identified by [providerConfig]
-  IDataProvider _lookupDataProvider(
-      {required DataProvider providerConfig}) {
-    final AppConfig appConfig=inject<AppConfig>();
+  IDataProvider _lookupDataProvider({required DataProvider providerConfig}) {
+    final AppConfig appConfig = inject<AppConfig>();
     final instanceConfig = appConfig.instanceConfig(providerConfig);
     final IDataProvider provider =
         inject<IDataProvider>(instanceName: instanceConfig.uniqueName);

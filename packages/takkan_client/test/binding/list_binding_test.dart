@@ -22,8 +22,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -31,13 +31,15 @@ void main() {
   group("ListBinding<int>", () {
     group("Read", () {
       test("read with default settings, value exists", () {
-        final List<int> actual = rootBinding.listBinding<int>(property: property).read()!;
+        final List<int> actual =
+            rootBinding.listBinding<int>(property: property).read()!;
         final List<int> expected = loadedValue;
         expect(actual, expected);
       });
 
       test("read with default settings, value does not exist", () {
-        final List<int> actual = rootBinding.listBinding<int>(property: "no item").read()!;
+        final List<int> actual =
+            rootBinding.listBinding<int>(property: "no item").read()!;
         final List<int> expected = [];
         expect(actual, expected);
       });
@@ -45,30 +47,38 @@ void main() {
       test("read with default value, value exists", () {
         List<int> defaultValue = defValue;
         final List<int> expected = loadedValue;
-        final List<int> actual =
-            rootBinding.listBinding<int>(property: property).read(defaultValue: defaultValue)!;
+        final List<int> actual = rootBinding
+            .listBinding<int>(property: property)
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
       });
 
       test("read with default value, value does not exist", () {
         List<int> defaultValue = defValue;
         final List<int> expected = defaultValue;
-        final actual =
-            rootBinding.listBinding<int>(property: "no item").read(defaultValue: defaultValue);
+        final actual = rootBinding
+            .listBinding<int>(property: "no item")
+            .read(defaultValue: defaultValue);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final List<int> expected = [];
-        final actual =
-            rootBinding.listBinding<int>(property: "no item").read(allowNullReturn: false);
+        final actual = rootBinding
+            .listBinding<int>(property: "no item")
+            .read(allowNullReturn: false);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final List<int>? expected = null;
-        final actual =
-            rootBinding.listBinding<int>(property: "no item").read(allowNullReturn: true);
+        final actual = rootBinding
+            .listBinding<int>(property: "no item")
+            .read(allowNullReturn: true);
         expect(actual, expected);
       });
     });

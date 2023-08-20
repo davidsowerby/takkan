@@ -33,7 +33,7 @@ Map<String, dynamic> _$DataProviderToJson(DataProvider instance) =>
       'signInOptions': instance.signInOptions.toJson(),
       'signIn': instance.signIn.toJson(),
       'instanceConfig': instance.instanceConfig.toJson(),
-      'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate],
+      'defaultDelegate': _$DelegateEnumMap[instance.defaultDelegate]!,
       'graphQLDelegate': instance.graphQLDelegate?.toJson(),
       'restDelegate': instance.restDelegate.toJson(),
       'useAuthenticator': instance.useAuthenticator,

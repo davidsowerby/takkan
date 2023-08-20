@@ -35,8 +35,6 @@ class PostCodeConditionBuilder {
       forQuery: forQuery,
     );
   }
-
-
 }
 
 @JsonSerializable(explicitToJson: true)

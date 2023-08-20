@@ -22,8 +22,8 @@ void main() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -31,13 +31,15 @@ void main() {
   group("StringBinding", () {
     group("Read", () {
       test("read with default settings, value exists", () {
-        final String actual = rootBinding.stringBinding(property: property).read()!;
+        final String actual =
+            rootBinding.stringBinding(property: property).read()!;
         final String expected = loadedValue;
         expect(actual, expected);
       });
 
       test("read with default settings, value does not exist", () {
-        final String actual = rootBinding.stringBinding(property: "no item").read()!;
+        final String actual =
+            rootBinding.stringBinding(property: "no item").read()!;
         final String expected = "";
         expect(actual, expected);
       });
@@ -45,28 +47,38 @@ void main() {
       test("read with default value, value exists", () {
         String defaultValue = defValue;
         final String expected = loadedValue;
-        final String actual =
-            rootBinding.stringBinding(property: property).read(defaultValue: defaultValue)!;
+        final String actual = rootBinding
+            .stringBinding(property: property)
+            .read(defaultValue: defaultValue)!;
         expect(actual, expected);
       });
 
       test("read with default value, value does not exist", () {
         String defaultValue = defValue;
         final String expected = defaultValue;
-        final actual =
-            rootBinding.stringBinding(property: "no item").read(defaultValue: defaultValue);
+        final actual = rootBinding
+            .stringBinding(property: "no item")
+            .read(defaultValue: defaultValue);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final String expected = "";
-        final actual = rootBinding.stringBinding(property: "no item").read(allowNullReturn: false);
+        final actual = rootBinding
+            .stringBinding(property: "no item")
+            .read(allowNullReturn: false);
         expect(actual, expected);
       });
 
-      test("read with no default value, value does not exist, allowNull is false", () {
+      test(
+          "read with no default value, value does not exist, allowNull is false",
+          () {
         final String? expected = null;
-        final actual = rootBinding.stringBinding(property: "no item").read(allowNullReturn: true);
+        final actual = rootBinding
+            .stringBinding(property: "no item")
+            .read(allowNullReturn: true);
         expect(actual, expected);
       });
     });

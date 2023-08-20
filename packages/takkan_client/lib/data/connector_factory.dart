@@ -50,7 +50,7 @@ Binding _binding(
   switch (fieldSchema.runtimeType) {
     case FString:
       return parentBinding.modelBinding.stringBinding(property: property);
-      // TODO: See
+    // TODO: See
     // case FList:
     //   return parentBinding.modelBinding.listBinding(property: property);
     case FInteger:

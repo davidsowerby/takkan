@@ -23,7 +23,7 @@ Part _$PartFromJson(Map<String, dynamic> json) => Part(
     );
 
 Map<String, dynamic> _$PartToJson(Part instance) => <String, dynamic>{
-      'controlEdit': _$ControlEditEnumMap[instance.controlEdit],
+      'controlEdit': _$ControlEditEnumMap[instance.controlEdit]!,
       'caption': instance.caption,
       'property': instance.property,
       'readOnly': instance.readOnly,

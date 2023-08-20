@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:takkan_client/app/router.dart';
 import 'package:takkan_script/page/page.dart';
 
-
 class TakkanApp extends StatelessWidget {
   final ThemeData theme;
   final String initialRoute;
@@ -16,7 +15,8 @@ class TakkanApp extends StatelessWidget {
       theme: theme,
       // home: MyHomePage(title: 'Flutter Demo Home Page'),
       initialRoute: TakkanRoute.fromString(initialRoute).toString(),
-      onGenerateRoute: (routeSettings) => router.generateRoute(routeSettings, context),
+      onGenerateRoute: (routeSettings) =>
+          router.generateRoute(routeSettings, context),
     );
   }
 }

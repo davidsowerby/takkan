@@ -17,7 +17,7 @@ mixin Interpolator {
   String doInterpolate(String pattern, dynamic Function(String) getValue) {
     final outBuf = StringBuffer();
     Characters source = Characters(pattern);
-    bool done=false;
+    bool done = false;
     while (source.isNotEmpty && !done) {
       final range = source.findFirst('{'.characters);
       if (range != null && range.moveUntil('}'.characters)) {
@@ -28,7 +28,7 @@ mixin Interpolator {
       }
       if (range == null) {
         outBuf.write(source.string);
-        done=true;
+        done = true;
       }
     }
     return outBuf.toString();

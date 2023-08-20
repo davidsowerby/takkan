@@ -47,8 +47,8 @@ class NavButtonSetTrait
   final double height;
   const NavButtonSetTrait(
       {required super.readTrait,
-        this.width=250,
-        this.height=200,
+      this.width = 250,
+      this.height = 200,
       super.editTrait,
       super.partName = 'NavButtonSetPart'});
 }

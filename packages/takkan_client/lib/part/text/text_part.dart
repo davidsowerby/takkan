@@ -44,7 +44,6 @@ class TextPartBuilder implements PartBuilder<Part, TextPart> {
     required DataBinding parentDataBinding,
     OnColor onColor = OnColor.surface,
   }) {
-
     final Trait trait = traitLibrary.find(config: config, theme: theme);
 
     ConnectorFactory connectorFactory = ConnectorFactory();

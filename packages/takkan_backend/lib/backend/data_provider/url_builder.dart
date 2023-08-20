@@ -34,7 +34,6 @@ class DefaultURLBuilder implements URLBuilder {
         final String url = '${instanceConfig.functionEndpoint}/$functionName';
         return URLComposition(url: url, paramsAsData: params);
       case URLRequest.readDoc:
-
       case URLRequest.updateDoc:
       case URLRequest.deleteDoc:
         {
@@ -43,13 +42,13 @@ class DefaultURLBuilder implements URLBuilder {
                 '${instanceConfig.documentEndpoint}/${documentId.documentClass}/${documentId.objectId}';
             return URLComposition(url: url);
           }
-          const String msg='DocumentId is required';
+          const String msg = 'DocumentId is required';
           logType(runtimeType).e(msg);
           throw const TakkanException(msg);
         }
       case URLRequest.createDoc:
-        return URLComposition(url: '${instanceConfig.documentEndpoint}/$documentClass');
-
+        return URLComposition(
+            url: '${instanceConfig.documentEndpoint}/$documentClass');
     }
   }
 }

@@ -15,7 +15,6 @@ import 'result.dart';
 
 /// Equivalent to a null but throws a meaningful exception instead.
 class NoDataProvider implements IDataProvider {
-
   const NoDataProvider();
   static const String msg =
       'A NoDataProvider represents a condition where no data provider is available, and invoking this method is an error condition';
@@ -38,7 +37,6 @@ class NoDataProvider implements IDataProvider {
   Future<Stream<List<Map<String, dynamic>>>> connectList() {
     throw const TakkanException(msg);
   }
-
 
   @override
   DocumentId documentIdFromData(Map<String, dynamic> data) {
@@ -64,7 +62,7 @@ class NoDataProvider implements IDataProvider {
     throw const TakkanException(msg);
   }
 
- @override
+  @override
   Future<void> init({required DataProvider config}) {
     throw const TakkanException(msg);
   }
@@ -125,13 +123,11 @@ class NoDataProvider implements IDataProvider {
     throw const TakkanException(msg);
   }
 
-
-
   @override
   Future<FunctionResult> executeFunction({
     required String functionName,
     Map<String, dynamic> params = const {},
-  }){
+  }) {
     throw const TakkanException(msg);
   }
 
@@ -143,7 +139,6 @@ class NoDataProvider implements IDataProvider {
 
   @override
   bool get userIsNotAuthenticated => throw const TakkanException(msg);
-
 
   @override
   Future<ReadResult<dynamic>> executeGraphQL({

@@ -1,6 +1,5 @@
 class APIException implements Exception {
-
-  const APIException({required this.message,required  this.statusCode});
+  const APIException({required this.message, required this.statusCode});
   final String message;
   final int statusCode;
 
@@ -8,8 +7,8 @@ class APIException implements Exception {
 }
 
 class APINotSupportedException implements Exception {
-
-  const APINotSupportedException({required this.message,required  this.statusCode});
+  const APINotSupportedException(
+      {required this.message, required this.statusCode});
   final String message;
   final int statusCode;
 

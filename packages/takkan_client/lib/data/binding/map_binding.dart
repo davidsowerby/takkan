@@ -6,25 +6,25 @@ import 'package:takkan_client/data/mutable_document.dart';
 import 'package:takkan_script/script/constants.dart';
 
 class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
-  const MapBinding.private(
-      {CollectionBinding? parent,
-      String property = notSet,
-      int index = Binding.noValue,
-      required String firstLevelKey,
-      required super.getEditHost,
-      })
-      : super.private(
-            parent: parent,
-            property: property,
-            index: index,
-            firstLevelKey: firstLevelKey,
-  );
+  const MapBinding.private({
+    CollectionBinding? parent,
+    String property = notSet,
+    int index = Binding.noValue,
+    required String firstLevelKey,
+    required super.getEditHost,
+  }) : super.private(
+          parent: parent,
+          property: property,
+          index: index,
+          firstLevelKey: firstLevelKey,
+        );
 
   BooleanBinding booleanBinding({required String property}) {
     return BooleanBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -32,7 +32,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return DoubleBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -40,7 +41,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return IntBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -48,7 +50,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return StringBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -56,7 +59,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return TableBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -64,7 +68,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return ListBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -72,7 +77,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return ModelBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -80,7 +86,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return MapBinding<K, V>.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -88,7 +95,8 @@ class MapBinding<K, V> extends CollectionBinding<Map<K, V>> {
     return DynamicBinding.private(
         parent: this,
         property: property,
-        firstLevelKey: (this.firstLevelKey==notSet) ? property : this.firstLevelKey,
+        firstLevelKey:
+            (this.firstLevelKey == notSet) ? property : this.firstLevelKey,
         getEditHost: this.getEditHost);
   }
 
@@ -119,8 +127,15 @@ class RootBinding extends ModelBinding {
   final String id;
   final instance = DateTime.now();
 
-  RootBinding({required this.data, required MutableDocument? Function() getEditHost, required this.id})
-      : super.private(getEditHost: getEditHost, property: "-root-", firstLevelKey: notSet, parent: null);
+  RootBinding(
+      {required this.data,
+      required MutableDocument? Function() getEditHost,
+      required this.id})
+      : super.private(
+            getEditHost: getEditHost,
+            property: "-root-",
+            firstLevelKey: notSet,
+            parent: null);
 
   @override
   Map<String, dynamic> read(
@@ -149,19 +164,18 @@ class RootBinding extends ModelBinding {
 }
 
 class ModelBinding extends MapBinding<String, dynamic> {
-  const ModelBinding.private(
-      {CollectionBinding? parent,
-        String property=notSet,
-        int index=Binding.noValue,
-      required String firstLevelKey,
-        required super.getEditHost,
-      })
-      : super.private(
-            parent: parent,
-            property: property,
-            index: index,
-            firstLevelKey: firstLevelKey,
-  );
+  const ModelBinding.private({
+    CollectionBinding? parent,
+    String property = notSet,
+    int index = Binding.noValue,
+    required String firstLevelKey,
+    required super.getEditHost,
+  }) : super.private(
+          parent: parent,
+          property: property,
+          index: index,
+          firstLevelKey: firstLevelKey,
+        );
 
   @override
   Map<String, dynamic> emptyValue() {

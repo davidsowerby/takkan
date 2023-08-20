@@ -14,11 +14,10 @@ part 'graphql_delegate.g.dart';
 ///
 @JsonSerializable(explicitToJson: true)
 class GraphQL extends DataProviderDelegate {
-
   const GraphQL({
     this.graphqlEndpoint = '/graphql',
-    super. checkHealthOnConnect = false,
-  }) ;
+    super.checkHealthOnConnect = false,
+  });
 
   factory GraphQL.fromJson(Map<String, dynamic> json) =>
       _$GraphQLFromJson(json);

@@ -71,7 +71,6 @@ class DocListByFunction implements DocumentListSelector {
 class DocListByQuery implements DocumentListSelector {
   const DocListByQuery({
     this.liveConnect = false,
-
     this.caption,
     this.pageLength = 20,
     required this.queryName,
@@ -84,8 +83,8 @@ class DocListByQuery implements DocumentListSelector {
   @override
   final int pageLength;
 
-   @override
-  String get name=> queryName;
+  @override
+  String get name => queryName;
   @override
   final String? caption;
   final String queryName;

@@ -26,7 +26,6 @@ class BoolConditionBuilder {
     );
   }
 
-
   BoolCondition notEqualTo(bool operand) {
     return BoolCondition(
       field: fieldName,
@@ -35,7 +34,6 @@ class BoolConditionBuilder {
       forQuery: forQuery,
     );
   }
-
 }
 
 @JsonSerializable(explicitToJson: true)

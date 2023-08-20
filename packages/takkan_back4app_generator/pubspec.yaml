@@ -20,6 +20,6 @@ dependencies:
 dev_dependencies:
   path: ^1.8.1
   lints: ^2.1.1
-  mocktail: ^0.3.0
+  mocktail: ^1.0.0
   test:
   takkan_medley_orchestrator: ^0.0.1

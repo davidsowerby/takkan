@@ -21,7 +21,8 @@ class DefaultLocaleReader implements LocaleReader {
 /// Populates placeholders with [params]
 mixin Interpolator {
   /// populates placeholders with [params]
-  String interpolate(String pattern, {Map<String, dynamic>? params, Locale? locale}) {
+  String interpolate(String pattern,
+      {Map<String, dynamic>? params, Locale? locale}) {
     String p = pattern;
     if (params != null) {
       params.forEach((key, value) {

@@ -30,16 +30,17 @@ void main() {
       // then
 
       expect(docId.isEmpty, isFalse);
-    });    test('compare', () {
-          // given
-    const docId1=DocumentId(documentClass: 'A', objectId: 'B');
-    const docId2=DocumentId(documentClass: 'A', objectId: 'B');
-          // when
+    });
+    test('compare', () {
+      // given
+      const docId1 = DocumentId(documentClass: 'A', objectId: 'B');
+      const docId2 = DocumentId(documentClass: 'A', objectId: 'B');
+      // when
 
-          // then
+      // then
 
-          expect(docId1, docId2);
-          expect(docId1.hashCode, docId2.hashCode);
-        });
+      expect(docId1, docId2);
+      expect(docId1.hashCode, docId2.hashCode);
+    });
   });
 }

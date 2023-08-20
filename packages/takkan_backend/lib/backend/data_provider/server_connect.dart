@@ -92,8 +92,7 @@ class DefaultRestServerConnect implements RestServerConnect {
       validateStatus: (c) => c == 200,
     );
 
-    return client(options)
-        .put('$url/${documentId.objectId}', data: data);
+    return client(options).put('$url/${documentId.objectId}', data: data);
   }
 
   @override

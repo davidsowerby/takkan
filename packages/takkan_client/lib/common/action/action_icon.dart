@@ -35,7 +35,8 @@ abstract class ActionIcon extends StatelessWidget with ActionInvocation {
 }
 
 mixin ActionInvocation {
-  invokeCallbacks(BuildContext context, List<Function(BuildContext)> callbacks) {
+  invokeCallbacks(
+      BuildContext context, List<Function(BuildContext)> callbacks) {
     for (var callback in callbacks) {
       callback(context);
     }

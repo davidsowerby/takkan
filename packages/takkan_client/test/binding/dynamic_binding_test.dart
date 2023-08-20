@@ -13,17 +13,17 @@ const String defValue = "a default";
 const double updateValue = 23.7;
 
 void main() {
-  late  Map<String, dynamic> data;
-  late  MutableDocument temporaryDocument;
-  late   RootBinding rootBinding;
-  late  ChangeListener changeListener;
+  late Map<String, dynamic> data;
+  late MutableDocument temporaryDocument;
+  late RootBinding rootBinding;
+  late ChangeListener changeListener;
 
   setUp(() {
     data = generateData();
     getIt.reset();
     temporaryDocument = MutableDocument();
-    rootBinding =
-        RootBinding(data: data, getEditHost: ()=>temporaryDocument, id: "test");
+    rootBinding = RootBinding(
+        data: data, getEditHost: () => temporaryDocument, id: "test");
     changeListener = ChangeListener();
     temporaryDocument.addListener(changeListener.listenToChange);
   });
@@ -32,14 +32,14 @@ void main() {
     group("Read", () {
       test("read with default settings, value exists", () {
         final dynamic actual =
-        rootBinding.dynamicBinding(property: property).read();
+            rootBinding.dynamicBinding(property: property).read();
         final dynamic expected = loadedValue;
         expect(actual, expected);
       });
 
       test("read with default settings, value does not exist", () {
         final dynamic actual =
-        rootBinding.dynamicBinding(property: "no item").read();
+            rootBinding.dynamicBinding(property: "no item").read();
         final dynamic expected = "";
         expect(actual, expected);
       });
@@ -64,41 +64,41 @@ void main() {
 
       test(
           "read with no default value, value does not exist, allowNull is false",
-              () {
-            final dynamic expected = "";
-            final actual = rootBinding
-                .dynamicBinding(property: "no item")
-                .read(allowNullReturn: false);
-            expect(actual, expected);
+          () {
+        final dynamic expected = "";
+        final actual = rootBinding
+            .dynamicBinding(property: "no item")
+            .read(allowNullReturn: false);
+        expect(actual, expected);
       });
 
       test(
           "read with no default value, value does not exist, allowNull is true",
-              () {
-            final dynamic expected = null;
-            final actual = rootBinding
-                .dynamicBinding(property: "no item")
-                .read(allowNullReturn: true);
-            expect(actual, expected);
+          () {
+        final dynamic expected = null;
+        final actual = rootBinding
+            .dynamicBinding(property: "no item")
+            .read(allowNullReturn: true);
+        expect(actual, expected);
       });
 
       test(
           "read with default value, value does not exist, allowNull is true, createIfAbsent is false",
-              () {
-            final dynamic expected = 23;
-            final actual = rootBinding.dynamicBinding(property: "no item").read(
-                defaultValue: 23, allowNullReturn: true, createIfAbsent: false);
-            expect(actual, expected);
+          () {
+        final dynamic expected = 23;
+        final actual = rootBinding.dynamicBinding(property: "no item").read(
+            defaultValue: 23, allowNullReturn: true, createIfAbsent: false);
+        expect(actual, expected);
       });
 
       test(
           "read with no default value, value does not exist, allowNull is true, createIfAbsent is false",
-              () {
-            final dynamic expected = null;
-            final actual = rootBinding
-                .dynamicBinding(property: "no item")
-                .read(allowNullReturn: true, createIfAbsent: false);
-            expect(actual, expected);
+          () {
+        final dynamic expected = null;
+        final actual = rootBinding
+            .dynamicBinding(property: "no item")
+            .read(allowNullReturn: true, createIfAbsent: false);
+        expect(actual, expected);
       });
     });
     group("Write", () {
