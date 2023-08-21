@@ -25,7 +25,7 @@ import '../util/walker.dart';
 /// It is useful to identify a specific component, or where ambiguity arises from the use of [uid].
 /// That is unlikely unless there are two components with the same caption or name.
 ///
-/// - [_index] is the child index within a [_parent] where it is held in a list. Null if not used.
+/// - [_childIndex] is the child index within a [_parent] where it is held in a list. Null if not used.
 /// - [script] is a reference back to the root [Script] instance.
 ///
 /// All properties except [_id] are generated during the [Script.init] process
@@ -61,7 +61,7 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   @JsonKey(ignore: true)
   late TakkanElement _parent;
   @JsonKey(ignore: true)
-  late int? _index;
+  late int? _childIndex;
 
   @JsonKey(ignore: true)
   @override
@@ -105,7 +105,7 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   }
 
   void doInit(InitWalkerParams params) {
-    _index = params.index;
+    _childIndex = params.index;
     uid = _id;
     String? tUid = uid;
 
@@ -127,8 +127,8 @@ abstract class TakkanElement extends Equatable with WalkTarget {
     /// if we still don't have a uid, generate one
     if (tUid == null || tUid.isEmpty) {
       final type = runtimeType.toString();
-      final String indexStr = (_index == null) ? '' : _index.toString();
-      final separator = (_index == null) ? '' : ':';
+      final String indexStr = (_childIndex == null) ? '' : _childIndex.toString();
+      final separator = (_childIndex == null) ? '' : ':';
       uid = '$type$separator$indexStr';
     }
 
@@ -156,7 +156,7 @@ abstract class TakkanElement extends Equatable with WalkTarget {
 
   void doValidate(ValidationWalkerCollector collector) {}
 
-  int? get index => _index ?? 0;
+  int? get childIndex => _childIndex ?? 0;
 
   DebugNode get debugNode => DebugNode(this, const []);
 }

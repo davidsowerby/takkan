@@ -19,6 +19,7 @@ import 'relation.dart';
 /// to define these are with the helper class 'V', for example:  V.int.greaterThan(0)
 ///
 /// Both achieve the same thing, and if both are defined, they are combined.
+/// - [index] is the type of index to apply to this field, if any.  See [Index]
 ///
 /// [_conditions] is the result of that combination. It is built in [doInit]
 abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
@@ -28,6 +29,7 @@ abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
     this.defaultValue,
     this.validation,
     required super.isReadOnly,
+    this.index=Index.none,
   });
 
   @override
@@ -36,6 +38,7 @@ abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
 
   List<Object?> get excludeProps => [constraints, validation];
 
+  final Index index;
   final List<C> constraints;
   final String? validation;
   final bool required;
@@ -106,3 +109,38 @@ abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
     }
   }
 }
+
+/// The following notes relate specifically to Back4App running on MongoDB
+/// backend:
+///
+/// ## Overview of Use
+///
+/// - Use [hashed] for unique identifiers
+/// - Use [geo2d], [geo2dSphere], [geoHaystack] for location data
+/// - Use [text] for text search and language queries
+///
+/// **2dsphere** - This is the recommended index for most geospatial data. It indexes
+/// geometry as GeoJSON points, lines and polygons on a sphere. Supports the most
+/// precise queries and complex shapes.
+
+/// **2d** - Indexes data in 2 dimensions on a flat plane, like Cartesian coordinates.
+/// Less precise than 2dsphere but has lower overhead. Best for simple point data
+/// and queries.
+
+/// **geoHaystack** -
+/// Designed for very large geospatial data sets. Uses buckets to group nearby
+/// points and improve performance. Sacrifices precision for speed with large data.
+///
+///
+/// ## Recommendations for Location Data:
+///
+/// - Start with 2dsphere for precise geospatial queries.
+/// - Use 2d if you just need basic point queries and want lower overhead.
+/// - Consider geoHaystack if you have huge data sets and can sacrifice some
+/// accuracy for speed.
+/// - Most apps are fine with 2dsphere unless they have complex performance needs
+/// or very large data volumes.
+///
+/// So in summary, 2dsphere is best for precision, 2d for simpler points, and
+/// geoHaystack for optimizing large data sets by approximating location.
+enum Index {none,ascending, descending, geo2d, geo2dSphere, geoHaystack, text, hashed}
