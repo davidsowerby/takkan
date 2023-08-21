@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,6 +14,7 @@ import 'package:takkan_client/pod/layout/layout_wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_script/data/select/data_selector.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/page/page.dart';
@@ -184,7 +187,7 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   ///
   _checkAuthentication() {
     final requiresAuth =
-        widget.dataContext.documentSchema.requiresGetAuthentication;
+        widget.dataContext.documentSchema.requiresAuthentication(AccessMethod.get);
     if (requiresAuth) {
       final userAuthenticated =
           widget.dataContext.dataProvider.authenticator.isAuthenticated;
@@ -220,19 +223,15 @@ class DocumentPageState extends State<DocumentPage> with CacheConsumer {
   _canEdit() {
     if (widget.dataContext.documentSchema.readOnly) return false;
 
-    if (!widget.dataContext.dataProvider.authenticator.isAuthenticated) {
+    final isAuthenticated = widget.dataContext.dataProvider.authenticator.isAuthenticated;
+    if (!isAuthenticated) {
       if (widget.dataContext.documentSchema.permissions
-          .requiresUpdateAuthentication) {
+          .requiresAuthentication(AccessMethod.update)) {
         return false;
       }
     }
     final userRoles = widget.dataContext.dataProvider.userRoles;
-    final requiredRoles =
-        widget.dataContext.documentSchema.permissions.updateRoles;
-    if (requiredRoles.isEmpty) return true;
-    final bool userHasPermissions =
-        userRoles.any((role) => requiredRoles.contains(role));
-    return userHasPermissions;
+    return widget.dataContext.documentSchema.permissions.hasPermission(AccessMethod.update, isAuthenticated, userRoles);
   }
 
   /// Requests a document or list of documents from the cache and sets

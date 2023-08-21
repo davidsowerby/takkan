@@ -5,9 +5,8 @@ import '../../common/log.dart';
 import '../../data/select/condition/condition.dart';
 import '../../data/select/condition/integer_condition.dart';
 import '../../data/select/condition/string_condition.dart';
+import '../document/document.dart';
 import '../field/field.dart';
-import '../field/integer.dart';
-import '../field/string.dart';
 import '../schema.dart';
 
 const separator = '&&';
@@ -92,15 +91,15 @@ class ConditionBuilder {
     required bool forQuery,
   }) {
     final f = document.field(fieldName);
-    switch (f.runtimeType) {
-      case FInteger:
+    switch (f.modelType) {
+      case int:
         return IntegerCondition(
           field: fieldName,
           operator: operator,
           operand: operand,
           forQuery: forQuery,
         );
-      case FString:
+      case String:
         return StringCondition(
           field: fieldName,
           operator: operator,
@@ -166,7 +165,7 @@ class ConditionBuilder {
   /// The field name for the [Condition] is taken from [field], unlike [parseForQuery],
   /// which contains field names as part of the query expression
   List<Condition<dynamic>> parseForValidation({
-    required Field<dynamic, dynamic> field,
+    required Field<dynamic> field,
     required String expression,
   }) {
     final f = field;

@@ -7,8 +7,10 @@ import 'takkan_user.dart';
 
 abstract class Authenticator<CONFIG extends DataProvider, USER> {
   Authenticator(this.parent);
+
   final IDataProvider<CONFIG> parent;
-  final List<String> _userRoles = List.empty(growable: true);
+  final Set<String> _userRoles = {};
+
   final List<Function(SignInStatus)> _signInStatusListeners =
       List.empty(growable: true);
   SignInStatus _status = SignInStatus.Uninitialized;
@@ -55,6 +57,7 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
   }
 
   bool get isAuthenticated => _status == SignInStatus.Authenticated;
+
   bool get isNotAuthenticated => !isAuthenticated;
 
   @protected
@@ -63,7 +66,7 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
   Future<AuthenticationResult> doRegisterWithEmail(
       {required String username, required String password});
 
-  // TODO: this needs to handle other failures (lost connections etc)
+// TODO: this needs to handle other failures (lost connections etc)
   Future<AuthenticationResult> signInByEmail(
       {required String username, required String password}) async {
     if (status == SignInStatus.Uninitialized) {
@@ -137,7 +140,7 @@ abstract class Authenticator<CONFIG extends DataProvider, USER> {
     notifyStatusListeners();
   }
 
-  List<String> get userRoles => _userRoles;
+  Set<String> get userRoles => _userRoles;
 
   void notifyStatusListeners() {
     for (final element in _signInStatusListeners) {
@@ -174,6 +177,7 @@ class AuthenticationResult {
     this.errorCode = -999,
     this.message = 'Unknown',
   });
+
   final TakkanUser user;
   final bool success;
   final int errorCode;

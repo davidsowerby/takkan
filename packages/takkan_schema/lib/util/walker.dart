@@ -1,4 +1,5 @@
 import '../common/message.dart';
+import '../schema/document/document.dart';
 import '../schema/schema.dart';
 import '../takkan/takkan_element.dart';
 

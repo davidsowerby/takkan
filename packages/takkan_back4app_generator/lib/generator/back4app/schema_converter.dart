@@ -1,26 +1,19 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/data/object/geo.dart';
 import 'package:takkan_schema/data/object/json_object.dart';
 import 'package:takkan_schema/data/object/pointer.dart';
 import 'package:takkan_schema/data/object/relation.dart';
-import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_schema/schema/field/field.dart';
-import 'package:takkan_schema/schema/field/pointer.dart';
-import 'package:takkan_schema/schema/field/relation.dart';
-import 'package:takkan_schema/schema/schema.dart';
 
 import 'converter.dart';
 
 part 'schema_converter.g.dart';
 
-
-
 @JsonSerializable(explicitToJson: true)
 class Back4AppSchema implements DataProviderSchema {
-
   const Back4AppSchema({required this.results});
 
   // SchemaClass get role => SchemaClass(results['_Role']);
@@ -53,7 +46,6 @@ class Back4AppSchema implements DataProviderSchema {
 
 @JsonSerializable(explicitToJson: true)
 class ServerSchemaClass {
-
   const ServerSchemaClass(
       {required this.fields,
       required this.className,
@@ -81,20 +73,20 @@ class ServerSchemaClass {
     final Map<String, ServerSchemaField> fields = {};
     doc.fields.forEach((key, value) {
       switch (value.runtimeType) {
-        case FPointer:
-          fields[key] = ReferenceSchemaField(
-            targetClass: (value as FPointer).targetClass,
-            required: value.required,
-            type: selectFieldType(value),
-          );
-          break;
-        case FRelation:
-          fields[key] = ReferenceSchemaField(
-            targetClass: (value as FRelation).targetClass,
-            required: value.required,
-            type: selectFieldType(value),
-          );
-          break;
+        // case FPointer:
+        //   fields[key] = ReferenceSchemaField(
+        //     targetClass: (value as FPointer).targetClass,
+        //     required: value.required,
+        //     type: selectFieldType(value),
+        //   );
+        //   break;
+        // case FRelation:
+        //   fields[key] = ReferenceSchemaField(
+        //     targetClass: (value as FRelation).targetClass,
+        //     required: value.required,
+        //     type: selectFieldType(value),
+        //   );
+        //   break;
         default:
           fields[key] = ServerSchemaField(
             type: selectFieldType(value),
@@ -107,7 +99,7 @@ class ServerSchemaClass {
     return fields;
   }
 
-  static String selectFieldType(Field<dynamic,Condition<dynamic>> takkanField) {
+  static String selectFieldType(Field<dynamic> takkanField) {
     switch (takkanField.modelType) {
       case int:
         return 'Number';
@@ -132,16 +124,14 @@ class ServerSchemaClass {
       case File:
         return 'File';
     }
-    throw UnsupportedError(
-        '${takkanField.modelType.toString()} is not supported');
+    throw UnsupportedError('${takkanField.modelType} is not supported');
   }
 
-  void addField(Field<dynamic,Condition<dynamic>> pField) {}
+  void addField(Field<dynamic> pField) {}
 }
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ServerSchemaField {
-
   const ServerSchemaField(
       {required this.type, this.required, this.defaultValue});
 
@@ -157,7 +147,6 @@ class ServerSchemaField {
 /// A specific [ServerSchemaField] for use with fields which refer elsewhere, for example Pointers and Relations
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ReferenceSchemaField extends ServerSchemaField {
-
   ReferenceSchemaField({
     required this.targetClass,
     required bool super.required,
@@ -175,7 +164,6 @@ class ReferenceSchemaField extends ServerSchemaField {
 
 @JsonSerializable(explicitToJson: true)
 class SchemaClassLevelPermissions {
-
   const SchemaClassLevelPermissions({
     required this.find,
     required this.get,
@@ -208,49 +196,19 @@ class SchemaClassLevelPermissions {
   static Map<String, dynamic> buildPermissions(
       AccessMethod method, Document document) {
     final Map<String, dynamic> map = {};
-    switch (method) {
-      case AccessMethod.get:
-        map['requiresAuthentication'] = document.requiresGetAuthentication;
-        _roleConstructor(map, document.permissions.getRoles);
-        break;
-      case AccessMethod.find:
-        map['requiresAuthentication'] = document.requiresFindAuthentication;
-        _roleConstructor(map, document.permissions.findRoles);
-        break;
-      case AccessMethod.count:
-        map['requiresAuthentication'] = document.requiresCountAuthentication;
-        _roleConstructor(map, document.permissions.countRoles);
-        break;
-      case AccessMethod.create:
-        map['requiresAuthentication'] = document.requiresCreateAuthentication;
-        _roleConstructor(map, document.permissions.createRoles);
-        break;
-      case AccessMethod.update:
-        map['requiresAuthentication'] = document.requiresUpdateAuthentication;
-        _roleConstructor(map, document.permissions.updateRoles);
-        break;
-      case AccessMethod.delete:
-        map['requiresAuthentication'] = document.requiresDeleteAuthentication;
-        _roleConstructor(map, document.permissions.deleteRoles);
-        break;
-      case AccessMethod.addField:
-        map['requiresAuthentication'] =
-            document.requiresAddFieldAuthentication;
-        _roleConstructor(map, document.permissions.addFieldRoles);
-        break;
-      case AccessMethod.all:
-      case AccessMethod.read:
-      case AccessMethod.write:
-        throw TakkanException(
-            "'$method' is not appropriate in this context");
-    }
-    if (document.permissions.isPublic.contains(method)) {
+    if (document.permissions.isPublic(method)) {
       map['*'] = true;
+      return map;
     }
+    map['requiresAuthentication'] =
+        document.permissions.requiresAuthentication(method);
+    _roleConstructor(map, document.permissions.roles(method));
+
     return map;
   }
 
-  static void _roleConstructor(Map<String, dynamic> map, List<String> fromRoles) {
+  static void _roleConstructor(
+      Map<String, dynamic> map, Set<String> fromRoles) {
     for (final element in fromRoles) {
       map['role:$element'] = true;
     }

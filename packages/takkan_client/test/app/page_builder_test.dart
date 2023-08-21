@@ -6,6 +6,7 @@ import 'package:takkan_client/data/document_cache.dart';
 import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_script/data/select/data_item.dart';
 import 'package:takkan_script/data/select/data_list.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
@@ -29,10 +30,9 @@ void main() {
     setUp(() {
       script = Script(
         name: 'test',
-        version: Version(number: 0),
+        version: Version(versionIndex: 0),
         schema: Schema(
-          version: Version(number: 0),
-          name: 'test',
+          version: Version(versionIndex: 0),
           documents: {'Person': Document(fields: {})},
         ),
         pages: [

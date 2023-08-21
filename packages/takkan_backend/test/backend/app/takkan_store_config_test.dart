@@ -1,5 +1,4 @@
 import 'package:takkan_backend/backend/app/app_config.dart';
-import 'package:takkan_schema/common/exception.dart';
 import 'package:test/test.dart';
 
 import '../../fixtures/matchers.dart';

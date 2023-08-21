@@ -9,6 +9,7 @@ import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_schema/common/message.dart';
 import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/schema/validation/validation_error_messages.dart';
 import 'package:takkan_schema/util/walker.dart';
@@ -88,13 +89,13 @@ class Script extends ScriptElement {
   final Version version;
   String? nameLocale;
   final Schema schema;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   final SchemaSource? schemaSource;
   final List<Page> pages;
   final ConversionErrorMessages conversionErrorMessages;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   final ValidationErrorMessages validationErrorMessages;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   List<ValidationMessage> _scriptValidationMessages =
       List.empty(growable: true);
 
@@ -106,7 +107,7 @@ class Script extends ScriptElement {
   @override
   bool get hasParent => false;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
@@ -129,7 +130,7 @@ class Script extends ScriptElement {
   Page? pageFromStringRoute(String route) =>
       routes[TakkanRoute.fromString(route)];
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   Map<TakkanRoute, Page> get routeMap => _routes;
 
   Set<String> get allRoles => schema.allRoles;

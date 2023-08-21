@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/version.dart';
-import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
@@ -10,16 +10,16 @@ import 'package:takkan_schema/schema/schema.dart';
 ///
 /// The does rely on accurate configuration for [Equatable], so any errors
 /// in setting up the  [Equatable.props] getters could cause an issue
-SchemaDiff generateDiff2({Schema? previous, required Schema current}) {
+SchemaDifference generateDiff({Schema? previous, required Schema current}) {
   if (previous != null) {
-    if (current.version.number == previous.version.number) {
+    if (current.version.versionIndex == previous.version.versionIndex) {
       throw const TakkanException(
           'To create a diff, two different versions are required');
     }
     if (current.name != previous.name) {
       throw UnsupportedError('Schema name change is not supported');
     }
-    if (current.version.number < previous.version.number) {
+    if (current.version.versionIndex < previous.version.versionIndex) {
       throw const TakkanException(
           'Previous version must precede current version');
     }
@@ -28,11 +28,10 @@ SchemaDiff generateDiff2({Schema? previous, required Schema current}) {
   /// replace null previous with 'empty' schema
   final p = (previous == null)
       ? Schema(
-    name: current.name,
-    version: const Version(number: -1),
+    version: const Version(versionIndex: -1),
   )
       : previous;
-  return SchemaDiff(previous: p, current: current);
+  return SchemaDifference(previous: p, current: current);
 }
 
 mixin Differ {
@@ -73,26 +72,26 @@ class DiffNames<T extends Equatable> {
   final Set<String> updated;
 }
 
-class DocumentDiff with Differ {
-  DocumentDiff({
+class DocumentDifference with Differ {
+  DocumentDifference({
     required this.name,
     required this.previous,
     required this.current,
   }) {
-    fieldNamesDiff = _identifyChanges<Field<dynamic,Condition<dynamic>>>(
+    fieldNamesDiff = _identifyChanges<Field<dynamic>>(
         previous: previous.fields, current: current.fields);
   }
 
   final Document previous;
   final Document current;
   final String name;
-  late DiffNames<Field<dynamic,Condition<dynamic>>> fieldNamesDiff;
+  late DiffNames<Field<dynamic>> fieldNamesDiff;
 
-  Map<String, Field<dynamic,Condition<dynamic>>> get create =>
+  Map<String, Field<dynamic>> get create =>
       Map.fromEntries(current.fields.entries
           .where((entry) => fieldNamesDiff.created.contains(entry.key)));
 
-  Map<String, Field<dynamic,Condition<dynamic>>> get delete =>
+  Map<String, Field<dynamic>> get delete =>
       Map.fromEntries(current.fields.entries
           .where((entry) => fieldNamesDiff.deleted.contains(entry.key)));
 
@@ -115,12 +114,12 @@ class DocumentDiff with Differ {
 class FieldChange {
   const FieldChange({required this.previous, required this.current});
 
-  final Field<dynamic,Condition<dynamic>> previous;
-  final Field<dynamic,Condition<dynamic>> current;
+  final Field<dynamic> previous;
+  final Field<dynamic> current;
 }
 
-class SchemaDiff with Differ {
-  SchemaDiff({
+class SchemaDifference with Differ {
+  SchemaDifference({
     required this.previous,
     required this.current,
   }) {
@@ -149,13 +148,13 @@ class SchemaDiff with Differ {
       Map.fromEntries(current.documents.entries
           .where((entry) => documentNamesDiff.deleted.contains(entry.key)));
 
-  Map<String, DocumentDiff> get update =>
+  Map<String, DocumentDifference> get update =>
       Map.fromEntries(current.documents.entries
           .where((entry) => documentNamesDiff.updated.contains(entry.key))).map(
             (key, value) =>
-            MapEntry<String, DocumentDiff>(
+            MapEntry<String, DocumentDifference>(
               key,
-              DocumentDiff(
+              DocumentDifference(
                   previous: previous.documents[key]!,
                   current: current.documents[key]!,
                   name: key),

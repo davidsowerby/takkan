@@ -37,7 +37,7 @@ class PanelStatic extends PodBase implements Panels {
     fromJson: ContentConverter.fromJson,
     toJson: ContentConverter.toJson,
   )
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   PanelHeading? _heading;
   final bool openExpanded;
   final bool scrollable;
@@ -47,7 +47,7 @@ class PanelStatic extends PodBase implements Panels {
   @override
   Map<String, dynamic> toJson() => _$PanelStaticToJson(this);
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props =>
       [...super.props, _heading, openExpanded, scrollable, help, pageArguments];

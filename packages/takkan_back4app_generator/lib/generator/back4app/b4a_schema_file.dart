@@ -6,10 +6,8 @@ import 'package:takkan_schema/data/object/geo.dart';
 import 'package:takkan_schema/data/object/json_object.dart';
 import 'package:takkan_schema/data/object/pointer.dart';
 import 'package:takkan_schema/data/object/relation.dart';
-import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_schema/schema/field/field.dart';
-import 'package:takkan_schema/schema/field/pointer.dart';
-import 'package:takkan_schema/schema/field/relation.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
 import '../diff.dart';
@@ -19,7 +17,7 @@ import 'function_file.dart';
 /// A Javascript file providing a versioned Back4App schema builder, generated
 /// from the Takkan [Schema] versions.
 ///
-/// It uses [SchemaDiff] to identify changes
+/// It uses [SchemaDifference] to identify changes
 class B4ASchemaJavaScriptFile extends JavaScriptFile {
   B4ASchemaJavaScriptFile();
 
@@ -29,7 +27,7 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     required List<Schema> schemaVersions,
   }) {
     final List<int> numbers =
-        schemaVersions.map((e) => e.version.number).toList();
+        schemaVersions.map((e) => e.version.versionIndex).toList();
     numbers.sort();
     final current = numbers.last;
 
@@ -71,12 +69,12 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     moduleExport.addExport('schemaVersion');
     moduleExport.addExport('versionStatus');
 
-    final List<SchemaDiff> diffs = _schemaDiffs(schemaVersions);
-    for (final SchemaDiff diff in diffs) {
-      final version = diff.current.version.number;
+    final List<SchemaDifference> diffs = _schemaDiffs(schemaVersions);
+    for (final SchemaDifference diff in diffs) {
+      final version = diff.current.version.versionIndex;
       final List<Document> createDocuments = List.from(diff.create.values);
       createDocuments.sort((a, b) => a.name.compareTo(b.name));
-      final List<DocumentDiff> updateDocumentDiffs =
+      final List<DocumentDifference> updateDocumentDiffs =
           List.from(diff.update.values);
 
       /// We only want to process field additions or deletions for the schema
@@ -136,13 +134,13 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     ];
   }
 
-  /// The [DocumentDiff.update] fields are not used here.  Back4App does not support
+  /// The [DocumentDifference.update] fields are not used here.  Back4App does not support
   /// changing the data type, and the rest of the field definition is handled through
   /// validation code.  This method therefore only adds and deletes fields
   ///
   /// Field names are sorted for ease of reading and testing
   List<JavaScriptElement> _updateDocumentSchema(
-      DocumentDiff documentDiff, int version) {
+      DocumentDifference documentDiff, int version) {
     final document = documentDiff.current;
     final String schemaVariable = '${decapitaliseName(document)}Schema';
     final getSchemaStatements = [
@@ -151,21 +149,21 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
     ];
 
     /// Add fields from diff.create
-    final createFields = List<Field<dynamic,Condition<dynamic>>>.from(documentDiff.create.values);
+    final createFields = List<Field<dynamic>>.from(documentDiff.create.values);
     createFields.sort((a, b) => a.name.compareTo(b.name));
     final createStatements = createFields.map((field) {
-      if (field.isLinkField) {
-        final String targetClass=(field is FPointer) ? field.targetClass : (field as FRelation).targetClass;
-        return Statement(
-            "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}', '$targetClass')");
-      }
+      // if (field.isLinkField) {
+      //   final String targetClass=(field is FPointer) ? field.targetClass : (field as FRelation).targetClass;
+      //   return Statement(
+      //       "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}', '$targetClass')");
+      // }
 
       return Statement(
           "$schemaVariable.add${_schemaDataTypeMap(field)}('${field.name}')");
     });
 
     /// Delete fields from diff.delete
-    final deleteFields = List<Field<dynamic,Condition<dynamic>>>.from(documentDiff.delete.values);
+    final deleteFields = List<Field<dynamic>>.from(documentDiff.delete.values);
     deleteFields.sort((a, b) => a.name.compareTo(b.name));
     final deleteStatements = deleteFields.map((field) => Statement(
         "$schemaVariable.delete${_schemaDataTypeMap(field)}('${field.name}')"));
@@ -199,22 +197,22 @@ class B4ASchemaJavaScriptFile extends JavaScriptFile {
   /// current version is 0
   ///
   /// Sort into ascending version number order first to ensure the order is correct
-  List<SchemaDiff> _schemaDiffs(List<Schema> schemaVersions) {
+  List<SchemaDifference> _schemaDiffs(List<Schema> schemaVersions) {
     final List<Schema> sortedVersions = List<Schema>.from(schemaVersions);
-    sortedVersions.sort((a, b) => a.version.number.compareTo(b.version.number));
+    sortedVersions.sort((a, b) => a.version.versionIndex.compareTo(b.version.versionIndex));
 
     /// If the first version we are passed is at number 0, we need a 'nothing'
     /// before that, so we use an empty schema
-    if (sortedVersions[0].version.number == 0) {
+    if (sortedVersions[0].version.versionIndex == 0) {
       final emptySchema = EmptySchema();
-      emptySchema.init();
+      emptySchema.init(schemaName: 'test');
       sortedVersions.insert(0, emptySchema);
     }
-    final List<SchemaDiff> diffs = List.empty(growable: true);
+    final List<SchemaDifference> diffs = List.empty(growable: true);
 
     while (sortedVersions.length >= 2) {
       diffs.add(
-          SchemaDiff(previous: sortedVersions[0], current: sortedVersions[1]));
+          SchemaDifference(previous: sortedVersions[0], current: sortedVersions[1]));
       sortedVersions.removeAt(0);
     }
 
@@ -237,7 +235,7 @@ List<JavaScriptElement> _deleteDocumentSchema(Document document) {
 }
 
 List<JavaScriptElement> _addSchemaFields(Document document) {
-  final List<Field<dynamic,Condition<dynamic>>> fields = document.fields.values.toList();
+  final List<Field<dynamic>> fields = document.fields.values.toList();
   final String schemaVariable = '${decapitaliseName(document)}Schema';
   fields.sort((a, b) => a.name.compareTo(b.name));
   return fields
@@ -248,7 +246,7 @@ List<JavaScriptElement> _addSchemaFields(Document document) {
 
 // TODO: Pointer and relation need to be added with, eg .addPointer('pointerField', '_User')
 // and .addRelation('relationField', '_User');
-String _schemaDataTypeMap(Field<dynamic,Condition<dynamic>> field) {
+String _schemaDataTypeMap(Field<dynamic> field) {
   switch (field.modelType) {
     case int:
       return 'Number';
@@ -274,11 +272,14 @@ String _schemaDataTypeMap(Field<dynamic,Condition<dynamic>> field) {
       return 'Relation';
     default:
       throw UnsupportedError(
-          'Unsupported data type: ${field.modelType.toString()}');
+          'Unsupported data type: ${field.modelType}');
   }
 }
 
 // ignore: must_be_immutable
 class EmptySchema extends Schema {
-  EmptySchema() : super(name: 'Empty', version: const Version(number: 0));
+  EmptySchema() : super(version: const Version(versionIndex: 0));
+
+  @override
+  String get name => 'Empty';
 }

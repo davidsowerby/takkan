@@ -6,118 +6,61 @@ part of 'schema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+SchemaSet _$SchemaSetFromJson(Map<String, dynamic> json) => SchemaSet(
+      baseVersion: Schema.fromJson(json['baseVersion'] as Map<String, dynamic>),
+      diffs: (json['diffs'] as List<dynamic>?)
+          ?.map((e) => SchemaDiff.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      schemaName: json['schemaName'] as String,
+    );
+
+Map<String, dynamic> _$SchemaSetToJson(SchemaSet instance) => <String, dynamic>{
+      'baseVersion': instance.baseVersion.toJson(),
+      'schemaName': instance.schemaName,
+      'diffs': instance.diffs.map((e) => e.toJson()).toList(),
+    };
+
+SchemaDiff _$SchemaDiffFromJson(Map<String, dynamic> json) => SchemaDiff(
+      addDocuments: (json['addDocuments'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(k, Document.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+      removeDocuments: (json['removeDocuments'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      amendDocuments: (json['amendDocuments'] as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, DocumentDiff.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+      readOnly: json['readOnly'] as bool?,
+      version: Version.fromJson(json['version'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$SchemaDiffToJson(SchemaDiff instance) =>
+    <String, dynamic>{
+      'addDocuments':
+          instance.addDocuments.map((k, e) => MapEntry(k, e.toJson())),
+      'removeDocuments': instance.removeDocuments,
+      'amendDocuments':
+          instance.amendDocuments.map((k, e) => MapEntry(k, e.toJson())),
+      'version': instance.version.toJson(),
+      'readOnly': instance.readOnly,
+    };
+
 Schema _$SchemaFromJson(Map<String, dynamic> json) => Schema(
       documents: (json['documents'] as Map<String, dynamic>?)?.map(
             (k, e) => MapEntry(k, Document.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
-      name: json['name'] as String,
       version: Version.fromJson(json['version'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SchemaToJson(Schema instance) => <String, dynamic>{
-      'name': instance.name,
       'version': instance.version.toJson(),
       'documents': instance.documents.map((k, e) => MapEntry(k, e.toJson())),
     };
-
-Permissions _$PermissionsFromJson(Map<String, dynamic> json) => Permissions(
-      isPublic: (json['isPublic'] as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$AccessMethodEnumMap, e))
-              .toList() ??
-          const [],
-      readRoles: (json['readRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      writeRoles: (json['writeRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      updateRoles: (json['updateRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      createRoles: (json['createRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      deleteRoles: (json['deleteRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      addFieldRoles: (json['addFieldRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      getRoles: (json['getRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      findRoles: (json['findRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-      countRoles: (json['countRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
-    );
-
-Map<String, dynamic> _$PermissionsToJson(Permissions instance) =>
-    <String, dynamic>{
-      'isPublic':
-          instance.isPublic.map((e) => _$AccessMethodEnumMap[e]!).toList(),
-      'readRoles': instance.readRoles,
-      'writeRoles': instance.writeRoles,
-      'addFieldRoles': instance.addFieldRoles,
-      'updateRoles': instance.updateRoles,
-      'createRoles': instance.createRoles,
-      'deleteRoles': instance.deleteRoles,
-      'getRoles': instance.getRoles,
-      'findRoles': instance.findRoles,
-      'countRoles': instance.countRoles,
-    };
-
-const _$AccessMethodEnumMap = {
-  AccessMethod.all: 'all',
-  AccessMethod.read: 'read',
-  AccessMethod.get: 'get',
-  AccessMethod.find: 'find',
-  AccessMethod.count: 'count',
-  AccessMethod.write: 'write',
-  AccessMethod.create: 'create',
-  AccessMethod.update: 'update',
-  AccessMethod.delete: 'delete',
-  AccessMethod.addField: 'addField',
-};
-
-Document _$DocumentFromJson(Map<String, dynamic> json) => Document(
-      fields: const SchemaFieldMapConverter()
-          .fromJson(json['fields'] as Map<String, dynamic>),
-      documentType:
-          $enumDecodeNullable(_$DocumentTypeEnumMap, json['documentType']) ??
-              DocumentType.standard,
-      permissions: json['permissions'] == null
-          ? const Permissions()
-          : Permissions.fromJson(json['permissions'] as Map<String, dynamic>),
-      queries: (json['queries'] as Map<String, dynamic>?)?.map(
-            (k, e) => MapEntry(k, Query.fromJson(e as Map<String, dynamic>)),
-          ) ??
-          const {},
-    );
-
-Map<String, dynamic> _$DocumentToJson(Document instance) => <String, dynamic>{
-      'queries': instance.queries.map((k, e) => MapEntry(k, e.toJson())),
-      'permissions': instance.permissions.toJson(),
-      'documentType': _$DocumentTypeEnumMap[instance.documentType]!,
-      'fields': const SchemaFieldMapConverter().toJson(instance.fields),
-    };
-
-const _$DocumentTypeEnumMap = {
-  DocumentType.standard: 'standard',
-  DocumentType.versioned: 'versioned',
-};
 
 SchemaSource _$SchemaSourceFromJson(Map<String, dynamic> json) => SchemaSource(
       group: json['group'] as String,
@@ -128,17 +71,4 @@ Map<String, dynamic> _$SchemaSourceToJson(SchemaSource instance) =>
     <String, dynamic>{
       'group': instance.group,
       'instance': instance.instance,
-    };
-
-SchemaStatus _$SchemaStatusFromJson(Map<String, dynamic> json) => SchemaStatus(
-      activeVersion: json['activeVersion'] as int,
-      deprecatedVersions: (json['deprecatedVersions'] as List<dynamic>)
-          .map((e) => e as int)
-          .toList(),
-    );
-
-Map<String, dynamic> _$SchemaStatusToJson(SchemaStatus instance) =>
-    <String, dynamic>{
-      'activeVersion': instance.activeVersion,
-      'deprecatedVersions': instance.deprecatedVersions,
     };

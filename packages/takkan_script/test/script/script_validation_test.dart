@@ -20,10 +20,9 @@ void main() {
       // given
       final script1 = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
       );
       // when
@@ -47,10 +46,9 @@ void main() {
         // given
         final script = Script(
           name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
           schema: Schema(
-            name: 'test',
-            version: const Version(number: 0),
+            version: const Version(versionIndex: 0),
           ),
           pages: [
             Page(
@@ -75,10 +73,9 @@ void main() {
       // given
       final component = Script(
         name: 'A script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(
@@ -101,10 +98,9 @@ void main() {
       // given
       final component = Script(
         name: 'a script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(
@@ -137,10 +133,9 @@ void main() {
       // given
       final component = Script(
           name: 'A Script',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
           schema: Schema(
-            name: 'test',
-            version: const Version(number: 0),
+            version: const Version(versionIndex: 0),
           ),
           dataProvider: DataProvider(
             instanceConfig: const AppInstance(
@@ -174,10 +169,9 @@ void main() {
       // given
       final withoutQueryOrDataProvider = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(
@@ -194,10 +188,9 @@ void main() {
 
       final withoutQuery = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(
@@ -216,10 +209,9 @@ void main() {
 
       final withQueryAndProvider = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(

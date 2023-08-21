@@ -21,10 +21,9 @@ void main() {
       // given
       final Script s = Script(
         name: 'test',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          version: const Version(number: 0),
-          name: 'test',
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(

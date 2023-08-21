@@ -27,10 +27,9 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(
@@ -87,10 +86,9 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         controlEdit: ControlEdit.panelsOnly,
         pages: [
@@ -144,10 +142,9 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(
@@ -201,10 +198,9 @@ void main() {
       // given
       final script = Script(
         name: 'A script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         pages: [
           Page(
@@ -254,10 +250,9 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         controlEdit: ControlEdit.thisAndBelow,
         // ignore: missing_required_param
@@ -311,10 +306,9 @@ void main() {
       // given
       final script = Script(
         name: 'A Script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         controlEdit: ControlEdit.inherited,
         pages: [

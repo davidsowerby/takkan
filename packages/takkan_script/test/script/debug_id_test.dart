@@ -1,4 +1,5 @@
 import 'package:takkan_schema/common/version.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/util/walker.dart';
 import 'package:takkan_script/page/page.dart';
@@ -23,10 +24,9 @@ void main() {
       // given
       final script = Script(
         name: 'script',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          version: const Version(number: 0),
-          name: 'schema',
+          version: const Version(versionIndex: 0),
           documents: {'Person': Document(fields: const {})},
         ),
         schemaSource: SchemaSource(group: 'x', instance: 'dev'),

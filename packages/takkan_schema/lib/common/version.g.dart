@@ -7,16 +7,24 @@ part of 'version.dart';
 // **************************************************************************
 
 Version _$VersionFromJson(Map<String, dynamic> json) => Version(
-      number: json['number'] as int,
+      versionIndex: json['versionIndex'] as int,
       label: json['label'] as String? ?? '',
-      deprecated: (json['deprecated'] as List<dynamic>?)
-              ?.map((e) => e as int)
-              .toList() ??
-          const [],
+      status: $enumDecodeNullable(_$VersionStatusEnumMap, json['status']) ??
+          VersionStatus.development,
     );
 
 Map<String, dynamic> _$VersionToJson(Version instance) => <String, dynamic>{
-      'number': instance.number,
+      'versionIndex': instance.versionIndex,
       'label': instance.label,
-      'deprecated': instance.deprecated,
+      'status': _$VersionStatusEnumMap[instance.status]!,
     };
+
+const _$VersionStatusEnumMap = {
+  VersionStatus.alpha: 'alpha',
+  VersionStatus.beta: 'beta',
+  VersionStatus.released: 'released',
+  VersionStatus.deprecated: 'deprecated',
+  VersionStatus.excluded: 'excluded',
+  VersionStatus.expired: 'expired',
+  VersionStatus.development: 'development',
+};

@@ -5,7 +5,7 @@ import 'condition.dart';
 part 'list_int_condition.g.dart';
 
 /// The only real purpose of this class is to support IDE friendly definitions of
-/// query and validation conditions, using [C] and [V] respectively.
+/// query and validation conditions, using [Q] and [V] respectively.
 ///
 /// The [fieldName] cannot be final as it may need updating when used in validation
 class ListIntConditionBuilder {

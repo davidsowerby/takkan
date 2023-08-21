@@ -10,7 +10,7 @@ void main() {
   group('Function File', () {
     setUpAll(() {
       for (final schema in schemaVersions) {
-        schema.init();
+        schema.init(schemaName: 'test');
       }
     });
 

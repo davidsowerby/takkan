@@ -20,6 +20,7 @@ class MainJavaScriptFile extends JavaScriptFile {
     );
   }
 
+  @override
   void writeToBuffer({required List<Schema> schemaVersions}) {
     specify(schemaVersions: schemaVersions);
     for (final element in elements) {

@@ -76,7 +76,7 @@ class BeforeSaveTrigger extends Trigger {
                   ))
               .map(
                 (docVersion) => Case(
-                    docVersion.version.number,
+                    docVersion.version.versionIndex,
                     [
                       ...docVersion.document.fields.values
                           .where((field) => field.hasValidation)

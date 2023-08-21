@@ -127,12 +127,14 @@ void main() {
     test('construct from config, static page', () {
       // given
       final Script script = Script(
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
           name: 'test',
           pages: [
             Page(name: 'static-page'),
           ],
-          schema: Schema(version: const Version(number: 0), name: 'test'));
+          schema: Schema(
+            version: const Version(versionIndex: 0),
+          ));
       script.init();
       final page = script.pages[0];
       // when

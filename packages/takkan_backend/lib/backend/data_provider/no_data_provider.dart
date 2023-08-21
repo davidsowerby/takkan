@@ -71,7 +71,7 @@ class NoDataProvider implements IDataProvider {
   TakkanUser get user => throw const TakkanException(msg);
 
   @override
-  List<String> get userRoles => throw const TakkanException(msg);
+  Set<String> get userRoles => throw const TakkanException(msg);
 
   @override
   String get sessionTokenKey => 'X-Parse-Session-Token';

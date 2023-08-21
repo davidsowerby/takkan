@@ -28,10 +28,9 @@ void main() {
       // given
       final script = Script(
         name: 'test',
-        version: const Version(number: 0),
+        version: const Version(versionIndex: 0),
         schema: Schema(
-          name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
         ),
         dataProvider: DataProvider(
           instanceConfig: const AppInstance(group: '', instance: ''),
@@ -78,10 +77,9 @@ void main() {
       // given
       final script = Script(
           name: 'test',
-          version: const Version(number: 0),
+          version: const Version(versionIndex: 0),
           schema: Schema(
-            name: 'test',
-            version: const Version(number: 0),
+            version: const Version(versionIndex: 0),
           ),
           dataProvider: NullDataProvider(),
           pages: [

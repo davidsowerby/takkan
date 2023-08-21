@@ -9,6 +9,7 @@ import 'package:takkan_client/pod/page/document_list_page.dart';
 import 'package:takkan_client/pod/page/document_page.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_script/inject/inject.dart';
 import 'package:takkan_script/page/page.dart' as PageConfig;
 import 'package:takkan_script/page/page.dart';

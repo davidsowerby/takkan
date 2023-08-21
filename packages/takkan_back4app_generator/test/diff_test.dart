@@ -15,9 +15,9 @@ void main() {
     test('nothing to 0', () {
       // given
       final currentSchema = medleySchema0;
-      currentSchema.init();
+      currentSchema.init(schemaName: 'test');
       // when
-      final result = generateDiff2(current: currentSchema);
+      final result = generateDiff(current: currentSchema);
       // then
 
       expect(result.create.length, 1);
@@ -29,11 +29,11 @@ void main() {
       // given
       final previousSchema = medleySchema0;
       final currentSchema = medleySchema1;
-      previousSchema.init();
-      currentSchema.init();
+      previousSchema.init(schemaName: 'test');
+      currentSchema.init(schemaName: 'test');
       // when
       final result =
-          generateDiff2(previous: previousSchema, current: currentSchema);
+          generateDiff(previous: previousSchema, current: currentSchema);
       // then
 
       expect(result.create.length, 1);
@@ -41,7 +41,7 @@ void main() {
       expect(result.update.length, 1);
       expect(result.update.keys, containsAll(['Person']));
 
-      final DocumentDiff updated = result.update['Person']!;
+      final DocumentDifference updated = result.update['Person']!;
       expect(updated.name, 'Person');
       expect(updated.create.length, 1);
       expect(updated.create.keys, containsAll(['lastName']));

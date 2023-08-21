@@ -27,10 +27,10 @@ class DocumentId extends Equatable {
 
   Map<String, dynamic> toJson() => _$DocumentIdToJson(this);
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String get fullReference => '$documentClass:$objectId';
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [documentClass, objectId];
 }

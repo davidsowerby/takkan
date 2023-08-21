@@ -1,49 +1,339 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
-import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../common/constants.dart';
 import '../common/exception.dart';
 import '../common/log.dart';
 import '../common/version.dart';
-import '../data/select/condition/condition.dart';
 import '../takkan/takkan_element.dart';
 import '../util/walker.dart';
-import 'field/boolean.dart';
+import 'common/diff.dart';
+import 'common/schema_element.dart';
+import 'document/document.dart';
 import 'field/field.dart';
-import 'field/string.dart';
-import 'json/json_converter.dart';
-import 'query/query.dart';
 
 part 'schema.g.dart';
 
-/// A backend-agnostic definition of a data structure, including data types, validation, permissions
-/// and relationships.
+/// A [SchemaSet] represents a set of [Schema] versions, and is primarily used
+/// to support version control.  It is therefore not expected generally to be
+/// used in a client application, unless the client needs to support multiple
+/// versions
 ///
-/// A [Schema] is associated with a [DataProvider] instance.  The [name] must be unique
-/// within the scope of an application, but has no other constraint.
+/// A [SchemaSet] is defined by a [baseVersion] with 0 or more [diffs] defining
+/// subsequent versions.  All versions have a version index which must increment
+/// by at least 1 for each new version.  See [Version] for more detail.
 ///
-/// [Schema] provides a definition for use by Takkan, and is also be used to create a backend schema.
+/// Each version has a [VersionStatus], which is used to inform both server
+/// code and the client.  The status of a version can be changed by
+/// [changeVersionStatus]. Takkan does not by default impose any rules on how
+/// transitions from one status to another can be made.  You can change this by
+/// passing your own implementation of [VersionStatusChangeRules] to specify your
+/// own lifecycle
 ///
-/// The terminology used reflects the intention to keep this backend-agnostic, although there may be cases where
-/// a backend does not support a particular data type.
+/// During [init] the [baseVersion] is initialised, and versions created (expanded)
+/// for all [diffs] except those that have [VersionStatus.excluded].
 ///
-/// How these translate to the structure in the backend will depend on the backend itself, and the user's
-/// preferences.
+/// [activeDiffs] returns only diffs which are not [VersionStatus.excluded]
+///
+/// [changeBaseVersion] changes the base version.
+@JsonSerializable(explicitToJson: true)
+class SchemaSet {
+  SchemaSet({
+    required this.baseVersion,
+    List<SchemaDiff>? diffs,
+    required this.schemaName,
+    VersionStatusChangeRules? statusRules,
+  })  : _diffs = diffs ?? [],
+        statusRules = statusRules ?? const DefaultVersionStatusChangeRules();
+
+  factory SchemaSet.fromJson(Map<String, dynamic> json) =>
+      _$SchemaSetFromJson(json);
+  Schema baseVersion;
+  final List<SchemaDiff> _diffs;
+  final String schemaName;
+  final Map<int, Schema> _schemaVersions = <int, Schema>{};
+  final VersionStatusChangeRules statusRules;
+
+  /// Expands and creates all versions from [baseVersion] plus [diffs]
+  /// The [baseVersion] is also the first version
+  /// Initialises the [baseVersion]
+  void init() {
+    baseVersion.init(schemaName: schemaName);
+    _expandVersions();
+  }
+
+  /// Return only those [Schema] instances where its status is
+  /// [VersionStatusExtension.active]
+  Set<Schema> get activeSchemas => _schemaVersions.values
+      .where((element) => element.status.isActive)
+      .toSet();
+
+  /// Return only those [SchemaDiff] instances where its status is
+  /// [VersionStatusExtension.active]
+  Set<SchemaDiff> get activeDiffs =>
+      _diffs.where((element) => element.status.isActive).toSet();
+
+  /// If you want only those versions which have not been removed, use
+  /// [validSchemaVersions]
+  Map<int, Schema> get schemaVersions => Map.from(_schemaVersions);
+
+  /// Returns only those versions which are not [VersionStatus.excluded]
+  /// If you want all versions, use [schemaVersions]
+  ///
+  /// This relies on the versions being built from [validDiffs], using
+  /// [_expandVersions], and access must therefore be preceded by a call to [init]
+  Map<int, Schema> get validSchemaVersions {
+    final result = Map<int, Schema>.from(_schemaVersions);
+    result.removeWhere((key, value) => value.status == VersionStatus.excluded);
+    return result;
+  }
+
+  /// Returns all diffs regardless of [VersionStatus]
+  List<SchemaDiff> get diffs => List.from(_diffs);
+
+  /// Returns all diffs except those that are [VersionStatus.excluded]
+  List<SchemaDiff> get validDiffs =>
+      _diffs.where((element) => element.status.isValid).toList();
+
+  /// Expands the diffs and populates [_schemaVersions].  [validDiffs] are applied in
+  /// turn to the [baseVersion], producing a new, full [Schema] instance at
+  /// each version.  These instances are available at [schemaVersions]
+  void _expandVersions() {
+    diffs.sort((a, b) => a.versionIndex.compareTo(b.versionIndex));
+    Schema latestSoFar = baseVersion;
+    _schemaVersions[baseVersion.versionIndex] = baseVersion;
+
+    // Step through valid diffs and apply to base version of schema, thus producing
+    // a new version.  New version is added to _versions.
+    for (final SchemaDiff diff in validDiffs) {
+      final nextVersionOfSchema = diff.applyTo(latestSoFar);
+      nextVersionOfSchema.init(schemaName: schemaName);
+      _schemaVersions[nextVersionOfSchema.versionIndex] = nextVersionOfSchema;
+      latestSoFar = nextVersionOfSchema;
+    }
+  }
+
+  Map<String, dynamic> toJson() => _$SchemaSetToJson(this);
+
+  /// This relies on the versions being built from [validDiffs], using
+  /// [_expandVersions], and must therefore/ be preceded by a call to [init]
+  Schema schemaVersion(int versionIndex) {
+    final v = _schemaVersions[versionIndex];
+    if (v == null) {
+      throw TakkanException('Schema version $versionIndex not found');
+    }
+    return v;
+  }
+
+  SchemaDiff diffVersion(int versionIndex) {
+    final diff =
+        diffs.firstWhere((element) => element.versionIndex == versionIndex);
+    if (diff == null) {
+      throw TakkanException('SchemaDiff version $versionIndex not found');
+    }
+    return diff;
+  }
+
+  /// This relies on the versions being built from [diffs], using [_expandVersions],
+  /// and must therefore/ be preceded by a call to [init]
+  bool containsSchemaVersion(int versionIndex) {
+    return _schemaVersions.containsKey(versionIndex);
+  }
+
+  bool containsDiffVersion(int versionIndex) {
+    return diffs.any((element) => element.versionIndex == versionIndex);
+  }
+
+  /// Make a change to the status of the version identified by its [versionIndex].
+  /// A change is only made if the [statusRules] are met.
+  ///
+  /// The change is applied to [schemaVersions] and [diffs], except when the
+  /// change is applied to the [baseVersion] as there will be no diff for that.
+  void changeVersionStatus(int versionIndex, VersionStatus newStatus) {
+    // This will throw an exception if versionIndex not valid
+    final versionToChange = schemaVersion(versionIndex);
+    final currentStatus = versionToChange.status;
+
+    if (currentStatus == newStatus) {
+      logType(runtimeType).i(
+          'Version at index $versionIndex is already at $newStatus, no change made');
+      return;
+    }
+
+    final isBaseVersion = versionIndex == baseVersion.versionIndex;
+    // Check the rules.  Rules may also throw an exception
+    final ruleCheck=statusRules.checkRules(currentStatus: currentStatus, newStatus: newStatus, isBaseVersion: isBaseVersion);
+
+    // Do nothing if we failed to pass the rules
+    if (!ruleCheck){
+      return;
+    }
+    // if we are moved to released state and we want to maintain a unique release,
+    // we need to deprecate currently released version, if there is one. Do
+    // before changing to newStatus, so we don't forget which is which
+    if (newStatus==VersionStatus.released){
+      if (statusRules.maintainUniqueReleasedVersion){
+        // We will check for more than one just in case the rule has changed
+        final currentlyReleased=schemaVersions.values.where((element) => element.status==VersionStatus.released);
+        for (final v in currentlyReleased){
+          changeVersionStatus(v.versionIndex, VersionStatus.deprecated);
+        }
+      }
+    }
+    // apply the version change
+    _doChangeVersionStatus(versionToChange, newStatus);
+  }
+
+  void _doChangeVersionStatus(Schema versionToChange, VersionStatus newStatus) {
+    // create a new version instance with new status
+    final newVersionInstance = versionToChange.version.withStatus(newStatus);
+
+    // change status in Schema
+    versionToChange.version = newVersionInstance;
+    final int versionIndex = versionToChange.versionIndex;
+    // change diff as well, if there is one (only time there would not be is if
+    // we are changing the base version)
+    if (versionIndex != baseVersion.versionIndex) {
+      final diff =
+          diffs.firstWhere((element) => element.versionIndex == versionIndex);
+      if (diff == null) {
+        // This should not happen - diffs should not have been be removed unless
+        // expanded schema is removed as well
+        throw TakkanException('There is no SchemaDiff for $versionIndex');
+      }
+      diff.version = newVersionInstance;
+    }
+  }
+
+  /// throws TakkanException if the version requested is the base version;
+  void _checkNotBaseVersion(int versionIndex, String action, String reason) {
+    if (versionIndex == baseVersion.versionIndex) {
+      throw TakkanException('Cannot $action base version $reason');
+    }
+  }
+
+  /// Adds a new version by specifying it as a[SchemaDiff].  Its status is
+  /// determined by the [SchemaDiff.version].  If the [Version.versionIndex]] already
+  /// exists, a TakkanException is thrown.
+  ///
+  /// The versionIndex of [diff] must be greater than any existing versionIndex,
+  /// but does not need to be contiguous.
+  ///
+  /// The newly added entry in [diffs] is expanded into [_schemaVersions]
+  void addVersion(SchemaDiff diff) {
+    // Reject if the versionIndex of diff is not greater than those already in diffs
+    if (diffs.any((element) => element.versionIndex >= diff.versionIndex)) {
+      throw const TakkanException(
+          'An added version must have a versionIndex greater than any existing '
+          'versionIndex');
+    }
+    _diffs.add(diff);
+    _schemaVersions.clear();
+    _expandVersions();
+  }
+
+  /// Changes the current base version to the specified [versionIndex]. All
+  /// versions prior to this have their status set to [VersionStatus.expired]
+  /// unless they have been previously [VersionStatus.excluded].
+  void changeBaseVersion(int versionIndex) {
+    _checkNotBaseVersion(
+        versionIndex, 'change base ', ' as base already at $versionIndex');
+    final oldBaseIndex = baseVersion.versionIndex;
+    final newBase = schemaVersion(versionIndex);
+    // expire all versions prior to this new base version
+    for (int i = oldBaseIndex; i < versionIndex; i++) {
+      if (containsSchemaVersion(i)) {
+        if (schemaVersion(i).status != VersionStatus.excluded) {
+          changeVersionStatus(i, VersionStatus.expired);
+        }
+      }
+    }
+    baseVersion = newBase;
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class SchemaDiff with DiffUpdate implements Diff<Schema> {
+  SchemaDiff({
+    this.addDocuments = const {},
+    this.removeDocuments = const [],
+    this.amendDocuments = const {},
+    this.readOnly,
+    required this.version,
+  });
+
+  factory SchemaDiff.fromJson(Map<String, dynamic> json) =>
+      _$SchemaDiffFromJson(json);
+  final Map<String, Document> addDocuments;
+  final List<String> removeDocuments;
+  final Map<String, DocumentDiff> amendDocuments;
+  Version version;
+  final bool? readOnly;
+
+  VersionStatus get status => version.status;
+
+  Map<String, dynamic> toJson() => _$SchemaDiffToJson(this);
+
+  /// Returns a new [Schema] instance with this [SchemaDiff] applied.
+  ///
+  /// Changes are applied in this order:
+  ///  - amend
+  ///  - remove
+  ///  - add
+  ///
+  /// This means that it is possible, with a poorly defined [diff], to remove a
+  /// document and add it back in, or to amend a document and then remove it,
+  /// all within one [diff].
+  @override
+  Schema applyTo(Schema base) {
+    return Schema(
+      readOnly: readOnly ?? base.readOnly,
+      version: version,
+      documents: _updatedDocuments(base),
+    );
+  }
+
+  Map<String, Document> _updatedDocuments(Schema base) {
+    return updateSubElements(
+      baseSubElements: base.documents,
+      amendSubElements: amendDocuments,
+      removeSubElements: removeDocuments,
+      addSubElements: addDocuments,
+    );
+  }
+
+  int get versionIndex => version.versionIndex;
+}
+
+/// [Schema] is a definition of a data structure, including data types, validation,
+/// permissions and relationships.  It provides a common definition for use by
+/// the client and server side code.
+///
+/// The [name] is provided by the parent [SchemaSet] during the [init] call, and
+/// must be unique within the scope of an application, but has no other constraint.
+///
+/// The terminology used reflects the intention to keep this backend-agnostic,
+/// although there may be cases where a backend does not support a particular
+/// data type.
+///
+/// How these translate to the structure in the backend will depend on the
+/// backend itself, and the user's preferences.
 ///
 ///
 /// - In [documents], the map key is the document name.  This is, for example, a
-/// Back4App Class or a Firestore collection, as determined by the backend implementation.
+/// Back4App Class or a Firestore collection, as determined by the backend
+/// implementation.  During the init() process, the name of the [Document] is set
+/// to match the key
 ///
-///
+/// A [Schema] also forms part of a [SchemaSet] to provide support for multiple
+/// [Schema] versions
 ///
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Schema extends SchemaElement {
   Schema({
     Map<String, Document> documents = const {},
     bool readOnly = false,
-    required this.name,
     required this.version,
   })  : _documents = Map.from(documents),
         super(isReadOnly: readOnly ? IsReadOnly.yes : IsReadOnly.no);
@@ -51,40 +341,35 @@ class Schema extends SchemaElement {
   factory Schema.fromJson(Map<String, dynamic> json) => _$SchemaFromJson(json);
   static const String supportedVersions = 'supportedSchemaVersions';
   static const String documentClassName = 'TakkanSchema';
-  @override
-  final String name;
   final Map<String, Document> _documents;
-  final Version version;
+  Version version;
 
   @override
   Map<String, dynamic> toJson() => _$SchemaToJson(this);
 
+  VersionStatus get status => version.status;
+
+  int get versionIndex => version.versionIndex;
+
   @override
   bool get hasParent => false;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
         version,
-        name,
         _documents,
       ];
 
   @override
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   SchemaElement get parent => NullSchemaElement();
 
   Map<String, Document> get documents => _documents;
 
   @override
   List<Object> get subElements => [_documents];
-
-  @override
-  void doInit(InitWalkerParams params) {
-    _name = name;
-    super.doInit(params);
-  }
 
   /// If 'User' or 'Role' [Document] instances are not defined by the developer,
   /// default definitions are added here, as they may be needed by the client.
@@ -131,16 +416,17 @@ class Schema extends SchemaElement {
   // TODO: needs other fields https://gitlab.com/takkan/takkan_script/-/issues/51
   // Note: ACL would only be used by schema generator, see https://gitlab.com/takkan/takkan_script/-/issues/50
   Document get defaultUserDocument => Document(fields: {
-        'email': FString(),
-        'username': FString(),
-        'emailVerified': FBoolean(),
+        'email': Field<String>(),
+        'username': Field<String>(),
+        'emailVerified': Field<bool>(),
       });
 
   // TODO: needs other fields https://gitlab.com/takkan/takkan_script/-/issues/51
   // Note: ACL would only be used by schema generator, see https://gitlab.com/takkan/takkan_script/-/issues/50
-  Document get defaultRoleDocument => Document(fields: {'name': FString()});
+  Document get defaultRoleDocument =>
+      Document(fields: {'name': Field<String>()});
 
-  void init() {
+  void init({required String schemaName}) {
     final parentWalker = SetParentWalker();
     final parentParams = SetParentWalkerParams(
       parent: NullSchemaElement(),
@@ -148,386 +434,12 @@ class Schema extends SchemaElement {
     parentWalker.walk(this, parentParams);
 
     final initWalker = InitWalker();
-    const params = InitWalkerParams(
+    final params = InitWalkerParams(
       useCaptionsAsIds: false,
+      name: schemaName,
     );
     initWalker.walk(this, params);
   }
-}
-
-/// By default [readOnly] is inherited from [parent], but can be set individually via the constructor
-///
-/// [_name] is not set directly, but through [init].  This is to simplify the declaration of schema elements, by allowing a map key to become the name of the schema element.
-///
-/// The declaration of elements then becomes something like:
-///
-/// PDocument(fields: {'title':PString()}), rather than:
-/// PDocument(fields: [PString(name: 'title')])
-///
-/// which for longer declarations is a bit more readable
-abstract class SchemaElement extends TakkanElement {
-  SchemaElement({this.isReadOnly = IsReadOnly.inherited});
-
-  String? _name;
-
-  final IsReadOnly isReadOnly;
-
-  @override
-  Map<String, dynamic> toJson();
-
-  @override
-  void doInit(InitWalkerParams params) {
-    _name = params.name;
-    super.doInit(params);
-  }
-
- @JsonKey(includeToJson: false, includeFromJson: false)
-  @override
-  List<Object?> get props => [...super.props, isReadOnly, _name];
-
- @JsonKey(includeToJson: false, includeFromJson: false)
-  bool get readOnly => _readOnlyState() == IsReadOnly.yes;
-
-  String get name => _name!;
-
-  @override
- @JsonKey(includeToJson: false, includeFromJson: false)
-  SchemaElement get parent => super.parent as SchemaElement;
-
-  IsReadOnly _readOnlyState() {
-    return (isReadOnly == IsReadOnly.inherited)
-        ? parent.isReadOnly
-        : isReadOnly;
-  }
-
-  @override
-  String get idAlternative => name;
-}
-
-/// Permissions were designed very much with Back4App in mind, so there is a
-/// direct mapping between this class and Back4App Class Level Permissions.
-///
-/// The default settings create a fully public [Document] (equivalent to a
-/// Back4App Class)
-///
-/// If a CRUD action only requires that the user is authenticated, specify it
-/// in [requiresAuthentication].
-///
-/// If a CRUD action requires that the user has a specific role, specify that
-/// role in the appropriate role list, for example [updateRoles], [createRoles],
-/// [deleteRoles].  A user with any of the specified roles will have appropriate
-/// access.
-///
-/// If a role is specified - for example in [updateRoles] - there is no need to
-/// also specify 'update' in [_requiresAuthentication], provided you use
-/// [requiresFindAuthentication]
-///
-/// To simplify specification:
-///
-/// - Roles specified in [readRoles] are added to [getRoles], [findRoles] and
-/// [countRoles]
-/// - Roles specified in [writeRoles] are added to [createRoles],[updateRoles]
-/// and [deleteRoles]
-///
-/// If no authentication is required, simply leave all properties empty.
-///
-/// A method can be explicitly defined as public by adding it to [isPublic], and
-/// this will overrule any other settings
-///
-@JsonSerializable(explicitToJson: true)
-class Permissions extends Equatable with WalkTarget {
-  const Permissions({
-    this.isPublic = const [],
-    List<AccessMethod> requiresAuthentication = const [],
-    this.readRoles = const [],
-    this.writeRoles = const [],
-    List<String> updateRoles = const [],
-    List<String> createRoles = const [],
-    List<String> deleteRoles = const [],
-    this.addFieldRoles = const [],
-    List<String> getRoles = const [],
-    List<String> findRoles = const [],
-    List<String> countRoles = const [],
-  })  : _requiresAuthentication = requiresAuthentication,
-        _updateRoles = updateRoles,
-        _createRoles = createRoles,
-        _deleteRoles = deleteRoles,
-        _getRoles = getRoles,
-        _findRoles = findRoles,
-        _countRoles = countRoles;
-
-  factory Permissions.fromJson(Map<String, dynamic> json) =>
-      _$PermissionsFromJson(json);
-  final List<AccessMethod> _requiresAuthentication;
-  final List<AccessMethod> isPublic;
-
-  final List<String> readRoles;
-  final List<String> writeRoles;
-
-  final List<String> _getRoles;
-  final List<String> _findRoles;
-  final List<String> _countRoles;
-
-  final List<String> _createRoles;
-  final List<String> _updateRoles;
-  final List<String> _deleteRoles;
-
-  final List<String> addFieldRoles;
-
-  List<String> get updateRoles {
-    final list = List<String>.from(_updateRoles);
-    list.addAll(writeRoles);
-    return list;
-  }
-
-  List<String> get createRoles {
-    final list = List<String>.from(_createRoles);
-    list.addAll(writeRoles);
-    return list;
-  }
-
-  List<String> get deleteRoles {
-    final list = List<String>.from(_deleteRoles);
-    list.addAll(writeRoles);
-    return list;
-  }
-
-  List<String> get getRoles {
-    final list = List<String>.from(_getRoles);
-    list.addAll(readRoles);
-    return list;
-  }
-
-  List<String> get findRoles {
-    final list = List<String>.from(_findRoles);
-    list.addAll(readRoles);
-    return list;
-  }
-
-  List<String> get countRoles {
-    final list = List<String>.from(_countRoles);
-    list.addAll(readRoles);
-    return list;
-  }
-
-  /// A list of all the roles used
-  Set<String> get allRoles {
-    final Set<String> list = {};
-    list.addAll(updateRoles);
-    list.addAll(createRoles);
-    list.addAll(deleteRoles);
-    list.addAll(getRoles);
-    list.addAll(findRoles);
-    list.addAll(countRoles);
-    return list;
-  }
-
-  Map<String, dynamic> toJson() => _$PermissionsToJson(this);
-
-  bool get requiresGetAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.get) ||
-      getRoles.isNotEmpty;
-
-  bool get requiresFindAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.find) ||
-      findRoles.isNotEmpty;
-
-  bool get requiresCountAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.count) ||
-      countRoles.isNotEmpty;
-
-  bool get requiresCreateAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.create) ||
-      createRoles.isNotEmpty;
-
-  bool get requiresUpdateAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.update) ||
-      updateRoles.isNotEmpty;
-
-  bool get requiresDeleteAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.delete) ||
-      deleteRoles.isNotEmpty;
-
-  bool get requiresAddFieldAuthentication =>
-      _requiresAuthentication.contains(AccessMethod.all) ||
-      _requiresAuthentication.contains(AccessMethod.addField) ||
-      addFieldRoles.isNotEmpty;
-
-  bool methodIsPublic(AccessMethod method) {
-    return isPublic.contains(method) || isPublic.contains(AccessMethod.all);
-  }
-
-  @override
-  List<Object?> get props => [
-        createRoles,
-        readRoles,
-        deleteRoles,
-        updateRoles,
-        getRoles,
-        findRoles,
-        countRoles
-      ];
-}
-
-enum AccessMethod {
-  all,
-  read,
-  get,
-  find,
-  count,
-  write,
-  create,
-  update,
-  delete,
-  addField
-}
-
-/// A [standard] document has no special attributes.
-/// A [versioned] document has a simple integer version number, incremented each time
-/// it is saved by the user.  This is separate from any auto-save functionality that may be added
-/// later
-///
-/// Implementation of these rules is managed by [DataProvider]
-enum DocumentType { standard, versioned }
-
-/// This defines a schema for a 'Class' in Back4App
-///
-/// A [Document] definition is used by client to control what is displayed to the
-/// user, limiting what is presented according to its [Permissions].
-///
-/// [fields] are used by the client, along with data bindings and conversion
-/// to connect the presentation layer to the data layer.  [fields] also define
-/// validation rules, which are used by the client, but also by the schema generator
-/// to generate server side validation.  That way, even if your client-side validation
-/// is hacked, server side validation will still be present.
-///
-/// [permissions] provide role based access control
-///
-/// [queries] relate to this specific document type (Back4App Class)
-///
-/// An ACL is used only be the schema generator but does need to be defined,
-/// with appropriate default. https://gitlab.com/takkan/takkan_script/-/issues/50
-@JsonSerializable(explicitToJson: true, includeIfNull: false)
-@SchemaFieldMapConverter()
-class Document extends SchemaElement {
-  Document({
-    required this.fields,
-    this.documentType = DocumentType.standard,
-    this.permissions = const Permissions(),
-    this.queries = const {},
-  });
-
-  factory Document.fromJson(Map<String, dynamic> json) =>
-      _$DocumentFromJson(json);
-
-  final Map<String, Query> queries;
-
- @JsonKey(includeToJson: false, includeFromJson: false)
-  @override
-  List<Object?> get props =>
-      [...super.props, permissions, documentType, fields, queries];
-
-  final Permissions permissions;
-  final DocumentType documentType;
-  final Map<String, Field<dynamic, Condition<dynamic>>> fields;
-
-  bool get hasValidation {
-    for (final Field f in fields.values) {
-      if (f.hasValidation) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @override
-  Map<String, dynamic> toJson() => _$DocumentToJson(this);
-
-  @override
-  List<Object> get subElements => [fields, queries];
-
-  @override
-  void doInit(InitWalkerParams params) {
-    super.doInit(params);
-    _name = params.name;
-  }
-
-  Field<dynamic, Condition<dynamic>> field(String fieldName) {
-    final f = fields[fieldName];
-    if (f == null) {
-      final f1 = reservedField(fieldName);
-      if (f1 == null) {
-        final String msg = 'Field $fieldName does not exist in document $name';
-        logType(runtimeType).e(msg);
-        throw TakkanException(msg);
-      }
-      return f1;
-    }
-    return f;
-  }
-
-  /// see https://gitlab.com/takkan/takkan_script/-/issues/45
-  Field<dynamic, Condition<dynamic>>? reservedField(fieldName) {
-    switch (fieldName) {
-      case 'objectId':
-        return FString(isReadOnly: IsReadOnly.yes);
-    }
-    return null;
-  }
-
-  Query query(String queryName) {
-    final q = queries[queryName];
-    if (q == null) {
-      final String msg = 'Unknown query with name $queryName';
-      logType(runtimeType).e(msg);
-      throw TakkanException(msg);
-    }
-    return q;
-  }
-
-  C operator [](String fieldName) {
-    final Field<dynamic, Condition<dynamic>>? f = fields[fieldName];
-    if (f != null) {
-      return C(fieldName);
-    }
-    final String msg = '$fieldName is not a valid field name';
-    logType(runtimeType).e(msg);
-    throw TakkanException(msg);
-  }
-
-  @override
-  void walk(List<ScriptVisitor> visitors) {
-    super.walk(visitors);
-    permissions.walk(visitors);
-  }
-
-  bool get requiresCreateAuthentication =>
-      permissions.requiresCreateAuthentication;
-
-  bool get requiresFindAuthentication => permissions.requiresFindAuthentication;
-
-  bool get requiresGetAuthentication => permissions.requiresGetAuthentication;
-
-  bool get requiresCountAuthentication =>
-      permissions.requiresCountAuthentication;
-
-  bool get requiresUpdateAuthentication =>
-      permissions.requiresUpdateAuthentication;
-
-  bool get requiresDeleteAuthentication =>
-      permissions.requiresDeleteAuthentication;
-
-  bool get requiresAddFieldAuthentication =>
-      permissions.requiresAddFieldAuthentication;
-
-  bool methodIsPublic(AccessMethod method) =>
-      permissions.methodIsPublic(method);
 }
 
 /// Defines where to retrieve a schema from.  It references the *takkan.json* file used to configure
@@ -548,26 +460,12 @@ class SchemaSource extends TakkanElement {
   final String group;
   final String instance;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, group, instance];
 
   @override
   Map<String, dynamic> toJson() => _$SchemaSourceToJson(this);
-}
-
-@JsonSerializable(explicitToJson: true)
-class SchemaStatus {
-  const SchemaStatus(
-      {required this.activeVersion, required this.deprecatedVersions});
-
-  factory SchemaStatus.fromJson(Map<String, dynamic> json) =>
-      _$SchemaStatusFromJson(json);
-
-  final int activeVersion;
-  final List<int> deprecatedVersions;
-
-  Map<String, dynamic> toJson() => _$SchemaStatusToJson(this);
 }
 
 class NullSchemaElement extends SchemaElement {

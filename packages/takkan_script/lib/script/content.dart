@@ -27,7 +27,7 @@ class Content extends ScriptElement {
   final String? property;
   final Panel? listEntryConfig;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props =>
       [...super.props, caption, property, listEntryConfig];

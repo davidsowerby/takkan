@@ -11,7 +11,26 @@ function lessThan(request, field, threshold) {
 }
 
 function integerValue(request, field) {
-    return parseInt(request.object.get(field));
+
+  if (!field) {
+    throw new Error('Field is required');
+  }
+
+  let value = request.object.get(field);
+
+  if (value === undefined) {
+    // Check original if updated is undefined
+    if (request.original) {
+      value = request.original.get(field);
+    }
+
+    if (value === undefined) {
+      throw new Error('Field ' + field + ' not in object or original');
+    }
+  }
+
+  return parseInt(value);
+
 }
 
 module.exports = {

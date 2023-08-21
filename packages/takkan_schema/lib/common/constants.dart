@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-const String jsonClassKey = '-classKey-';
+
 
 @JsonEnum(alwaysCreate: true)
 enum IsReadOnly {
@@ -11,3 +11,6 @@ enum IsReadOnly {
   @JsonValue('inherited')
   inherited
 }
+
+const String jsonClassKey = '-classKey-';
+const String jsonValueKey = '-valueKey-';

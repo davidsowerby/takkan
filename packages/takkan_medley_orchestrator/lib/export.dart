@@ -30,7 +30,7 @@ void main(List<String> args) async{
 Future<dynamic> exportSchemaToFile({required Schema schema}) async {
   final output = json.encode(schema.toJson());
   final String filename =
-      'exported_schemas/schema${schema.version.number}.json';
+      'exported_schemas/schema${schema.version.versionIndex}.json';
   final File f = File(filename);
   f.createSync(recursive: true);
   return f.writeAsString(output, flush: true);
@@ -39,7 +39,7 @@ Future<dynamic> exportSchemaToFile({required Schema schema}) async {
 Future<dynamic> exportScript(
     {required Script script, bool toFile = true, bool toCloud = false}) {
   final output = json.encode(script.toJson());
-  final String filename = 'script${script.version.number}.json';
+  final String filename = 'script${script.version.versionIndex}.json';
   final File f = File(filename);
   return f.writeAsString(output, flush: true);
 }

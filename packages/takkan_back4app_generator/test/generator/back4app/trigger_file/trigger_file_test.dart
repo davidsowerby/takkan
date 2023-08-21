@@ -10,7 +10,7 @@ void main() {
   group('Trigger', () {
     setUpAll(() {
       for (final schema in schemaVersions) {
-        schema.init();
+        schema.init(schemaName: 'test');
       }
     });
 
@@ -35,7 +35,7 @@ void main() {
       // ignore: avoid_print
       print(trigger.buf.toString());
       final comparison = await compareGeneratedToReferenceFile(
-          generated: actual, reference: _referenceFile('trigger_file_ref.txt'));
+          generated: actual, reference: _referenceFile('trigger_file_ref.js'));
       if (comparison.isNotEmpty) {
         // ignore: avoid_print
         print(comparison);

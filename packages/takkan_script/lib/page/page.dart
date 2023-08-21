@@ -3,8 +3,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:takkan_schema/common/debug.dart';
-import 'package:takkan_schema/schema/field/integer.dart';
-import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/document/document.dart';
+import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/util/walker.dart';
 
@@ -81,7 +81,7 @@ class Page extends PodBase {
   final bool scrollable;
   final String name;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, name, scrollable, dataSelectors];
 
@@ -216,11 +216,11 @@ class Page extends PodBase {
 final Document pScriptSchema0 = Document(
   documentType: DocumentType.versioned,
   fields: {
-    'nameLocale': FString(),
-    'name': FString(),
-    'version': FInteger(),
-    'locale': FString(),
-    'controlEdit': FString(),
+    'nameLocale': Field<String>(),
+    'name': Field<String>(),
+    'version': Field<int>(),
+    'locale': Field<String>(),
+    'controlEdit': Field<String>(),
   },
 );
 
@@ -272,7 +272,7 @@ class TakkanRoute extends Equatable {
     return '$pageName/$dataSelectorName';
   }
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [pageName, dataSelectorName];
 }

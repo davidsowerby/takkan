@@ -10,7 +10,7 @@ void main() {
   group('API File', () {
     setUpAll(() {
       for (final schema in schemaVersions) {
-        schema.init();
+        schema.init(schemaName: 'test');
       }
     });
 

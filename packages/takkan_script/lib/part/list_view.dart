@@ -34,7 +34,7 @@ class ListView extends Part {
   final String titleProperty;
   final String subtitleProperty;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,

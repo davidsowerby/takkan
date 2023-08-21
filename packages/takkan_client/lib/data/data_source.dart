@@ -3,6 +3,7 @@ import 'package:takkan_client/pod/panel/panel.dart';
 import 'package:takkan_backend/backend/data_provider/data_provider.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/document/document.dart';
 import 'package:takkan_script/data/provider/data_provider.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/script/script.dart';

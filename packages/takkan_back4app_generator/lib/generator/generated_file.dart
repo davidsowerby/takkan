@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:characters/characters.dart';
 import 'package:takkan_schema/common/version.dart';
 import 'package:takkan_schema/data/select/condition/condition.dart';
+import 'package:takkan_schema/schema/document/document.dart';
+import 'package:takkan_schema/schema/document/permissions.dart';
 import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
@@ -260,7 +262,7 @@ class Case extends Block {
   final bool useBreak;
 
   @override
-  String get opening => 'case ${caseValue.toString()}: {';
+  String get opening => 'case $caseValue: {';
 
   @override
   void createContent() {
@@ -373,68 +375,69 @@ class CLPObject extends Block {
 
   @override
   void createContent() {
-    content.addAll([
-      Property(
-        key: 'addField',
-        value: CLPMethod(
-          roles: permissions.addFieldRoles,
-          requiresAuthentication: permissions.requiresAddFieldAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.addField),
-        ),
-      ),
-      Property(
-        key: 'count',
-        value: CLPMethod(
-          roles: permissions.countRoles,
-          requiresAuthentication: permissions.requiresCountAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.count),
-        ),
-      ),
-      Property(
-        key: 'create',
-        value: CLPMethod(
-          roles: permissions.createRoles,
-          requiresAuthentication: permissions.requiresCreateAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.create),
-        ),
-      ),
-      Property(
-        key: 'delete',
-        value: CLPMethod(
-          roles: permissions.deleteRoles,
-          requiresAuthentication: permissions.requiresDeleteAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.delete),
-        ),
-      ),
-      Property(
-        key: 'find',
-        value: CLPMethod(
-          roles: permissions.findRoles,
-          requiresAuthentication: permissions.requiresFindAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.find),
-        ),
-      ),
-      Property(
-        key: 'get',
-        value: CLPMethod(
-          roles: permissions.getRoles,
-          requiresAuthentication: permissions.requiresGetAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.get),
-        ),
-      ),
-      Property(
-        key: 'protectedFields',
-        value: JObject(properties: [], terminator: ',', blankLinesAfter: 0),
-      ),
-      Property(
-        key: 'update',
-        value: CLPMethod(
-          roles: permissions.updateRoles,
-          requiresAuthentication: permissions.requiresUpdateAuthentication,
-          isPublic: permissions.isPublic.contains(AccessMethod.update),
-        ),
-      ),
-    ]);
+    throw UnimplementedError();
+    // content.addAll([
+    //   Property(
+    //     key: 'addField',
+    //     value: CLPMethod(
+    //       roles: permissions.addFieldRoles,
+    //       requiresAuthentication: permissions.requiresAddFieldAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.addField),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'count',
+    //     value: CLPMethod(
+    //       roles: permissions.countRoles,
+    //       requiresAuthentication: permissions.requiresCountAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.count),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'create',
+    //     value: CLPMethod(
+    //       roles: permissions.createRoles,
+    //       requiresAuthentication: permissions.requiresCreateAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.create),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'delete',
+    //     value: CLPMethod(
+    //       roles: permissions.deleteRoles,
+    //       requiresAuthentication: permissions.requiresDeleteAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.delete),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'find',
+    //     value: CLPMethod(
+    //       roles: permissions.findRoles,
+    //       requiresAuthentication: permissions.requiresFindAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.find),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'get',
+    //     value: CLPMethod(
+    //       roles: permissions.getRoles,
+    //       requiresAuthentication: permissions.requiresGetAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.get),
+    //     ),
+    //   ),
+    //   Property(
+    //     key: 'protectedFields',
+    //     value: JObject(properties: [], terminator: ',', blankLinesAfter: 0),
+    //   ),
+    //   Property(
+    //     key: 'update',
+    //     value: CLPMethod(
+    //       roles: permissions.updateRoles,
+    //       requiresAuthentication: permissions.requiresUpdateAuthentication,
+    //       isPublic: permissions.isPublic.contains(AccessMethod.update),
+    //     ),
+    //   ),
+    // ]);
   }
 }
 
@@ -499,7 +502,7 @@ class DocumentVersion {
 
   List<Condition<dynamic>> queryConditions(String queryName) {
     return (containsQuery(queryName))
-        ? document.query(queryName).conditions
+        ? document.query(queryName).constraints
         : [];
   }
 }
@@ -566,7 +569,7 @@ class Statement extends JavaScriptElement {
 class ValidationElement extends StatementSet {
   ValidationElement({required this.field});
 
-  final Field<dynamic,Condition<dynamic>> field;
+  final Field<dynamic> field;
 
   @override
   void createContent() {
@@ -597,7 +600,7 @@ class ValidationElement extends StatementSet {
     final List<Statement> list = List.empty(growable: true);
     for (final Condition<dynamic> c in field.conditions) {
       final operand = (c.operand is String)
-          ? "'${c.operand.toString()}'"
+          ? "'${c.operand}'"
           : c.operand.toString();
 
       final String op = c.operator.operator;
@@ -648,7 +651,7 @@ class BlankStatement extends Statement {
 class ExtractObjectProperty extends JavaScriptElement {
   ExtractObjectProperty({required this.field});
 
-  final Field<dynamic,Condition<dynamic>> field;
+  final Field<dynamic> field;
 
   @override
   void writeToBuffer(CodeBuffer buf, {required OutputConditions conditions}) {
@@ -662,7 +665,7 @@ class ExtractObjectProperty extends JavaScriptElement {
 class ParseProperty extends JavaScriptElement {
   ParseProperty(this.property, this.dataType);
 
-  ParseProperty.fromField(Field<dynamic,Condition<dynamic>> field)
+  ParseProperty.fromField(Field<dynamic> field)
       : property = field.name,
         dataType = field.modelType;
   final String property;

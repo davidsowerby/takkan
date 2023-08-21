@@ -44,7 +44,7 @@ class DataProvider extends TakkanElement {
     restDelegate.walk(visitors);
   }
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,

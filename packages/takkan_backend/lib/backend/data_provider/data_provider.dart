@@ -203,7 +203,7 @@ abstract class IDataProvider<CONFIG extends DataProvider> {
   /// The roles held by the user currently logged in to this provider.
   ///
   /// This will currently fail if no user logged in see https://gitlab.com/takkan/takkan_backend/-/issues/9
-  List<String> get userRoles;
+  Set<String> get userRoles;
 
   /// The currently identified user of this provider.  If no user is signed in,
   /// returns a user instance created with [TakkanUser.unknownUser]

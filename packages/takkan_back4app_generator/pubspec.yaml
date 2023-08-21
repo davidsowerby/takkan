@@ -9,8 +9,9 @@ environment:
 
 dependencies:
   dio: ^5.2.1+1
+  change_case: ^1.1.0
   characters: ^1.2.0
-  json_annotation: ^4.5.0
+  json_annotation: ^4.8.1
   equatable: ^2.0.3
   takkan_schema: ^0.1.0
   takkan_back4app_client: ^0.0.1
@@ -23,3 +24,6 @@ dev_dependencies:
   mocktail: ^1.0.0
   test:
   takkan_medley_orchestrator: ^0.0.1
+  fire_line_diff: ^1.5.5
+  diffutil_dart: ^4.0.0
+  diff_match_patch: ^0.4.1

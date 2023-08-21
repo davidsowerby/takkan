@@ -1,4 +1,5 @@
-import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/document/document.dart';
+import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_script/data/select/field_selector.dart';
 import 'package:test/test.dart';
@@ -15,7 +16,7 @@ void main() {
 
     test('directly specified', () {
       // given
-      final Document schema = Document(fields: {'c': FString()});
+      final Document schema = Document(fields: {'c': Field<String>()});
       const selector = FieldSelector(fields: ['a', 'b']);
       // when
       final selection = selector.selection(schema);
@@ -27,7 +28,7 @@ void main() {
     test('all fields true, direct fields ignored', () {
       // given
       final Document schema =
-          Document(fields: {'c': FString(), 'd': FString()});
+          Document(fields: {'c': Field<String>(), 'd': Field<String>()});
       const selector = FieldSelector(
         fields: ['a', 'b'],
         allFields: true,
@@ -41,7 +42,7 @@ void main() {
     test('all fields except excluded', () {
       // given
       final Document schema =
-          Document(fields: {'c': FString(), 'd': FString()});
+          Document(fields: {'c': Field<String>(), 'd': Field<String>()});
       const selector = FieldSelector(
         excludeFields: ['c'],
         allFields: true,
@@ -55,7 +56,7 @@ void main() {
     test('all fields plus meta, except excluded', () {
       // given
       final Document schema =
-          Document(fields: {'c': FString(), 'd': FString()});
+          Document(fields: {'c': Field<String>(), 'd': Field<String>()});
       const selector = FieldSelector(
         excludeFields: ['c'],
         includeMetaFields: true,
@@ -70,7 +71,7 @@ void main() {
     test('all fields plus meta, except excluded one meta excluded', () {
       // given
       final Document schema =
-          Document(fields: {'c': FString(), 'd': FString()});
+          Document(fields: {'c': Field<String>(), 'd': Field<String>()});
       const selector = FieldSelector(
         excludeFields: ['c', 'updatedAt'],
         includeMetaFields: true,

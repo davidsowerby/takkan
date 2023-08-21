@@ -1,7 +1,6 @@
 import 'package:takkan_back4app_generator/generator/back4app/server_code_structure2.dart';
 import 'package:takkan_back4app_generator/generator/generated_file.dart';
 import 'package:test/test.dart';
-import 'package:mocktail/mocktail.dart';
 
 void main() {
   group('Unit test', () {

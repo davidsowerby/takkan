@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:takkan_backend/backend/app/app_config_loader.dart';
+import 'package:takkan_schema/data/object/json_object.dart';
 import 'package:takkan_schema/data/select/condition/condition.dart';
-import 'package:takkan_schema/schema/field/integer.dart';
-import 'package:takkan_schema/schema/field/object.dart';
-import 'package:takkan_schema/schema/field/string.dart';
+import 'package:takkan_schema/schema/document/document.dart';
+import 'package:takkan_schema/schema/field/field.dart';
 import 'package:takkan_schema/schema/schema.dart';
 
 import 'generator/back4app/schema_generator/cloud_generator.dart';
@@ -63,19 +63,19 @@ Future<List<Schema>> extractSchemas(GeneratorArgs args) async {
 List<Document> storeSchemas() {
   return [
     Document(fields: {
-      'schema': FObject(),
-      'version': FInteger(
+      'schema': Field<JsonObject>(),
+      'version': Field<int>(
         constraints: [V.int.greaterThan(0)],
       ),
     }),
     Document(
       fields: {
-        'script': FObject(),
-        'version': FInteger(
+        'script': Field<JsonObject>(),
+        'version': Field<int>(
           constraints: [V.int.greaterThan(0)],
         ),
-        'locale': FString(),
-        'versionLocale': FString(),
+        'locale': Field<String>(),
+        'versionLocale': Field<String>(),
       },
     ),
   ];

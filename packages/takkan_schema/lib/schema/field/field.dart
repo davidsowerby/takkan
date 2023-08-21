@@ -1,66 +1,110 @@
 // ignore_for_file: must_be_immutable
 /// See comments on [TakkanElement]
+import 'package:change_case/change_case.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+import '../../common/constants.dart';
 import '../../common/exception.dart';
 import '../../common/log.dart';
+import '../../data/json_converter.dart';
 import '../../data/select/condition/condition.dart';
 import '../../util/interpolate.dart';
 import '../../util/walker.dart';
+import '../common/diff.dart';
+import '../common/schema_element.dart';
+import '../document/document.dart';
 import '../query/expression.dart';
+import '../query/query.dart';
 import '../schema.dart';
 import '../validation/validation_error_messages.dart';
-import 'pointer.dart';
-import 'relation.dart';
+
+part 'field.g.dart';
 
 /// [MODEL] the data type of the model attribute represented
 ///
-/// Validation can be defined by either or both of the following properties:
-/// - [validation] is a script version of validation, for example '> 100'
-/// - [constraints] also defines validation but in a code format.  The easiest way
-/// to define these are with the helper class 'V', for example:  V.int.greaterThan(0)
-///
-/// Both achieve the same thing, and if both are defined, they are combined.
 /// - [index] is the type of index to apply to this field, if any.  See [Index]
 ///
-/// [_conditions] is the result of that combination. It is built in [doInit]
-abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
+/// Validation can be defined by either or both of the following properties:
+/// - [validation] is a script version of validation, for example '> 100'
+/// - [constraints] defines validation but in a code format.  The easiest way
+/// to define these are with the helper class 'V', for example:  V.int.greaterThan(0)
+///
+/// Both achieve the same thing, and if both are defined, they are combined, and
+/// retrieved as [conditions].  The underlying [_conditions] property is built
+/// in [doInit]
+///
+/// The apparently unnecessary set up of [constraints], and passing them to [_constraints]
+/// is to facilitate the use of a common condition converter
+@JsonSerializable(explicitToJson: true)
+class Field<MODEL> extends SchemaElement {
+
   Field({
-    this.constraints = const [],
-    required this.required,
+    bool? required,
     this.defaultValue,
     this.validation,
-    required super.isReadOnly,
-    this.index=Index.none,
-  });
+    IsReadOnly? isReadOnly,
+    Index? index,
+    List<Condition<MODEL>> constraints = const [],
+  })  : index = index ?? Index.none,
+        _constraints = constraints,
+        required = required ?? false,
+        super(isReadOnly: isReadOnly ?? IsReadOnly.no);
+  factory Field.fromJson(Map<String, dynamic> json) => _$FieldFromJson(json);
+
+  @JsonKey(fromJson: conditionListFromJson, toJson: conditionListToJson)
+  List<Condition<dynamic>> _constraints;
 
   @override
   List<Object?> get props =>
-      [...super.props, _conditions, required, defaultValue];
-
-  List<Object?> get excludeProps => [constraints, validation];
+      [...super.props, _conditions, required, index, defaultValue];
 
   final Index index;
-  final List<C> constraints;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  List<Condition<MODEL>> get constraints =>
+      _constraints as List<Condition<MODEL>>;
+
   final String? validation;
   final bool required;
-
+  @DataTypeConverter()
   final MODEL? defaultValue;
 
-  /// Returns [_conditions], which is built during [Field.doInit] to combine
-  /// [constraints] and [validation].  As long as the end result is the same,
-  /// it does not matter which method (or even both) is used to specify a condition
-  ///
-  /// Ignore for JSON output, as the original [validation] and [constraints] are
-  /// serialised.
-  final List<Condition<dynamic>> _conditions = [];
+  String get cloudTypeLabel {
+    switch (modelType) {
+      case int:
+        return 'integer';
+      default:
+        throw UnsupportedError('Unsupported model type: $modelType');
+    }
+  }
+
+  String get cloudImportName => 'validate${cloudTypeLabel.toCapitalCase()}';
+
+  String get cloudImportStatement =>
+      "const $cloudImportName = require('./${cloudTypeLabel}_validation.js');";
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  final List<Condition<MODEL>> _conditions = [];
 
   /// True only for [FPointer] and [FRelation]
   bool get isLinkField => false;
 
   bool get hasValidation => required || (conditions.isNotEmpty);
 
-  List<Condition<dynamic>> get conditions => _conditions;
+  /// Built during [Field.doInit] to combine [constraints] and [validation].  It
+  /// does not matter which method (or even both) is used to specify a condition
+  ///
+  /// See [conditions]
+  ///
+  /// Ignore for JSON output, as the original [validation] and [constraints] are
+  /// serialised.
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  List<Condition<MODEL>> get conditions => _conditions;
 
-  Type get modelType;
+  Type get modelType => MODEL;
+
+  @override
+  Map<String, dynamic> toJson() => _$FieldToJson(this);
 
   /// Returns a list of validation errors, or an empty list if there are none
   List<String> doValidation(
@@ -97,6 +141,7 @@ abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
   }
 
   void _buildValidations() {
+    _conditions.clear();
     for (final condition in constraints) {
       _conditions.add(condition.withField(name));
     }
@@ -143,4 +188,71 @@ abstract class Field<MODEL, C extends Condition<MODEL>> extends SchemaElement {
 ///
 /// So in summary, 2dsphere is best for precision, 2d for simpler points, and
 /// geoHaystack for optimizing large data sets by approximating location.
-enum Index {none,ascending, descending, geo2d, geo2dSphere, geoHaystack, text, hashed}
+enum Index {
+  none,
+  ascending,
+  descending,
+  geo2d,
+  geo2dSphere,
+  geoHaystack,
+  text,
+  hashed
+}
+
+/// Captures changes to a field as part of a [DocumentDiff].  Properties are
+/// nullable as the intent is to require specification of only those fields that
+/// are changed
+///
+/// The apparently unnecessary set up of [constraints], and passing them to [_constraints]
+/// is to facilitate the use of a common Condition converter
+///
+/// Note the use of [removeDefaultValue].  Set this to true if you wish to clear
+/// the base default value to null.  Setting [defaultValue] to null does not work
+/// for this purpose, as a null diff represents 'no change'
+///
+@JsonSerializable(explicitToJson: true)
+class FieldDiff<MODEL> implements Diff<Field<MODEL>>{
+
+  FieldDiff({
+    this.required,
+    this.defaultValue,
+    this.validation,
+    this.isReadOnly,
+    this.index,
+    this.removeDefaultValue=false,
+    List<Condition<MODEL>>? constraints,
+  }) : _constraints = constraints;
+
+  factory FieldDiff.fromJson(Map<String, dynamic> json) =>
+      _$FieldDiffFromJson(json);
+  bool removeDefaultValue;
+
+  final Index? index;
+  @JsonKey(fromJson: conditionListFromJson, toJson: conditionListToJson)
+  final List<Condition<dynamic>>? _constraints;
+
+  @JsonKey(includeToJson: false, includeFromJson: false)
+  List<Condition<MODEL>>? get constraints =>
+      _constraints as List<Condition<MODEL>>?;
+
+  final String? validation;
+  final bool? required;
+  final IsReadOnly? isReadOnly;
+  @DataTypeConverter()
+  final MODEL? defaultValue;
+
+  /// Applies this diff to the [base]
+  @override
+  Field<MODEL> applyTo(Field<MODEL> base) {
+    return Field<MODEL>(
+      defaultValue: removeDefaultValue ? null : defaultValue ?? base.defaultValue,
+      required: required ?? base.required,
+      index: index ?? base.index,
+      isReadOnly: isReadOnly ?? base.isReadOnly,
+      validation: validation ?? base.validation,
+      constraints: constraints ?? base.constraints,
+    );
+  }
+
+  Map<String, dynamic> toJson() => _$FieldDiffToJson(this);
+}

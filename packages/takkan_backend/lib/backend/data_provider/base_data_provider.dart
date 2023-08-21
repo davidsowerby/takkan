@@ -33,7 +33,7 @@ abstract class BaseDataProvider<CONFIG extends DataProvider,
   late ResultTransformer resultTransformer;
 
   @override
-  List<String> get userRoles => authenticator.userRoles;
+  Set<String> get userRoles => authenticator.userRoles;
 
   InstanceConfig get instanceConfig => _instanceConfig;
 

@@ -23,7 +23,7 @@ final List<Script> medleyScript = [
 /// - Validation changes (see [medleySchema1])
 final Script medleyScript2 = Script(
   name: 'Medley',
-  version: Version(number: 1, label: '0.0.1-draft'),
+  version: Version(versionIndex: 1, label: '0.0.1-draft'),
   schema: medleySchema1,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main'),
@@ -85,7 +85,7 @@ final Script medleyScript2 = Script(
 );
 final Script medleyScript1 = Script(
   name: 'Medley',
-  version: Version(number: 1, label: '0.0.1-draft'),
+  version: Version(versionIndex: 1, label: '0.0.1-draft'),
   schema: medleySchema1,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),
@@ -138,7 +138,7 @@ final Script medleyScript1 = Script(
 ///
 final Script medleyScript0 = Script(
   name: 'Medley',
-  version: Version(number: 0, label: '0.0.0-draft'),
+  version: Version(versionIndex: 0, label: '0.0.0-draft'),
   schema: medleySchema0,
   dataProvider: DataProvider(
     instanceConfig: AppInstance(group: 'main', instance: 'dev'),

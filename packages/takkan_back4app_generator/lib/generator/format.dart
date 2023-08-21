@@ -23,7 +23,7 @@ class Formatter {
         }
       } else {
         final q = (value is String) ? '"' : '';
-        outln('$q${value.toString()}$q$comma');
+        outln('$q$value$q$comma');
       }
     }
     final term = root ? ';' : comma;

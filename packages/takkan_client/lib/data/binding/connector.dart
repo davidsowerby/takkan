@@ -6,7 +6,6 @@ import 'package:takkan_client/common/exceptions.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
 import 'package:takkan_schema/schema/field/field.dart';
-import 'package:takkan_schema/schema/field/string.dart';
 import 'package:takkan_script/data/converter/converter.dart';
 
 /// Connects a Field Widget to its data source, using a [ModelViewConverter] to provide conversion where needed.
@@ -77,7 +76,7 @@ class StaticConnector extends ModelConnector<String, String> {
                   property: 'not used',
                   getEditHost: () => null),
             ),
-            fieldSchema: FString());
+            fieldSchema: Field<String>());
 
   @override
   String readFromModel() {

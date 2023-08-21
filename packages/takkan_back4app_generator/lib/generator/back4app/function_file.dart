@@ -69,7 +69,7 @@ class FunctionJavaScriptFile extends JavaScriptFile {
             functions.putIfAbsent(key, () => List.empty(growable: true));
         versions.add(QueryVersion(
           query: value,
-          versionNumber: dv.version.number,
+          versionNumber: dv.version.versionIndex,
         ));
       });
     }
@@ -192,7 +192,7 @@ class QueryFunctionVersion extends StatementSet {
   @override
   void createContent() {
     final conditions =
-        queryVersion.query.combinedConditions.map((e) => Statement(e.cloudOut));
+        queryVersion.query.conditions.map((e) => Statement(e.cloudCode));
 
     content.addAll([
       Statement("const query = new Parse.Query('$documentClassName');"),

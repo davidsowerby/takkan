@@ -22,10 +22,10 @@ class Back4AppCloudGenerator implements CloudGenerator {
   /// that is, newest first.  This call generates the content of [jsFiles], but does not
   /// create physical files.
   ///
-  /// **NOTE** 'User and 'Role' excluded for now, see https://gitlab.com/takkan/takkan_design/-/issues/34
+  /// **NOTE** 'User and 'Role' excluded for now, see https://gitlab.com/dsowerby/takkan/-/issues/158
   void generateCode({required List<Schema> schemaVersions}) {
     final List<Schema> versions=schemaVersions;
-    versions.sort((a,b) => b.version.number.compareTo(a.version.number));
+    versions.sort((a,b) => b.version.versionIndex.compareTo(a.version.versionIndex));
 
     _initSchemas(versions);
     final Set<String> documentNameSet = versions
@@ -49,7 +49,7 @@ class Back4AppCloudGenerator implements CloudGenerator {
 
   void _initSchemas(List<Schema> schemaVersions) {
     for (final schema in schemaVersions) {
-      schema.init();
+      schema.init(schemaName: 'wiggly');
     }
   }
 

@@ -39,7 +39,7 @@ class Panel extends PodBase implements Panels {
 
   factory Panel.fromJson(Map<String, dynamic> json) => _$PanelFromJson(json);
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
@@ -59,7 +59,7 @@ class Panel extends PodBase implements Panels {
     fromJson: ContentConverter.fromJson,
     toJson: ContentConverter.toJson,
   )
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   PanelHeading? _heading;
 
   final bool openExpanded;
@@ -127,7 +127,7 @@ class PanelHeading extends TakkanElement {
   final bool canEdit;
   final Help? help;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, expandable, canEdit, help];
 
@@ -168,7 +168,7 @@ abstract class PodBase extends Content implements Pod {
   final List<Content> children;
   final String? _documentClass;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, layout, _documentClass, children];
   @override
@@ -180,11 +180,11 @@ abstract class PodBase extends Content implements Pod {
 
   /// A computed boolean indicating whether or not the instance is at the root of a data chain
   @override
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   bool get isDataRoot => _documentClass != null;
 
   @override
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   String? get documentClass {
     if (_documentClass != null) {
       return _documentClass;

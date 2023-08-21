@@ -18,7 +18,7 @@ Parse.Cloud.define("initTakkan", async (request) => {
 
 });
 
-// Applies a specific version of a bBack4App schema as new server schema, see b4a_schema.js
+// Applies a specific version of a Back4App schema as new server schema, see b4a_schema.js
 // params:
 // 'version':version to apply
 Parse.Cloud.define("applyServerSchema", async (request) => {

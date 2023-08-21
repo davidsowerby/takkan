@@ -22,6 +22,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/common/schema_element.dart';
 import 'package:takkan_schema/schema/schema.dart';
 import 'package:takkan_schema/takkan/takkan_element.dart';
 import 'package:test/test.dart';
@@ -56,7 +57,7 @@ void main() {
             variables.map((e) => extractName(e.simpleName)).toSet();
 
         final Set<String> declaredInProps = await sourceValues(c, 'props');
-        final Set<String> exclusions = await sourceValues(c, 'excludeProps');
+        final Set<String> exclusions = {'constraints', 'validation','_constraints'};
 
         variableNamesFromMirror
             .removeWhere((element) => exclusions.contains(element));
@@ -84,7 +85,7 @@ void main() {
 
         expect(check, isTrue, reason: diffMsg);
       }
-      expect(result.length, 13);
+      expect(result.length, 5);
     });
   });
 }
@@ -112,7 +113,7 @@ String diffMessage(ClassMirror c, Set<String> declaredInProps,
   if (diff2.isNotEmpty) {
     buf.writeln('Properties identified as variables, but are not in "props" ');
     buf.writeln(
-        '(If this is intentional, ensure these are included in an "excludeProps" getter)');
+        '(If this is intentional, ensure these are added to "exclusions" in the test)');
     buf.writeln();
     buf.writeln(diff2.toString());
   }

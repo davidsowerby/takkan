@@ -12,7 +12,7 @@ void main() {
   group('B4a Schema File', () {
     setUpAll(() {
       for (final schema in schemaVersions) {
-        schema.init();
+        schema.init(schemaName: 'test');
       }
     });
 

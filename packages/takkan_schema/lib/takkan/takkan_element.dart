@@ -42,10 +42,8 @@ import '../util/walker.dart';
 ///
 /// Takkan testing of [Equatable] sub-classes is by ensuring that all properties are
 /// listed in [Equatable.props].  However, there are legitimate cases where a property
-/// should be excluded from equality comparison.  For test purposes only, an additional
-/// getter `List<Object> get excludeProps` can be declared.  This is not an [Equatable]
-/// feature, simply an aid for testing in Takkan
-// @JsonSerializable(explicitToJson: true)
+/// should be excluded from equality comparison, and these need to be explicitly
+/// tested
 abstract class TakkanElement extends Equatable with WalkTarget {
   TakkanElement({
     String? id,
@@ -56,14 +54,14 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   final String? _id;
   @JsonKey(includeToJson: false, includeFromJson: false)
   late String? uid;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late String? _debugId;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late TakkanElement _parent;
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late int? _childIndex;
 
- @JsonKey(includeToJson: false, includeFromJson: false)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         _id,
@@ -127,7 +125,8 @@ abstract class TakkanElement extends Equatable with WalkTarget {
     /// if we still don't have a uid, generate one
     if (tUid == null || tUid.isEmpty) {
       final type = runtimeType.toString();
-      final String indexStr = (_childIndex == null) ? '' : _childIndex.toString();
+      final String indexStr =
+          (_childIndex == null) ? '' : _childIndex.toString();
       final separator = (_childIndex == null) ? '' : ':';
       uid = '$type$separator$indexStr';
     }

@@ -4,10 +4,8 @@ import 'package:takkan_client/data/cache_entry.dart';
 import 'package:takkan_client/data/data_source.dart';
 import 'package:takkan_schema/common/exception.dart';
 import 'package:takkan_schema/common/log.dart';
+import 'package:takkan_schema/schema/common/schema_element.dart';
 import 'package:takkan_schema/schema/field/field.dart';
-import 'package:takkan_schema/schema/field/integer.dart';
-import 'package:takkan_schema/schema/field/list.dart';
-import 'package:takkan_schema/schema/field/string.dart';
 import 'package:takkan_script/data/converter/converter.dart';
 import 'package:takkan_script/part/part.dart';
 import 'package:takkan_schema/schema/schema.dart';
@@ -47,13 +45,14 @@ Binding _binding(
     {required DataBinding parentBinding,
     required Field fieldSchema,
     required String property}) {
-  switch (fieldSchema.runtimeType) {
-    case FString:
+  // TODO: This used to use FString and FInteger, but modelType used after switch
+  // to using Field<MODEL
+  switch (fieldSchema.modelType) {
+    case String:
       return parentBinding.modelBinding.stringBinding(property: property);
-    // TODO: See
     // case FList:
     //   return parentBinding.modelBinding.listBinding(property: property);
-    case FInteger:
+    case int:
       return parentBinding.modelBinding.intBinding(property: property);
     default:
       throw UnimplementedError(
@@ -66,10 +65,10 @@ ModelViewConverter _converter(
   if (schema.modelType == viewDataType) {
     return PassThroughConverter();
   }
-  switch (schema.runtimeType) {
-    case FInteger:
+  switch (schema.modelType) {
+    case int:
       return _intConverter(viewDataType);
-    case FString:
+    case String:
       return _stringConverter(viewDataType);
     default:
       throw UnimplementedError(

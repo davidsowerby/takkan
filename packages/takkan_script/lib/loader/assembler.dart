@@ -61,8 +61,7 @@ class ScriptAssembler {
     return Script(
       name: name,
       schema: Schema(
-        name: 'dummy - move from data provider',
-        version: const Version(number: -1),
+        version: const Version(versionIndex: -1),
       ),
       pages: pages,
       version: version,
