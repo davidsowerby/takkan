@@ -23,12 +23,12 @@ class FRelation extends Field<Relation, RelationCondition> {
   factory FRelation.fromJson(Map<String, dynamic> json) =>
       _$FRelationFromJson(json);
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, targetClass];
 
   @override
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   bool get isLinkField => true;
 
   @override

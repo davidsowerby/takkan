@@ -88,13 +88,13 @@ class Script extends ScriptElement {
   final Version version;
   String? nameLocale;
   final Schema schema;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   final SchemaSource? schemaSource;
   final List<Page> pages;
   final ConversionErrorMessages conversionErrorMessages;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   final ValidationErrorMessages validationErrorMessages;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   List<ValidationMessage> _scriptValidationMessages =
       List.empty(growable: true);
 
@@ -106,7 +106,7 @@ class Script extends ScriptElement {
   @override
   bool get hasParent => false;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
@@ -129,7 +129,7 @@ class Script extends ScriptElement {
   Page? pageFromStringRoute(String route) =>
       routes[TakkanRoute.fromString(route)];
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   Map<TakkanRoute, Page> get routeMap => _routes;
 
   Set<String> get allRoles => schema.allRoles;

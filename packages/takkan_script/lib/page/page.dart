@@ -81,7 +81,7 @@ class Page extends PodBase {
   final bool scrollable;
   final String name;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, name, scrollable, dataSelectors];
 
@@ -272,7 +272,7 @@ class TakkanRoute extends Equatable {
     return '$pageName/$dataSelectorName';
   }
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [pageName, dataSelectorName];
 }

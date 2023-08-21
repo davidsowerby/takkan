@@ -62,7 +62,7 @@ class Schema extends SchemaElement {
   @override
   bool get hasParent => false;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
@@ -72,7 +72,7 @@ class Schema extends SchemaElement {
       ];
 
   @override
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   SchemaElement get parent => NullSchemaElement();
 
   Map<String, Document> get documents => _documents;
@@ -181,17 +181,17 @@ abstract class SchemaElement extends TakkanElement {
     super.doInit(params);
   }
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, isReadOnly, _name];
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   bool get readOnly => _readOnlyState() == IsReadOnly.yes;
 
   String get name => _name!;
 
   @override
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   SchemaElement get parent => super.parent as SchemaElement;
 
   IsReadOnly _readOnlyState() {
@@ -428,7 +428,7 @@ class Document extends SchemaElement {
 
   final Map<String, Query> queries;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props =>
       [...super.props, permissions, documentType, fields, queries];
@@ -548,7 +548,7 @@ class SchemaSource extends TakkanElement {
   final String group;
   final String instance;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, group, instance];
 

@@ -53,7 +53,7 @@ class Part extends Content {
   final double? height;
   final String traitName;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props =>
       [...super.props, readOnly, height, traitName, staticData, help, tooltip];

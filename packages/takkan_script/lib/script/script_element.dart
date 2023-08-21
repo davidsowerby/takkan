@@ -94,7 +94,7 @@ abstract class ScriptElement extends TakkanElement {
     return false;
   }
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,
@@ -103,7 +103,7 @@ abstract class ScriptElement extends TakkanElement {
         _hasEditControl,
       ];
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   DataProvider? get dataProvider => _dataProvider ?? parent.dataProvider;
 
   /// [dataProvider] is declared rather than inherited
@@ -112,7 +112,7 @@ abstract class ScriptElement extends TakkanElement {
   Script get script => parent.script;
 
   @override
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   ScriptElement get parent => super.parent as ScriptElement;
 
   /// Initialises by setting up [_parent], [_index] (by calling super) and [_hasEditControl] properties.

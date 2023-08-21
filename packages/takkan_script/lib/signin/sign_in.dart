@@ -86,7 +86,7 @@ class EmailSignIn extends Part {
   final String failureRoute;
   final String signInFailureMessage;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         ...super.props,

@@ -18,7 +18,7 @@ class Version extends Equatable {
 
   Map<String, dynamic> toJson() => _$VersionToJson(this);
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [number, label, deprecated];
 

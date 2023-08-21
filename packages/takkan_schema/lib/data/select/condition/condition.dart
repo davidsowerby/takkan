@@ -60,7 +60,7 @@ abstract class Condition<T> extends Equatable {
 
   Map<String, dynamic> toJson();
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [field, operator, operand];
 

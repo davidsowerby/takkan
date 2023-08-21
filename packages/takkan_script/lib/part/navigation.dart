@@ -36,7 +36,7 @@ class NavButton extends Part {
   String get route =>
       TakkanRoute(pageName: toPage, dataSelectorName: toData).toString();
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, toPage, toData];
 
@@ -67,7 +67,7 @@ class NavButtonSet extends Part {
   final List<NavButton> buttons;
   final double? width;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, buttons, width];
 

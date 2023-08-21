@@ -23,7 +23,7 @@ class FPointer extends Field<Pointer, PointerCondition> {
   factory FPointer.fromJson(Map<String, dynamic> json) =>
       _$FPointerFromJson(json);
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [...super.props, targetClass];
 
@@ -32,7 +32,7 @@ class FPointer extends Field<Pointer, PointerCondition> {
   final String targetClass;
 
   @override
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   bool get isLinkField => true;
 
   @override

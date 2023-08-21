@@ -65,7 +65,7 @@ class Query extends SchemaElement {
 
   /// Combines [conditions] with [script].  Use this to ensure you have all
   /// conditions
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   List<Condition<dynamic>> get combinedConditions {
     final Document document = parent as Document;
     final qs = queryScript;

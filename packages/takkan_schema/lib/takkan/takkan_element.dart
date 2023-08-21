@@ -54,16 +54,16 @@ abstract class TakkanElement extends Equatable with WalkTarget {
   // factory TakkanElement.fromJson(Map<String, dynamic> json) =>
   //     _$TakkanElementFromJson(json);
   final String? _id;
-  @JsonKey(ignore: true)
+  @JsonKey(includeToJson: false, includeFromJson: false)
   late String? uid;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   late String? _debugId;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   late TakkanElement _parent;
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   late int? _childIndex;
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [
         _id,

@@ -18,7 +18,7 @@ class ConversionErrorMessages extends Equatable {
 
   Map<String, dynamic> toJson() => _$ConversionErrorMessagesToJson(this);
 
-  @JsonKey(ignore: true)
+ @JsonKey(includeToJson: false, includeFromJson: false)
   @override
   List<Object?> get props => [patterns];
 }
