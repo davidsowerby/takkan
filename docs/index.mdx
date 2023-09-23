@@ -18,7 +18,7 @@ These are the primary components of Takkan:
 
 ### Schema
 
-At the heart of the Takkan framework is the `Schema`.  It allows app developers to define the application schema, with associated validations and permissions in one place, or if preferred, by combining various elements of a schema from different parts of the app:
+At the heart of the Takkan framework is the `Schema`.  It allows developers to define the application schema, with associated validations and permissions in one place, or if preferred, by combining various elements of a schema from different parts of the app:
 
 ```dart
 final Schema schema = Schema(
@@ -54,7 +54,7 @@ The `Schema` is input to a `CloudCodeGenerator`, which generates server-side jav
 
 A `Script` is the client side element, which is mostly about presenting data to the user, or the user editing that data.
 
-It uses the `Schema`, to avoid discrepancies between client and server side code, especially when clients may be operating on differing versions.
+It uses the ames `Schema` used to generate the server side code and schema. This avoids potential discrepancies between client and server side code, especially when clients may be operating on differing versions.
 
 The `Script` provides client-side validation, and allows the developer to, for example, hide or disable components that display data that the end user does not have permission to view.
 
@@ -62,9 +62,9 @@ It also provides default behaviour that suits many situations, over and above th
 
 Currently, the Takkan app runs a `Script` in an "interpreted" mode.  However, it is recognised that this may have some performance limitations for the more demanding apps.
 
-### Builder
+### Client Code Generator
 
-In the event that performance becomes an issue, it is intended that a `Builder` would generate native Flutter code from the `Script`.  This would remove any need for interpreting the `Script` at run time, but would lose the flexibility of the being able to dynamically download a version update of the `Script`.
+In the event that performance becomes an issue, it is intended that a `ClientCodeGenerator` would generate native Flutter code from the `Script`.  This would remove any need for interpreting the `Script` at run time, but would lose the flexibility of the being able to dynamically download a version update of the `Script`.
 
 This aspect of the project has not been started, and will only become a priority if performance does actually become an issue.
 
